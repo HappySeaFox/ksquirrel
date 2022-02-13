@@ -150,11 +150,7 @@ bool SQ_ArchiveHandler::unpack()
 			if(!adir)
 				return false;
 
-			try{
-				adir->copyTo(fullextracteddir);
-			}
-			catch(...)
-			{}
+			adir->copyTo(fullextracteddir);
 
 			QApplication::restoreOverrideCursor();
 		}

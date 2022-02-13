@@ -1,12 +1,13 @@
 sq_quickbrowser.o sq_quickbrowser.o: sq_quickbrowser.cpp \
-  /usr/lib/qt3/include/qsizegrip.h /usr/lib/qt3/include/qwidget.h \
-  /usr/lib/qt3/include/qwindowdefs.h /usr/lib/qt3/include/qobjectdefs.h \
-  /usr/lib/qt3/include/qglobal.h /usr/lib/qt3/include/qconfig.h \
-  /usr/lib/qt3/include/qmodules.h /usr/lib/qt3/include/qfeatures.h \
-  /usr/lib/qt3/include/qstring.h /usr/lib/qt3/include/qcstring.h \
-  /usr/lib/qt3/include/qmemarray.h /usr/lib/qt3/include/qgarray.h \
-  /usr/lib/qt3/include/qshared.h /usr/lib/qt3/include/qwinexport.h \
-  /usr/include/string.h /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/lib/qt3/include/qtoolbutton.h /usr/lib/qt3/include/qbutton.h \
+  /usr/lib/qt3/include/qwidget.h /usr/lib/qt3/include/qwindowdefs.h \
+  /usr/lib/qt3/include/qobjectdefs.h /usr/lib/qt3/include/qglobal.h \
+  /usr/lib/qt3/include/qconfig.h /usr/lib/qt3/include/qmodules.h \
+  /usr/lib/qt3/include/qfeatures.h /usr/lib/qt3/include/qstring.h \
+  /usr/lib/qt3/include/qcstring.h /usr/lib/qt3/include/qmemarray.h \
+  /usr/lib/qt3/include/qgarray.h /usr/lib/qt3/include/qshared.h \
+  /usr/lib/qt3/include/qwinexport.h /usr/include/string.h \
+  /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/gnu/stubs.h \
   /usr/lib/gcc-lib/i586-mandrake-linux-gnu/3.3.2/include/stddef.h \
   /usr/include/xlocale.h \
@@ -124,9 +125,9 @@ sq_quickbrowser.o sq_quickbrowser.o: sq_quickbrowser.cpp \
   /usr/lib/qt3/include/qglist.h /usr/lib/qt3/include/qptrcollection.h \
   /usr/lib/qt3/include/qbrush.h /usr/lib/qt3/include/qfont.h \
   /usr/lib/qt3/include/qfontmetrics.h /usr/lib/qt3/include/qfontinfo.h \
-  /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qtoolbutton.h \
-  /usr/lib/qt3/include/qbutton.h /usr/lib/qt3/include/qkeysequence.h \
+  /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qkeysequence.h \
   /usr/lib/qt3/include/qpixmap.h /usr/lib/qt3/include/qiconset.h \
+  /usr/lib/qt3/include/qlabel.h /usr/lib/qt3/include/qframe.h \
   /usr/include/kiconloader.h /usr/lib/qt3/include/qmovie.h \
   /usr/include/kglobal.h /usr/include/kdemacros.h \
   /usr/include/kinstance.h /usr/include/kicontheme.h \
@@ -134,27 +135,27 @@ sq_quickbrowser.o sq_quickbrowser.o: sq_quickbrowser.cpp \
   /usr/include/kxmlguifactory.h /usr/lib/qt3/include/qdom.h \
   /usr/include/kxmlguiclient.h /usr/include/kxmlguibuilder.h \
   /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qtoolbar.h \
-  /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qframe.h \
-  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
-  /usr/include/ktoolbar.h /usr/lib/qt3/include/qcombobox.h \
-  /usr/lib/qt3/include/qguardedptr.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h sq_config.h /usr/include/kconfig.h \
-  /usr/include/ksharedptr.h /usr/include/kconfigbase.h \
-  /usr/lib/qt3/include/qdatetime.h /usr/lib/qt3/include/qvariant.h \
-  /usr/include/kconfigdata.h sq_quickbrowser.h \
-  /usr/lib/qt3/include/qvbox.h /usr/lib/qt3/include/qhbox.h \
-  sq_diroperatorbase.h /usr/include/kurl.h /usr/include/kfileview.h \
-  /usr/include/kfileitem.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/kio/global.h \
-  /usr/include/kmimetype.h /usr/include/ksycocatype.h \
-  /usr/include/kservicetype.h /usr/include/ksycocaentry.h \
-  /usr/include/kservice.h /usr/include/ksimpleconfig.h \
-  /usr/include/kfilemetainfo.h /usr/lib/qt3/include/qdict.h \
-  /usr/lib/qt3/include/qgdict.h /usr/include/kfile.h \
-  /usr/lib/qt3/include/qdir.h /usr/lib/qt3/include/qfileinfo.h \
-  /usr/lib/qt3/include/qfile.h /usr/include/kdiroperator.h \
-  /usr/lib/qt3/include/qptrstack.h /usr/include/kaction.h \
-  /usr/include/kguiitem.h /usr/include/kshortcut.h \
+  /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmetaobject.h \
+  /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
+  /usr/lib/qt3/include/qcombobox.h /usr/lib/qt3/include/qguardedptr.h \
+  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_config.h \
+  /usr/include/kconfig.h /usr/include/ksharedptr.h \
+  /usr/include/kconfigbase.h /usr/lib/qt3/include/qdatetime.h \
+  /usr/lib/qt3/include/qvariant.h /usr/include/kconfigdata.h \
+  sq_quickbrowser.h /usr/lib/qt3/include/qvbox.h \
+  /usr/lib/qt3/include/qhbox.h /usr/lib/qt3/include/qstatusbar.h \
+  /usr/lib/qt3/include/qsizegrip.h sq_diroperatorbase.h \
+  /usr/include/kurl.h /usr/include/kfileview.h /usr/include/kfileitem.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/include/kmimetype.h \
+  /usr/include/ksycocatype.h /usr/include/kservicetype.h \
+  /usr/include/ksycocaentry.h /usr/include/kservice.h \
+  /usr/include/ksimpleconfig.h /usr/include/kfilemetainfo.h \
+  /usr/lib/qt3/include/qdict.h /usr/lib/qt3/include/qgdict.h \
+  /usr/include/kfile.h /usr/lib/qt3/include/qdir.h \
+  /usr/lib/qt3/include/qfileinfo.h /usr/lib/qt3/include/qfile.h \
+  /usr/include/kdiroperator.h /usr/lib/qt3/include/qptrstack.h \
+  /usr/include/kaction.h /usr/include/kguiitem.h /usr/include/kshortcut.h \
   /usr/include/kstdaction.h /usr/include/kactioncollection.h \
   /usr/include/kactionclasses.h /usr/include/kcompletion.h \
   /usr/include/kglobalsettings.h /usr/include/ksortablevaluelist.h \
@@ -177,7 +178,9 @@ sq_quickbrowser.o sq_quickbrowser.o: sq_quickbrowser.cpp \
   /usr/include/linux/compiler.h /usr/include/linux/compiler-gcc3.h \
   /usr/include/linux/compiler-gcc.h
 
-/usr/lib/qt3/include/qsizegrip.h:
+/usr/lib/qt3/include/qtoolbutton.h:
+
+/usr/lib/qt3/include/qbutton.h:
 
 /usr/lib/qt3/include/qwidget.h:
 
@@ -569,15 +572,15 @@ sq_quickbrowser.o sq_quickbrowser.o: sq_quickbrowser.cpp \
 
 /usr/lib/qt3/include/qsizepolicy.h:
 
-/usr/lib/qt3/include/qtoolbutton.h:
-
-/usr/lib/qt3/include/qbutton.h:
-
 /usr/lib/qt3/include/qkeysequence.h:
 
 /usr/lib/qt3/include/qpixmap.h:
 
 /usr/lib/qt3/include/qiconset.h:
+
+/usr/lib/qt3/include/qlabel.h:
+
+/usr/lib/qt3/include/qframe.h:
 
 /usr/include/kiconloader.h:
 
@@ -610,8 +613,6 @@ ksquirrel.h:
 /usr/lib/qt3/include/qtoolbar.h:
 
 /usr/lib/qt3/include/qdockwindow.h:
-
-/usr/lib/qt3/include/qframe.h:
 
 /usr/lib/qt3/include/qmetaobject.h:
 
@@ -646,6 +647,10 @@ sq_quickbrowser.h:
 /usr/lib/qt3/include/qvbox.h:
 
 /usr/lib/qt3/include/qhbox.h:
+
+/usr/lib/qt3/include/qstatusbar.h:
+
+/usr/lib/qt3/include/qsizegrip.h:
 
 sq_diroperatorbase.h:
 

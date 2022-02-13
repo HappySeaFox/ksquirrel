@@ -42,8 +42,8 @@ void SQ_Options::init()
 // Init GLView page
 	QPixmap p1;
 	checkStatus->setChecked(sqConfig->readBoolEntry("GL view", "hide_sbar", true));
-	checkDrawQuads->setChecked(sqConfig->readBoolEntry("GL view", "alpha_bkgr", true));
-    
+	checkDrawQuads->setChecked(sqConfig->readBoolEntry("GL view", "alpha_bkgr", true));	  checkMarks->setChecked(sqConfig->readBoolEntry("GL view", "marks", true));    
+	
 	tp = sqConfig->readNumEntry("GL view", "GL view background type", 0);
 	buttonGroupColor->setButton(tp);
 	widgetStack4->raiseWidget(tp);
@@ -146,10 +146,17 @@ void SQ_Options::slotShowLibs()
 	QValueVector<SQ_LIBRARY>::iterator   BEGIN = sqLibHandler->begin();
 	QValueVector<SQ_LIBRARY>::iterator      END = sqLibHandler->end();
 	
+	QPixmap pix;
+	
 	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
 	{
 		QFileInfo libfileinfo((*it).libpath);
-		tableLib->insertItem(new QListViewItem(tableLib, libfileinfo.fileName(), QString((*it).quickinfo), QString((*it).version), QString((*it).filter)));
+		QListViewItem *item = new QListViewItem(tableLib, QString::null, libfileinfo.fileName(), QString((*it).quickinfo), QString((*it).version), QString((*it).filter));
+
+		if(pix.convertFromImage((*it).mime))
+		    item->setPixmap(0, pix);
+
+		tableLib->insertItem(item);
 	}
 }
 
@@ -189,6 +196,7 @@ int SQ_Options::start()
 		sqConfig->writeEntry("GL view background type", buttonGroupColor->id(buttonGroupColor->selected()));
 		sqConfig->writeEntry("zoom limit", buttonGroupZoomLimit->id(buttonGroupZoomLimit->selected()));
 		sqConfig->writeEntry("alpha_bkgr", checkDrawQuads->isChecked());
+		sqConfig->writeEntry("marks", checkMarks->isChecked());
 		sqConfig->writeEntry("hide_sbar", checkStatus->isChecked());
 		sqConfig->writeEntry("scroll", buttonGroupScrolling->id(buttonGroupScrolling->selected()));
 		sqConfig->writeEntry("angle", sliderAngle->value());
@@ -280,8 +288,7 @@ void SQ_Options::slotCalcCache()
 void SQ_Options::slotClearCache()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    KURL url;
-    url.setPath(QDir::homeDirPath() + "/.ksquirrel/thumbnails");
+    KURL url = QDir::homeDirPath() + QString::fromLatin1("/.ksquirrel/thumbnails");
 
     KIO::DeleteJob *job = KIO::del(url);
     connect(job, SIGNAL(result(KIO::Job*)), this, SLOT(slotClearFinished(KIO::Job*)));

@@ -39,10 +39,6 @@ class SQ_Dir;
 #undef SQ_AH
 #define SQ_AH SQ_ArchiveHandler
 
-/**
-  *@author CKulT
-  */
-
 class SQ_ArchiveHandler : public QObject
 {
 	public: 

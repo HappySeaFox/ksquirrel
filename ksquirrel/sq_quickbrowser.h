@@ -19,6 +19,7 @@
 #define SQ_QUICKBROWSER_H
 
 #include <qvbox.h>
+#include <qstatusbar.h>
 #include <qsizegrip.h>
 
 #include <ktoolbar.h>
@@ -45,7 +46,7 @@ class SQ_Header : public KToolBar
 class SQ_SizeGrip : public QSizeGrip
 {
 	public:
-		SQ_SizeGrip(QWidget *parent = 0, const char *name = 0);
+		SQ_SizeGrip(QWidget *top, QWidget *parent = 0, const char *name = 0);
 		~SQ_SizeGrip();
 
 	protected:
@@ -55,6 +56,16 @@ class SQ_SizeGrip : public QSizeGrip
 	private:
 		QWidget *p;
 		QPoint mother;
+};
+
+class SQ_QuickStatus : public QStatusBar
+{
+	public:
+		SQ_QuickStatus(QWidget *parent = 0, const char *name = 0);
+		~SQ_QuickStatus();
+
+	protected:
+		virtual void mousePressEvent(QMouseEvent *e);
 };
 
 class SQ_QuickBrowser : public QVBox

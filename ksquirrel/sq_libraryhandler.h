@@ -27,8 +27,6 @@
 
 class QLibrary;
 
-const int buffer_size = 14;
-
 class SQ_LIBRARY
 {
 	public:
@@ -64,9 +62,9 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 		SQ_LibraryHandler(QStringList *foundLibraries = 0);
 		~SQ_LibraryHandler();
 
-		SQ_LIBRARY* libraryForFile(const QString &) const;
-		bool supports(const QString &) const;
-		QStringList allFilters() const;
+		SQ_LIBRARY* libraryForFile(const QString &);
+		bool supports(const QString &);
+		void allFilters(QStringList &filters, QStringList &quick) const;
 		QString allFiltersString() const;
 
 		void clear();
@@ -76,8 +74,13 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 		void add(QStringList *foundLibraries);
 		void remove(QStringList *foundLibraries);
 
+		SQ_LIBRARY *latestLibrary();
+
 	private:
 		bool alreadyInMap(const QString &quick) const;
+
+	private:
+		SQ_LIBRARY *latest;
 };
 
 #endif

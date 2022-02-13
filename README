@@ -15,7 +15,7 @@ Ctrl + Left Arrow - rotate left for N degrees
 Ctrl + Right Arrow - rotate right for N degrees
 Ctrl + Up/Down Arrow - rotate for 180 degrees up/down
 Shift + Up/Down Arrow - rotate for 1 degree up/down
-R - Reset
+Middle click,R - Reset
 Space - next image
 Backspace - previous image
 Home - first image
@@ -38,7 +38,9 @@ L - "Ignore, if the image is less than window"
 I - menu with images
 A - stop/start animation (if animated, like GIF)
 B - toggle drawing background for transparent images
+K - toggle drawing tickmarks
 E - show menu with external tools
+Delete - delete image
 
 F1 - First image from sequense
 F2 - Previous

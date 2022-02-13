@@ -53,12 +53,12 @@ void SQ_GLView::createContent()
 	sbar = new KStatusBar(this);
 
 	sbar->addWidget(sqSBDecodedBox, 0, true);
+	sbar->addWidget(sqSBFrame, 0, true);
 	sbar->addWidget(sqSBLoaded, 0, true);
 	sbar->addWidget(sqSBGLZoom, 0, true);
 	sbar->addWidget(sqSBGLAngle, 0, true);
 	sbar->addWidget(sqSBGLCoord, 0, true);
-	QLabel *levak = new QLabel(sbar);
-	sbar->addWidget(levak, 1, true);
+	sbar->addWidget(sqSBFile, 1, true);
 
 	sbar->setShown(sqConfig->readBoolEntry("GL view", "statusbar", true));
 

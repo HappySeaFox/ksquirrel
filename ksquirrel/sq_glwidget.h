@@ -1,5 +1,5 @@
 /***************************************************************************
-                          sq_glviewwidget.h  -  description
+                          sq_glwidget.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
@@ -19,13 +19,14 @@
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
 
-#include <kurl.h>
-
 #include <qgl.h>
 #include <qcursor.h>
 #include <qfileinfo.h>
 #include <qimage.h>
 #include <qrect.h>
+
+#include <kurl.h>
+#include <ktoolbar.h>
 
 //#define SQ_NEED_RGBA_OPERATOR
 #include "defs.h"
@@ -43,7 +44,6 @@ class KActionCollection;
 class KToggleAction;
 class KPopupMenu;
 class KRadioAction;
-class KToolBar;
 
 class QTimer;
 class QWidgetStack;
@@ -60,6 +60,16 @@ class MemoryPart256;
 class MemoryPart128;
 class MemoryPart64;
 class MemoryPart32;
+
+class SQ_ToolBar : public KToolBar
+{
+	public:
+		SQ_ToolBar(QWidget *parent = 0);
+		~SQ_ToolBar();
+
+	protected:
+		void mouseReleaseEvent(QMouseEvent *);
+};
 
 class SQ_GLWidget : public QGLWidget
 {
@@ -80,12 +90,12 @@ class SQ_GLWidget : public QGLWidget
 		bool matrix_zoom(GLfloat ratio);
 		void matrix_reset();
 		void matrix_pure_reset();
-		void matrix_pure_reset_notflip();
 		void matrix_push();
 		void matrix_pop();
 		void write_gl_matrix();
 		void matrix_rotate(GLfloat angle);
-		void flip(int);
+		void matrix_rotate2(GLfloat angle);
+		void flip(int, bool = true);
 		void flip_h();
 		void flip_v();
 
@@ -115,7 +125,6 @@ class SQ_GLWidget : public QGLWidget
 		void dragEnterEvent(QDragEnterEvent *);
 		void dropEvent(QDropEvent *);
 
-		void contextMenuEvent(QContextMenuEvent *);
 		void mousePressEvent(QMouseEvent *);
 		void mouseReleaseEvent(QMouseEvent *);
 		void mouseMoveEvent(QMouseEvent *);
@@ -132,9 +141,17 @@ class SQ_GLWidget : public QGLWidget
 		void jumpToImage(bool);
 		void nextImage();
 		void prevImage();
-		void showHelp();
 		void toggleDrawingBackground();
 		void showExternalTools();
+		void bindMarks(bool &first, bool deleteOld);
+		void createMarks();
+		QColor calculateAdjustedColor(QImage im, QColor rgb, bool color);
+		void deleteWrapper();
+		void updateCurrentFileInfo();
+		void toogleTickmarks();
+		void frameChanged();
+		void internalZoom(const GLfloat &z);
+		void createContextMenu(KPopupMenu *m);
 
 		bool prepare();
 		bool zoomRect(const QRect &r);
@@ -177,11 +194,13 @@ class SQ_GLWidget : public QGLWidget
 		void slotSetCurrentImage(int);
 		void slotShowImages();
 		void slotImagedHidden();
+		void signalMapped(int);
+		void slotShowHelp();
 
 	public:
 		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus,
 						*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
-						*pAFirst, *pALast;
+						*pAFirst, *pALast, *pAHelp;
 
 		QToolButton	*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
 
@@ -202,7 +221,7 @@ class SQ_GLWidget : public QGLWidget
 		QCursor			cusual, cdrag, cZoomIn;
 		QFileInfo		fm;
 		QImage 		BGpixmap, BGquads;
-		KToolBar		*toolbar, *toolbar2;
+		SQ_ToolBar		*toolbar, *toolbar2;
 		QTimer			*timer_show, *timer_hide, *timer_decode, *timer_prev, *timer_next, *timer_anim;
 		SQ_LIBRARY	*lib;
 		int				steps;
@@ -211,14 +230,18 @@ class SQ_GLWidget : public QGLWidget
 		KActionCollection*ac;
 		RGBA			*next;
 		unsigned int		texQuads, texPixmap;
-		bool			changed, inMouse, crossDrawn;
+		bool			changed, inMouse, crossDrawn, changed2;
 		QPainter		*pRect;
 		QRect			lastRect;
 		KPopupMenu 	*zoom, *images;
+		bool			marks;
+		unsigned int		mark[4];
+		KPopupMenu	*menu;
 
 		Parts 			*parts;
 		int 				total, errors, tileSize;
 		float			zoomFactor;
+		QImage 		mm[4];
 
 		void 			*mem_parts;
 		MemoryPart256	*m256;
@@ -253,7 +276,7 @@ class MemoryPart32
 
 struct Part
 {
-	int x1, y1, x2, y2;
+	float x1, y1, x2, y2;
 	unsigned int tex;
 	GLuint list;
 };

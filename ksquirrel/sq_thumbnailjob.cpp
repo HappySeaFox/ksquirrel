@@ -298,8 +298,6 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 	if(!lib)
 		return false;
 
-	printf("SQ_ThumbnailLoadJob: using %s\n", lib->quickinfo.ascii());
-
 	int res = lib->fmt_readimage((const char*)pixPath.local8Bit(), &all, &dump);
 
 	if(res != SQERR_OK)

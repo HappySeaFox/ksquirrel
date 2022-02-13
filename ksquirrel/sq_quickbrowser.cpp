@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qsizegrip.h>
 #include <qtoolbutton.h>
+#include <qlabel.h>
 
 #include <kiconloader.h>
 #include <klocale.h>
@@ -42,6 +42,8 @@ SQ_Header::~SQ_Header()
 
 void SQ_Header::mousePressEvent(QMouseEvent *e)
 {
+	e->accept();
+
 	if(e->button() == Qt::LeftButton)
 	{
 		oldParentX = p->x();
@@ -56,6 +58,8 @@ void SQ_Header::mousePressEvent(QMouseEvent *e)
 
 void SQ_Header::mouseMoveEvent(QMouseEvent *e)
 {
+	e->accept();
+
 	if(!inMouse)
 		return;
 
@@ -67,11 +71,13 @@ void SQ_Header::mouseMoveEvent(QMouseEvent *e)
 
 void SQ_Header::mouseReleaseEvent(QMouseEvent *e)
 {
+	e->accept();
+
 	if(e->button() == Qt::LeftButton)
 		inMouse = false;
 }
 
-SQ_SizeGrip::SQ_SizeGrip(QWidget *parent, const char *name) : QSizeGrip(parent, name), p(parent)
+SQ_SizeGrip::SQ_SizeGrip(QWidget *top, QWidget *parent, const char *name) : QSizeGrip(parent, name), p(top)
 {}
 
 SQ_SizeGrip::~SQ_SizeGrip()
@@ -100,6 +106,19 @@ void SQ_SizeGrip::mouseMoveEvent(QMouseEvent *e)
 		p->resize(p->width(), h);
 }
 
+SQ_QuickStatus::SQ_QuickStatus(QWidget *parent, const char *name) : QStatusBar(parent, name)
+{
+	setCursor(Qt::ArrowCursor);
+}
+
+SQ_QuickStatus::~SQ_QuickStatus()
+{}
+
+void SQ_QuickStatus::mousePressEvent(QMouseEvent *e)
+{
+	e->accept();
+}
+
 SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(parent, name)
 {
 	hide();
@@ -126,7 +145,15 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 	quick->actionCollection()->action("delete")->plug(t);
 	(new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()), sqApp->actionCollection(), "SQ GL THide2"))->plug(t);
 
-	new SQ_SizeGrip(this);
+	setStretchFactor(quick, 1);
+
+	SQ_QuickStatus *status = new SQ_QuickStatus(this);
+	status->setSizeGripEnabled(false);
+	QLabel *fix = new QLabel(status);
+	SQ_SizeGrip *grip = new SQ_SizeGrip(this, status);
+
+	status->addWidget(fix, 1, true);
+	status->addWidget(grip, 0, true);
 
 	QRect r = sqConfig->readRectEntry("GL view", "quickGeometry");
 

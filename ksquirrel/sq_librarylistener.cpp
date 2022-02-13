@@ -14,10 +14,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <qstring.h>
 
-#include "sq_librarylistener.h"
+#include <qstring.h>
+#include <qfile.h>
+
 #include "ksquirrel.h"
+#include "sq_librarylistener.h"
 #include "sq_libraryhandler.h"
 #include "sq_librarieschanged.h"
 #include "sq_config.h"
@@ -26,7 +28,7 @@ SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {
 	operation = true;
 
-	setAutoUpdate(true); // we have to init libraries anyway, even if "Monitor" options disabled
+	setAutoUpdate(true);
 	setDirOnlyMode(false);
 	setShowingDotFiles(false);
 
@@ -67,7 +69,7 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 
 	KFileItem 		*item;
 	QString		stritems;
-	
+
 	while((item = it.current()) != 0)
 	{
 		++it;
@@ -102,7 +104,14 @@ void SQ_LibraryListener::slotShowInfo(const QStringList &linfo, bool added)
 	list.clear();
 }
 
-void SQ_LibraryListener::slotOpenURL(const KURL &url__, bool b1, bool b2)
+void SQ_LibraryListener::slotOpenURL(const KURL &url, bool b1, bool b2)
 {
-	openURL(url__, b1, b2);
+	if(!QFile::exists(url.path()))
+	{
+	    sqLibHandler->clear();
+	    emit finishedInit();
+	    return;
+	}
+
+	openURL(url, b1, b2);
 }

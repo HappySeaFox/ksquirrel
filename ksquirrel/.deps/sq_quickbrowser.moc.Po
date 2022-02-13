@@ -126,14 +126,14 @@ sq_quickbrowser.moc.o sq_quickbrowser.moc.o: sq_quickbrowser.moc.cpp \
   /usr/lib/qt3/include/qbrush.h /usr/lib/qt3/include/qfont.h \
   /usr/lib/qt3/include/qfontmetrics.h /usr/lib/qt3/include/qfontinfo.h \
   /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qframe.h \
-  /usr/lib/qt3/include/qsizegrip.h /usr/include/ktoolbar.h \
-  /usr/lib/qt3/include/qtoolbar.h /usr/lib/qt3/include/qdockwindow.h \
-  /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qcombobox.h \
-  /usr/include/kglobal.h /usr/include/kdemacros.h \
-  /usr/include/kinstance.h /usr/lib/qt3/include/qguardedptr.h \
-  /usr/lib/qt3/include/qiconset.h /usr/lib/qt3/include/qpixmap.h \
-  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
-  /usr/lib/qt3/include/qapplication.h \
+  /usr/lib/qt3/include/qstatusbar.h /usr/lib/qt3/include/qsizegrip.h \
+  /usr/include/ktoolbar.h /usr/lib/qt3/include/qtoolbar.h \
+  /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmainwindow.h \
+  /usr/lib/qt3/include/qcombobox.h /usr/include/kglobal.h \
+  /usr/include/kdemacros.h /usr/include/kinstance.h \
+  /usr/lib/qt3/include/qguardedptr.h /usr/lib/qt3/include/qiconset.h \
+  /usr/lib/qt3/include/qpixmap.h /usr/lib/qt3/include/qmetaobject.h \
+  /usr/lib/qt3/include/qconnection.h /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
   /usr/lib/qt3/include/private/qucomextra_p.h \
@@ -536,6 +536,8 @@ sq_quickbrowser.h:
 /usr/lib/qt3/include/qsizepolicy.h:
 
 /usr/lib/qt3/include/qframe.h:
+
+/usr/lib/qt3/include/qstatusbar.h:
 
 /usr/lib/qt3/include/qsizegrip.h:
 

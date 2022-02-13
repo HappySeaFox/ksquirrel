@@ -1,6 +1,6 @@
 <!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>SQ_Options</class>
-<author>CKulT</author>
+<author>Krasu</author>
 <widget class="QDialog">
     <property name="name">
         <cstring>SQ_Options</cstring>
@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>523</width>
-            <height>455</height>
+            <height>461</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -544,7 +544,7 @@
                                                 <string>Run unknown file formats separately (with default application)</string>
                                             </property>
                                             <property name="toolTip" stdset="0">
-                                                <string>For example, run unsupported "png" format in kuickshow</string>
+                                                <string></string>
                                             </property>
                                         </widget>
                                         <widget class="QCheckBox" row="2" column="0">
@@ -1336,23 +1336,6 @@
                                         <property name="name">
                                             <cstring>unnamed</cstring>
                                         </property>
-                                        <spacer row="2" column="0">
-                                            <property name="name">
-                                                <cstring>spacer16_4</cstring>
-                                            </property>
-                                            <property name="orientation">
-                                                <enum>Vertical</enum>
-                                            </property>
-                                            <property name="sizeType">
-                                                <enum>Expanding</enum>
-                                            </property>
-                                            <property name="sizeHint">
-                                                <size>
-                                                    <width>20</width>
-                                                    <height>80</height>
-                                                </size>
-                                            </property>
-                                        </spacer>
                                         <widget class="QLayoutWidget" row="0" column="0">
                                             <property name="name">
                                                 <cstring>layout4_2</cstring>
@@ -1529,6 +1512,31 @@
                                             </property>
                                             <property name="text">
                                                 <string>Draw background for transparent images (quads)</string>
+                                            </property>
+                                        </widget>
+                                        <spacer row="3" column="0">
+                                            <property name="name">
+                                                <cstring>spacer16_4</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Vertical</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>20</width>
+                                                    <height>130</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <widget class="QCheckBox" row="2" column="0">
+                                            <property name="name">
+                                                <cstring>checkMarks</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Draw tickmarks around the image</string>
                                             </property>
                                         </widget>
                                     </grid>
@@ -1929,6 +1937,17 @@
                                         <widget class="QListView" row="0" column="0">
                                             <column>
                                                 <property name="text">
+                                                    <string>Icon</string>
+                                                </property>
+                                                <property name="clickable">
+                                                    <bool>true</bool>
+                                                </property>
+                                                <property name="resizable">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </column>
+                                            <column>
+                                                <property name="text">
                                                     <string>Library</string>
                                                 </property>
                                                 <property name="clickable">
@@ -1977,14 +1996,17 @@
                                             <property name="frameShape">
                                                 <enum>ToolBarPanel</enum>
                                             </property>
+                                            <property name="resizePolicy">
+                                                <enum>AutoOneFit</enum>
+                                            </property>
                                             <property name="selectionMode">
-                                                <enum>Extended</enum>
+                                                <enum>Single</enum>
                                             </property>
                                             <property name="allColumnsShowFocus">
                                                 <bool>true</bool>
                                             </property>
                                             <property name="resizeMode">
-                                                <enum>AllColumns</enum>
+                                                <enum>LastColumn</enum>
                                             </property>
                                             <property name="toolTip" stdset="0">
                                                 <string>Contains information about all found libraries</string>

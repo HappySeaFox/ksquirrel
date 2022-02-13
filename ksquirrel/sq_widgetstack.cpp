@@ -61,10 +61,6 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0
 
 	ac = new KActionCollection(this);
 
-	KDirOperator *w = new KDirOperator(KURL("/"), 0);
-	w->hide();
-	KAction *abstract;
-
 	pABack = KStdAction::back(this, SLOT(slotBack()), ac, "SQ back wrapper");
 	pAForw = KStdAction::forward(this, SLOT(slotForward()), ac, "SQ forward wrapper");
 	pAUp = KStdAction::up(this, SLOT(slotUp()), ac, "SQ up wrapper");
@@ -73,13 +69,11 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0
 	pARefresh->setShortcut(KStdAccel::shortcut(KStdAccel::Reload));
 	pAHome = KStdAction::home(this, SLOT(slotHome()), ac, "SQ h0me wrapper");
 	pAHome->setText(i18n("Home"));
-	abstract = w->actionCollection()->action("mkdir");
-	pAMkDir = new KAction(abstract->text(), abstract->icon(), abstract->shortcut(), this, SLOT(slotMkDir()), ac, "SQ mkdir wrapper");
-	abstract = w->actionCollection()->action("properties");
-	pAProp = new KAction(abstract->text(), abstract->icon(), abstract->shortcut(), this, SLOT(slotProperties()), ac, "SQ prop wrapper");
-	abstract = w->actionCollection()->action("delete");
+	pAMkDir = new KAction(i18n("New directory ..."), "folder_new", 0, this, SLOT(slotMkDir()), ac, "SQ mkdir wrapper");
+	pAProp = new KAction(i18n("Properties ..."), QString::null, 0, this, SLOT(slotProperties()), ac, "SQ prop wrapper");
 	pADelete = new KAction(i18n("Delete"), "editdelete", Qt::Key_Delete, this, SLOT(slotDelete()), ac, "SQ delete wrapper");
-	delete w;
+	pAHidden = new KToggleAction(i18n("Show hidden files"), "folder_grey", 0, 0, 0, ac, "SQ hidden files wrapper");
+	connect(pAHidden, SIGNAL(toggled(bool)), this, SLOT(slotShowHidden(bool)));
 
 	timerShowProgress = new QTimer(this);
 	connect(timerShowProgress, SIGNAL(timeout()), this, SLOT(slotDelayedShowProgress()));
@@ -176,7 +170,10 @@ bool SQ_WidgetStack::moveTo(Direction direction, KFileItem *it)
 
 void SQ_WidgetStack::slotShowHidden(bool)
 {
-	visibleWidget()->actionCollection()->action("show hidden")->activate();
+	if(pDirOperatorList) pDirOperatorList->actionCollection()->action("show hidden")->activate();
+	if(pDirOperatorIcon) pDirOperatorIcon->actionCollection()->action("show hidden")->activate();
+	if(pDirOperatorDetail) pDirOperatorDetail->actionCollection()->action("show hidden")->activate();
+	if(pDirOperatorThumb) pDirOperatorThumb->actionCollection()->action("show hidden")->activate();
 }
 
 void SQ_WidgetStack::setNameFilter(const QString &f)
@@ -232,6 +229,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorList->readConfig(KGlobal::config(), SQ_SECTION_LIST);
 		pDirOperatorList->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
 		pDirOperatorList->setMode(KFile::Files);
+		pDirOperatorList->iv->setArrangement(QIconView::TopToBottom);
 //		pDirOperatorList->iv->setSelectionMode(KFile::Single);
 		pDirOperatorList->iv->setIconSize(KIcon::SizeSmall);
 		shown = pDirOperatorList;
@@ -258,6 +256,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorIcon->readConfig(KGlobal::config(), SQ_SECTION_ICONS);
 		pDirOperatorIcon->setViewConfig(KGlobal::config(), SQ_SECTION_ICONS);
 		pDirOperatorIcon->setMode(KFile::Files);
+		pDirOperatorIcon->iv->setArrangement(QIconView::LeftToRight);
 //		pDirOperatorIcon->iv->setSelectionMode(KFile::Single);
 		pDirOperatorIcon->iv->setIconSize(KIcon::SizeMedium);
 		shown = pDirOperatorIcon;
@@ -307,6 +306,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 
 		pDirOperatorThumb->readConfig(KGlobal::config(), SQ_SECTION_ICONS);
 		pDirOperatorThumb->setMode(KFile::Files);
+		pDirOperatorThumb->tv->setArrangement(QIconView::LeftToRight);
 //		pDirOperatorThumb->tv->setSelectionMode(KFile::Single);
 
 		int pixelSize = (sqThumbSize->isExtended())?
@@ -328,7 +328,12 @@ void SQ_WidgetStack::raiseWidget(int id)
 		widget(id)->setURL(visibleWidget()->url(), true);
 
 	if(shown)
+	{
+		if(pAHidden->isChecked())
+			shown->actionCollection()->action("show hidden")->activate();
+
 		shown->show();
+	}
 
 	QWidgetStack::raiseWidget(id);
 
@@ -690,7 +695,7 @@ void SQ_WidgetStack::slotDelayedRecreateThumbnail()
 		if(!SQ_ThumbnailLoadJob::loadThumbnail(path, thumb, true))
 			continue;
 
-		sqCache->removeEntry(path);
+		sqCache->removeEntryFull(path);
 
 		sqCache->insert(path, thumb);
 

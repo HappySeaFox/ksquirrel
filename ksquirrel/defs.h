@@ -67,6 +67,8 @@ struct fmt_image
     char		*dump;
     fmt_metainfo	*meta;
     int			delay;
+    bool		interlaced;
+    int			passes;
 }ATTR_;
 
 struct fmt_info
@@ -74,11 +76,9 @@ struct fmt_info
     fmt_image		*image;
     unsigned short	images;
     bool		animated;
-    bool		interlaced;
-    int			passes;
 }ATTR_;
 
-#define trace(a) printf("%s\n", a)
+#define trace(a) fprintf(stderr, "%s\n", a)
 
 #if defined SQ_NEED_OPERATOR_RGBA_RGBA
 static int operator== (const RGBA &rgba1, const RGBA &rgba2)

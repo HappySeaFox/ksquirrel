@@ -86,6 +86,13 @@ void SQ_PixmapCache::removeEntry(const QString &key)
 	QMap<QString, SQ_Thumbnail>::remove(key);
 }
 
+void SQ_PixmapCache::removeEntryFull(const QString &key)
+{
+	removeEntry(key);
+
+	dir->removeFile(key);
+}
+
 bool SQ_PixmapCache::contains2(const QString &key, SQ_Thumbnail &th)
 {
 	if(this->contains(key))

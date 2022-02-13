@@ -30,8 +30,11 @@
 #include "sq_thumbnailjob.h"
 #undef		SQ_HAVE_MIMESTRING
 
+static const int buffer_size = 10;
+
 SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries) :
-											QValueVector<SQ_LIBRARY>()
+											QValueVector<SQ_LIBRARY>(),
+											latest(0)
 {
 	if(foundLibraries)
 		reInit(foundLibraries);
@@ -40,7 +43,7 @@ SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries) :
 SQ_LibraryHandler::~SQ_LibraryHandler()
 {}
 
-SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path) const
+SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 {
 	if(full_path.isEmpty())
 		return 0;
@@ -51,7 +54,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path) const
 	SQ_LIBRARY *l, *found = 0;
 
 	QFile file(full_path);
-	char buffer[buffer_size];
+	char buffer[buffer_size+1];
 
 	if(!file.open(IO_ReadOnly))
 		return 0;
@@ -70,7 +73,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path) const
 		if(buffer[j] == '\0')
 			buffer[j] = '\001';
 
-	buffer[buffer_size - 1] = '\0';
+	buffer[buffer_size] = '\0';
 
 	QString read = QString::fromLatin1(buffer);
 
@@ -78,16 +81,22 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path) const
 	{
 		l = (SQ_LIBRARY *)&(*it);
 
-		if(!l->regexp.pattern().isEmpty() && !l->regexp.pattern().isNull())
+		if(!l->regexp_str.isEmpty() && !l->regexp_str.isNull())
 			if(read.find(l->regexp) == 0)
 			{
 				found = l;
+				latest = found;
 				break;
 			}
 	}
 
 	if(found)
+	{
+		printf("1. SQ_LibraryHandler::libraryForFile: \"%s\" => \"%s\"\n", 
+			KStringHandler::csqueeze(full_path, 22).ascii(),
+			found->quickinfo.ascii());
 		return found;
+	}
 
 	QFileInfo f(full_path);
 	QString ext = "*.";
@@ -98,14 +107,22 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path) const
 	{
 		l = (SQ_LIBRARY *)&(*it);
 
-		if(l->filter.find(ext, 0, false) != -1)
+		if(l->filter.find(ext, 0, false) != -1 && (l->regexp_str.isEmpty() || l->regexp_str.isNull()))
+		{
+			printf("2. SQ_LibraryHandler::libraryForFile: \"%s\" => \"%s\"\n",
+			    KStringHandler::csqueeze(full_path, 22).ascii(),
+			    l->quickinfo.ascii());
+
+			latest = l;
+
 			return l;
+		}
 	}
 
 	return 0;
 }
 
-bool SQ_LibraryHandler::supports(const QString &f) const
+bool SQ_LibraryHandler::supports(const QString &f)
 {
 	return libraryForFile(f) != 0;
 }
@@ -118,22 +135,28 @@ QString SQ_LibraryHandler::allFiltersString() const
 	QValueVector<SQ_LIBRARY>::const_iterator   END = end();
 
 	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
-		ret = ret + (*it).filter + " ";
+	{
+		if(!(*it).filter.isEmpty() && !(*it).filter.isNull())
+			ret = ret + (*it).filter + " ";
+	}
 
 	return ret;
 }
 
-QStringList SQ_LibraryHandler::allFilters() const
+void SQ_LibraryHandler::allFilters(QStringList &filters, QStringList &quick) const
 {
-	QStringList ret;
+	filters.clear();
+	quick.clear();
 
 	QValueVector<SQ_LIBRARY>::const_iterator   BEGIN = begin();
 	QValueVector<SQ_LIBRARY>::const_iterator   END = end();
 
 	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
-		ret.append((*it).filter);
-
-	return ret;
+		if(!(*it).filter.isEmpty() && !(*it).filter.isNull())
+		{
+			filters.append((*it).filter);
+			quick.append((*it).quickinfo);
+		}
 }
 
 void SQ_LibraryHandler::clear()
@@ -212,12 +235,14 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 				libtmp.regexp_str = QString::fromLatin1(libtmp.fmt_mime());
 				libtmp.regexp.setPattern(libtmp.regexp_str);
 				libtmp.regexp.setCaseSensitive(true);
+//				libtmp.regexp.setWildcard(true);
+//				libtmp.regexp.setMinimal(true);
 
 				append(libtmp);
 			}
 			else
 			{
-				kdDebug() << "Library \"" << q << "\" is already handled" << endl;
+				kdDebug() << "Library \"" << q << "\" is already in map" << endl;
 			}
 		}
 	}
@@ -296,3 +321,9 @@ void SQ_LibraryHandler::dump() const
 
 	printf("\n\n");
 }
+
+SQ_LIBRARY* SQ_LibraryHandler::latestLibrary()
+{
+	return latest;
+}
+

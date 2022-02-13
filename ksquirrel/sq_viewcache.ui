@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Thumbnail cache</string>
+        <string>Thumbnails' cache</string>
     </property>
     <property name="modal">
         <bool>true</bool>

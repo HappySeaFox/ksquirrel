@@ -144,12 +144,12 @@ sq_glview.o sq_glview.o: sq_glview.cpp /usr/lib/qt3/include/qlayout.h \
   /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
   /usr/lib/qt3/include/qcombobox.h /usr/include/dcopobject.h \
   /usr/include/kdatastream.h sq_glview.h /usr/lib/qt3/include/qvbox.h \
-  /usr/lib/qt3/include/qhbox.h sq_glwidget.h /usr/include/kurl.h \
-  /usr/lib/qt3/include/qgl.h /usr/lib/qt3/include/qglcolormap.h \
-  /usr/X11R6/include/GL/gl.h /usr/X11R6/include/GL/glext.h \
-  /usr/X11R6/include/GL/glu.h /usr/lib/qt3/include/qcursor.h \
-  /usr/lib/qt3/include/qfileinfo.h /usr/lib/qt3/include/qfile.h \
-  /usr/lib/qt3/include/qdatetime.h /usr/lib/qt3/include/qimage.h defs.h \
+  /usr/lib/qt3/include/qhbox.h sq_glwidget.h /usr/lib/qt3/include/qgl.h \
+  /usr/lib/qt3/include/qglcolormap.h /usr/X11R6/include/GL/gl.h \
+  /usr/X11R6/include/GL/glext.h /usr/X11R6/include/GL/glu.h \
+  /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qfileinfo.h \
+  /usr/lib/qt3/include/qfile.h /usr/lib/qt3/include/qdatetime.h \
+  /usr/lib/qt3/include/qimage.h /usr/include/kurl.h defs.h \
   /usr/include/linux/types.h /usr/include/linux/posix_types.h \
   /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
   /usr/include/asm/types.h /usr/include/linux/compiler.h \
@@ -645,8 +645,6 @@ sq_glview.h:
 
 sq_glwidget.h:
 
-/usr/include/kurl.h:
-
 /usr/lib/qt3/include/qgl.h:
 
 /usr/lib/qt3/include/qglcolormap.h:
@@ -666,6 +664,8 @@ sq_glwidget.h:
 /usr/lib/qt3/include/qdatetime.h:
 
 /usr/lib/qt3/include/qimage.h:
+
+/usr/include/kurl.h:
 
 defs.h:
 

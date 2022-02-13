@@ -1,0 +1,93 @@
+/****************************************************************************
+** ui.h extension file, included from the uic-generated form implementation.
+**
+** If you wish to add, delete or rename functions or slots use
+** Qt Designer which will update this file, preserving your code. Create an
+** init() function in place of a constructor, and a destroy() function in
+** place of a destructor.
+*****************************************************************************/
+void SQ_AlbumOptionsDialog::init()
+{
+    buttonGroupType->setButton(sqConfig->readNumEntry("Album", "type", 0));
+    kURLFile->setURL(sqConfig->readEntry("Album", "url", QString::null));
+    checkPreview->setChecked(sqConfig->readBoolEntry("Album", "preview", true));
+    checkDirInfo->setChecked(sqConfig->readBoolEntry("Album", "dir_info", true));
+    checkSrc->setChecked(sqConfig->readBoolEntry("Album", "copy_src", false));
+    spinQual->setValue(sqConfig->readNumEntry("Album", "qual", 0));
+
+    KFile::Mode mode = static_cast<KFile::Mode>(KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
+    kURLFile->setMode(mode);
+    
+    connect(sqAlbum, SIGNAL(advance(int)), kProgress1, SLOT(advance(int)));
+    connect(sqAlbum, SIGNAL(addInfo(const QString &)), this, SLOT(addInfo(const QString &)));
+    connect(this, SIGNAL(generate(const KFileItemList *,SQ_AlbumOptions&)), 
+	    sqAlbum, SLOT(slotGenerate(const KFileItemList *,SQ_AlbumOptions&)));
+    
+    comboFormats->insertStringList(QImage::outputFormatList());
+    comboFormats->setCurrentText(sqConfig->readEntry("Album", "format", "PNG"));
+    
+    pixmapLabel1->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/album/html_simple.png")));
+    pixmapLabel2->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/album/html_simple2.png")));
+    pixmapLabel3->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/album/html_detailed.png")));
+    
+    widgetStack1->raiseWidget(sqConfig->readNumEntry("Album", "type", 0));
+    pushPreview->setPixmap(KGlobal::iconLoader()->loadIcon("konqueror", KIcon::Desktop, 16));
+    last = "";
+}
+
+void SQ_AlbumOptionsDialog::slotGenerate()
+{
+    KFileItemList *items = const_cast<KFileItemList*>(sqWStack->items());
+    setProgressParams(items->count());
+
+    QString file = kURLFile->url();
+    
+    last = file;
+    
+    if(file.isEmpty())
+	return;
+
+    QFileInfo ff(file);
+    opt.preview = checkPreview->isChecked();
+    opt.dir_info = checkDirInfo->isChecked();
+    opt.copy_src = checkSrc->isChecked();
+    opt.album = buttonGroupType->id(buttonGroupType->selected());
+    opt.root = ff.dirPath(true);
+    opt.file = ff.fileName();
+    opt.format = comboFormats->currentText();
+    opt.qual = spinQual->value();
+	
+    sqConfig->setGroup("Album");
+    sqConfig->writeEntry("type", opt.album);
+    sqConfig->writeEntry("url", file);
+    sqConfig->writeEntry("preview", opt.preview);
+    sqConfig->writeEntry("copy_src", opt.copy_src);
+    sqConfig->writeEntry("dir_info", opt.dir_info);
+    sqConfig->writeEntry("format", opt.format);
+    sqConfig->writeEntry("qual", opt.qual);
+
+    pushOK->setEnabled(false);
+    qApp->processEvents();
+    emit generate(items, opt);
+    pushOK->setEnabled(true);
+}
+
+void SQ_AlbumOptionsDialog::setProgressParams(int totalSteps)
+{
+    kProgress1->setTotalSteps(totalSteps);
+    kProgress1->setProgress(0);
+    kText->clear();
+}
+
+void SQ_AlbumOptionsDialog::addInfo(const QString &text)
+{
+    kText->insert(text);
+}
+
+void SQ_AlbumOptionsDialog::slotPreview()
+{
+    if(last.isEmpty())
+	return;
+    
+    kapp->invokeBrowser(last);
+}

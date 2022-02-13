@@ -17,6 +17,7 @@
 
 #include <qstringlist.h>
 #include <qimage.h>
+#include <qfile.h>
 
 #include <kdebug.h>
 
@@ -124,7 +125,7 @@ bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
 
 QString SQ_Dir::getAbsPath(const QString relpath)
 {
-	return m_root + relpath;
+	return m_root + "/" + relpath;
 }
 
 bool SQ_Dir::updateNeeded(const QString &file)
@@ -133,3 +134,11 @@ bool SQ_Dir::updateNeeded(const QString &file)
 
 	return fpath.lastModified() > ffullpath.lastModified();
 }
+
+void SQ_Dir::removeFile(const QString &file)
+{
+	QString full = getAbsPath(file);
+
+	QFile::remove(full);
+}
+

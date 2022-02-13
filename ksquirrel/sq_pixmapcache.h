@@ -41,6 +41,7 @@ class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
 		void clear();
 		QString root() const;
 		void removeEntry(const QString &key);
+		void removeEntryFull(const QString &key);
 
 		static int entrySize(const SQ_Thumbnail &t);
 

@@ -21,9 +21,9 @@
 
 #include <kaboutdata.h>
 
-static const char *description = "KSquirrel - image viewer for KDE";
+static const char *description = I18N_NOOP("KSquirrel - image viewer for KDE");
 
-#define SQ_VERSION "0.5.0-pre4"
+#define SQ_VERSION "0.5.0"
 
 static KAboutData aboutData(
 			"ksquirrel", 
@@ -31,7 +31,7 @@ static KAboutData aboutData(
 			SQ_VERSION, 
 			description,
 			KAboutData::License_GPL,
-			"(c) 2004, Baryshev Dmitry", 
+			"(c) 2004,2005 Baryshev Dmitry", 
 			QString::null,
 			"http://ksquirrel.sourceforge.net",
 			QString::null);

@@ -129,6 +129,8 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 	if(i->isDir() && sqConfig->readBoolEntry("Fileview", "disable_dirs", false))
 		return;
 
+	static QPixmap dirPix = sqLoader->loadIcon("folder", KIcon::Desktop, 48);
+
 	bool disable_mime = sqConfig->readBoolEntry("Thumbnails", "disable_mime", true);
 	const QPixmap mimeall = sqLoader->loadIcon("unknown", KIcon::Desktop, (sqThumbSize->isExtended())?
 			sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize());
@@ -148,8 +150,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 
 	if(i->isDir())
 	{
-		QPixmap itemPix = i->pixmap(pixelSize);
-		painter.drawPixmap((pixelSize-itemPix.width())/2, (pixelSize-itemPix.height())/2, itemPix);
+		painter.drawPixmap((pixelSize-dirPix.width())/2, (pixelSize-dirPix.height())/2, dirPix);
 	}
 	else
 	{

@@ -142,7 +142,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		KStatusBar				*sbar;
 		SQ_LibraryListener		*libl;
 		SQ_SystemTray			*tray;
-		QLabel					*dirInfo, *fileIcon, *fileName, *decodedStatus, *decodedIcon, *GLzoom, *GLangle, *GLcoord, *GLloaded;
+		QLabel					*dirInfo, *fileIcon, *fileName, *decodedStatus, *decodedIcon, *GLzoom, *GLangle, *GLcoord, *GLloaded, *GLcurrentFrame, *GLcurrentFile;
 		QHBox					*decodedBox;
 		SQ_ExternalTool			*extool;
 		SQ_TreeView			*ptree;
@@ -171,7 +171,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		QStringList				strlibFound;
 		int						old_id;
 		QWidgetStack			*viewBrowser;
-		bool 					first_time, hastree, old_disable, old_ext, m_urlbox, m_sep;
+		bool 					first_time, hastree, old_disable, old_ext, m_urlbox, m_sep, old_marks;
 		QVBox					*mainBox, *b2;
 		KBookmarkMenu		*bookmarkMenu;
 		QValueList<int>		mainSizes;
@@ -204,6 +204,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
 #define	sqSBGLAngle		(KSquirrel::App->GLangle)
 #define	sqSBGLCoord		(KSquirrel::App->GLcoord)
 #define	sqSBLoaded			(KSquirrel::App->GLloaded)
+#define	sqSBFrame			(KSquirrel::App->GLcurrentFrame)
+#define	sqSBFile				(KSquirrel::App->GLcurrentFile)
 
 #define	sqGLView			(KSquirrel::App->gl_view)
 #define	sqGLWidget			(KSquirrel::App->gl_view->gl)

@@ -1,3 +1,25 @@
+ksquirrel-0.5.0(final)
+******************************************************************
+
+* added nice tickmarks around the image (press K to toggle)
+* Middle click (or 'M') for context menu
+* F5 to recreate selected thumbnails
+
+* fixed little repainting problem
+* fixed startup problem, if /usr/lib/squirrel doesn't exist.
+* fixed problem with making image window built-in/separate
+* fixed small problem with decoding corrupted files
+
+ksquirrel-libs:
+* GIF decoder is much better now (fixed problems with transparency)
+* added X cursors
+* added PSD(RGB,CMYK,Grayscale,Indexed)
+* added FLI Animation
+* added thumbnail generator for FLI, GIF
+* small fixes in PNM, BMP libraries
+
+
+
 ksquirrel-0.5.0-preview4
 ******************************************************************
 
@@ -12,8 +34,7 @@ ksquirrel-libs:
 * GIF (beta, including animated)
 * interlaced PNG's
 * fixed random crushing on some PNGs
-* about 15 formats are done.
-* visit http://ksquirrel.sf.net/development.php
+* about 15 formats are done
 
 other:
 * some interface improvements
@@ -21,9 +42,10 @@ other:
 * new 'fullscreen' method (KDE-related)
 * "Quick Browser" now can be moved and resized
 * other small fixes
-* decoding is now a little bit faster
 
->>> ksquirrel-libs-0.5.0-pre3 and pre4 ARE NOT compatible!
+>>> Remember that ksquirrel-libs-0.5.0-pre3 and pre4 ARE NOT compatible!
+
+
 
 ksquirrel-0.5.0-preview3 for KDE 3.2 and JPEG library for preview3
 ******************************************************************
@@ -36,7 +58,7 @@ Please be patient - preview3 contains only one library, anyway, it's just a prev
 * fixed awful memory leak, shame on myself !! =)
 * moved to JPEG thumbnails (remove old ones from ~/.ksquirrel/thumbnails !)
 * detecting images by content (like Trolltech's QImage)
-* removed "Look like ..." - unusable stuff
+* removed "Look like ..." - useless stuff
 * please check README for new keyboard shortcuts.
 
 >> other:

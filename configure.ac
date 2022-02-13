@@ -1,4 +1,4 @@
-AC_INIT([ksquirrel], [0.5.0-pre4], [squirrel-sf@yandex.ru])
+AC_INIT([ksquirrel], [0.5.0], [squirrel-sf@yandex.ru])
 AC_GNU_SOURCE
 #AC_CONFIG_SRCDIR([config.h.in])
 #AM_INIT_AUTOMAKE([foreign])
@@ -11,7 +11,7 @@ unset CDPATH
 AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.5.0-pre4)
+AM_INIT_AUTOMAKE(ksquirrel, 0.5.0)
 
 KDE_SET_PREFIX
 
@@ -19,6 +19,7 @@ AM_CONFIG_HEADER(config.h)
 
 AC_ENABLE_SHARED(yes)
 AC_ENABLE_STATIC(no)
+KDE_PROG_LIBTOOL
 
 dnl for NLS support. Call them in this order!
 dnl WITH_NLS is for the po files
@@ -34,7 +35,7 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-KDE_PROG_LIBTOOL
+AC_PROG_RANLIB
 AC_PATH_PROG([PERL], [perl])
 
 AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h) and GLU (GL/glu.h) headers to be installed."))
@@ -66,6 +67,7 @@ AC_CHECK_FUNC([glVertex2f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 AC_CHECK_FUNC([glLoadMatrixf], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 
 # Checks for header files.
 AC_PATH_X
@@ -90,6 +92,7 @@ KDE_CREATE_SUBDIRSLIST
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([ksquirrel/Makefile])
 AC_CONFIG_FILES([pics/Makefile])
+AC_CONFIG_FILES([pics/menu/Makefile])
 AC_CONFIG_FILES([po/Makefile])
 
 AC_OUTPUT

@@ -27,6 +27,7 @@
 class	QTimer;
 
 class	KAction;
+class	KToggleAction;
 class	KActionCollection;
 
 class	SQ_DirOperatorBase;
@@ -97,6 +98,7 @@ class SQ_WidgetStack : public QWidgetStack
 
 	public:
 		KAction				*pABack, *pAForw, *pAUp, *pADelete, *pAHome, *pAProp, *pARefresh, *pAMkDir, *pARecreate;
+		KToggleAction		*pAHidden;
 
 	private:
 		SQ_DirOperator	*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail, *pDirOperatorThumb;

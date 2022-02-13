@@ -42,6 +42,7 @@ class SQ_Dir : public QDir
 		void saveThumbnail(const QString &path, SQ_Thumbnail &thumb);
 		bool fileExists(const QString &file, QString &file);
 		bool updateNeeded(const QString &file);
+		void removeFile(const QString &file);
 
 	private:
 		QString m_root;

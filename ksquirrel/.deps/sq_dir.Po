@@ -114,9 +114,9 @@ sq_dir.o sq_dir.o: sq_dir.cpp /usr/lib/qt3/include/qstringlist.h \
   /usr/lib/qt3/include/qwindowdefs.h /usr/lib/qt3/include/qobjectdefs.h \
   /usr/lib/qt3/include/qnamespace.h /usr/lib/qt3/include/qrect.h \
   /usr/lib/qt3/include/qsize.h /usr/lib/qt3/include/qpoint.h \
-  /usr/lib/qt3/include/qcolor.h /usr/include/kdebug.h sq_dir.h \
-  /usr/lib/qt3/include/qdir.h /usr/lib/qt3/include/qfileinfo.h \
-  /usr/lib/qt3/include/qfile.h /usr/lib/qt3/include/qdatetime.h \
+  /usr/lib/qt3/include/qcolor.h /usr/lib/qt3/include/qfile.h \
+  /usr/include/kdebug.h sq_dir.h /usr/lib/qt3/include/qdir.h \
+  /usr/lib/qt3/include/qfileinfo.h /usr/lib/qt3/include/qdatetime.h \
   sq_thumbnailinfo.h
 
 /usr/lib/qt3/include/qstringlist.h:
@@ -479,6 +479,8 @@ sq_dir.o sq_dir.o: sq_dir.cpp /usr/lib/qt3/include/qstringlist.h \
 
 /usr/lib/qt3/include/qcolor.h:
 
+/usr/lib/qt3/include/qfile.h:
+
 /usr/include/kdebug.h:
 
 sq_dir.h:
@@ -486,8 +488,6 @@ sq_dir.h:
 /usr/lib/qt3/include/qdir.h:
 
 /usr/lib/qt3/include/qfileinfo.h:
-
-/usr/lib/qt3/include/qfile.h:
 
 /usr/lib/qt3/include/qdatetime.h:
 

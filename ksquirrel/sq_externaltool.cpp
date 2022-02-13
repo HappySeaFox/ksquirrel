@@ -27,7 +27,7 @@
 
 SQ_ExternalTool::SQ_ExternalTool() : QObject(), QValueVector<SQ_EXT_TOOL>()
 {
-	menu = new KPopupMenu;
+	menu = new KPopupMenu(0L, "External tools");
 
 	connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
 }
@@ -88,6 +88,10 @@ void SQ_ExternalTool::writeEntries()
 {
 	int ncount = count(), cur = 1, i;
 	QString num;
+
+	sqConfig->deleteGroup("External tool pixmap");
+	sqConfig->deleteGroup("External tool name");
+	sqConfig->deleteGroup("External tool program");
 
 	for(i = 0;i < ncount;i++,cur++)
 	{

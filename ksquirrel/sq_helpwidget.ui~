@@ -1,0 +1,176 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SQ_HelpWidget</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_HelpWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>501</width>
+            <height>394</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>3</hsizetype>
+            <vsizetype>3</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="caption">
+        <string>Hotkeys</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>false</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="spacing">
+            <number>0</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabbb</cstring>
+            </property>
+            <property name="focusPolicy">
+                <enum>NoFocus</enum>
+            </property>
+            <property name="tabPosition">
+                <enum>Bottom</enum>
+            </property>
+            <property name="tabShape">
+                <enum>Triangular</enum>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Widget8</cstring>
+                </property>
+                <attribute name="title">
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Esc,X,Return&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;close&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Q&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Quick Browser&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;F&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fullscreen&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;T&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;[&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;]&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Z&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show 'Zoom' menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;S&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide statusbar&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;/&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show this help&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Widget9</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Filing</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Space&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;next image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Backspace&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;previous image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Home&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;first image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;End&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;last image&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Moving</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Left Arrow, Right Arrow,&lt;br&gt;Up Arrow, Down Arrow&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;move the image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Ctrl + Left Arrow&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;rotate left&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Ctrl + Right Arrow&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;rotate right&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Ctrl + Up/Down Arrow&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;rotate for 180 degrees up/down&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Shift + Up/Down Arrow&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;rotate for 1 degree up/down&lt;/td&gt;&lt;/tr&gt;&lt;/table&lt;/p&gt;</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Zoom</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;+/-&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;zoom Nx&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Ctrl + +/-&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;zoom 2x/0.5x&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Scroll&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;load next/prev file OR zoom+/zoom-&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Shift + Scroll&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;zoom+/zoom-&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Ctrl + Scroll&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;zoom+ 2x/zoom- 2x&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;1..9&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;zoom 1..9x&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;0&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;zoom 10x&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;comma&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fit width&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;period&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fit height&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;*&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fit image&lt;/td&gt;&lt;/tr&gt;&lt;/table&lt;/p&gt;</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Current image</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;V&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip vertically&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;H&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip horizontally&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;R, Middle click&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;reset&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;P&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;image properties&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;L&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;"Ignore, if the image is less than window"&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;I&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;menu with images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;A&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;stop/start animation&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;B&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing background for transparent images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;K&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing tickmarks&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;E&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;show menu with external tools&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F1&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;first image from the miltipaged image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F2&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;previous&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F3&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;next&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F4&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;last&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

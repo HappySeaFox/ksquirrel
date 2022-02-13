@@ -29,7 +29,7 @@
 
 static KCmdLineOptions options[] =
 {
-	{"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
+	{I18N_NOOP("+[file or folder to open]"), I18N_NOOP("File or folder to be opened at startup."), 0},
 	{"l", I18N_NOOP("Print found libraries and exit."), 0},
 	KCmdLineLastOption
 };         
@@ -40,10 +40,10 @@ int main(int argc, char *argv[])
 	SQ_HLOptions		*high;
 
 	aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
-	aboutData.addCredit("NightGoblin", "Translation help", 0, "http://nightgoblin.info");
-	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org");
-	aboutData.addCredit("GameDev forum at", 0, 0, "http://gamedev.ru");
-	aboutData.addCredit("A great description of various file formats at", 0, 0, "http://www.wotsit.org");
+	aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
+	aboutData.addCredit(I18N_NOOP("OpenGL forum at"), 0, 0, "http://opengl.org");
+	aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
+	aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
 
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);

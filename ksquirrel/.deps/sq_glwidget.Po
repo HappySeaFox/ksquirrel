@@ -139,21 +139,22 @@ sq_glwidget.o sq_glwidget.o: sq_glwidget.cpp \
   /usr/lib/qt3/include/qkeysequence.h /usr/lib/qt3/include/qiconset.h \
   /usr/lib/qt3/include/qpainter.h /usr/lib/qt3/include/qpen.h \
   /usr/lib/qt3/include/qpointarray.h /usr/lib/qt3/include/qwmatrix.h \
-  /usr/include/kaction.h /usr/lib/qt3/include/qguardedptr.h \
-  /usr/include/kguiitem.h /usr/include/kicontheme.h \
-  /usr/include/kglobal.h /usr/include/kdemacros.h \
-  /usr/include/kinstance.h /usr/include/kshortcut.h \
-  /usr/include/kstdaction.h /usr/include/kactioncollection.h \
-  /usr/include/kactionclasses.h /usr/include/kcursor.h \
-  /usr/include/kstandarddirs.h /usr/lib/qt3/include/qdict.h \
-  /usr/include/kstatusbar.h /usr/lib/qt3/include/qstatusbar.h \
-  /usr/lib/qt3/include/qintdict.h /usr/include/kfiledialog.h \
-  /usr/include/kdialogbase.h /usr/include/kdialog.h \
-  /usr/include/kjanuswidget.h /usr/lib/qt3/include/qsplitter.h \
-  /usr/include/klistbox.h /usr/lib/qt3/include/qlistbox.h \
-  /usr/lib/qt3/include/qscrollview.h /usr/lib/qt3/include/qscrollbar.h \
-  /usr/lib/qt3/include/qrangecontrol.h /usr/include/kstdguiitem.h \
-  /usr/include/kfile.h /usr/lib/qt3/include/qdir.h /usr/include/kurl.h \
+  /usr/lib/qt3/include/qsignalmapper.h /usr/include/kaction.h \
+  /usr/lib/qt3/include/qguardedptr.h /usr/include/kguiitem.h \
+  /usr/include/kicontheme.h /usr/include/kglobal.h \
+  /usr/include/kdemacros.h /usr/include/kinstance.h \
+  /usr/include/kshortcut.h /usr/include/kstdaction.h \
+  /usr/include/kactioncollection.h /usr/include/kactionclasses.h \
+  /usr/include/kcursor.h /usr/include/kstandarddirs.h \
+  /usr/lib/qt3/include/qdict.h /usr/include/kstatusbar.h \
+  /usr/lib/qt3/include/qstatusbar.h /usr/lib/qt3/include/qintdict.h \
+  /usr/include/kfiledialog.h /usr/include/kdialogbase.h \
+  /usr/include/kdialog.h /usr/include/kjanuswidget.h \
+  /usr/lib/qt3/include/qsplitter.h /usr/include/klistbox.h \
+  /usr/lib/qt3/include/qlistbox.h /usr/lib/qt3/include/qscrollview.h \
+  /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
+  /usr/include/kstdguiitem.h /usr/include/kfile.h \
+  /usr/lib/qt3/include/qdir.h /usr/include/kurl.h \
   /usr/include/kmimetype.h /usr/include/sys/stat.h \
   /usr/include/bits/stat.h /usr/include/ksycocatype.h \
   /usr/include/kservicetype.h /usr/include/ksycocaentry.h \
@@ -166,15 +167,21 @@ sq_glwidget.o sq_glwidget.o: sq_glwidget.cpp \
   /usr/include/kpopupmenu.h /usr/lib/qt3/include/qpopupmenu.h \
   /usr/lib/qt3/include/qmenudata.h /usr/lib/qt3/include/qsignal.h \
   /usr/include/kpixmapeffect.h /usr/include/kpixmap.h \
-  /usr/include/ktoolbar.h /usr/lib/qt3/include/qtoolbar.h \
-  /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmainwindow.h \
-  /usr/lib/qt3/include/qcombobox.h /usr/include/klocale.h \
-  /usr/include/kstringhandler.h /usr/lib/qt3/include/qregexp.h \
-  /usr/include/kdebug.h ksquirrel.h /usr/include/kmainwindow.h \
+  /usr/include/klocale.h /usr/include/kstringhandler.h \
+  /usr/lib/qt3/include/qregexp.h /usr/include/kdebug.h \
+  /usr/include/kimageeffect.h ksquirrel.h /usr/include/kmainwindow.h \
   /usr/include/kxmlguifactory.h /usr/lib/qt3/include/qdom.h \
   /usr/include/kxmlguiclient.h /usr/include/kxmlguibuilder.h \
-  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
-  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_externaltool.h \
+  /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qtoolbar.h \
+  /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmetaobject.h \
+  /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
+  /usr/lib/qt3/include/qcombobox.h /usr/include/dcopobject.h \
+  /usr/include/kdatastream.h sq_diroperator.h sq_diroperatorbase.h \
+  /usr/include/kfileview.h /usr/include/kfileitem.h \
+  /usr/include/kfilemetainfo.h /usr/include/kdiroperator.h \
+  /usr/lib/qt3/include/qptrstack.h /usr/include/kcompletion.h \
+  /usr/include/kglobalsettings.h /usr/include/ksortablevaluelist.h \
+  /usr/include/kdirlister.h /usr/include/kdirnotify.h sq_externaltool.h \
   /usr/lib/qt3/include/qvaluevector.h /usr/include/c++/3.3.2/vector \
   /usr/include/c++/3.3.2/bits/stl_vector.h \
   /usr/include/c++/3.3.2/bits/stl_bvector.h \
@@ -184,14 +191,9 @@ sq_glwidget.o sq_glwidget.o: sq_glwidget.cpp \
   /usr/include/asm/types.h /usr/include/linux/compiler.h \
   /usr/include/linux/compiler-gcc3.h /usr/include/linux/compiler-gcc.h \
   sq_config.h sq_widgetstack.h /usr/lib/qt3/include/qwidgetstack.h \
-  /usr/lib/qt3/include/qptrdict.h /usr/include/kfileitem.h \
-  /usr/include/kfilemetainfo.h sq_quickbrowser.h \
+  /usr/lib/qt3/include/qptrdict.h sq_quickbrowser.h \
   /usr/lib/qt3/include/qvbox.h /usr/lib/qt3/include/qhbox.h \
-  /usr/lib/qt3/include/qsizegrip.h sq_diroperator.h sq_diroperatorbase.h \
-  /usr/include/kfileview.h /usr/include/kdiroperator.h \
-  /usr/lib/qt3/include/qptrstack.h /usr/include/kcompletion.h \
-  /usr/include/kglobalsettings.h /usr/include/ksortablevaluelist.h \
-  /usr/include/kdirlister.h /usr/include/kdirnotify.h sq_fileiconview.h \
+  /usr/lib/qt3/include/qsizegrip.h sq_fileiconview.h \
   /usr/include/kfileiconview.h /usr/include/kiconview.h \
   /usr/lib/qt3/include/qiconview.h /usr/lib/qt3/include/qbitmap.h \
   /usr/lib/qt3/include/qpicture.h /usr/lib/qt3/include/qbuffer.h \
@@ -646,6 +648,8 @@ sq_glwidget.o sq_glwidget.o: sq_glwidget.cpp \
 
 /usr/lib/qt3/include/qwmatrix.h:
 
+/usr/lib/qt3/include/qsignalmapper.h:
+
 /usr/include/kaction.h:
 
 /usr/lib/qt3/include/qguardedptr.h:
@@ -756,16 +760,6 @@ sq_glwidget.o sq_glwidget.o: sq_glwidget.cpp \
 
 /usr/include/kpixmap.h:
 
-/usr/include/ktoolbar.h:
-
-/usr/lib/qt3/include/qtoolbar.h:
-
-/usr/lib/qt3/include/qdockwindow.h:
-
-/usr/lib/qt3/include/qmainwindow.h:
-
-/usr/lib/qt3/include/qcombobox.h:
-
 /usr/include/klocale.h:
 
 /usr/include/kstringhandler.h:
@@ -773,6 +767,8 @@ sq_glwidget.o sq_glwidget.o: sq_glwidget.cpp \
 /usr/lib/qt3/include/qregexp.h:
 
 /usr/include/kdebug.h:
+
+/usr/include/kimageeffect.h:
 
 ksquirrel.h:
 
@@ -786,13 +782,47 @@ ksquirrel.h:
 
 /usr/include/kxmlguibuilder.h:
 
+/usr/lib/qt3/include/qmainwindow.h:
+
+/usr/lib/qt3/include/qtoolbar.h:
+
+/usr/lib/qt3/include/qdockwindow.h:
+
 /usr/lib/qt3/include/qmetaobject.h:
 
 /usr/lib/qt3/include/qconnection.h:
 
+/usr/include/ktoolbar.h:
+
+/usr/lib/qt3/include/qcombobox.h:
+
 /usr/include/dcopobject.h:
 
 /usr/include/kdatastream.h:
+
+sq_diroperator.h:
+
+sq_diroperatorbase.h:
+
+/usr/include/kfileview.h:
+
+/usr/include/kfileitem.h:
+
+/usr/include/kfilemetainfo.h:
+
+/usr/include/kdiroperator.h:
+
+/usr/lib/qt3/include/qptrstack.h:
+
+/usr/include/kcompletion.h:
+
+/usr/include/kglobalsettings.h:
+
+/usr/include/ksortablevaluelist.h:
+
+/usr/include/kdirlister.h:
+
+/usr/include/kdirnotify.h:
 
 sq_externaltool.h:
 
@@ -834,10 +864,6 @@ sq_widgetstack.h:
 
 /usr/lib/qt3/include/qptrdict.h:
 
-/usr/include/kfileitem.h:
-
-/usr/include/kfilemetainfo.h:
-
 sq_quickbrowser.h:
 
 /usr/lib/qt3/include/qvbox.h:
@@ -845,26 +871,6 @@ sq_quickbrowser.h:
 /usr/lib/qt3/include/qhbox.h:
 
 /usr/lib/qt3/include/qsizegrip.h:
-
-sq_diroperator.h:
-
-sq_diroperatorbase.h:
-
-/usr/include/kfileview.h:
-
-/usr/include/kdiroperator.h:
-
-/usr/lib/qt3/include/qptrstack.h:
-
-/usr/include/kcompletion.h:
-
-/usr/include/kglobalsettings.h:
-
-/usr/include/ksortablevaluelist.h:
-
-/usr/include/kdirlister.h:
-
-/usr/include/kdirnotify.h:
 
 sq_fileiconview.h:
 

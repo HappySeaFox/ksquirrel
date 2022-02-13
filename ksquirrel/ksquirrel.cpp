@@ -120,8 +120,9 @@ KSquirrel::KSquirrel(SQ_HLOptions *HL_Options, QWidget *parent, const char *name
 	sqLibUpdater = new SQ_LibraryListener;
 
 	sqLibUpdater->setAutoErrorHandlingEnabled(false, 0L);
+
+	connect(sqLibUpdater, SIGNAL(finishedInit()), this, SLOT(slotContinueLoading()));
 	
-	connect(sqLibUpdater, SIGNAL(finishedInit()), SLOT(slotContinueLoading()));
 	slotRescan();
 }
 
@@ -140,6 +141,7 @@ void KSquirrel::slotOptions()
 
 	old_disable = sqConfig->readBoolEntry("Fileview", "disable_dirs", false);
 	old_ext = sqConfig->readBoolEntry("Thumbnails", "extended", false);
+	old_marks = sqConfig->readBoolEntry("GL view", "marks", true);
 
 	if(optd.start() == QDialog::Accepted)
 		applyDefaultSettings();
@@ -222,16 +224,23 @@ void KSquirrel::initFilterMenu()
 	actionFilterMenu->clear();
 	int id, Id = old_id;
 	bool both = sqConfig->readBoolEntry("Filters", "menuitem both", true);
+	QStringList quickInfo;
 
-	libFilters = sqLibHandler->allFilters();
+	sqLibHandler->allFilters(libFilters, quickInfo);
+
 	QValueList<QString>::iterator BEGIN = libFilters.begin();
 	QValueList<QString>::iterator END = libFilters.end();
+	QValueList<QString>::iterator BEGIN1 = quickInfo.begin();
 
-	actionFilterMenu->insertTitle(i18n("Library's filters"));
+	actionFilterMenu->insertTitle(i18n("Libraries' filters"));
 
-	for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
+	for(QValueList<QString>::iterator it = BEGIN, it1 = BEGIN1;it != END;++it, ++it1)
 	{
-		id = actionFilterMenu->insertItem(*it);
+		if(both)
+			id = actionFilterMenu->insertItem(*it1 + " (" + *it + ")");
+		else
+			id = actionFilterMenu->insertItem(*it1);
+
 		actionFilterMenu->setItemParameter(id, i++);
 
 		if(last == *it && !last.isEmpty())
@@ -317,10 +326,10 @@ void KSquirrel::createWidgets(int createFirst)
 
 	mainBox = new QVBox(this); Q_CHECK_PTR(mainBox);
 	mainBox->resize(size());
+	menubar = new KMenuBar(mainBox); Q_CHECK_PTR(menubar);
 
 	viewBrowser = new QWidgetStack(mainBox, QString::fromLatin1("SQ_BROWSER_WIDGET_STACK")); Q_CHECK_PTR(viewBrowser);
 	QVBox *b1 = new QVBox(viewBrowser); Q_CHECK_PTR(b1);
-	menubar = new KMenuBar(b1); Q_CHECK_PTR(menubar);
 	tools = new KToolBar(b1); Q_CHECK_PTR(tools);
 
 	pTLocation = new SQ_LocationToolbar(b1, QString::fromLatin1("Location toolbar")); Q_CHECK_PTR(pTLocation);
@@ -415,6 +424,13 @@ void KSquirrel::createStatusBar(KStatusBar *bar)
 	sqSBGLAngle = new QLabel(QString::fromLatin1("----"), 0);
 	sqSBGLCoord = new QLabel(QString::fromLatin1("----"), 0);
 	sqSBLoaded = new QLabel(QString::fromLatin1("----"), 0);
+	sqSBFrame = new QLabel(QString::fromLatin1("0/0"), 0);
+	sqSBFrame->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs);
+	sqSBFile = new QLabel(0);
+	sqSBFile->setAlignment(Qt::AlignRight | Qt::AlignTop);
+	QFont font = sqSBFile->font();
+	font.setBold(true);
+	sqSBFile->setFont(font);
 }
 
 void KSquirrel::createMenu(KMenuBar *menubar)
@@ -442,6 +458,7 @@ void KSquirrel::createMenu(KMenuBar *menubar)
 	sqWStack->pAForw->plug(pop_file);
 	sqWStack->pAMkDir->plug(pop_file);
 	pop_file->insertSeparator();
+	sqWStack->pAHidden->plug(pop_file);
 	sqWStack->pAProp->plug(pop_file);
 	sqWStack->pADelete->plug(pop_file);
 	pop_file->insertSeparator();
@@ -471,6 +488,7 @@ void KSquirrel::createToolbar(KToolBar *tools)
 	sqWStack->pAUp->plug(tools);
 	sqWStack->pAHome->plug(tools);
 	sqWStack->pAMkDir->plug(tools);
+	sqWStack->pAHidden->plug(tools);
 
 	pARaiseListView->plug(tools);
 	pARaiseIconView->plug(tools);
@@ -681,12 +699,14 @@ void KSquirrel::applyDefaultSettings()
 	bool updateDirs = false, updateThumbs = false;
 
 	sqGLWidget->setClearColor();
-	sqGLWidget->setAcceptDrops(sqConfig->readBoolEntry("GL view", "enable drop", true));
 	sqGLWidget->setZoomFactor(sqConfig->readNumEntry("GL view", "zoom", 25));
 	sqGLWidget->setMoveFactor(sqConfig->readNumEntry("GL view", "move", 5));
 	sqGLWidget->setRotateFactor(sqConfig->readNumEntry("GL view", "angle", 90));
 	sqLibUpdater->setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
 	sqThumbSize->setExtended(sqConfig->readBoolEntry("Thumbnails", "extended", false));
+
+	if(old_marks != sqConfig->readBoolEntry("GL view", "marks", true))
+		sqGLWidget->updateGLA();
 
 	if(old_disable != sqConfig->readBoolEntry("Fileview", "disable_dirs", false))
 		updateDirs = true;
@@ -721,16 +741,26 @@ void KSquirrel::slotFullScreen(bool full)
 {
 	WId id = (sqGLView->isSeparate()) ? sqGLView->winId() : winId();
 	KStatusBar *s = sqGLView->statusbar();
-	
-	if(full)
-		KWin::setState(id, NET::FullScreen);
-	else
-		KWin::clearState(id, NET::FullScreen);
 
 	if(s && sqConfig->readBoolEntry("GL view", "hide_sbar", true))
 	{
 		s->setShown(!full);
 		sqGLWidget->pAStatus->setChecked(!full);
+	}
+
+	if(full)
+	{
+		if(!sqGLView->isSeparate())
+			menubar->hide();
+
+		KWin::setState(id, NET::FullScreen);
+	}
+	else
+	{
+		KWin::clearState(id, NET::FullScreen);
+
+		if(!sqGLView->isSeparate())
+			menubar->show();
 	}
 }
 
@@ -787,9 +817,8 @@ QString KSquirrel::slotRescan()
 	if(!sqLibPrefix.endsWith("/"))
 		sqLibPrefix += "/";
 
-	KURL url;
-	url.setPath(sqLibPrefix);
-
+	KURL url = sqLibPrefix;
+	
 	sqLibHandler->clear();
 	sqLibUpdater->slotOpenURL(url, false, true);
 
@@ -849,6 +878,8 @@ void KSquirrel::slotThumbsHuge()
 
 void KSquirrel::finalActions()
 {
+	hide();
+
 	bool create_splash = (!sqConfig->readBoolEntry("Thumbnails", "dont write", false)) & (!sqCache->empty());
 
 	if(create_splash)
@@ -895,7 +926,7 @@ void KSquirrel::resizeEvent(QResizeEvent *e)
 void KSquirrel::slotContinueLoading()
 {
 	if(sqHighLevel->showLibsAndExit)
-		exit(0);
+	    exit(0);
 
 	disconnect(sqLibUpdater, SIGNAL(finishedInit()), this, SLOT(slotContinueLoading()));
 
@@ -958,6 +989,7 @@ void KSquirrel::slotSeparateGL(bool sep)
 {
 	if(sep)
 	{
+		viewBrowser->raiseWidget(0);
 		sqGLView->reparent(0, QPoint(0,0), false);
 		QRect rect(0,0,320,200);
 		sqGLView->setGeometry(sqConfig->readRectEntry("GL view", "geometry", &rect));

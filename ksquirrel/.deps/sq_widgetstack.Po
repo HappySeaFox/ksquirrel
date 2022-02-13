@@ -190,7 +190,8 @@ sq_widgetstack.o sq_widgetstack.o: sq_widgetstack.cpp \
   /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
   /usr/include/asm/types.h /usr/include/linux/compiler.h \
   /usr/include/linux/compiler-gcc3.h /usr/include/linux/compiler-gcc.h \
-  sq_quickbrowser.h /usr/lib/qt3/include/qsizegrip.h sq_libraryhandler.h \
+  sq_quickbrowser.h /usr/lib/qt3/include/qstatusbar.h \
+  /usr/lib/qt3/include/qsizegrip.h sq_libraryhandler.h \
   /usr/lib/qt3/include/qregexp.h sq_diroperator.h sq_diroperatorbase.h \
   /usr/include/kdiroperator.h /usr/lib/qt3/include/qptrstack.h \
   sq_bookmarkowner.h /usr/include/kbookmarkmanager.h \
@@ -860,6 +861,8 @@ defs.h:
 /usr/include/linux/compiler-gcc.h:
 
 sq_quickbrowser.h:
+
+/usr/lib/qt3/include/qstatusbar.h:
 
 /usr/lib/qt3/include/qsizegrip.h:
 
