@@ -34,12 +34,15 @@ class SQ_Page : public QWidget
 	SQ_DirOperator	*pDirOperator;
 	QToolBar		*pPageToolbar, *pPageToolbar2;
 	KHistoryCombo	*pCurrentURL;
-	QToolButton		*pTBUp, *pTBBack, *pTBForward, *pTBBookmarkAdd, *pFilterButton;
+	QToolButton		*pTBAbstractButton, *pFilterButton;
+	QToolButton		*pTBIconBigger, *pTBIconSmaller, *pTBIconView, *pTBListView, *pTBDetailView;
 	KPopupMenu		*menuIconSize;
 	QPopupMenu		*menuBookmarks;
 	QPixmap		folderPix;
 
 	QValueList<FILTER> *fl;
+	QValueList<int>	*pIconSizeList;
+	int				iCurrentListIndex;
 
 	int menuBookmarksID;
   	int Type;
@@ -67,12 +70,13 @@ class SQ_Page : public QWidget
        void slotProp();
        void slotAddBookmark();
 	void slotCloseTab();
-	void slotSetIconSize16();
-	void slotSetIconSize22();
-	void slotSetIconSize32();
-	void slotSetIconSize48();
-	void slotSetIconSize64();
+	void slotSetIconBigger();
+	void slotSetIconSmaller();	
 	void slotSetURLfromMenu(int);
+
+	void slotPageIcon();
+	void slotPageList();
+	void slotPageDetailed();
 };
 
 #endif

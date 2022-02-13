@@ -153,6 +153,9 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 
 	KDockWidget *mainDock;
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
+	
+	// TODO: option "show content when resizing" [true|false]
+	mainDock->dockManager()->setSplitterOpaqueResize(true);
 
 	QWidget *cw = new QWidget(mainDock);
     

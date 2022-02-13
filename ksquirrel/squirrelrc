@@ -97,4 +97,4 @@ Sort case insensitively=false
 Sort directories first=true
 Sort reversed=false
 View Style=Simple
-ViewMode=LargeRows
+ViewMode=SmallColumns
