@@ -43,7 +43,7 @@ void SQ_PixmapCache::sync()
 	QMapIterator<QString, SQ_Thumbnail> BEGIN = begin();
 	QMapIterator<QString, SQ_Thumbnail>    END = end();
 
-	kdDebug() << "Syncing " << size() << " entries ..." << endl;
+	kdDebug() << "Syncing " << size() << " entries..." << endl;
 
 	for(QMapIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;it++)
 	{
@@ -55,7 +55,7 @@ void SQ_PixmapCache::sync()
 
 void SQ_PixmapCache::syncEntry(const QString &key, SQ_Thumbnail &thumb)
 {
-	kdDebug() << "syncing single entry \"" << key << "\" ..." << endl;
+	kdDebug() << "syncing single entry \"" << key << "\"..." << endl;
 	dir->saveThumbnail(key, thumb);
 }
 

@@ -19,10 +19,6 @@
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <qgl.h>
 #include <qcursor.h>
 #include <qfileinfo.h>
@@ -68,10 +64,7 @@ class fmt_codec_base;
 
 struct Parts;
 struct Part;
-struct MemoryPart256;
-struct MemoryPart128;
-struct MemoryPart64;
-struct MemoryPart32;
+class memoryPart;
 
 class SQ_GLWidget : public QGLWidget
 {
@@ -86,20 +79,6 @@ class SQ_GLWidget : public QGLWidget
 		void setRotateFactor(const GLfloat &newfactor);
 
 		void setClearColor();
-
-		void matrix_move(GLfloat x, GLfloat y);
-		void matrix_move_z(GLfloat z);
-		bool matrix_zoom(GLfloat ratio);
-		void matrix_reset();
-		void matrix_pure_reset();
-		void matrix_push();
-		void matrix_pop();
-		void write_gl_matrix();
-		void matrix_rotate(GLfloat angle);
-		void matrix_rotate2(GLfloat angle);
-		void flip(int, bool = true);
-		void flip_h();
-		void flip_v();
 
 		GLfloat get_zoom() const;
 		GLfloat get_zoom_pc() const;
@@ -116,6 +95,7 @@ class SQ_GLWidget : public QGLWidget
 		void stopAnimation();
 		bool manualBlocked();
 		void matrixChanged();
+		void updateSlideShowButton(bool toggled);
 
 		static SQ_GLWidget* window();
 
@@ -141,7 +121,6 @@ class SQ_GLWidget : public QGLWidget
 		void coordChanged();
 		void setupBits(Parts *p, RGBA *b, int y);
 		void adjustTimeFromMsecs(int &msecs, int &secs);
-		void showFrames(int);
 		void jumpToImage(bool);
 		void nextImage();
 		void prevImage();
@@ -149,19 +128,31 @@ class SQ_GLWidget : public QGLWidget
 		void showExternalTools();
 		void bindMarks(bool &first, bool deleteOld);
 		void createMarks();
-		QColor calculateAdjustedColor(QImage im, QColor rgb, bool color);
 		void deleteWrapper();
 		void updateCurrentFileInfo();
 		void toogleTickmarks();
 		void frameChanged();
 		void internalZoom(const GLfloat &z);
 		void createContextMenu(KPopupMenu *m);
-		void prioritizeTextures(const int &cur, bool newbind = false);
-
+		void findCloserTiles(int w, int h, int &tile1, int &tile2);
 		bool prepare();
 		bool zoomRect(const QRect &r);
+		bool showFrames(int);
+		QColor calculateAdjustedColor(QImage im, QColor rgb, bool color);
 
-		void findCloserTiles(int w, int h, int &tile1, int &tile2);
+		void matrix_move(GLfloat x, GLfloat y);
+		void matrix_move_z(GLfloat z);
+		bool matrix_zoom(GLfloat ratio);
+		void matrix_reset();
+		void matrix_pure_reset();
+		void matrix_push();
+		void matrix_pop();
+		void write_gl_matrix();
+		void matrix_rotate(GLfloat angle);
+		void matrix_rotate2(GLfloat angle);
+		void flip(int, bool = true);
+		void flip_h();
+		void flip_v();
 
 	public slots:
 		void slotStartDecoding(const QString &file, bool = false);
@@ -212,7 +203,7 @@ class SQ_GLWidget : public QGLWidget
 
 		QWidgetStack 			*s;
 
-		SQ_ToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick;
+		SQ_ToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolSlideShow;
 		SQ_ToolButtonPopup		*pAToolZoom, *pAToolImages;
 		SQ_QuickBrowser		*v;
 		SQ_DirOperator 			*quick;
@@ -238,11 +229,8 @@ class SQ_GLWidget : public QGLWidget
 		RGBA				*next;
 		fmt_info				finfo;
 
-		std::vector<Parts>				parts;
-		std::vector<MemoryPart256>	m256;
-		std::vector<MemoryPart128>	m128;
-		std::vector<MemoryPart64>		m64;
-		std::vector<MemoryPart32>		m32;
+		std::vector<Parts>		parts;
+		std::vector<memoryPart *> m32;
 
 		GLfloat 				matrix[12], saved[12];
 		GLfloat				zoomfactor, movefactor, rotatefactor;
@@ -269,39 +257,69 @@ bool SQ_GLWidget::manualBlocked()
 	return blocked_force;
 }
 
-struct MemoryPart256
+class memoryPart
 {
-	MemoryPart256() {}
-	unsigned char part [65536 * sizeof(RGBA)];
+	public:
+		memoryPart();
+		virtual ~memoryPart();
+
+		virtual void create() = 0;
+
+		int    size() const;
+		void del();
+		bool valid() const;
+
+	protected:
+		int m_size;
+
+	public:
+		unsigned char *m_data;
 };
 
-struct MemoryPart128
+class memoryPart32 : public memoryPart
 {
-	MemoryPart128() {}
-	unsigned char part [16384 * sizeof(RGBA)];
+	public:
+		memoryPart32();
+		~memoryPart32();
+
+		virtual void create();
 };
 
-struct MemoryPart64
+class memoryPart64 : public memoryPart
 {
-	MemoryPart64() {}
-	unsigned char part [4096 * sizeof(RGBA)];
+	public:
+		memoryPart64();
+		~memoryPart64();
+
+		virtual void create();
 };
 
-struct MemoryPart32
+class memoryPart128 : public memoryPart
 {
-	MemoryPart32() {}
-	unsigned char part [1024 * sizeof(RGBA)];
+	public:
+		memoryPart128();
+		~memoryPart128();
+
+		virtual void create();
+};
+
+class memoryPart256 : public memoryPart
+{
+	public:
+		memoryPart256();
+		~memoryPart256();
+
+		virtual void create();
 };
 
 struct Part
 {
-	Part() : x1(0), y1(0), x2(0), y2(0), tex(0), list(0), priority(0.0f)
+	Part() : x1(0), y1(0), x2(0), y2(0), tex(0), list(0)
 	{}
 
 	float 			x1, y1, x2, y2;
 	unsigned int	tex;
 	GLuint 		list;
-	GLclampf		priority;
 };
 
 struct Parts

@@ -23,11 +23,14 @@ class SQ_Label : public QWidget
 		SQ_Label(QWidget *parent = 0, const char *name = 0);
 		~SQ_Label();
 
-		void setText(const QString &ntext);
+		void setText(const QString &lt, const QString &rt);
+		void setText(const QString &lt);
+		void setSingle(bool s);
 
 	protected:
 		void paintEvent(QPaintEvent *);
 
 	private:
-		QString text;
+		QString ltext, rtext;
+		bool single;
 };

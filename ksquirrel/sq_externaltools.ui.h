@@ -22,7 +22,7 @@ void SQ_ExternalTools::init()
 		    item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->getToolName(i), SQ_ExternalTool::instance()->getToolCommand(i), SQ_ExternalTool::instance()->getToolPixmap(i));
 		else
 		item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->getToolName(i), SQ_ExternalTool::instance()->getToolCommand(i), SQ_ExternalTool::instance()->getToolPixmap(i));
-		item->setPixmap(0, KSquirrel::loader()->loadIcon(item->text(3), KIcon::Desktop, 16));
+		item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(item->text(3), KIcon::Desktop, 16));
 	itemafter = item;
 
 	    item->setRenameEnabled(1, true);
@@ -32,12 +32,12 @@ void SQ_ExternalTools::init()
 	    listTools->insertItem(item);
 	}
 
-	pushToolUp->setPixmap(KSquirrel::loader()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
-	pushToolDown->setPixmap(KSquirrel::loader()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
-	pushNew->setPixmap(KSquirrel::loader()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
-	pushDelete->setPixmap(KSquirrel::loader()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
-	pushClearAll->setPixmap(KSquirrel::loader()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
-	pushHelp->setPixmap(KSquirrel::loader()->loadIcon("help", KIcon::Desktop, KIcon::SizeSmall));
+	pushToolUp->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
+	pushToolDown->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
+	pushNew->setPixmap(SQ_IconLoader::instance()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
+	pushDelete->setPixmap(SQ_IconLoader::instance()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
+	pushClearAll->setPixmap(SQ_IconLoader::instance()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
+	pushHelp->setPixmap(SQ_IconLoader::instance()->loadIcon("help", KIcon::Desktop, KIcon::SizeSmall));
 
 	listTools->setCurrentItem(listTools->firstChild());
 	listTools->clearSelection();
@@ -130,13 +130,13 @@ void SQ_ExternalTools::slotToolRenameRequest( QListViewItem *item, const QPoint 
 	item->startRename(pos);
     else
     {
-	KIconDialog dialog(KSquirrel::loader());
+	KIconDialog dialog(SQ_IconLoader::instance());
 	dialog.setup(KIcon::Desktop, KIcon::Application, true, 16);
 	QString result = dialog.openDialog();
 	
 	if(result != QString::null)
 	{
-	    item->setPixmap(0, KSquirrel::loader()->loadIcon(result, KIcon::Desktop, 16));
+	    item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(result, KIcon::Desktop, 16));
 	    item->setText(3, result);
 	}
     }

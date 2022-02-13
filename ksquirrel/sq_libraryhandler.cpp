@@ -18,6 +18,7 @@
 #include <qmessagebox.h>
 #include <qlibrary.h>
 #include <qfileinfo.h>
+#include <qfile.h>
 
 #include <kstringhandler.h>
 #include <kdebug.h>
@@ -50,7 +51,7 @@ SQ_LibraryHandler::~SQ_LibraryHandler()
 
 SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 {
-	if(full_path.isEmpty())
+	if(full_path.isEmpty() || !QFile::exists(full_path))
 		return NULL;
 
 	QValueVector<SQ_LIBRARY>::const_iterator	BEGIN = begin();
@@ -228,22 +229,37 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 		{
 			fmt_codec_base *codeK = libtmp.fmt_codec_create();
 
+#ifndef QT_NO_STL
 			QString q = codeK->fmt_quickinfo();
+#else
+			QString q = codeK->fmt_quickinfo().c_str();
+#endif
 
 			if(!alreadyInMap(q))
 			{
+#ifndef QT_NO_STL
 				libtmp.mime_len = convertMimeFromBits(codeK->fmt_pixmap(), mime_str);
+#else
+				libtmp.mime_len = convertMimeFromBits(codeK->fmt_pixmap().c_str(), mime_str);
+#endif
 				libtmp.mime.loadFromData((unsigned char*)mime_str.ascii(), libtmp.mime_len, "PNG");
-				libtmp.filter = codeK->fmt_filter();
 				libtmp.quickinfo = q;
+#ifndef QT_NO_STL
+				libtmp.filter = codeK->fmt_filter();
 				libtmp.version = codeK->fmt_version();
 				libtmp.regexp_str = codeK->fmt_mime();
+#else
+				libtmp.filter = codeK->fmt_filter().c_str();
+				libtmp.version = codeK->fmt_version().c_str();
+				libtmp.regexp_str = codeK->fmt_mime().c_str();
+#endif
 				libtmp.regexp.setPattern(libtmp.regexp_str);
 				libtmp.regexp.setCaseSensitive(true);
 //				libtmp.regexp.setWildcard(true);
 //				libtmp.regexp.setMinimal(true);
 
 				libtmp.writable = codeK->fmt_writable();
+				libtmp.readable = codeK->fmt_readable();
 
 				if(libtmp.writable)
 					codeK->fmt_getwriteoptions(&libtmp.opt);

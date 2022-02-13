@@ -10,8 +10,6 @@
 void SQ_Options::init()
 {
 	int tp;
-	QPixmap pixNF = QPixmap::fromMimeSource(locate("appdata", "images/libs_notfound.png"));
-	pixmapNotFound->setPixmap(pixNF);
     
 	checkMinimize->setChecked(SQ_Config::instance()->readBoolEntry("Main", "minimize to tray", true));
 	checkSync->setChecked(SQ_Config::instance()->readBoolEntry("Main", "sync", true));
@@ -20,7 +18,6 @@ void SQ_Options::init()
 	checkFAMMessage->setChecked(SQ_Config::instance()->readBoolEntry("Libraries", "show dialog", true));
    
 	KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
-	slotShowLibs();
 
 	tp = SQ_Config::instance()->readNumEntry("Fileview", "sync type", 0);
 	buttonGroupSync->setButton(tp);
@@ -74,12 +71,16 @@ void SQ_Options::init()
 	if(SQ_Config::instance()->readBoolEntry("Thumbnails", "dont write", false)) checkNoWriteThumbs->toggle();
 	if(SQ_Config::instance()->readBoolEntry("Thumbnails", "extended", false)) checkExtended->toggle();
 	if(SQ_Config::instance()->readBoolEntry("Thumbnails", "tooltips", false)) checkTooltips->toggle();
-    
-	(void)new SQ_IconListItem(listMain, KSquirrel::loader()->loadIcon("display", KIcon::Desktop, 32), i18n("Main"));	
-	(void)new SQ_IconListItem(listMain, KSquirrel::loader()->loadIcon("folder", KIcon::Desktop, 32), i18n("Filing"));
-	(void)new SQ_IconListItem(listMain, KSquirrel::loader()->loadIcon("images", KIcon::Desktop, 32), i18n("Thumbnails"));
+
+	if(SQ_Config::instance()->readBoolEntry("Edit tools", "preview", false)) checkPreview->toggle();
+	if(SQ_Config::instance()->readBoolEntry("Edit tools", "multi", true)) checkMultiPaged->toggle();
+
+	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, 32), i18n("Main"));	
+	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 32), i18n("Filing"));
+	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, 32), i18n("Thumbnails"));
 	(void)new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
-	(void)new SQ_IconListItem(listMain, KSquirrel::loader()->loadIcon("binary", KIcon::Desktop, 32), i18n("Libraries"));
+	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("binary", KIcon::Desktop, 32), i18n("Libraries"));
+	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("edit", KIcon::Desktop, 32), i18n("Edit tools"));
 	listMain->invalidateHeight();
 	listMain->invalidateWidth();
 	listMain->updateWidth();
@@ -117,34 +118,15 @@ void SQ_Options::init()
 		}   
 	    }
 	}
-}
 
-void SQ_Options::slotShowLibs()
-{
-	QString path;
-	QPixmap pix;
+	fillAltCombo();
 
-	WST->raiseWidget((SQ_LibraryHandler::instance()->count())?0:1);
+	QString lib = SQ_Config::instance()->readEntry("Edit tools", "altlibrary", "Portable Network Graphics");
 
-	tableLib->clear();
-
-	// return anyway
-	if(!SQ_LibraryHandler::instance()->count())
-	    return;
-
-	QValueVector<SQ_LIBRARY>::iterator   BEGIN = SQ_LibraryHandler::instance()->begin();
-	QValueVector<SQ_LIBRARY>::iterator      END = SQ_LibraryHandler::instance()->end();
-
-	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
-	{
-		QFileInfo libfileinfo((*it).libpath);
-		QListViewItem *item = new QListViewItem(tableLib, QString::null, libfileinfo.fileName(), QString((*it).quickinfo), QString((*it).version));
-
-		if(pix.convertFromImage((*it).mime))
-		    item->setPixmap(0, pix);
-
-		tableLib->insertItem(item);
-	}
+	if(SQ_LibraryHandler::instance()->libraryByName(lib))
+	    comboAlt->setCurrentText(lib);
+	else if(comboAlt->count() > 1)
+	    comboAlt->setCurrentItem(1);
 }
 
 int SQ_Options::start()
@@ -154,10 +136,10 @@ int SQ_Options::start()
 	if(result == QDialog::Accepted)
 	{
 		SQ_Config::instance()->setGroup("Fileview");
-		SQ_Config::instance()->writeEntry("set path", buttonGroupSetPath->id(buttonGroupSetPath->selected()));
+		SQ_Config::instance()->writeEntry("set path", buttonGroupSetPath->selectedId());
 		SQ_Config::instance()->writeEntry("custom directory", kURLReqOpenCustom->url());
-		SQ_Config::instance()->writeEntry("sync type", buttonGroupSync->id(buttonGroupSync->selected()));
-		SQ_Config::instance()->writeEntry("click policy", buttonGroupClick->id(buttonGroupClick->selected()));
+		SQ_Config::instance()->writeEntry("sync type", buttonGroupSync->selectedId());
+		SQ_Config::instance()->writeEntry("click policy", buttonGroupClick->selectedId());
 		SQ_Config::instance()->writeEntry("history", checkSaveHistory->isChecked());
 		SQ_Config::instance()->writeEntry("run unknown", checkRunUnknown->isChecked());
 		SQ_Config::instance()->writeEntry("archives", checkSupportAr->isChecked());
@@ -179,12 +161,12 @@ int SQ_Options::start()
 		SQ_Config::instance()->setGroup("GL view");
 		SQ_Config::instance()->writeEntry("GL view background", (kColorGLbackground->color()).name());
 		SQ_Config::instance()->writeEntry("GL view custom texture", custpixmap);
-		SQ_Config::instance()->writeEntry("GL view background type", buttonGroupColor->id(buttonGroupColor->selected()));
-		SQ_Config::instance()->writeEntry("zoom limit", buttonGroupZoomLimit->id(buttonGroupZoomLimit->selected()));
+		SQ_Config::instance()->writeEntry("GL view background type", buttonGroupColor->selectedId());
+		SQ_Config::instance()->writeEntry("zoom limit", buttonGroupZoomLimit->selectedId());
 		SQ_Config::instance()->writeEntry("alpha_bkgr", checkDrawQuads->isChecked());
 		SQ_Config::instance()->writeEntry("marks", checkMarks->isChecked());
 		SQ_Config::instance()->writeEntry("hide_sbar", checkStatus->isChecked());
-		SQ_Config::instance()->writeEntry("scroll", buttonGroupScrolling->id(buttonGroupScrolling->selected()));
+		SQ_Config::instance()->writeEntry("scroll", buttonGroupScrolling->selectedId());
 		SQ_Config::instance()->writeEntry("angle", sliderAngle->value());
 		SQ_Config::instance()->writeEntry("zoom", spinZoomFactor->value());
 		SQ_Config::instance()->writeEntry("zoom_min", spinZoomMin->value());
@@ -194,6 +176,11 @@ int SQ_Options::start()
 		SQ_Config::instance()->setGroup("Libraries");
 		SQ_Config::instance()->writeEntry("monitor", checkMonitor->isChecked());
 		SQ_Config::instance()->writeEntry("show dialog", checkFAMMessage->isChecked());
+
+		SQ_Config::instance()->setGroup("Edit tools");
+		SQ_Config::instance()->writeEntry("preview", checkPreview->isChecked());
+		SQ_Config::instance()->writeEntry("altlibrary", comboAlt->currentText());
+		SQ_Config::instance()->writeEntry("multi", checkMultiPaged->isChecked());
 	}
 
 	return result;
@@ -279,4 +266,25 @@ void SQ_Options::paletteChange( const QPalette &oldPalette )
 void SQ_Options::slotSetSystemBack( const QColor & )
 {
     kColorSystem->setColor(colorGroup().color(QColorGroup::Base));
+}
+
+void SQ_Options::fillAltCombo()
+{
+    QPixmap pix;
+
+    // return anyway
+    if(!SQ_LibraryHandler::instance()->count())
+	return;
+
+    QValueVector<SQ_LIBRARY>::iterator   BEGIN = SQ_LibraryHandler::instance()->begin();
+    QValueVector<SQ_LIBRARY>::iterator      END = SQ_LibraryHandler::instance()->end();
+
+    for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
+    {
+	if(pix.convertFromImage((*it).mime))
+	{
+	    if((*it).writable)
+		comboAlt->insertItem(pix, (*it).quickinfo);
+	}
+    }
 }

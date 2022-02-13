@@ -48,6 +48,8 @@ void SQ_Resizer::startEditPrivate()
 	connect(this, SIGNAL(oneFileProcessed()), res, SLOT(slotOneProcessed()));
 	connect(this, SIGNAL(done(bool)), res, SLOT(slotDone(bool)));
 
+	preview = false;
+
 	res->exec();
 }
 
@@ -62,11 +64,6 @@ void SQ_Resizer::slotStartResize(SQ_ImageOptions *o, SQ_ImageResizeOptions *ropt
 SQ_Resizer* SQ_Resizer::instance()
 {
 	return sing;
-}
-
-void SQ_Resizer::setWritingLibrary()
-{
-	lw = lr->writable ? lr : NULL;
 }
 
 void SQ_Resizer::dialogReset()

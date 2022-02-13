@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>540</width>
-            <height>228</height>
+            <width>492</width>
+            <height>134</height>
         </rect>
     </property>
     <property name="caption">
@@ -184,6 +184,7 @@
 <functions>
     <function access="private" specifier="non virtual">init()</function>
     <function access="private" specifier="non virtual">destroy()</function>
+    <function access="private">updateSize()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

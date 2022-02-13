@@ -20,13 +20,11 @@
 */
 
 #include "fmt_filters.h"
-#include "fmt_types.h"
-#include "fmt_defs.h"
 
 #include <cmath>
 
 // colorize tool
-void fmt_filters::colorize(RGBA *image, int w, int h, int red, int green, int blue)
+void fmt_filters::colorize(unsigned char *image, int w, int h, int red, int green, int blue)
 {
     // check if all parameters are good
     if(!image || !w || !h)
@@ -35,7 +33,7 @@ void fmt_filters::colorize(RGBA *image, int w, int h, int red, int green, int bl
     if(!red && !green && !blue)
 	return;
 
-    unsigned char *bits = (unsigned char *)image;
+    unsigned char *bits = image;
     int val;
     const int S = w * h;
 
@@ -62,13 +60,13 @@ void fmt_filters::colorize(RGBA *image, int w, int h, int red, int green, int bl
 }
 
 // brightness tool
-void fmt_filters::brightness(RGBA *image, int w, int h, int bn)
+void fmt_filters::brightness(unsigned char *image, int w, int h, int bn)
 {
     // check if all parameters are good
     if(!image || !w || !h)
 	return;
 
-    unsigned char *bits = (unsigned char *)image;
+    unsigned char *bits = image;
     int val;
     const int S = w * h * 4;
 
@@ -90,7 +88,7 @@ void fmt_filters::brightness(RGBA *image, int w, int h, int bn)
 }
 
 // gamma tool
-void fmt_filters::gamma(RGBA *image, int w, int h, double L)
+void fmt_filters::gamma(unsigned char *image, int w, int h, double L)
 {
     // check if all parameters are good
     if(!image || !w || !h)
@@ -98,19 +96,20 @@ void fmt_filters::gamma(RGBA *image, int w, int h, double L)
 
     if(L == 0 || L < 0) L = 0.01;
 
-    unsigned char *bits = (unsigned char *)image;
+    unsigned char *bits = image;
     unsigned char R, G, B;
     int X;
     unsigned char GT[256];
 
     GT[0] = 0;
 
+    // fill the array with gamma koefficients
     for (X = 1; X < 256; ++X)
 	GT[X] = (unsigned char)round(255 * pow((double)X / 255.0, 1.0 / L));
 
     const int S = w * h;
 
-    // change gamma
+    // now change gamma
     for(X = 0; X < S; ++X)
     {
 	R = *bits;
@@ -126,14 +125,14 @@ void fmt_filters::gamma(RGBA *image, int w, int h, double L)
 }
 
 // contrast tool
-void fmt_filters::contrast(RGBA *image, int w, int h, int contrast)
+void fmt_filters::contrast(unsigned char *image, int w, int h, int contrast)
 {
     if(!image || !w || !h || !contrast)
 
     if(contrast <= -256) contrast = -255;
     if(contrast >= 256) contrast = 255;
 
-    unsigned char *bits = (unsigned char *)image, Ravg, Gavg, Bavg;
+    unsigned char *bits = image, Ravg, Gavg, Bavg;
     int Ra = 0, Ga = 0, Ba = 0, Rn, Gn, Bn;
     const int S = w * h;
 
@@ -152,7 +151,7 @@ void fmt_filters::contrast(RGBA *image, int w, int h, int contrast)
     Gavg = Ga / S;
     Bavg = Ba / S;
 
-    bits = (unsigned char *)image;
+    bits = image;
 
     // ok, now change contrast
     // with the terms of alghoritm:
@@ -173,6 +172,54 @@ void fmt_filters::contrast(RGBA *image, int w, int h, int contrast)
 	*bits = Rn < 0 ? 0 : (Rn > 255 ? 255 : Rn);
 	*(bits+1) = Gn < 0 ? 0 : (Gn > 255 ? 255 : Gn);
 	*(bits+2) = Bn < 0 ? 0 : (Bn > 255 ? 255 : Bn);
+
+	bits += 4;
+    }
+}
+
+// negative
+void fmt_filters::negative(unsigned char *image, int w, int h)
+{
+    // check if all parameters are good
+    if(!image || !w || !h)
+	return;
+
+    unsigned char *bits = image, R, G, B;
+    const int S = w * h;
+
+    for(int X = 0; X < S; ++X)
+    {
+	R = *bits;
+	G = *(bits+1);
+	B = *(bits+2);
+
+	*bits     = 255 - R;
+	*(bits+1) = 255 - G;
+	*(bits+2) = 255 - B;
+
+	bits += 4;
+    }
+}
+
+// swap RGB values
+void fmt_filters::swapRGB(unsigned char *image, int w, int h, int type)
+{
+    // check if all parameters are good
+    if(!image || !w || !h || (type != fmt_filters::GBR && type != fmt_filters::BRG))
+	return;
+
+    unsigned char *bits = image, R, G, B;
+    const int S = w * h;
+
+    for(int X = 0; X < S; ++X)
+    {
+	R = *bits;
+	G = *(bits+1);
+	B = *(bits+2);
+
+	*bits     = (type == fmt_filters::GBR) ? G : B;
+	*(bits+1) = (type == fmt_filters::GBR) ? B : R;
+	*(bits+2) = (type == fmt_filters::GBR) ? R : G;
 
 	bits += 4;
     }

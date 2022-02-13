@@ -8,15 +8,25 @@
 *****************************************************************************/
 void SQ_ImageFilter::init()
 {
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
-/*
+    pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_filter.png")));
-    pixmap->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
-*/
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
+
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "filter_putto", QString::null);
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "filter_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "filter_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "filter_close", true);
+
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "filter_dontshowhelp", false));
+
+    buttonGroupSwapRGB->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "filter_swapRGB", 0));
+
+    if(checkDontShow->isChecked())
+	slotNext();
+
+    listFilters->insertItem(QPixmap(locate("appdata", "images/imageedit/filter_color.png")), tr2i18n("Color changes"));
+    listFilters->setCurrentItem(0);
+    listFilters->adjustSize();
 
     done = true;
 }
@@ -32,14 +42,11 @@ void SQ_ImageFilter::slotOptions()
 {
     SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
 
-    if(o->exec(&imageopt) == QDialog::Accepted)
-    {
-	SQ_Config::instance()->setGroup("Image edit options");
-	SQ_Config::instance()->writeEntry("filter_putto", imageopt.putto);
-	SQ_Config::instance()->writeEntry("filter_prefix", imageopt.prefix);
-	SQ_Config::instance()->writeEntry("filter_where_to_put", imageopt.where_to_put);
-	SQ_Config::instance()->writeEntry("filter_close", imageopt.close);
-    }
+    // SQ_ImageEditOptions will write needed KConfig entries, if
+    // exec() will return QDialog::Accepted
+    o->setConfigPrefix("filter");
+
+    o->exec(&imageopt);
 }
 
 void SQ_ImageFilter::slotStartFiltering()
@@ -52,7 +59,22 @@ void SQ_ImageFilter::slotStartFiltering()
 
     qApp->processEvents();
 
+    SQ_Config::instance()->setGroup("Image edit options");
+    SQ_Config::instance()->writeEntry("filter_swapRGB", buttonGroupSwapRGB->selectedId());
+
     SQ_ImageFilterOptions opt;
+ 
+    opt.type = listFilters->currentItem();
+
+    switch(opt.type)
+    {
+              case 0:
+	  opt.subtype = tabColor->currentPageIndex();
+
+	  if(opt.subtype == 1)
+	      opt.sb.swaprgb.type = buttonGroupSwapRGB->selectedId();
+	break;
+    }
 
     emit filter(&imageopt, &opt);
 }
@@ -92,6 +114,23 @@ void SQ_ImageFilter::closeEvent(QCloseEvent *e)
     else
     {
 	e->ignore();
-	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
+}
+
+void SQ_ImageFilter::slotNext()
+{
+    pushNext->setDefault(false);
+    pushFilter->setDefault(true);
+    pushFilter->setFocus();
+
+    widgetStackWizard->raiseWidget(1);
+}
+
+void SQ_ImageFilter::slotBack()
+{
+    pushNext->setDefault(true);
+    pushFilter->setDefault(false);
+
+    widgetStackWizard->raiseWidget(0);
 }

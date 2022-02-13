@@ -9,19 +9,27 @@
 
 void SQ_ImageConvert::init()
 {
+    pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_convert.png")));
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
+
     tableLib->header()->hide();   
-    
+
     createExtension();
     
     initLibs();
 
-    pushWriteOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
+    pushWriteOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
+    pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "convert_putto", QString::null);
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "convert_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "convert_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "convert_close", true);
+
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "convert_dontshowhelp", false));
+
+    if(checkDontShow->isChecked())
+	slotNext();
 
     done = true;
 }
@@ -94,7 +102,9 @@ void SQ_ImageConvert::slotStartConvert()
 
     SQ_ImageConvertOptions copt;
     copt.libname =  i->text(1);
-    
+
+    SQ_Config::instance()->writeEntry("convert_dontshowhelp", checkDontShow->isChecked());
+
     emit convert(&imageopt, &copt);
 }
 
@@ -116,26 +126,26 @@ void SQ_ImageConvert::slotCurrentLibraryChanged( QListViewItem * i)
 {
     if(!i)
 	return;
-    
+
     QString name = i->text(1);
-    
+
     SQ_LIBRARY *l = SQ_LibraryHandler::instance()->libraryByName(name);
-    
+
     if(!l)
 	return;
-    
+
     SQ_WriteOption *e = (SQ_WriteOption*)extension();
-    
+
     if(!e)
 	return;
-    
+
     e->widgetStack->raiseWidget(0);
-    
+
     bool bslider = (l->opt.compression_scheme == CompressionInternal && (l->opt.compression_min || l->opt.compression_max));
-    
+
     e->groupSlider->setShown(bslider);
     e->checkRLE->setShown(!bslider);
-    
+
     if(bslider)
     {
 	e->slider->setMinValue(l->opt.compression_min);
@@ -146,9 +156,9 @@ void SQ_ImageConvert::slotCurrentLibraryChanged( QListViewItem * i)
 	e->textMin->setNum(e->slider->minValue());
 	e->textMax->setNum(e->slider->maxValue());
     }
-    
+
     bool rle = true;
-    
+
     if(!(l->opt.compression_scheme & CompressionRLE))
     {
 	e->checkRLE->hide();
@@ -156,9 +166,9 @@ void SQ_ImageConvert::slotCurrentLibraryChanged( QListViewItem * i)
     }
 
     bool binter = l->opt.interlaced;
-    
+
     e->checkInterlaced->setShown(binter);
-    
+
     if(!binter && !rle && !bslider)
 	e->widgetStack->raiseWidget(1);
 }
@@ -166,12 +176,12 @@ void SQ_ImageConvert::slotCurrentLibraryChanged( QListViewItem * i)
 void SQ_ImageConvert::fillWriteOptions(fmt_writeoptions *opt, const fmt_writeoptionsabs &opt2)
 {
     SQ_WriteOption *e = (SQ_WriteOption*)extension();
-    
+
     if(!e)
 	return;
-    
+
     opt->interlaced = (opt2.interlaced) ? e->checkInterlaced->isChecked() : false;
-    
+
     if(opt2.compression_scheme == CompressionInternal)
 	opt->compression_scheme = CompressionInternal;
     else if(opt2.compression_scheme == CompressionRLE)
@@ -186,20 +196,17 @@ void SQ_ImageConvert::slotOptions()
 {
     SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
 
-    if(o->exec(&imageopt) == QDialog::Accepted)
-    {
-	SQ_Config::instance()->setGroup("Image edit options");
-	SQ_Config::instance()->writeEntry("convert_putto", imageopt.putto);
-	SQ_Config::instance()->writeEntry("convert_prefix", imageopt.prefix);
-	SQ_Config::instance()->writeEntry("convert_where_to_put", imageopt.where_to_put);
-	SQ_Config::instance()->writeEntry("convert_close", imageopt.close);
-    }
+    // SQ_ImageEditOptions will write needed KConfig entries, if
+    // exec() will return QDialog::Accepted
+    o->setConfigPrefix("convert");
+
+    o->exec(&imageopt);
 }
 
 void SQ_ImageConvert::slotDone(bool close)
 {
     done = true;
-    
+
     if(close)
 	reject();
 }
@@ -217,6 +224,23 @@ void SQ_ImageConvert::closeEvent(QCloseEvent *e)
     else
     {
 	e->ignore();
-	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
+}
+
+void SQ_ImageConvert::slotNext()
+{
+    pushNext->setDefault(false);
+    pushConvert->setDefault(true);
+    pushConvert->setFocus();
+
+    widgetStackWizard->raiseWidget(1);
+}
+
+void SQ_ImageConvert::slotBack()
+{
+    pushNext->setDefault(true);
+    pushConvert->setDefault(false);
+
+    widgetStackWizard->raiseWidget(0);
 }

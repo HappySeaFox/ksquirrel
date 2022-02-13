@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qpaintdevicemetrics.h>
 #include <qpainter.h>
+#include <qpaintdevicemetrics.h>
 
 #include <klocale.h>
 #include <kprinter.h>
@@ -28,6 +28,10 @@
 #include "sq_about.h"
 
 #include "libpixops/pixops.h"
+
+#define IMAGE_ALPHA_CHECK1			0x009C999C
+#define IMAGE_ALPHA_CHECK2			0x00626562
+#define IMAGE_ALPHA_CHECK_SIZE		8
 
 SQ_Printer * SQ_Printer::sing = NULL;
 
@@ -55,6 +59,8 @@ void SQ_Printer::startEditPrivate()
 	connect(this, SIGNAL(oneFileProcessed()), print, SLOT(slotOneProcessed()));
 	connect(this, SIGNAL(done(bool)), print, SLOT(slotDone(bool)));
 
+	preview = false;
+
 	print->exec();
 }
 
@@ -69,7 +75,25 @@ void SQ_Printer::slotStartPrint(SQ_ImageOptions *o, SQ_ImagePrintOptions *popt)
 	if(printer->setup(print))
 	{
 		currentPage = -1;
+
+		mt = new QPaintDeviceMetrics(printer);
+
+		pixmap = prnopt.type ? new unsigned char [mt->width() * mt->height() * sizeof(RGBA)] : NULL;
+
+		if(prnopt.type && !pixmap)
+			return;
+
 		painter->begin(printer);
+
+		x = y = 0;
+
+		if(prnopt.type == 2)
+		{
+			memset(pixmap, 255, mt->width() * mt->height() * sizeof(RGBA));
+			w = mt->width() / prnopt.in_x;
+			h = mt->height() / prnopt.in_y;
+		}
+
 		decodingCycle();
 	}
 	else
@@ -79,11 +103,6 @@ void SQ_Printer::slotStartPrint(SQ_ImageOptions *o, SQ_ImagePrintOptions *popt)
 SQ_Printer* SQ_Printer::instance()
 {
 	return sing;
-}
-
-void SQ_Printer::setWritingLibrary()
-{
-	lw = lr;
 }
 
 int SQ_Printer::manipDecodedImage(fmt_image *)
@@ -98,12 +117,9 @@ void SQ_Printer::dialogReset()
 
 int SQ_Printer::manipAndWriteDecodedImage(const QString &, fmt_image *im, const fmt_writeoptions &)
 {
-	QPaintDeviceMetrics mt(printer);
-	RGBA *rgba;
+	unsigned char *rgba;
 
-	const int spacing = 6;
-
-	currentPage++;
+	const int spacing = 3;
 
 	if(prnopt.type == 1)
 	{
@@ -111,72 +127,135 @@ int SQ_Printer::manipAndWriteDecodedImage(const QString &, fmt_image *im, const 
 	}
 	else if(prnopt.type == 2)
 	{
+		QSize s(im->w, im->h);
+		s.scale(w-spacing, h-spacing, QSize::ScaleMin);
 
+		rgba = new unsigned char [s.width() * s.height() * sizeof(RGBA)];
+
+		if(!rgba)
+			return SQE_W_NOMEMORY;
+
+		if(im->hasalpha)
+		{
+			if(!prnopt.transp)
+				pixops_composite_color(rgba, 0, 0, s.width(), s.height(), s.width() * 4, 4, true,
+						(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
+						(double)s.width() / im->w, (double)s.height() / im->h,
+						PIXOPS_INTERP_BILINEAR, 255, 0, 0,
+						IMAGE_ALPHA_CHECK_SIZE,
+						IMAGE_ALPHA_CHECK1,
+						IMAGE_ALPHA_CHECK2);
+			else
+			{
+				QRgb qrgba = qRgba(prnopt.transp_color.red(), prnopt.transp_color.green(), prnopt.transp_color.blue(), 255);
+				pixops_composite_color(rgba, 0, 0, s.width(), s.height(), s.width() * 4, 4, true,
+						(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
+						(double)s.width() / im->w, (double)s.height() / im->h,
+						PIXOPS_INTERP_BILINEAR, 255, 0, 0,
+						IMAGE_ALPHA_CHECK_SIZE, qrgba, qrgba);
+			}
+		}
+		else
+			pixops_scale(rgba, 0, 0, s.width(), s.height(), s.width() * 4, 4, true,
+					(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
+					(double)s.width() / im->w, (double)s.height() / im->h,
+					PIXOPS_INTERP_BILINEAR);
+
+		free(image);
+
+		image = (RGBA *)rgba;
+
+		im->w = s.width();
+		im->h = s.height();
+
+		for(int Y = 0;Y < im->h;Y++)
+		{
+			memcpy(pixmap + mt->width() * sizeof(RGBA) * (y * h + Y) + x * w * sizeof(RGBA),
+						rgba + im->w * sizeof(RGBA) * Y, im->w * sizeof(RGBA));
+		}
+
+		x++;
+
+		if(x == prnopt.in_x || lastFrame)
+		{
+			if(!lastFrame)
+			{
+				x = 0;
+				y++;
+			}
+
+			if(y == prnopt.in_y || lastFrame)
+			{
+				currentPage++;
+
+				if(!lastFrame) y = 0;
+
+				QImage img(pixmap, mt->width(), mt->height(), 32, 0, 0, QImage::LittleEndian);
+				img.setAlphaBuffer(true);
+				img = img.swapRGB();
+
+				int cps = printer->numCopies();
+
+				for(int pages = 0;pages < cps;pages++)
+				{
+					if(currentPage || (!currentPage && pages))
+  						if(!printer->newPage())
+     						{
+							qWarning(i18n("KPrinter::newPage() error"));
+							continue;
+						}
+
+						painter->drawImage(0, 0, img);
+				}
+
+				memset(pixmap, 255, mt->width() * mt->height() * sizeof(RGBA));
+			}
+		}
 	}
 	else
 	{
-		int x, y;
+		currentPage++;
 
-		if(im->w > mt.width() || im->h > mt.height())
+		if(im->w > mt->width() || im->h > mt->height())
 		{
 			double asp;
 
-			if(im->w > mt.width() && im->h > mt.height())
+			if(im->w > mt->width() && im->h > mt->height())
 			{
 				double asp1 = (double)im->w / im->h;
-				double asp2 = (double)mt.width() / mt.height();
+				double asp2 = (double)mt->width() / mt->height();
 
 				asp = (asp1 > asp2) ? asp1 : asp2;
 			}
 			else
-				asp = (im->w > mt.width()) ? ((double)im->w / mt.width()) : ((double)im->h / mt.height());
+				asp = (im->w > mt->width()) ? ((double)im->w / mt->width()) : ((double)im->h / mt->height());
 
-			int w = int((double)im->w / asp);
-			int h = int((double)im->h / asp);
+			w = int((double)im->w / asp);
+			h = int((double)im->h / asp);
 
-			rgba = new RGBA [w * h];
+			rgba = new unsigned char [w * h * sizeof(RGBA)];
 
 			if(!rgba)
 				return SQE_W_NOMEMORY;
 
-			pixops_scale((unsigned char *)rgba, 0, 0, w, h, w * 4, 4, true,
+			pixops_scale(rgba, 0, 0, w, h, w * 4, 4, true,
 						(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
 						(double)w / im->w, (double)h / im->h,
 						PIXOPS_INTERP_BILINEAR);
 
 			free(image);
 
-			image = rgba;
+			image = (RGBA *)rgba;
 
 			im->w = w;
 			im->h = h;
 		}
 
-		if(prnopt.align == "lefttop")
-		{
-			x = 0;
-			y = 0;
-		}
-		else if(prnopt.align == "righttop")
-		{
-			x = mt.width() - im->w;
-			y = 0;
-		}
-		else if(prnopt.align == "leftbottom")
-		{
-			x = 0;
-			y = mt.height() - im->h;
-		}
-		else if(prnopt.align == "rightbottom")
-		{
-			x = mt.width() - im->w;
-			y = mt.height() - im->h;
-		}
-		else
-		{
-			x = (mt.width() - im->w) / 2;
-			y = (mt.height() - im->h) / 2;
-		}
+		if(prnopt.align == "lefttop") 			{ x = 0; 					y = 0; 						}
+		else if(prnopt.align == "righttop") 	{ x = mt->width() - im->w;	y = 0; 						}
+		else if(prnopt.align == "leftbottom")	{ x = 0;						y = mt->height() - im->h;	}
+		else if(prnopt.align == "rightbottom"){ x = mt->width() - im->w;	y = mt->height() - im->h;	}
+		else									{ x = (mt->width() - im->w) / 2; y = (mt->height() - im->h) / 2; }
 
 		QImage img((uchar *)image, im->w, im->h, 32, 0, 0, QImage::LittleEndian);
 		img.setAlphaBuffer(true);
@@ -189,8 +268,8 @@ int SQ_Printer::manipAndWriteDecodedImage(const QString &, fmt_image *im, const 
 			if(currentPage || (!currentPage && pages))
   				if(!printer->newPage())
      				{
-					qWarning("KPrinter::newPage() error");
-					return SQE_NOTOK;
+					qWarning(i18n("KPrinter::newPage() error"));
+					continue;
 				}
 
 			painter->drawImage(x, y, img);
@@ -204,5 +283,8 @@ void SQ_Printer::cycleDone()
 {
 	painter->end();
 
+	if(pixmap) delete pixmap;
+
+	delete mt;
 	delete printer;
 }

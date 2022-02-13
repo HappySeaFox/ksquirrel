@@ -210,7 +210,7 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 
 	th.info.mime = lib->mime;
 
-	kdDebug() << "STAT searching \"" << origPath  << "\" ..." << endl;
+	kdDebug() << "STAT searching \"" << origPath  << "\"..." << endl;
 
 	if(SQ_PixmapCache::instance()->contains2(origPath, th))
 	{
@@ -317,7 +317,11 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 
 	codeK = lib->codec;
 
+#ifndef QT_NO_STL
 	res = codeK->fmt_read_init(QString(pixPath.local8Bit()));
+#else
+	res = codeK->fmt_read_init(QString(pixPath.local8Bit()).ascii());
+#endif
 
 	if(res != SQE_OK)
 		return false;
@@ -354,8 +358,13 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 			t.info.type = lib->quickinfo;
 			t.info.dimensions = QString::fromLatin1("%1x%2").arg(w).arg(h);
 			t.info.bpp = QString::fromLatin1("%1").arg(finfo.image[current].bpp);
+#ifndef QT_NO_STL
 			t.info.color = finfo.image[current].colorspace;
 			t.info.compression = finfo.image[current].compression;
+#else
+			t.info.color = finfo.image[current].colorspace.c_str();
+			t.info.compression = finfo.image[current].compression.c_str();
+#endif
 			t.info.frames = QString::fromLatin1("0");
 			t.info.mime = lib->mime;
 			t.info.uncompressed = KIO::convertSize(S);
@@ -419,11 +428,9 @@ QImage SQ_ThumbnailLoadJob::makeBigThumb(QImage *image)
 	const int SZ = SQ_ThumbnailSize::biggest();
 
 	if(image->width() > SZ || image->height() > SZ)
-		/**image = */ return image->smoothScale(QSize(SZ, SZ), QImage::ScaleMin).swapRGB();
+		return image->smoothScale(QSize(SZ, SZ), QImage::ScaleMin).swapRGB();
 	else
-		/**image =*/ return  image->swapRGB();
-
-//	return *image;
+		return  image->swapRGB();
 }
 
 void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)

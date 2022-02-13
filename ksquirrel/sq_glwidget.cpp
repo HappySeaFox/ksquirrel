@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qapplication.h>
 #include <qeventloop.h>
 #include <qstringlist.h>
@@ -112,7 +116,7 @@ SQ_ToolBar::SQ_ToolBar(QWidget *parent, const int members) : KToolBar(parent)
 	setIconSize(22);
 	setFixedHeight(34);
 	boxLayout()->setSpacing(0);
-	setFixedWidth(SQ_ToolButton::fixedWidth() * members + 6);
+	resize(SQ_ToolButton::fixedWidth() * members + 6, height());
 }
 
 SQ_ToolBar::~SQ_ToolBar()
@@ -122,6 +126,81 @@ void SQ_ToolBar::mouseReleaseEvent(QMouseEvent *e)
 {
 	e->accept();
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+memoryPart::memoryPart() : m_size(0), m_data(NULL)
+{}
+
+memoryPart::~memoryPart()
+{
+	if(m_data) delete m_data;
+}
+
+int memoryPart::size() const
+{
+  	return m_size;
+}
+
+void memoryPart::del()
+{
+	if(m_data) delete m_data;
+}
+
+bool memoryPart::valid() const
+{
+  	return m_data != NULL;
+}
+
+memoryPart32::memoryPart32()  : memoryPart()
+{}
+
+memoryPart32::~memoryPart32()
+{}
+
+void memoryPart32::create()
+{
+	m_size = 32;
+	m_data = new unsigned char [32 * 32 * sizeof(RGBA)];
+}
+
+memoryPart64::memoryPart64()  : memoryPart()
+{}
+
+memoryPart64::~memoryPart64()
+{}
+
+void memoryPart64::create()
+{
+	m_size = 64;
+	m_data = new unsigned char [64 * 64 * sizeof(RGBA)];
+}
+
+memoryPart128::memoryPart128()  : memoryPart()
+{}
+
+memoryPart128::~memoryPart128()
+{}
+
+void memoryPart128::create()
+{
+	m_size = 128;
+	m_data = new unsigned char [128 * 128 * sizeof(RGBA)];
+}
+
+memoryPart256::memoryPart256()  : memoryPart()
+{}
+
+memoryPart256::~memoryPart256()
+{}
+
+void memoryPart256::create()
+{
+	m_size = 256;
+	m_data = new unsigned char [256 * 256 * sizeof(RGBA)];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, name)
 {
@@ -272,7 +351,7 @@ void SQ_GLWidget::createToolbar()
 	toolbar2->setPalette(pall);
 	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/toolbar_show.png")), i18n("Show"), pAShow, SLOT(activate()), toolbar2);
 
-	toolbar = new SQ_ToolBar(this, 18);
+	toolbar = new SQ_ToolBar(this, 19);
 	toolbar->move(0, 0);
 	toolbar->setPalette(pall);
 
@@ -337,6 +416,11 @@ void SQ_GLWidget::createToolbar()
 	pAToolQuick->setToggleButton(true);
 	pAToolImages = new SQ_ToolButtonPopup(QPixmap(locate("appdata", "images/actions/images.png")), i18n("Select image"), toolbar);
 	pAToolImages->setPopup(images);
+
+	KToggleAction *n = KSquirrel::app()->pASlideShow;
+	pAToolSlideShow = new SQ_ToolButton(n->iconSet(KIcon::Desktop).pixmap(QIconSet::Large, QIconSet::Normal), n->text(), n, SLOT(activate()), toolbar);
+	pAToolSlideShow->setToggleButton(true);
+
 	pAToolClose = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/close.png")), i18n("Close"), pAClose, SLOT(activate()), toolbar);
 	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/toolbar_hide.png")), i18n("Hide"), pAHide, SLOT(activate()), toolbar);
 
@@ -383,7 +467,7 @@ void SQ_GLWidget::draw_background(void *bits, unsigned int *tex, int dim, GLfloa
 
 	if(bind)
 	{
-		kdDebug() << "Background changed. Binding texture ..." << endl;
+		kdDebug() << "Background changed. Binding texture..." << endl;
 
 		if(deleteOld)
 			glDeleteTextures(1, tex);
@@ -480,49 +564,50 @@ void SQ_GLWidget::paintGL()
 		matrix_move_z(SQ_FIRST_FRAME_POS);
 
 		for(z = 0;z < parts[current].tilesy;z++)
-			glCallList(parts[current].m_parts[z * parts[current].tilesx].list);
+			if(glIsList(parts[current].m_parts[z * parts[current].tilesx].list))
+				glCallList(parts[current].m_parts[z * parts[current].tilesx].list);
 
 		if(SQ_Config::instance()->readBoolEntry("GL view", "marks", true) && marks)
 		{
-		GLfloat zum = get_zoom();
-		GLfloat x = fabsf(parts[current].m_parts[0].x1) * zum, y = parts[current].m_parts[0].y1 * zum;
-		GLfloat X = MATRIX_X, Y = MATRIX_Y;
+			GLfloat zum = get_zoom();
+			GLfloat x = fabsf(parts[current].m_parts[0].x1) * zum, y = parts[current].m_parts[0].y1 * zum;
+			GLfloat X = MATRIX_X, Y = MATRIX_Y;
 
-		if(x < 0.0)
-			x = -x;
+			if(x < 0.0)
+				x = -x;
 
-		const GLfloat ly = y+16, ry = -y-16;
-		const GLfloat lx = x+16, rx = -x-16;
+			const GLfloat ly = y+16, ry = -y-16;
+			const GLfloat lx = x+16, rx = -x-16;
 
-		matrix_push();
-		matrix_pure_reset();
-		MATRIX_X = X;
-		MATRIX_Y = Y;
-		matrix_rotate2(curangle);
-		matrix_move_z(SQ_MARKS_POS);
+			matrix_push();
+			matrix_pure_reset();
+			MATRIX_X = X;
+			MATRIX_Y = Y;
+			matrix_rotate2(curangle);
+			matrix_move_z(SQ_MARKS_POS);
 
-		GLfloat coords[4][8] =
-		{
-			      rx, ly,      -x, ly,          -x, y,       rx, y,
-  			      x, ly,        lx, ly,           lx, y,       x, y,
-			      x, -y,       lx, -y,          lx, ry,      x, ry,
-			     rx, -y,      -x, -y,         -x, ry,       rx, ry
-		};
+			GLfloat coords[4][8] =
+			{
+				      rx, ly,      -x, ly,          -x, y,       rx, y,
+  				      x, ly,        lx, ly,           lx, y,       x, y,
+			      	x, -y,       lx, -y,          lx, ry,      x, ry,
+				     rx, -y,      -x, -y,         -x, ry,       rx, ry
+			};
 
-		for(z = 0;z < 4;z++)
-		{
-			glBindTexture(GL_TEXTURE_2D, mark[z]);
+			for(z = 0;z < 4;z++)
+			{
+				glBindTexture(GL_TEXTURE_2D, mark[z]);
 
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0, 0.0);			glVertex2f(coords[z][0], coords[z][1]);
-				glTexCoord2f(1.0, 0.0);			glVertex2f(coords[z][2], coords[z][3]);
-				glTexCoord2f(1.0, 1.0);			glVertex2f(coords[z][4], coords[z][5]);
-				glTexCoord2f(0.0, 1.0);			glVertex2f(coords[z][6], coords[z][7]);
-			glEnd();
-		}
+				glBegin(GL_QUADS);
+					glTexCoord2f(0.0, 0.0);			glVertex2f(coords[z][0], coords[z][1]);
+					glTexCoord2f(1.0, 0.0);			glVertex2f(coords[z][2], coords[z][3]);
+					glTexCoord2f(1.0, 1.0);			glVertex2f(coords[z][4], coords[z][5]);
+					glTexCoord2f(0.0, 1.0);			glVertex2f(coords[z][6], coords[z][7]);
+				glEnd();
+			}
 
-		matrix_pop();
-		write_gl_matrix();
+			matrix_pop();
+			write_gl_matrix();
 		}
 	}
 
@@ -1021,15 +1106,24 @@ void SQ_GLWidget::slotProperties()
 
 		for(std::vector<fmt_metaentry>::iterator it = BEGIN;it != END;it++)
 		{
+#ifndef QT_NO_STL
 			meta.append(QPair<QString,QString>((*it).group, (*it).data));
+#else
+			meta.append(QPair<QString,QString>((*it).group.c_str(), (*it).data.c_str()));
+#endif
 		}
 	}
 
 	list  << quickImageInfo
 		<< QString::fromLatin1("%1x%2").arg(finfo.image[current].w).arg(finfo.image[current].h)
 		<< QString::fromLatin1("%1").arg(finfo.image[current].bpp)
+#ifndef QT_NO_STL
 		<< finfo.image[current].colorspace
 		<< finfo.image[current].compression
+#else
+		<< finfo.image[current].colorspace.c_str()
+		<< finfo.image[current].compression.c_str()
+#endif
 		<<	sz
 		<< QString::fromLatin1("%1").arg((double)real_size / fm.size(), 0, 'f', 2)
 		<< ((finfo.image[current].interlaced) ? i18n("yes") : i18n("no"))
@@ -1397,12 +1491,16 @@ bool SQ_GLWidget::prepare()
 	finfo.image.clear();
 	finfo.meta.clear();
 
+#ifndef QT_NO_STL
 	i = codeK->fmt_read_init(File);
+#else
+	i = codeK->fmt_read_init(File.ascii());
+#endif
 
 	if(i != SQE_OK)
 	{
-		status = i18n("fmt_read_init: Library returned error:") + " <b>" + SQ_ErrorString::instance()->string(i) + "</b>";
-		KMessageBox::error(KSquirrel::app(), status);
+		KMessageBox::error(KSquirrel::app(),
+				i18n("fmt_read_init: Library returned error:") + SQ_ErrorString::instance()->string(i));
 		return false;
 	}
 
@@ -1414,21 +1512,22 @@ bool SQ_GLWidget::prepare()
 		parts.clear();
 	}
 
+	for(unsigned int s = 0;s < m32.size();s++)
+		(m32[s])->del();
 
 	m32.clear();
-	m64.clear();
-	m128.clear();
-	m256.clear();
 
 	current = 0;
 
 	return true;
 }
 
-void SQ_GLWidget::showFrames(int i)
+bool SQ_GLWidget::showFrames(int i)
 {
 	int z;
 	const int a = parts[current].tilesx * i, b = parts[current].tilesx * (i+1);
+	GLboolean resident = GL_TRUE, ret;
+	int layers = b;
 
 	makeCurrent();
 
@@ -1447,21 +1546,7 @@ void SQ_GLWidget::showFrames(int i)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		switch(tileSize)
-		{
-			case 32:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tileSize, tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, m32[z].part);
-			break;
-			case 64:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tileSize, tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, m64[z].part);
-			break;
-			case 128:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tileSize, tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, m128[z].part);
-			break;
-			case 256:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tileSize, tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, m256[z].part);
-			break;
-		}
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tileSize, tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, (m32[z])->m_data);
 	}
 
 	glNewList(parts[current].m_parts[a].list, GL_COMPILE_AND_EXECUTE);
@@ -1480,6 +1565,16 @@ void SQ_GLWidget::showFrames(int i)
 
 	glDisable(GL_TEXTURE_2D);
 	swapBuffers();
+
+	for(z = a;z < b;z++)
+	{
+		ret = glAreTexturesResident(1, &parts[current].m_parts[z].tex, &resident);
+
+		if(ret == GL_FALSE)
+			break;
+	}
+
+	return (resident == GL_TRUE);
 }
 
 bool SQ_GLWidget::actions() const
@@ -1513,21 +1608,7 @@ void SQ_GLWidget::setupBits(Parts *p, RGBA *b, int y)
 
 	for(int x = 0;x < p->tilesx;x++)
 	{
-		switch(tileSize)
-		{
-			case 32:
-				vv = m32[index].part;
-			break;
-			case 64:
-				vv = m64[index].part;
-			break;
-			case 128:
-				vv = m128[index].part;
-			break;
-			case 256:
-				vv = m256[index].part;
-			break;
-		}
+		vv = (m32[index])->m_data;
 
 		for(int j = 0,k = 0;j < tileSize;j++,k++)
 			memcpy(vv + k*f, b + x*tileSize + k*rw2, f);
@@ -1642,7 +1723,14 @@ void SQ_GLWidget::slotStartDecoding(const QString &file, bool isMouseEvent)
 		return;
 	}
 
-	KSquirrel::app()->raiseGLWidget();
+	bool slideShowRunning = KSquirrel::app()->slideShowRunning();
+
+	if(slideShowRunning && !pAFull->isChecked() && SQ_Config::instance()->readBoolEntry("Slideshow", "fullscreen", true))
+		pAToolFull->animateClick();
+
+	if(!slideShowRunning || (slideShowRunning && SQ_Config::instance()->readBoolEntry("Slideshow", "force", true)))
+		KSquirrel::app()->raiseGLWidget();
+
 	KSquirrel::app()->setCaption(file);
 
 	if(!pAHideToolbars->isChecked())
@@ -1730,31 +1818,28 @@ void SQ_GLWidget::slotDecode()
 			return;
 		}
 
-		m32.clear();
-		m64.clear();
-		m128.clear();
-		m256.clear();
-
 		int s;
 
-		switch(tileSize)
+		for(unsigned int d = 0;d < m32.size();d++)
+			(m32[d])->del();
+
+		m32.clear();
+
+		memoryPart *pt;
+
+		for(s = 0;s < parts[current].tiles;s++)
 		{
-			case 32:
-				for(s = 0;s < parts[current].tiles;s++)
-					m32.push_back(MemoryPart32());
-			break;
-			case 64:
-				for(s = 0;s < parts[current].tiles;s++)
-					m64.push_back(MemoryPart64());
-			break;
-			case 128:
-				for(s = 0;s < parts[current].tiles;s++)
-					m128.push_back(MemoryPart128());
-			break;
-			case 256:
-				for(s = 0;s < parts[current].tiles;s++)
-					m256.push_back(MemoryPart256());
-			break;
+			switch(tileSize)
+			{
+				case 32:	pt = new memoryPart32;	break;
+				case 64:	pt = new memoryPart64;	break;
+				case 128:	pt = new memoryPart128;	break;
+				case 256:	pt = new memoryPart256;	break;
+			}
+
+			pt->create();
+
+			m32.push_back(pt);
 		}
 
 		parts[current].computeCoords();
@@ -1822,7 +1907,10 @@ void SQ_GLWidget::slotDecode()
 				if(pass == finfo.image[current].passes-1)
 				{
 					setupBits(&parts[current], next, i);
-					showFrames(i);
+					bool b = showFrames(i);
+
+					if(!b)
+						printf("Showframes failed for image %d, tiley %d\n", current, i);
 				}
 			}
 		}
@@ -1860,9 +1948,6 @@ void SQ_GLWidget::slotDecode()
 //	QMessageBox::warning(KSquirrel::app(), i18n("Decoding"), i18n("Cycle done"), QMessageBox::Ok, QMessageBox::NoButton);
 	current = 0;
 	total = finfo.images;
-
-//	if(!finfo.animated)
-//		prioritizeTextures(current, true);
 
 	decoded = true;
 	reset_mode = false;
@@ -1989,12 +2074,16 @@ void SQ_GLWidget::slotToggleStatus(bool s)
 
 void SQ_GLWidget::slotFirst()
 {
+	KSquirrel::app()->stopSlideShow();
+
 	if(!reset_mode)
 		SQ_WidgetStack::instance()->slotFirstFile();
 }
 
 void SQ_GLWidget::slotLast()
 {
+	KSquirrel::app()->stopSlideShow();
+
 	if(!reset_mode)
 		SQ_WidgetStack::instance()->slotLastFile();
 }
@@ -2002,6 +2091,8 @@ void SQ_GLWidget::slotLast()
 void SQ_GLWidget::slotNext()
 {
 	static int r1, r2 = SQ_WidgetStack::moveFailed;
+
+	KSquirrel::app()->stopSlideShow();
 
 	timer_next->stop();
 	timer_prev->stop();
@@ -2022,6 +2113,8 @@ void SQ_GLWidget::slotNext()
 void SQ_GLWidget::slotPrev()
 {
 	static int r1, r2 = SQ_WidgetStack::moveFailed;
+
+	KSquirrel::app()->stopSlideShow();
 
 	timer_prev->stop();
 	timer_next->stop();
@@ -2139,9 +2232,6 @@ void SQ_GLWidget::nextImage()
 	if(current >= finfo.images)
 		current = 0;
 
-//	if(!finfo.animated)
-//		prioritizeTextures(current);
-
 	updateGL();
 
 	updateCurrentFileInfo();
@@ -2153,9 +2243,6 @@ void SQ_GLWidget::prevImage()
 
 	if(current < 0)
 		current = finfo.images - 1;
-
-//	if(!finfo.animated)
-//		prioritizeTextures(current);
 
 	updateGL();
 
@@ -2214,8 +2301,6 @@ void SQ_GLWidget::bindMarks(bool &first, bool deleteOld)
 
 	QColor adj = calculateAdjustedColor(BGpixmap, QColor(p[0],p[1],p[2]),
 										(SQ_Config::instance()->readNumEntry("GL view", "GL view background type", 0) != 2));
-
-	kdDebug() << "Binding marks" << endl;
 
 	for(int i = 0;i < 4;i++)
 	{
@@ -2369,7 +2454,7 @@ void SQ_GLWidget::createContextMenu(KPopupMenu *m)
 	KActionMenu *menuMove = new KActionMenu(i18n("Move"));
 	KActionMenu *menuWindow = new KActionMenu(i18n("Window"));//, locate("appdata", "images/menu/window16.png"));
 	KActionMenu *menuImage = new KActionMenu(i18n("Image"));
-	KActionMenu *menuEdit = new KActionMenu(i18n("Edit image"), "edit");
+//	KActionMenu *menuEdit = new KActionMenu(i18n("Edit image"), "edit");
 
 	KActionSeparator *S = new KActionSeparator;
 	KAction *abstract;
@@ -2419,14 +2504,14 @@ void SQ_GLWidget::createContextMenu(KPopupMenu *m)
 	all.append(KeyE(i18n("Quick Browser"), locate("appdata", "images/menu/quick16.png"), "SQ Menu Window2", (Qt::NoButton << 16 ) | Qt::Key_Q, menuWindow, false));
 	all.append(KeyE(i18n("Hide/show toolbar"), locate("appdata", "images/menu/toolbar16.png"), "SQ Menu Window3", (Qt::NoButton << 16 ) | Qt::Key_T, menuWindow, false));
 	all.append(KeyE(i18n("Hide/show statusbar"), locate("appdata", "images/menu/statusbar16.png"), "SQ Menu Window4", (Qt::NoButton << 16 ) | Qt::Key_S, menuWindow, false));
-
+/*
 	menuEdit->insert(KSquirrel::app()->pAImageConvert);
 	menuEdit->insert(KSquirrel::app()->pAImageResize);
 	menuEdit->insert(KSquirrel::app()->pAImageRotate);
 	menuEdit->insert(KSquirrel::app()->pAImageBCG);
 	menuEdit->insert(KSquirrel::app()->pAImageFilter);
 	menuEdit->insert(KSquirrel::app()->pAPrintImages);
-
+*/
 	KActionCollection *coll = new KActionCollection(this);
 
 	QSignalMapper *mapper = new QSignalMapper(this);
@@ -2454,10 +2539,9 @@ void SQ_GLWidget::createContextMenu(KPopupMenu *m)
 	menuMove->plug(m);
 	menuWindow->plug(m);
 	menuImage->plug(m);
-	menuEdit->plug(m);
+//	menuEdit->plug(m);
 	S->plug(m);
 	pAReset->plug(m);
-	S->plug(m);
 	pAProperties->plug(m);
 	S->plug(m);
 	pAHelp->plug(m);
@@ -2475,30 +2559,12 @@ void SQ_GLWidget::signalMapped(int id)
 	keyPressEvent(&e);
 }
 
+void SQ_GLWidget::updateSlideShowButton(bool toggled)
+{
+	pAToolSlideShow->setOn(toggled);
+}
+
 SQ_GLWidget* SQ_GLWidget::window()
 {
 	return sing;
-}
-
-void SQ_GLWidget::prioritizeTextures(const int &cur, bool newbind)
-{
-	static int last = -1;
-	int z;
-
-	if(last != -1 && !newbind)
-	{
-		for(z = 0;z < parts[last].tiles;z++)
-		{
-			parts[last].m_parts[z].priority = 0.0;
-			glPrioritizeTextures(1, &parts[last].m_parts[z].tex, &parts[last].m_parts[z].priority);
-		}
-	}
-
-	for(z = 0;z < parts[cur].tiles;z++)
-	{
-		parts[cur].m_parts[z].priority = 1.0;
-		glPrioritizeTextures(1, &parts[cur].m_parts[z].tex, &parts[cur].m_parts[z].priority);
-	}
-
-	last = cur;
 }

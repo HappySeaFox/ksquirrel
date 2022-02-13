@@ -36,6 +36,8 @@ SQ_GLU::SQ_GLU()
 SQ_GLU::~SQ_GLU()
 {}
 
+#ifndef SQ_DISABLE_OPENGL
+
 void SQ_GLU::gluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez, GLdouble centerx, GLdouble centery, GLdouble centerz, GLdouble upx, GLdouble upy, GLdouble upz)
 {
 	GLdouble m[16];
@@ -107,3 +109,10 @@ void SQ_GLU::gluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez, GLdouble cen
 	glMultMatrixd(m);
 	glTranslated(-eyex, -eyey, -eyez);
 }
+
+#else
+
+void SQ_GLU::gluLookAt(GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble)
+{}
+
+#endif

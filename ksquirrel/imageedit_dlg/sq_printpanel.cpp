@@ -33,7 +33,7 @@ SQ_PrintPanel* SQ_PrintPanel::instance()
 void SQ_PrintPanel::toggleCurrentFrameColor(SQ_PrintPanelFrame *newf)
 {
     if(cur)
-	cur->setPaletteBackgroundColor(white);
+	cur->setPaletteBackgroundColor(colorGroup().base());
 
     cur = newf;
 

@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0-pre6], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.0-pre7], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre6)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre7)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -200,4 +200,9 @@ Installation options:
   prefix:               ${prefix}
   KSquirrel binary:     ${prefix}/bin/${PACKAGE}
   Enable OpenGL:        $sq_ogl
+
+
+  Note: Please, don't forget to install ksquirrel-libs
+  ----------------------------------------------------
+
 "

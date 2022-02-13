@@ -40,7 +40,6 @@ class SQ_Resizer : public SQ_EditBase
 
 	protected:
 		virtual void startEditPrivate();
-		virtual void setWritingLibrary();
 		virtual void dialogReset();
 		virtual int manipDecodedImage(fmt_image *im);
 

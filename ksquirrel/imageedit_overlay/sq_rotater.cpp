@@ -54,17 +54,14 @@ void SQ_Rotater::startEditPrivate()
 	connect(this, SIGNAL(oneFileProcessed()), rotate, SLOT(slotOneProcessed()));
 	connect(this, SIGNAL(done(bool)), rotate, SLOT(slotDone(bool)));
 
+	preview = true;
+
 	rotate->exec();
 }
 
 SQ_Rotater* SQ_Rotater::instance()
 {
 	return sing;
-}
-
-void SQ_Rotater::setWritingLibrary()
-{
-	lw = lr->writable ? lr : NULL;
 }
 
 void SQ_Rotater::dialogReset()
@@ -112,4 +109,9 @@ int SQ_Rotater::determineNextScan(const fmt_image &im, RGBA *scan, int y)
 		memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
 
 	return SQE_OK;
+}
+
+void SQ_Rotater::setPreviewImage(const QImage &)
+{
+
 }

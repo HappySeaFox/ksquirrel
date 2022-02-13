@@ -25,13 +25,12 @@
 #include <qtimer.h>
 
 #include <kurldrag.h>
-#include <kiconloader.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <klocale.h>
 #include <kapplication.h>
 
-#include "ksquirrel.h"
+#include "sq_iconloader.h"
 #include "sq_config.h"
 #include "sq_dir.h"
 #include "sq_filethumbview.h"
@@ -80,7 +79,7 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
 	connect(this, SIGNAL(onItem(QIconViewItem *)), this, SLOT(slotShowToolTip(QIconViewItem *)));
 	connect(this, SIGNAL(onViewport()), this, SLOT(slotRemoveToolTip()));
 
-	dirPix = KSquirrel::loader()->loadIcon("folder", KIcon::Desktop, 48);
+	dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 48);
 	pixelSize = (SQ_ThumbnailSize::instance()->extended())? SQ_ThumbnailSize::instance()->extendedPixelSize() : SQ_ThumbnailSize::instance()->pixelSize();
 }
 
@@ -108,7 +107,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 		return;
 
 	bool disable_mime = SQ_Config::instance()->readBoolEntry("Thumbnails", "disable_mime", true);
-	const QPixmap mimeall = KSquirrel::loader()->loadIcon("unknown", KIcon::Desktop, (SQ_ThumbnailSize::instance()->extended())?
+	const QPixmap mimeall = SQ_IconLoader::instance()->loadIcon("unknown", KIcon::Desktop, (SQ_ThumbnailSize::instance()->extended())?
 			SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize());
 
 	SQ_FileThumbViewItem *item;

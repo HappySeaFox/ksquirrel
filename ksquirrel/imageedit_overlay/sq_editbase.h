@@ -45,16 +45,17 @@ class SQ_EditBase : public QObject
 		virtual ~SQ_EditBase();
 
 	protected:
-		virtual void startEditPrivate() = 0;
-		virtual void setWritingLibrary() = 0;
-		virtual void dialogReset() = 0;
 		virtual int manipDecodedImage(fmt_image *im) = 0;
+		virtual void startEditPrivate() = 0;
+		virtual void dialogReset() = 0;
 
 		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt);
 		virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
 
-		virtual void cycleDone();
 		virtual void dialogAdditionalInit();
+		virtual void setWritingLibrary();
+		virtual void cycleDone();
+		virtual void setPreviewImage(const QImage &im);
 
 		void decodingCycle();
 		void errorjmp(jmp_buf jmp, const int code);
@@ -76,14 +77,15 @@ class SQ_EditBase : public QObject
 		QStringList			files;
 		QString				err_internal, err_failed;
 		QString				currentFile;
-		int					error_code;
+		int					error_code, current_page;
 		SQ_ImageOptions	imageopt;
 		fmt_writeoptions		opt;
 		SQ_LIBRARY		*lr, *lw;
 		RGBA				*image;
 		QString				special_action;
-		bool				ondisk;
+		bool				ondisk, preview, multi, last, lastFrame;
 		KTempFile			*tempfile;
+		QString 				altlibrary;
 };
 
 #endif

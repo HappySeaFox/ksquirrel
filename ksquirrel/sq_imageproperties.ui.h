@@ -16,13 +16,13 @@ void SQ_ImageProperties::init()
     
     copyentry->setIcon(copy->icon());
     copyall->setIcon(copy->icon());
-    
+
     copy->plug(menu);
     copyentry->plug(menu);
     copyall->plug(menu);
     
-    ok = KSquirrel::loader()->loadIcon("ok", KIcon::Desktop, 16);
-    error = KSquirrel::loader()->loadIcon("error", KIcon::Desktop, 16);
+    ok = SQ_IconLoader::instance()->loadIcon("ok", KIcon::Desktop, 16);
+    error = SQ_IconLoader::instance()->loadIcon("error", KIcon::Desktop, 16);
 }
 
 void SQ_ImageProperties::setParams(QStringList &l)

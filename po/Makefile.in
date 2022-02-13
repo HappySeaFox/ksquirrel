@@ -475,8 +475,9 @@ uninstall-am: uninstall-info-am
 .NOEXPORT:
 
 
+
 #>+ 2
-KDE_DIST=ru.gmo ksquirrel.pot nl.gmo nl.po ru.po Makefile.in Makefile.am 
+KDE_DIST=Makefile.in ru.gmo ksquirrel.pot nl.gmo nl.po ru.po Makefile.am 
 
 #>+ 7
 ru.gmo: ru.po

@@ -14,8 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qlabel.h>
 #include <qbuttongroup.h>
+#include <qpushbutton.h>
 #include <qtoolbutton.h>
 #include <qtimer.h>
 #include <qfileinfo.h>
@@ -50,6 +56,7 @@
 #include "sq_progress.h"
 #include "sq_thumbnailjob.h"
 #include "sq_pixmapcache.h"
+#include "sq_selectdeselectgroup.h"
 
 #define SQ_SECTION_ICONS "Navigator Icons"
 #define SQ_SECTION_LIST "Navigator List"
@@ -76,8 +83,8 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0
 	pARefresh->setShortcut(KStdAccel::shortcut(KStdAccel::Reload));
 	pAHome = KStdAction::home(this, SLOT(slotHome()), ac, "SQ h0me wrapper");
 	pAHome->setText(i18n("Home"));
-	pAMkDir = new KAction(i18n("New directory ..."), "folder_new", 0, this, SLOT(slotMkDir()), ac, "SQ mkdir wrapper");
-	pAProp = new KAction(i18n("Properties ..."), QString::null, 0, this, SLOT(slotProperties()), ac, "SQ prop wrapper");
+	pAMkDir = new KAction(i18n("New directory..."), "folder_new", 0, this, SLOT(slotMkDir()), ac, "SQ mkdir wrapper");
+	pAProp = new KAction(i18n("Properties..."), QString::null, 0, this, SLOT(slotProperties()), ac, "SQ prop wrapper");
 	pADelete = new KAction(i18n("Delete"), "editdelete", Qt::Key_Delete, this, SLOT(slotDelete()), ac, "SQ delete wrapper");
 	pAHidden = new KToggleAction(i18n("Show hidden files"), "folder_grey", 0, 0, 0, ac, "SQ hidden files wrapper");
 	connect(pAHidden, SIGNAL(toggled(bool)), this, SLOT(slotShowHidden(bool)));
@@ -93,7 +100,7 @@ KURL SQ_WidgetStack::getURL() const
 {
 	SQ_DirOperator *dirop = visibleWidget();
 
-	return (dirop)?dirop->url():KURL();
+	return (dirop) ? dirop->url() : KURL();
 }
 
 void SQ_WidgetStack::setURL(const QString &newpath, bool cl, bool parseTree)
@@ -552,49 +559,41 @@ void SQ_WidgetStack::thumbnailProcess()
 
 void SQ_WidgetStack::slotUp()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("up")->activate();
+	visibleWidget()->actionCollection()->action("up")->activate();
 }
 
 void SQ_WidgetStack::slotBack()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("back")->activate();
+	visibleWidget()->actionCollection()->action("back")->activate();
 }
 
 void SQ_WidgetStack::slotForward()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("forward")->activate();
+	visibleWidget()->actionCollection()->action("forward")->activate();
 }
 
 void SQ_WidgetStack::slotReload()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("reload")->activate();
+	visibleWidget()->actionCollection()->action("reload")->activate();
 }
 
 void SQ_WidgetStack::slotHome()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("home")->activate();
+	visibleWidget()->actionCollection()->action("home")->activate();
 }
 
 void SQ_WidgetStack::slotMkDir()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("mkdir")->activate();
+	visibleWidget()->actionCollection()->action("mkdir")->activate();
 }
 void SQ_WidgetStack::slotProperties()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("properties")->activate();
+	visibleWidget()->actionCollection()->action("properties")->activate();
 }
 
 void SQ_WidgetStack::slotDelete()
 {
-	SQ_DirOperator *local_operator = visibleWidget();
-	local_operator->actionCollection()->action("delete")->activate();
+	visibleWidget()->actionCollection()->action("delete")->activate();
 }
 
 void SQ_WidgetStack::setURLForCurrent(const QString &path)
@@ -662,7 +661,6 @@ void SQ_WidgetStack::setupDirOperator(SQ_DirOperator *op, const QString &filter)
 	}
 }
 
-
 void SQ_WidgetStack::slotRecreateThumbnail()
 {
 	if(!pDirOperatorThumb) return;
@@ -704,6 +702,16 @@ void SQ_WidgetStack::slotDelayedRecreateThumbnail()
 
 		if(!SQ_ThumbnailLoadJob::loadThumbnail(path, thumb, true))
 			continue;
+
+		int biggestDimension = QMAX(thumb.thumbnail.width(), thumb.thumbnail.height());
+		int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize() - 2;
+
+		if(biggestDimension <= thumbPixelSize)
+		{
+			double scale = double(thumbPixelSize) / double(biggestDimension);
+			thumb.thumbnail = thumb.thumbnail.smoothScale(int(thumb.thumbnail.width() * scale),
+								int(thumb.thumbnail.height() * scale));
+		}
 
 		SQ_PixmapCache::instance()->removeEntryFull(path);
 
@@ -825,7 +833,76 @@ void SQ_WidgetStack::slotFileMoveTo()
 	KIO::move(files, url);
 }
 
+void SQ_WidgetStack::slotSelectGroup()
+{
+	selectDeselectGroup(true);
+}
+
+void SQ_WidgetStack::slotDeselectGroup()
+{
+	selectDeselectGroup(false);
+}
+
+void SQ_WidgetStack::selectDeselectGroup(bool select)
+{
+	QString mask;
+
+	KFileView *local = visibleWidget()->fileview;
+
+	SQ_SelectDeselectGroup *sd = new SQ_SelectDeselectGroup(KSquirrel::app());
+
+	sd->setCaption(select ? i18n("Select a group of files") : i18n("Deselect a group of files"));
+	sd->pushMask->setText(select ? i18n("Select !") : i18n("Deselect !"));
+
+	if(sd->exec(mask) == QDialog::Accepted)
+	{
+		if(select)
+			local->clearSelection();
+
+		KFileItemList *sd_files = (KFileItemList *)items();
+		KFileItem *i;
+		QRegExp exp(mask);
+		exp.setWildcard(true);
+
+		if(!sd_files)
+			return;
+
+		i = sd_files->first();
+
+		while(i != NULL)
+		{
+			if(exp.exactMatch(i->name()))
+				local->setSelected(i, select);
+
+			i = sd_files->next();
+		}
+	}
+}
+
 SQ_WidgetStack* SQ_WidgetStack::instance()
 {
 	return sing;
+}
+
+void SQ_WidgetStack::slotDeselectAll()
+{
+	visibleWidget()->fileview->clearSelection();
+}
+
+void SQ_WidgetStack::slotSelectAll()
+{
+	KFileItemList *sd_files = (KFileItemList *)items();
+	KFileView *local = visibleWidget()->fileview;
+	KFileItem *i;
+
+	if(!sd_files)
+		return;
+
+	i = sd_files->first();
+
+	while(i != NULL)
+	{
+		local->setSelected(i, true);
+		i = sd_files->next();
+	}
 }

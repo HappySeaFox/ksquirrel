@@ -498,6 +498,7 @@ dist-hook:
 .NOEXPORT:
 
 
+
 #>+ 2
 KDE_DIST=Print file.desktop Run within KDE.desktop Open with KuickShow.desktop View in hexadecimal mode.desktop Open with KWrite.desktop Open with Konqueror.desktop Makefile.in Set as wallpaper on desktop.desktop Open with ShowImg.desktop Open with GQview.desktop Open with GIMP.desktop Set as tiled wallpaper on desktop.desktop Open with Opera.desktop Makefile.am Open with KView.desktop 
 

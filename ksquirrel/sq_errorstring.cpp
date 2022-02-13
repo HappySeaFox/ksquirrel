@@ -35,6 +35,7 @@ SQ_ErrorString::SQ_ErrorString()
 	messages[SQE_W_NOTSUPPORTED] = i18n("write feature is not supported");
 	messages[SQE_W_ERROR] = i18n("write error (check free space)");
 	messages[SQE_W_WRONGPARAMS] = i18n("wrong parameters");
+	messages[SQE_NOTFINISHED] = i18n("Editing process is not finished yet");
 }
 
 SQ_ErrorString::~SQ_ErrorString()

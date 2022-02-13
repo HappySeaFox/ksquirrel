@@ -18,12 +18,12 @@
 #include <qfile.h>
 
 #include <kpopupmenu.h>
-#include <kiconloader.h>
 #include <kstringhandler.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 
 #include "ksquirrel.h"
+#include "sq_iconloader.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
 #include "sq_externaltool.h"
@@ -105,7 +105,7 @@ KPopupMenu* SQ_ExternalTool::getNewPopupMenu()
 
 	for(unsigned int i = 0;i < count();i++)
 	{
-		id = menu->insertItem(KSquirrel::loader()->loadIcon(getToolPixmap(i), KIcon::Desktop, 16), getToolName(i));
+		id = menu->insertItem(SQ_IconLoader::instance()->loadIcon(getToolPixmap(i), KIcon::Desktop, 16), getToolName(i));
 		menu->setItemParameter(id, i);
 	}
 
@@ -138,8 +138,8 @@ void SQ_ExternalTool::writeEntries()
 
 void SQ_ExternalTool::slotAboutToShowMenu()
 {
-	KFileItem *item = SQ_WidgetStack::instance()->visibleWidget()->view()->currentFileItem();
 	KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->visibleWidget()->selectedItems();
+	KFileItem *item = items->first();
 
 	if(!item)
 	{

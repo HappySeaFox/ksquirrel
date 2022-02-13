@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qapplication.h>
 #include <qdesktopwidget.h>
 #include <qeventloop.h>
@@ -31,13 +35,13 @@
 #include <qtoolbutton.h>
 #include <qwhatsthis.h>
 #include <qfileinfo.h>
+#include <qtimer.h>
 
 #include <kapp.h>
 #include <khelpmenu.h>
 #include <kpopupmenu.h>
 #include <kwin.h>
 #include <kstatusbar.h>
-#include <kiconloader.h>
 #include <kpopupmenu.h>
 #include <kmenubar.h>
 #include <kaction.h>
@@ -54,6 +58,7 @@
 #include <kanimwidget.h>
 
 #include "ksquirrel.h"
+#include "sq_iconloader.h"
 #include "sq_locationtoolbar.h"
 #include "sq_widgetstack.h"
 #include "sq_tray.h"
@@ -82,6 +87,9 @@
 #include "sq_errorstring.h"
 #include "sq_thumbnailcachemaster.h"
 #include "sq_checkversion.h"
+#include "sq_slideshow.h"
+#include "sq_glwidget_helpers.h"
+#include "sq_pluginsinfo.h"
 
 #include "sq_imageeditsplash.h"
 #include "sq_converter.h"
@@ -96,30 +104,31 @@
 static const int menuParam = 100000;
 
 KSquirrel * KSquirrel::sing = NULL;
-KIconLoader * KSquirrel::iconL = NULL;
 
 KSquirrel::KSquirrel(QWidget *parent, const char *name) : KMainWindow (parent, name), DCOPObject(name)
 {
 	sing = this;
 	first_time = false;
+	slideShowStop = true;
 
 	QString testConf = locateLocal("config", "ksquirrelrc");
 
-	if(!QFile::exists(testConf))
+	if(!QFile::exists(testConf) || checkConfigFileVersion())
 	{
+		QFile::remove(testConf);
 		writeDefaultEntries(testConf);
 		first_time = true;
 	}
 
 	kconf = new SQ_Config("ksquirrelrc");
-	iconL = kapp->iconLoader();
 	old_id = 0;
 
 	thumbSize = new SQ_ThumbnailSize((SQ_ThumbnailSize::Size)kconf->readNumEntry("Thumbnails", "size", SQ_ThumbnailSize::Huge));
 	thumbSize->setExtended(kconf->readBoolEntry("Thumbnails", "extended", false));
 
-	cache = new SQ_PixmapCache;
-	ar = new SQ_ArchiveHandler;
+	new SQ_PixmapCache;
+	new SQ_ArchiveHandler;
+	new SQ_IconLoader;
 
 	mainBox = NULL;
 	mainSplitter = NULL;
@@ -400,6 +409,10 @@ void KSquirrel::createWidgets(int createFirst)
 	connect(pATree, SIGNAL(toggled(bool)), this, SLOT(slotSetTreeShown(bool)));
 	connect(pAURL, SIGNAL(toggled(bool)), pTLocation, SLOT(setShown(bool)));
 	connect(pASeparateGL, SIGNAL(toggled(bool)), this, SLOT(slotSeparateGL(bool)));
+	connect(pASelectGroup, SIGNAL(activated()), pWidgetStack, SLOT(slotSelectGroup()));
+	connect(pADeselectGroup, SIGNAL(activated()), pWidgetStack, SLOT(slotDeselectGroup()));
+	connect(pASelectAll, SIGNAL(activated()), pWidgetStack, SLOT(slotSelectAll()));
+	connect(pADeselectAll, SIGNAL(activated()), pWidgetStack, SLOT(slotDeselectAll()));
 
 	mainSizes = kconf->readIntListEntry("Interface", "splitter1");
 	mainSplitter->setSizes(mainSizes);
@@ -435,13 +448,14 @@ void KSquirrel::createMenu(KMenuBar *menubar)
 	pop_file = new KPopupMenu(menubar);
 	pop_edit = new KPopupMenu(menubar);
 	pop_view = new KPopupMenu(menubar);
+	pop_action = new KPopupMenu(menubar);
 
 	initBookmarks();
 	initFilterMenu();
 
 	menubar->insertItem(i18n("&File"), pop_file);
 	menubar->insertItem(i18n("&Edit"), pop_edit);
-	menubar->insertItem(i18n("&View"), pop_view);
+	menubar->insertItem(i18n("&Action"), pop_action);
 	bookmarks->plug(menubar);
 	menubar->insertItem(i18n("Fi&lter"), actionFilterMenu);
 	menubar->insertItem(i18n("External Tools"), SQ_ExternalTool::instance()->getConstPopupMenu());
@@ -459,6 +473,11 @@ void KSquirrel::createMenu(KMenuBar *menubar)
 	pWidgetStack->pAHidden->plug(pop_file);
 	pWidgetStack->pAProp->plug(pop_file);
 	pWidgetStack->pADelete->plug(pop_file);
+	pop_file->insertSeparator();
+	pASelectAll->plug(pop_file);
+	pADeselectAll->plug(pop_file);
+	pASelectGroup->plug(pop_file);
+	pADeselectGroup->plug(pop_file);
 	pop_file->insertSeparator();
 	pAExit->plug(pop_file);
 
@@ -482,24 +501,26 @@ void KSquirrel::createMenu(KMenuBar *menubar)
 	pAImageFilter->plug(pop_edit);
 	pAPrintImages->plug(pop_edit);
 	pop_edit->insertSeparator();
-	pATCMaster->plug(pop_edit);
-	pARescan->plug(pop_edit);
-	pAExtTools->plug(pop_edit);
-	pAFilters->plug(pop_edit);
-	pACheck->plug(pop_edit);
 	pAConfigure->plug(pop_edit);
+
+	pASlideShow->plug(pop_action);
+	pASlideShowDialog->plug(pop_action);
+	pop_action->insertSeparator();
+	pATCMaster->plug(pop_action);
+	pARescan->plug(pop_action);
+	pAExtTools->plug(pop_action);
+	pAFilters->plug(pop_action);
+	pACheck->plug(pop_action);
+	pAPluginsInfo->plug(pop_action);
 }
 
 void KSquirrel::createToolbar(KToolBar *tools)
 {
-	tools->insertWidget(0, 0, new QToolButton(KSquirrel::loader()->loadIcon("back", KIcon::Desktop, 22), i18n("Back"), QString::null, pWidgetStack->pABack, SLOT(activate()), tools));
-	tools->insertWidget(0, 0, new QToolButton(KSquirrel::loader()->loadIcon("forward", KIcon::Desktop, 22), i18n("Forward"), QString::null, pWidgetStack->pAForw, SLOT(activate()), tools));
-	tools->insertWidget(0, 0, new QToolButton(KSquirrel::loader()->loadIcon("up", KIcon::Desktop, 22), i18n("Up"), QString::null, pWidgetStack->pAUp, SLOT(activate()), tools));
+	tools->insertWidget(0, 0, new QToolButton(SQ_IconLoader::instance()->loadIcon("back", KIcon::Desktop, 22), i18n("Back"), QString::null, pWidgetStack->pABack, SLOT(activate()), tools));
+	tools->insertWidget(0, 0, new QToolButton(SQ_IconLoader::instance()->loadIcon("forward", KIcon::Desktop, 22), i18n("Forward"), QString::null, pWidgetStack->pAForw, SLOT(activate()), tools));
+	tools->insertWidget(0, 0, new QToolButton(SQ_IconLoader::instance()->loadIcon("up", KIcon::Desktop, 22), i18n("Up"), QString::null, pWidgetStack->pAUp, SLOT(activate()), tools));
 
-//	tools->insertLineSeparator();
 	pWidgetStack->pAHome->plug(tools);
-//	pWidgetStack->pAMkDir->plug(tools);
-//	pWidgetStack->pAHidden->plug(tools);
 
 	tools->insertLineSeparator();
 	pARaiseListView->plug(tools);
@@ -507,6 +528,7 @@ void KSquirrel::createToolbar(KToolBar *tools)
 	pARaiseDetailView->plug(tools);
 	pARaiseThumbView->plug(tools);
 	pAThumbs->plug(tools);
+	pASlideShow->plug(tools);
 /*
 	tools->insertLineSeparator();
 	pAImageToolbar->plug(tools);
@@ -543,38 +565,48 @@ void KSquirrel::createActions()
 	pAThumbs = new KActionMenu(i18n("Thumbnail size"), "thumbnail");
 	pAExit = KStdAction::quit(this, SLOT(close()), actionCollection(), "SQ close");
   	pAConfigure = KStdAction::preferences(this, SLOT(slotOptions()), actionCollection(), "SQ edit options");
-	pAGLView = new KAction(i18n("Image window"), "desktop", KShortcut(CTRL+Key_I), this, SLOT(raiseGLWidget()), actionCollection(), "SQ gl view widget");
+	pAGLView = new KAction(i18n("Image window"), "desktop", CTRL+Key_I, this, SLOT(raiseGLWidget()), actionCollection(), "SQ gl view widget");
 	pARescan = KStdAction::redisplay(this, SLOT(slotRescan()), actionCollection(), "SQ rescan libraries");
 	pARescan->setText(i18n("Rescan libraries"));
-	pAExtTools = new KAction(i18n("Configure external tools ..."), "runprog", KShortcut(CTRL + Key_H), this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
-	pAFilters = new KAction(i18n("Configure filters ..."), "filefind", KShortcut(CTRL + Key_F), this, SLOT(slotFilters()), actionCollection(), "SQ filters");
+	pAExtTools = new KAction(i18n("Configure external tools..."), "runprog", 0, this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
+	pAFilters = new KAction(i18n("Configure filters..."), "filefind", 0, this, SLOT(slotFilters()), actionCollection(), "SQ filters");
 	pAGotoTray = new KAction(i18n("Goto tray"), "idea", 0, this, SLOT(slotGotoTray()), actionCollection(), "SQ goto tray");
 	pAOpenAndSet = new KAction(i18n("Open file") + QString::fromLatin1(" #2"), "fileopen", 0, this, SLOT(slotOpenFileAndSet()), actionCollection(), "SQ open and set");
 	pAOpen = new KAction(i18n("Open file"), "fileopen", 0, this, SLOT(slotOpenFile()), actionCollection(), "SQ open file");
 	pATCMaster = new KAction(i18n("Manipulate thumbnail cache"), "cache", 0, this, SLOT(slotTCMaster()), actionCollection(), "SQ TC Master");
+	pASelectAll = KStdAction::selectAll(0, 0, actionCollection(), "SQ Select All");
+	pADeselectAll = KStdAction::deselect(0, 0, actionCollection(), "SQ Deselect All");
 
-	pARaiseListView = new KRadioAction(i18n("List"), "view_multicolumn", KShortcut(CTRL + Key_1), this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
-	pARaiseIconView = new KRadioAction(i18n("Icons"), "view_icon", KShortcut(CTRL + Key_2), this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
-	pARaiseDetailView = new KRadioAction(i18n("Details"), "view_detailed", KShortcut(CTRL + Key_3), this, SLOT(slotRaiseDetailView()), actionCollection(), "SQ raise detailed view");
-	pARaiseThumbView = new KRadioAction(i18n("Thumbnails"), "view_icon", KShortcut(CTRL + Key_4), this, SLOT(slotRaiseThumbView()), actionCollection(), "SQ raise thumbs view");
+	pARaiseListView = new KRadioAction(i18n("List"), "view_multicolumn", CTRL + Key_1, this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
+	pARaiseIconView = new KRadioAction(i18n("Icons"), "view_icon", CTRL + Key_2, this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
+	pARaiseDetailView = new KRadioAction(i18n("Details"), "view_detailed", CTRL + Key_3, this, SLOT(slotRaiseDetailView()), actionCollection(), "SQ raise detailed view");
+	pARaiseThumbView = new KRadioAction(i18n("Thumbnails"), "view_icon", CTRL + Key_4, this, SLOT(slotRaiseThumbView()), actionCollection(), "SQ raise thumbs view");
 
-	pATree = new KToggleAction(i18n("Show tree"), "view_tree", KShortcut(CTRL + Key_T), 0, 0, actionCollection(), "SQ toggle tree");
-	pAURL = new KToggleAction(i18n("Show URL box"), "history", KShortcut(CTRL + Key_U), 0, 0, actionCollection(), "SQ toggle url box");
-	pASeparateGL = new KToggleAction(i18n("Separate image window"), "window_new", KShortcut(CTRL + Key_G), 0, 0, actionCollection(), "SQ toggle gl separate");
-	pAImageToolbar = new KAction(i18n("Edit selected images"), "gimp", KShortcut(CTRL + Key_E), this, SLOT(slotShowImageEditActions()), actionCollection(), "SQ toggle imagepanel");
+	pATree = new KToggleAction(i18n("Show tree"), "view_tree", CTRL + Key_T, 0, 0, actionCollection(), "SQ toggle tree");
+	pAURL = new KToggleAction(i18n("Show URL box"), "history", CTRL + Key_U, 0, 0, actionCollection(), "SQ toggle url box");
+	pASeparateGL = new KToggleAction(i18n("Separate image window"), "window_new", 0, 0, 0, actionCollection(), "SQ toggle gl separate");
+	pAImageToolbar = new KAction(i18n("Edit selected images"), "gimp", CTRL + Key_E, this, SLOT(slotShowImageEditActions()), actionCollection(), "SQ toggle imagepanel");
 
-	pAImageResize = new KAction(i18n("Resize"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/resize.png")), CTRL+Key_R, SQ_Resizer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Resize");
-	pAImageConvert = new KAction(i18n("Convert"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/convert.png")), CTRL+Key_K, SQ_Converter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Convert");
-	pAImageBCG = new KAction(i18n("Colorize"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/bcg.png")), CTRL+Key_S, SQ_Contraster::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image BCG");
-	pAImageRotate = new KAction(i18n("Rotate"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/rotate.png")), CTRL+Key_J, SQ_Rotater::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Rotate");
-	pAImageFilter = new KAction(i18n("Filter"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/filter.png")), CTRL+Key_D, 0, 0, actionCollection(), "SQ Image Filter");
-//	pAImageFilter = new KAction(i18n("Filter"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/filter.png")), CTRL+Key_D, SQ_Filter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Filter");
-	pAPrintImages = new KAction(i18n("Print"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/print.png")), CTRL+Key_P, SQ_Printer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Print");
+	pAImageResize = new KAction(i18n("Resize"), locate("appdata", "images/imageedit/resize.png"), CTRL+Key_R, SQ_Resizer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Resize");
+	pAImageConvert = new KAction(i18n("Convert"), locate("appdata", "images/imageedit/convert.png"), CTRL+Key_K, SQ_Converter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Convert");
+	pAImageBCG = new KAction(i18n("Colorize"), locate("appdata", "images/imageedit/bcg.png"), CTRL + Key_G, SQ_Contraster::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image BCG");
+	pAImageRotate = new KAction(i18n("Rotate"), locate("appdata", "images/imageedit/rotate.png"), CTRL+Key_J, SQ_Rotater::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Rotate");
+	pAImageFilter = new KAction(i18n("Filter"), locate("appdata", "images/imageedit/filter.png"), CTRL+Key_F, SQ_Filter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Filter");
+	pAPrintImages = new KAction(i18n("Print"), locate("appdata", "images/imageedit/print.png"), CTRL+Key_P, SQ_Printer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Print");
 
-	pAThumb0 = new KRadioAction(i18n("Small thumbnails"), QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_small.png")), 0, this, SLOT(slotThumbsSmall()), actionCollection(), "SQ thumbs0");
-	pAThumb1 = new KRadioAction(i18n("Medium thumbnails"), QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_medium.png")), 0, this, SLOT(slotThumbsMedium()), actionCollection(), "SQ thumbs1");
-	pAThumb2 = new KRadioAction(i18n("Large thumbnails"), QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_large.png")), 0, this, SLOT(slotThumbsLarge()), actionCollection(), "SQ thumbs2");
-	pAThumb3 = new KRadioAction(i18n("Huge thumbnails"), QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_huge.png")), 0, this, SLOT(slotThumbsHuge()), actionCollection(), "SQ thumbs3");
+	pASlideShow = new KToggleAction(i18n("Slideshow"), locate("appdata", "images/actions/slideshow.png"), CTRL+Key_S, 0, 0, actionCollection(), "SQ toggle slideshow");
+	pASlideShowDialog = new KAction(i18n("Slideshow through dialog"), 0, CTRL+ALT+Key_S, this, SLOT(slotSlideShowDialog()), actionCollection(), "SQ SlideShow Dialog");
+	connect(pASlideShow, SIGNAL(toggled(bool)), this, SLOT(slotSlideShowToggle(bool)));
+
+	pAPluginsInfo = new KAction(i18n("Plugins information"), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
+
+	pAThumb0 = new KRadioAction(i18n("Small thumbnails"), locate("appdata", "images/thumbs/thumbs_small.png"), 0, this, SLOT(slotThumbsSmall()), actionCollection(), "SQ thumbs0");
+	pAThumb1 = new KRadioAction(i18n("Medium thumbnails"), locate("appdata", "images/thumbs/thumbs_medium.png"), 0, this, SLOT(slotThumbsMedium()), actionCollection(), "SQ thumbs1");
+	pAThumb2 = new KRadioAction(i18n("Large thumbnails"), locate("appdata", "images/thumbs/thumbs_large.png"), 0, this, SLOT(slotThumbsLarge()), actionCollection(), "SQ thumbs2");
+	pAThumb3 = new KRadioAction(i18n("Huge thumbnails"), locate("appdata", "images/thumbs/thumbs_huge.png"), 0, this, SLOT(slotThumbsHuge()), actionCollection(), "SQ thumbs3");
+
+	pASelectGroup = new KAction(i18n("Select group"), "viewmag+", Key_Plus, 0, 0, actionCollection(), "SQ Select Group");
+	pADeselectGroup = new KAction(i18n("Deselect group"), "viewmag-", Key_Minus, 0, 0, actionCollection(), "SQ Deselect Group");
 
 	QString thumbs_size__ = QString::fromLatin1("thumbs_size__");
 	pAThumb0->setExclusiveGroup(thumbs_size__);
@@ -735,7 +767,7 @@ void KSquirrel::applyDefaultSettings()
 	pWidgetStack->configureClickPolicy();
 	pWidgetStack->updateGrid(!updateThumbs | updateDirs);
 
-	cache->setCacheLimit(kconf->readNumEntry("Thumbnails", "cache", 1024*10));
+	SQ_PixmapCache::instance()->setCacheLimit(kconf->readNumEntry("Thumbnails", "cache", 1024*10));
 
 	if(kconf->readBoolEntry("Main", "sync", true))
 		kconf->sync();
@@ -819,11 +851,12 @@ void KSquirrel::saveValues()
 
 QString KSquirrel::slotRescan()
 {
-	QString libPrefix = "/usr/lib/ksquirrel-libs/";
+	const QString libPrefix = "/usr/lib/ksquirrel-libs/";
 
 	KURL url = libPrefix;
 
 	SQ_LibraryHandler::instance()->clear();
+
 	libl->slotOpenURL(url, false, true);
 
 	return libPrefix;
@@ -842,12 +875,12 @@ void KSquirrel::createPostSplash()
 	QPixmap todo = QPixmap::fromMimeSource(locate("appdata", "images/tray.png"));
 
 	if(todo.isNull())
-	    todo = KSquirrel::loader()->loadIcon("ksquirrel", KIcon::Desktop, 16);
+	    todo = SQ_IconLoader::instance()->loadIcon("ksquirrel", KIcon::Desktop, 16);
 
 	pp->setPixmap(todo);
 	pp->setFixedWidth(18);
 
-	QLabel *l = new QLabel(i18n(" writing settings and thumbnails ...  "), hbox);
+	QLabel *l = new QLabel(i18n(" writing settings and thumbnails...  "), hbox);
 	l->setPalette(QPalette(cc, cc));
 	l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -884,7 +917,7 @@ void KSquirrel::finalActions()
 {
 	hide();
 
-	bool create_splash = (!kconf->readBoolEntry("Thumbnails", "dont write", false)) & (!cache->empty());
+	bool create_splash = (!kconf->readBoolEntry("Thumbnails", "dont write", false)) & (!SQ_PixmapCache::instance()->empty());
 
 	if(create_splash)
 	{
@@ -896,7 +929,7 @@ void KSquirrel::finalActions()
 	kconf->sync();
 
 	if(create_splash)
-		cache->sync();
+		SQ_PixmapCache::instance()->sync();
 }
 
 void KSquirrel::enableThumbsMenu(bool enable)
@@ -921,6 +954,10 @@ void KSquirrel::preCreate()
 	new SQ_Printer;
 	new SQ_Filter;
 
+	slideShowTimer = new QTimer(this);
+
+	connect(slideShowTimer, SIGNAL(timeout()), this, SLOT(slotSlideShowNextImage()));
+
 	createActions();
 
 	actionFilterMenu = new KPopupMenu;
@@ -941,7 +978,7 @@ void KSquirrel::resizeEvent(QResizeEvent *e)
 void KSquirrel::slotContinueLoading()
 {
 	if(SQ_HLOptions::instance()->showLibsAndExit)
-		_exit(0);
+		exit(0);
 
 	disconnect(libl, SIGNAL(finishedInit()), this, SLOT(slotContinueLoading()));
 
@@ -1123,11 +1160,6 @@ KPopupMenu* KSquirrel::menuViews()
 	return actionViews;
 }
 
-KIconLoader* KSquirrel::loader()
-{
-	return iconL;
-}
-
 KSquirrel* KSquirrel::app()
 {
 	return sing;
@@ -1203,17 +1235,46 @@ QLabel* KSquirrel::sbarWidget(const QString &name)
 	return sbarwidgets[name];
 }
 
+QString KSquirrel::getArg(const QByteArray &data)
+{
+	QDataStream args(data, IO_ReadOnly);
+
+	QString arg;
+
+	args >> arg;
+
+	return arg;
+}
+
 bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
 {
 	if(fun == "control(QString)")
 	{
-		QDataStream args(data, IO_ReadOnly);
+		control(getArg(data));
 
-		QString arg1;
+		replyType = "void";
 
-		args >> arg1;
+		return true;
+	}
+	else if(fun == "load_image(QString)")
+	{
+		QString arg = getArg(data);
 
-		control(arg1);
+		QFileInfo fm(arg);
+
+		if(fm.isFile() && fm.isReadable())
+		{
+			KFileView *v = pWidgetStack->visibleWidget()->view();
+			v->clearSelection();
+			v->setCurrentItem(fm.fileName());
+			v->setSelected(v->currentFileItem(), true);
+
+			if(SQ_LibraryHandler::instance()->supports(arg))
+			{
+				stopSlideShow();
+				SQ_GLWidget::window()->slotStartDecoding(arg, true);
+			}
+		}
 
 		replyType = "void";
 
@@ -1228,15 +1289,16 @@ QCStringList KSquirrel::functions()
 	QCStringList result = DCOPObject::functions();
 
 	result << "void control(QString)";
+	result << "void load_image(QString)";
 
 	return result;
 }
 
-void KSquirrel::control(const QString &str)
+void KSquirrel::control(const QString &command)
 {
-	if(messages.contains(str))
+	if(messages.contains(command))
 	{
-	    int id = messages[str];
+	    int id = messages[command];
 
 	    QKeyEvent *ev = new QKeyEvent(QEvent::KeyPress, id, id, Qt::NoButton);
 
@@ -1244,17 +1306,15 @@ void KSquirrel::control(const QString &str)
 	}
 	else
 	{
-		qDebug("\nList of available DCOP parameters:");
+		qDebug("\nList of available DCOP parameters for control() method:");
 		qDebug("*****************************");
 
-		QValueList<QString> keys = messages.keys();
+		QMap<QString, int>::iterator BEGIN = messages.begin();
+		QMap<QString, int>::iterator   END = messages.end();
 
-		QValueList<QString>::iterator BEGIN = keys.begin();
-		QValueList<QString>::iterator   END = keys.end();
-
-		for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
+		for(QMap<QString, int>::iterator it = BEGIN;it != END;++it)
 		{
-		    qDebug("%s", (*it).ascii());
+		    qDebug("%s", it.key().ascii());
 		}
 
 		qDebug("******************************\n");
@@ -1302,4 +1362,113 @@ void KSquirrel::slotCheckVersion()
 	SQ_CheckVersion *ch = new SQ_CheckVersion(this);
 
 	ch->exec();
+}
+
+bool KSquirrel::checkConfigFileVersion()
+{
+	SQ_Config tmpconf("ksquirrelrc");
+
+	QString version = tmpconf.readEntry("Main", "version");
+
+	return (version != SQ_VERSION);
+}
+
+void KSquirrel::slotSlideShowToggle(bool go)
+{
+	SQ_GLWidget::window()->updateSlideShowButton(go);
+
+	if(go)
+	{
+		if(slideShowDir.isEmpty())
+			slideShowDir = SQ_WidgetStack::instance()->getURL().path();
+
+		slideShowPrivate();
+	}
+	else
+		stopSlideShow();
+}
+
+void KSquirrel::slotSlideShowDialog()
+{
+	SQ_SlideShow *s = new SQ_SlideShow(this);
+
+	if(s->exec(slideShowDir) == QDialog::Accepted)
+		pASlideShow->activate();
+}
+
+void KSquirrel::slideShowPrivate()
+{
+	slideShowTimer->stop();
+	slideShowStop = false;
+	slideShowDelay = SQ_Config::instance()->readNumEntry("Slideshow", "delay", 1000);
+
+	if(slideShowDelay < 0) slideShowDelay = 1000;
+
+	slideShowItems.setSorting(QDir::Name);
+	slideShowItems.setFilter(QDir::Files | QDir::Readable | QDir::Hidden);
+	slideShowItems.setPath(slideShowDir);
+
+	slideShowTotal = slideShowItems.count();
+
+	if(!slideShowTotal)
+	{
+		stopSlideShow();
+		return;
+	}
+
+	slideShowIndex = 0;
+	slideShowName = slideShowDir + "/" + slideShowItems[slideShowIndex];
+
+	slideShowTimer->start(1, true);
+}
+
+void KSquirrel::slotSlideShowNextImage()
+{
+	if(slideShowStop)
+		return;
+
+	if(SQ_LibraryHandler::instance()->supports(slideShowName))
+	{
+		SQ_GLWidget::window()->slotStartDecoding(slideShowName, true);
+	}
+
+	slideShowIndex++;
+
+	if(slideShowIndex == slideShowTotal)
+	{
+		stopSlideShow();
+		return;
+	}
+
+	slideShowName = slideShowDir + "/" + slideShowItems[slideShowIndex];
+
+	slideShowTimer->start(slideShowDelay, true);
+}
+
+void KSquirrel::stopSlideShow()
+{
+	if(!slideShowRunning())
+		return;
+
+	slideShowStop = true;
+	slideShowTimer->stop();
+	slideShowDir = QString::null;
+
+	if(SQ_GLWidget::window()->pAFull->isChecked() && SQ_Config::instance()->readBoolEntry("Slideshow", "fullscreen", true))
+		SQ_GLWidget::window()->pAToolFull->animateClick();
+
+	pASlideShow->setChecked(false);
+	SQ_GLWidget::window()->updateSlideShowButton(false);
+}
+
+bool KSquirrel::slideShowRunning() const
+{
+	return !slideShowStop;
+}
+
+void KSquirrel::slotPluginsInfo()
+{
+	SQ_PluginsInfo *pi = new SQ_PluginsInfo(this);
+
+	pi->exec();
 }

@@ -24,13 +24,13 @@
 
 #include <qstringlist.h>
 #include <qmap.h>
+#include <qdir.h>
 
 #include <kmainwindow.h>
 #include <kio/job.h>
 #include <dcopobject.h>
 
 class KMenuBar;
-class KIconLoader;
 class KToolBar;
 class KStatusBar;
 class KSystemTray;
@@ -47,6 +47,7 @@ class QLabel;
 class QWidgetStack;
 class QHBox;
 class QVBox;
+class QTimer;
 
 class SQ_WidgetStack;
 class SQ_SystemTray;
@@ -70,10 +71,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
 	public:
 		KSquirrel(QWidget *parent = 0, const char *name = 0);
 		~KSquirrel();
-		
+
 		void finalActions();
 		void enableThumbsMenu(bool);
 		void setCaption(const QString &cap);
+		void stopSlideShow();
+		bool slideShowRunning() const;
 
 		KPopupMenu* menuFilters();
 		KPopupMenu* menuViews();
@@ -107,13 +110,17 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		void applyDefaultSettings();
 		void saveValues();
 		void openFile(bool parseURL = false);
+		void slideShowPrivate();
 
 		void setFilter(const QString &f, const int id);
 
 		void fillMessages();
 
+		bool checkConfigFileVersion();
+
 		// dcop method
-	        void control(const QString &str);
+		void control(const QString &command);
+		QString getArg(const QByteArray &data);
 
 	signals:
 		void thumbSizeChanged(const QString&);
@@ -151,35 +158,39 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		void slotContinueLoading2();
 		void slotShowImageEditActions();
 		void slotTCMaster();
+		void slotSlideShowDialog();
+		void slotSlideShowNextImage();
+		void slotSlideShowToggle(bool);
+		void slotPluginsInfo();
 		QString slotRescan();
 
 	public:
-		static KSquirrel 			*sing;
-		static KIconLoader		*iconL;
-
-		static KIconLoader* 		loader();
 		static KSquirrel* 		app();
 
 		KHistoryCombo			*pCurrentURL;
 		QStringList				*sqFiltersName, *sqFiltersExt;
 		KAction					*pAImageConvert, *pAImageResize, *pAImageBCG, *pAImageRotate,
 								*pAImageToolbar, *pAImageFilter, *pAPrintImages, *pAConfigure,
-								*pACheck;
+								*pACheck, *pASelectGroup, *pADeselectGroup, *pASelectAll, *pADeselectAll;
+		KToggleAction			*pASlideShow;
 
 	private:
+		static KSquirrel 			*sing;
+
 		KToolBar				*tools;
 		KMenuBar				*menubar;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView, *pARaiseThumbView;
 		KActionMenu			*pAThumbs;
 		KRadioAction			*pAThumb0, *pAThumb1, *pAThumb2, *pAThumb3;
 		KToggleAction			*pATree, *pAURL, *pASeparateGL;
-		KPopupMenu			*pop_file, *pop_view, *pop_edit;
+		KPopupMenu			*pop_file, *pop_view, *pop_edit, *pop_action;
 		KPopupMenu			*actionFilterMenu, *actionViews;
 		KActionMenu 			*bookmarks;
 		KBookmarkMenu			*bookmarkMenu;
 		KIO::ListJob				*job;
 		KAction					*pAOpen, *pAOpenAndSet, *pATCMaster, *pAGLView,
-								*pAExit, *pARescan, *pAExtTools, *pAFilters, *pAGotoTray;
+								*pAExit, *pARescan, *pAExtTools, *pAFilters, *pAGotoTray,
+								*pASlideShowDialog, *pAPluginsInfo;
 		KStatusBar				*sbar;
 
 		QSplitter				*mainSplitter;
@@ -192,6 +203,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		QLabel					*dirInfo, *fileIcon, *fileName;
 		QString					new_version;
 		QMap<QString, int>		messages;
+		QString					slideShowDir;
+		QDir					slideShowItems;
+		int						slideShowIndex, slideShowDelay, slideShowTotal;
+		QString					slideShowName;
+		QTimer					*slideShowTimer;
+		bool					slideShowStop;
 
 		SQ_LocationToolbar		*pTLocation;
 		SQ_Dir					*dir;

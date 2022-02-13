@@ -11,7 +11,7 @@ void SQ_ImageRotate::init()
 {
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_rotate.png")));
     pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
+    pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pushRotateL->setPixmap(locate("appdata", "images/imageedit/rotateL.png"));
     pushRotateR->setPixmap(locate("appdata", "images/imageedit/rotateR.png"));
     pushFlipV->setPixmap(locate("appdata", "images/imageedit/flipV.png"));
@@ -24,7 +24,12 @@ void SQ_ImageRotate::init()
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "rotate_close", true);
 
     sample.load(locate("appdata", "images/imageedit/edit_sample.png"));
-    
+
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "rotate_dontshowhelp", false));
+
+    if(checkDontShow->isChecked())
+	slotNext();
+
     if(sample.isNull())
 	return;
 
@@ -79,6 +84,8 @@ void SQ_ImageRotate::slotStartRotate()
 	    ropt.fliph = false;
 	}
     }
+
+    SQ_Config::instance()->writeEntry("rotate_dontshowhelp", checkDontShow->isChecked());
 
     emit rotate(&imageopt, &ropt);
 }
@@ -221,14 +228,11 @@ void SQ_ImageRotate::slotOptions()
 {
     SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
 
-    if(o->exec(&imageopt) == QDialog::Accepted)
-    {
-	SQ_Config::instance()->setGroup("Image edit options");
-	SQ_Config::instance()->writeEntry("rotate_putto", imageopt.putto);
-	SQ_Config::instance()->writeEntry("rotate_prefix", imageopt.prefix);
-	SQ_Config::instance()->writeEntry("rotate_where_to_put", imageopt.where_to_put);
-	SQ_Config::instance()->writeEntry("rotate_close", imageopt.close);
-    }
+    // SQ_ImageEditOptions will write needed KConfig entries, if
+    // exec() will return QDialog::Accepted
+    o->setConfigPrefix("rotate");
+
+    o->exec(&imageopt);
 }
 
 void SQ_ImageRotate::updateAngle()
@@ -262,6 +266,23 @@ void SQ_ImageRotate::closeEvent(QCloseEvent *e)
     else
     {
 	e->ignore();
-	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
+}
+
+void SQ_ImageRotate::slotNext()
+{
+    pushNext->setDefault(false);
+    pushRotate->setDefault(true);
+    pushRotate->setFocus();
+
+    widgetStackWizard->raiseWidget(1);
+}
+
+void SQ_ImageRotate::slotBack()
+{
+    pushNext->setDefault(true);
+    pushRotate->setDefault(false);
+
+    widgetStackWizard->raiseWidget(0);
 }

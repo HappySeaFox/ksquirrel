@@ -11,7 +11,7 @@ void SQ_ImageResize::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_resize.png")));
     pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
+    pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     groupBoxApsect->setEnabled(false);
 
     method = SQ_Config::instance()->readEntry("Image edit options", "resize_method", "NEAREST");
@@ -53,13 +53,17 @@ void SQ_ImageResize::init()
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "resize_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "resize_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "resize_close", true);
-    
+
     checkPreserve->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "resize_preserve", true));
     comboFit->setCurrentItem(SQ_Config::instance()->readNumEntry("Image edit options", "resize_fit", 2));
     comboApplyTo->setCurrentItem(SQ_Config::instance()->readNumEntry("Image edit options", "resize_applyto", 2));
     kIntPercent->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_percent", 100));
     kIntPixW->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_w", 1));
     kIntPixH->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_h", 1));
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "resize_dontshowhelp", false));
+
+    if(checkDontShow->isChecked())
+	slotNext();
 
     done = true;
 }
@@ -88,8 +92,8 @@ void SQ_ImageResize::slotDebugText(const QString &text, bool bold)
 void SQ_ImageResize::slotStartResize()
 {
     pushCancel->setFocus();
-    pushResize->setDefault(false);
-    pushResize->setDisabled(true);
+    pushNext->setDefault(false);
+    pushNext->setDisabled(true);
     pushCancel->setDefault(true);
     pushCancel->setFocus();
     widgetStack->raiseWidget(1);
@@ -119,6 +123,7 @@ void SQ_ImageResize::slotStartResize()
     SQ_Config::instance()->writeEntry("resize_preserve", checkPreserve->isChecked());
     SQ_Config::instance()->writeEntry("resize_which", id);
     SQ_Config::instance()->writeEntry("resize_method", method);
+    SQ_Config::instance()->writeEntry("resize_dontshowhelp", checkDontShow->isChecked());
 
     emit _resize(&imageopt, &ropt);
 }
@@ -127,14 +132,11 @@ void SQ_ImageResize::slotOptions()
 {
     SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
 
-    if(o->exec(&imageopt) == QDialog::Accepted)
-    {
-	SQ_Config::instance()->setGroup("Image edit options");
-	SQ_Config::instance()->writeEntry("resize_putto", imageopt.putto);
-	SQ_Config::instance()->writeEntry("resize_prefix", imageopt.prefix);
-	SQ_Config::instance()->writeEntry("resize_where_to_put", imageopt.where_to_put);
-	SQ_Config::instance()->writeEntry("resize_close", imageopt.close);
-    }
+    // SQ_ImageEditOptions will write needed KConfig entries, if
+    // exec() will return QDialog::Accepted
+    o->setConfigPrefix("resize");
+
+    o->exec(&imageopt);
 }
 
 void SQ_ImageResize::slotDone(bool close)
@@ -173,6 +175,23 @@ void SQ_ImageResize::closeEvent(QCloseEvent *e)
     else
     {
 	e->ignore();
-	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
+}
+
+void SQ_ImageResize::slotNext()
+{
+    pushNext->setDefault(false);
+    pushResize->setDefault(true);
+    pushResize->setFocus();
+
+    widgetStackWizard->raiseWidget(1);
+}
+
+void SQ_ImageResize::slotBack()
+{
+    pushNext->setDefault(true);
+    pushResize->setDefault(false);
+
+    widgetStackWizard->raiseWidget(0);
 }

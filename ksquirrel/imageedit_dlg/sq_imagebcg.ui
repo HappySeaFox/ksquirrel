@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>378</width>
-            <height>403</height>
+            <width>436</width>
+            <height>389</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,9 +22,9 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QWidgetStack" row="0" column="1" rowspan="1" colspan="3">
+        <widget class="QWidgetStack" row="0" column="0">
             <property name="name">
-                <cstring>widgetStack</cstring>
+                <cstring>widgetStackWizard</cstring>
             </property>
             <widget class="QWidget">
                 <property name="name">
@@ -40,601 +40,114 @@
                     <property name="margin">
                         <number>0</number>
                     </property>
-                    <spacer row="2" column="2">
+                    <widget class="QLabel" row="0" column="1" rowspan="1" colspan="3">
                         <property name="name">
-                            <cstring>spacer11</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>MinimumExpanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>16</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="SQ_BCGLabel" row="3" column="2">
-                        <property name="name">
-                            <cstring>pixmap</cstring>
+                            <cstring>textLabel1_2</cstring>
                         </property>
                         <property name="sizePolicy">
                             <sizepolicy>
-                                <hsizetype>0</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>100</width>
-                                <height>100</height>
-                            </size>
-                        </property>
-                    </widget>
-                    <spacer row="4" column="2">
-                        <property name="name">
-                            <cstring>spacer10</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Fixed</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>16</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="SQ_BCGLabel" row="5" column="2">
-                        <property name="name">
-                            <cstring>pixmap1</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>0</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>100</width>
-                                <height>100</height>
-                            </size>
-                        </property>
-                    </widget>
-                    <spacer row="6" column="2">
-                        <property name="name">
-                            <cstring>spacer12_2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>MinimumExpanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>16</width>
-                                <height>25</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QWidgetStack" row="2" column="0" rowspan="5" colspan="1">
-                        <property name="name">
-                            <cstring>widgetStackParams</cstring>
-                        </property>
-                        <property name="frameShape">
-                            <enum>GroupBoxPanel</enum>
-                        </property>
-                        <widget class="QWidget">
-                            <property name="name">
-                                <cstring>WStackPage</cstring>
-                            </property>
-                            <attribute name="id">
-                                <number>0</number>
-                            </attribute>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>4</number>
-                                </property>
-                                <widget class="QSpinBox" row="2" column="0">
-                                    <property name="name">
-                                        <cstring>spinB</cstring>
-                                    </property>
-                                    <property name="maxValue">
-                                        <number>255</number>
-                                    </property>
-                                    <property name="minValue">
-                                        <number>-255</number>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton" row="0" column="2">
-                                    <property name="name">
-                                        <cstring>pushResetG</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="autoDefault">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="flat">
-                                        <bool>true</bool>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>pushResetC</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="autoDefault">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="flat">
-                                        <bool>true</bool>
-                                    </property>
-                                </widget>
-                                <widget class="KDoubleSpinBox" row="2" column="2">
-                                    <property name="name">
-                                        <cstring>spinG</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QSpinBox" row="2" column="1">
-                                    <property name="name">
-                                        <cstring>spinC</cstring>
-                                    </property>
-                                    <property name="maxValue">
-                                        <number>255</number>
-                                    </property>
-                                    <property name="minValue">
-                                        <number>-255</number>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton" row="0" column="0">
-                                    <property name="name">
-                                        <cstring>pushResetB</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="autoDefault">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="flat">
-                                        <bool>true</bool>
-                                    </property>
-                                </widget>
-                                <widget class="QLayoutWidget" row="1" column="0">
-                                    <property name="name">
-                                        <cstring>layout6</cstring>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="SQ_Label">
-                                            <property name="name">
-                                                <cstring>sQ_LabelB</cstring>
-                                            </property>
-                                        </widget>
-                                        <widget class="QSlider">
-                                            <property name="name">
-                                                <cstring>sliderB</cstring>
-                                            </property>
-                                            <property name="minValue">
-                                                <number>-255</number>
-                                            </property>
-                                            <property name="maxValue">
-                                                <number>255</number>
-                                            </property>
-                                            <property name="orientation">
-                                                <enum>Vertical</enum>
-                                            </property>
-                                            <property name="tickmarks">
-                                                <enum>Above</enum>
-                                            </property>
-                                            <property name="tickInterval">
-                                                <number>20</number>
-                                            </property>
-                                            <property name="whatsThis" stdset="0">
-                                                <string>Brightness</string>
-                                            </property>
-                                        </widget>
-                                    </hbox>
-                                </widget>
-                                <widget class="QLayoutWidget" row="1" column="1">
-                                    <property name="name">
-                                        <cstring>layout5</cstring>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="SQ_Label">
-                                            <property name="name">
-                                                <cstring>sQ_LabelC</cstring>
-                                            </property>
-                                        </widget>
-                                        <widget class="QSlider">
-                                            <property name="name">
-                                                <cstring>sliderC</cstring>
-                                            </property>
-                                            <property name="minValue">
-                                                <number>-255</number>
-                                            </property>
-                                            <property name="maxValue">
-                                                <number>255</number>
-                                            </property>
-                                            <property name="orientation">
-                                                <enum>Vertical</enum>
-                                            </property>
-                                            <property name="tickmarks">
-                                                <enum>Above</enum>
-                                            </property>
-                                            <property name="tickInterval">
-                                                <number>20</number>
-                                            </property>
-                                            <property name="whatsThis" stdset="0">
-                                                <string>Contrast</string>
-                                            </property>
-                                        </widget>
-                                    </hbox>
-                                </widget>
-                                <widget class="QLayoutWidget" row="1" column="2">
-                                    <property name="name">
-                                        <cstring>layout4</cstring>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="SQ_Label">
-                                            <property name="name">
-                                                <cstring>sQ_LabelG</cstring>
-                                            </property>
-                                        </widget>
-                                        <widget class="QSlider">
-                                            <property name="name">
-                                                <cstring>sliderG</cstring>
-                                            </property>
-                                            <property name="minValue">
-                                                <number>0</number>
-                                            </property>
-                                            <property name="maxValue">
-                                                <number>600</number>
-                                            </property>
-                                            <property name="value">
-                                                <number>100</number>
-                                            </property>
-                                            <property name="orientation">
-                                                <enum>Vertical</enum>
-                                            </property>
-                                            <property name="tickmarks">
-                                                <enum>Above</enum>
-                                            </property>
-                                            <property name="tickInterval">
-                                                <number>17</number>
-                                            </property>
-                                            <property name="whatsThis" stdset="0">
-                                                <string>Gamma</string>
-                                            </property>
-                                        </widget>
-                                    </hbox>
-                                </widget>
-                            </grid>
-                        </widget>
-                        <widget class="QWidget">
-                            <property name="name">
-                                <cstring>WStackPage</cstring>
-                            </property>
-                            <attribute name="id">
-                                <number>1</number>
-                            </attribute>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>4</number>
-                                </property>
-                                <widget class="QPushButton" row="0" column="0">
-                                    <property name="name">
-                                        <cstring>pushResetRed</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="autoDefault">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="flat">
-                                        <bool>true</bool>
-                                    </property>
-                                </widget>
-                                <widget class="QSpinBox" row="2" column="0">
-                                    <property name="name">
-                                        <cstring>spinRed</cstring>
-                                    </property>
-                                    <property name="maxValue">
-                                        <number>255</number>
-                                    </property>
-                                    <property name="minValue">
-                                        <number>-255</number>
-                                    </property>
-                                </widget>
-                                <widget class="QSpinBox" row="2" column="1">
-                                    <property name="name">
-                                        <cstring>spinGreen</cstring>
-                                    </property>
-                                    <property name="maxValue">
-                                        <number>255</number>
-                                    </property>
-                                    <property name="minValue">
-                                        <number>-255</number>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>pushResetGreen</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="autoDefault">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="flat">
-                                        <bool>true</bool>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton" row="0" column="2">
-                                    <property name="name">
-                                        <cstring>pushResetBlue</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="autoDefault">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="flat">
-                                        <bool>true</bool>
-                                    </property>
-                                </widget>
-                                <widget class="QSpinBox" row="2" column="2">
-                                    <property name="name">
-                                        <cstring>spinBlue</cstring>
-                                    </property>
-                                    <property name="maxValue">
-                                        <number>255</number>
-                                    </property>
-                                    <property name="minValue">
-                                        <number>-255</number>
-                                    </property>
-                                </widget>
-                                <widget class="QLayoutWidget" row="1" column="2">
-                                    <property name="name">
-                                        <cstring>layout1</cstring>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="SQ_Label">
-                                            <property name="name">
-                                                <cstring>sQ_LabelBlue</cstring>
-                                            </property>
-                                        </widget>
-                                        <widget class="QSlider">
-                                            <property name="name">
-                                                <cstring>sliderBlue</cstring>
-                                            </property>
-                                            <property name="minValue">
-                                                <number>-255</number>
-                                            </property>
-                                            <property name="maxValue">
-                                                <number>255</number>
-                                            </property>
-                                            <property name="tickmarks">
-                                                <enum>Above</enum>
-                                            </property>
-                                            <property name="tickInterval">
-                                                <number>20</number>
-                                            </property>
-                                            <property name="whatsThis" stdset="0">
-                                                <string>Blue</string>
-                                            </property>
-                                        </widget>
-                                    </hbox>
-                                </widget>
-                                <widget class="QLayoutWidget" row="1" column="1">
-                                    <property name="name">
-                                        <cstring>layout2</cstring>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="SQ_Label">
-                                            <property name="name">
-                                                <cstring>sQ_LabelGreen</cstring>
-                                            </property>
-                                        </widget>
-                                        <widget class="QSlider">
-                                            <property name="name">
-                                                <cstring>sliderGreen</cstring>
-                                            </property>
-                                            <property name="minValue">
-                                                <number>-255</number>
-                                            </property>
-                                            <property name="maxValue">
-                                                <number>255</number>
-                                            </property>
-                                            <property name="tickmarks">
-                                                <enum>Above</enum>
-                                            </property>
-                                            <property name="tickInterval">
-                                                <number>20</number>
-                                            </property>
-                                            <property name="whatsThis" stdset="0">
-                                                <string>Green</string>
-                                            </property>
-                                        </widget>
-                                    </hbox>
-                                </widget>
-                                <widget class="QLayoutWidget" row="1" column="0">
-                                    <property name="name">
-                                        <cstring>layout3</cstring>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="SQ_Label">
-                                            <property name="name">
-                                                <cstring>sQ_LabelRed</cstring>
-                                            </property>
-                                        </widget>
-                                        <widget class="QSlider">
-                                            <property name="name">
-                                                <cstring>sliderRed</cstring>
-                                            </property>
-                                            <property name="minValue">
-                                                <number>-255</number>
-                                            </property>
-                                            <property name="maxValue">
-                                                <number>255</number>
-                                            </property>
-                                            <property name="tickmarks">
-                                                <enum>Above</enum>
-                                            </property>
-                                            <property name="tickInterval">
-                                                <number>20</number>
-                                            </property>
-                                            <property name="whatsThis" stdset="0">
-                                                <string>Red</string>
-                                            </property>
-                                        </widget>
-                                    </hbox>
-                                </widget>
-                            </grid>
-                        </widget>
-                    </widget>
-                    <widget class="QGroupBox" row="0" column="0" rowspan="2" colspan="3">
-                        <property name="name">
-                            <cstring>groupBox3</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>7</hsizetype>
+                                <hsizetype>3</hsizetype>
                                 <vsizetype>5</vsizetype>
                                 <horstretch>0</horstretch>
                                 <verstretch>0</verstretch>
                             </sizepolicy>
                         </property>
-                        <property name="title">
-                            <string></string>
+                        <property name="text">
+                            <string>&lt;b&gt;Colorize tool&lt;/b&gt;</string>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>6</number>
-                            </property>
-                            <property name="spacing">
-                                <number>0</number>
-                            </property>
-                            <widget class="QPushButton" row="0" column="4">
-                                <property name="name">
-                                    <cstring>push2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="autoDefault">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="flat">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>push1</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="autoDefault">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="flat">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <spacer row="0" column="1">
-                                <property name="name">
-                                    <cstring>spacer26</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>1</width>
-                                        <height>16</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <spacer row="0" column="3">
-                                <property name="name">
-                                    <cstring>spacer27</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>1</width>
-                                        <height>16</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <widget class="QLabel" row="0" column="2">
-                                <property name="name">
-                                    <cstring>text</cstring>
-                                </property>
-                                <property name="alignment">
-                                    <set>WordBreak|AlignCenter</set>
-                                </property>
-                            </widget>
-                        </grid>
                     </widget>
-                    <spacer row="3" column="1">
+                    <widget class="Line" row="1" column="1" rowspan="1" colspan="3">
                         <property name="name">
-                            <cstring>spacer13</cstring>
+                            <cstring>line9</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>HLine</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="1" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>textLabel2_2</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>3</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="frameShape">
+                            <enum>GroupBoxPanel</enum>
+                        </property>
+                        <property name="margin">
+                            <number>6</number>
+                        </property>
+                        <property name="text">
+                            <string>Colorize will help you adjust color balance and brightness, gamma and contrast of your images.</string>
+                        </property>
+                        <property name="textFormat">
+                            <enum>RichText</enum>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="1" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>checkDontShow</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Don't show this help again</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="5" column="2">
+                        <property name="name">
+                            <cstring>pushNext</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Next &gt;</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>false</bool>
+                        </property>
+                        <property name="default">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="5" column="3">
+                        <property name="name">
+                            <cstring>pushCancel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Close</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="Line" row="4" column="1" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>line1_2</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>HLine</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                    </widget>
+                    <spacer row="5" column="1">
+                        <property name="name">
+                            <cstring>spacer3_2</cstring>
                         </property>
                         <property name="orientation">
                             <enum>Horizontal</enum>
@@ -644,45 +157,19 @@
                         </property>
                         <property name="sizeHint">
                             <size>
-                                <width>150</width>
+                                <width>255</width>
                                 <height>16</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QPushButton" row="0" column="3">
+                    <widget class="QLabel" row="0" column="0" rowspan="6" colspan="1">
                         <property name="name">
-                            <cstring>pushOptions</cstring>
+                            <cstring>pixmapA</cstring>
                         </property>
                         <property name="text">
                             <string></string>
                         </property>
-                        <property name="flat">
-                            <bool>true</bool>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Put new files here</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Put new files here</string>
-                        </property>
                     </widget>
-                    <spacer row="1" column="3" rowspan="6" colspan="1">
-                        <property name="name">
-                            <cstring>spacer12</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>16</width>
-                                <height>295</height>
-                            </size>
-                        </property>
-                    </spacer>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -699,91 +186,762 @@
                     <property name="margin">
                         <number>0</number>
                     </property>
-                    <widget class="QTextEdit" row="0" column="0">
+                    <widget class="QPushButton" row="2" column="3">
                         <property name="name">
-                            <cstring>textResult</cstring>
+                            <cstring>pushCancel</cstring>
                         </property>
-                        <property name="wordWrap">
-                            <enum>NoWrap</enum>
+                        <property name="text">
+                            <string>Close</string>
                         </property>
-                        <property name="readOnly">
-                            <bool>true</bool>
-                        </property>
-                        <property name="undoRedoEnabled">
+                        <property name="autoDefault">
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="KProgress" row="1" column="0">
+                    <widget class="QPushButton" row="2" column="2">
                         <property name="name">
-                            <cstring>progress</cstring>
+                            <cstring>pushGO</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Colorize</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QWidgetStack" row="0" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>widgetStack</cstring>
+                        </property>
+                        <widget class="QWidget">
+                            <property name="name">
+                                <cstring>WStackPage</cstring>
+                            </property>
+                            <attribute name="id">
+                                <number>0</number>
+                            </attribute>
+                            <grid>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <spacer row="2" column="2">
+                                    <property name="name">
+                                        <cstring>spacer11</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>MinimumExpanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>16</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="SQ_BCGLabel" row="3" column="2">
+                                    <property name="name">
+                                        <cstring>pixmap</cstring>
+                                    </property>
+                                    <property name="sizePolicy">
+                                        <sizepolicy>
+                                            <hsizetype>0</hsizetype>
+                                            <vsizetype>0</vsizetype>
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                    </property>
+                                    <property name="minimumSize">
+                                        <size>
+                                            <width>100</width>
+                                            <height>100</height>
+                                        </size>
+                                    </property>
+                                </widget>
+                                <spacer row="4" column="2">
+                                    <property name="name">
+                                        <cstring>spacer10</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Fixed</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>16</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="SQ_BCGLabel" row="5" column="2">
+                                    <property name="name">
+                                        <cstring>pixmap1</cstring>
+                                    </property>
+                                    <property name="sizePolicy">
+                                        <sizepolicy>
+                                            <hsizetype>0</hsizetype>
+                                            <vsizetype>0</vsizetype>
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                    </property>
+                                    <property name="minimumSize">
+                                        <size>
+                                            <width>100</width>
+                                            <height>100</height>
+                                        </size>
+                                    </property>
+                                </widget>
+                                <spacer row="6" column="2">
+                                    <property name="name">
+                                        <cstring>spacer12_2</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>MinimumExpanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>25</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QWidgetStack" row="2" column="0" rowspan="5" colspan="1">
+                                    <property name="name">
+                                        <cstring>widgetStackParams</cstring>
+                                    </property>
+                                    <property name="frameShape">
+                                        <enum>GroupBoxPanel</enum>
+                                    </property>
+                                    <widget class="QWidget">
+                                        <property name="name">
+                                            <cstring>WStackPage</cstring>
+                                        </property>
+                                        <attribute name="id">
+                                            <number>0</number>
+                                        </attribute>
+                                        <grid>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <property name="margin">
+                                                <number>4</number>
+                                            </property>
+                                            <widget class="QSpinBox" row="2" column="0">
+                                                <property name="name">
+                                                    <cstring>spinB</cstring>
+                                                </property>
+                                                <property name="maxValue">
+                                                    <number>255</number>
+                                                </property>
+                                                <property name="minValue">
+                                                    <number>-255</number>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton" row="0" column="2">
+                                                <property name="name">
+                                                    <cstring>pushResetG</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="autoDefault">
+                                                    <bool>false</bool>
+                                                </property>
+                                                <property name="flat">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton" row="0" column="1">
+                                                <property name="name">
+                                                    <cstring>pushResetC</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="autoDefault">
+                                                    <bool>false</bool>
+                                                </property>
+                                                <property name="flat">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                            <widget class="KDoubleSpinBox" row="2" column="2">
+                                                <property name="name">
+                                                    <cstring>spinG</cstring>
+                                                </property>
+                                            </widget>
+                                            <widget class="QSpinBox" row="2" column="1">
+                                                <property name="name">
+                                                    <cstring>spinC</cstring>
+                                                </property>
+                                                <property name="maxValue">
+                                                    <number>255</number>
+                                                </property>
+                                                <property name="minValue">
+                                                    <number>-255</number>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton" row="0" column="0">
+                                                <property name="name">
+                                                    <cstring>pushResetB</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="autoDefault">
+                                                    <bool>false</bool>
+                                                </property>
+                                                <property name="flat">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLayoutWidget" row="1" column="0">
+                                                <property name="name">
+                                                    <cstring>layout6</cstring>
+                                                </property>
+                                                <hbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <widget class="SQ_Label">
+                                                        <property name="name">
+                                                            <cstring>sQ_LabelB</cstring>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QSlider">
+                                                        <property name="name">
+                                                            <cstring>sliderB</cstring>
+                                                        </property>
+                                                        <property name="minValue">
+                                                            <number>-255</number>
+                                                        </property>
+                                                        <property name="maxValue">
+                                                            <number>255</number>
+                                                        </property>
+                                                        <property name="orientation">
+                                                            <enum>Vertical</enum>
+                                                        </property>
+                                                        <property name="tickmarks">
+                                                            <enum>Above</enum>
+                                                        </property>
+                                                        <property name="tickInterval">
+                                                            <number>20</number>
+                                                        </property>
+                                                        <property name="whatsThis" stdset="0">
+                                                            <string>Brightness</string>
+                                                        </property>
+                                                    </widget>
+                                                </hbox>
+                                            </widget>
+                                            <widget class="QLayoutWidget" row="1" column="1">
+                                                <property name="name">
+                                                    <cstring>layout5</cstring>
+                                                </property>
+                                                <hbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <widget class="SQ_Label">
+                                                        <property name="name">
+                                                            <cstring>sQ_LabelC</cstring>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QSlider">
+                                                        <property name="name">
+                                                            <cstring>sliderC</cstring>
+                                                        </property>
+                                                        <property name="minValue">
+                                                            <number>-255</number>
+                                                        </property>
+                                                        <property name="maxValue">
+                                                            <number>255</number>
+                                                        </property>
+                                                        <property name="orientation">
+                                                            <enum>Vertical</enum>
+                                                        </property>
+                                                        <property name="tickmarks">
+                                                            <enum>Above</enum>
+                                                        </property>
+                                                        <property name="tickInterval">
+                                                            <number>20</number>
+                                                        </property>
+                                                        <property name="whatsThis" stdset="0">
+                                                            <string>Contrast</string>
+                                                        </property>
+                                                    </widget>
+                                                </hbox>
+                                            </widget>
+                                            <widget class="QLayoutWidget" row="1" column="2">
+                                                <property name="name">
+                                                    <cstring>layout4</cstring>
+                                                </property>
+                                                <hbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <widget class="SQ_Label">
+                                                        <property name="name">
+                                                            <cstring>sQ_LabelG</cstring>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QSlider">
+                                                        <property name="name">
+                                                            <cstring>sliderG</cstring>
+                                                        </property>
+                                                        <property name="minValue">
+                                                            <number>0</number>
+                                                        </property>
+                                                        <property name="maxValue">
+                                                            <number>600</number>
+                                                        </property>
+                                                        <property name="value">
+                                                            <number>100</number>
+                                                        </property>
+                                                        <property name="orientation">
+                                                            <enum>Vertical</enum>
+                                                        </property>
+                                                        <property name="tickmarks">
+                                                            <enum>Above</enum>
+                                                        </property>
+                                                        <property name="tickInterval">
+                                                            <number>17</number>
+                                                        </property>
+                                                        <property name="whatsThis" stdset="0">
+                                                            <string>Gamma</string>
+                                                        </property>
+                                                    </widget>
+                                                </hbox>
+                                            </widget>
+                                        </grid>
+                                    </widget>
+                                    <widget class="QWidget">
+                                        <property name="name">
+                                            <cstring>WStackPage</cstring>
+                                        </property>
+                                        <attribute name="id">
+                                            <number>1</number>
+                                        </attribute>
+                                        <grid>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <property name="margin">
+                                                <number>4</number>
+                                            </property>
+                                            <widget class="QPushButton" row="0" column="0">
+                                                <property name="name">
+                                                    <cstring>pushResetRed</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="autoDefault">
+                                                    <bool>false</bool>
+                                                </property>
+                                                <property name="flat">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                            <widget class="QSpinBox" row="2" column="0">
+                                                <property name="name">
+                                                    <cstring>spinRed</cstring>
+                                                </property>
+                                                <property name="maxValue">
+                                                    <number>255</number>
+                                                </property>
+                                                <property name="minValue">
+                                                    <number>-255</number>
+                                                </property>
+                                            </widget>
+                                            <widget class="QSpinBox" row="2" column="1">
+                                                <property name="name">
+                                                    <cstring>spinGreen</cstring>
+                                                </property>
+                                                <property name="maxValue">
+                                                    <number>255</number>
+                                                </property>
+                                                <property name="minValue">
+                                                    <number>-255</number>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton" row="0" column="1">
+                                                <property name="name">
+                                                    <cstring>pushResetGreen</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="autoDefault">
+                                                    <bool>false</bool>
+                                                </property>
+                                                <property name="flat">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton" row="0" column="2">
+                                                <property name="name">
+                                                    <cstring>pushResetBlue</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="autoDefault">
+                                                    <bool>false</bool>
+                                                </property>
+                                                <property name="flat">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                            <widget class="QSpinBox" row="2" column="2">
+                                                <property name="name">
+                                                    <cstring>spinBlue</cstring>
+                                                </property>
+                                                <property name="maxValue">
+                                                    <number>255</number>
+                                                </property>
+                                                <property name="minValue">
+                                                    <number>-255</number>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLayoutWidget" row="1" column="2">
+                                                <property name="name">
+                                                    <cstring>layout1</cstring>
+                                                </property>
+                                                <hbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <widget class="SQ_Label">
+                                                        <property name="name">
+                                                            <cstring>sQ_LabelBlue</cstring>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QSlider">
+                                                        <property name="name">
+                                                            <cstring>sliderBlue</cstring>
+                                                        </property>
+                                                        <property name="minValue">
+                                                            <number>-255</number>
+                                                        </property>
+                                                        <property name="maxValue">
+                                                            <number>255</number>
+                                                        </property>
+                                                        <property name="tickmarks">
+                                                            <enum>Above</enum>
+                                                        </property>
+                                                        <property name="tickInterval">
+                                                            <number>20</number>
+                                                        </property>
+                                                        <property name="whatsThis" stdset="0">
+                                                            <string>Blue</string>
+                                                        </property>
+                                                    </widget>
+                                                </hbox>
+                                            </widget>
+                                            <widget class="QLayoutWidget" row="1" column="1">
+                                                <property name="name">
+                                                    <cstring>layout2</cstring>
+                                                </property>
+                                                <hbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <widget class="SQ_Label">
+                                                        <property name="name">
+                                                            <cstring>sQ_LabelGreen</cstring>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QSlider">
+                                                        <property name="name">
+                                                            <cstring>sliderGreen</cstring>
+                                                        </property>
+                                                        <property name="minValue">
+                                                            <number>-255</number>
+                                                        </property>
+                                                        <property name="maxValue">
+                                                            <number>255</number>
+                                                        </property>
+                                                        <property name="tickmarks">
+                                                            <enum>Above</enum>
+                                                        </property>
+                                                        <property name="tickInterval">
+                                                            <number>20</number>
+                                                        </property>
+                                                        <property name="whatsThis" stdset="0">
+                                                            <string>Green</string>
+                                                        </property>
+                                                    </widget>
+                                                </hbox>
+                                            </widget>
+                                            <widget class="QLayoutWidget" row="1" column="0">
+                                                <property name="name">
+                                                    <cstring>layout3</cstring>
+                                                </property>
+                                                <hbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <widget class="SQ_Label">
+                                                        <property name="name">
+                                                            <cstring>sQ_LabelRed</cstring>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QSlider">
+                                                        <property name="name">
+                                                            <cstring>sliderRed</cstring>
+                                                        </property>
+                                                        <property name="minValue">
+                                                            <number>-255</number>
+                                                        </property>
+                                                        <property name="maxValue">
+                                                            <number>255</number>
+                                                        </property>
+                                                        <property name="tickmarks">
+                                                            <enum>Above</enum>
+                                                        </property>
+                                                        <property name="tickInterval">
+                                                            <number>20</number>
+                                                        </property>
+                                                        <property name="whatsThis" stdset="0">
+                                                            <string>Red</string>
+                                                        </property>
+                                                    </widget>
+                                                </hbox>
+                                            </widget>
+                                        </grid>
+                                    </widget>
+                                </widget>
+                                <widget class="QGroupBox" row="0" column="0" rowspan="2" colspan="3">
+                                    <property name="name">
+                                        <cstring>groupBox3</cstring>
+                                    </property>
+                                    <property name="sizePolicy">
+                                        <sizepolicy>
+                                            <hsizetype>7</hsizetype>
+                                            <vsizetype>5</vsizetype>
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                    </property>
+                                    <property name="title">
+                                        <string></string>
+                                    </property>
+                                    <grid>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <property name="margin">
+                                            <number>6</number>
+                                        </property>
+                                        <property name="spacing">
+                                            <number>0</number>
+                                        </property>
+                                        <widget class="QPushButton" row="0" column="4">
+                                            <property name="name">
+                                                <cstring>push2</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                            <property name="autoDefault">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="flat">
+                                                <bool>true</bool>
+                                            </property>
+                                        </widget>
+                                        <widget class="QPushButton" row="0" column="0">
+                                            <property name="name">
+                                                <cstring>push1</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                            <property name="autoDefault">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="flat">
+                                                <bool>true</bool>
+                                            </property>
+                                        </widget>
+                                        <spacer row="0" column="1">
+                                            <property name="name">
+                                                <cstring>spacer26</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>1</width>
+                                                    <height>16</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <spacer row="0" column="3">
+                                            <property name="name">
+                                                <cstring>spacer27</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>1</width>
+                                                    <height>16</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <widget class="QLabel" row="0" column="2">
+                                            <property name="name">
+                                                <cstring>text</cstring>
+                                            </property>
+                                            <property name="alignment">
+                                                <set>WordBreak|AlignCenter</set>
+                                            </property>
+                                        </widget>
+                                    </grid>
+                                </widget>
+                                <spacer row="3" column="1">
+                                    <property name="name">
+                                        <cstring>spacer13</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Horizontal</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>150</width>
+                                            <height>16</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QPushButton" row="0" column="3">
+                                    <property name="name">
+                                        <cstring>pushOptions</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string></string>
+                                    </property>
+                                    <property name="flat">
+                                        <bool>true</bool>
+                                    </property>
+                                </widget>
+                                <spacer row="1" column="3" rowspan="6" colspan="1">
+                                    <property name="name">
+                                        <cstring>spacer12</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>295</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                            </grid>
+                        </widget>
+                        <widget class="QWidget">
+                            <property name="name">
+                                <cstring>WStackPage</cstring>
+                            </property>
+                            <attribute name="id">
+                                <number>1</number>
+                            </attribute>
+                            <grid>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <widget class="QTextEdit" row="0" column="0">
+                                    <property name="name">
+                                        <cstring>textResult</cstring>
+                                    </property>
+                                    <property name="wordWrap">
+                                        <enum>NoWrap</enum>
+                                    </property>
+                                    <property name="readOnly">
+                                        <bool>true</bool>
+                                    </property>
+                                    <property name="undoRedoEnabled">
+                                        <bool>false</bool>
+                                    </property>
+                                </widget>
+                                <widget class="KProgress" row="1" column="0">
+                                    <property name="name">
+                                        <cstring>progress</cstring>
+                                    </property>
+                                </widget>
+                            </grid>
+                        </widget>
+                    </widget>
+                    <widget class="Line" row="1" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>line2</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>HLine</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                    </widget>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>150</width>
+                                <height>21</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QPushButton" row="2" column="1">
+                        <property name="name">
+                            <cstring>pushBack</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt; Back</string>
                         </property>
                     </widget>
                 </grid>
             </widget>
-        </widget>
-        <widget class="QLabel" row="0" column="0" rowspan="3" colspan="1">
-            <property name="name">
-                <cstring>pixmapA</cstring>
-            </property>
-            <property name="text">
-                <string></string>
-            </property>
-        </widget>
-        <widget class="QPushButton" row="2" column="3">
-            <property name="name">
-                <cstring>pushCancel</cstring>
-            </property>
-            <property name="text">
-                <string>Close</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <widget class="QPushButton" row="2" column="2">
-            <property name="name">
-                <cstring>pushGO</cstring>
-            </property>
-            <property name="text">
-                <string>Colorize</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-            <property name="default">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <spacer row="2" column="1">
-            <property name="name">
-                <cstring>spacer3</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>335</width>
-                    <height>21</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="Line" row="1" column="1" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>line2</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
         </widget>
     </grid>
 </widget>
@@ -828,118 +986,10 @@
 </images>
 <connections>
     <connection>
-        <sender>pushCancel</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotReject()</slot>
-    </connection>
-    <connection>
-        <sender>pushGO</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotStartBCG()</slot>
-    </connection>
-    <connection>
-        <sender>pushOptions</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotOptions()</slot>
-    </connection>
-    <connection>
-        <sender>pushResetB</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotResetB()</slot>
-    </connection>
-    <connection>
-        <sender>pushResetBlue</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotResetBlue()</slot>
-    </connection>
-    <connection>
-        <sender>pushResetC</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotResetC()</slot>
-    </connection>
-    <connection>
-        <sender>pushResetG</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotResetG()</slot>
-    </connection>
-    <connection>
-        <sender>pushResetGreen</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotResetGreen()</slot>
-    </connection>
-    <connection>
-        <sender>pushResetRed</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotResetRed()</slot>
-    </connection>
-    <connection>
-        <sender>sliderB</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotBChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderBlue</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotBlueChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderC</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotCChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderG</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotGChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderGreen</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotGreenChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderRed</sender>
+        <sender>spinRed</sender>
         <signal>valueChanged(int)</signal>
         <receiver>SQ_ImageBCG</receiver>
         <slot>slotRedChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>spinB</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotBChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>spinBlue</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotBlueChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>spinC</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotCChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>spinG</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageBCG</receiver>
-        <slot>slotGSpinChanged(double)</slot>
     </connection>
     <connection>
         <sender>spinGreen</sender>
@@ -948,10 +998,136 @@
         <slot>slotGreenChanged(int)</slot>
     </connection>
     <connection>
-        <sender>spinRed</sender>
+        <sender>spinG</sender>
+        <signal>valueChanged(double)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotGSpinChanged(double)</slot>
+    </connection>
+    <connection>
+        <sender>spinC</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotCChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>spinBlue</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotBlueChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>spinB</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotBChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sliderRed</sender>
         <signal>valueChanged(int)</signal>
         <receiver>SQ_ImageBCG</receiver>
         <slot>slotRedChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sliderGreen</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotGreenChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sliderG</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotGChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sliderC</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotCChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sliderBlue</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotBlueChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sliderB</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotBChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>pushResetRed</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotResetRed()</slot>
+    </connection>
+    <connection>
+        <sender>pushResetGreen</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotResetGreen()</slot>
+    </connection>
+    <connection>
+        <sender>pushResetG</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotResetG()</slot>
+    </connection>
+    <connection>
+        <sender>pushResetC</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotResetC()</slot>
+    </connection>
+    <connection>
+        <sender>pushResetBlue</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotResetBlue()</slot>
+    </connection>
+    <connection>
+        <sender>pushResetB</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotResetB()</slot>
+    </connection>
+    <connection>
+        <sender>pushOptions</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotOptions()</slot>
+    </connection>
+    <connection>
+        <sender>pushNext</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotNext()</slot>
+    </connection>
+    <connection>
+        <sender>pushGO</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotStartBCG()</slot>
+    </connection>
+    <connection>
+        <sender>pushCancel2</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotReject()</slot>
+    </connection>
+    <connection>
+        <sender>pushCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotReject()</slot>
+    </connection>
+    <connection>
+        <sender>push2</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageBCG</receiver>
+        <slot>slotPush()</slot>
     </connection>
     <connection>
         <sender>push1</sender>
@@ -960,13 +1136,16 @@
         <slot>slotPush()</slot>
     </connection>
     <connection>
-        <sender>push2</sender>
+        <sender>pushBack</sender>
         <signal>clicked()</signal>
         <receiver>SQ_ImageBCG</receiver>
-        <slot>slotPush()</slot>
+        <slot>slotBack()</slot>
     </connection>
 </connections>
 <tabstops>
+    <tabstop>pushNext</tabstop>
+    <tabstop>checkDontShow</tabstop>
+    <tabstop>pushCancel2</tabstop>
     <tabstop>push1</tabstop>
     <tabstop>push2</tabstop>
     <tabstop>pushResetRed</tabstop>
@@ -988,6 +1167,7 @@
     <tabstop>spinC</tabstop>
     <tabstop>spinG</tabstop>
     <tabstop>pushOptions</tabstop>
+    <tabstop>pushBack</tabstop>
     <tabstop>pushGO</tabstop>
     <tabstop>pushCancel</tabstop>
     <tabstop>textResult</tabstop>
@@ -996,8 +1176,7 @@
     <include location="local" impldecl="in declaration">sq_imageedit.h</include>
     <include location="global" impldecl="in declaration">qimage.h</include>
     <include location="global" impldecl="in declaration">qstringlist.h</include>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
-    <include location="global" impldecl="in implementation">kiconloader.h</include>
+    <include location="local" impldecl="in implementation">sq_iconloader.h</include>
     <include location="global" impldecl="in implementation">kfiledialog.h</include>
     <include location="global" impldecl="in implementation">qapplication.h</include>
     <include location="global" impldecl="in implementation">kstandarddirs.h</include>
@@ -1006,6 +1185,7 @@
     <include location="local" impldecl="in implementation">fmt_filters.h</include>
     <include location="local" impldecl="in implementation">fmt_types.h</include>
     <include location="local" impldecl="in implementation">fmt_defs.h</include>
+    <include location="local" impldecl="in implementation">sq_errorstring.h</include>
     <include location="local" impldecl="in implementation">sq_imagebcg.ui.h</include>
 </includes>
 <variables>
@@ -1040,6 +1220,8 @@
     <slot access="private">slotDone( bool close )</slot>
     <slot access="private">slotReject()</slot>
     <slot access="private">slotPush()</slot>
+    <slot access="private">slotNext()</slot>
+    <slot access="private">slotBack()</slot>
 </slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>

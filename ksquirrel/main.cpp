@@ -17,12 +17,14 @@
 
 #include <qgl.h>
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
 #include <kapplication.h>
 #include <dcopclient.h>
+
+#include <stdlib.h>
 
 #include "ksquirrel.h"
 #include "sq_about.h"
@@ -43,6 +45,7 @@ int main(int argc, char *argv[])
 {
 	KSquirrel 			*SQ;
 	SQ_HLOptions		*high;
+	const QCString App = "ksquirrel";
 
 	aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
 	aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
@@ -53,21 +56,37 @@ int main(int argc, char *argv[])
 
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
-
-	KApplication	a;
-
-	if(!QGLFormat::hasOpenGL())
-        {
-	    qWarning( "This system has no OpenGL support. Exiting." );
-	    return -1;
-	}
-
 	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
 	high = new SQ_HLOptions;
 
 	if(sq_args->count())
 		high->path = sq_args->url(0).path();
+
+	KApplication		a;
+
+	if(!QGLFormat::hasOpenGL())
+	{
+		qWarning("KSquirrel: this system has no OpenGL support. Exiting." );
+		exit(1);
+	}
+
+	if(a.dcopClient()->isApplicationRegistered(App) && !high->path.isEmpty())
+	{
+		QCString replyType;
+		QByteArray data, replyData;
+		QDataStream dataStream(data, IO_WriteOnly);
+
+		dataStream << high->path;
+
+		if(!a.dcopClient()->call(App, App, "load_image(QString)", data, replyType, replyData))
+			qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+
+		sq_args->clear();
+		delete high;
+
+		exit(0);
+	}
 
 	high->showLibsAndExit = sq_args->isSet("l");
 	high->thumbs = sq_args->isSet("t");
@@ -76,14 +95,14 @@ int main(int argc, char *argv[])
 	if(high->thumbs)
 		high->thumbs_p = sq_args->getOption("t");
 
-	SQ = new KSquirrel(NULL, "ksquirrel");
+	SQ = new KSquirrel(NULL, App);
 
 	a.setMainWidget(SQ);
 
 	sq_args->clear();
 
         if(a.dcopClient()->attach())
-            a.dcopClient()->registerAs("ksquirrel", false);
+            a.dcopClient()->registerAs(App, false);
 
 	return a.exec();
 }

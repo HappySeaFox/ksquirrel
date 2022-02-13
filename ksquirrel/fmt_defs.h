@@ -69,7 +69,8 @@ struct RGB
 /* Image decription */
 struct fmt_image
 {
-    fmt_image() : w(0), h(0), bpp(0), hasalpha(false), needflip(false), delay(0), interlaced(false), passes(1)
+    fmt_image() : w(0), h(0), bpp(0), hasalpha(false), needflip(false), delay(0),
+		    interlaced(false), passes(1)
     {}
 
     // width and height
@@ -105,6 +106,13 @@ struct fmt_image
 
     // compression type (RLE, JPEG, Deflate ...)
     std::string compression;
+
+    // palette types
+    enum fmt_palette { monochrome = 1, indexed4 = 2, indexed8 = 4, indexed15 = 8,
+			indexed16 = 16, pure24 = 32, pure32 = 64, internal = 128 };
+
+    // palette, if exists
+    std::vector<RGB> palette;
 };
 
 /* General description */
@@ -161,6 +169,14 @@ struct fmt_writeoptionsabs
     //    maximum = 100 and default = 25.
     s32  compression_min, compression_max, compression_def;
 
+    // with which bit depth it can be encoded ?
+    // 1 means support of this bit depth,
+    // and 0 otherwise. This param cann't be null.
+    // 
+    // bits       8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+    // bit depth         32  24  16  15   8   4   1            
+    u8  palette_flags;
+
 }PACKED;
 
 /* this information will be passed to writing function */
@@ -178,6 +194,8 @@ struct fmt_writeoptions
     // has alpha channel ?
     // If no, A channel in RGBA image will be ignored
     bool alpha;
+
+    s32  bitdepth;
 
 }PACKED;
 

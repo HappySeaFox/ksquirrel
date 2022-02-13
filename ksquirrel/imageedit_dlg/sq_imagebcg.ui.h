@@ -9,7 +9,7 @@
 
 void SQ_ImageBCG::init()
 {
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
+    pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_colorize.png")));
     pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
 
@@ -22,12 +22,15 @@ void SQ_ImageBCG::init()
     pushResetGreen->setFixedWidth(pushResetGreen->height());
     pushResetBlue->setFixedWidth(pushResetBlue->height());
 */
+    sQ_LabelB->setSingle(true);
+    sQ_LabelC->setSingle(true);
+    sQ_LabelG->setSingle(true);
     sQ_LabelB->setText(tr2i18n("Brightness"));
     sQ_LabelC->setText(tr2i18n("Contrast"));
     sQ_LabelG->setText(tr2i18n("Gamma"));
-    sQ_LabelRed->setText(tr2i18n("Red"));
-    sQ_LabelGreen->setText(tr2i18n("Green"));
-    sQ_LabelBlue->setText(tr2i18n("Blue"));
+    sQ_LabelRed->setText(tr2i18n("Red"), tr2i18n("Cyan"));
+    sQ_LabelGreen->setText(tr2i18n("Green"), tr2i18n("Magenta"));
+    sQ_LabelBlue->setText(tr2i18n("Blue"), tr2i18n("Yellow"));
 
     pushResetB->setPixmap(p);
     pushResetC->setPixmap(p);
@@ -61,6 +64,11 @@ void SQ_ImageBCG::init()
 
     sample.load(locate("appdata", "images/imageedit/edit_sample.png"));
 
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "bcg_dontshowhelp", false));
+
+    if(checkDontShow->isChecked())
+	slotNext();
+
     if(sample.isNull())
 	return;
 
@@ -92,14 +100,11 @@ void SQ_ImageBCG::slotOptions()
 {
     SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
 
-    if(o->exec(&imageopt) == QDialog::Accepted)
-    {
-	SQ_Config::instance()->setGroup("Image edit options");
-	SQ_Config::instance()->writeEntry("bcg_putto", imageopt.putto);
-	SQ_Config::instance()->writeEntry("bcg_prefix", imageopt.prefix);
-	SQ_Config::instance()->writeEntry("bcg_where_to_put", imageopt.where_to_put);
-	SQ_Config::instance()->writeEntry("bcg_close", imageopt.close);
-    }
+    // SQ_ImageEditOptions will write needed KConfig entries, if
+    // exec() will return QDialog::Accepted
+    o->setConfigPrefix("bcg");
+
+    o->exec(&imageopt);
 }
 
 void SQ_ImageBCG::slotResetG()
@@ -149,6 +154,8 @@ void SQ_ImageBCG::slotStartBCG()
     opt.red = sliderRed->value();
     opt.green = sliderGreen->value();
     opt.blue = sliderBlue->value();
+
+    SQ_Config::instance()->writeEntry("bcg_dontshowhelp", checkDontShow->isChecked());
 
     emit bcg(&imageopt, &opt);
 }
@@ -269,18 +276,18 @@ void SQ_ImageBCG::changeImage(int b, int c, int g1, int red, int green, int blue
     sample = sample_saved.copy();
 
     // change brightness
-    fmt_filters::brightness((RGBA *)sample.bits(), sample.width(), sample.height(), b);
+    fmt_filters::brightness(sample.bits(), sample.width(), sample.height(), b);
 
     //change contrast
     if(c)
-	fmt_filters::contrast((RGBA *)sample.bits(), sample.width(), sample.height(), c);
+	fmt_filters::contrast(sample.bits(), sample.width(), sample.height(), c);
 
     // change gamma
     if(g1 != 100)
-	fmt_filters::gamma((RGBA *)sample.bits(), sample.width(), sample.height(), g);
+	fmt_filters::gamma(sample.bits(), sample.width(), sample.height(), g);
 
     if(red || green || blue)
-	fmt_filters::colorize((RGBA *)sample.bits(), sample.width(), sample.height(), blue, green, red);
+	fmt_filters::colorize(sample.bits(), sample.width(), sample.height(), blue, green, red);
 
     assignNewImage(sample);
 }
@@ -315,6 +322,23 @@ void SQ_ImageBCG::closeEvent(QCloseEvent *e)
     else
     {
 	e->ignore();
-	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
+}
+
+void SQ_ImageBCG::slotNext()
+{
+    pushNext->setDefault(false);
+    pushGO->setDefault(true);
+    pushGO->setFocus();
+
+    widgetStackWizard->raiseWidget(1);
+}
+
+void SQ_ImageBCG::slotBack()
+{
+    pushNext->setDefault(true);
+    pushGO->setDefault(false);
+
+    widgetStackWizard->raiseWidget(0);
 }

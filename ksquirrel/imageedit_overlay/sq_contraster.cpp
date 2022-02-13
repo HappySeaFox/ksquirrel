@@ -63,11 +63,6 @@ SQ_Contraster* SQ_Contraster::instance()
 	return sing;
 }
 
-void SQ_Contraster::setWritingLibrary()
-{
-	lw = lr->writable ? lr : NULL;
-}
-
 void SQ_Contraster::dialogReset()
 {
 	bcg->startBCG(files.count());
@@ -76,16 +71,21 @@ void SQ_Contraster::dialogReset()
 int SQ_Contraster::manipDecodedImage(fmt_image *im)
 {
 	if(bcgopt.b)
-		fmt_filters::brightness(image, im->w, im->h, bcgopt.b);
+		fmt_filters::brightness((unsigned char *)image, im->w, im->h, bcgopt.b);
 
 	if(bcgopt.c)
-		fmt_filters::contrast(image, im->w, im->h, bcgopt.c);
+		fmt_filters::contrast((unsigned char *)image, im->w, im->h, bcgopt.c);
 
 	if(bcgopt.g != 100)
-		fmt_filters::gamma(image, im->w, im->h, (double)bcgopt.g / 100.0);
+		fmt_filters::gamma((unsigned char *)image, im->w, im->h, (double)bcgopt.g / 100.0);
 
 	if(bcgopt.red || bcgopt.green || bcgopt.blue)
-		fmt_filters::colorize(image, im->w, im->h, bcgopt.red, bcgopt.green, bcgopt.blue);
+		fmt_filters::colorize((unsigned char *)image, im->w, im->h, bcgopt.red, bcgopt.green, bcgopt.blue);
 
 	return SQE_OK;
+}
+
+void SQ_Contraster::setPreviewImage(const QImage &)
+{
+
 }

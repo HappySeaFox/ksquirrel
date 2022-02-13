@@ -49,4 +49,5 @@ struct SQ_LIBRARY
 
 	fmt_writeoptionsabs	opt;
 	bool		writable;
+	bool		readable;
 };

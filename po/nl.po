@@ -33,15 +33,15 @@ msgid "Image actions"
 msgstr ""
 
 #: sq_diroperatorbase.cpp:423
-msgid "Copy to ..."
+msgid "Copy to..."
 msgstr ""
 
 #: sq_diroperatorbase.cpp:424
-msgid "Move to ..."
+msgid "Move to..."
 msgstr ""
 
 #: sq_diroperatorbase.cpp:425
-msgid "Link to ..."
+msgid "Link to..."
 msgstr ""
 
 #: sq_diroperatorbase.cpp:429
@@ -91,11 +91,11 @@ msgstr ""
 "%3"
 
 #: sq_widgetstack.cpp:75
-msgid "New directory ..."
+msgid "New directory..."
 msgstr "Nieuwe map..."
 
 #: sq_widgetstack.cpp:76
-msgid "Properties ..."
+msgid "Properties..."
 msgstr "Eigenschappen..."
 
 #: sq_widgetstack.cpp:78
@@ -450,11 +450,11 @@ msgid "Rescan libraries"
 msgstr "Bibliotheken opnieuw scannen"
 
 #: ksquirrel.cpp:532
-msgid "Configure external tools ..."
+msgid "Configure external tools..."
 msgstr "Externe hulpprogramma's instellen..."
 
 #: ksquirrel.cpp:533
-msgid "Configure filters ..."
+msgid "Configure filters..."
 msgstr "Filters instellen..."
 
 #: ksquirrel.cpp:534
@@ -518,7 +518,7 @@ msgid "Default (installed) config file couldn't be opened for reading!"
 msgstr "Het configuratiebestand van het systeem kon niet worden geopend."
 
 #: ksquirrel.cpp:839
-msgid " writing settings and thumbnails ...  "
+msgid " writing settings and thumbnails...  "
 msgstr " instellingen en miniaturen schrijven...  "
 
 #: ksquirrel.cpp:1094
@@ -822,7 +822,7 @@ msgid "Check for a new version available"
 msgstr "Kijk of er een nieuwe versie beschikbaar is"
 
 #: sq_options.cpp:819
-msgid "On starting open ..."
+msgid "On starting open..."
 msgstr "Bij opstarten openen..."
 
 #: sq_options.cpp:821
@@ -1069,7 +1069,7 @@ msgstr ""
 "dynamisch worden toegevoegd."
 
 #: sq_options.cpp:913
-msgid "Show the message, if the directory has changed"
+msgid "Show a message, if the directory has changed"
 msgstr "Bericht tonen als de mapinhoud is gewijzigd"
 
 #: sq_options.cpp:914

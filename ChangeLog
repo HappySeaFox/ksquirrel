@@ -1,3 +1,36 @@
+ksquirrel-0.6.0-pre7 and ksquirrel-libs-0.6.0-pre6
+************************************************************
+
+ksquirrel:
+* fixed segfault when printing multipaged images
+* fixed small bug in "Recreate selected thumbnails" action in thumbnail view
+* fixed wrong header naming in "External tools" menu
+* fixed small bug in print tool, in "Alignment" frame
+* fixed bug with size() of version checker
+* fixed compile problems on some Qt versions, which don't support STL (like Slackware's one)
+* added filter tool (only "Negative" and "swap RGB" are currently supported, new filters coming soon)
+* added slideshow and advanced slideshow (Ctrl+S, Ctrl+Alt+S)
+* added mc-like file selection with '+' and '-'
+* added "Select All" and "Deselect" actions in menu
+* added some new options
+* added unique application support (KSquirrel now can have only one running instance)
+* print tool: "Custom fill" now works
+* print tool: added transparency support
+* now you needn't delete old config file - KSquirrel will do it for you
+* edit tools now look like simple wizards (hope TiamaT will draw new squirrels soon...)
+* libraries information was moved from Options to "Plugins information" dialog
+* some menu layout changes
+* code cleanups
+
+ksquirrel-libs:
+* some changes in API
+* added MTV Ray-Tracer (reading, writing)
+* added AVS X (reading, writing)
+* added PNM (writing)
+* LIF: many bugfixes
+* SVG: removed useless "-lfontconfig" dependency, which could create compile problems on some systems (like Slackware)
+* PNG: fixed autoconf problems on some systems (like Slackware)
+
 ksquirrel-0.6.0-pre6 and ksquirrel-libs-0.6.0-pre5
 ************************************************************
 
@@ -5,7 +38,7 @@ ksquirrel:
 * resize tool now works (four resize methods: nearest, bilinear, tiles, hyper)
 * colorize tool now works
 * rotate tool now works (has some small bugs in algorithm)
-* print tool now works (only "One image per one page")
+* print tool now partially works (only "One image per one page")
 
 ksquirrel-libs:
 * added JPEG2000 (reading)

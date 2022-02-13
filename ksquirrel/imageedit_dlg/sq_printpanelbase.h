@@ -6,8 +6,8 @@
 #define K 6
 #define M 2
 
-#define PANEL_W_F 172
-#define PANEL_H_F 192
+#define PANEL_W_F 132
+#define PANEL_H_F 152
 #define PANEL_W PANEL_W_F-K
 #define PANEL_H PANEL_H_F-K
 

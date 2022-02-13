@@ -12,6 +12,9 @@
 
 void SQ_ImagePrint::init()
 {
+    pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_print.png")));
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
+    
     sliderX->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "print_X", 1));
     sliderY->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "print_Y", 1));
 
@@ -19,12 +22,22 @@ void SQ_ImagePrint::init()
 
     if(fr) printpanel->toggleCurrentFrameColor(fr);
 
-    imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "print_close", true);
-    checkClose->setChecked(imageopt.close);
+    checkClose->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "print_close", true));
     slotXYChanged(0);
 
     buttonGroupSetups->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "print_layout", 0));
     widgetStackSetups->raiseWidget(buttonGroupSetups->selectedId());
+
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "print_dontshowhelp", false));
+
+    buttonGroupTR->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "print_transp", 0));
+
+    if(checkDontShow->isChecked())
+	slotNext2();
+
+    QColor cc;
+    cc.setNamedColor(SQ_Config::instance()->readEntry("Image edit options", "print_transp_color", "#000000"));
+    color->setColor(cc);
 
     done = true;
 }
@@ -48,6 +61,8 @@ void SQ_ImagePrint::slotNext()
     SQ_Config::instance()->writeEntry("print_alignment", printpanel->currentFrame());
     SQ_Config::instance()->writeEntry("print_close", checkClose->isChecked());
     SQ_Config::instance()->writeEntry("print_layout", buttonGroupSetups->selectedId());
+    SQ_Config::instance()->writeEntry("print_transp", buttonGroupTR->selectedId());
+    SQ_Config::instance()->writeEntry("print_transp_color", color->color().name());
 
     SQ_ImagePrintOptions pr;
 
@@ -55,6 +70,11 @@ void SQ_ImagePrint::slotNext()
     pr.in_x = sliderX->value();
     pr.in_y = sliderY->value();
     pr.align = printpanel->currentFrame();
+    pr.transp =  buttonGroupTR->selectedId();
+    pr.transp_color = color->color();
+    imageopt.close = checkClose->isChecked();
+
+    SQ_Config::instance()->writeEntry("print_dontshowhelp", checkDontShow->isChecked());
 
     emit print(&imageopt, &pr);
 }
@@ -106,6 +126,23 @@ void SQ_ImagePrint::closeEvent(QCloseEvent *e)
     else
     {
 	e->ignore();
-	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
+}
+
+void SQ_ImagePrint::slotNext2()
+{
+    pushNext2->setDefault(false);
+    pushNext->setDefault(true);
+    pushNext->setFocus();
+
+    widgetStackWizard->raiseWidget(1);
+}
+
+void SQ_ImagePrint::slotBack()
+{
+    pushNext2->setDefault(true);
+    pushNext->setDefault(false);
+
+    widgetStackWizard->raiseWidget(0);
 }

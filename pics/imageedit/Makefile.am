@@ -2,7 +2,7 @@
 
 SUBDIRS = squirrels 
 
-EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png flipH.png flipV.png rotateL.png rotateR.png 
+EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png flipH.png flipV.png rotateL.png rotateR.png filter_color.png filter.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
@@ -51,6 +51,10 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/rotateL.png $(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
 	$(INSTALL_DATA) $(srcdir)/rotateR.png $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+	$(INSTALL_DATA) $(srcdir)/filter_color.png $(kde_datadir)/ksquirrel/images/imageedit/filter_color.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+	$(INSTALL_DATA) $(srcdir)/filter.png $(kde_datadir)/ksquirrel/images/imageedit/filter.png
 
 uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/bcg.png
@@ -76,5 +80,7 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/flipV.png
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
+	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/filter_color.png
+	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/filter.png
 
 ####### kdevelop will overwrite this part!!! (end)############

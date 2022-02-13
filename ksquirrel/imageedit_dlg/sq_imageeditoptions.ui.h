@@ -9,8 +9,8 @@
 
 void SQ_ImageEditOptions::init()
 {
-    pushPut->setPixmap(KSquirrel::loader()->loadIcon("fileopen", KIcon::Desktop, 16));
-    
+    pushPut->setPixmap(SQ_IconLoader::instance()->loadIcon("fileopen", KIcon::Desktop, 16));
+
     KURLCompletion *pURLCompletion = new KURLCompletion(KURLCompletion::DirCompletion);
     pURLCompletion->setDir("/");
 
@@ -21,7 +21,7 @@ void SQ_ImageEditOptions::slotPutConverted()
 {
     putto = KFileDialog::getExistingDirectory(linePutTo->text(), this);    
 
-    if(!putto.isNull() && !putto.isEmpty())
+    if(!putto.isEmpty())
 	linePutTo->setText(putto);
 }
 
@@ -29,6 +29,7 @@ int SQ_ImageEditOptions::exec(SQ_ImageOptions *o)
 {
     linePrefix->setText(o->prefix);
     linePutTo->setText(o->putto);
+
     QButton *b = buttonGroup1->find(o->where_to_put);
 
     if(b)
@@ -49,7 +50,18 @@ int SQ_ImageEditOptions::exec(SQ_ImageOptions *o)
 	o->prefix = linePrefix->text();
 	o->where_to_put = buttonGroup1->selectedId();
 	o->close = checkClose->isChecked();
+
+	SQ_Config::instance()->setGroup("Image edit options");
+	SQ_Config::instance()->writeEntry(prefix + "_putto", o->putto);
+	SQ_Config::instance()->writeEntry(prefix + "_prefix", o->prefix);
+	SQ_Config::instance()->writeEntry(prefix + "_where_to_put", o->where_to_put);
+	SQ_Config::instance()->writeEntry(prefix + "_close", o->close);
     }
 
     return result;
+}
+
+void SQ_ImageEditOptions::setConfigPrefix( const QString &pr )
+{
+    prefix = pr;
 }

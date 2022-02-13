@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>584</width>
-            <height>404</height>
+            <height>406</height>
         </rect>
     </property>
     <property name="caption">
@@ -394,8 +394,8 @@
 </tabstops>
 <includes>
     <include location="local" impldecl="in implementation">sq_config.h</include>
+    <include location="local" impldecl="in implementation">sq_iconloader.h</include>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
-    <include location="global" impldecl="in implementation">kiconloader.h</include>
     <include location="local" impldecl="in implementation">sq_filters.ui.h</include>
 </includes>
 <slots>

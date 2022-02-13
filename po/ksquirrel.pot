@@ -44,15 +44,15 @@ msgid "Image actions"
 msgstr ""
 
 #: sq_diroperatorbase.cpp:423
-msgid "Copy to ..."
+msgid "Copy to..."
 msgstr ""
 
 #: sq_diroperatorbase.cpp:424
-msgid "Move to ..."
+msgid "Move to..."
 msgstr ""
 
 #: sq_diroperatorbase.cpp:425
-msgid "Link to ..."
+msgid "Link to..."
 msgstr ""
 
 #: sq_diroperatorbase.cpp:429
@@ -93,11 +93,11 @@ msgid ""
 msgstr ""
 
 #: sq_widgetstack.cpp:75
-msgid "New directory ..."
+msgid "New directory..."
 msgstr ""
 
 #: sq_widgetstack.cpp:76
-msgid "Properties ..."
+msgid "Properties..."
 msgstr ""
 
 #: sq_widgetstack.cpp:78
@@ -447,11 +447,11 @@ msgid "Rescan libraries"
 msgstr ""
 
 #: ksquirrel.cpp:532
-msgid "Configure external tools ..."
+msgid "Configure external tools..."
 msgstr ""
 
 #: ksquirrel.cpp:533
-msgid "Configure filters ..."
+msgid "Configure filters..."
 msgstr ""
 
 #: ksquirrel.cpp:534
@@ -515,7 +515,7 @@ msgid "Default (installed) config file couldn't be opened for reading!"
 msgstr ""
 
 #: ksquirrel.cpp:839
-msgid " writing settings and thumbnails ...  "
+msgid " writing settings and thumbnails...  "
 msgstr ""
 
 #: ksquirrel.cpp:1094
@@ -767,7 +767,7 @@ msgid "Check for a new version available"
 msgstr ""
 
 #: sq_options.cpp:819
-msgid "On starting open ..."
+msgid "On starting open..."
 msgstr ""
 
 #: sq_options.cpp:821
@@ -1012,15 +1012,11 @@ msgid ""
 msgstr ""
 
 #: sq_options.cpp:913
-msgid "Show the message, if the directory has changed"
+msgid "Show a message, if the directory has changed"
 msgstr ""
 
 #: sq_options.cpp:914
 msgid "Show dialog with information about new or deleted libraries"
-msgstr ""
-
-#: sq_options.cpp:920
-msgid "Contains information about all found libraries"
 msgstr ""
 
 #: sq_imageproperties.cpp:323 sq_imageproperties.cpp:404

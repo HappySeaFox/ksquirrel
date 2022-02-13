@@ -1,0 +1,86 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SQ_SelectDeselectGroup</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_SelectDeselectGroup</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>429</width>
+            <height>55</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>SQ_SelectDeselectGroup</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QPushButton" row="0" column="2">
+            <property name="name">
+                <cstring>pushMask</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Filename or mask:</string>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="0" column="1">
+            <property name="name">
+                <cstring>comboMask</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="editable">
+                <bool>true</bool>
+            </property>
+            <property name="insertionPolicy">
+                <enum>AtTop</enum>
+            </property>
+            <property name="autoCompletion">
+                <bool>true</bool>
+            </property>
+            <property name="duplicatesEnabled">
+                <bool>false</bool>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushMask</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_SelectDeselectGroup</receiver>
+        <slot>accept()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>comboMask</tabstop>
+    <tabstop>pushMask</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">sq_config.h</include>
+    <include location="local" impldecl="in implementation">sq_selectdeselectgroup.ui.h</include>
+</includes>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function returnType="int">exec( QString &amp; mask )</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

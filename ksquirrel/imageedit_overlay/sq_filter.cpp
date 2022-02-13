@@ -20,6 +20,7 @@
 #include "ksquirrel.h"
 #include "sq_filter.h"
 #include "sq_imagefilter.h"
+#include "fmt_filters.h"
 
 SQ_Filter * SQ_Filter::sing = NULL;
 
@@ -45,6 +46,8 @@ void SQ_Filter::startEditPrivate()
 	connect(this, SIGNAL(oneFileProcessed()), filter, SLOT(slotOneProcessed()));
 	connect(this, SIGNAL(done(bool)), filter, SLOT(slotDone(bool)));
 
+	preview = true;
+
 	filter->exec();
 }
 
@@ -61,17 +64,29 @@ SQ_Filter* SQ_Filter::instance()
 	return sing;
 }
 
-void SQ_Filter::setWritingLibrary()
+int SQ_Filter::manipDecodedImage(fmt_image *im)
 {
-	lw = lr;
-}
+	switch(filtopt.type)
+	{
+		case 0:
+		{
+			if(filtopt.subtype)
+				fmt_filters::swapRGB((unsigned char *)image, im->w, im->h, filtopt.sb.swaprgb.type);
+			else
+				fmt_filters::negative((unsigned char *)image, im->w, im->h);
+		}
+		break;
+	}
 
-int SQ_Filter::manipDecodedImage(fmt_image *)
-{
 	return SQE_OK;
 }
 
 void SQ_Filter::dialogReset()
 {
 	filter->startFiltering(files.count());
+}
+
+void SQ_Filter::setPreviewImage(const QImage &)
+{
+
 }

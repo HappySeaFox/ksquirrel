@@ -606,8 +606,9 @@ messages:
 .NOEXPORT:
 
 
+
 #>+ 2
-KDE_DIST=sq_imagebcg.ui.h sq_imageconvert.ui.h sq_imageresize.ui.h sq_imagerotate.ui.h sq_imageeditoptions.ui.h sq_imageprint.ui.h sq_imageeditsplash.ui.h sq_imagefilter.ui.h Makefile.in Makefile.am 
+KDE_DIST=sq_imageconvert.h sq_imageresize.ui.h sq_imageeditoptions.ui.h sq_imageeditsplash.ui.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imagefilter.h sq_imageeditsplash.h Makefile.in sq_imageconvert.ui.h sq_imagebcg.ui.h sq_imagerotate.ui.h sq_imageprint.ui.h sq_writeoption.h sq_imagebcg.h sq_imagefilter.ui.h sq_imagerotate.h Makefile.am 
 
 #>+ 12
 clean-ui:

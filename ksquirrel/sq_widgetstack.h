@@ -65,6 +65,7 @@ class SQ_WidgetStack : public QWidgetStack
 	private:
 		void setupDirOperator(SQ_DirOperator *op, const QString &filter);
 		bool copyOrCut();
+		void selectDeselectGroup(bool select);
 
 	public slots:
 		void raiseWidget(int id);
@@ -108,6 +109,10 @@ class SQ_WidgetStack : public QWidgetStack
 		void slotDelete();
 		void slotRecreateThumbnail();
 		void slotDelayedRecreateThumbnail();
+		void slotSelectGroup();
+		void slotDeselectGroup();
+		void slotDeselectAll();
+		void slotSelectAll();
 
 	public:
 		KAction				*pABack, *pAForw, *pAUp, *pADelete, *pAHome, *pAProp, *pARefresh, *pAMkDir;

@@ -1,4 +1,4 @@
-KSquirrel is a new image viewer, simple and convenient in usage.
+KSquirrel is a new image viewer for KDE, simple and convenient in usage.
 
 While all others use another's decoders, in KSquirrel image decoding is based on own decoders
 (ksquirrel-libs) which format is very simple. If support of certain format FMT is necessary
@@ -19,7 +19,7 @@ Having become dissapointed, I've decided to write the image viewer with the flex
 architecture. Birthday for KSquirrel - on December, 10, 2003. 
 
 KSquirrel is the first viewer for KDE widely supporting such a quantity of image formats,
-including Photoshop PSD, X cursors, animated GIF, FLI Animation, PGM/PBM/PPM, SVG ...
+including Photoshop PSD, X cursors, animated GIF, FLI Animation, WMF, SVG ...
 
 The detailed information, format of libraries with examples, screenshots you can find
 visiting page http://ksquirrel.sourceforge.net/
@@ -81,3 +81,13 @@ Examples
 * let's load next image in current directory:
 [me@localhost /]$ dcop ksquirrel ksquirrel control image_next
 
+***********************************************************************************
+
+Since 0.6.0-pre1 KSquirrel has edit tools:
+- convert tool
+
+Since 0.6.0-pre6 KSquirrel has additional edit tools:
+- resize tool
+- rotate tool
+- colorize tool
+- print tool

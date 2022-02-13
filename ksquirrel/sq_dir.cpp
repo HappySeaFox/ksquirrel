@@ -103,11 +103,11 @@ void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
 
 	if(fpath.lastModified() < ffullpath.lastModified())
 	{
-		kdDebug() << "equal => skipping writing ..." << endl;
+		kdDebug() << "equal => skipping writing..." << endl;
 		return;
 	}
 
-	kdDebug() << "writing accepted ..." << endl;
+	kdDebug() << "writing accepted..." << endl;
 
 	if(!mkdir(fpath.dirPath(true)))
 	{

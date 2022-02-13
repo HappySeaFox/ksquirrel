@@ -28,30 +28,35 @@
 //                                      //
 //////////////////////////////////////////
 
-struct RGBA;
-
 namespace fmt_filters
 {
 	// colorize the image, which is w x h, left alpha channel unchanged.
 	//
 	// it just adds to each pixel in the image
 	// aproproriate value.
-	void colorize(RGBA *image, int w, int h, int red, int green, int blue);
+	void colorize(unsigned char *image, int w, int h, int red, int green, int blue);
 
 	// change brightness of the image
-	void brightness(RGBA *image, int w, int h, int bn);
+	void brightness(unsigned char *image, int w, int h, int bn);
 
 	// change gamma
 	// gamma should be  0.0 <= L <= 6.0
 	//
 	// it is no problem to set L to 8.0 or 9.0, but the resulting
 	// image won't have much difference from 6.0
-	void gamma(RGBA *image, int w, int h, double L);
+	void gamma(unsigned char *image, int w, int h, double L);
 
 	// change contrast with Photoshop-like method
 	// contrast should be  -255 <= contrast <= 255
-	void contrast(RGBA *image, int w, int h, int contrast);
+	void contrast(unsigned char *image, int w, int h, int contrast);
 
+	enum swapRGBtype { GBR = 0, BRG = 1 };
+
+	// negative
+	void negative(unsigned char *image, int w, int h);
+
+	// swap RGB values
+	void swapRGB(unsigned char *image, int w, int h, int type);
 }
 
 #endif

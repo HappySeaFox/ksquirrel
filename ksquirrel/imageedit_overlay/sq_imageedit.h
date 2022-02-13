@@ -19,6 +19,7 @@
 #define SQ_IMAGEEDIT_H
 
 #include <qfont.h>
+#include <qcolor.h>
 
 struct SQ_ImageOptions
 {
@@ -61,11 +62,24 @@ struct SQ_ImagePrintOptions
 	int type;
 	int in_x, in_y;
 	QString align;
+	bool prop;
+	int transp;
+	QColor transp_color;
+};
+
+struct SQ_IFO_swapRGB
+{
+	int type;
 };
 
 struct SQ_ImageFilterOptions
 {
-	int dummy;
+	int type, subtype;
+
+	union
+	{
+		SQ_IFO_swapRGB swaprgb;
+	}sb;
 };
 
 #endif

@@ -1,10 +1,12 @@
 #include "sq_printpanelframe.h"
 #include "sq_printpanel.h"
 
+#define DIM 36
+
 SQ_PrintPanelFrame::SQ_PrintPanelFrame(QWidget *parent, const char *name) : QFrame(parent, name)
 {
-    setFixedWidth(48);
-    setFixedHeight(48);
+    setFixedWidth(DIM);
+    setFixedHeight(DIM);
     setFrameShape(QFrame::Box);
 }
 

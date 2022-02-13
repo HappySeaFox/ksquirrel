@@ -15,7 +15,7 @@ SQ_PrintPanelBase::SQ_PrintPanelBase(QWidget *parent, const char *name) : QFrame
     QPainter paint(&pix);
 
     paint.fillRect(K, K, PANEL_W, PANEL_H, QBrush(darkGray, Qt::Dense1Pattern));
-    paint.fillRect(0, 0, PANEL_W, PANEL_H, QBrush(white));
+    paint.fillRect(0, 0, PANEL_W, PANEL_H, QBrush(colorGroup().base()));
 
     setPaletteBackgroundPixmap(pix);
 }

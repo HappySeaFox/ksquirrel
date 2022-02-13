@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>511</width>
-            <height>389</height>
+            <height>391</height>
         </rect>
     </property>
     <property name="caption">
@@ -947,8 +947,7 @@
     <include location="global" impldecl="in implementation">kaction.h</include>
     <include location="global" impldecl="in implementation">qapplication.h</include>
     <include location="global" impldecl="in implementation">qclipboard.h</include>
-    <include location="global" impldecl="in implementation">kiconloader.h</include>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
+    <include location="local" impldecl="in implementation">sq_iconloader.h</include>
     <include location="local" impldecl="in implementation">sq_imageproperties.ui.h</include>
 </includes>
 <forwards>

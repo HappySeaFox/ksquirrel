@@ -33,11 +33,11 @@ void SQ_Filters::init()
 	    listFilters->insertItem(item);
 	}
 
-	pushFilterUp->setPixmap(KSquirrel::loader()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
-	pushFilterDown->setPixmap(KSquirrel::loader()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
-	pushNew->setPixmap(KSquirrel::loader()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
-	pushDelete->setPixmap(KSquirrel::loader()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
-	pushClearAll->setPixmap(KSquirrel::loader()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
+	pushFilterUp->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
+	pushFilterDown->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
+	pushNew->setPixmap(SQ_IconLoader::instance()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
+	pushDelete->setPixmap(SQ_IconLoader::instance()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
+	pushClearAll->setPixmap(SQ_IconLoader::instance()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
 	
 	listFilters->setCurrentItem(listFilters->firstChild());
 	listFilters->clearSelection();

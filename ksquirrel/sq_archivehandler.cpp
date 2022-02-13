@@ -181,7 +181,7 @@ void SQ_ArchiveHandler::clean(QString s)
 
 	del << "rm -rf " << KShellProcess::quote(s) << "/*";
 
-	kdDebug() << "cleaning archive ... ";
+	kdDebug() << "cleaning archive... ";
 
 	bool removed = del.start(KProcess::Block);
 

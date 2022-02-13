@@ -40,9 +40,9 @@ class SQ_Contraster : public SQ_EditBase
 
 	protected:
 		virtual void startEditPrivate();
-		virtual void setWritingLibrary();
 		virtual void dialogReset();
 		virtual int manipDecodedImage(fmt_image *im);
+		virtual void setPreviewImage(const QImage &im);
 
 	private slots:
 		void slotStartContrast(SQ_ImageOptions*, SQ_ImageBCGOptions*);

@@ -54,16 +54,16 @@ msgid "Image actions"
 msgstr "Действия над изображениями"
 
 #: sq_diroperatorbase.cpp:423
-msgid "Copy to ..."
-msgstr "Копировать в ..."
+msgid "Copy to..."
+msgstr "Копировать в..."
 
 #: sq_diroperatorbase.cpp:424
-msgid "Move to ..."
-msgstr "Переместить в ..."
+msgid "Move to..."
+msgstr "Переместить в..."
 
 #: sq_diroperatorbase.cpp:425
-msgid "Link to ..."
-msgstr "Создать ссылку в ..."
+msgid "Link to..."
+msgstr "Создать ссылку в..."
 
 #: sq_diroperatorbase.cpp:429
 msgid "Convert images"
@@ -108,12 +108,12 @@ msgstr ""
 "%3"
 
 #: sq_widgetstack.cpp:75
-msgid "New directory ..."
-msgstr "Новый каталог ..."
+msgid "New directory..."
+msgstr "Новый каталог..."
 
 #: sq_widgetstack.cpp:76
-msgid "Properties ..."
-msgstr "Свойства ..."
+msgid "Properties..."
+msgstr "Свойства..."
 
 #: sq_widgetstack.cpp:78
 msgid "Show hidden files"
@@ -467,12 +467,12 @@ msgid "Rescan libraries"
 msgstr "Перепроверить библиотеки"
 
 #: ksquirrel.cpp:532
-msgid "Configure external tools ..."
-msgstr "Настроить внешние программы ..."
+msgid "Configure external tools..."
+msgstr "Настроить внешние программы..."
 
 #: ksquirrel.cpp:533
-msgid "Configure filters ..."
-msgstr "Настроить фильтры ..."
+msgid "Configure filters..."
+msgstr "Настроить фильтры..."
 
 #: ksquirrel.cpp:534
 msgid "Goto tray"
@@ -537,8 +537,8 @@ msgstr ""
 "чтения!"
 
 #: ksquirrel.cpp:839
-msgid " writing settings and thumbnails ...  "
-msgstr " запись настроек и эскизов ...  "
+msgid " writing settings and thumbnails...  "
+msgstr " запись настроек и эскизов...  "
 
 #: ksquirrel.cpp:1094
 msgid "New version is available"
@@ -830,8 +830,8 @@ msgid "Check for a new version available"
 msgstr "Проверять, доступна ли новая версия"
 
 #: sq_options.cpp:819
-msgid "On starting open ..."
-msgstr "При запуске открывать ..."
+msgid "On starting open..."
+msgstr "При запуске открывать..."
 
 #: sq_options.cpp:821
 msgid "Custom directory:"
@@ -1064,16 +1064,12 @@ msgstr ""
 "загружены автоматически"
 
 #: sq_options.cpp:913
-msgid "Show the message, if the directory has changed"
+msgid "Show a message, if the directory has changed"
 msgstr "Показывать сообщение, если каталог изменился"
 
 #: sq_options.cpp:914
 msgid "Show dialog with information about new or deleted libraries"
 msgstr "Показать сообщение о новых библиотеках"
-
-#: sq_options.cpp:920
-msgid "Contains information about all found libraries"
-msgstr "Содержит информацию о всех найденных библиотеках"
 
 #: sq_imageproperties.cpp:323 sq_imageproperties.cpp:404
 msgid "Group"

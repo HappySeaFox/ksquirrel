@@ -2,7 +2,7 @@
 
 SUBDIRS = menu imageedit 
 
-EXTRA_DIST = checker.png drag.png libs_notfound.png usual.png close.png file_first.png file_last.png flipH.png flipV.png fullscreen.png ifless.png next.png prev.png prop.png quick.png reload.png rotateL.png rotateR.png toolbar_hide.png toolbar_show.png zoom100.png zoomH.png zoom-.png zoom+.png zoom_template.png zoomWH.png zoomW.png progress.png tray.png thumb_resume.png thumbs_huge.png thumbs_large.png thumbs_medium.png thumbs_small.png thumb_stop.png thumb_pending128.png thumb_pending48.png thumb_pending64.png thumb_pending96.png image_win.png cache_disk_clear.png cache_disk.png cache_mem_clear.png cache_mem.png cache_mem_view.png cache_mem_sync.png images.png anime.png mark_1.png mark_2.png mark_3.png mark_4.png cache_disk_browse.png 
+EXTRA_DIST = checker.png drag.png libs_notfound.png usual.png close.png file_first.png file_last.png flipH.png flipV.png fullscreen.png ifless.png next.png prev.png prop.png quick.png reload.png rotateL.png rotateR.png toolbar_hide.png toolbar_show.png zoom100.png zoomH.png zoom-.png zoom+.png zoom_template.png zoomWH.png zoomW.png progress.png tray.png thumb_resume.png thumbs_huge.png thumbs_large.png thumbs_medium.png thumbs_small.png thumb_stop.png thumb_pending128.png thumb_pending48.png thumb_pending64.png thumb_pending96.png image_win.png cache_disk_clear.png cache_disk.png cache_mem_clear.png cache_mem.png cache_mem_view.png cache_mem_sync.png images.png anime.png mark_1.png mark_2.png mark_3.png mark_4.png cache_disk_browse.png slideshow.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
@@ -111,6 +111,8 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/mark_4.png $(kde_datadir)/ksquirrel/images/marks/mark_4.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
 	$(INSTALL_DATA) $(srcdir)/cache_disk_browse.png $(kde_datadir)/ksquirrel/images/cache_disk_browse.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+	$(INSTALL_DATA) $(srcdir)/slideshow.png $(kde_datadir)/ksquirrel/images/actions/slideshow.png
 
 uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/checker.png
@@ -166,5 +168,6 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/marks/mark_3.png
 	-rm -f $(kde_datadir)/ksquirrel/images/marks/mark_4.png
 	-rm -f $(kde_datadir)/ksquirrel/images/cache_disk_browse.png
+	-rm -f $(kde_datadir)/ksquirrel/images/actions/slideshow.png
 
 ####### kdevelop will overwrite this part!!! (end)############

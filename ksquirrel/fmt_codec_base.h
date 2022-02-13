@@ -58,6 +58,9 @@ class fmt_codec_base
 	// 16x16 PNG pixmap in ASCII mode
 	virtual std::string	fmt_pixmap() = 0;
 
+	// return file extension for a given bpp
+	virtual std::string     fmt_extension(const s32 bpp) = 0;
+
 	/*
 	 *             read methods
 	 */

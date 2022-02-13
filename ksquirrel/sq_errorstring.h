@@ -26,6 +26,8 @@
   *@author Baryshev Dmitry
   */
 
+#define SQE_NOTFINISHED 10000
+
 class SQ_ErrorString
 {
 	public: 

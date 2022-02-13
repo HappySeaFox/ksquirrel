@@ -40,10 +40,10 @@ class SQ_Rotater : public SQ_EditBase
 
 	protected:
 		virtual void startEditPrivate();
-		virtual void setWritingLibrary();
 		virtual void dialogReset();
 		virtual int manipDecodedImage(fmt_image *im);
 		virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
+		virtual void setPreviewImage(const QImage &im);
 
 	private slots:
 		void slotStartRotate(SQ_ImageOptions*, SQ_ImageRotateOptions*);

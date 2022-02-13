@@ -76,7 +76,8 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 	while((item = it.current()) != 0)
 	{
 		++it;
-		if(item->isFile() && item)
+
+		if(item && item->isFile())
 			stritems = stritems + url().path() + "/" + item->name() + "\n";
 	}
 
@@ -87,9 +88,9 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 
 void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 {
-	QString stritems("");
+	QString stritems;
 
-	if(item->isFile() && item)
+	if(item && item->isFile())
 	{
 		stritems = stritems + url().path() + "/" + item->name() + "\n";
 		list = list + QStringList::split("\n", stritems);
@@ -111,9 +112,9 @@ void SQ_LibraryListener::slotOpenURL(const KURL &url, bool b1, bool b2)
 {
 	if(!QFile::exists(url.path()))
 	{
-	    SQ_LibraryHandler::instance()->clear();
-	    emit finishedInit();
-	    return;
+		SQ_LibraryHandler::instance()->clear();
+		emit finishedInit();
+		return;
 	}
 
 	openURL(url, b1, b2);

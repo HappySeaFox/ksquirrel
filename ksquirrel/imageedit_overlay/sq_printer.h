@@ -21,6 +21,8 @@
 #include "sq_editbase.h"
 
 class QPainter;
+class QPaintDeviceMetrics;
+class QPixmap;
 
 class KPrinter;
 
@@ -38,7 +40,6 @@ class SQ_Printer : public SQ_EditBase
 
 	protected:
 		virtual void startEditPrivate();
-		virtual void setWritingLibrary();
 		virtual void dialogReset();
 		virtual int manipDecodedImage(fmt_image *im);
 		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt);
@@ -49,11 +50,15 @@ class SQ_Printer : public SQ_EditBase
 
 	private:
 		SQ_ImagePrint		*print;
-		static SQ_Printer		*sing;
 		SQ_ImagePrintOptions prnopt;
 		KPrinter				*printer;
 		QPainter			*painter;
 		int					currentPage;
+		unsigned char		*pixmap;
+		QPaintDeviceMetrics *mt;
+		int					x, y, w, h;
+
+		static SQ_Printer		*sing;
 };
 
 #endif

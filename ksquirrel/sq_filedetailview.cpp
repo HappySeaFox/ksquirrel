@@ -20,10 +20,9 @@
 
 #include <kapplication.h>
 #include <kpopupmenu.h>
-#include <kiconloader.h>
 
-#include "ksquirrel.h"
 #include "sq_config.h"
+#include "sq_iconloader.h"
 #include "sq_filedetailview.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
@@ -47,7 +46,7 @@ SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
 {
 	setAcceptDrops(true);
 	connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
-	dirPix = KSquirrel::loader()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
+	dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()

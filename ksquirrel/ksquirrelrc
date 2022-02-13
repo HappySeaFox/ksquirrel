@@ -1,3 +1,8 @@
+[Edit tools]
+preview=false
+altlibrary=Portable Network Graphics
+multi=true
+
 [External tools]
 1=Run within KDE
 10=View in hexadecimal mode
@@ -24,6 +29,7 @@ filter_id=0
 history=true
 last visited=/
 run unknown=false
+selectdeselecthistory=
 set path=0
 sync type=0
 tofirst=true
@@ -76,11 +82,18 @@ convert_close=true
 convert_prefix=
 convert_putto=
 convert_where_to_put=0
+filter_close=true
+filter_prefix=Filtering of\s
+filter_putto=
+filter_where_to_put=0
+filter_swapRGB=0
 print_X=1
 print_Y=1
-print_alignment=leftbottom
+print_alignment=center
 print_close=true
 print_layout=0
+print_transp=0
+print_transp_color=#000000
 resize_applyto=2
 resize_close=true
 resize_fit=2
@@ -114,6 +127,7 @@ show dialog=false
 first_time=true
 minimize to tray=false
 sync=false
+version=0.6.0-pre7
 
 [Navigator Icons]
 Preview Size=60
@@ -124,6 +138,12 @@ ViewMode=LargeRows
 Preview Size=60
 ShowPreviews=false
 ViewMode=SmallColumns
+
+[Slideshow]
+delay=1000
+fullscreen=true
+force=true
+history=/
 
 [Thumbnails]
 cache=20000

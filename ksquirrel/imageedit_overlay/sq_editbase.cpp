@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qapplication.h>
 #include <qfile.h>
 
@@ -28,6 +32,7 @@
 #include "sq_diroperator.h"
 #include "sq_libraryhandler.h"
 #include "sq_editbase.h"
+#include "sq_config.h"
 #include "sq_errorstring.h"
 
 SQ_EditBase::SQ_EditBase() : QObject()
@@ -96,10 +101,12 @@ QString SQ_EditBase::adjustFileName(const QString &globalprefix, const QString &
 
 	prefix.truncate(name2.length() - ext.length());
 
-	if(SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.") + ext))
-		suffix = filter.section("*.", 0, 0, QString::SectionSkipEmpty).stripWhiteSpace();
-	else
-		suffix = ext;
+	suffix = (SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.") + ext))
+#ifndef QT_NO_STL
+			? QString(lw->codec->fmt_extension(32)) : ext;
+#else
+			? QString(lw->codec->fmt_extension(32).c_str()) : ext;
+#endif
 
 	if(replace)
 		result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
@@ -139,8 +146,12 @@ void SQ_EditBase::decodingCycle()
 	RGBA			*scan;
 	int				errors, gerrors = 0, current;
 	QString 			putto;
-	bool			replace = (imageopt.where_to_put == 1);
-	fmt_image 		im;
+	bool			replace = (imageopt.where_to_put == 1), generate_preview;
+	fmt_image 		*im;
+
+	altlibrary = 	SQ_Config::instance()->readEntry("Edit tools", "altlibrary", "Portable Network Graphics");
+	generate_preview = SQ_Config::instance()->readBoolEntry("Edit tools", "preview", false);
+	multi = SQ_Config::instance()->readBoolEntry("Edit tools", "multi", true);
 
 	if(ondisk)
 	{
@@ -165,10 +176,11 @@ void SQ_EditBase::decodingCycle()
 	for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
 	{
 		currentFile = *it;
+		last = (currentFile == files.last());
 
 		QFileInfo ff(*it);
 
-		emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + " ... ", false);
+		emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + "... ", false);
 
 		if(SQ_LibraryHandler::instance()->supports(*it))
 		{
@@ -220,8 +232,7 @@ void SQ_EditBase::decodingCycle()
 
 				finfo = lr->codec->information();
 
-				im.w = finfo.image[current-1].w;
-				im.h = finfo.image[current-1].h;
+				im = &finfo.image[current-1];
 
 				if(i != SQE_OK)
 				{
@@ -237,10 +248,12 @@ void SQ_EditBase::decodingCycle()
 						else
 							name = QString::null;
 
+						lastFrame = last ? true : false;
+
 						if(ondisk)
-							i = manipAndWriteDecodedImage(tempfile->name(), &im, opt);
+							i = manipAndWriteDecodedImage(tempfile->name(), im, opt);
 						else
-							i = manipAndWriteDecodedImage(QString::null, &im, opt);
+							i = manipAndWriteDecodedImage(QString::null, im, opt);
 
 						emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
 						emit oneFileProcessed();
@@ -254,7 +267,7 @@ void SQ_EditBase::decodingCycle()
 
 						if(replace && ondisk)
 						{
-							emit convertText(i18n("Removing") + KStringHandler::rsqueeze(ff.fileName()) + QString(" ... "), false);
+							emit convertText(i18n("Removing") + KStringHandler::rsqueeze(ff.fileName()) + QString("... "), false);
 
 							bool b = QFile::remove(*it);
 
@@ -277,8 +290,12 @@ void SQ_EditBase::decodingCycle()
 					else
 						name = QString::null;
 
+					lastFrame = false;
 //					i = lw->codec->fmt_writeimage(name.ascii(), image, finfo.image[current-1].w, finfo.image[current-1].h, opt);
-					i = manipAndWriteDecodedImage(tempfile->name(), &im, opt);
+					if(ondisk)
+						i = manipAndWriteDecodedImage(tempfile->name(), im, opt);
+					else
+						i = manipAndWriteDecodedImage(QString::null, im, opt);
 
 					i = SQE_OK;
 
@@ -290,7 +307,7 @@ void SQ_EditBase::decodingCycle()
 //					qApp->processEvents();
 				}
 
-//				printf("%dx%d@%d ...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
+//				printf("%dx%d@%d...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
 				image = (RGBA *)realloc(image, finfo.image[current].w * finfo.image[current].h * sizeof(RGBA));
 
 				if(!image)
@@ -374,7 +391,12 @@ int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im, c
 	if(!scan)
 		return SQE_W_NOMEMORY;
 
+
+#ifndef QT_NO_STL
 	err = lw->codec->fmt_write_init(name, *im, opt);
+#else
+	err = lw->codec->fmt_write_init(name.ascii(), *im, opt);
+#endif
 
 	if(err != SQE_OK)
 		goto error_exit;
@@ -463,4 +485,12 @@ void SQ_EditBase::cycleDone()
 {}
 
 void SQ_EditBase::dialogAdditionalInit()
+{}
+
+void SQ_EditBase::setWritingLibrary()
+{
+	lw = lr->writable ? lr : SQ_LibraryHandler::instance()->libraryByName(altlibrary);
+}
+
+void SQ_EditBase::setPreviewImage(const QImage &)
 {}

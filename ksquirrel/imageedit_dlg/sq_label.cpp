@@ -19,7 +19,9 @@
 
 #include "sq_label.h"
 
-SQ_Label::SQ_Label(QWidget *parent, const char *name) : QWidget(parent, name)
+#define MARGIN 15
+
+SQ_Label::SQ_Label(QWidget *parent, const char *name) : QWidget(parent, name), single(false)
 {}
 
 SQ_Label::~SQ_Label()
@@ -27,7 +29,7 @@ SQ_Label::~SQ_Label()
 
 void SQ_Label::paintEvent(QPaintEvent *)
 {
-	if(text.isEmpty())
+	if((single && ltext.isEmpty() && rtext.isEmpty()) || (!single && ltext.isEmpty()))
 		return;
 
 	QPainter paint(this);
@@ -37,17 +39,40 @@ void SQ_Label::paintEvent(QPaintEvent *)
 	font.setPointSize(8);
 	paint.setFont(font);
 
-	paint.translate((width() + paint.fontMetrics().height()) / 2, (height() + paint.fontMetrics().width(text)) / 2);
-      paint.rotate(-90);
-	paint.drawText(0, 0, text);
+	if(!single)
+	{
+	    paint.translate((width() + paint.fontMetrics().height()) / 2, height());
+	    paint.rotate(-90);
+	    paint.drawText(MARGIN, 0, ltext);
+
+	    paint.translate(height() - paint.fontMetrics().width(rtext), 0);
+	    paint.drawText(-MARGIN, 0, rtext);
+	}
+	else
+	{
+	    paint.translate((width() + paint.fontMetrics().height()) / 2,
+			    (height() + paint.fontMetrics().width(ltext)) / 2);
+	    paint.rotate(-90);
+	    paint.drawText(0, 0, ltext);
+	}
 }
 
-void SQ_Label::setText(const QString &ntext)
+void SQ_Label::setText(const QString &lt, const QString &rt)
 {
-	if(ntext == text)
-		return;
-
-	text = ntext;
+	ltext = lt;
+	rtext = rt;
 
 	update();
+}
+
+void SQ_Label::setText(const QString &lt)
+{
+	ltext = lt;
+
+	update();
+}
+
+void SQ_Label::setSingle(bool s)
+{
+    single = s;
 }

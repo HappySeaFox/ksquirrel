@@ -14,6 +14,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qlabel.h>
 #include <qtimer.h>
 
@@ -419,9 +424,9 @@ void SQ_DirOperatorBase::setupActions()
 	pAFileActions->insert(new KAction(i18n("Cut"), "editcut", KStdAccel::cut(), SQ_WidgetStack::instance(), SLOT(slotFileCut()), actionCollection(), "SQ Menu File Cut"));
 	pAFileActions->insert(new KAction(i18n("Paste"), "editpaste", KStdAccel::paste(), SQ_WidgetStack::instance(), SLOT(slotFilePaste()), actionCollection(), "SQ Menu File Paste"));
 	pAFileActions->insert(pASep);
-	pAFileActions->insert(new KAction(i18n("Copy to ..."), "editcopy", 0, SQ_WidgetStack::instance(), SLOT(slotFileCopyTo()), actionCollection(), "SQ Menu File Copy To"));
-	pAFileActions->insert(new KAction(i18n("Move to ..."), "editcut", 0, SQ_WidgetStack::instance(), SLOT(slotFileMoveTo()), actionCollection(), "SQ Menu File Move To	"));
-	pAFileActions->insert(new KAction(i18n("Link to ..."), "www", 0, SQ_WidgetStack::instance(), SLOT(slotFileLinkTo()), actionCollection(), "SQ Menu File Link To "));
+	pAFileActions->insert(new KAction(i18n("Copy to..."), "editcopy", 0, SQ_WidgetStack::instance(), SLOT(slotFileCopyTo()), actionCollection(), "SQ Menu File Copy To"));
+	pAFileActions->insert(new KAction(i18n("Move to..."), "editcut", 0, SQ_WidgetStack::instance(), SLOT(slotFileMoveTo()), actionCollection(), "SQ Menu File Move To	"));
+	pAFileActions->insert(new KAction(i18n("Link to..."), "www", 0, SQ_WidgetStack::instance(), SLOT(slotFileLinkTo()), actionCollection(), "SQ Menu File Link To "));
 	pAFileActions->insert(pASep);
 	pAFileActions->insert(pARunSeparately);
 

@@ -46,6 +46,8 @@ void SQ_Converter::startEditPrivate()
 	connect(this, SIGNAL(oneFileProcessed()), convert, SLOT(slotOneProcessed()));
 	connect(this, SIGNAL(done(bool)), convert, SLOT(slotDone(bool)));
 
+	preview = false;
+
 	convert->exec();
 }
 
