@@ -23,6 +23,7 @@ void SQ_Options::init()
 
     checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", false));
     checkSync->setChecked(kconf->readBoolEntry("sync", false));
+    checkSplash->setChecked(kconf->readBoolEntry("splash", true));
 
     SQ_Config::instance()->setGroup("Libraries");
 
@@ -42,7 +43,7 @@ void SQ_Options::init()
     buttonGroupClick->setButton(tp);
 
     checkSaveHistory->setChecked(kconf->readBoolEntry("history", true));
-    checkRunUnknown->setChecked(kconf->readBoolEntry("run unknown", true));
+    checkRunUnknown->setChecked(kconf->readBoolEntry("run unknown", false));
     checkSupportAr->setChecked(kconf->readBoolEntry("archives", true));
     checkJumpFirst->setChecked(kconf->readBoolEntry("tofirst", true));
     checkDisableDirs->setChecked(kconf->readBoolEntry("disable_dirs", false));
@@ -169,6 +170,7 @@ int SQ_Options::start()
         kconf->setGroup("Main");
         kconf->writeEntry("minimize to tray", checkMinimize->isChecked());
         kconf->writeEntry("sync", checkSync->isChecked());
+        kconf->writeEntry("splash", checkSplash->isChecked());
 
         kconf->setGroup("Thumbnails");
         kconf->writeEntry("margin", spinMargin->value());

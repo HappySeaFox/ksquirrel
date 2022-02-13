@@ -91,3 +91,5 @@ void SQ_Converter::cycleDone()
 {
     delete convert;
 }
+
+#include "sq_converter.moc"

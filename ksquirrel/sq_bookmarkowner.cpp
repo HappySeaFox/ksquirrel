@@ -52,3 +52,5 @@ void SQ_BookmarkOwner::setURL(const KURL &new_url)
 {
     URL = new_url;
 }
+
+#include "sq_bookmarkowner.moc"

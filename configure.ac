@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.2], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.3], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.2)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.3)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -14,8 +14,6 @@ unset CDPATH
 #AC_ARG_PROGRAM
 
 KDE_SET_PREFIX
-
-sq_ksmall="yes"
 
 AC_ENABLE_SHARED(yes)
 AC_ENABLE_STATIC(no)
@@ -98,41 +96,22 @@ KDE_CHECK_HEADER(konq_operations.h, [], AC_MSG_ERROR("Header file konq_operation
 
 __cflags=$CFLAGS
 
-CFLAGS="$X_INCLUDES $CFLAGS"
-LDFLAGS="$X_PRE_LIBS -lX11 $X_LDFLAGS $X_EXTRA_LIBS $LDFLAGS"
+CFLAGS="$X_CFLAGS $CFLAGS"
+LDFLAGS="$X_PRE_LIBS -lX11 $X_LIBS $X_EXTRA_LIBS $LDFLAGS"
 
 AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h, ...) and GLU (GL/glu.h) headers to be installed."))
 
-SQ_GL_ERROR="OpenGL library is corrupted or not installed"
+# Checks for OpenGL.
+AC_CHECK_LIB([GL], [glBegin], [LDFLAGS="-lGL $LDFLAGS"], [ogl="no"])
 
-AC_CHECK_LIB([GL], [glBegin], [], AC_MSG_ERROR($SQ_GL_ERROR))
-
-AC_CHECK_FUNC([glEnd], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glGenTextures], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glBindTexture], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glTexImage2D], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glColor3f], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glClearColor], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glClearDepth], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glClear], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glEnable], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glDisable], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glBlendFunc], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glShadeModel], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glMatrixMode], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glViewport], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glLoadIdentity], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glOrtho], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glTexParameteri], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glTexCoord2f], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glVertex2f], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glLoadMatrixf], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR($SQ_GL_ERROR))
-AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR($SQ_GL_ERROR))
+if test "x$ogl" = "xno"; then
+    AC_MSG_NOTICE([Maybe libGL requires libpthread...])
+    unset ac_cv_lib_GL_glBegin
+    AC_CHECK_LIB([GL], [glBegin], [LDFLAGS="-lpthread -lGL $LDFLAGS"], AC_MSG_ERROR([Cannot use -lGL]), [-lpthread])
+fi
 
 CFLAGS=${__cflags}
-CXXFLAGS="$X_INCLUDES $CXXFLAGS"
+CXXFLAGS="$X_CFLAGS $CXXFLAGS"
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
@@ -144,11 +123,8 @@ AC_CHECK_FUNCS([memcpy memset], [], AC_MSG_ERROR("ksquirrel needs memcpy() and m
 
 AC_ARG_ENABLE(ksmall,
               [AS_HELP_STRING([--disable-ksmall], [don't compile ksquirrel-small [default=no]])],
-              [     case "${enableval}" in
-                       no)  sq_ksmall="yes" ;;
-                       yes) sq_ksmall="no"  ;;
-                       *)   AC_MSG_ERROR([bad value ${enableval} for ksmall param]) ;;
-                    esac]
+	      [ sq_ksmall="$enableval" ],
+	      [ sq_ksmall="yes" ]
              )
 
 AM_CONDITIONAL([SQ_ENABLE_KSMALL], [test $sq_ksmall = yes])
@@ -164,11 +140,8 @@ AM_CONDITIONAL([SQ_ENABLE_KSMALL], [test $sq_ksmall = yes])
 dnl Let people disable the MMX optimization
 AC_ARG_ENABLE(mmx,
               [AS_HELP_STRING([--disable-mmx], [don't use MMX [default=auto]])],
-              [     case "${enableval}" in
-                       no)  enable_mmx="auto" ;;
-                       yes) enable_mmx="no"  ;;
-                       *)   AC_MSG_ERROR([bad value ${enableval} for mmx param]) ;;
-                    esac]
+	      [ enable_mmx="$enableval" ],
+	      [ enable_mmx="auto" ]
              )
 
 AC_MSG_CHECKING(for x86 platform)
@@ -222,18 +195,18 @@ KDE_CREATE_SUBDIRSLIST
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([ksquirrel/Makefile])
 AC_CONFIG_FILES([ksquirrel/libpixops/Makefile])
-AC_CONFIG_FILES([ksquirrel/ksquirrel-small/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_dlg/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_overlay/Makefile])
 AC_CONFIG_FILES([ksquirrel/sidebar/Makefile])
 AC_CONFIG_FILES([pics/Makefile])
 AC_CONFIG_FILES([pics/toolbar/Makefile])
+AC_CONFIG_FILES([pics/like/Makefile])
 AC_CONFIG_FILES([pics/menu/Makefile])
 AC_CONFIG_FILES([pics/imageedit/Makefile])
 AC_CONFIG_FILES([pics/imageedit/squirrels/Makefile])
 AC_CONFIG_FILES([po/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
-AC_CONFIG_FILES([doc/en/Makefile])
+AC_CONFIG_FILES([doc/ru/Makefile])
 
 AC_OUTPUT
 

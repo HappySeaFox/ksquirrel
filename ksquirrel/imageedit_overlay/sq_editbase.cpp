@@ -546,3 +546,5 @@ QImage SQ_EditBase::generatePreview() const
 
     return SQ_ImageLoader::instance()->image().smoothScale(SQ_BCGLabel::fixedWidth(), SQ_BCGLabel::fixedWidth(), QImage::ScaleMin);
 }
+
+#include "sq_editbase.moc"

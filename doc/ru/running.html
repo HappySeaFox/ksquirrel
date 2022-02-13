@@ -1,0 +1,35 @@
+<html><head><title>Глава 6. Запуск KSquirrel из командной строки</title><link rel="stylesheet" href="help:/common/kde-default.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.48"><meta name="keywords" content="KDE, image, viewer, picture"><meta http-equiv="Content-Type" content="text/html; charset=KOI8-R"><meta name="GENERATOR" content="KDE XSL Stylesheet V1.13 using libxslt"><link rel="home" href="index.html" title="KSquirrel Руководство Пользователя"><link rel="up" href="index.html" title="KSquirrel Руководство Пользователя"><link rel="previous" href="ksquirrelsmall.html" title="Глава 5. О ksquirrel-small"><link rel="next" href="license.html" title="Глава 7. Лицензия, авторские права и благодарности"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr class="header"><td colspan="2"> </td></tr><tr id="logo"><td valign="top"><img src="help:/common/kde_logo.png" alt="KDE -         The K Desktop Environment" width="296" height="79" border="0"></td><td valign="middle" align="center" id="location"><h1>Запуск KSquirrel из командной строки</h1></td></tr></table><table width="100%" class="header"><tbody><tr><td align="left" class="navLeft" width="33%"><a accesskey="p" href="ksquirrelsmall.html">Пред.</a></td><td align="center" class="navCenter" width="34%"> </td><td align="right" class="navRight" width="33%"> 
+		      <a accesskey="n" href="license.html">След.</a></td></tr></tbody></table><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="running"></a>Глава 6. Запуск KSquirrel из командной строки</h2></div><div><p class="author">Дмитрий Алексеевич Барышев </p></div><div>Издание <span class="releaseinfo">0.2 (<span class="date">2006-01-02</span>)</span></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="running-arguments"></a>Аргументы командной строки для KSquirrel и ksquirrel-libs</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="running-arguments-ksquirrel"></a>Аргументы командной строки для KSquirrel</h3></div></div><p>
+Команда запуска KSquirrel из командной строки выглядит так:
+</p><div class="cmdsynopsis"><p><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>ksquirrel</b></span> [<span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="option"><tt>-t</tt></span>] [<span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="option"><tt>-r</tt></span>] [<span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="option"><tt>-l</tt></span>] [<span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>файл</tt></i></span>]</p></div><p>
+Параметр <span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>-t</b></span> заставляет KSquirrel запустить процедуру создания эскизов изображений для указанного каталога <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>файл</tt></i></span></tt>.
+</p><p>
+Параметр <span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>-r</b></span> применяется вместе с -t, и указывает KSquirrel, что сканирование каталога должно происходить рукурсивно (т.е. и во всех подкаталогах).
+</p><p>
+Параметр <span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>-l</b></span> указывает KSquirrel вывести на экран список найденных кодеков и выйти. Этот параметр чисто информационный.
+</p><p>
+Параметр <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>файл</tt></i></span></tt> должен быть путём к каталогу, когда задан параметр <span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>-t</b></span>. Иначе это путь к файлу или каталогу для открытия.
+</p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="running-arguments-ksquirrel-small"></a>Аргументы командной строки для ksquirrel-small</h3></div></div><p>
+Команда запуска ksquirrel-small из командной строки выглядит так:
+</p><div class="cmdsynopsis"><p><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>ksquirrel-small</b></span> [<span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>файл</tt></i></span>]</p></div><p>
+Параметр <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>файл</tt></i></span></tt> должен быть путём к файлу для открытия.
+</p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="running-examples"></a>Примеры</h3></div></div><div class="itemizedlist"><ul type="disc"><li><p>
+Рекурсивно создать эскизы изображений, находящихся в каталоге <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>/home/me/images</tt></i></span></tt>.
+
+<div class="cmdsynopsis"><p><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>ksquirrel -t -r /home/me/images/</b></span></p></div>
+</p></li><li><p>
+Открыть при запуске изображение <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>/home/me/images/foto00054.jpg</tt></i></span></tt>
+
+<div class="cmdsynopsis"><p><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>ksquirrel /home/me/images/foto00054.jpg</b></span></p></div>
+
+</p></li><li><p>
+Перейти при запуске в каталог <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>/home/me/images</tt></i></span></tt>
+
+<div class="cmdsynopsis"><p><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>ksquirrel /home/me/images</b></span></p></div>
+
+</p></li><li><p>
+Открыть изображение <tt><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="replaceable"><i><tt>/home/me/images/foto00054.jpg</tt></i></span></tt> с помощью ksquirrel-small
+
+<div class="cmdsynopsis"><p><span xmlns:doc="http://nwalsh.com/xsl/documentation/1.0" class="command"><b>ksquirrel-small /home/me/images/foto00054.jpg</b></span></p></div>
+
+</p></li></ul></div></div></div></div><table width="100%" class="bottom-nav"><tr><td width="33%" align="left" valign="top" class="navLeft"><a href="ksquirrelsmall.html">Пред.</a></td><td width="34%" align="center" valign="top" class="navCenter"><a href="index.html">Начало</a></td><td width="33%" align="right" valign="top" class="navRight"><a href="license.html">След.</a></td></tr><tr><td width="33%" align="left" class="navLeft">О ksquirrel-small </td><td width="34%" align="center" class="navCenter"><a href="index.html">Уровень выше</a></td><td width="33%" align="right" class="navRight"> Лицензия, авторские права и благодарности</td></tr></table></body></html>

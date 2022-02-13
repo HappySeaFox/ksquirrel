@@ -297,8 +297,8 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-SUBDIRS = menu imageedit toolbar 
-EXTRA_DIST = checker.png drag.png usual.png progress.png tray.png thumb_resume.png thumbs_huge.png thumbs_large.png thumbs_medium.png thumbs_small.png thumb_stop.png thumb_pending128.png thumb_pending48.png thumb_pending64.png thumb_pending96.png image_win.png cache_disk_clear.png cache_disk.png cache_mem_clear.png cache_mem.png cache_mem_view.png cache_mem_sync.png anime.png mark_1.png mark_2.png mark_3.png mark_4.png cache_disk_browse.png slideshow.png 
+SUBDIRS = menu imageedit toolbar like 
+EXTRA_DIST = checker.png drag.png usual.png progress.png tray.png thumb_resume.png thumbs_huge.png thumbs_large.png thumbs_medium.png thumbs_small.png thumb_stop.png thumb_pending128.png thumb_pending48.png thumb_pending64.png thumb_pending96.png image_win.png cache_disk_clear.png cache_disk.png cache_mem_clear.png cache_mem.png cache_mem_view.png cache_mem_sync.png anime.png mark_1.png mark_2.png mark_3.png mark_4.png cache_disk_browse.png slideshow.png splash_mask.png 
 #>- all: all-recursive
 #>+ 1
 all: docs-am  all-recursive
@@ -725,42 +725,42 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/image_win.png $(kde_datadir)/ksquirrel/images/listbox/image_win.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/image_win.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/listbox/image_win.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_disk_clear.png $(kde_datadir)/ksquirrel/images/cache_disk_clear.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_disk_clear.png $(kde_datadir)/ksquirrel/images/cache/cache_disk_clear.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_disk_clear.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_disk_clear.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/cache_disk_clear.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_disk_clear.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_disk.png $(kde_datadir)/ksquirrel/images/cache_disk.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_disk.png $(kde_datadir)/ksquirrel/images/cache/cache_disk.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_disk.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_disk.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/cache_disk.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_disk.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem_clear.png $(kde_datadir)/ksquirrel/images/cache_mem_clear.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem_clear.png $(kde_datadir)/ksquirrel/images/cache/cache_mem_clear.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_mem_clear.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem_clear.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/cache_mem_clear.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem_clear.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem.png $(kde_datadir)/ksquirrel/images/cache_mem.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem.png $(kde_datadir)/ksquirrel/images/cache/cache_mem.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_mem.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/cache_mem.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem_view.png $(kde_datadir)/ksquirrel/images/cache_mem_view.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem_view.png $(kde_datadir)/ksquirrel/images/cache/cache_mem_view.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_mem_view.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem_view.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/cache_mem_view.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem_view.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem_sync.png $(kde_datadir)/ksquirrel/images/cache_mem_sync.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_mem_sync.png $(kde_datadir)/ksquirrel/images/cache/cache_mem_sync.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_mem_sync.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem_sync.png
+	$(INSTALL_DATA) $(srcdir)/cache_mem_sync.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem_sync.png
 #>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
 #>+ 1
 	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
@@ -791,18 +791,24 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/mark_4.png $(kde_datadir)/ksquirrel/images/marks/mark_4.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/mark_4.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/marks/mark_4.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
-#>- 	$(INSTALL_DATA) $(srcdir)/cache_disk_browse.png $(kde_datadir)/ksquirrel/images/cache_disk_browse.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/
+#>- 	$(INSTALL_DATA) $(srcdir)/cache_disk_browse.png $(kde_datadir)/ksquirrel/images/cache/cache_disk_browse.png
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/cache_disk_browse.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_disk_browse.png
+	$(INSTALL_DATA) $(srcdir)/cache_disk_browse.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_disk_browse.png
 #>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 #>+ 1
 	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/
 #>- 	$(INSTALL_DATA) $(srcdir)/slideshow.png $(kde_datadir)/ksquirrel/images/actions/slideshow.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/slideshow.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/slideshow.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/
+#>- 	$(INSTALL_DATA) $(srcdir)/splash_mask.png $(kde_datadir)/ksquirrel/images/splash_mask.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/splash_mask.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/splash_mask.png
 
 uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/checker.png
@@ -853,24 +859,24 @@ uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/listbox/image_win.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/listbox/image_win.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_disk_clear.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_disk_clear.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_disk_clear.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_disk.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_disk_clear.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_disk.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_disk.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_mem_clear.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_disk.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_mem_clear.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem_clear.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_mem.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem_clear.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_mem.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_mem_view.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_mem_view.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem_view.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_mem_sync.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem_view.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_mem_sync.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_mem_sync.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_mem_sync.png
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/anime.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/anime.png
@@ -886,12 +892,15 @@ uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/marks/mark_4.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/marks/mark_4.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache_disk_browse.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_disk_browse.png
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache_disk_browse.png
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/cache/cache_disk_browse.png
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/actions/slideshow.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/slideshow.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/splash_mask.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/splash_mask.png
 
 ####### kdevelop will overwrite this part!!! (end)############
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

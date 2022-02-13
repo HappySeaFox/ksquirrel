@@ -175,3 +175,5 @@ void SQ_FileDetailView::clearView()
     // insert ".."
     insertCdUpItem(SQ_WidgetStack::instance()->url());
 }
+
+#include "sq_filedetailview.moc"

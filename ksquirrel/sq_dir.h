@@ -46,7 +46,10 @@ class SQ_Dir : public QDir
             Extracts,
 
             // temporary usage (~/.ksquirrel/tmp).
-            Tmp };
+            Tmp,
+
+            // image categories (~/.ksquirrel/categories).
+            Categories};
 
         SQ_Dir(Prefix);
         ~SQ_Dir();

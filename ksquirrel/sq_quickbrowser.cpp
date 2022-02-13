@@ -210,3 +210,5 @@ void SQ_QuickBrowser::updateCurrentFileItem()
     if(f)
         quick->setCurrentItem(f);
 }
+
+#include "sq_quickbrowser.moc"

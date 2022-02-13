@@ -124,3 +124,5 @@ void SQ_Rotater::cycleDone()
 {
     delete rotate;
 }
+
+#include "sq_rotater.moc"

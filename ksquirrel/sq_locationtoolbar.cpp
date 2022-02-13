@@ -33,3 +33,5 @@ void SQ_LocationToolbar::setShown(bool shown)
 
     KToolBar::setShown(shown);
 }
+
+#include "sq_locationtoolbar.moc"

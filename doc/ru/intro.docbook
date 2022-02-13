@@ -1,0 +1,35 @@
+<chapter id="intro">
+
+<chapterinfo>
+<authorgroup>
+<author>&Dmitry.Baryshev;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2006-01-02</date>
+<releaseinfo>0.2</releaseinfo>
+</chapterinfo>
+
+<title>Вступление</title>
+
+<sect1 id="intro-whatis-ksquirrel">
+<title>Что такое &kappname;</title>
+
+<para>
+&kappname; это просмотрщик изображений для KDE реализующий OpenGL и динамическую поддержу форматов изображений.
+</para>
+
+<para>
+&kappname; имеет простой файловый менеджер, который позволяет просматривать каталоги и файлы на Вашем жёстком диске.
+</para>
+
+<para>
+Боковая панель с несколькими вкладками обеспечивает дополнильную функциональность.
+</para>
+
+<para>Загрузка изображений осуществляется набором собственных кодеков, которые мы называем <quote>&klibname;</quote>.
+&kappname; сможет показать все изображения, которые поддерживаются данным набором кодеков.</para>
+
+</sect1>
+
+</chapter>

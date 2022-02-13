@@ -2,6 +2,6 @@
 
 
 ####### kdevelop will overwrite this part!!! (end)############
-SUBDIRS = en
+SUBDIRS = ru
 
 man_MANS = ksquirrel.1 ksquirrel-small.1

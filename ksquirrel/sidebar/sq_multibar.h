@@ -72,6 +72,14 @@ class SQ_MultiBar : public QHBox
          */
         int currentPage();
 
+        void updateLayout();
+
+        void updateWidth(const int w);
+
+        void saveConfig();
+
+        KMultiTabBar* multiBar() const;
+
     public slots:
 
         /*
@@ -83,14 +91,20 @@ class SQ_MultiBar : public QHBox
     private:
         KMultiTabBar *mt;
         QWidgetStack *stack;
-        int m_id, m_selected;
+        int m_id, m_selected, m_width;
         QSignalMapper *mapper;
 };
 
 inline
 int SQ_MultiBar::currentPage()
 {
-    return m_selected < 0 ? 0 : m_selected;
+    return m_selected;
+}
+
+inline
+KMultiTabBar* SQ_MultiBar::multiBar() const
+{
+    return mt;
 }
 
 #endif

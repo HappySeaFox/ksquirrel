@@ -238,6 +238,8 @@ class SQ_GLWidget : public QGLWidget
 
     protected:
 
+        void resizeEvent(QResizeEvent *);
+
         /*
          *  Next three methods should be reimplemented in
          *  every QGLWidget's subclass.
@@ -458,7 +460,7 @@ class SQ_GLWidget : public QGLWidget
          *  Bind textures, draw them and create GL lists.
          *  If 'swap' it true, swap buffers.
          */
-        bool showFrames(int, Parts *, bool swap = true);
+        bool showFrames(int, Parts *, int fake_i, bool swap);
 
         /*
          *  Calculate color.

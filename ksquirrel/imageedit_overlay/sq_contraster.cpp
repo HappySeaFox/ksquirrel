@@ -100,3 +100,5 @@ void SQ_Contraster::cycleDone()
 {
     delete bcg;
 }
+
+#include "sq_contraster.moc"

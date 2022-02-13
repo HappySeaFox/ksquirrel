@@ -319,7 +319,7 @@ xdg_menudir = @xdg_menudir@
 ####### kdevelop will overwrite this part!!! (end)############
 SUBDIRS = ksquirrel po pics doc
 EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL \
-	README TODO ksquirrel.lsm ksquirrel.spec fmt_filters_README
+	README TODO ksquirrel.lsm fmt_filters_README
 
 # not a GNU package. You can remove this line, if 
 # have all needed files, that a GNU package needs
@@ -810,7 +810,7 @@ dist-hook:
 
 
 #>+ 2
-KDE_DIST=stamp-h.in autoscan.log subdirs configure.ac Makefile.in config.h.in reconfigure configure.gnu aclocal.m4 Makefile.dist Doxyfile ksquirrel.kdevses configure Makefile.am acinclude.m4 start 
+KDE_DIST=stamp-h.in autoscan.log subdirs configure.ac Makefile.in config.h.in reconfigure configure.gnu aclocal.m4 Makefile.dist Doxyfile ksquirrel.kdevses configure Makefile.am acinclude.m4 LICENSE start 
 
 #>+ 2
 docs-am:

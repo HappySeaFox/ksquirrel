@@ -21,16 +21,18 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
+#include <kconfig.h>
 #include <kapplication.h>
 #include <dcopclient.h>
 
 #include <cstdlib>
 
 #include "ksquirrel.h"
+#include "sq_splashscreen.h"
 #include "sq_about.h"
 #include "sq_hloptions.h"
 
-/////////////////////////////////////////////////////////////////////////////////////
+/* ****************************************************************** */
 
 // Our command line options
 static KCmdLineOptions options[] =
@@ -116,16 +118,33 @@ int main(int argc, char *argv[])
     high->thumbs = sq_args->isSet("t");
     high->recurs = (high->thumbs) ? sq_args->isSet("r") : false;
 
+    SQ_SplashScreen *splash = NULL;
+
     if(high->thumbs)
         high->thumbs_p = sq_args->getOption("t");
+    else
+    {
+        // should we show a splash screen ?
+        KConfig *config = new KConfig("ksquirrelrc");
+        config->setGroup("Main");
+
+        if(config->readBoolEntry("splash", true))
+        {
+            splash = new SQ_SplashScreen;
+            splash->show();
+            KApplication::flush();
+        }
+
+        delete config;
+    }
 
     // connect to DCOP server and register KSquirrel. Now we can
     // send messages to KSquirrel (see README for parameters)
     if(a.dcopClient()->attach())
         a.dcopClient()->registerAs(App, false);
 
-    // create instance
-    SQ = new KSquirrel(NULL, App);
+    // create an instance
+    SQ = new KSquirrel(NULL, App, &splash);
 
     a.setMainWidget(SQ);
 

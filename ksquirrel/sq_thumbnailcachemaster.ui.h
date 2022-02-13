@@ -15,13 +15,13 @@
 
 void SQ_ThumbnailCacheMaster::init()
 {
-    pushCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_disk.png")));
-    pushCacheBrowse->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_disk_browse.png")));
-    pushCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem.png")));
-    pushClearCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_disk_clear.png")));
-    pushClearCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem_clear.png")));
-    pushShowCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem_view.png")));
-    pushSyncCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem_sync.png")));
+    pushCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_disk.png")));
+    pushCacheBrowse->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_disk_browse.png")));
+    pushCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_mem.png")));
+    pushClearCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_disk_clear.png")));
+    pushClearCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "imagescache//cache_mem_clear.png")));
+    pushShowCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_mem_view.png")));
+    pushSyncCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_mem_sync.png")));
 }
 
 void SQ_ThumbnailCacheMaster::slotCalcCache()

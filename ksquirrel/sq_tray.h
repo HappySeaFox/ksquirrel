@@ -27,13 +27,13 @@ class KPopupMenu;
  *  SQ_SystemTray represents tray. It also can show popup menu.
  */
 
-class SQ_SystemTray : public KSystemTray
+class SQ_Tray : public KSystemTray
 {
     Q_OBJECT
 
     public:
-        SQ_SystemTray(QWidget *parent = 0, const char *name = 0);
-        ~SQ_SystemTray();
+        SQ_Tray(QWidget *parent = 0, const char *name = 0);
+        ~SQ_Tray();
 
     protected:
 

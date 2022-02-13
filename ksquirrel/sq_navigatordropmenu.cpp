@@ -96,3 +96,5 @@ void SQ_NavigatorDropMenu::exec(const QPoint &pos)
 {
     dropmenu->exec(pos);
 }
+
+#include "sq_navigatordropmenu.moc"

@@ -82,3 +82,5 @@ void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
         kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
     }
 }
+
+#include "sq_fileiconviewbase.moc"

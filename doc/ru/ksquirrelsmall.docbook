@@ -1,0 +1,43 @@
+<chapter id="ksquirrelsmall">
+
+<chapterinfo>
+<authorgroup>
+<author>&Dmitry.Baryshev;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2006-01-02</date>
+<releaseinfo>0.2</releaseinfo>
+</chapterinfo>
+
+<title>О &kappnamesmall;</title>
+
+<para>
+
+&kappnamesmall; - это облегчённая версия &kappname;, которая может использоваться как простой просмотрщик изображений из файлового менеджера <application>Midnight Commander</application> или &konqueror;. Чтобы закрепить &kappnamesmall; за изображениями в <application>Midnight Commander</application>, Вы должны прописать его в специальном файле расширений (<menuchoice><guimenu>Command</guimenu><guimenuitem>Edit extension file</guimenuitem></menuchoice>).
+
+<screenshot>
+<screeninfo>&kappnamesmall; в mc</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="ksmall-mc.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Привязки расширений в MC</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+Теперь откроем любое изображение из mc:
+
+<screenshot>
+<screeninfo>&kappnamesmall;</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="ksmall.png" format="PNG" />
+</imageobject>
+<textobject><phrase>&kappnamesmall;, запущенный из-под MC</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+</para>
+
+</chapter>

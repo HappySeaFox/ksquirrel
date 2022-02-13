@@ -1,6 +1,24 @@
-ksquirrel-0.6.2: Debian-policy-release.
+ksquirrel-0.6.3 and ksquirrel-libs-0.6.3
+********************************************
+
+ksquirrel:
+* interface improvements, now KSquirrel can look like GQview
+* small fix in reloading libraries from disk
+* added categories
+
+ksquirrel-0.6.2 and ksquirrel-libs-0.6.2
 ********************************************
 ksquirrel and ksquirrel-libs now should correspond Debian policy.
+
+ksquirrel-libs:
+* some changes in API
+
+ksquirrel:
+* fixed segfault if the file format is not supported
+* new option: "Don't show tooltips when the main window is inactive"
+* "L" key ("Ignore, if the image is less than window") in image window now works
+* added Russian handbook
+* single-page images now eat less memory
 
 ksquirrel-0.6.1: bugfix release, minor changes
 *****************************************************

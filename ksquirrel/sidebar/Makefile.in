@@ -53,16 +53,19 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 libsidebar_a_AR = $(AR) $(ARFLAGS)
 libsidebar_a_LIBADD =
-am_libsidebar_a_OBJECTS = sq_urllabel.$(OBJEXT) sq_headlabel.$(OBJEXT) \
-	sq_treeview.$(OBJEXT) sq_multibar.$(OBJEXT) \
-	sq_mountview.$(OBJEXT)
+am_libsidebar_a_OBJECTS = sq_categorybrowsermenu.$(OBJEXT) \
+	sq_categoriesview.$(OBJEXT) sq_splitter.$(OBJEXT) \
+	sq_rubberband.$(OBJEXT) sq_urllabel.$(OBJEXT) \
+	sq_headlabel.$(OBJEXT) sq_treeview.$(OBJEXT) \
+	sq_multibar.$(OBJEXT) sq_mountview.$(OBJEXT)
 #>- libsidebar_a_OBJECTS = $(am_libsidebar_a_OBJECTS)
-#>+ 7
+#>+ 8
 libsidebar_a_final_OBJECTS = libsidebar_a.all_cpp.o 
-libsidebar_a_nofinal_OBJECTS = sq_urllabel.$(OBJEXT) sq_headlabel.$(OBJEXT) \
-	sq_treeview.$(OBJEXT) sq_multibar.$(OBJEXT) \
-	sq_mountview.$(OBJEXT) sq_sidebaractions.$(OBJEXT)\
-sq_treeview.moc.o sq_multibar.moc.o sq_mountview.moc.o sq_urllabel.moc.o 
+libsidebar_a_nofinal_OBJECTS = sq_categorybrowsermenu.$(OBJEXT) \
+	sq_categoriesview.$(OBJEXT) sq_splitter.$(OBJEXT) \
+	sq_rubberband.$(OBJEXT) sq_urllabel.$(OBJEXT) \
+	sq_headlabel.$(OBJEXT) sq_treeview.$(OBJEXT) \
+	sq_multibar.$(OBJEXT) sq_mountview.$(OBJEXT) sq_sidebaractions.$(OBJEXT)
 @KDE_USE_FINAL_FALSE@libsidebar_a_OBJECTS = $(libsidebar_a_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@libsidebar_a_OBJECTS = $(libsidebar_a_final_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -329,10 +332,10 @@ noinst_LIBRARIES = libsidebar.a
 INCLUDES = $(all_includes) -I.. -I../imageedit_overlay \
 	-I../imageeedit_dlg
 #>- libsidebar_a_METASOURCES = AUTO
-#>- libsidebar_a_SOURCES = sq_urllabel.cpp sq_sidebaractions.ui sq_headlabel.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp 
+#>- libsidebar_a_SOURCES = sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_splitter.cpp sq_rubberband.cpp sq_urllabel.cpp sq_sidebaractions.ui sq_headlabel.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp 
 #>+ 1
-libsidebar_a_SOURCES=sq_urllabel.cpp  sq_headlabel.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp  sq_sidebaractions.cpp
-EXTRA_DIST = sq_mountview.cpp sq_mountview.h sq_multibar.cpp sq_multibar.h sq_treeview.cpp sq_treeview.h sq_headlabel.cpp sq_headlabel.h sq_sidebaractions.ui sq_urllabel.cpp sq_urllabel.h 
+libsidebar_a_SOURCES=sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_splitter.cpp sq_rubberband.cpp sq_urllabel.cpp  sq_headlabel.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp  sq_sidebaractions.cpp
+EXTRA_DIST = sq_mountview.cpp sq_mountview.h sq_multibar.cpp sq_multibar.h sq_treeview.cpp sq_treeview.h sq_headlabel.cpp sq_headlabel.h sq_sidebaractions.ui sq_urllabel.cpp sq_urllabel.h sq_rubberband.cpp sq_rubberband.h sq_splitter.cpp sq_splitter.h sq_categoriesview.cpp sq_categoriesview.h sq_categorybrowsermenu.cpp sq_categorybrowsermenu.h 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
@@ -395,9 +398,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_categoriesview.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_categorybrowsermenu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_headlabel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_mountview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_multibar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_rubberband.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_splitter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_treeview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_urllabel.Po@am__quote@
 
@@ -609,36 +616,64 @@ uninstall-am: uninstall-info-am
 
 
 #>+ 3
-sq_treeview.moc.cpp: $(srcdir)/sq_treeview.h
-	$(MOC) $(srcdir)/sq_treeview.h -o sq_treeview.moc.cpp
+sq_categoriesview.moc: $(srcdir)/sq_categoriesview.h
+	$(MOC) $(srcdir)/sq_categoriesview.h -o sq_categoriesview.moc
 
 #>+ 2
-mocs: sq_treeview.moc.cpp
+mocs: sq_categoriesview.moc
 
 #>+ 3
-sq_multibar.moc.cpp: $(srcdir)/sq_multibar.h
-	$(MOC) $(srcdir)/sq_multibar.h -o sq_multibar.moc.cpp
+sq_multibar.moc: $(srcdir)/sq_multibar.h
+	$(MOC) $(srcdir)/sq_multibar.h -o sq_multibar.moc
 
 #>+ 2
-mocs: sq_multibar.moc.cpp
+mocs: sq_multibar.moc
 
 #>+ 3
-sq_mountview.moc.cpp: $(srcdir)/sq_mountview.h
-	$(MOC) $(srcdir)/sq_mountview.h -o sq_mountview.moc.cpp
+sq_mountview.moc: $(srcdir)/sq_mountview.h
+	$(MOC) $(srcdir)/sq_mountview.h -o sq_mountview.moc
 
 #>+ 2
-mocs: sq_mountview.moc.cpp
+mocs: sq_mountview.moc
 
 #>+ 3
-sq_urllabel.moc.cpp: $(srcdir)/sq_urllabel.h
-	$(MOC) $(srcdir)/sq_urllabel.h -o sq_urllabel.moc.cpp
+sq_treeview.moc: $(srcdir)/sq_treeview.h
+	$(MOC) $(srcdir)/sq_treeview.h -o sq_treeview.moc
 
 #>+ 2
-mocs: sq_urllabel.moc.cpp
+mocs: sq_treeview.moc
+
+#>+ 3
+sq_rubberband.moc: $(srcdir)/sq_rubberband.h
+	$(MOC) $(srcdir)/sq_rubberband.h -o sq_rubberband.moc
+
+#>+ 2
+mocs: sq_rubberband.moc
+
+#>+ 3
+sq_categorybrowsermenu.moc: $(srcdir)/sq_categorybrowsermenu.h
+	$(MOC) $(srcdir)/sq_categorybrowsermenu.h -o sq_categorybrowsermenu.moc
+
+#>+ 2
+mocs: sq_categorybrowsermenu.moc
+
+#>+ 3
+sq_urllabel.moc: $(srcdir)/sq_urllabel.h
+	$(MOC) $(srcdir)/sq_urllabel.h -o sq_urllabel.moc
+
+#>+ 2
+mocs: sq_urllabel.moc
+
+#>+ 3
+sq_splitter.moc: $(srcdir)/sq_splitter.h
+	$(MOC) $(srcdir)/sq_splitter.h -o sq_splitter.moc
+
+#>+ 2
+mocs: sq_splitter.moc
 
 #>+ 3
 clean-metasources:
-	-rm -f  sq_treeview.moc.cpp sq_multibar.moc.cpp sq_mountview.moc.cpp sq_urllabel.moc.cpp
+	-rm -f  sq_categoriesview.moc sq_multibar.moc sq_mountview.moc sq_treeview.moc sq_rubberband.moc sq_categorybrowsermenu.moc sq_urllabel.moc sq_splitter.moc
 
 #>+ 2
 KDE_DIST=sq_sidebaractions.h libsidebar.a Makefile.in Makefile.am sq_sidebaractions.ui.h 
@@ -690,11 +725,11 @@ bcheck-am:
 
 
 #>+ 11
-libsidebar_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_urllabel.cpp $(srcdir)/sq_headlabel.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_multibar.cpp $(srcdir)/sq_mountview.cpp $(srcdir)/sq_sidebaractions.cpp sq_treeview.moc.cpp sq_multibar.moc.cpp sq_mountview.moc.cpp sq_urllabel.moc.cpp  sq_sidebaractions.moc
+libsidebar_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_categorybrowsermenu.cpp $(srcdir)/sq_categoriesview.cpp $(srcdir)/sq_splitter.cpp $(srcdir)/sq_rubberband.cpp $(srcdir)/sq_urllabel.cpp $(srcdir)/sq_headlabel.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_multibar.cpp $(srcdir)/sq_mountview.cpp $(srcdir)/sq_sidebaractions.cpp  sq_categoriesview.moc sq_multibar.moc sq_mountview.moc sq_treeview.moc sq_rubberband.moc sq_categorybrowsermenu.moc sq_sidebaractions.moc sq_urllabel.moc sq_splitter.moc
 	@echo 'creating libsidebar_a.all_cpp.cpp ...'; \
 	rm -f libsidebar_a.all_cpp.files libsidebar_a.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> libsidebar_a.all_cpp.final; \
-	for file in sq_urllabel.cpp sq_headlabel.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp sq_sidebaractions.cpp sq_treeview.moc.cpp sq_multibar.moc.cpp sq_mountview.moc.cpp sq_urllabel.moc.cpp ; do \
+	for file in sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_splitter.cpp sq_rubberband.cpp sq_urllabel.cpp sq_headlabel.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp sq_sidebaractions.cpp ; do \
 	  echo "#include \"$$file\"" >> libsidebar_a.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> libsidebar_a.all_cpp.final; \
 	done; \
@@ -729,14 +764,34 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 8
-nmcheck: 
-$(srcdir)/sq_urllabel.cpp: sq_sidebaractions.h 
+#>+ 28
+sq_rubberband.lo: sq_rubberband.moc 
+sq_splitter.o: sq_splitter.moc 
 $(srcdir)/sq_treeview.cpp: sq_sidebaractions.h 
 $(srcdir)/sq_mountview.cpp: sq_sidebaractions.h 
-nmcheck-am: nmcheck
-$(srcdir)/sq_multibar.cpp: sq_sidebaractions.h 
+$(srcdir)/sq_categorybrowsermenu.cpp: sq_sidebaractions.h 
+sq_urllabel.lo: sq_urllabel.moc 
+sq_multibar.o: sq_multibar.moc 
+sq_categorybrowsermenu.lo: sq_categorybrowsermenu.moc 
+sq_categorybrowsermenu.o: sq_categorybrowsermenu.moc 
 $(srcdir)/sq_headlabel.cpp: sq_sidebaractions.h 
+sq_urllabel.o: sq_urllabel.moc 
+sq_treeview.lo: sq_treeview.moc 
+nmcheck: 
+$(srcdir)/sq_urllabel.cpp: sq_sidebaractions.h 
+$(srcdir)/sq_rubberband.cpp: sq_sidebaractions.h 
+sq_treeview.o: sq_treeview.moc 
+nmcheck-am: nmcheck
+sq_categoriesview.lo: sq_categoriesview.moc 
+sq_multibar.lo: sq_multibar.moc 
+$(srcdir)/sq_splitter.cpp: sq_sidebaractions.h 
+sq_rubberband.o: sq_rubberband.moc 
+$(srcdir)/sq_multibar.cpp: sq_sidebaractions.h 
+sq_categoriesview.o: sq_categoriesview.moc 
+$(srcdir)/sq_categoriesview.cpp: sq_sidebaractions.h 
+sq_mountview.o: sq_mountview.moc 
+sq_mountview.lo: sq_mountview.moc 
+sq_splitter.lo: sq_splitter.moc 
 
 #>+ 15
 sq_sidebaractions.cpp: $(srcdir)/sq_sidebaractions.ui sq_sidebaractions.h sq_sidebaractions.moc

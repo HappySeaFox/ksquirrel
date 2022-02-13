@@ -293,3 +293,5 @@ void SQ_Printer::cycleDone()
     delete printer;
     delete print;
 }
+
+#include "sq_printer.moc"

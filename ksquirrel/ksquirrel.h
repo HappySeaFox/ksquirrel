@@ -38,6 +38,7 @@ class KActionMenu;
 class KHistoryCombo;
 class KToggleAction;
 class KBookmarkMenu;
+class SQ_SplashScreen;
 
 template <class T> class QValueVector;
 class QLabel;
@@ -45,9 +46,10 @@ class QWidgetStack;
 class QHBox;
 class QVBox;
 class QTimer;
+class QSplitter;
 
 class SQ_WidgetStack;
-class SQ_SystemTray;
+class SQ_Tray;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_Config;
@@ -74,7 +76,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         /*
          *  Constructor & destructor
          */
-        KSquirrel(QWidget *parent = 0, const char *name = 0);
+        KSquirrel(QWidget *parent, const char *name, SQ_SplashScreen **splash_to_delete);
         ~KSquirrel();
 
         /*
@@ -156,6 +158,16 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         QStringList* filtersNames() const;
         QStringList* filtersExtensions() const;
+
+        /*
+         *  Rebuild interface
+         */
+        void rebuildInterface(int type, bool init = false);
+
+        /*
+         *  Get interface type (see 'viewtype')
+         */
+        int interfaceType() const;
 
         static KSquirrel*     app() { return m_instance; }
 
@@ -359,6 +371,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotOptions();
 
         /*
+         *  Change interface, see 'viewtype'
+         */
+        void slotChangeInterface();
+
+        /*
          *  Edit current item's mimetype (Konqueror-related action).
          */
         void slotEditMime();
@@ -422,11 +439,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  in /usr/lib/ksquirrel-libs. Now we can decode images.
          */
         void slotContinueLoading();
-
-        /*
-         *  Invoked, when user toggles "Separate image window" button.
-         */
-        void slotSeparateGL(bool);
 
         /*
          *  Invoked, when user clicked "Check for a newer version" button.
@@ -509,6 +521,19 @@ class KSquirrel : public KMainWindow, public DCOPObject
     private:
         static KSquirrel     *m_instance;
 
+        // view type:
+        // 0 - KSquirrel classic
+        // 1 - built-in image window
+        // 2 - like GQview
+        int         viewtype;
+
+        QSplitter   *ts;
+
+        QVBox       *rightBox;
+
+        // change interface (see above)
+        KAction *pAInterface;
+
         // main toolbar
         KToolBar    *tools;
 
@@ -524,9 +549,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // thumbnail sizes (small, normal, ...)
         KRadioAction    *pAThumb0, *pAThumb1, *pAThumb2, *pAThumb3;
 
-        // toggle actions: show/hide url box, make image window
-        // built-in/separate
-        KToggleAction    *pAURL, *pASeparateGL;
+        // show/hide url box
+        KToggleAction    *pAURL;
 
         // popup menus: "File", "View" ...
         KPopupMenu    *pop_file, *pop_view, *pop_action, *pop_nav;
@@ -680,7 +704,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         SQ_LibraryListener    *libl;
 
         // ou tray instance
-        SQ_SystemTray    *tray;
+        SQ_Tray    *tray;
 
         // external tools
         SQ_ExternalTool    *extool;
@@ -704,10 +728,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // sidebar
         SQ_MultiBar       *sideBar;
 
+        SQ_SplashScreen     *splash_to_delete;
+
         // not interesting ;)
         int     old_id;
         bool   first_time, old_disable, old_ext,
-                 m_urlbox, m_sep, old_marks;
+                 m_urlbox, old_marks;
 };
 
 // Is slideshow running ?
@@ -745,6 +771,12 @@ inline
 KPopupMenu* KSquirrel::menuViews()
 {
     return actionViews;
+}
+
+inline
+int KSquirrel::interfaceType() const
+{
+    return viewtype;
 }
 
 #endif

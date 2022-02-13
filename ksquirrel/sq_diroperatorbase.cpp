@@ -40,6 +40,10 @@
 #include "sq_widgetstack.h"
 #include "sq_config.h"
 #include "sq_archivehandler.h"
+#include "sq_externaltool.h"
+#include "sq_categoriesview.h"
+#include "sq_popupmenu.h"
+#include "sq_categorybrowsermenu.h"
 
 #define SQ_MAX_WORD_LENGTH 50
 
@@ -309,6 +313,17 @@ void SQ_DirOperatorBase::setupActions()
     // remove "View" submenu, since we will insert our's one.
     setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
 
+    KActionMenu *pADirOperatorMenu = dynamic_cast<KActionMenu *>(actionCollection()->action("popupMenu"));
+
+    pADirOperatorMenu->popupMenu()->insertItem(i18n("&External Tools"), SQ_ExternalTool::instance()->constPopupMenu());
+    pADirOperatorMenu->popupMenu()->insertItem(i18n("Add To &Category"), SQ_CategoriesBox::instance()->popupMenu());
+
+    connect(actionCollection()->action("properties"), SIGNAL(enabled(bool)), 
+        SQ_ExternalTool::instance()->constPopupMenu(), SLOT(setEnabled(bool)));
+
+    connect(actionCollection()->action("properties"), SIGNAL(enabled(bool)), 
+        SQ_CategoriesBox::instance()->popupMenu(), SLOT(setEnabled(bool)));
+
     new KAction(QString::null, 0, CTRL+Key_J, SQ_WidgetStack::instance(), SLOT(slotRunSeparately()), actionCollection(), "dirop_runsepar");
     new KAction(QString::null, 0, KStdAccel::copy(), SQ_WidgetStack::instance(), SLOT(slotFileCopy()), actionCollection(), "dirop_copy");
     new KAction(QString::null, 0, KStdAccel::cut(), SQ_WidgetStack::instance(), SLOT(slotFileCut()), actionCollection(), "dirop_cut");
@@ -349,8 +364,8 @@ void SQ_DirOperatorBase::execute(KFileItem *fi)
                 else;
             // not image, not archive. Read settings and run this file separately
             // with default application (if needed).
-            else if(SQ_Config::instance()->readBoolEntry("run unknown", true))
-                pARunSeparately->activate();
+            else if(SQ_Config::instance()->readBoolEntry("run unknown", false))
+                emit runSeparately(fi);
         }
     }
 }
@@ -408,3 +423,5 @@ void SQ_DirOperatorBase::setPreparedView()
 {
     setView(fileview);
 }
+
+#include "sq_diroperatorbase.moc"

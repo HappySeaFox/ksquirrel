@@ -160,6 +160,11 @@ class SQ_DirOperatorBase : public KDirOperator
          */
         void tryUnpack(KFileItem *item);
 
+        /*
+         *  Run selected file separately (with default application)
+         */
+        void runSeparately(KFileItem *item);
+
     protected:
         /*
          *  Pointer to current view. All view types (such as icon view, list view ...)
@@ -171,12 +176,6 @@ class SQ_DirOperatorBase : public KDirOperator
          *  Some additional menus.
          */
         KActionMenu     *pADirOperatorMenu, *pAFileActions, *pAImageActions;
-
-        /*
-         *  Action, which will run current item with default application.
-         *  For eample, it can open film "f.avi" in Xine.
-         */
-        KAction    *pARunSeparately;
 
         /*
          *  View type.

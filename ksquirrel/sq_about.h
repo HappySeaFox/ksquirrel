@@ -25,19 +25,15 @@
  *  'About' dialog
  */
 
-#define SQ_VERSION "0.6.2"
+#define SQ_VERSION "0.6.3"
 
 static KAboutData aboutData(
             "ksquirrel",
 
 #ifndef SQ_SMALL
-
             "KSquirrel",
-
 #else
-
             "KSquirrel (light version)",
-
 #endif
 
             SQ_VERSION, 

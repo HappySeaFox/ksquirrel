@@ -451,7 +451,7 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <spacer row="2" column="0">
+                            <spacer row="3" column="0">
                                 <property name="name">
                                     <cstring>spacer10</cstring>
                                 </property>
@@ -464,7 +464,7 @@
                                 <property name="sizeHint">
                                     <size>
                                         <width>20</width>
-                                        <height>16</height>
+                                        <height>165</height>
                                     </size>
                                 </property>
                             </spacer>
@@ -482,6 +482,14 @@
                                 </property>
                                 <property name="text">
                                     <string>Minimize to tray after closing</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="2" column="0">
+                                <property name="name">
+                                    <cstring>checkSplash</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show splash screen at startup</string>
                                 </property>
                             </widget>
                         </grid>

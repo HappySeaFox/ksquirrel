@@ -43,17 +43,18 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
     setRootIsDecorated(true);
 
     setCurrentItem(root->root());
+    root->setChildRecurse(true);
     root->setOpen(true);
 
     // connect signals
 
     // Space and Return will open item
-    connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
-    connect(this, SIGNAL(returnPressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
+    connect(this, SIGNAL(spacePressed(QListViewItem*)), this, SIGNAL(executed(QListViewItem*)));
+    connect(this, SIGNAL(returnPressed(QListViewItem*)), this, SIGNAL(executed(QListViewItem*)));
 
-    connect(this, SIGNAL(executed(QListViewItem*)), SLOT(slotItemExecuted(QListViewItem*)));
+    connect(this, SIGNAL(executed(QListViewItem*)), this, SLOT(slotItemExecuted(QListViewItem*)));
     connect(this, SIGNAL(newURL(const KURL&)), this, SLOT(slotNewURL(const KURL&)));
-    connect(root, SIGNAL(populateFinished(KFileTreeViewItem *)), SLOT(slotOpened(KFileTreeViewItem *)));
+    connect(root, SIGNAL(populateFinished(KFileTreeViewItem *)), this, SLOT(slotOpened(KFileTreeViewItem *)));
 
     itemsToClose = new KFileTreeViewItemList;
 
@@ -89,11 +90,15 @@ void SQ_TreeView::slotItemExecuted(QListViewItem *item)
     KURL Curl = cur->url();
 
     // pass url to SQ_WidgetStack
-    SQ_WidgetStack::instance()->setURLForCurrent(Curl);
+    SQ_WidgetStack::instance()->setURLForCurrent(Curl, false);
 }
 
 void SQ_TreeView::emitNewURL(const KURL &url)
 {
+    // already selected?
+    if(url.equals(currentURL(), true))
+        return;
+
     // tree is invisible.
     // save url for future use
     if(!isVisible())
@@ -237,3 +242,5 @@ void SQ_TreeView::showEvent(QShowEvent *)
         emit newURL(url);
     }
 }
+
+#include "sq_treeview.moc"

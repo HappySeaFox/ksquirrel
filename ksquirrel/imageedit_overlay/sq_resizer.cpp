@@ -154,3 +154,5 @@ void SQ_Resizer::cycleDone()
 {
     delete res;
 }
+
+#include "sq_resizer.moc"

@@ -19,15 +19,20 @@
 #include <qsignalmapper.h>
 
 #include <kmultitabbar.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 #include <kdebug.h>
 
 #include "sq_multibar.h"
-#include "sq_iconloader.h"
+#include "sq_config.h"
 
 SQ_MultiBar::SQ_MultiBar(QWidget *parent, const char *name) : QHBox(parent, name)
 {
     m_id = 0;
     m_selected = -1;
+
+    SQ_Config::instance()->setGroup("Interface");
+    m_width = SQ_Config::instance()->readNumEntry("splitter", 220);
 
     kdDebug() << "+SQ_MultiBar" << endl;
 
@@ -42,11 +47,10 @@ SQ_MultiBar::SQ_MultiBar(QWidget *parent, const char *name) : QHBox(parent, name
     mt->setPosition(KMultiTabBar::Left);
     mt->showActiveTabTexts(true);
 
+    setSpacing(0);
+
     // QWigdetStack will contain all widgets
     stack = new QWidgetStack(this);
-
-    stack->setFixedWidth(220);
-    stack->hide();
 }
 
 SQ_MultiBar::~SQ_MultiBar()
@@ -56,11 +60,11 @@ SQ_MultiBar::~SQ_MultiBar()
 
 void SQ_MultiBar::addWidget(QWidget *new_w, const QString &text, const QString &icon)
 {
-    // add button
-    mt->appendTab(SQ_IconLoader::instance()->loadIcon(icon, KIcon::Desktop, 22), m_id, text);
-
     // add widget to stack
     stack->addWidget(new_w, m_id);
+
+    // add button
+    mt->appendTab(KGlobal::iconLoader()->loadIcon(icon, KIcon::Desktop, 22), m_id, text);
 
     // since we cann't determine which tab was clicked,
     // we should use QSignalMapper to determine it.
@@ -78,13 +82,45 @@ void SQ_MultiBar::raiseWidget(int id)
 
     if(mt->isTabRaised(id))
     {
+        if(m_selected != -1)
+            m_width = width();
+
         m_selected = id;
+
+        setMinimumSize(QSize(0, 0));
+        setMaximumSize(QSize(10000, 10000));
+        setFixedWidth(m_width);
         stack->raiseWidget(id);
         stack->show();
     }
     else
     {
         m_selected = -1;
+        m_width = width();
         stack->hide();
+        setFixedWidth(mt->width());
     }
 }
+
+void SQ_MultiBar::updateLayout()
+{
+    setFixedWidth(mt->width());
+    stack->hide();
+}
+
+void SQ_MultiBar::saveConfig()
+{
+    if(m_selected != -1)
+        m_width = width();
+
+    SQ_Config::instance()->setGroup("Interface");
+    SQ_Config::instance()->writeEntry("splitter", m_width);
+}
+
+void SQ_MultiBar::updateWidth(const int w)
+{
+    if(m_selected != -1 && w > mt->width())
+        setFixedWidth(w);
+}
+
+#include "sq_multibar.moc"

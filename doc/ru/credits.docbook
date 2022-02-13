@@ -1,0 +1,30 @@
+<chapter id="license">
+
+<chapterinfo>
+<authorgroup>
+<author>&Dmitry.Baryshev;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2006-01-02</date>
+<releaseinfo>0.2</releaseinfo>
+</chapterinfo>
+
+<title>Лицензия, авторские права и благодарности</title>
+
+<para>
+&kappname; и &klibname; разработаны и сопровождаются &copy; 2003-2006 Барышевым Дмитрием Алексеевичем. Русская версия данного документа создана &copy; 2006 Барышевым Дмитрием Алексеевичем. Вы можете связаться со мной по электронному адресу <email>ksquirrel@tut.by</email>.
+</para>
+
+<segmentedlist>
+<segtitle>Лицензирование &kappname;</segtitle>
+<segtitle>Лицензирование &klibname;</segtitle>
+<segtitle>Лицензирование  этого документа</segtitle>
+<seglistitem>
+<seg>&underGPL;</seg>
+<seg>LGPL</seg>
+<seg>&underFDL;</seg>
+</seglistitem>
+</segmentedlist>
+
+</chapter>

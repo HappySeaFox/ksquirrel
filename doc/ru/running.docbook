@@ -1,0 +1,115 @@
+<chapter id="running">
+
+<chapterinfo>
+<authorgroup>
+<author>&Dmitry.Baryshev;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2006-01-02</date>
+<releaseinfo>0.2</releaseinfo>
+</chapterinfo>
+
+<title>Запуск &kappname; из командной строки</title>
+
+<sect1 id="running-arguments">
+<title>Аргументы командной строки для &kappname; и &klibname;</title>
+
+<sect2 id="running-arguments-ksquirrel">
+<title>Аргументы командной строки для &kappname;</title>
+
+<para>
+Команда запуска &kappname; из командной строки выглядит так:
+</para>
+
+<cmdsynopsis>
+<command>ksquirrel</command>
+<group choice="opt"><option>-t</option></group>
+<group choice="opt"><option>-r</option></group>
+<group choice="opt"><option>-l</option></group>
+<arg><replaceable>файл</replaceable></arg>
+</cmdsynopsis>
+
+<para>
+Параметр <command>-t</command> заставляет &kappname; запустить процедуру создания эскизов изображений для указанного каталога <filename><replaceable>файл</replaceable></filename>.
+</para>
+
+<para>
+Параметр <command>-r</command> применяется вместе с -t, и указывает &kappname;, что сканирование каталога должно происходить рукурсивно (т.е. и во всех подкаталогах).
+</para>
+
+<para>
+Параметр <command>-l</command> указывает &kappname; вывести на экран список найденных кодеков и выйти. Этот параметр чисто информационный.
+</para>
+
+<para>
+Параметр <filename><replaceable>файл</replaceable></filename> должен быть путём к каталогу, когда задан параметр <command>-t</command>. Иначе это путь к файлу или каталогу для открытия.
+</para>
+
+</sect2>
+
+<sect2 id="running-arguments-ksquirrel-small">
+<title>Аргументы командной строки для &kappnamesmall;</title>
+
+<para>
+Команда запуска &kappnamesmall; из командной строки выглядит так:
+</para>
+
+<cmdsynopsis>
+<command>&kappnamesmall;</command>
+<arg><replaceable>файл</replaceable></arg>
+</cmdsynopsis>
+
+<para>
+Параметр <filename><replaceable>файл</replaceable></filename> должен быть путём к файлу для открытия.
+</para>
+
+</sect2>
+
+<sect2 id="running-examples">
+<title>Примеры</title>
+
+<itemizedlist>
+
+<listitem><para>
+Рекурсивно создать эскизы изображений, находящихся в каталоге <filename><replaceable>/home/me/images</replaceable></filename>.
+
+<cmdsynopsis>
+<command>ksquirrel -t -r /home/me/images/</command>
+</cmdsynopsis>
+</para></listitem>
+
+<listitem><para>
+Открыть при запуске изображение <filename><replaceable>/home/me/images/foto00054.jpg</replaceable></filename>
+
+<cmdsynopsis>
+<command>ksquirrel /home/me/images/foto00054.jpg</command>
+</cmdsynopsis>
+
+</para></listitem>
+
+<listitem><para>
+Перейти при запуске в каталог <filename><replaceable>/home/me/images</replaceable></filename>
+
+<cmdsynopsis>
+<command>ksquirrel /home/me/images</command>
+</cmdsynopsis>
+
+</para></listitem>
+
+<listitem><para>
+Открыть изображение <filename><replaceable>/home/me/images/foto00054.jpg</replaceable></filename> с помощью &kappnamesmall;
+
+<cmdsynopsis>
+<command>&kappnamesmall; /home/me/images/foto00054.jpg</command>
+</cmdsynopsis>
+
+</para></listitem>
+
+</itemizedlist>
+
+</sect2>
+
+</sect1>
+
+</chapter>

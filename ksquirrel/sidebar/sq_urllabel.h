@@ -1,3 +1,23 @@
+/***************************************************************************
+                          sq_urllabel.cpp  -  description
+                             -------------------
+    begin                : Jan 2 2006
+    copyright            : (C) 2006 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef SQ_URLLABEL
+#define SQ_URLLABEL
+
 #include <qlabel.h>
 
 /*
@@ -29,3 +49,5 @@ class SQ_URLLabel : public QLabel
     signals:
         void clicked();
 };
+
+#endif

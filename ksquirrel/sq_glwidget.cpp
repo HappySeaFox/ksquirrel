@@ -44,7 +44,6 @@
 #include <kstringhandler.h>
 #include <kimageeffect.h>
 #include <kmessagebox.h>
-#include <kpopupmenu.h>
 #include <kdebug.h>
 
 #include <math.h>
@@ -53,20 +52,17 @@
 #undef SQ_SECTION
 
 #ifndef SQ_SMALL // light version doesn't require all this stuff...
-
-#define SQ_SECTION "GL view"
-
-#include "ksquirrel.h"
-#include "sq_externaltool.h"
-#include "sq_widgetstack.h"
-#include "sq_fileiconview.h"
-#include "sq_quickbrowser.h"
-#include "sq_diroperator.h"
-
+    #define SQ_SECTION "GL view"
+    #include "ksquirrel.h"
+    #include "sq_externaltool.h"
+    #include "sq_widgetstack.h"
+    #include "sq_fileiconview.h"
+    #include "sq_quickbrowser.h"
+    #include "sq_diroperator.h"
+    #include "sq_popupmenu.h"
 #else
-
-#define SQ_SECTION "ksquirrel-small"
-
+    #define SQ_SECTION "ksquirrel-small"
+    #include <kpopupmenu.h>
 #endif
 
 #include "sq_libraryhandler.h"
@@ -449,6 +445,14 @@ void SQ_GLWidget::resizeGL(int width, int height)
     glMatrixMode(GL_MODELVIEW);
 }
 
+void SQ_GLWidget::resizeEvent(QResizeEvent *e)
+{
+    QGLWidget::resizeEvent(e);
+
+    // TODO
+//    slotZoomIfLess();
+}
+
 /*
  *  Fill a w x h region with texture. Generate texture if needed.
  */
@@ -737,6 +741,8 @@ void SQ_GLWidget::wheelEvent(QWheelEvent *e)
 // User pressed mouse button down.
 void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
 {
+    setFocus();
+
     // left button, update cursor
     if(e->button() == Qt::LeftButton && e->state() == Qt::NoButton)
     {
@@ -1638,7 +1644,6 @@ void SQ_GLWidget::removeCurrentParts()
             clearParts(&(*it));
 
             (*it).m32.clear();
-
         }
 
         parts.clear();
@@ -1704,10 +1709,11 @@ bool SQ_GLWidget::prepare()
  *  Bind textures, draw them and create GL lists.
  *  Also show textures by executing GL lists, if 'swap' = true.
  */
-bool SQ_GLWidget::showFrames(int i, Parts *p, bool swap)
+bool SQ_GLWidget::showFrames(int i, Parts *p, int fake_i, bool swap)
 {
-    int z;
+    int z, fake_z;
     const int a = p->tilesx * i, b = p->tilesx * (i+1);
+    const int fake_a = (fake_i == -1 ? a : 0);
     int filter = linear ? GL_LINEAR : GL_NEAREST;
 
     // for safety...
@@ -1715,7 +1721,7 @@ bool SQ_GLWidget::showFrames(int i, Parts *p, bool swap)
 
     glEnable(GL_TEXTURE_2D);
 
-    for(z = a;z < b;z++)
+    for(z = a, fake_z = fake_a;z < b;z++, fake_z++)
     {
         glBindTexture(GL_TEXTURE_2D, p->m_parts[z].tex);
 
@@ -1729,7 +1735,7 @@ bool SQ_GLWidget::showFrames(int i, Parts *p, bool swap)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p->tileSize, p->tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, ((p->m32)[z])->data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p->tileSize, p->tileSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, ((p->m32)[fake_z])->data());
     }
 
     // create new display list
@@ -1771,7 +1777,7 @@ void SQ_GLWidget::setupBits(Parts *p, RGBA *b, int y)
 
     for(int x = 0;x < p->tilesx;x++)
     {
-        vv = ((p->m32)[index])->data();
+        vv = (p->m32)[index]->data();
 
         for(int j = 0,k = 0;j < p->tileSize;j++,k++)
             memcpy(vv + k*f, b + x*p->tileSize + k*p->realw, f);
@@ -1944,6 +1950,7 @@ void SQ_GLWidget::slotDecode()
     memoryPart *pt;
     SQ_Config::instance()->setGroup("GL view");
     bool progr = SQ_Config::instance()->readBoolEntry("progressiv", true);
+    bool canbemulti = codeK->fmt_canbemultiple();
 
 #ifdef SQ_SMALL
 
@@ -2037,7 +2044,9 @@ void SQ_GLWidget::slotDecode()
                     return;                    \
                 }
 
-        for(int s = 0;s < pp.tiles;s++)
+        i = canbemulti ? pp.tiles : pp.tilesx;
+
+        for(int s = 0;s < i;s++)
         {
             pt = new memoryPart(tileSize);
 
@@ -2068,9 +2077,11 @@ void SQ_GLWidget::slotDecode()
 #endif
 
             // delete memory buffers
+            clearParts(&pp);
+/*
             for(int k = 0;k < pp.tiles;k++)
                 pp.m32[k]->del();
-
+*/
             pp.m32.clear();
 
             SQ_FAIL_RET
@@ -2114,16 +2125,17 @@ void SQ_GLWidget::slotDecode()
 
                 if(pass == im->passes-1)
                 {
-                    setupBits(&pp, next, i);
+                    setupBits(&pp, next, (canbemulti ? i : 0));
 
                     if(!current)
                     {
-                        bool b = showFrames(i, &pp, progr);
+                        bool b = showFrames(i, &pp, (canbemulti ? -1 : 0), progr);
 
                         if(!b)
                             printf("Showframes failed for image %d, tiley %d\n", current, i);
                     }
                 }
+
             }
         }
 
@@ -2144,6 +2156,12 @@ void SQ_GLWidget::slotDecode()
         current++;
     }
 
+    finfo = codeK->information();
+    codeK->fmt_read_close();
+    total = finfo.image.size();
+    current = 0;
+    updateCurrentFileInfo();
+
     anim->flush();
 
     if(next)
@@ -2152,13 +2170,11 @@ void SQ_GLWidget::slotDecode()
         next = NULL;
     }
 
-    finfo = codeK->information();
-
-    codeK->fmt_read_close();
-    total = finfo.image.size();
-
-    current = 0;
-    updateCurrentFileInfo();
+    if(!canbemulti && total)
+    {
+        clearParts(&parts[0]);
+        parts[0].m32.clear();
+    }
 
     decoded = true;
     reset_mode = false;
@@ -2177,6 +2193,8 @@ void SQ_GLWidget::slotDecode()
 
     if(finfo.animated)
         QTimer::singleShot(finfo.image[current].delay, this, SLOT(slotAnimateNext()));
+
+    setFocus();
 }
 
 void SQ_GLWidget::adjustTimeFromMsecs(int &secs, int &msecs)
@@ -2750,7 +2768,7 @@ void SQ_GLWidget::reassignParts()
     p->computeCoords();
 
     for(int j = 0;j < p->tilesy;j++)
-        showFrames(j, p, false);
+        showFrames(j, p, -1, false);
 }
 
 void SQ_GLWidget::updateFilter(bool nice)
@@ -2857,7 +2875,7 @@ void SQ_GLWidget::initBrokenImage()
 
     parts_broken->m32.push_back(pt);
 
-    showFrames(0, parts_broken, false);
+    showFrames(0, parts_broken, -1, false);
 
     image_broken.w = parts_broken->w;
     image_broken.h = parts_broken->h;
@@ -2890,3 +2908,5 @@ void SQ_GLWidget::useBrokenImage(const int err_index)
     // update context and show "broken" image
     updateGL();
 }
+
+#include "sq_glwidget.moc"

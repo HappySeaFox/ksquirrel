@@ -22,7 +22,7 @@
 #include <qobject.h>
 #include <qvaluevector.h>
 
-class KPopupMenu;
+class SQ_PopupMenu;
 
 struct Tool
 {
@@ -56,12 +56,12 @@ class SQ_ExternalTool : public QObject, public QValueVector<Tool>
         /*
          *  Recreate current popop menu.
          */
-        KPopupMenu* newPopupMenu();
+        SQ_PopupMenu* newPopupMenu();
 
         /*
          *  Get current popup menu.
          */
-        KPopupMenu* constPopupMenu() const;
+        SQ_PopupMenu* constPopupMenu() const;
 
         /*
          *  Write tools to config file as QStringLists
@@ -78,16 +78,14 @@ class SQ_ExternalTool : public QObject, public QValueVector<Tool>
          */
         void slotAboutToShowMenu();
 
+    public:
+        static void aboutToShowMenu(SQ_PopupMenu *);
+
     private:
         /*
          *  Popup menu with all tools.
          */
-        KPopupMenu *menu;
-
-        /*
-         *  Id of menu's title.
-         */
-        int title;
+        SQ_PopupMenu *menu;
 
         static SQ_ExternalTool *m_instance;
 };

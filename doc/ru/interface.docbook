@@ -1,0 +1,260 @@
+<chapter id="interface">
+
+<chapterinfo>
+<authorgroup>
+<author>&Dmitry.Baryshev;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2006-01-02</date>
+<releaseinfo>0.2</releaseinfo>
+</chapterinfo>
+
+<title>Интерфейс</title>
+
+<sect1 id="interface-navigator">
+<title>Навигатор</title>
+
+<para>
+&kappname; имеет простой файловый менеджер, который позволяет просматривать каталоги и файлы на Вашем жёстком диске.
+Этот файловый менеджер, который мы называем  <quote>навигатором</quote>, может представлять файлы и каталоги несколькими способами: в виде списка, иконок, детального просмотра и просмотра эскизов.
+
+<screenshot>
+<screeninfo>Список</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="view_list.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Список</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<screenshot>
+<screeninfo>Иконки</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="view_icons.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Иконки</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<screenshot>
+<screeninfo>Детально</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="view_detailed.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Детально</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<screenshot>
+<screeninfo>Эскизы</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="view_thumbnails.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Эскизы</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+В навигаторе также имеется возможность просматривать содержимое архивов .tar.gz, .tar.bz2, .zip. Распакованные архивы кэширутся на диск в Ваш домашний каталог.
+
+</para>
+
+</sect1>
+
+<sect1 id="interface-iw">
+<title>Смена внешнего вида</title>
+
+<para>
+Окно просмотра изображения может быть встроенным и отдельным. При просмотре изображения встроенное окно заменяет собой навиатор, а отдельное - существует как отдельное окно, не перекрывая собой другие части интерфейса. Отличия этих двух режимов можно рассмотреть подробнее на скриншотах ниже.
+
+<screenshot>
+<screeninfo>Встроенное окно просмотра</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="imagewindow_builtin.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Внешний вид программы если окно просмотра - встроенное</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<screenshot>
+<screeninfo>Отдельное окно просмотра</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="imagewindow_separate.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Внешний вид программы если окно просмотра - отдельное</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<screenshot>
+<screeninfo>Как у QQview</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="imagewindow_gqview.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Внешний вид программы в режиме похожести на GQview</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+</para>
+
+<screenshot>
+<screeninfo>Настроить внешний вид</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="imagewindow_button.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Кнопка настройки внешнего вида</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+</sect1>
+
+<sect1 id="interface-sidebar">
+<title>Боковая панель</title>
+
+<para>
+В &kappname; имеется боковая панель наподобие той, что Вы видели в &konqueror;. Листая страницы с помощью мыши Вы можете переключаться на файловое дерево, список действий с файлами и изображениями и на вид подключённых дисковых разделов.
+
+<orderedlist>
+
+<listitem><para>Файловое дерево позволяет просматривать каталоги на диске в виде иерархического дерева. Обычно файловое дерево используется для быстрой навигации по каталогам. Файловое дерево представлено на скриншоте выше по тексту.
+<screenshot>
+<screeninfo>Боковая панель</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="sidebar.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Боковая панель</phrase></textobject>
+</mediaobject>
+</screenshot>
+</para></listitem>
+
+<listitem><para>Вид подключённых разделов позволяет просмотреть подключенные на данный момент (смонтированные) дисковые разделы. При клике на значок устройства навигатор переходит на заданный раздел.
+<screenshot>
+<screeninfo>Боковая панель: точки монтирования</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="sidebar_mounts.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Боковая панель: точки монтирования</phrase></textobject>
+</mediaobject>
+</screenshot>
+</para></listitem>
+
+<listitem><para>Список действий над файлами и изображениями предоставляет быстрый доступ к действиям над файлами (копирование, перемещение) и над изображениями (конвертация, изменение размеров). Для применения, скажем, конвертации изображений, необходимо выделить в навигаторе файлы, которые вы хотите редактировать, и выбрать на панели нужное действие.
+<screenshot>
+<screeninfo>Эскизы</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="sidebar_actions.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Боковая панель: действия над файлами и изображениями</phrase></textobject>
+</mediaobject>
+</screenshot>
+</para></listitem>
+
+<listitem><para>Панель категорий содержит ссылки на файлы, разбитые по категориям. Чтобы добавить новые ссылки в категории, используйте контекстное меню в навигаторе.
+<screenshot>
+<screeninfo>Боковая панель: категории</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="sidebar_categories.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Боковая панель: категории</phrase></textobject>
+</mediaobject>
+</screenshot>
+</para></listitem>
+
+</orderedlist>
+
+</para>
+
+</sect1>
+
+<sect1 id="interface-menu">
+<title>Меню</title>
+
+<para>
+Как и почти во всех графических программах, в &kappname; имеется меню команд. Рассмотрим некоторые команды подробнее.
+
+<!--
+
+<screenshot>
+<screeninfo>Меню</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="menu.png" format="PNG" />
+</imageobject>
+<textobject><phrase>Меню</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<sect2>
+<title>Меню <guimenu>Файл</guimenu></title>
+
+<para>Меню <guimenu>Файл</guimenu> содержит команды, которые связаны с действиями над файлами и, традиционно, команду выхода.</para>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Файл</guimenu><guimenuitem>Открыть</guimenuitem>
+</menuchoice></term>
+<listitem><para>Открыть файл изображения</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Файл</guimenu><guimenuitem>Открыть файл и сменить каталог</guimenuitem>
+</menuchoice></term>
+<listitem><para>Открыть файл изображения, и перейти в каталог, где данный файл находится</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Файл</guimenu><guimenuitem>Свойства</guimenuitem>
+</menuchoice></term>
+<listitem><para>Показать свойства текущего (в навигаторе) файла</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Файл</guimenu><guimenuitem>Удалить</guimenuitem>
+</menuchoice></term>
+<listitem><para></para>Удалить выделенные в навигаторе файлы</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Файл</guimenu><guimenuitem>Изменить тип файла</guimenuitem>
+</menuchoice></term>
+<listitem><para></para>Изменть тип файла, используя диалог настроек KDE</listitem>
+</varlistentry>
+
+</sect2>
+
+<sect2>
+<title>Меню <guimenu>Вид</guimenu></title>
+
+<para>Меню <guimenu>Вид</guimenu> содержит команды, которые позволяют изменить внешний вид программы.</para>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Вид</guimenu><guimenuitem></guimenuitem>
+</menuchoice></term>
+<listitem><para></para></listitem>
+</varlistentry>
+
+</sect2>
+
+-->
+
+</para>
+
+</sect1>
+
+</chapter>

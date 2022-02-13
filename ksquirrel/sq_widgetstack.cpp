@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <qlabel.h>
@@ -55,7 +55,7 @@
 #include "sq_bookmarkowner.h"
 #include "sq_thumbnailsize.h"
 #include "sq_progress.h"
-#include "sq_thumbnailjob.h"
+#include "sq_thumbnailloadjob.h"
 #include "sq_pixmapcache.h"
 #include "sq_selectdeselectgroup.h"
 
@@ -101,6 +101,7 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 
     connect(KSquirrel::app(), SIGNAL(thumbSizeChanged(const QString&)), dirop, SLOT(slotSetThumbSize(const QString&)));
     connect(dirop, SIGNAL(tryUnpack(KFileItem *)), this, SLOT(tryUnpack(KFileItem *)));
+    connect(dirop, SIGNAL(runSeparately(KFileItem *)), this, SLOT(slotRunSeparately()));
 
     KSquirrel::app()->historyCombo()->setEditURL(dirop->url());
 
@@ -163,19 +164,6 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool cl, bool parseTree)
         if(sync_type == 2 || sync_type == 0)
             SQ_TreeView::instance()->emitNewURL(url);
     }
-}
-
-/*
- *  User selected some url in file tree. Let's set it for
- *  current diroperator and other widgets (with setURL()).
- */
-void SQ_WidgetStack::setURLfromtree(const KURL &newurl)
-{
-    bool cl = true;
-
-    setURL(newurl, cl, false);
-
-    dirop->setURL(newurl, cl);
 }
 
 /*
@@ -486,16 +474,16 @@ void SQ_WidgetStack::thumbnailProcess()
     tv->progress->advance(1);
 }
 
-void SQ_WidgetStack::setURLForCurrent(const QString &path)
+void SQ_WidgetStack::setURLForCurrent(const QString &path, bool parseTree)
 {
     KURL url = path;
 
-    setURLForCurrent(url);
+    setURLForCurrent(url, parseTree);
 }
 
-void SQ_WidgetStack::setURLForCurrent(const KURL &url)
+void SQ_WidgetStack::setURLForCurrent(const KURL &url, bool parseTree)
 {
-    setURL(url, true);
+    setURL(url, true, parseTree);
 
     dirop->setURL(url, true);
 }
@@ -512,7 +500,7 @@ void SQ_WidgetStack::slotRunSeparately()
 
     KFileItem *item;
 
-    while((item = it.current()) != 0)
+    while((item = it.current()))
     {
         if(item)
             item->run();
@@ -557,7 +545,7 @@ void SQ_WidgetStack::slotDelayedRecreateThumbnail()
 
     qApp->processEvents();
 
-    while((item = list->take()) != 0)
+    while((item = list->take()))
     {
         if(!item)
             continue;
@@ -800,3 +788,5 @@ KAction* SQ_WidgetStack::action(const QString &name)
 {
     return dirop->actionCollection()->action(name);
 }
+
+#include "sq_widgetstack.moc"

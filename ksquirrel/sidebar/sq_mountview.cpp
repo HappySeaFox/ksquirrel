@@ -81,3 +81,5 @@ void SQ_MountView::slotReload()
         }
     }
 }
+
+#include "sq_mountview.moc"

@@ -58,6 +58,8 @@
 
 #endif
 
+#include <GL/glx.h>
+
 SQ_GLView * SQ_GLView::m_instance = NULL;
 
 SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
@@ -114,8 +116,9 @@ void SQ_GLView::createContent()
 {
     m_toolbar = new SQ_ToolBar(this);
 
-    gl = new SQ_GLWidget(this);
+    gl = new SQ_GLWidget(this, "ksquirrel image window");
     gl->glInitA();
+    glXWaitX();
 
     setStretchFactor(gl, 1);
 
@@ -190,7 +193,9 @@ void SQ_GLView::closeEvent(QCloseEvent *e)
     // in 'small' version accept close event,
     // and save geometry to config file
     kconf->setGroup(SQ_SECTION);
+
     saveGeometry();
+
     kconf->writeEntry("statusbar", dynamic_cast<KToggleAction *>(gl->actionCollection()->action("toggle status"))->isChecked());
     kconf->writeEntry("ignore", dynamic_cast<KToggleAction *>(gl->actionCollection()->action("if less"))->isChecked());
     kconf->writeEntry("zoom type", gl->zoomType());
@@ -208,12 +213,10 @@ void SQ_GLView::closeEvent(QCloseEvent *e)
 
 #ifndef SQ_SMALL
 
-/*
- *  Is this widget separate ?
- */
-bool SQ_GLView::isSeparate() const
+void SQ_GLView::statusBarLikeGQview(bool b)
 {
-    return separate;
+    names["SBGLCoord"]->setShown(!b);
+    names["SBGLAngle"]->setShown(!b);
 }
 
 /*
@@ -287,7 +290,7 @@ void SQ_GLView::slotFullScreen(bool full)
 {
     WId id = winId();
 
-    SQ_Config::instance()->setGroup(SQ_SECTION);
+    kconf->setGroup(SQ_SECTION);
 
     // hide statusbar in fullscreen mode ?
     if(kconf->readBoolEntry("hide_sbar", true))
@@ -322,6 +325,8 @@ void SQ_GLView::restoreGeometry()
 {
     QPoint p_def(0,0);
     QSize  sz_def(660, 480);
+
+    SQ_Config::instance()->setGroup(SQ_SECTION);
 
     QPoint p = SQ_Config::instance()->readPointEntry("pos", &p_def);
     QSize sz = SQ_Config::instance()->readSizeEntry("size", &sz_def);
@@ -364,3 +369,5 @@ void SQ_ToolBar::mouseReleaseEvent(QMouseEvent *e)
 {
     e->accept();
 }
+
+#include "sq_glview.moc"

@@ -30,9 +30,9 @@
 #include "sq_tray.h"
 #include "sq_glview.h"
 
-SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(parent, name)
+SQ_Tray::SQ_Tray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 {
-    kdDebug() << "+SQ_SystemTray" << endl;
+    kdDebug() << "+SQ_Tray" << endl;
 
     // create popup menu
     rightMenu = new KPopupMenu;
@@ -52,9 +52,9 @@ SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(pa
     setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/tray.png")));
 }
 
-SQ_SystemTray::~SQ_SystemTray()
+SQ_Tray::~SQ_Tray()
 {
-    kdDebug() << "-SQ_SystemTray" << endl;
+    kdDebug() << "-SQ_Tray" << endl;
 
     delete rightMenu;
 }
@@ -62,7 +62,7 @@ SQ_SystemTray::~SQ_SystemTray()
 /*
  *  Reimplement mouse press event.
  */
-void SQ_SystemTray::mousePressEvent(QMouseEvent *ev)
+void SQ_Tray::mousePressEvent(QMouseEvent *ev)
 {
     // left button ?
     if(ev->button() == Qt::LeftButton)
@@ -78,7 +78,7 @@ void SQ_SystemTray::mousePressEvent(QMouseEvent *ev)
     }
 }
 
-void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
+void SQ_Tray::mouseReleaseEvent(QMouseEvent *ev)
 {
     KSystemTray::mouseReleaseEvent(ev);
 }
@@ -86,7 +86,7 @@ void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 /*
  *  Show main window.
  */
-void SQ_SystemTray::slotActivate()
+void SQ_Tray::slotActivate()
 {
     if(SQ_GLView::window()->isSeparate() && !SQ_GLView::window()->isHidden())
         SQ_GLView::window()->show();
@@ -97,7 +97,7 @@ void SQ_SystemTray::slotActivate()
 /*
  *  Quit...
  */
-void SQ_SystemTray::slotClose()
+void SQ_Tray::slotClose()
 {
     // save all parameters...
     KSquirrel::app()->finalActions();
@@ -105,3 +105,5 @@ void SQ_SystemTray::slotClose()
     // quit
     qApp->quit();
 }
+
+#include "sq_tray.moc"

@@ -161,3 +161,5 @@ void SQ_FileIconView::listingCompleted()
 {
     arrangeItemsInGrid();
 }
+
+#include "sq_fileiconview.moc"

@@ -130,3 +130,5 @@ void SQ_Filter::cycleDone()
 {
     delete filter;
 }
+
+#include "sq_filter.moc"

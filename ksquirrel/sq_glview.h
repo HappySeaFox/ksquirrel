@@ -98,6 +98,8 @@ class SQ_GLView : public QVBox
          */
         void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
 
+        void statusBarLikeGQview(bool b);
+
 #endif
 
         /*
@@ -205,5 +207,15 @@ QLabel* SQ_GLView::sbarWidget(const QString &name) const
 {
     return names[name];
 }
+
+#ifndef SQ_SMALL
+
+inline
+bool SQ_GLView::isSeparate() const
+{
+    return separate;
+}
+
+#endif
 
 #endif

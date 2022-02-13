@@ -303,7 +303,7 @@ xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 
 ####### kdevelop will overwrite this part!!! (end)############
-SUBDIRS = en
+SUBDIRS = ru
 man_MANS = ksquirrel.1 ksquirrel-small.1
 #>- all: all-recursive
 #>+ 1

@@ -38,7 +38,7 @@
 #include "sq_dir.h"
 #include "sq_filethumbview.h"
 #include "sq_libraryhandler.h"
-#include "sq_thumbnailjob.h"
+#include "sq_thumbnailloadjob.h"
 #include "sq_thumbnailsize.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
@@ -533,3 +533,5 @@ void SQ_FileThumbView::listingCompleted()
 {
     arrangeItemsInGrid();
 }
+
+#include "sq_filethumbview.moc"

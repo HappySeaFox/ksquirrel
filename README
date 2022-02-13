@@ -29,13 +29,7 @@ visiting page http://ksquirrel.sourceforge.net/
 Copyrights
 ----------
 
-- Some functions in SQ_GLWidget (see source code for more) are based on
-original code by (C) Guillaume Chazarain <guichaz@yahoo.fr> in his great GLiv
-project.
-
-- KSquirrel uses fmt_filters package. See fmt_filters_README for more.
-
-- "broken" pixmap was taken from the "Nuvola" icon theme for KDE.
+see COPYING
 
 ***********************************************************************************
 

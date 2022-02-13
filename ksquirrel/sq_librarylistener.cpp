@@ -170,3 +170,5 @@ void SQ_LibraryListener::slotOpenURL(const KURL &url, bool b1, bool b2)
 
     KDirLister::openURL(url, b1, b2);
 }
+
+#include "sq_librarylistener.moc"

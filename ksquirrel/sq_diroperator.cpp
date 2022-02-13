@@ -26,7 +26,6 @@
 #include <kstringhandler.h>
 #include <klocale.h>
 #include <kprogress.h>
-#include <kpopupmenu.h>
 #include <kglobal.h>
 #include <kdebug.h>
 #include <kprocess.h>
@@ -42,6 +41,7 @@
 #include "sq_thumbnailsize.h"
 #include "sq_pixmapcache.h"
 #include "sq_externaltool.h"
+#include "sq_popupmenu.h"
 
 #define SQ_MAX_WORD_LENGTH 50
 
@@ -381,3 +381,5 @@ void SQ_DirOperator::slotActivateExternalTool(int id)
     // start process
     proc.start(KProcess::DontCare);
 }
+
+#include "sq_diroperator.moc"

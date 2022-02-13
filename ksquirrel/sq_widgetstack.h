@@ -154,12 +154,6 @@ class SQ_WidgetStack : public QVBox
         void tryUnpack(KFileItem *);
 
         /*
-         *  User selected some url in file tree. Let's set it for
-         *  current diroperator and other widgets (with setURL()).
-         */
-        void setURLfromtree(const KURL&);
-
-        /*
          *  Select first supported image in current directory.
          *  Used by SQ_GLWidget.
          */
@@ -191,8 +185,8 @@ class SQ_WidgetStack : public QVBox
         /*
          *  Set url
          */
-        void setURLForCurrent(const QString &);
-        void setURLForCurrent(const KURL &);
+        void setURLForCurrent(const QString &, bool parseTree = true);
+        void setURLForCurrent(const KURL &, bool parseTree = true);
         void slotRunSeparately();
 
         /*

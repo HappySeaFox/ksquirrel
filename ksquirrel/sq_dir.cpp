@@ -42,6 +42,9 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
         case SQ_Dir::Tmp:
             setRoot("tmp");
         break;
+        case SQ_Dir::Categories:
+            setRoot("categories");
+        break;
     }
 
     kdDebug() << "+SQ_Dir" << " [" << m_root << "]" << endl;

@@ -17,9 +17,9 @@
 
 #include <qfile.h>
 
-#include <kpopupmenu.h>
 #include <kstringhandler.h>
 #include <klocale.h>
+#include <kicontheme.h>
 #include <kstandarddirs.h>
 
 #include "ksquirrel.h"
@@ -27,6 +27,7 @@
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
 #include "sq_externaltool.h"
+#include "sq_popupmenu.h"
 #include "sq_config.h"
 
 SQ_ExternalTool * SQ_ExternalTool::m_instance = NULL;
@@ -44,7 +45,7 @@ Tool::Tool(const QString &pix, const QString &nam, const QString &com)
 SQ_ExternalTool::SQ_ExternalTool(QObject *parent) : QObject(parent), QValueVector<Tool>()
 {
     m_instance = this;
-    menu = new KPopupMenu(NULL, "External tools");
+    menu = new SQ_PopupMenu(NULL, "External tools");
 
     connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
 
@@ -87,19 +88,19 @@ QString SQ_ExternalTool::toolCommand(const int i)
 /*
  *  Recreate current popop menu.
  */
-KPopupMenu* SQ_ExternalTool::newPopupMenu()
+SQ_PopupMenu* SQ_ExternalTool::newPopupMenu()
 {
     int id;
 
     // clear menu
     menu->clear();
 
-    title = menu->insertTitle(i18n("No file selected"));
+    menu->insertTitle(i18n("No file selected"));
 
     // construct new menu
     for(unsigned int i = 0;i < count();i++)
     {
-        id = menu->insertItem(SQ_IconLoader::instance()->loadIcon(toolPixmap(i), KIcon::Desktop, 16), toolName(i));
+        id = menu->insertItem(SQ_IconLoader::instance()->loadIcon(toolPixmap(i), KIcon::Desktop, KIcon::SizeSmall), toolName(i));
         menu->setItemParameter(id, i);
     }
 
@@ -109,7 +110,7 @@ KPopupMenu* SQ_ExternalTool::newPopupMenu()
 /*
  *  Get current popup menu.
  */
-KPopupMenu* SQ_ExternalTool::constPopupMenu() const
+SQ_PopupMenu* SQ_ExternalTool::constPopupMenu() const
 {
     return menu;
 }
@@ -146,14 +147,15 @@ void SQ_ExternalTool::writeEntries()
  *  Invoked, when user executed popup menu with external tools.
  *  This slot will do some useful stuff.
  */
-void SQ_ExternalTool::slotAboutToShowMenu()
+
+void SQ_ExternalTool::aboutToShowMenu(SQ_PopupMenu *m)
 {
     // get selected items in filemanager
     KFileItemList *items = const_cast<KFileItemList *>(SQ_WidgetStack::instance()->selectedItems());
 
     if(!items || !items->count())
     {
-        menu->changeTitle(title, i18n("No file selected"));
+        m->changeTitle(i18n("No file selected"));
         return;
     }
 
@@ -161,7 +163,7 @@ void SQ_ExternalTool::slotAboutToShowMenu()
 
     if(!item)
     {
-        menu->changeTitle(title, i18n("No file selected"));
+        m->changeTitle(i18n("No file selected"));
         return;
     }
 
@@ -172,8 +174,15 @@ void SQ_ExternalTool::slotAboutToShowMenu()
     if(items)
     {
         QString final = (items->count() == 1 || items->count() == 0) ? file : (file + QString::fromLatin1(" (+%1)").arg(items->count()-1));
-        menu->changeTitle(title, final);
+        m->changeTitle(final);
     }
     else
-        menu->changeTitle(title, file);
+        m->changeTitle(file);
 }
+
+void SQ_ExternalTool::slotAboutToShowMenu()
+{
+    SQ_ExternalTool::aboutToShowMenu(menu);
+}
+
+#include "sq_externaltool.moc"

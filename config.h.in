@@ -24,9 +24,6 @@
 /* Define to 1 if you have the <ksquirrel-libs/fileio.h> header file. */
 #undef HAVE_KSQUIRREL_LIBS_FILEIO_H
 
-/* Define to 1 if you have the `GL' library (-lGL). */
-#undef HAVE_LIBGL
-
 /* Define if you have libjpeg */
 #undef HAVE_LIBJPEG
 
