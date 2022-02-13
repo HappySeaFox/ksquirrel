@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=opera %F
+Icon=opera
+Name=Open with Opera
+ServiceTypes=*

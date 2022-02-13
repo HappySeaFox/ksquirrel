@@ -1,9 +1,18 @@
+ksquirrel-0.6.0-pre4
+************************************************************
+
+ksquirrel:
+* new autoconf test for GL library. old one could fail on some systems.
+* image window: some changes in toolbar and context menu.
+
+
 ksquirrel-0.6.0-pre3
 ************************************************************
 
 ksquirrel:
 * small fix in tootips for thumbnails
 * small fix in toolbar in image window
+* some changes in main toolbar
 * resize, rotate, colorize and print tools are available in preview mode
   (will read, but won't write images)
 * added thumbnail cache manipulator
@@ -77,7 +86,6 @@ ksquirrel-libs:
 * small fixes in PNM, BMP libraries
 
 
-
 ksquirrel-0.5.0-preview4
 ******************************************************************
 
@@ -102,7 +110,6 @@ other:
 * other small fixes
 
 >>> Remember that ksquirrel-libs-0.5.0-pre3 and pre4 ARE NOT compatible!
-
 
 
 ksquirrel-0.5.0-preview3 for KDE 3.2 and JPEG library for preview3
@@ -136,3 +143,4 @@ Please be patient - preview3 contains only one library, anyway, it's just a prev
 * some changes in 'Options' dialog
 * removed GL_LINEAR filter due to new displaying alghoritm
 * other small fixes.
+

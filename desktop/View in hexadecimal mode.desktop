@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=khexedit %f
+Icon=khexedit
+Name=View in hexadecimal mode
+ServiceTypes=*

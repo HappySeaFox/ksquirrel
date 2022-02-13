@@ -1,0 +1,245 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SQ_ImageEditOptions</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_ImageEditOptions</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>461</width>
+            <height>250</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Options</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>buttonGroup1</cstring>
+            </property>
+            <property name="title">
+                <string>New files</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>9</number>
+                </property>
+                <property name="spacing">
+                    <number>2</number>
+                </property>
+                <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>radioCurrentDir</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Put files to current directory, renaming them if neccessary</string>
+                    </property>
+                    <property name="buttonGroupId">
+                        <number>0</number>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>radioReplace</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Replace original files</string>
+                    </property>
+                    <property name="buttonGroupId">
+                        <number>1</number>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="2" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>radioPutHere</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Put here</string>
+                    </property>
+                </widget>
+                <widget class="QGroupBox" row="3" column="1">
+                    <property name="name">
+                        <cstring>groupBoxPutTo</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="QPushButton" row="0" column="1">
+                            <property name="name">
+                                <cstring>pushPut</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                        <widget class="KLineEdit" row="0" column="0">
+                            <property name="name">
+                                <cstring>linePutTo</cstring>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Prefix:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>linePrefix</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Names of new files will begin with this string. For example, if the prefix is equal to "Rotate of " and the original file had a name &lt;b&gt;nature_800x600.png&lt;/b&gt;, the new file will have a name &lt;b&gt;Rotate&amp;nbsp;of&amp;nbsp;nature_800x600.png&lt;/b&gt;</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QPushButton" row="4" column="2">
+            <property name="name">
+                <cstring>pushCancel</cstring>
+            </property>
+            <property name="text">
+                <string>Cancel</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="4" column="1">
+            <property name="name">
+                <cstring>pushOK</cstring>
+            </property>
+            <property name="text">
+                <string>OK</string>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <spacer row="4" column="0">
+            <property name="name">
+                <cstring>spacer4</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>291</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="Line" row="3" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>checkClose</cstring>
+            </property>
+            <property name="text">
+                <string>Auto close</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>pushPut</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageEditOptions</receiver>
+        <slot>slotPutConverted()</slot>
+    </connection>
+    <connection>
+        <sender>pushOK</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageEditOptions</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>pushCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ImageEditOptions</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>radioPutHere</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>groupBoxPutTo</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">ksquirrel.h</include>
+    <include location="global" impldecl="in implementation">kiconloader.h</include>
+    <include location="global" impldecl="in implementation">kfiledialog.h</include>
+    <include location="local" impldecl="in implementation">sq_imageedit.h</include>
+    <include location="global" impldecl="in implementation">kurlcompletion.h</include>
+    <include location="local" impldecl="in implementation">sq_imageeditoptions.ui.h</include>
+</includes>
+<forwards>
+    <forward>class SQ_ImageOptions;</forward>
+</forwards>
+<variables>
+    <variable access="private">QString putto;</variable>
+</variables>
+<slots>
+    <slot>slotPutConverted()</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function returnType="int">exec( SQ_ImageOptions * o )</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klineedit.h</includehint>
+</includehints>
+</UI>

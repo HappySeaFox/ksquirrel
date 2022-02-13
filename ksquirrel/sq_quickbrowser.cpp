@@ -27,6 +27,7 @@
 #include "sq_diroperatorbase.h"
 #include "sq_fileiconview.h"
 #include "sq_widgetstack.h"
+#include "sq_glwidget_helpers.h"
 #include "sq_glview.h"
 #include "sq_glwidget.h"
 

@@ -1,14 +1,14 @@
-KSquirrel is a new image viewer, simple and convenient in circulation. 
+KSquirrel is a new image viewer, simple and convenient in usage.
 
 While all others use another's decoders, in KSquirrel image decoding is based on own decoders
 (ksquirrel-libs) which format is very simple. If support of certain format FMT is necessary
-for you, you can write the decoder for KSquirrel, compile and copy in /usr/lib/ksquirrel-libs.
-At desire you can use ksquirrel-libs in other image viewer. Since 0.6.0 ksquireel-libs package has
+for you, you can write the decoder for KSquirrel, compile and copy it in /usr/lib/ksquirrel-libs.
+At desire you can use ksquirrel-libs in other image viewer. Since 0.6.0 ksquireel-libs has
 documentation and simple examples.
 
 Due to usage OpenGL show and a manipulation the image is characterized by extreme speed :).
 Also in the program customized filters, external programs, tree, thumbnails,
-extended thumbnails with the information on the image, flexible options, etc. are accessible. 
+extended thumbnails with the information on the image, flexible options, etc. are available.
 
 There is some history:) 
 In November, 2003, testing long time other programs on my collection of images,
@@ -18,8 +18,8 @@ most advanced libraries for decoding images, and use either imlib, or QImage::lo
 Having become dissapointed, I've decided to write the image viewer with the flexible
 architecture. Birthday for KSquirrel - on December, 10, 2003. 
 
-KSquirrel is the first viewer widely supporting such a quantity of formats,
-including Photoshop PSD, X cursors, animated GIF, FLI Animation, PGM/PBM/PPM ...
+KSquirrel is the first viewer for KDE widely supporting such a quantity of image formats,
+including Photoshop PSD, X cursors, animated GIF, FLI Animation, PGM/PBM/PPM, SVG ...
 
 The detailed information, format of libraries with examples, screenshots you can find
 visiting page http://ksquirrel.sourceforge.net/

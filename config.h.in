@@ -165,6 +165,9 @@
 /* Version number of package */
 #undef VERSION
 
+/* Define to 1 if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING
+
 /*
  * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system
  * headers and I'm too lazy to write a configure test as long as only

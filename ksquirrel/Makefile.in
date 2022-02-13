@@ -279,9 +279,11 @@ VERSION = @VERSION@
 WOVERLOADED_VIRTUAL = @WOVERLOADED_VIRTUAL@
 XGETTEXT = @XGETTEXT@
 XMLLINT = @XMLLINT@
+X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_INCLUDES = @X_INCLUDES@
 X_LDFLAGS = @X_LDFLAGS@
+X_LIBS = @X_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 X_RPATH = @X_RPATH@
 ac_ct_AR = @ac_ct_AR@
@@ -396,7 +398,7 @@ EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	sq_navigatordropmenu.cpp sq_navigatordropmenu.h fmt_utils.cpp \
 	fileio.cpp sq_errorstring.cpp sq_errorstring.h fmt_filters.cpp \
 	fmt_filters.h sq_editsplashbutton.cpp sq_editsplashbutton.h \
-	sq_thumbnailcachemaster.ui
+	sq_thumbnailcachemaster.ui sq_glwidget_helpers.h
 
 # These paths are KDE specific. Use them:
 # kde_appsdir         Where your application's menu entry (.desktop) should go to.

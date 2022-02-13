@@ -1,0 +1,225 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SQ_ThumbnailCacheMaster</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_ThumbnailCacheMaster</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>310</width>
+            <height>78</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Manipulate thumbnail cache</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QPushButton" row="0" column="0">
+            <property name="name">
+                <cstring>pushCache</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Calculate cache size on disk</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="0">
+            <property name="name">
+                <cstring>textThumbSize</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>Box</enum>
+            </property>
+            <property name="margin">
+                <number>1</number>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="1">
+            <property name="name">
+                <cstring>pushCacheBrowse</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Browse disk cache</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="2">
+            <property name="name">
+                <cstring>pushClearCache</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Clear cache on disk</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="3">
+            <property name="name">
+                <cstring>pushCacheMemory</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Calculate cache size in memory</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="3">
+            <property name="name">
+                <cstring>textCacheMemSize</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>Box</enum>
+            </property>
+            <property name="margin">
+                <number>1</number>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="4">
+            <property name="name">
+                <cstring>pushShowCache</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>View memory cache</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="5">
+            <property name="name">
+                <cstring>pushClearCacheMemory</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Clear cache in memory</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="6">
+            <property name="name">
+                <cstring>pushSyncCache</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Sync cache to disk</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushCache</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotCalcCache()</slot>
+    </connection>
+    <connection>
+        <sender>pushCacheMemory</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotCalcCacheMemory()</slot>
+    </connection>
+    <connection>
+        <sender>pushClearCache</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotClearCache()</slot>
+    </connection>
+    <connection>
+        <sender>pushClearCacheMemory</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotClearMemoryCache()</slot>
+    </connection>
+    <connection>
+        <sender>pushShowCache</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotShowDiskCache()</slot>
+    </connection>
+    <connection>
+        <sender>pushSyncCache</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotSyncCache()</slot>
+    </connection>
+    <connection>
+        <sender>pushCacheBrowse</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ThumbnailCacheMaster</receiver>
+        <slot>slotBrowseDiskCache()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in declaration">kio/job.h</include>
+    <include location="global" impldecl="in implementation">qapplication.h</include>
+    <include location="global" impldecl="in implementation">kdirsize.h</include>
+    <include location="local" impldecl="in implementation">sq_viewcache.h</include>
+    <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
+    <include location="global" impldecl="in implementation">kstandarddirs.h</include>
+    <include location="global" impldecl="in implementation">kapplication.h</include>
+    <include location="local" impldecl="in implementation">sq_dir.h</include>
+    <include location="local" impldecl="in implementation">sq_thumbnailcachemaster.ui.h</include>
+</includes>
+<slots>
+    <slot access="private">slotCalcCache()</slot>
+    <slot access="private">slotClearCache()</slot>
+    <slot access="private">slotClearFinished( KIO::Job * )</slot>
+    <slot access="private">slotClearMemoryCache()</slot>
+    <slot access="private">slotCalcCacheMemory()</slot>
+    <slot access="private">slotShowDiskCache()</slot>
+    <slot access="private">slotSyncCache()</slot>
+    <slot access="private">slotBrowseDiskCache()</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

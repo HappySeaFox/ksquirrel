@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=kwrite %F
+Icon=kwrite
+Name=Open with KWrite
+ServiceTypes=*

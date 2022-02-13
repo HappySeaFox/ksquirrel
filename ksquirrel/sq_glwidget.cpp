@@ -54,6 +54,7 @@
 #include "sq_quickbrowser.h"
 #include "sq_diroperator.h"
 #include "sq_fileiconview.h"
+#include "sq_glwidget_helpers.h"
 #include "sq_glview.h"
 #include "sq_glwidget.h"
 #include "sq_imageproperties.h"
@@ -68,20 +69,30 @@
 #include "error.h"
 
 SQ_GLWidget * SQ_GLWidget::sing = NULL;
+int SQ_ToolButtonPopup::id = 10;
 
 static const int timer_delay = 20;
 static const int timer_delay_file = 30;
 static const int len = 5;
 
-static const float SQ_WINDOW_BACKGROUND_POS = -1000.0f;
-static const float SQ_IMAGE_CHECKER_POS = -999.0f;
-static const float SQ_FIRST_FRAME_POS = -998.0f;
-static const float SQ_MARKS_POS = -997.0f;
-static const float SQ_FIRST_TILE_LAYER = -995.0f;
+static const float SQ_WINDOW_BACKGROUND_POS =	 -1000.0f;
+static const float SQ_IMAGE_CHECKER_POS = 		-999.0f;
+static const float SQ_FIRST_FRAME_POS = 			-998.0f;
+static const float SQ_MARKS_POS = 					-997.0f;
+static const float SQ_FIRST_TILE_LAYER = 			-995.0f;
 
-SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel, const QString &grouptext,
-						QObject *receiver, const char *slot, QToolBar *parent, const char *name)
-						: QToolButton(iconSet, textLabel, grouptext, receiver, slot, parent, name)
+SQ_ToolButtonPopup::SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, QWidget *parent)
+		: KToolBarButton(pix, ++SQ_ToolButtonPopup::id, parent, 0, textLabel)
+{
+	setFixedWidth(SQ_ToolButton::fixedWidth());
+}
+
+SQ_ToolButtonPopup::~SQ_ToolButtonPopup()
+{}
+
+SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel,
+                                                QObject *receiver, const char *slot, QToolBar *parent, const char *name)
+                                                : QToolButton(iconSet, textLabel, QString::null, receiver, slot, parent, name)
 {
 	setFixedWidth(SQ_ToolButton::fixedWidth());
 }
@@ -91,8 +102,10 @@ SQ_ToolButton::~SQ_ToolButton()
 
 int SQ_ToolButton::fixedWidth()
 {
-	return 28;
+        return 28;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 SQ_ToolBar::SQ_ToolBar(QWidget *parent, const int members) : KToolBar(parent)
 {
@@ -149,10 +162,10 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
 	movefactor = SQ_Config::instance()->readNumEntry("GL view", "move", 5);
 	rotatefactor = SQ_Config::instance()->readNumEntry("GL view", "angle", 90);
 
-	QPixmap pusual = QPixmap::fromMimeSource(locate("appdata", "cursors/usual.png"));
+	QPixmap pusual = QPixmap(locate("appdata", "cursors/usual.png"));
 	cusual = (!pusual.isNull()) ? QCursor(pusual) : KCursor::arrowCursor();
 
-	QPixmap pdrag = QPixmap::fromMimeSource(locate("appdata", "cursors/drag.png"));
+	QPixmap pdrag = QPixmap(locate("appdata", "cursors/drag.png"));
 	cdrag = (!pdrag.isNull()) ? QCursor(pdrag) : cusual;
 
 	cZoomIn = KCursor::crossCursor();
@@ -161,6 +174,9 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
 
 	setFocusPolicy(QWidget::WheelFocus);
 	setAcceptDrops(true);
+
+	images = new KPopupMenu;
+	images->setCheckable(true);
 
 	createQuickBrowser();
 	createActions();
@@ -185,11 +201,9 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
 	connect(timer_decode, SIGNAL(timeout()), this, SLOT(slotDecode()));
 	connect(timer_anim, SIGNAL(timeout()), this, SLOT(slotAnimateNext()));
 
-	images = new KPopupMenu;
-	images->setCheckable(true);
-
 	connect(images, SIGNAL(activated(int)), this, SLOT(slotSetCurrentImage(int)));
 	connect(images, SIGNAL(aboutToHide()), this, SLOT(slotImagedHidden()));
+	connect(images, SIGNAL(aboutToShow()), this, SLOT(slotImagedShown()));
 
 	createContextMenu(menu);
 }
@@ -204,12 +218,12 @@ void SQ_GLWidget::createActions()
 	pAZoomPlus = new KAction(QString::null, 0, this, SLOT(slotZoomPlus()), ac, "SQ Zoom+");
 	pAZoomMinus = new KAction(QString::null, 0, this, SLOT(slotZoomMinus()), ac, "SQ Zoom-");
 
-	pAZoomW = new KToggleAction(i18n("Fit width"), QPixmap::fromMimeSource(locate("appdata", "images/actions/zoomW.png")), 0, this, SLOT(slotZoomW()), ac, "SQ ZoomW");
-	pAZoomH = new KToggleAction(i18n("Fit height"), QPixmap::fromMimeSource(locate("appdata", "images/actions/zoomH.png")), 0, this, SLOT(slotZoomH()), ac, "SQ ZoomH");
-	pAZoomWH = new KToggleAction(i18n("Fit image"), QPixmap::fromMimeSource(locate("appdata", "images/actions/zoomWH.png")), 0, this, SLOT(slotZoomWH()), ac, "SQ ZoomWH");
-	pAZoom100 = new KToggleAction(i18n("Zoom 100%"), QPixmap::fromMimeSource(locate("appdata", "images/actions/zoom100.png")), 0, this, SLOT(slotZoom100()), ac, "SQ Zoom100");
-	pAZoomLast = new KToggleAction(i18n("Leave previous zoom"), QPixmap::fromMimeSource(locate("appdata", "images/actions/zoomlast.png")), 0, this, SLOT(slotZoomLast()), ac, "SQ ZoomLast");
-	pAIfLess = new KToggleAction(i18n("Ignore, if the image is less than window"), QPixmap::fromMimeSource(locate("appdata", "images/actions/ifless.png")), 0, 0, 0, ac, "SQ GL If Less");
+	pAZoomW = new KToggleAction(i18n("Fit width"), QPixmap(locate("appdata", "images/actions/zoomW.png")), 0, this, SLOT(slotZoomW()), ac, "SQ ZoomW");
+	pAZoomH = new KToggleAction(i18n("Fit height"), QPixmap(locate("appdata", "images/actions/zoomH.png")), 0, this, SLOT(slotZoomH()), ac, "SQ ZoomH");
+	pAZoomWH = new KToggleAction(i18n("Fit image"), QPixmap(locate("appdata", "images/actions/zoomWH.png")), 0, this, SLOT(slotZoomWH()), ac, "SQ ZoomWH");
+	pAZoom100 = new KToggleAction(i18n("Zoom 100%"), QPixmap(locate("appdata", "images/actions/zoom100.png")), 0, this, SLOT(slotZoom100()), ac, "SQ Zoom100");
+	pAZoomLast = new KToggleAction(i18n("Leave previous zoom"), QPixmap(locate("appdata", "images/actions/zoomlast.png")), 0, this, SLOT(slotZoomLast()), ac, "SQ ZoomLast");
+	pAIfLess = new KToggleAction(i18n("Ignore, if the image is less than window"), QPixmap(locate("appdata", "images/actions/ifless.png")), 0, 0, 0, ac, "SQ GL If Less");
 
 	pAHelp = new KAction(i18n("Help"), "help", 0, this, SLOT(slotShowHelp()), ac, "SQ help");
 	pAFlipV = new KAction(QString::null, 0, this, SLOT(slotFlipV()), ac, "SQ flip_v");
@@ -256,7 +270,7 @@ void SQ_GLWidget::createToolbar()
 	toolbar2 = new SQ_ToolBar(this, 1);
 	toolbar2->move(0, 0);
 	toolbar2->setPalette(pall);
-	(void)new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/toolbar_show.png")), i18n("Show"), QString::null, pAShow, SLOT(activate()), toolbar2);
+	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/toolbar_show.png")), i18n("Show"), pAShow, SLOT(activate()), toolbar2);
 
 	toolbar = new SQ_ToolBar(this, 18);
 	toolbar->move(0, 0);
@@ -295,34 +309,36 @@ void SQ_GLWidget::createToolbar()
 		default: pAZoom100->setChecked(true);
 	}
 
-	(void)new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/file_first.png")), i18n("Go to first file"), QString::null, pAFirst, SLOT(activate()), toolbar);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/prev.png")), i18n("Previous file"), QString::null, pAPrev, SLOT(activate()), toolbar);
+	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/file_first.png")), i18n("Go to first file"), pAFirst, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/prev.png")), i18n("Previous file"), pAPrev, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/next.png")), i18n("Next file"), QString::null, pANext, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/next.png")), i18n("Next file"), pANext, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	(void)new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/file_last.png")), i18n("Go to last file"), QString::null, pALast, SLOT(activate()), toolbar);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/zoom+.png")), i18n("Zoom +"), QString::null, pAZoomPlus, SLOT(activate()), toolbar);
+	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/file_last.png")), i18n("Go to last file"), pALast, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/zoom+.png")), i18n("Zoom +"), pAZoomPlus, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/zoom-.png")), i18n("Zoom -"), QString::null, pAZoomMinus, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/zoom-.png")), i18n("Zoom -"), pAZoomMinus, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	pAToolZoom = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/zoom_template.png")), i18n("Zoom"), QString::null, this, SLOT(slotZoomMenu()), toolbar);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/rotateL.png")), i18n("Rotate left"), QString::null, pARotateLeft, SLOT(activate()), toolbar);
+	pAToolZoom = new SQ_ToolButtonPopup(QPixmap(locate("appdata", "images/actions/zoom_template.png")), i18n("Zoom"), toolbar);
+	pAToolZoom->setPopup(zoom);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/rotateL.png")), i18n("Rotate left"), pARotateLeft, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/rotateR.png")), i18n("Rotate right"), QString::null, pARotateRight, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/rotateR.png")), i18n("Rotate right"), pARotateRight, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/flipV.png")), i18n("Flip vertically"), QString::null, pAFlipV, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/flipV.png")), i18n("Flip vertically"), pAFlipV, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	pATool = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/flipH.png")), i18n("Flip horizontally"), QString::null, pAFlipH, SLOT(activate()), toolbar);
+	pATool = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/flipH.png")), i18n("Flip horizontally"), pAFlipH, SLOT(activate()), toolbar);
 	pATool->setAutoRepeat(true);
-	(void)new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/reload.png")), i18n("Normalize"), QString::null, pAReset, SLOT(activate()), toolbar);
-	(void)new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/prop.png")), i18n("Image Properties"), QString::null, pAProperties, SLOT(activate()), toolbar);
-	pAToolFull = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/fullscreen.png")), i18n("Fullscreen"), QString::null, pAFull, SLOT(activate()), toolbar);
+	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/reload.png")), i18n("Normalize"), pAReset, SLOT(activate()), toolbar);
+	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/prop.png")), i18n("Image Properties"), pAProperties, SLOT(activate()), toolbar);
+	pAToolFull = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/fullscreen.png")), i18n("Fullscreen"), pAFull, SLOT(activate()), toolbar);
 	pAToolFull->setToggleButton(true);
-	pAToolQuick = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/quick.png")), i18n("\"Quick Browser\""), QString::null, pAQuick, SLOT(activate()), toolbar);
+	pAToolQuick = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/quick.png")), i18n("\"Quick Browser\""), pAQuick, SLOT(activate()), toolbar);
 	pAToolQuick->setToggleButton(true);
-	pAToolImages = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/images.png")), i18n("Select image"), QString::null, this, SLOT(slotShowImages()), toolbar);
-	pAToolClose = new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/close.png")), i18n("Close"), QString::null, pAClose, SLOT(activate()), toolbar);
-	(void)new SQ_ToolButton(QPixmap::fromMimeSource(locate("appdata", "images/actions/toolbar_hide.png")), i18n("Hide"), QString::null, pAHide, SLOT(activate()), toolbar);
+	pAToolImages = new SQ_ToolButtonPopup(QPixmap(locate("appdata", "images/actions/images.png")), i18n("Select image"), toolbar);
+	pAToolImages->setPopup(images);
+	pAToolClose = new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/close.png")), i18n("Close"), pAClose, SLOT(activate()), toolbar);
+	(void)new SQ_ToolButton(QPixmap(locate("appdata", "images/actions/toolbar_hide.png")), i18n("Hide"), pAHide, SLOT(activate()), toolbar);
 
 	timer_show = new QTimer(this);
 	timer_hide = new QTimer(this);
@@ -2088,7 +2104,7 @@ void SQ_GLWidget::slotSetCurrentImage(int id)
 	updateGL();
 }
 
-void SQ_GLWidget::slotShowImages()
+void SQ_GLWidget::slotImagedShown()
 {
 	if(finfo.animated)
 		if(!timer_anim->isActive())
@@ -2103,7 +2119,10 @@ void SQ_GLWidget::slotShowImages()
 	int id = images->idAt(current);
 	images->setItemChecked(id, true);
 	old_id = id;
+}
 
+void SQ_GLWidget::slotShowImages()
+{
 	images->exec(QCursor::pos());
 }
 
@@ -2344,12 +2363,13 @@ class KeyE
 
 void SQ_GLWidget::createContextMenu(KPopupMenu *m)
 {
-	KActionMenu *menuFile = new KActionMenu(i18n("File"));
-	KActionMenu *menuRotate = new KActionMenu(i18n("Rotate"));
-	KActionMenu *menuZoom = new KActionMenu(i18n("Zoom"));//, locate("appdata", "images/menu/zoom16.png"));
+	KActionMenu *menuFile = new KActionMenu(i18n("File"), "fileopen");
+	KActionMenu *menuRotate = new KActionMenu(i18n("Rotate"), "view_orientation");
+	KActionMenu *menuZoom = new KActionMenu(i18n("Zoom"), "viewmag");//, locate("appdata", "images/menu/zoom16.png"));
 	KActionMenu *menuMove = new KActionMenu(i18n("Move"));
 	KActionMenu *menuWindow = new KActionMenu(i18n("Window"));//, locate("appdata", "images/menu/window16.png"));
 	KActionMenu *menuImage = new KActionMenu(i18n("Image"));
+	KActionMenu *menuEdit = new KActionMenu(i18n("Edit image"), "edit");
 
 	KActionSeparator *S = new KActionSeparator;
 	KAction *abstract;
@@ -2400,6 +2420,13 @@ void SQ_GLWidget::createContextMenu(KPopupMenu *m)
 	all.append(KeyE(i18n("Hide/show toolbar"), locate("appdata", "images/menu/toolbar16.png"), "SQ Menu Window3", (Qt::NoButton << 16 ) | Qt::Key_T, menuWindow, false));
 	all.append(KeyE(i18n("Hide/show statusbar"), locate("appdata", "images/menu/statusbar16.png"), "SQ Menu Window4", (Qt::NoButton << 16 ) | Qt::Key_S, menuWindow, false));
 
+	menuEdit->insert(KSquirrel::app()->pAImageConvert);
+	menuEdit->insert(KSquirrel::app()->pAImageResize);
+	menuEdit->insert(KSquirrel::app()->pAImageRotate);
+	menuEdit->insert(KSquirrel::app()->pAImageBCG);
+	menuEdit->insert(KSquirrel::app()->pAImageFilter);
+	menuEdit->insert(KSquirrel::app()->pAPrintImages);
+
 	KActionCollection *coll = new KActionCollection(this);
 
 	QSignalMapper *mapper = new QSignalMapper(this);
@@ -2427,6 +2454,7 @@ void SQ_GLWidget::createContextMenu(KPopupMenu *m)
 	menuMove->plug(m);
 	menuWindow->plug(m);
 	menuImage->plug(m);
+	menuEdit->plug(m);
 	S->plug(m);
 	pAReset->plug(m);
 	S->plug(m);

@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0-pre3], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.0-pre4], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre3)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre4)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -52,43 +52,49 @@ AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
 
 #AC_CHECK_LIB([kio], [KFileIconView], [], AC_MSG_ERROR("KIO library is corrupted!"))
 
+# Checks for header files.
+AC_PATH_X
+AC_PATH_XTRA
+AC_HEADER_STDC
+AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
+AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
+
+CFLAGS="$X_INCLUDES $CFLAGS"
+LDFLAGS="$X_PRE_LIBS -lX11 $X_LDFLAGS $X_EXTRA_LIBS $LDFLAGS"
+
 if test "x$sq_ogl" = "xyes"; then
 
 AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h) and GLU (GL/glu.h) headers to be installed."))
 
-AC_CHECK_LIB([GL], [glBegin], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+SQ_GL_ERROR="OpenGL library is corrupted or not installed."
 
-AC_CHECK_FUNC([glEnd], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glGenTextures], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glBindTexture], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glTexImage2D], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glColor3f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glClearColor], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glClearDepth], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glClear], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glEnable], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glDisable], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glBlendFunc], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glShadeModel], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glMatrixMode], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glViewport], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glLoadIdentity], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glOrtho], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glTexParameteri], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glTexCoord2f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glVertex2f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glLoadMatrixf], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
-AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_LIB([GL], [glBegin], [], AC_MSG_ERROR($SQ_GL_ERROR))
+
+AC_CHECK_FUNC([glEnd], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glGenTextures], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glBindTexture], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glTexImage2D], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glColor3f], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glClearColor], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glClearDepth], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glClear], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glEnable], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glDisable], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glBlendFunc], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glShadeModel], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glMatrixMode], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glViewport], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glLoadIdentity], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glOrtho], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glTexParameteri], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glTexCoord2f], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glVertex2f], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glLoadMatrixf], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR($SQ_GL_ERROR))
+AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR($SQ_GL_ERROR))
 
 fi
-
-# Checks for header files.
-AC_PATH_X
-AC_HEADER_STDC
-AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
-AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -113,6 +119,7 @@ AC_CONFIG_FILES([desktop/Makefile])
 AC_CONFIG_FILES([pics/Makefile])
 AC_CONFIG_FILES([pics/menu/Makefile])
 AC_CONFIG_FILES([pics/imageedit/Makefile])
+AC_CONFIG_FILES([pics/imageedit/squirrels/Makefile])
 AC_CONFIG_FILES([po/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/en/Makefile])

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=kuickshow %F
+Icon=kuickshow
+Name=Open with KuickShow
+ServiceTypes=*

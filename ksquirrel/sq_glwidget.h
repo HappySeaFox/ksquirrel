@@ -28,10 +28,8 @@
 #include <qfileinfo.h>
 #include <qimage.h>
 #include <qrect.h>
-#include <qtoolbutton.h>
 
 #include <kurl.h>
-#include <ktoolbar.h>
 
 //#define SQ_NEED_RGBA_OPERATOR
 #include "fmt_types.h"
@@ -61,6 +59,9 @@ class QPainter;
 
 class SQ_DirOperator;
 class SQ_QuickBrowser;
+class SQ_ToolButtonPopup;
+class SQ_ToolButton;
+class SQ_ToolBar;
 
 struct SQ_LIBRARY;
 class fmt_codec_base;
@@ -71,26 +72,6 @@ struct MemoryPart256;
 struct MemoryPart128;
 struct MemoryPart64;
 struct MemoryPart32;
-
-class SQ_ToolButton : public QToolButton
-{
-	public:
-		SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel, const QString &grouptext,
-						QObject *receiver, const char *slot, QToolBar *parent, const char *name = 0);
-		~SQ_ToolButton();
-
-		static int fixedWidth();
-};
-
-class SQ_ToolBar : public KToolBar
-{
-	public:
-		SQ_ToolBar(QWidget *parent, const int members);
-		~SQ_ToolBar();
-
-	protected:
-		void mouseReleaseEvent(QMouseEvent *);
-};
 
 class SQ_GLWidget : public QGLWidget
 {
@@ -218,61 +199,66 @@ class SQ_GLWidget : public QGLWidget
 		void slotSetCurrentImage(int);
 		void slotShowImages();
 		void slotImagedHidden();
+		void slotImagedShown();
 		void signalMapped(int);
 		void slotShowHelp();
 
 	public:
 		KAction					*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus,
-								*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
-								*pAFirst, *pALast, *pAHelp;
-
-		SQ_ToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
-
-		SQ_QuickBrowser		*v;
-		QWidgetStack 			*s;
+								*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext,
+								*pAPrev, *pAHide, *pAShow, *pAFirst, *pALast, *pAHelp;
 		KToggleAction 			*pAFull, *pAQuick, *pAIfLess, *pAStatus;
 		KToggleAction			*pAZoomW, *pAZoomH, *pAZoomWH, *pAZoom100, *pAHideToolbars, *pAZoomLast;
-		SQ_DirOperator 		*quick;
+
+		QWidgetStack 			*s;
+
+		SQ_ToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick;
+		SQ_ToolButtonPopup		*pAToolZoom, *pAToolImages;
+		SQ_QuickBrowser		*v;
+		SQ_DirOperator 			*quick;
 
 	private:
-		GLfloat 			matrix[12], saved[12];
-		GLfloat				zoomfactor, movefactor, rotatefactor;
-		GLfloat				curangle;
-		fmt_info			finfo;
-		int					xmoveold, ymoveold, xmove, ymove, current;
-		bool				reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH;
-		QString			File, m_File;
-		QCursor			cusual, cdrag, cZoomIn;
+		KActionCollection	*ac;
+		KPopupMenu		*menu;
+		KPopupMenu 		*zoom, *images;
+
+		QString				File, m_File;
+		QCursor				cusual, cdrag, cZoomIn;
 		QFileInfo			fm;
 		QImage 			BGpixmap, BGquads;
-		SQ_ToolBar		*toolbar, *toolbar2;
-		QTimer			*timer_show, *timer_hide, *timer_decode, *timer_prev, *timer_next, *timer_anim;
-		SQ_LIBRARY		*lib;
-		fmt_codec_base	*codeK;
-		int					steps;
-		bool				m_hiding;
-		int					zoom_type, old_id;
-		KActionCollection	*ac;
-		RGBA				*next;
-		unsigned int		texQuads, texPixmap;
-		bool				changed, inMouse, crossDrawn, changed2;
+		QTimer				*timer_show, *timer_hide, *timer_decode, *timer_prev, *timer_next, *timer_anim;
+		QString				quickImageInfo;
 		QPainter			*pRect;
 		QRect				lastRect;
-		KPopupMenu 		*zoom, *images;
-		bool				marks;
-		unsigned int		mark[4];
-		KPopupMenu		*menu;
-		QString				quickImageInfo;
-
-		std::vector<Parts>	parts;
-		int 					total, errors, tileSize;
-		float				zoomFactor;
 		QImage 			mm[4];
 
+		SQ_ToolBar			*toolbar, *toolbar2;
+		SQ_LIBRARY		*lib;
+		fmt_codec_base		*codeK;
+		RGBA				*next;
+		fmt_info				finfo;
+
+		std::vector<Parts>				parts;
 		std::vector<MemoryPart256>	m256;
 		std::vector<MemoryPart128>	m128;
-		std::vector<MemoryPart64>	m64;
-		std::vector<MemoryPart32>	m32;
+		std::vector<MemoryPart64>		m64;
+		std::vector<MemoryPart32>		m32;
+
+		GLfloat 				matrix[12], saved[12];
+		GLfloat				zoomfactor, movefactor, rotatefactor;
+		GLfloat				curangle;
+
+		unsigned int			texQuads, texPixmap;
+		unsigned int			mark[4];
+		int					xmoveold, ymoveold, xmove, ymove, current;
+		int					steps;
+		int					zoom_type, old_id;
+		int 					total, errors, tileSize;
+		bool				reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH;
+		bool				m_hiding;
+		bool				changed, inMouse, crossDrawn, changed2;
+		bool				marks;
+		float				zoomFactor;
 
 		static SQ_GLWidget	*sing;
 };

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=kprinter %f
+Icon=kdeprintfax
+Name=Print file
+ServiceTypes=*
