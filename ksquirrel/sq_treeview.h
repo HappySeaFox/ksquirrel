@@ -31,10 +31,8 @@ class SQ_TreeView : public KFileTreeView
 		SQ_TreeView(QWidget *parent = 0, const char *name = 0);
 		~SQ_TreeView();
 
-	
 	public slots:
-		void slotDoubleClicked(QListViewItem*);
-		void slotSetupClick(QListViewItem*);
+		void slotItemExecuted(QListViewItem*);
 };
 
 #endif

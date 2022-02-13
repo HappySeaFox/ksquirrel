@@ -1,5 +1,5 @@
 X - done
-W - now working
+W - now working on
 
 
 GL view
@@ -12,16 +12,18 @@ GL view
 	[   ]  background for transparent images (and for all other ;))
 
 Libraries
-	[   ]  file mapping
-	[ W ]  step-by-step decoding
+	[   ]  file mapping?
+	[ X ]  step-by-step decoding
 	[ X ]  not-compressed BMP
-	[ X ]  not-grayscale jpeg
-	[ W ]  grayscale jpeg
-	[ W ]  PNM
-	[   ]  png
+	[   ]  compressed BMP
+	[ X ]  not-grayscale jpeg (libjpeg)
+	[ X ]  grayscale jpeg
+	[ W ]  PNM*
+	[ X ]  png (libpng)
 	[   ]  gif
 	[   ]  ico, cur
 	[ W ]  PCX
+	[ X ]  TIFF (libtiff)
 	[ X ]  FAM support (hot detection of new libraries) ... replaced with KDirLister
 
 Fileview
@@ -35,7 +37,10 @@ Interface
 	[ X ]  Mutable interface (Kuickshow, XnView ...)
 
 Main
-	[   ]  IPC, based on sockets(AF_UNIX), like xmms, or, probably on DCOP.
-	[   ]  Activate old instance, when running new one
+	[ W ]  IPC, based on sockets(AF_UNIX), like xmms, or, probably on DCOP, or QServerSocket.
+	  [ X ]  Activate old instance, when running new one
+
 	[ W ]  Command line support
 	[   ]  Associate SQuirrel with images
+	[ W ]  External tools
+

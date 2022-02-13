@@ -34,6 +34,7 @@ class SQ_WidgetStack : public QWidgetStack
 		QValueVector<int>		*pIconSizeList;
 		int					iCurrentListIndex, iCurrentIconIndex;
 		SQ_DirOperator		*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail;
+		QString				*path;
 
 	public:
     		SQ_WidgetStack(QWidget *parent = 0);
@@ -42,8 +43,6 @@ class SQ_WidgetStack : public QWidgetStack
 		KURL getURL() const;
 		void setURL(const QString &, bool);
 		void setURL(const KURL &, bool);
-
-		void setURLfromtree(const KURL&);
 
 		KAction			*pABack, *pAForw, *pAUp, *pADelete, *pAHome, *pAProp,
 						*pARefresh, *pANewDir, *pAPrev, *pANext,
@@ -58,6 +57,7 @@ class SQ_WidgetStack : public QWidgetStack
 
 		void setURL(const QString &);
 		void setURL(const KURL &);
+		void setURLfromtree(const KURL&);
 
 		void slotSetIconBigger();
 		void slotSetIconSmaller();

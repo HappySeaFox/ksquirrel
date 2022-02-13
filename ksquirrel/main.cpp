@@ -18,12 +18,14 @@
 #include <kapp.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
+#include <kconfig.h>
 #include <dcopclient.h>
 
 #include "ksquirrel.h"
 #include "sq_about.h"
 #include "sq_version.h"
 #include "sq_application.h"
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +37,8 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
+	const QCString App = "ksquirrel";
+
 	QString			name_app;
 	Squirrel 			*SQ;
 
@@ -60,14 +64,36 @@ int main(int argc, char *argv[])
 	// create app after KCmdLineArgs::init(...) !
 	SQ_Application	a;
 
-	name_app.sprintf("%s%d", APP, version);
+	KConfig *tmpConfig = new KConfig(QString("ksquirrelrc"));
 
-	SQ = new Squirrel;
+	// check for another SQuirrel
+	tmpConfig->setGroup("Main");
+	if(a.dcopClient()->isApplicationRegistered(App) && tmpConfig->readBoolEntry("activate another", true))
+	{
+		QCString replyType;
+		QByteArray data, replyData;
+		QDataStream dataStream(data, IO_WriteOnly);
+		dataStream << QString("ACTIVATE");
+
+		if(a.dcopClient()->call(App, "KMainWindow", "control(QString)", data, replyType, replyData) == false)
+			printf("\nUnable to send data to old SQuirrel: exiting anyway.\n");
+
+		sq_args->clear();
+		delete tmpConfig;
+		return 0;
+	}
+
+	delete tmpConfig;
+
+	// create instance
+	SQ = new Squirrel(0, "KMainWindow");
+	name_app.sprintf("%s%d", APP, version);
 	SQ->setCaption(name_app);
 
 	a.setMainWidget(SQ);
 
-	a.dcopClient()->registerAs("ksquirrel");
+	if(a.dcopClient()->attach())
+		a.dcopClient()->registerAs(App, false);
 
 	sq_args->clear();
 

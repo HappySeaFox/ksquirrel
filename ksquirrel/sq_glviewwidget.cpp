@@ -28,11 +28,12 @@
 
 #include "ksquirrel.h"
 #include "sq_libraryhandler.h"
-#include "sq_decoder.h"
+#include <kconfig.h>
+
 
 SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(parent, name)
 {
-	decoder = new SQ_Decoder;
+	rgba = 0;
 	setZoomFactor(0.10f);
 
 	ZoomModelArray[0] = GL_LINEAR;
@@ -247,9 +248,33 @@ void SQ_GLViewWidget::slotZoomMinus()
 	updateGL();
 }
 
+int flip_bmp(RGBA *A, long w, long h)
+{
+	long		i;
+	RGBA	*rgba;
+	int		scanlen = w * sizeof(RGBA);
+
+	if((rgba = (RGBA*)calloc(w, sizeof(RGBA))) == 0)
+		return 0;
+
+	for(i = 0;i < h/2;i++)
+	{
+		memcpy(rgba, A + i*w, scanlen);
+		memcpy(A + i*w, A + (h-i-1)*w, scanlen);
+		memcpy(A + (h-i-1)*w, rgba, scanlen);
+	}
+
+	free(rgba);
+
+	return 1;
+}
+
 bool SQ_GLViewWidget::showIfCan(const QString &file)
 {
 	QFileInfo fm(file);
+	const char *name = file.ascii();
+	static SQ_LIBRARY *lib;
+	static QString status;
 
 	if(!sqLibHandler->supports(fm.extension(false).upper()))
 	{
@@ -257,22 +282,36 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 		return false;
 	}
 
-	rgba = sqGLDecoder->decode(file);
-	w = (GLfloat)sqGLDecoder->width();
-	h = (GLfloat)sqGLDecoder->height();
+	sqLibHandler->setCurrentLibrary(fm.extension(false));
+	lib = sqLibHandler->getCurrentLibrary();
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)w, (int)h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-//	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//	glTexImage2D(GL_TEXTURE_2D, 0, 4, (int)w, (int)h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	lib->fmt_init(&finfo, name);
+	lib->fmt_read_info(finfo);
+
+	rgba = (RGBA*)realloc(rgba, finfo->w * finfo->h * sizeof(RGBA));
+	memset(rgba, 255, finfo->w * finfo->h * sizeof(RGBA));
+
+	w = (GLfloat)finfo->w;
+	h = (GLfloat)finfo->h;
+
+	status.sprintf("%s (%ldx%ld@%d bit)", fm.fileName().ascii(), finfo->w, finfo->h, finfo->bpp);
+	sqSBDecoded->setText(status);
+
+	// step-by-step decoding & displaying is <NI>, so we can only decode a file like ver.0.1.3
+	for(unsigned int i = 0;i < finfo->h;i++)
+		lib->fmt_read_scanline(finfo, rgba + i*finfo->w);
+
+	lib->fmt_close(finfo);
+
+	if(fm.extension(false).lower() == "bmp" || fm.extension(false).lower() == "tga")
+		flip_bmp(rgba, finfo->w, finfo->h);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	gluLookAt(0,0,5, 0,0,0, 0,1,0);
-	updateGL();
 
-	QString status;
-	status.sprintf("%s (%dx%d@%d bit)", fm.fileName().ascii(), (int)w, (int)h, sqGLDecoder->bpp());
-	sqSBDecoded->setText(status);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, finfo->w, finfo->h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	updateGL();
 
 	return true;
 }

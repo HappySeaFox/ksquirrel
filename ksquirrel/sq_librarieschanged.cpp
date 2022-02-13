@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_librarieschanged.ui'
 **
-** Created: Tue Mar 30 00:59:48 2004
+** Created: Втр Апр 6 01:48:45 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -35,25 +35,28 @@ SQ_LibrariesChanged::SQ_LibrariesChanged( QWidget* parent, const char* name, boo
     setCursor( QCursor( 0 ) );
     SQ_LibrariesChangedLayout = new QGridLayout( this, 1, 1, 11, 6, "SQ_LibrariesChangedLayout"); 
 
-    pushOK = new QPushButton( this, "pushOK" );
-    pushOK->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, pushOK->sizePolicy().hasHeightForWidth() ) );
-    pushOK->setCursor( QCursor( 0 ) );
-
-    SQ_LibrariesChangedLayout->addWidget( pushOK, 2, 1 );
-
-    textLabel1 = new QLabel( this, "textLabel1" );
-    textLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, textLabel1->sizePolicy().hasHeightForWidth() ) );
-
-    SQ_LibrariesChangedLayout->addWidget( textLabel1, 0, 0 );
-
     listNewLibs = new QListBox( this, "listNewLibs" );
-    listNewLibs->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)5, 0, 0, listNewLibs->sizePolicy().hasHeightForWidth() ) );
+    listNewLibs->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, 0, 0, listNewLibs->sizePolicy().hasHeightForWidth() ) );
     listNewLibs->setFrameShape( QListBox::LineEditPanel );
     listNewLibs->setFrameShadow( QListBox::Sunken );
 
     SQ_LibrariesChangedLayout->addMultiCellWidget( listNewLibs, 1, 1, 0, 1 );
+
+    textLabel1 = new QLabel( this, "textLabel1" );
+    textLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, textLabel1->sizePolicy().hasHeightForWidth() ) );
+
+    SQ_LibrariesChangedLayout->addMultiCellWidget( textLabel1, 0, 0, 0, 1 );
+
+    pushOK = new QPushButton( this, "pushOK" );
+    pushOK->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)1, 0, 0, pushOK->sizePolicy().hasHeightForWidth() ) );
+    pushOK->setCursor( QCursor( 0 ) );
+    pushOK->setDefault( TRUE );
+
+    SQ_LibrariesChangedLayout->addWidget( pushOK, 2, 1 );
+    QSpacerItem* spacer = new QSpacerItem( 345, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    SQ_LibrariesChangedLayout->addItem( spacer, 2, 0 );
     languageChange();
-    resize( QSize(471, 302).expandedTo(minimumSizeHint()) );
+    resize( QSize(472, 322).expandedTo(minimumSizeHint()) );
 
     // signals and slots connections
     connect( pushOK, SIGNAL( clicked() ), this, SLOT( accept() ) );
@@ -74,9 +77,9 @@ SQ_LibrariesChanged::~SQ_LibrariesChanged()
 void SQ_LibrariesChanged::languageChange()
 {
     setCaption( tr2i18n( "Libraries" ) );
-    pushOK->setText( tr2i18n( "OK" ) );
-    textLabel1->setText( tr2i18n( "Libs" ) );
     listNewLibs->setCurrentItem( -1 );
+    textLabel1->setText( QString::null );
+    pushOK->setText( tr2i18n( "OK" ) );
 }
 
 #include "sq_librarieschanged.moc"

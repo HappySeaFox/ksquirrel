@@ -27,8 +27,6 @@
 
 #include "defs.h"
 
-class SQ_Decoder;
-
 // thanks to GLiv
 static GLfloat matrix[8] =
 {
@@ -50,6 +48,7 @@ class SQ_GLViewWidget : public QGLWidget
 
 	private:
 		RGBA	*rgba;
+		fmt_info	*finfo;
 
 		GLuint	texture[1];
 		GLfloat	w, h;
@@ -71,9 +70,8 @@ class SQ_GLViewWidget : public QGLWidget
 
 		GLint 			ZoomModel, ShadeModel;
 		GLint			ZoomModelArray[2], ShadeModelArray[2];
-		SQ_Decoder		*decoder;
 
-		KAction *pARotate, *pAZoomPlus, *pAZoomMinus;
+		KAction			*pARotate, *pAZoomPlus, *pAZoomMinus;
 
 	protected:
 		void initializeGL();
@@ -93,7 +91,6 @@ class SQ_GLViewWidget : public QGLWidget
 		void slotZoomMinus();
 };
 
-#define	sqGLDecoder		(SQ_GLViewWidget::decoder)
 #define	sqGLRotate		(SQ_GLViewWidget::pARotate)
 #define	sqGLZoomPlus	(SQ_GLViewWidget::pAZoomPlus)
 #define	sqGLZoomMinus	(SQ_GLViewWidget::pAXoomMinus)

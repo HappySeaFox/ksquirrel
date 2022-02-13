@@ -17,21 +17,20 @@
 
 #include <qapplication.h>
 #include <qpixmap.h>
-#include <qimage.h>
 #include <qprocess.h>
 #include <qcolor.h>
 #include <qlabel.h>
-#include <qtimer.h>
-#include <qregexp.h>
 #include <qvbox.h>
 #include <qlayout.h>
 #include <qvaluevector.h>
 #include <qvaluelist.h>
+#include <qmessagebox.h>
 
 #include <kapp.h>
 #include <khelpmenu.h>
 #include <kpopupmenu.h>
 #include <kurlcompletion.h>
+#include <kconfig.h>
 
 #include "ksquirrel.h"
 #include "sq_widgetstack.h"
@@ -40,22 +39,21 @@
 #include "sq_runprocess.h"
 #include "sq_options.h"
 #include "sq_about.h"
-#include "sq_splash.h"
 #include "sq_glviewwidget.h"
 #include "sq_libraryhandler.h"
 #include "sq_bookmarks.h"
-#include "sq_convertwidget.h"
 #include "sq_squirreloptions.h"
 #include "sq_librarylistener.h"
-
+#include "sq_externaltools.h"
 
 Squirrel * Squirrel::App = 0;
 KDockWidget *pdock1;
 
 
-Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent, name), mainSplitter(0L)
+Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent, name), DCOPObject(name), mainSplitter(0L)
 {
 	App = this;
+
 	sqLibPrefix = "/usr/lib/squirrel/";
 	
 	sqConfig = new KConfig(QString("ksquirrelrc"));
@@ -79,16 +77,6 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	toolbarIconSize = (*iconSizeList)[sqConfig->readNumEntry("toolbar icon size", 0)];
 	createFirst = sqConfig->readNumEntry("create first", 0);
 
-	sqConfig->setGroup("Main");
-	bool showsplash = sqConfig->readBoolEntry("show splash", true);
-
-        if(showsplash)
-        {
-		splash = new SQ_Splash(this);
-		splash->show();
-	}
-
-	
 	// !! Find libraries
 	sqLibHandler = new SQ_LibraryHandler;
 	sqLibUpdater = new SQ_LibraryListener;
@@ -117,21 +105,15 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	move(0,0);
 	resize(QApplication::desktop()->width(), QApplication::desktop()->height());
 
-        if(showsplash)
-		QTimer::singleShot(500*1, this, SLOT(slotSplashClose()));
-
 	show();
 }
+
+Squirrel::~Squirrel()
+{}
 
 void Squirrel::slotExecuteRunMenu()
 {
 	pmLaunch->exec(QCursor::pos());
-}
-
-void Squirrel::slotConvert()
-{
-	SQ_ConvertWidget editpict(this);
-	editpict.exec();
 }
 
 void Squirrel::slotOptions()
@@ -164,13 +146,6 @@ void Squirrel::closeEvent(QCloseEvent *ev)
 		sqConfig->sync();
 		ev->accept();
 	}
-}
-
-void Squirrel::slotSplashClose()
-{
-	splash->close();
-
-	delete splash;
 }
 
 void Squirrel::slotRaiseListView()
@@ -331,7 +306,7 @@ void Squirrel::createWidgetsLikeSQuirrel()
 	SQ_TreeView *pTree = new SQ_TreeView(mainSplitter);
 	mainSplitter->moveToFirst(pTree);
 
-       connect(sqCurrentURL, SIGNAL(returnPressed(const QString&)), sqWStack, SLOT(setURL(const QString&)));
+	connect(sqCurrentURL, SIGNAL(returnPressed(const QString&)), sqWStack, SLOT(setURL(const QString&)));
 	connect(sqCurrentURL, SIGNAL(activated(const QString&)), sqWStack, SLOT(setURL(const QString&)));
 
 	CreateToolbar(fileTools);
@@ -379,11 +354,10 @@ void Squirrel::createWidgetsLikeGqview()
 	// "GQview" specific
 	sqWStack->pAIconBigger->unplug(pToolbar);
 	sqWStack->pAIconSmaller->unplug(pToolbar);
-
 	pAGLView->unplug(pToolbar);
-	pAExit->unplug(pToolbar);
 	sqWStack->pANewDir->unplug(pToolbar);
-	pAConvert->unplug(pToolbar);
+	pAPrevFile->unplug(pToolbar);
+	pANextFile->unplug(pToolbar);
 
 	glView = new SQ_GLViewWidget(mainSplitter);
 
@@ -473,7 +447,6 @@ void Squirrel::createWidgetsLikeWinViewer()
 	sqWStack->pAIconBigger->unplug(pToolbarTools);
 	sqWStack->pAIconSmaller->unplug(pToolbarTools);
 	pAGLView->unplug(pToolbarTools);
-	pAConvert->unplug(pToolbarTools);
 	sqWStack->hide();
 }
 
@@ -545,15 +518,14 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	pop_edit = new KPopupMenu(menubar);
 	pop_view = new KPopupMenu(menubar);
 
+	InitRunMenu();
+	InitFilterMenu();
+
 	menubar->insertItem("&File", pop_file);
 	menubar->insertItem("&Edit", pop_edit);
 	menubar->insertItem("&View", pop_view);
-	InitRunMenu();
 	menubar->insertItem("&Launch", pmLaunch);
-
-	InitFilterMenu();
 	menubar->insertItem("&Filter", actionFilterMenu);
-
 	menubar->insertItem("&Help", helpMenu());
 
 	pARunMenu->plug(pop_view);
@@ -564,13 +536,10 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	pARaiseIconView->plug(pop_view);
 	pARaiseListView->plug(pop_view);
 	pARaiseDetailView->plug(pop_view);
-	pop_view->insertSeparator();
-
 	pAExit->plug(pop_file);
-	pAConvert->plug(pop_edit);
-	pop_edit->insertSeparator();
 	pARescan->plug(pop_edit);
 	pAConfigure->plug(pop_edit);
+	pAExtTools->plug(pop_edit);
 }
 
 void Squirrel::CreateToolbar(KToolBar *tools)
@@ -595,26 +564,24 @@ void Squirrel::CreateToolbar(KToolBar *tools)
 	sqWStack->pAIconSmaller->plug(tools);
 
 	pAGLView->plug(tools);
-	pAConvert->plug(tools);
 	pAConfigure->plug(tools);
+	pAExtTools->plug(tools);
 	pAExit->plug(tools);
 }
 
 void Squirrel::CreateActions()
 {
-	pARaiseListView = new KRadioAction("Raise 'list' view", QIconSet(sqLoader->loadIcon("view_icon", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_icon", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
-	pARaiseIconView = new KRadioAction("Raise 'icon' view", QIconSet(sqLoader->loadIcon("view_choose", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_choose", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
-	pARaiseDetailView = new KRadioAction("Raise 'detailed' view", QIconSet(sqLoader->loadIcon("view_detailed", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_detailed", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseDetailView()), actionCollection(), "SQ raise detailed view");
-	pAConvert = new KAction("Convert images", QIconSet(sqLoader->loadIcon("edit_picture", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("edit_picture", KIcon::Desktop, toolbarIconSize)), KShortcut(CTRL+Key_X), this, SLOT(slotConvert()), actionCollection(), "SQ call convert dialog");
 	pAExit = new KAction("Quit", QIconSet(sqLoader->loadIcon("exit", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("exit", KIcon::Desktop, toolbarIconSize)), KShortcut(ALT+Key_Q), this, SLOT(close()), actionCollection(), "SQ close");
   	pAConfigure = new KAction("Options", QIconSet(sqLoader->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("configure", KIcon::Desktop, toolbarIconSize)), KShortcut(CTRL+Key_P), this, SLOT(slotOptions()), actionCollection(), "SQ edit options");
   	pAGLView = new KAction("GLview", QIconSet(sqLoader->loadIcon("desktop", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("desktop", KIcon::Desktop, toolbarIconSize)), KShortcut(CTRL+Key_H), this, SLOT(slotGLView()), actionCollection(), "SQ gl view widget");
-
 	pANextFile = new KAction("Next file", QIconSet(sqLoader->loadIcon("next", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("next", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotNextFile()), actionCollection(), "SQ select next file");
 	pAPrevFile = new KAction("Previous file", QIconSet(sqLoader->loadIcon("previous", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("previous", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotPreviousFile()), actionCollection(), "SQ select previous file");
-
 	pARescan = new KAction("Rescan libraries", QIconSet(sqLoader->loadIcon("reload", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("reload", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, 0, actionCollection(), "SQ rescan libraries");
+	pAExtTools = new KAction("External tools ...", QIconSet(sqLoader->loadIcon("memory", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("memory", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
 
+	pARaiseListView = new KRadioAction("Raise 'list' view", QIconSet(sqLoader->loadIcon("view_icon", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_icon", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
+	pARaiseIconView = new KRadioAction("Raise 'icon' view", QIconSet(sqLoader->loadIcon("view_choose", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_choose", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
+	pARaiseDetailView = new KRadioAction("Raise 'detailed' view", QIconSet(sqLoader->loadIcon("view_detailed", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_detailed", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseDetailView()), actionCollection(), "SQ raise detailed view");
 	pARaiseListView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
 	pARaiseIconView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
 	pARaiseDetailView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
@@ -630,5 +597,38 @@ void Squirrel::slotPreviousFile()
 	sqWStack->slotPrevious();
 }
 
-Squirrel::~Squirrel()
-{}
+bool Squirrel::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
+{
+	if(fun == "control(QString)")
+	{
+		QDataStream args(data, IO_ReadOnly);
+		QString arg1;
+		args >> arg1;
+		control(arg1);
+		replyType = "void";
+		return true;
+	}
+
+	return DCOPObject::process(fun, data, replyType, replyData);
+}
+
+QCStringList Squirrel::functions()
+{
+	QCStringList result = DCOPObject::functions();
+	result << "void control(QString)";
+	return result;
+}
+
+void Squirrel::control(const QString &str)
+{
+	if(str == "ACTIVATE")
+	{
+		showNormal();
+	}
+}
+
+void Squirrel::slotExtTools()
+{
+	SQ_ExternalTools etd(this, "sq_exttools", true);
+	etd.exec();
+}

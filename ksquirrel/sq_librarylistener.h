@@ -30,14 +30,16 @@ class SQ_LibraryListener : public KDirLister
 	Q_OBJECT
 
 	private:
-		KURL	url;
+		KURL		url;
+		QStringList	list;
+		bool 			operation;
 
 	public: 
 		SQ_LibraryListener(bool = false);
 		~SQ_LibraryListener();
 
 	signals:
-		void showInfo(const QStringList &linfo);
+		void showInfo(const QStringList &linfo, bool added);
 
 	public slots:
 		void slotStarted(const KURL &);
@@ -45,7 +47,7 @@ class SQ_LibraryListener : public KDirLister
 		void slotNewItems(const KFileItemList &);
 		void slotDeleteItem(KFileItem *);
 
-		void slotShowInfo(const QStringList &linfo);
+		void slotShowInfo(const QStringList &linfo, bool added);
 };
 
 #endif

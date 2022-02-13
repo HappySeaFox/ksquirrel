@@ -38,22 +38,6 @@ typedef struct
 
 }ATTR_ RGB;
 
-
-typedef struct
-{
-    long w;
-    long h;
-    long bpp;
-    long imagesize;
-
-    RGBA *A;
-    RGB  *pal;
-    
-    /*  @todo for all formats: write 'dump'  */
-    char **dump;
-    
-}ATTR_ PICTURE;
-
 typedef struct
 {
     unsigned long	w;        /*  width  */
@@ -61,15 +45,10 @@ typedef struct
     unsigned char	bpp;
     BOOL		hasalpha; /* has alpha channel ?  */
     RGB			*pal;     /*  palette  */
-    unsigned char	pal_entr; /*  how many elements contains *pal (usually 1<<bpp elements)  */
-
-/*  use F1 and F2 as you want. for exmaple in libSQ_serve_bmp.so F1==width of scanline  */
-    unsigned long	F1;
-    unsigned long	F2;
+    short		pal_entr; /*  how many elements contains *pal (usually 1<<bpp elements)  */
+    char		*dump;	  /*  dump: "Width: 1024\nHeight: 768\nBPP: 24\n...."  */
 
     FILE		*fptr;
-
-    char		*dump;  /*  dump: "Width: 1024\nHeight: 768\nBPP: 24\n...."  */
 
 }ATTR_ fmt_info;
 

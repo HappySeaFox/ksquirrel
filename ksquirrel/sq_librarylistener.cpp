@@ -32,7 +32,7 @@ SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
        connect(this, SIGNAL(completed()), SLOT(slotCompleted()));
        connect(this, SIGNAL(newItems(const KFileItemList &)), SLOT(slotNewItems(const KFileItemList &)));
        connect(this, SIGNAL(deleteItem(KFileItem *)), SLOT(slotDeleteItem(KFileItem *)));
-	connect(this, SIGNAL(showInfo(const QStringList &)), SLOT(slotShowInfo(const QStringList &)));
+	connect(this, SIGNAL(showInfo(const QStringList &,bool)), SLOT(slotShowInfo(const QStringList &,bool)));
 }
 
 SQ_LibraryListener::~SQ_LibraryListener()
@@ -45,14 +45,25 @@ void SQ_LibraryListener::slotStarted(const KURL &_url)
 
 void SQ_LibraryListener::slotCompleted()
 {
+        if(operation)
+		sqLibHandler->add(&list);
+	else
+		sqLibHandler->remove(&list);
 
+	setAutoUpdate(sqConfig->readBoolEntry("monitor", true));
+
+ 	sqConfig->setGroup("Libraries");
+	if(sqConfig->readBoolEntry("show dialog", true))
+		emit showInfo(list, operation);
+	else
+		list.clear();
 }
 
 void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 {
 	KFileItemListIterator	it(items);
-	KFileItem 			*item;
-	QStringList			list;
+
+	KFileItem 				*item;
 	QString				stritems = "";
 	
 	while((item = it.current()) != 0)
@@ -62,25 +73,29 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 			stritems = stritems + url.path() + "/" + item->name() + "\n";
 	}
 
-	list = QStringList::split("\n", stritems);
-	sqLibHandler->add(&list);
+	list = list + QStringList::split("\n", stritems);
 
- 	sqConfig->setGroup("Libraries");
-
-	if(sqConfig->readBoolEntry("show dialog", true))
-		emit showInfo(list);
-
-	setAutoUpdate(sqConfig->readBoolEntry("monitor", true));
+	operation = true;
 }
 
 void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 {
+	QString				stritems = "";
 
+	if(item->isFile() && item)
+	{
+		stritems = stritems + url.path() + "/" + item->name() + "\n";
+		list = list + QStringList::split("\n", stritems);
+	}
+
+	operation = false;
 }
 
-void SQ_LibraryListener::slotShowInfo(const QStringList &linfo)
+void SQ_LibraryListener::slotShowInfo(const QStringList &linfo, bool added)
 {
 	SQ_LibrariesChanged cd(sqApp);
-	cd.setLibsInfo(linfo, true);
+	cd.setLibsInfo(linfo, added);
 	cd.exec();
+
+	list.clear();
 }

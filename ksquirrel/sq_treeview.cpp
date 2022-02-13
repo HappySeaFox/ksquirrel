@@ -32,6 +32,7 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 
 	KFileTreeBranch *root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
 	KFileTreeBranch *home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
+
 	addColumn("Name");
 
 	setDirOnlyMode(root, true);
@@ -43,30 +44,26 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	setCurrentItem(home->root());
 	home->setOpen(true);
 
-	connect(this, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(slotSetupClick(QListViewItem*)));
 	connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
-	connect(this, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
+	connect(this, SIGNAL(returnPressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 
+	sqConfig->setGroup("Fileview");
+
+	if(sqConfig->readNumEntry("sync type", 0) == 1)
+		connect(this, SIGNAL(executed(QListViewItem*)), SLOT(slotItemExecuted(QListViewItem*)));
+	
 	header()->hide();
 }
 
 SQ_TreeView::~SQ_TreeView()
 {}
 
-void SQ_TreeView::slotSetupClick(QListViewItem *item)
+void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 {
 	if(!item) return;
 
-	KFileTreeViewItem *cur = static_cast<KFileTreeViewItem*>(item);
+	KFileTreeViewItem *cur = (KFileTreeViewItem*)item;
 	KURL Curl = cur->url();
 
 	sqWStack->setURLfromtree(Curl);
-}
-
-void SQ_TreeView::slotDoubleClicked(QListViewItem *item)
-{
-	if(!item) return;
-
-	slotSetupClick(item);
-	emit executed(item);
 }

@@ -24,9 +24,9 @@ void SQ_Options::init()
     a[5] = QPixmap::fromMimeSource("images/view_xnview.png");
     
     sqConfig->setGroup("Main");
-    checkSplash->setChecked(sqConfig->readBoolEntry("show splash", true));
     checkRestart->setChecked(sqConfig->readBoolEntry("restart", true));
     checkMinimize->setChecked(sqConfig->readBoolEntry("minimize to tray", true));
+    checkOneInstance->setChecked(sqConfig->readBoolEntry("activate another", true));
     
     sqConfig->setGroup("Libraries");
     if(sqConfig->readBoolEntry("monitor", true)) checkMonitor->toggle();
@@ -40,9 +40,10 @@ void SQ_Options::init()
     sqConfig->setGroup("Fileview");
     comboIconIndex->setCurrentItem(sqConfig->readNumEntry("iCurrentIconIndex", 0));
     comboListIndex->setCurrentItem(sqConfig->readNumEntry("iCurrentListIndex", 0));
+    tp = sqConfig->readNumEntry("sync type", 0);
+    ((QRadioButton*)(buttonGroupSync->find(tp)))->setChecked(true);
     tp = sqConfig->readNumEntry("set path", 0);
     ((QRadioButton*)(buttonGroupSetPath->find(tp)))->setChecked(true);
-    checkSyncTree->setChecked(sqConfig->readBoolEntry("sync tree & fileview", false));
     lineEditCustomDir->setText(sqConfig->readEntry("custom directory", "/"));
     tp = sqConfig->readNumEntry("click policy custom", 0);
     ((QRadioButton*)(buttonGroupClickPolicy->find(tp)))->setChecked(true);
@@ -64,8 +65,6 @@ void SQ_Options::init()
     tableLib->addColumn("Info");
     tableLib->addColumn("Version");
     tableLib->addColumn("Extensions");
-    tableLib->addColumn("Read");
-    tableLib->addColumn("Write");
     
     slotShowLinks(true);
     
@@ -73,11 +72,9 @@ void SQ_Options::init()
     tableLib->setColumnWidthMode(1, QListView::Maximum);
     tableLib->setColumnWidthMode(2, QListView::Maximum);
     tableLib->setColumnWidthMode(3, QListView::Maximum);
-    tableLib->setColumnWidthMode(4, QListView::Maximum);
-    tableLib->setColumnWidthMode(5, QListView::Maximum);
     tableLib->setSelectionMode(QListView::Single);
     
-    for(int i = 0;i < 6;i++)
+    for(int i = 0;i < 4;i++)
         tableLib->setColumnWidth(i, tableLib->columnWidth(i)+20);
     
     textPrefix->setText(sqLibPrefix);
@@ -164,16 +161,16 @@ void SQ_Options::start()
 	sqConfig->setGroup("Fileview");
 	sqConfig->writeEntry("set path", buttonGroupSetPath->id(buttonGroupSetPath->selected()));
 	sqConfig->writeEntry("custom directory", lineEditCustomDir->text());
+	sqConfig->writeEntry("sync type", buttonGroupSync->id(buttonGroupSync->selected()));
 	sqConfig->writeEntry("iCurrentIconIndex", comboIconIndex->currentItem());
 	sqConfig->writeEntry("iCurrentListIndex", comboListIndex->currentItem());
-	sqConfig->writeEntry("sync tree & fileview", checkSyncTree->isChecked());
 	sqConfig->writeEntry("click policy custom", buttonGroupClickPolicy->id(buttonGroupClickPolicy->selected()));
 	sqConfig->writeEntry("click policy system", checkClickSystem->isChecked());
 
 	sqConfig->setGroup("Main");
-	sqConfig->writeEntry("show splash", checkSplash->isChecked());
 	sqConfig->writeEntry("minimize to tray", checkMinimize->isChecked());
 	sqConfig->writeEntry("restart", checkRestart->isChecked());
+	sqConfig->writeEntry("activate another", checkOneInstance->isChecked());
 
 	sqConfig->setGroup("GL view");
 	sqGLViewBGColor = kColorGLbackground->color();
@@ -209,6 +206,6 @@ void SQ_Options::slotShowLinks( bool show )
 	    if(libfileinfo.isSymLink()) continue;
 	}
 	path.replace(sqLibPrefix, "");
-	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.fmt_quickinfo()), QString(tmplib.fmt_version()), QString(tmplib.sinfo), QString(((tmplib.fmt_readable())?"Yes":"No")), QString(((tmplib.fmt_writeable())?"Yes":"No"))));
+	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.fmt_quickinfo()), QString(tmplib.fmt_version()), QString(tmplib.sinfo)));
     }
 }

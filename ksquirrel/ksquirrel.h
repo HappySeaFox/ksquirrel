@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SPLITTER_MAIN_WIDGET
-#define SPLITTER_MAIN_WIDGET
+#ifndef KSQUIRREL_H
+#define KSQUIRREL_H
 
 #include <qsplitter.h>
 #include <qtoolbutton.h>
@@ -29,7 +29,6 @@
 #include <ktoolbar.h>
 #include <kstatusbar.h>
 #include <ksystemtray.h>
-#include <kconfig.h>
 #include <kiconloader.h>
 #include <kurl.h>
 #include <kdockwidget.h>
@@ -38,8 +37,8 @@
 #include <kcombobox.h>
 #include <kaction.h>
 #include <kprocess.h>
+#include <dcopobject.h>
 
-class SQ_Splash;
 class SQ_WidgetStack;
 class SQ_RunProcess;
 class SQ_SystemTray;
@@ -48,6 +47,8 @@ class SQ_Bookmarks;
 class SQ_SquirrelOptions;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
+
+class KConfig;
 
 template <class T> class QValueVector;
 
@@ -58,15 +59,17 @@ typedef struct
 }FILTER;
 
 
-class Squirrel : public KDockMainWindow
+class Squirrel : public KDockMainWindow, public DCOPObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    public:
+	public:
+		static Squirrel *App;
+
 		enum ViewType{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview};
 		ViewType			curViewType;
 
-    private:
+	private:
 		QValueVector<FILTER>*filterList;
 		QValueVector<int>		*iconSizeList;
 		SQ_SystemTray		*tray;
@@ -76,11 +79,9 @@ class Squirrel : public KDockMainWindow
 		QPopupMenu			*pmLaunch;
 		QPixmap				 fullIcon, unfullIcon;
 
-		SQ_Splash			*splash;
-
 		KDockWidget 			*mainDock;
 
-		KAction				*pAGLView, *pAConfigure, *pAExit, *pAConvert, *pANextFile, *pAPrevFile, *pARescan;
+		KAction				*pAGLView, *pAConfigure, *pAExit, *pANextFile, *pAPrevFile, *pARescan, *pAExtTools;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView;
 
 		QSplitter				*mainSplitter;
@@ -106,11 +107,10 @@ class Squirrel : public KDockMainWindow
 		void createWidgetsLikeWinViewer();
 		void createWidgetsLikeXnview();
 
-    public slots:
-		void slotConvert();
+	public slots:
 		void slotOptions();
+		void slotExtTools();
 		void slotExecuteRunMenu();
-		void slotSplashClose();
 
 		void slotRaiseListView();
 		void slotRaiseIconView();
@@ -127,15 +127,9 @@ class Squirrel : public KDockMainWindow
 
 		void slotDoNothing() {}
 
-    public:
+	public:
 		Squirrel(QWidget *parent = 0, const char *name = 0);
 		~Squirrel();
-
-    protected:
-		void closeEvent(QCloseEvent *e);
-
-    public:
-		static Squirrel *App;
 
 		KConfig				*kconf;
 		KIconLoader			*iconL;
@@ -148,10 +142,18 @@ class Squirrel : public KDockMainWindow
 		KStatusBar			*sbar;
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
 		QString				libPrefix;
-		SQ_SquirrelOptions	*options;
+		SQ_SquirrelOptions		*options;
 		SQ_LibraryListener		*libl;
 
 		QColor				GLBkGroundColor;
+
+	public slots:
+		QCStringList functions();
+		bool process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData);
+		void control(const QString &str);
+
+	protected:
+		void closeEvent(QCloseEvent *e);
 };
 
 #define	sqApp			(Squirrel::App)
@@ -162,7 +164,7 @@ class Squirrel : public KDockMainWindow
 #define   sqStatus			(Squirrel::App->sbar)
 #define   sqProgress		(Squirrel::App->progress)
 #define   sqBookmarks		(Squirrel::App->bookmarks)
-#define   sqWStack		(Squirrel::App->pWidgetStack)
+#define   sqWStack			(Squirrel::App->pWidgetStack)
 #define   sqCurrentURL		(Squirrel::App->pCurrentURL)
 
 #define   sqSBdirInfo		(Squirrel::App->dirInfo)
@@ -171,7 +173,7 @@ class Squirrel : public KDockMainWindow
 #define   sqSBfileName		(Squirrel::App->fileName)
 #define   sqSBDecoded		(Squirrel::App->decodedStatus)
 
-#define	sqGLView		(Squirrel::App->glView)
+#define	sqGLView			(Squirrel::App->glView)
 #define	sqGLViewBGColor	(Squirrel::App->GLBkGroundColor)
 
 #define	sqLibHandler		(Squirrel::App->sqLibHandlerReal)

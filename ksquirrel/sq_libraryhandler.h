@@ -40,18 +40,13 @@ class SQ_LIBRARY
 		QString libpath;
 		QString sinfo;
 
-		int (*fmt_init)(fmt_info *, const char *);
+		int (*fmt_init)(fmt_info **, const char *);
 		int (*fmt_read_info)(fmt_info *);
 		int (*fmt_read_scanline)(fmt_info *, RGBA *);
-
-		int (*readformat)(const char *, PICTURE **);
-		int (*writeformat)(const char *, PICTURE **);
-
-		int (*fmt_readable)();
-		int (*fmt_writeable)();
 		char* (*fmt_version)();
 		char* (*fmt_quickinfo)();
 		char* (*fmt_extension)();
+		int* (*fmt_close)(fmt_info *);
 };
   
 class SQ_LibraryHandler : public QObject
@@ -65,7 +60,7 @@ class SQ_LibraryHandler : public QObject
 		~SQ_LibraryHandler();
 
 		void setCurrentLibrary(const QString &name);
-		int callReadFormat(const QString &file, PICTURE **pic);
+		SQ_LIBRARY* getCurrentLibrary();
 
 		SQ_LIBRARY getLibByIndex(const int &i);
 		int count() const;
@@ -75,7 +70,9 @@ class SQ_LibraryHandler : public QObject
 
 		void clear();
 		void reInit(QStringList *foundLibraries);
+
 		void add(QStringList *foundLibraries);
+		void remove(QStringList *foundLibraries);
 };
 
 #endif

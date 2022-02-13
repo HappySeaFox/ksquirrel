@@ -47,13 +47,9 @@ void SQ_LibraryHandler::setCurrentLibrary(const QString &name)
 		}
 }
 
-int SQ_LibraryHandler::callReadFormat(const QString &file, PICTURE **pic)
+SQ_LIBRARY* SQ_LibraryHandler::getCurrentLibrary()
 {
-//	QMessageBox::information(0, "", (const char*)file, 1);
-
-	int ret = currentlib->readformat(file, pic);
-
-	return ret;
+	return currentlib;
 }
 
 SQ_LIBRARY SQ_LibraryHandler::getLibByIndex(const int &i)
@@ -112,26 +108,32 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 		libtmp.libpath = *it;
 		libtmp.lib->load();
 
-		libtmp.fmt_init = (int (*)(fmt_info *, const char *))(libtmp.lib)->resolve("fmt_init");
+		libtmp.fmt_init = (int (*)(fmt_info **, const char *))(libtmp.lib)->resolve("fmt_init");
 		libtmp.fmt_read_info = (int (*)(fmt_info *))(libtmp.lib)->resolve("fmt_read_info");
 		libtmp.fmt_read_scanline = (int (*)(fmt_info *, RGBA*))(libtmp.lib)->resolve("fmt_read_scanline");
-
-		libtmp.readformat = (int (*)(const char*, PICTURE **))(libtmp.lib)->resolve("readformat");
-		libtmp.writeformat = (int (*)(const char*, PICTURE **))(libtmp.lib)->resolve("writeformat");
-		libtmp.fmt_readable = (int (*)())(libtmp.lib)->resolve("fmt_readable");
-		libtmp.fmt_writeable = (int (*)())(libtmp.lib)->resolve("fmt_writeable");
 		libtmp.fmt_version = (char* (*)())(libtmp.lib)->resolve("fmt_version");
 		libtmp.fmt_quickinfo = (char* (*)())(libtmp.lib)->resolve("fmt_quickinfo");
 		libtmp.fmt_extension = (char* (*)())(libtmp.lib)->resolve("fmt_extension");
+		libtmp.fmt_close = (int* (*)(fmt_info*))(libtmp.lib)->resolve("fmt_close");
 		libtmp.sinfo = QString(libtmp.fmt_extension());
 
-		if(libtmp.readformat == 0)
+		if(libtmp.fmt_init == 0 || libtmp.fmt_read_info == 0 || libtmp.fmt_read_scanline == 0)
 			if(QMessageBox::warning(0, "SQ_LibHandler", "Library \""+libtmp.libpath+"\" doesn't contain one of fmt_* function.", QMessageBox::Ignore, QMessageBox::Abort) == QMessageBox::Abort)
 				break;
 			else;
       		else
 			libs->append(libtmp);
 	}
+}
+
+void SQ_LibraryHandler::remove(QStringList *foundLibraries)
+{
+	QValueList<QString>::iterator   BEGIN = foundLibraries->begin();
+	QValueList<QString>::iterator      END = foundLibraries->end();
+
+	QValueVector<SQ_LIBRARY>::iterator   vBEGIN = libs->begin();
+	QValueVector<SQ_LIBRARY>::iterator      vEND = libs->end();
+
 }
 
 int SQ_LibraryHandler::count() const

@@ -13,7 +13,7 @@
 void SQ_LibrariesChanged::setLibsInfo( const QStringList &l, bool added )
 {
     listNewLibs->clear();
-    listNewLibs->insertItem((added)?"New libraries:":"Deleted libraries:");
+    textLabel1->setText((added)?"New libraries found:":"Deleted libraries:");
     listNewLibs->insertStringList(l);
     listNewLibs->setCurrentItem(0);
 }

@@ -1,0 +1,244 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>SQ_ExternalTools</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_ExternalTools</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>410</width>
+            <height>303</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>&lt;NI&gt;Configure external tools</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QListBox" row="1" column="0" rowspan="4" colspan="1">
+            <item>
+                <property name="text">
+                    <string>Open with GIMP</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Open with konqueror</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>listNames</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>LineEditPanel</enum>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>Name</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>textLabel2</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>Action</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="1" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>lineAction</cstring>
+            </property>
+            <property name="text">
+                <string>gimp-remote %s</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="2" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>pushTestAll</cstring>
+            </property>
+            <property name="text">
+                <string>Test all</string>
+            </property>
+        </widget>
+        <spacer row="1" column="3" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>65</width>
+                    <height>55</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="3" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>spacer4</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>215</width>
+                    <height>56</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QButtonGroup" row="4" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>buttonGroup1</cstring>
+            </property>
+            <property name="title">
+                <string>Add new tool</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>lineNewName</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel1_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Name:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Program:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>lineNewProgram</cstring>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>pushAddNew</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Add</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <spacer row="5" column="0">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>145</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="5" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>pushButton3</cstring>
+            </property>
+            <property name="text">
+                <string>OK</string>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <spacer row="5" column="1">
+            <property name="name">
+                <cstring>spacer4_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>125</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushTestAll</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ExternalTools</receiver>
+        <slot>slotTestAll()</slot>
+    </connection>
+    <connection>
+        <sender>pushButton3</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_ExternalTools</receiver>
+        <slot>accept()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">ksquirrel.h</include>
+    <include location="local" impldecl="in implementation">sq_externaltools.ui.h</include>
+</includes>
+<slots>
+    <slot>slotTestAll()</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

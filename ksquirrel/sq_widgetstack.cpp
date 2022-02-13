@@ -43,13 +43,15 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 	pIconSizeList->append(192);
 	pIconSizeList->append(256);
 
-	sqConfig->setGroup("Interface");
+	sqConfig->setGroup("Fileview");
 	iCurrentListIndex = sqConfig->readNumEntry("iCurrentListIndex", 0);
 	iCurrentIconIndex = sqConfig->readNumEntry("iCurrentIconIndex", 2);
 
 	pDirOperatorList = 0L;
 	pDirOperatorIcon = 0L;
 	pDirOperatorDetail = 0L;
+
+	path = 0L;
 }
 
 SQ_WidgetStack::~SQ_WidgetStack()
@@ -62,12 +64,14 @@ KURL SQ_WidgetStack::getURL() const
 	if(dirop)
 		return dirop->url();
 	else
-		return "/";
+		return "";
 }
 
 void SQ_WidgetStack::setURL(const QString &newpath, bool cl)
 {
 	KURL url(newpath);
+	if(sqCurrentURL) sqCurrentURL->setEditText(newpath);
+	if(sqCurrentURL) sqCurrentURL->addToHistory(newpath);
 	if(pDirOperatorList) pDirOperatorList->setURL(url, cl);
 	if(pDirOperatorIcon) pDirOperatorIcon->setURL(url, cl);
 	if(pDirOperatorDetail) pDirOperatorDetail->setURL(url, cl);
@@ -182,13 +186,13 @@ void SQ_WidgetStack::raiseWidget(int id)
 	// load views only on call.
 	if(id == 0 && pDirOperatorList == 0L)
 	{
-		pDirOperatorList = new SQ_DirOperator(KURL("/"));
+		pDirOperatorList = new SQ_DirOperator(KURL(((path)?*path:"/")));
 		pDirOperatorList->readConfig(sqConfig, "file browser");
 		pDirOperatorList->setViewConfig(sqConfig, "file browser");
 		pDirOperatorList->setMode(KFile::Files);
 		pDirOperatorList->setView(KFile::Simple);
 		pDirOperatorList->view()->actionCollection()->action(2)->activate();
-		pDirOperatorList->setURL(getURL(), true);
+		if(!path) pDirOperatorList->setURL(getURL(), true);
 		int iconsize = (*pIconSizeList)[iCurrentListIndex];
 		pDirOperatorList->setIconSize(iconsize);
 
@@ -203,7 +207,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorIcon->setMode(KFile::Files);
 		pDirOperatorIcon->setView(KFile::Simple);
 		pDirOperatorIcon->view()->actionCollection()->action(1)->activate();
-		pDirOperatorIcon->setURL(getURL(), true);
+		if(!path) pDirOperatorIcon->setURL(getURL(), true);
 		int iconsize = (*pIconSizeList)[iCurrentIconIndex];
 		pDirOperatorIcon->setIconSize(iconsize);
 
@@ -217,7 +221,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorDetail->setViewConfig(sqConfig, "file browser");
 		pDirOperatorDetail->setMode(KFile::Files);
 		pDirOperatorDetail->setView(KFile::Detail);
-		pDirOperatorDetail->setURL(getURL(), true);
+		if(!path) pDirOperatorDetail->setURL(getURL(), true);
 
 		connect(pDirOperatorDetail, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
 		addWidget(pDirOperatorDetail, 2);
@@ -238,21 +242,30 @@ const KFileItemList* SQ_WidgetStack::selectedItems() const
 
 void SQ_WidgetStack::raiseFirst(int id)
 {
-	QString path;
+	path = new QString;
 
 	sqConfig->setGroup("Fileview");
 	switch(sqConfig->readNumEntry("set path", 1))
 	{
-		case 2: path = sqConfig->readEntry("custom directory", "/"); break;
-		case 1: path = ""; break;
-		case 0: path = sqConfig->readEntry("last visited", "/"); break;
-		default: path = "/";
+		case 2: *path = sqConfig->readEntry("custom directory", "/"); break;
+		case 1: *path = ""; break;
+		case 0: *path = sqConfig->readEntry("last visited", "/"); break;
+		default: *path = "/";
 	}
 
 	raiseWidget(id);
 
+	QString url = getURL().path();
+	if(sqCurrentURL)
+	{
+		sqCurrentURL->setEditText(url);
+		sqCurrentURL->addToHistory(url);
+	}
+
+        delete path;
+        path = 0L;
+
 	SQ_DirOperator *dirop = (SQ_DirOperator*)visibleWidget();
-	dirop->setURL(path, true);
 	
 	pABack = dirop->actionCollection()->action("back");
 	pAForw = dirop->actionCollection()->action("forward");
