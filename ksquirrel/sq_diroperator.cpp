@@ -77,7 +77,16 @@ KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 	{
 		fileview = new SQ_FileDetailView(parent, "detail view");
 
-		connect((SQ_FileDetailView*)fileview, SIGNAL(doubleClicked(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
+		if(sing)
+		{
+			connect((SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*, const QPoint&, int)), (SQ_FileDetailView*)fileview, SLOT(slotSelected(QListViewItem*, const QPoint&, int)));
+			connect((SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
+       	}
+		else
+			connect((SQ_FileDetailView*)fileview, SIGNAL(doubleClicked(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
+
+		disconnect((SQ_FileDetailView*)fileview, SIGNAL(returnPressed(QListViewItem*)), (SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*)));
+		connect((SQ_FileDetailView*)fileview, SIGNAL(returnPressed(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
 		connect((SQ_FileDetailView*)fileview, SIGNAL(currentChanged(QListViewItem*)), SLOT(slotSelected(QListViewItem*)));
 	}
 	else if(view == KFile::Simple)
@@ -87,7 +96,16 @@ KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 	
 		fileview->setViewName("Short View");
 
-		connect((SQ_FileIconView*)fileview, SIGNAL(doubleClicked(QIconViewItem*)), SLOT(slotDoubleClicked(QIconViewItem*)));
+		if(sing)
+		{
+			connect((SQ_FileIconView*)fileview, SIGNAL(clicked(QIconViewItem*, const QPoint&)), (SQ_FileIconView*)fileview, SLOT(slotSelected(QIconViewItem*, const QPoint&)));
+			connect((SQ_FileIconView*)fileview, SIGNAL(clicked(QIconViewItem*)), SLOT(slotDoubleClicked(QIconViewItem*)));
+		}
+		else
+			connect((SQ_FileIconView*)fileview, SIGNAL(doubleClicked(QIconViewItem*)), SLOT(slotDoubleClicked(QIconViewItem*)));
+
+		disconnect((SQ_FileIconView*)fileview, SIGNAL(returnPressed(QIconViewItem*)), (SQ_FileIconView*)fileview, SIGNAL(clicked(QIconViewItem*)));
+		connect((SQ_FileIconView*)fileview, SIGNAL(returnPressed(QIconViewItem*)), SLOT(slotDoubleClicked(QIconViewItem*)));
 		connect((SQ_FileIconView*)fileview, SIGNAL(currentChanged(QIconViewItem*)), SLOT(slotSelected(QIconViewItem*)));
 	}
 
@@ -98,13 +116,16 @@ void SQ_DirOperator::slotDoubleClicked(QIconViewItem *item)
 {
 	if(!item) return;
 
-	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
+	if(KFileIconViewItem* f = (KFileIconViewItem*)item)
 	{
 		QFileInfo fm(f->fileInfo()->url().path());
 
 		if(f->fileInfo()->isFile())
 			if(sqLibHandler->supports(fm.extension(false)))
 				sqGLView->showIfCan(f->fileInfo()->url().path());
+			else;
+		else
+			emit dirActivated((const KFileItem*)f->fileInfo());
 	}
 }
 
@@ -112,13 +133,16 @@ void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 {
 	if(!item) return;
 
-	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
+	if(KFileListViewItem* f = (KFileListViewItem*)item)
 	{
 		QFileInfo fm(f->fileInfo()->url().path());
 
 		if(f->fileInfo()->isFile())
 			if(!sqLibHandler->supports(fm.extension(false)))
 					sqGLView->showIfCan(f->fileInfo()->url().path());
+			else;
+		else
+			emit dirActivated((const KFileItem*)f->fileInfo());
 	}
 }
 
@@ -137,13 +161,13 @@ void SQ_DirOperator::slotSelected(QIconViewItem *item)
 			sqSBfileIcon->setPixmap(px);
 			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
 		}
-
+/*
 		if(f->fileInfo()->isFile() && (sqViewType == Squirrel::Gqview || sqViewType == Squirrel::Xnview || sqViewType == Squirrel::WinViewer))
 		{
 			QFileInfo fm(f->fileInfo()->url().path());
 			sqGLView->showIfCan(f->fileInfo()->url().path());
 		}
-	}
+*/	}
 }
 
 void SQ_DirOperator::slotSelected(QListViewItem *item)
@@ -162,12 +186,12 @@ void SQ_DirOperator::slotSelected(QListViewItem *item)
 			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
 		}
 
-		if(f->fileInfo()->isFile() && (sqViewType == Squirrel::Gqview || sqViewType == Squirrel::Xnview || sqViewType == Squirrel::WinViewer))
+/*		if(f->fileInfo()->isFile() && (sqViewType == Squirrel::Gqview || sqViewType == Squirrel::Xnview || sqViewType == Squirrel::WinViewer))
 		{
 			QFileInfo fm(f->fileInfo()->url().path());
 			sqGLView->showIfCan(f->fileInfo()->url().path());
 		}
-	}
+*/	}
 }
 
 void SQ_DirOperator::setShowHiddenFilesF(bool s)

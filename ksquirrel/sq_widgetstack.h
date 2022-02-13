@@ -21,9 +21,9 @@
 #include <qwidgetstack.h>
 #include <qstring.h>
 #include <qvaluelist.h>
+#include <kurl.h>
 
 #include "sq_diroperator.h"
-#include "ksquirrel.h"
 
 class SQ_WidgetStack : public QWidgetStack
 {
@@ -31,7 +31,7 @@ class SQ_WidgetStack : public QWidgetStack
 
 	private:
 		QValueList<int>		*pIconSizeList;
-		int				iCurrentListIndex, iCurrentIconIndex;
+		int					iCurrentListIndex, iCurrentIconIndex;
 		SQ_DirOperator		*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail;
 
 	public:
@@ -48,9 +48,12 @@ class SQ_WidgetStack : public QWidgetStack
 						*pARefresh, *pANewDir, *pAPrev, *pANext,
 						*pAIconBigger, *pAIconSmaller;
 
+		const KFileItemList* selectedItems() const;
+
 
 	public slots:
 		void raiseWidget(int id);
+		void raiseFirst(int id);
 
 		void setURL(const QString &);
 		void setURL(const KURL &);

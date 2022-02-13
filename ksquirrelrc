@@ -16,11 +16,13 @@ CurrentPalette=* Recent Colors *
 2=pcx
 
 [Fileview]
-custom directory=
+click policy custom=1
+click policy system=false
+custom directory=/
 iCurrentIconIndex=2
 iCurrentListIndex=0
-last visited=/home/ckult/
-set path=1
+last visited=/
+set path=2
 sync tree & fileview=true
 
 [Filters]
@@ -34,13 +36,15 @@ sync tree & fileview=true
 3=*.html *.htm *.shtml
 
 [GL view]
-GL view background=#9f9f9f
+GL view background=#6c6c6c
 adjust image=false
+enable drop=true
 shade model=0
 zoom model=1
 
 [Interface]
-ViewType=4
+ViewType=1
+create first=0
 toolbar icon size=1
 
 [KFileDialog Settings]

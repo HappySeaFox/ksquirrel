@@ -58,3 +58,8 @@ QDragObject* SQ_FileIconView::dragObject()
 
 	return KURLDrag::newDrag(urls, viewport());
 }
+
+void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
+{
+	emit doubleClicked(item, point);
+}

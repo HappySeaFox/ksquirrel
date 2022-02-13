@@ -47,12 +47,6 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 	connect(this, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
 
-	sqConfig->setGroup("Interface");
-	if(!sqConfig->readBoolEntry("set last visited", true))
-		slotSetupClick((QListViewItem*)(home->root()));
-	else
-		sqWStack->setURL(KURL(sqConfig->readEntry("last visited", QString("/"))));
-
 	header()->hide();
 }
 

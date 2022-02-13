@@ -36,14 +36,20 @@ class SQ_LIBRARY
 
 		QLibrary *lib;
 		QString libpath;
-		int (*readformat)(const char *name, PICTURE **);
-		int (*writeformat)(const char *name, PICTURE **);
-		int (*readable)();
-		int (*writeable)();
-		char* (*version)();
-		char* (*info)();
-		char* (*extension)();
 		QString sinfo;
+
+		int (*fmt_init)(fmt_info *, const char *);
+		int (*fmt_read_info)(fmt_info *);
+		int (*fmt_read_scanline)(fmt_info *, RGBA *);
+
+		int (*readformat)(const char *, PICTURE **);
+		int (*writeformat)(const char *, PICTURE **);
+
+		int (*fmt_readable)();
+		int (*fmt_writeable)();
+		char* (*fmt_version)();
+		char* (*fmt_quickinfo)();
+		char* (*fmt_extension)();
 };
   
 class SQ_LibraryHandler : public QObject
@@ -53,7 +59,7 @@ class SQ_LibraryHandler : public QObject
 		SQ_LIBRARY				*currentlib;
 
 	public:
-		SQ_LibraryHandler(QStringList &foundLibraries, QObject *parent = 0, const char *name = 0);
+		SQ_LibraryHandler(QStringList *foundLibraries = 0, QObject *parent = 0, const char *name = 0);
 		~SQ_LibraryHandler();
 
 		void setCurrentLibrary(const QString &name);
@@ -64,6 +70,9 @@ class SQ_LibraryHandler : public QObject
 
 		bool supports(const QString &format) const;
 		QString allSupportedForFilter() const;
+
+		void clear();
+		void reInit(QStringList *foundLibraries);
 };
 
 #endif

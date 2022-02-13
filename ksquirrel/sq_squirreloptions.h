@@ -1,7 +1,7 @@
 /***************************************************************************
-                          sq_fileiconview.h  -  description
+                          sq_squirreloptions.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
+    begin                : Wed Mar 24 2004
     copyright            : (C) 2004 by ckult
     email                : squirrel-sf@yandex.ru
  ***************************************************************************/
@@ -15,33 +15,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_FILEICONVIEW_H
-#define SQ_FILEICONVIEW_H
+#ifndef SQ_SQUIRRELOPTIONS_H
+#define SQ_SQUIRRELOPTIONS_H
 
-#include <qwidget.h>
-#include <qpoint.h>
-#include <kfileiconview.h>
+#include <qobject.h>
 
-class SQ_FileIconView : public KFileIconView
+/**
+  *@author ckult
+  */
+
+class KConfig;
+
+class SQ_SquirrelOptions : public QObject
 {
-    Q_OBJECT
+	private:
+		KConfig *config;
 
-	public:
-		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
-	        ~SQ_FileIconView();
+	public: 
+		SQ_SquirrelOptions(QObject * parent = 0, const char *name = 0);
+		~SQ_SquirrelOptions();
 
-	protected slots:
-//		void slotDrop(QDropEvent*, const QValueList<QIconDragItem>&);
-
-	protected:
-		QDragObject *dragObject();
-		void dragEnterEvent(QDragEnterEvent *);
-		void dropEvent(QDropEvent *);
-
-	protected slots:
-		void slotSelected(QIconViewItem *item, const QPoint &point);
-
+		void init(KConfig *);
 };
-
 
 #endif

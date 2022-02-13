@@ -48,6 +48,8 @@ class SQ_GLViewWidget;
 class SQ_LibraryHandler;
 class SQ_Dir;
 class SQ_Bookmarks;
+class SQ_SquirrelOptions;
+
 
 typedef struct
 {
@@ -65,33 +67,33 @@ class Squirrel : public KDockMainWindow
 		ViewType			curViewType;
 
     private:
-    	QValueList<FILTER>	*filterList;
+		QValueList<FILTER>	*filterList;
 		QValueList<int>		*iconSizeList;
 		SQ_SystemTray		*tray;
 		QToolButton			*pTBAbstractButton, *pTBBookmarksButton;
 		KMenuBar			*menubar;
-		KToolBar			*fileTools, *pTLocation;
+		KToolBar				*fileTools, *pTLocation;
 		QPopupMenu			*pmLaunch;
-		QPixmap				fullIcon, unfullIcon;
+		QPixmap				 fullIcon, unfullIcon;
 
 		SQ_Splash			*splash;
 
-		KDockWidget 		*mainDock;
+		KDockWidget 			*mainDock;
 		KDockWidget			*pdockTree;
-		KDockWidget 		*pdockTabView;
+		KDockWidget 			*pdockTabView;
 		SQ_Dir				*dirForViewer;
 
-		KAction				*pAGLView, *pAConfigure, *pAExit, *pAConvert, *pANextFile, *pAPrevFile;
+		KAction				*pAGLView, *pAConfigure, *pAExit, *pAConvert, *pANextFile, *pAPrevFile, *pARescan;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView;
 
-		QSplitter			*mainSplitter;
+		QSplitter				*mainSplitter;
 
 		SQ_RunProcess		*pMenuProc;
 
 		KPopupMenu			*pop_file, *pop_view, *pop_edit;
 		KPopupMenu			*actionFilterMenu;
-	 	int	 				toolbarIconSize;
-	    QStringList			strlibFound;
+	 	int	 				toolbarIconSize, createFirst;
+		QStringList			strlibFound;
 
 		void InitRunMenu();
 		void CreateLocationToolbar();
@@ -127,14 +129,13 @@ class Squirrel : public KDockMainWindow
 
 		void slotNextFile();
 		void slotPreviousFile();
+		void slotRescanLibraries();
 
 		void slotDoNothing() {}
 
     public:
 		Squirrel(QWidget *parent = 0, const char *name = 0);
 		~Squirrel();
-
-		void rescanLibraries();
 
     protected:
 		void closeEvent(QCloseEvent *e);
@@ -153,17 +154,19 @@ class Squirrel : public KDockMainWindow
 		KStatusBar			*sbar;
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
 		QString				libPrefix;
+		SQ_SquirrelOptions	*options;
 
 		QColor				GLBkGroundColor;
 };
 
-#define		sqApp			(Squirrel::App)
-#define		sqConfig			(Squirrel::App->kconf)
+#define	sqApp			(Squirrel::App)
+#define	sqOptions		(Squirrel::App->options)
+#define	sqConfig			(Squirrel::App->kconf)
 #define   sqLoader			(Squirrel::App->iconL)
 #define   sqStatus			(Squirrel::App->sbar)
 #define   sqProgress		(Squirrel::App->progress)
 #define   sqBookmarks		(Squirrel::App->bookmarks)
-#define   sqWStack			(Squirrel::App->pWidgetStack)
+#define   sqWStack		(Squirrel::App->pWidgetStack)
 #define   sqCurrentURL		(Squirrel::App->pCurrentURL)
 
 #define   sqSBdirInfo		(Squirrel::App->dirInfo)

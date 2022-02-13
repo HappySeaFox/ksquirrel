@@ -21,11 +21,11 @@
 
 #include <kaboutdata.h>
 
-static const char *description = "Squirrel";
+static const char *description = "KSquirrel - image viewer for KDE with dynamic format support.";
 
 static KAboutData aboutData(
 			"squirrel", 
-			"Squirrel",
+			"KSquirrel",
 			"0.1.3", 
 			description,
 			KAboutData::License_GPL,

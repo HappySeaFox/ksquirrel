@@ -26,6 +26,8 @@
 #include "sq_fileiconview.h"
 #include "sq_filedetailview.h"
 
+#include "ksquirrel.h"
+
 SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 {
 	pIconSizeList = new QValueList<int>;
@@ -47,31 +49,6 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 	pDirOperatorIcon = 0L;
 	pDirOperatorDetail = 0L;
 
-	// pDirOperatorIcon & pDirOperatorDetail will be loaded later, if I'll press "Icon View" or "Detailed view" button on toolbar.
-	// we needn't load them at the beginning, by default only pDirOperatorList exists.
-	pDirOperatorList = new SQ_DirOperator(KURL("/"));
-	pDirOperatorList->readConfig(sqConfig, "file browser");
-	pDirOperatorList->setViewConfig(sqConfig, "file browser");
-	pDirOperatorList->setMode(KFile::Files);
-	pDirOperatorList->setView(KFile::Simple);
-	pDirOperatorList->view()->actionCollection()->action(2)->activate();
-
-	int iconsize = *(pIconSizeList->at(iCurrentListIndex));
-	pDirOperatorList->setIconSize(iconsize);
-
-	pABack = pDirOperatorList->actionCollection()->action("back");
-	pAForw = pDirOperatorList->actionCollection()->action("forward");
-	pAUp = pDirOperatorList->actionCollection()->action("up");
-	pARefresh = pDirOperatorList->actionCollection()->action("reload");
-	pAHome = pDirOperatorList->actionCollection()->action("home");
-	pANewDir = pDirOperatorList->actionCollection()->action("mkdir");
-	pAProp = pDirOperatorList->actionCollection()->action("properties");
-	pADelete = pDirOperatorList->actionCollection()->action("delete");
-	pAIconSmaller = new KAction("Smaller icons", sqLoader->loadIcon("viewmag-", KIcon::Desktop, 22), KShortcut(CTRL+Key_Minus), this, SLOT(slotSetIconSmaller()), sqApp->actionCollection(), "Set smaller icons");
-	pAIconBigger = new KAction("Bigger icons", sqLoader->loadIcon("viewmag+", KIcon::Desktop, 22), KShortcut(CTRL+Key_Plus), this, SLOT(slotSetIconBigger()), sqApp->actionCollection(), "Set bigger icons");
-
-	connect(pDirOperatorList, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
-
 	addWidget(pDirOperatorList, 0);
 }
 
@@ -80,13 +57,18 @@ SQ_WidgetStack::~SQ_WidgetStack()
 
 KURL SQ_WidgetStack::getURL() const
 {
-	return  pDirOperatorList->url();
+	SQ_DirOperator* dirop = (SQ_DirOperator*)visibleWidget();
+
+	if(dirop)
+		return dirop->url();
+	else
+		return "/";
 }
 
 void SQ_WidgetStack::setURL(const QString &newpath, bool cl)
 {
 	KURL url(newpath);
-	pDirOperatorList->setURL(url, cl);
+	if(pDirOperatorList) pDirOperatorList->setURL(url, cl);
 	if(pDirOperatorIcon) pDirOperatorIcon->setURL(url, cl);
 	if(pDirOperatorDetail) pDirOperatorDetail->setURL(url, cl);
 }
@@ -95,7 +77,7 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool cl)
 {
 	if(sqCurrentURL) sqCurrentURL->setEditText(newurl.path());
 	if(sqCurrentURL) sqCurrentURL->addToHistory(newurl.path());
-	pDirOperatorList->setURL(newurl, cl);
+	if(pDirOperatorList) pDirOperatorList->setURL(newurl, cl);
 	if(pDirOperatorIcon) pDirOperatorIcon->setURL(newurl, cl);
 	if(pDirOperatorDetail) pDirOperatorDetail->setURL(newurl, cl);
 }
@@ -113,7 +95,7 @@ void SQ_WidgetStack::setURL(const KURL &newurl)
 void SQ_WidgetStack::setURLfromtree(const KURL &newurl)
 {
 	bool cl = true;
-	pDirOperatorList->setURL(newurl, cl);
+	if(pDirOperatorList) pDirOperatorList->setURL(newurl, cl);
 	if(pDirOperatorIcon) pDirOperatorIcon->setURL(newurl, cl);
 	if(pDirOperatorDetail) pDirOperatorDetail->setURL(newurl, cl);
 }
@@ -176,16 +158,16 @@ void SQ_WidgetStack::slotNext()
 
 void SQ_WidgetStack::slotShowHidden(bool)
 {
-	pDirOperatorList->actionCollection()->action("show hidden")->activate();
+	((SQ_DirOperator*)visibleWidget())->actionCollection()->action("show hidden")->activate();
 }
 
 void SQ_WidgetStack::setNameFilter(const QString &f)
 {
-	pDirOperatorList->setNameFilter(f);
+	if(pDirOperatorList) pDirOperatorList->setNameFilter(f);
 	if(pDirOperatorIcon) pDirOperatorIcon->setNameFilter(f);
 	if(pDirOperatorDetail) pDirOperatorDetail->setNameFilter(f);
 
-	pDirOperatorList->updateDir();
+	if(pDirOperatorList) pDirOperatorList->updateDir();
 	if(pDirOperatorIcon) pDirOperatorIcon->actionCollection()->action("reload")->activate();
 	if(pDirOperatorDetail) pDirOperatorDetail->actionCollection()->action("reload")->activate();
 }
@@ -193,6 +175,21 @@ void SQ_WidgetStack::setNameFilter(const QString &f)
 void SQ_WidgetStack::raiseWidget(int id)
 {
 	// load views only on call.
+	if(id == 0 && pDirOperatorList == 0L)
+	{
+		pDirOperatorList = new SQ_DirOperator(KURL("/"));
+		pDirOperatorList->readConfig(sqConfig, "file browser");
+		pDirOperatorList->setViewConfig(sqConfig, "file browser");
+		pDirOperatorList->setMode(KFile::Files);
+		pDirOperatorList->setView(KFile::Simple);
+		pDirOperatorList->view()->actionCollection()->action(2)->activate();
+		pDirOperatorList->setURL(getURL(), true);
+		int iconsize = *(pIconSizeList->at(iCurrentListIndex));
+		pDirOperatorList->setIconSize(iconsize);
+
+		connect(pDirOperatorList, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
+		addWidget(pDirOperatorList, 0);
+	}
 	if(id == 1 && pDirOperatorIcon == 0L)
 	{
 		pDirOperatorIcon = new SQ_DirOperator(KURL("/"));
@@ -201,12 +198,11 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorIcon->setMode(KFile::Files);
 		pDirOperatorIcon->setView(KFile::Simple);
 		pDirOperatorIcon->view()->actionCollection()->action(1)->activate();
-		pDirOperatorIcon->setNameFilter(pDirOperatorList->nameFilter());
 		pDirOperatorIcon->setURL(getURL(), true);
 		int iconsize = *(pIconSizeList->at(iCurrentIconIndex));
 		pDirOperatorIcon->setIconSize(iconsize);
 
-		connect(pDirOperatorIcon, SIGNAL(urlEntered(const KURL&)), this, SLOT(setURL(const KURL&)));
+		connect(pDirOperatorIcon, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
 		addWidget(pDirOperatorIcon, 1);
 	}
 	else if(id == 2 &&  pDirOperatorDetail == 0L)
@@ -216,13 +212,51 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorDetail->setViewConfig(sqConfig, "file browser");
 		pDirOperatorDetail->setMode(KFile::Files);
 		pDirOperatorDetail->setView(KFile::Detail);
-		pDirOperatorDetail->setNameFilter(pDirOperatorList->nameFilter());
 		pDirOperatorDetail->setURL(getURL(), true);
 
-		connect(pDirOperatorDetail, SIGNAL(urlEntered(const KURL&)), this, SLOT(setURL(const KURL&)));
+		connect(pDirOperatorDetail, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
 		addWidget(pDirOperatorDetail, 2);
 	}
 
 	// and raise widget
 	QWidgetStack::raiseWidget(id);
+}
+
+const KFileItemList* SQ_WidgetStack::selectedItems() const
+{
+	KFileView *local;
+
+	local = ((SQ_DirOperator*)visibleWidget())->fileview;
+
+	return local->selectedItems();	
+}
+
+void SQ_WidgetStack::raiseFirst(int id)
+{
+	QString path;
+
+	sqConfig->setGroup("Fileview");
+	switch(sqConfig->readNumEntry("set path", 1))
+	{
+		case 2: path = sqConfig->readEntry("custom directory", "/"); break;
+		case 1: path = ""; break;
+		case 0: path = sqConfig->readEntry("last visited", "/"); break;
+		default: path = "/";
+	}
+
+	raiseWidget(id);
+
+	SQ_DirOperator *dirop = (SQ_DirOperator*)visibleWidget();
+	dirop->setURL(path, true);
+	
+	pABack = dirop->actionCollection()->action("back");
+	pAForw = dirop->actionCollection()->action("forward");
+	pAUp = dirop->actionCollection()->action("up");
+	pARefresh = dirop->actionCollection()->action("reload");
+	pAHome = dirop->actionCollection()->action("home");
+	pANewDir = dirop->actionCollection()->action("mkdir");
+	pAProp = dirop->actionCollection()->action("properties");
+	pADelete = dirop->actionCollection()->action("delete");
+	pAIconSmaller = new KAction("Smaller icons", sqLoader->loadIcon("viewmag-", KIcon::Desktop, 22), KShortcut(CTRL+Key_Minus), this, SLOT(slotSetIconSmaller()), sqApp->actionCollection(), "Set smaller icons");
+	pAIconBigger = new KAction("Bigger icons", sqLoader->loadIcon("viewmag+", KIcon::Desktop, 22), KShortcut(CTRL+Key_Plus), this, SLOT(slotSetIconBigger()), sqApp->actionCollection(), "Set bigger icons");
 }

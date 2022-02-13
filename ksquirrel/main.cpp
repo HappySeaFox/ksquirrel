@@ -22,9 +22,7 @@
 
 #include "ksquirrel.h"
 #include "sq_about.h"
-
 #include "sq_version.h"
-
 #include "sq_application.h"
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -37,22 +35,41 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-	aboutData.addAuthor("CKulT", 0, "squirrel-sf@yandex.ru");
-	aboutData.addCredit("", "", "", 0);
-	
+	QString			name_app;
+	Squirrel 			*SQ;
+
+	aboutData.addAuthor("CKulT", "Author, first programming, code cleanups,\nfisrt GL viewer.", "squirrel-sf@yandex.ru", "http://ckult.narod.ru");
+	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org.ru");
+	aboutData.addCredit("A great description of various file formats at", 0, 0, "http://www.wotsit.org");
+	aboutData.addCredit("Special thanks to: Axiome, Converter,");
+	aboutData.addCredit("Front Line Assembly, Hocico, Hybrids,");
+	aboutData.addCredit("Hypnoskull, Mlada Fronta, Mono No Aware,");
+	aboutData.addCredit("Shinjuku Thief, Synapscape, Dive,");
+	aboutData.addCredit("Noise Unit, Sonar, Somatic Responses,");
+	aboutData.addCredit("Gods Tower, Dimmu Borgir, Nine Inch Nails,");
+	aboutData.addCredit("Therion, Brujeria, Children of Bodom,");
+	aboutData.addCredit("In Extremo, Rammstein, Fear Factory,");
+	aboutData.addCredit("and other mad industrial & rock'n'roll men.");
+	aboutData.addCredit("Your music is a great support for me.");
+	aboutData.addCredit(" ");
+
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
-	SQ_Application a;
+	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
-	char name_app[100];
-	sprintf(name_app, "%s%d", APP, version);
+	// create app after KCmdLineArgs::init(...) !
+	SQ_Application	a;
 
-	Squirrel *SQ = new Squirrel;
+	name_app.sprintf("%s%d", APP, version);
+
+	SQ = new Squirrel;
 	SQ->setCaption(name_app);
 
 	a.setMainWidget(SQ);
 
 	a.dcopClient()->registerAs("ksquirrel");
+
+	sq_args->clear();
 
 	return a.exec();
 }

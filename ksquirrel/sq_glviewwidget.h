@@ -29,6 +29,21 @@
 
 class SQ_Decoder;
 
+// thanks to GLiv
+static GLfloat matrix[8] =
+{
+	1.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f, 0.0f
+};
+
+#define	MATRIX_C1	matrix[0]
+#define	MATRIX_S1	matrix[1]
+#define	MATRIX_X	matrix[3]
+#define	MATRIX_S2	matrix[4]
+#define	MATRIX_C2	matrix[5]
+#define	MATRIX_Y	matrix[7]
+
+
 class SQ_GLViewWidget : public QGLWidget
 {
 	Q_OBJECT
@@ -43,8 +58,6 @@ class SQ_GLViewWidget : public QGLWidget
 
 		GLfloat fogcolor[4];
 
-		int xmoveold, ymoveold, xmove, ymove;
-
 	public:
 		SQ_GLViewWidget(QWidget *parent = 0, const char *name = 0);
 		~SQ_GLViewWidget();
@@ -57,6 +70,7 @@ class SQ_GLViewWidget : public QGLWidget
 		bool showIfCan(const QString &file);
 
 		GLint 			ZoomModel, ShadeModel;
+		GLint			ZoomModelArray[2], ShadeModelArray[2];
 		SQ_Decoder		*decoder;
 
 		KAction *pARotate, *pAZoomPlus, *pAZoomMinus;
@@ -67,10 +81,6 @@ class SQ_GLViewWidget : public QGLWidget
 		void resizeGL(int,int);
 		void wheelEvent(QWheelEvent *);
 		void keyPressEvent(QKeyEvent *);
-
-		void mousePressEvent(QMouseEvent *);
-		void mouseReleaseEvent(QMouseEvent *);
-		void mouseMoveEvent(QMouseEvent *);
 
 		void dragEnterEvent(QDragEnterEvent *);
 		void dropEvent(QDropEvent *);

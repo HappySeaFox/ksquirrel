@@ -19,38 +19,12 @@
 
 #include <qmessagebox.h>
 
-SQ_LibraryHandler::SQ_LibraryHandler(QStringList &foundLibraries, QObject *parent, const char *name) : QObject(parent, name), currentlib(0)
+SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries, QObject *parent, const char *name) : QObject(parent, name), currentlib(0)
 {
 	libs = new QValueList<SQ_LIBRARY>;
 
-	QValueList<QString>::iterator   BEGIN = foundLibraries.begin();
-	QValueList<QString>::iterator      END = foundLibraries.end();
-
-	if(BEGIN == END) return;
-
-	for(QValueList<QString>::iterator it = BEGIN;it != END;it++)
-	{
-//		QString tmp = *it;
-		SQ_LIBRARY libtmp;
-
-//		tmp = tmp.replace("/usr/lib/squirrel/libSQ_serve_", "");
-//		tmp = tmp.replace(".so", "");
-		
-		libtmp.lib = new QLibrary(*it);
-		libtmp.libpath = *it;
-		//@todo 'Preload' runlevel needs load(), otherwise - not.
-		libtmp.lib->load();
-		libtmp.readformat = (int (*)(const char*, PICTURE **))(libtmp.lib)->resolve("readformat");
-		libtmp.writeformat = (int (*)(const char*, PICTURE **))(libtmp.lib)->resolve("writeformat");
-		libtmp.readable = (int (*)())(libtmp.lib)->resolve("readable");
-		libtmp.writeable = (int (*)())(libtmp.lib)->resolve("writeable");
-		libtmp.version = (char* (*)())(libtmp.lib)->resolve("version");
-		libtmp.info = (char* (*)())(libtmp.lib)->resolve("info");
-		libtmp.extension = (char* (*)())(libtmp.lib)->resolve("extension");
-		libtmp.sinfo = QString(libtmp.extension());
-
-		libs->append(libtmp);
-	}
+	if(foundLibraries)
+		reInit(foundLibraries);
 }
 
 SQ_LibraryHandler::~SQ_LibraryHandler()
@@ -109,4 +83,48 @@ QString SQ_LibraryHandler::allSupportedForFilter() const
 		ret = ret + QString((*it).sinfo) + " ";
 
 	return ret;
+}
+
+void SQ_LibraryHandler::clear()
+{
+	libs->clear();
+}
+
+void SQ_LibraryHandler::reInit(QStringList *foundLibraries)
+{
+	libs->clear();
+
+	QValueList<QString>::iterator   BEGIN = foundLibraries->begin();
+	QValueList<QString>::iterator      END = foundLibraries->end();
+
+	if(BEGIN == END) return;
+
+	for(QValueList<QString>::iterator it = BEGIN;it != END;it++)
+	{
+		SQ_LIBRARY libtmp;
+
+		libtmp.lib = new QLibrary(*it);
+		libtmp.libpath = *it;
+		libtmp.lib->load();
+
+		libtmp.fmt_init = (int (*)(fmt_info *, const char *))(libtmp.lib)->resolve("fmt_init");
+		libtmp.fmt_read_info = (int (*)(fmt_info *))(libtmp.lib)->resolve("fmt_read_info");
+		libtmp.fmt_read_scanline = (int (*)(fmt_info *, RGBA*))(libtmp.lib)->resolve("fmt_read_scanline");
+
+		libtmp.readformat = (int (*)(const char*, PICTURE **))(libtmp.lib)->resolve("readformat");
+		libtmp.writeformat = (int (*)(const char*, PICTURE **))(libtmp.lib)->resolve("writeformat");
+		libtmp.fmt_readable = (int (*)())(libtmp.lib)->resolve("fmt_readable");
+		libtmp.fmt_writeable = (int (*)())(libtmp.lib)->resolve("fmt_writeable");
+		libtmp.fmt_version = (char* (*)())(libtmp.lib)->resolve("fmt_version");
+		libtmp.fmt_quickinfo = (char* (*)())(libtmp.lib)->resolve("fmt_quickinfo");
+		libtmp.fmt_extension = (char* (*)())(libtmp.lib)->resolve("fmt_extension");
+		libtmp.sinfo = QString(libtmp.fmt_extension());
+
+		if(libtmp.readformat == 0)
+			if(QMessageBox::warning(0, "SQ_LibHandler", "Library \""+libtmp.libpath+"\" doesn't contain one of fmt_* function.", QMessageBox::Ignore, QMessageBox::Abort) == QMessageBox::Abort)
+				break;
+			else;
+      		else
+			libs->append(libtmp);
+	}
 }

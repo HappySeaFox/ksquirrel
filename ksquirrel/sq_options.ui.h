@@ -21,6 +21,7 @@ void SQ_Options::init()
     a[2] = QPixmap::fromMimeSource("images/view_kuickshow.png");
     a[3] = QPixmap::fromMimeSource("images/view_winviewer.png");
     a[4] = QPixmap::fromMimeSource("images/view_xnview.png");
+    a[5] = QPixmap::fromMimeSource("images/view_xnview.png");
     
     sqConfig->setGroup("Main");
     checkSplash->setChecked(sqConfig->readBoolEntry("show splash", true));
@@ -29,14 +30,19 @@ void SQ_Options::init()
     
     sqConfig->setGroup("Interface");
     comboToolbarIconSize->setCurrentItem(sqConfig->readNumEntry("toolbar icon size", 0));
+    tp = sqConfig->readNumEntry("create first", 0);
+    ((QRadioButton*)(buttonGroupCreateFirst->find(tp)))->setChecked(true);
     
     sqConfig->setGroup("Fileview");
     comboIconIndex->setCurrentItem(sqConfig->readNumEntry("iCurrentIconIndex", 0));
     comboListIndex->setCurrentItem(sqConfig->readNumEntry("iCurrentListIndex", 0));
-//    checkLastVisited->setChecked(sqConfig->readBoolEntry("set last visited", true));
     tp = sqConfig->readNumEntry("set path", 0);
     ((QRadioButton*)(buttonGroupSetPath->find(tp)))->setChecked(true);
     checkSyncTree->setChecked(sqConfig->readBoolEntry("sync tree & fileview", false));
+    lineEditCustomDir->setText(sqConfig->readEntry("custom directory", "/"));
+    tp = sqConfig->readNumEntry("click policy custom", 0);
+    ((QRadioButton*)(buttonGroupClickPolicy->find(tp)))->setChecked(true);
+    if(sqConfig->readBoolEntry("click policy system", true)) checkClickSystem->toggle();
 
     tp = sqViewType;
     pixmapShowView->setPixmap(a[tp]);
@@ -49,6 +55,7 @@ void SQ_Options::init()
     ((QRadioButton*)(buttonGroupShadeModel->find(tp)))->setChecked(true);
     checkAdjust->setChecked(sqConfig->readBoolEntry("adjust image", false));
     kColorGLbackground->setColor(sqGLViewBGColor);
+    checkDrop->setChecked(sqConfig->readBoolEntry("enable drop", true));
 
     tableLib->addColumn("Library");
     tableLib->addColumn("Info");
@@ -150,6 +157,7 @@ void SQ_Options::start()
 //	sqConfig->writeEntry("set last visited", checkLastVisited->isChecked());
 	sqConfig->writeEntry("ViewType", buttonGroupViewType->id(buttonGroupViewType->selected()));
 	sqConfig->writeEntry("toolbar icon size", comboToolbarIconSize->currentItem());
+	sqConfig->writeEntry("create first", buttonGroupCreateFirst->id(buttonGroupCreateFirst->selected()));
 
 	sqConfig->setGroup("Fileview");
 	sqConfig->writeEntry("set path", buttonGroupSetPath->id(buttonGroupSetPath->selected()));
@@ -157,6 +165,9 @@ void SQ_Options::start()
 	sqConfig->writeEntry("iCurrentIconIndex", comboIconIndex->currentItem());
 	sqConfig->writeEntry("iCurrentListIndex", comboListIndex->currentItem());
 	sqConfig->writeEntry("sync tree & fileview", checkSyncTree->isChecked());
+	sqConfig->writeEntry("click policy custom", buttonGroupClickPolicy->id(buttonGroupClickPolicy->selected()));
+	sqConfig->writeEntry("click policy system", checkClickSystem->isChecked());
+
 
 	// write color later
 	sqConfig->setGroup("Main");
@@ -170,6 +181,7 @@ void SQ_Options::start()
 	sqConfig->writeEntry("adjust image", checkAdjust->isChecked());
 	sqConfig->writeEntry("zoom model", buttonGroupZoomModel->id(buttonGroupZoomModel->selected()));
 	sqConfig->writeEntry("shade model", buttonGroupShadeModel->id(buttonGroupShadeModel->selected()));
+	sqConfig->writeEntry("enable drop", checkDrop->isChecked());
 	
 	sqConfig->sync();
     }
@@ -194,6 +206,6 @@ void SQ_Options::slotShowLinks( bool show )
 	    if(libfileinfo.isSymLink()) continue;
 	}
 	path.replace(sqLibPrefix, "");
-	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.info()), QString(tmplib.version()), QString(tmplib.extension()), QString(((tmplib.readable())?"Yes":"No")), QString(((tmplib.writeable())?"Yes":"No"))));
+	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.fmt_quickinfo()), QString(tmplib.fmt_version()), QString(tmplib.sinfo), QString(((tmplib.fmt_readable())?"Yes":"No")), QString(((tmplib.fmt_writeable())?"Yes":"No"))));
     }
 }

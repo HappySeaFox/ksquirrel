@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>630</width>
-            <height>443</height>
+            <width>632</width>
+            <height>468</height>
         </rect>
     </property>
     <property name="minimumSize">
@@ -224,154 +224,6 @@
                 <attribute name="id">
                     <number>1</number>
                 </attribute>
-                <widget class="QButtonGroup">
-                    <property name="name">
-                        <cstring>buttonGroupViewType</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>8</x>
-                            <y>8</y>
-                            <width>410</width>
-                            <height>160</height>
-                        </rect>
-                    </property>
-                    <property name="title">
-                        <string>Look like ...</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Change appearance</string>
-                    </property>
-                    <widget class="QLabel">
-                        <property name="name">
-                            <cstring>pixmapShowView</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>155</x>
-                                <y>20</y>
-                                <width>241</width>
-                                <height>130</height>
-                            </rect>
-                        </property>
-                        <property name="scaledContents">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioSQuirrel</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>15</x>
-                                <y>35</y>
-                                <width>120</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>SQuirrel</string>
-                        </property>
-                        <property name="checked">
-                            <bool>false</bool>
-                        </property>
-                        <property name="buttonGroupId">
-                            <number>0</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Like SQuirrel. Has TreeView, FileView, separate GLView</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioGQview</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>15</x>
-                                <y>55</y>
-                                <width>120</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>GQview</string>
-                        </property>
-                        <property name="buttonGroupId">
-                            <number>1</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Like GQview. Has FileView, built-in GLView</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioKuickShow</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>15</x>
-                                <y>75</y>
-                                <width>120</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>KuickShow</string>
-                        </property>
-                        <property name="buttonGroupId">
-                            <number>2</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Like Kuickshow. Has FileView, separate GLView</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioWinViewer</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>15</x>
-                                <y>95</y>
-                                <width>120</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>WinViewer</string>
-                        </property>
-                        <property name="buttonGroupId">
-                            <number>3</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Like Windows Picture and Fax viewer. Has only built-in GLView</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioXnview</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>15</x>
-                                <y>115</y>
-                                <width>120</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>XnView</string>
-                        </property>
-                        <property name="buttonGroupId">
-                            <number>4</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Like XnView. Has TreeView, FileView, built-in GLView</string>
-                        </property>
-                    </widget>
-                </widget>
                 <widget class="QLabel">
                     <property name="name">
                         <cstring>textLabel1_3</cstring>
@@ -379,7 +231,7 @@
                     <property name="geometry">
                         <rect>
                             <x>15</x>
-                            <y>190</y>
+                            <y>300</y>
                             <width>110</width>
                             <height>16</height>
                         </rect>
@@ -415,319 +267,25 @@
                     <property name="geometry">
                         <rect>
                             <x>130</x>
-                            <y>190</y>
+                            <y>300</y>
                             <width>80</width>
                             <height>25</height>
                         </rect>
                     </property>
                     <property name="currentItem">
                         <number>0</number>
-                    </property>
-                </widget>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>page</cstring>
-                </property>
-                <attribute name="id">
-                    <number>2</number>
-                </attribute>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>textLabel1_2</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>15</x>
-                            <y>125</y>
-                            <width>184</width>
-                            <height>15</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>default icon size for "Icon View"</string>
-                    </property>
-                </widget>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>textLabel2</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>15</x>
-                            <y>165</y>
-                            <width>180</width>
-                            <height>15</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>default icon size for "List View"</string>
                     </property>
                 </widget>
                 <widget class="QButtonGroup">
                     <property name="name">
-                        <cstring>buttonGroupSetPath</cstring>
+                        <cstring>buttonGroupViewType</cstring>
                     </property>
                     <property name="geometry">
                         <rect>
-                            <x>11</x>
-                            <y>7</y>
-                            <width>470</width>
-                            <height>105</height>
-                        </rect>
-                    </property>
-                    <property name="title">
-                        <string>&lt;NI&gt;Set path ...</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string></string>
-                    </property>
-                    <widget class="QLineEdit">
-                        <property name="name">
-                            <cstring>lineEditCustomDir</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>105</x>
-                                <y>70</y>
-                                <width>290</width>
-                                <height>25</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton">
-                        <property name="name">
-                            <cstring>pushOpenDir</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>400</x>
-                                <y>70</y>
-                                <width>55</width>
-                                <height>26</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Open</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioSetLast</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>20</y>
-                                <width>90</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Set last</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioSetCurrent</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>45</y>
-                                <width>90</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Set current</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>radioSetThis</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>70</y>
-                                <width>90</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Set this</string>
-                        </property>
-                    </widget>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>checkSyncTree</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>15</x>
-                            <y>210</y>
-                            <width>270</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>&lt;NI&gt;Syncronize Tree i FIleView</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Change path in TreeVire and FileView &lt;&gt;</string>
-                    </property>
-                </widget>
-                <widget class="QComboBox">
-                    <item>
-                        <property name="text">
-                            <string>16</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>22</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>32</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>48</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>64</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>96</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>128</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>192</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>256</string>
-                        </property>
-                    </item>
-                    <property name="name">
-                        <cstring>comboIconIndex</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>210</x>
-                            <y>125</y>
-                            <width>80</width>
-                            <height>25</height>
-                        </rect>
-                    </property>
-                    <property name="currentItem">
-                        <number>0</number>
-                    </property>
-                    <property name="maxCount">
-                        <number>20</number>
-                    </property>
-                </widget>
-                <widget class="QComboBox">
-                    <item>
-                        <property name="text">
-                            <string>16</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>22</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>32</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>48</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>64</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>96</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>128</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>192</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>256</string>
-                        </property>
-                    </item>
-                    <property name="name">
-                        <cstring>comboListIndex</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>210</x>
-                            <y>165</y>
-                            <width>80</width>
-                            <height>25</height>
-                        </rect>
-                    </property>
-                    <property name="currentItem">
-                        <number>0</number>
-                    </property>
-                </widget>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>page</cstring>
-                </property>
-                <attribute name="id">
-                    <number>3</number>
-                </attribute>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>textPrefix</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>75</x>
-                            <y>10</y>
-                            <width>385</width>
-                            <height>25</height>
+                            <x>8</x>
+                            <y>8</y>
+                            <width>410</width>
+                            <height>165</height>
                         </rect>
                     </property>
                     <property name="sizePolicy">
@@ -738,81 +296,781 @@
                             <verstretch>0</verstretch>
                         </sizepolicy>
                     </property>
-                    <property name="text">
-                        <string></string>
+                    <property name="title">
+                        <string>Look like ...</string>
                     </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Where SQuirrel should search libraries</string>
-                    </property>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioSQuirrel</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>15</x>
+                                <y>30</y>
+                                <width>120</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>SQuirrel</string>
+                        </property>
+                        <property name="checked">
+                            <bool>false</bool>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>0</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Like SQuirrel. Has TreeView, FileView, separate GLView</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioWinViewer</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>15</x>
+                                <y>90</y>
+                                <width>120</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>WinViewer</string>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>3</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Like Windows Picture and Fax viewer. Has only built-in GLView</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioXnview</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>15</x>
+                                <y>110</y>
+                                <width>120</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>XnView</string>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>4</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Like XnView. Has TreeView, FileView, built-in GLView</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioButton13</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>15</x>
+                                <y>130</y>
+                                <width>120</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>&lt;NI&gt;Konqueror</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Like Konqueror. GLView toglles with FileView</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioGQview</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>15</x>
+                                <y>50</y>
+                                <width>120</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>GQview</string>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>1</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Like GQview. Has FileView, built-in GLView</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioKuickShow</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>15</x>
+                                <y>70</y>
+                                <width>120</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>KuickShow</string>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>2</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Like Kuickshow. Has FileView, separate GLView</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>pixmapShowView</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>155</x>
+                                <y>20</y>
+                                <width>241</width>
+                                <height>130</height>
+                            </rect>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
                 </widget>
-                <widget class="QLabel">
+                <widget class="QButtonGroup">
                     <property name="name">
-                        <cstring>textLabel1</cstring>
+                        <cstring>buttonGroupCreateFirst</cstring>
                     </property>
                     <property name="geometry">
                         <rect>
                             <x>10</x>
-                            <y>10</y>
-                            <width>57</width>
-                            <height>25</height>
+                            <y>180</y>
+                            <width>405</width>
+                            <height>100</height>
                         </rect>
                     </property>
                     <property name="sizePolicy">
                         <sizepolicy>
-                            <hsizetype>0</hsizetype>
+                            <hsizetype>5</hsizetype>
                             <vsizetype>0</vsizetype>
                             <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
                         </sizepolicy>
                     </property>
-                    <property name="text">
-                        <string>$PREFIX:</string>
+                    <property name="title">
+                        <string>Create first ...</string>
                     </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Where SQuirrel should search libraries</string>
-                    </property>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioButton15</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>25</y>
+                                <width>80</width>
+                                <height>21</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>List View</string>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>0</number>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioButton14</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>45</y>
+                                <width>86</width>
+                                <height>21</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>Icon View</string>
+                        </property>
+                        <property name="buttonGroupId">
+                            <number>1</number>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioButton16</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>65</y>
+                                <width>106</width>
+                                <height>21</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>Detailed View</string>
+                        </property>
+                    </widget>
                 </widget>
-                <widget class="QCheckBox">
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>page</cstring>
+                </property>
+                <attribute name="id">
+                    <number>2</number>
+                </attribute>
+                <grid>
                     <property name="name">
-                        <cstring>checkShowLinks</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>10</x>
-                            <y>40</y>
-                            <width>185</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>show 'symlink' libraries</string>
-                    </property>
-                    <property name="checked">
-                        <bool>true</bool>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>If not checked, this table will contain only real .so files, not symlinks</string>
-                    </property>
-                </widget>
-                <widget class="QListView">
+                    <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>buttonGroupSetPath</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="title">
+                            <string>Set path ...</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string></string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>radioSetLast</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Set last</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>radioSetCurrent</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Set current</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>radioSetThis</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Set this</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit" row="2" column="1">
+                                <property name="name">
+                                    <cstring>lineEditCustomDir</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton" row="2" column="2">
+                                <property name="name">
+                                    <cstring>pushOpenDir</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Open</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>checkSyncTree</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;NI&gt;Syncronize Tree i FIleView</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>TreeView and FileView will have common path</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>default icon size for "List View"</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>checkRunUnknown</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;NI&gt;Run unknown file formats separately</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>For example, run unsupported "png" format in kuickshow</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>default icon size for "Icon View"</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="1" column="2" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>16</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>22</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>32</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>48</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>64</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>96</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>128</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>192</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>256</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>comboIconIndex</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>1</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="currentItem">
+                            <number>0</number>
+                        </property>
+                        <property name="maxCount">
+                            <number>20</number>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="2" column="2" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>16</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>22</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>32</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>48</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>64</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>96</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>128</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>192</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>256</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>comboListIndex</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>1</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="currentItem">
+                            <number>0</number>
+                        </property>
+                    </widget>
+                    <spacer row="1" column="4">
+                        <property name="name">
+                            <cstring>spacer5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>185</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="2" column="4">
+                        <property name="name">
+                            <cstring>spacer6</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>185</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="7" column="4">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Minimum</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>16</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="6" column="0">
+                        <property name="name">
+                            <cstring>spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>45</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>checkClickSystem</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Use system settings for clicking policy</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>if KDE uses single click to open item, SQuirrel will have too</string>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="6" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>buttonGroupClickPolicy</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="frameShape">
+                            <enum>NoFrame</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="title">
+                            <string></string>
+                        </property>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>radioButton18</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>0</x>
+                                    <y>20</y>
+                                    <width>161</width>
+                                    <height>21</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>Use double click policy</string>
+                            </property>
+                            <property name="buttonGroupId">
+                                <number>1</number>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>radioButton17</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>0</x>
+                                    <y>0</y>
+                                    <width>157</width>
+                                    <height>21</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>Use single click policy</string>
+                            </property>
+                            <property name="checked">
+                                <bool>false</bool>
+                            </property>
+                            <property name="buttonGroupId">
+                                <number>0</number>
+                            </property>
+                        </widget>
+                    </widget>
+                    <spacer row="6" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>270</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>page</cstring>
+                </property>
+                <attribute name="id">
+                    <number>3</number>
+                </attribute>
+                <grid>
                     <property name="name">
-                        <cstring>tableLib</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>0</x>
-                            <y>70</y>
-                            <width>495</width>
-                            <height>305</height>
-                        </rect>
-                    </property>
-                    <property name="frameShape">
-                        <enum>NoFrame</enum>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Contains information about all found libraries</string>
-                    </property>
-                </widget>
+                    <widget class="QLabel" row="0" column="1">
+                        <property name="name">
+                            <cstring>textPrefix</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Where SQuirrel should search libraries</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>0</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>$PREFIX:</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Where SQuirrel should search libraries</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>checkFAMDetectNew</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;NI&gt;detect new libraries automatically</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>checkFAMMessage</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>&lt;NI&gt;Show message</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>checkShowLinks</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>1</hsizetype>
+                                <vsizetype>1</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>show 'symlink' libraries</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>If not checked, this table will contain only real .so files, not symlinks</string>
+                        </property>
+                    </widget>
+                    <widget class="QListView" row="5" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>tableLib</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>NoFrame</enum>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Contains information about all found libraries</string>
+                        </property>
+                    </widget>
+                    <widget class="Line" row="4" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>line1</cstring>
+                        </property>
+                        <property name="paletteForegroundColor">
+                            <color>
+                                <red>38</red>
+                                <green>255</green>
+                                <blue>0</blue>
+                            </color>
+                        </property>
+                        <property name="paletteBackgroundColor">
+                            <color>
+                                <red>68</red>
+                                <green>255</green>
+                                <blue>0</blue>
+                            </color>
+                        </property>
+                        <property name="frameShape">
+                            <enum>HLine</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                    </widget>
+                </grid>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -908,60 +1166,6 @@
                             <attribute name="title">
                                 <string>Main</string>
                             </attribute>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>checkAdjust</cstring>
-                                </property>
-                                <property name="geometry">
-                                    <rect>
-                                        <x>15</x>
-                                        <y>80</y>
-                                        <width>200</width>
-                                        <height>20</height>
-                                    </rect>
-                                </property>
-                                <property name="text">
-                                    <string>&lt;NI&gt;adjust image</string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Adjust image to fit free space</string>
-                                </property>
-                            </widget>
-                            <widget class="KColorButton">
-                                <property name="name">
-                                    <cstring>kColorGLbackground</cstring>
-                                </property>
-                                <property name="geometry">
-                                    <rect>
-                                        <x>100</x>
-                                        <y>20</y>
-                                        <width>95</width>
-                                        <height>35</height>
-                                    </rect>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>GLView will have such background color</string>
-                                </property>
-                            </widget>
-                            <widget class="QLabel">
-                                <property name="name">
-                                    <cstring>textLabel1_5</cstring>
-                                </property>
-                                <property name="geometry">
-                                    <rect>
-                                        <x>15</x>
-                                        <y>30</y>
-                                        <width>75</width>
-                                        <height>16</height>
-                                    </rect>
-                                </property>
-                                <property name="text">
-                                    <string>Background:</string>
-                                </property>
-                            </widget>
                             <widget class="QButtonGroup">
                                 <property name="name">
                                     <cstring>buttonGroupShadeModel</cstring>
@@ -1015,6 +1219,76 @@
                                         <number>0</number>
                                     </property>
                                 </widget>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>checkDrop</cstring>
+                                </property>
+                                <property name="geometry">
+                                    <rect>
+                                        <x>13</x>
+                                        <y>215</y>
+                                        <width>200</width>
+                                        <height>21</height>
+                                    </rect>
+                                </property>
+                                <property name="text">
+                                    <string>Enable drop</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel1_5</cstring>
+                                </property>
+                                <property name="geometry">
+                                    <rect>
+                                        <x>15</x>
+                                        <y>30</y>
+                                        <width>75</width>
+                                        <height>16</height>
+                                    </rect>
+                                </property>
+                                <property name="text">
+                                    <string>Background:</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>checkAdjust</cstring>
+                                </property>
+                                <property name="geometry">
+                                    <rect>
+                                        <x>15</x>
+                                        <y>80</y>
+                                        <width>200</width>
+                                        <height>20</height>
+                                    </rect>
+                                </property>
+                                <property name="text">
+                                    <string>&lt;NI&gt;adjust image</string>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>Adjust image to fit free space</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton">
+                                <property name="name">
+                                    <cstring>kColorGLbackground</cstring>
+                                </property>
+                                <property name="geometry">
+                                    <rect>
+                                        <x>100</x>
+                                        <y>20</y>
+                                        <width>95</width>
+                                        <height>35</height>
+                                    </rect>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>GLView will have such background color</string>
+                                </property>
                             </widget>
                         </widget>
                         <widget class="QWidget">
@@ -1183,15 +1457,27 @@
         <slot>slotDirCache()</slot>
     </connection>
     <connection>
+        <sender>radioSetThis</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>lineEditCustomDir</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkFAMDetectNew</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkFAMMessage</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
         <sender>checkShowLinks</sender>
         <signal>toggled(bool)</signal>
         <receiver>SQ_Options</receiver>
         <slot>slotShowLinks(bool)</slot>
     </connection>
     <connection>
-        <sender>radioSetThis</sender>
+        <sender>checkClickSystem</sender>
         <signal>toggled(bool)</signal>
-        <receiver>lineEditCustomDir</receiver>
+        <receiver>buttonGroupClickPolicy</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>
@@ -1204,10 +1490,10 @@
     <include location="local" impldecl="in implementation">sq_options.ui.h</include>
 </includes>
 <variables>
-    <variable>bool showlinks;</variable>
-    <variable>typedef struct { QListViewItem *item; int id;} ListViewItemID;</variable>
-    <variable access="private">QPixmap a[5];</variable>
     <variable>QListViewItem *itemMain,*itemInterface,*itemFileView,*itemLibraries, *itemCache, *itemGLview;</variable>
+    <variable access="private">QPixmap a[6];</variable>
+    <variable>typedef struct { QListViewItem *item; int id;} ListViewItemID;</variable>
+    <variable>bool showlinks;</variable>
 </variables>
 <slots>
     <slot>slotSelectPage( int page )</slot>

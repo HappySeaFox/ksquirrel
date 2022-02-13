@@ -1,27 +1,41 @@
+X - done
+W - now working
+
+
 GL view
-	[    ]  scrollbars
-	[    ]  editable zoomfactor
-	[    ]  "currentzoom = N%"
-	[    ]  gradually drawing (string by string)
+	[   ]  scrollbars
+	[   ]  editable zoomfactor
+	[   ]  "currentzoom = N%"
+	[ W ]  step-by-step drawing
+	[   ]  border around a picture
+	[   ]  all operations (rotate, flip ...) - with matrices!
+	[   ]  background for transparent images (and for all other ;))
 
 Libraries
-	[    ]  gradually decoding (string by string)
-	[ X ] not-compressed BMP
-	[ X ] not-grayscale jpeg
-	[    ] PNM
-	[    ] png
-	[    ] gif
-	[    ] ico, cur
+	[   ]  file mapping
+	[ W ]  step-by-step decoding
+	[ X ]  not-compressed BMP
+	[ X ]  not-grayscale jpeg
+	[ W ]  grayscale jpeg
+	[ W ]  PNM
+	[   ]  png
+	[   ]  gif
+	[   ]  ico, cur
+	[ W ]  PCX
+	[ W ]  FAM support (hot detection of new libraries)
 
 Fileview
-	[ X ] WidgetStack
-	[ X ] "Run separately"
-	[ X ] Communication with statusbar
+	[ X ]  WidgetStack
+	[ X ] "Run separately" menuitem
+	[ X ]  Communication with statusbar
+	[   ]  "Convert images" menuitem
+	[   ]  hide "Thumbnail preview" menuitem
 
 Interface
-	[ X ] Mutable interface (Kuickshow, XnView ...)
+	[ X ]  Mutable interface (Kuickshow, XnView ...)
 
 Main
-	[    ] Activate old instance, when running new one
-	[    ] Command line support
-	[    ] Associate SQuirrel with images
+	[   ]  IPC, based on sockets(AF_UNIX), like xmms, or, probably on DCOP.
+	[   ]  Activate old instance, when running new one
+	[ W ]  Command line support
+	[   ]  Associate SQuirrel with images

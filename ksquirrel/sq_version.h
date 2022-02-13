@@ -19,7 +19,7 @@
 #define __APP_VERSION__
 
 const char APP[] = "Squirrel development build #";
-const int version=2866;
+const int version=3090;
 
 #endif
 

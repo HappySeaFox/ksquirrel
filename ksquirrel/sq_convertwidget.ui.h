@@ -8,6 +8,19 @@
 *****************************************************************************/
 
 
+void SQ_ConvertWidget::init()
+{
+    selected = (KFileItemList *)sqWStack->selectedItems();
+    
+    QPtrListIterator<KFileItem> it(*selected);
+  
+    for(; it.current(); ++it)
+	if(it.current()->isFile())
+	    listFiles->insertItem(it.current()->name());
+    
+    listFiles->sort();
+}
+
 void SQ_ConvertWidget::slotOpenDir()
 {
     QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");

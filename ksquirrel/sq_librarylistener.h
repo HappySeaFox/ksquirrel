@@ -1,7 +1,7 @@
 /***************************************************************************
-                          sq_fileiconview.h  -  description
+                          sq_librarylistener.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
+    begin                : Fri Mar 26 2004
     copyright            : (C) 2004 by ckult
     email                : squirrel-sf@yandex.ru
  ***************************************************************************/
@@ -15,33 +15,39 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_FILEICONVIEW_H
-#define SQ_FILEICONVIEW_H
+#ifndef SQ_LIBRARYLISTENER_H
+#define SQ_LIBRARYLISTENER_H
 
-#include <qwidget.h>
-#include <qpoint.h>
-#include <kfileiconview.h>
+#include <qobject.h>
 
-class SQ_FileIconView : public KFileIconView
+class QSocketNotifier;
+class QString;
+class FAMConnection;
+
+/**
+  *@author ckult
+  */
+
+class SQ_LibraryListener : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-	public:
-		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
-	        ~SQ_FileIconView();
+	private:
+		FAMConnection	*fam;
+		QSocketNotifier	*sn;
 
-	protected slots:
-//		void slotDrop(QDropEvent*, const QValueList<QIconDragItem>&);
+		bool openFAM();
 
-	protected:
-		QDragObject *dragObject();
-		void dragEnterEvent(QDragEnterEvent *);
-		void dropEvent(QDropEvent *);
+	public: 
+		SQ_LibraryListener(QObject * parent = 0, const char *name = 0);
+		~SQ_LibraryListener();
 
-	protected slots:
-		void slotSelected(QIconViewItem *item, const QPoint &point);
+		void readFAM();
+		void closeFAM();
+		void startMonitoring(const QString &);
 
+	public slots:
+		void readFAM(int);
 };
-
 
 #endif

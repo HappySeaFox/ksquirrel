@@ -33,29 +33,86 @@
 SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(parent, name)
 {
 	decoder = new SQ_Decoder;
+	setZoomFactor(0.10f);
 
-	setZoomFactor(0.15f);
+	ZoomModelArray[0] = GL_LINEAR;
+	ZoomModelArray[1] = GL_NEAREST;
+	ShadeModelArray[0] = GL_FLAT;
+	ShadeModelArray[1] = GL_SMOOTH;
 
 	sqConfig->setGroup("GL view");
-
-	int tp = sqConfig->readNumEntry("zoom model", 0);
-       if(tp) ZoomModel = GL_NEAREST;
-       else ZoomModel = GL_LINEAR;
-
+	int tp = sqConfig->readNumEntry("zoom model", 1);
+	ZoomModel = ZoomModelArray[tp];
 	tp = sqConfig->readNumEntry("shade model", 0);
-       if(tp) ShadeModel = GL_SMOOTH;
-       else ShadeModel = GL_FLAT;
-	
+       ShadeModel = ShadeModelArray[tp];
+
 	density = 0.0f;
 
-	setFogColor(0.0, 0.9, 0.0, 1);
+	setFogColor(1.0, 1.0, 1.0, 1);
 
-	setFocusPolicy(QWidget::ClickFocus);
-	setAcceptDrops(true);
+	setFocusPolicy(QWidget::WheelFocus);
+	sqConfig->setGroup("GL view");
+	setAcceptDrops(sqConfig->readBoolEntry("enable drop", true));
 }
 
 SQ_GLViewWidget::~SQ_GLViewWidget()
 {}
+
+void SQ_GLViewWidget::initializeGL()
+{
+	const GLdouble koeff = 0.003921568;
+
+	glEnable(GL_TEXTURE_2D);
+	glClearColor(sqGLViewBGColor.red()*koeff, sqGLViewBGColor.green()*koeff, sqGLViewBGColor.blue()*koeff, 0.0f);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_FOG);
+	glFogfv(GL_FOG_COLOR, fogcolor);
+	glFogf(GL_FOG_DENSITY, density);
+	glEnable(GL_ALPHA_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glShadeModel(SQ_GLViewWidget::ShadeModel);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, SQ_GLViewWidget::ZoomModel);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, SQ_GLViewWidget::ZoomModel);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void SQ_GLViewWidget::resizeGL(int width, int height)
+{
+	GLfloat w2 = (width+1) / 2.0f, h2 = (height+1) / 2.0f;
+
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-w2, w2, -h2, h2, 0.1f, 100.0f);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void SQ_GLViewWidget::paintGL()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	GLfloat half_w = (GLfloat)w / 2.0f, half_h = (GLfloat)h / 2.0f;
+
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-half_w, half_h);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( half_w, half_h);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( half_w, -half_h);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-half_w, -half_h);
+	glEnd();
+}
 
 void SQ_GLViewWidget::setZoomFactor(const GLfloat &newfactor)
 {
@@ -80,66 +137,6 @@ const GLfloat* SQ_GLViewWidget::getFogColor() const
 	return fogcolor;
 }
 
-void SQ_GLViewWidget::initializeGL()
-{
-	const GLdouble koeff = 0.003921567;
-
-	glEnable(GL_TEXTURE_2D);
-	glClearColor(sqGLViewBGColor.red()*koeff, sqGLViewBGColor.green()*koeff, sqGLViewBGColor.blue()*koeff, 0.0f);
-	glClearDepth(1.0);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_FOG);
-	glFogfv(GL_FOG_COLOR, fogcolor);
-	glFogf(GL_FOG_DENSITY, density);
-	glEnable(GL_ALPHA_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glShadeModel(SQ_GLViewWidget::ShadeModel);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	glGenTextures(1, &texture[0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, SQ_GLViewWidget::ZoomModel);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, SQ_GLViewWidget::ZoomModel);
-
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, sqGLDecoder->width(), sqGLDecoder->height(), GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -3.5f);
-}
-
-void SQ_GLViewWidget::resizeGL(int width, int height)
-{
-//	GLfloat w2 = (width+1) / 2.0f, h2 = (height+1) / 2.0f;
-
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-//	glOrtho(-w2, w2, -h2, h2, -1.0f, 1.0f);
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
-	glMatrixMode(GL_MODELVIEW);
-}
-
-void SQ_GLViewWidget::paintGL()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(-w/h, 1.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f( w/h, 1.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f( w/h,  -1.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(-w/h,  -1.0f);
-	glEnd();
-}
-
 void SQ_GLViewWidget::wheelEvent(QWheelEvent *e)
 {
 	if(e->delta() > 0 && e->state() == Qt::ControlButton)
@@ -155,64 +152,16 @@ void SQ_GLViewWidget::wheelEvent(QWheelEvent *e)
 	updateGL();
 }
 
-void SQ_GLViewWidget::mousePressEvent(QMouseEvent *e)
-{
-	if(e->state() == Qt::LeftButton)
-	{
-		xmoveold = e->x();
-		ymoveold = e->y();
-	}
-	else e->ignore();
-}
-
-void SQ_GLViewWidget::mouseReleaseEvent(QMouseEvent *e)
-{
-	if(e->state() == Qt::LeftButton)
-	{
-		xmoveold = 0;
-		ymoveold = 0;
-	}
-	else e->ignore();
-}
-
-void SQ_GLViewWidget::mouseMoveEvent(QMouseEvent *e)
-{
-	return;
-
-	if(e->state() == Qt::LeftButton)
-	{
-		QString cap;
-
-		xmove = e->x();
-		ymove = e->y();
-
-		if(xmove != xmoveold)
-			glTranslatef(((xmove < xmoveold)?(-0.01f):(0.01f)), 0.0f, 0.0f);
-		if(ymove != ymoveold)
-			glTranslatef(0.0f, ((ymove < ymoveold)?(0.01f):(-0.01f)), 0.0f);
-
-		cap.sprintf("%d,%d", xmoveold-xmove, ymoveold-ymove);
-		setCaption(cap);
-
-		xmoveold = e->x();
-		ymoveold = e->y();
-
-		updateGL();
-	}
-	else
-		e->ignore();
-}
-
 void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 {
 	if(e->key() == Qt::Key_Left && e->state() == Qt::NoButton)
-		glTranslatef(0.05f, 0.0f, 0.0f);
+		glTranslated(1, 0, 0);
 	else if(e->key() == Qt::Key_Right && e->state() == Qt::NoButton)
-		glTranslatef(-0.05f, 0.0f, 0.0f);
+		glTranslated(-1, 0, 0);
 	else if(e->key() == Qt::Key_Up && e->state() == Qt::NoButton)
-		glTranslatef(0.0f, -0.05f, 0.0f);
+		glTranslated(0, -1, 0);
 	else if(e->key() == Qt::Key_Down && e->state() == Qt::NoButton)
-		glTranslatef(0.0f, 0.05f, 0.0f);
+		glTranslated(0, 1, 0);
 	else if(e->key() == Qt::Key_Plus  && ((e->state()&Qt::ControlButton) == 0))
 		glScalef(1.0f+zoomfactor, 1.0f+zoomfactor, 1.0f);
 	else if(e->key() == Qt::Key_Minus  && ((e->state()&Qt::ControlButton) == 0))
@@ -312,12 +261,13 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 	w = (GLfloat)sqGLDecoder->width();
 	h = (GLfloat)sqGLDecoder->height();
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)w, (int)h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+//	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)w, (int)h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, (int)w, (int)h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-       	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -3.5f);
-
+	glLoadIdentity();
+	gluLookAt(0,0,5, 0,0,0, 0,1,0);
 	updateGL();
 
 	QString status;

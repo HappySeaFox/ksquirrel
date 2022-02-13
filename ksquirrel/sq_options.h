@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_options.ui'
 **
-** Created: Fri Mar 19 17:39:48 2004
+** Created: Sat Mar 27 17:13:21 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -21,6 +21,7 @@ class KColorButton;
 class QButtonGroup;
 class QCheckBox;
 class QComboBox;
+class QFrame;
 class QLabel;
 class QLineEdit;
 class QListView;
@@ -50,32 +51,45 @@ public:
     QCheckBox* checkRestart;
     QCheckBox* checkMinimize;
     QWidget* page_2;
-    QButtonGroup* buttonGroupViewType;
-    QLabel* pixmapShowView;
-    QRadioButton* radioSQuirrel;
-    QRadioButton* radioGQview;
-    QRadioButton* radioKuickShow;
-    QRadioButton* radioWinViewer;
-    QRadioButton* radioXnview;
     QLabel* textLabel1_3;
     QComboBox* comboToolbarIconSize;
+    QButtonGroup* buttonGroupViewType;
+    QRadioButton* radioSQuirrel;
+    QRadioButton* radioWinViewer;
+    QRadioButton* radioXnview;
+    QRadioButton* radioButton13;
+    QRadioButton* radioGQview;
+    QRadioButton* radioKuickShow;
+    QLabel* pixmapShowView;
+    QButtonGroup* buttonGroupCreateFirst;
+    QRadioButton* radioButton15;
+    QRadioButton* radioButton14;
+    QRadioButton* radioButton16;
     QWidget* page_3;
-    QLabel* textLabel1_2;
-    QLabel* textLabel2;
     QButtonGroup* buttonGroupSetPath;
-    QLineEdit* lineEditCustomDir;
-    QPushButton* pushOpenDir;
     QRadioButton* radioSetLast;
     QRadioButton* radioSetCurrent;
     QRadioButton* radioSetThis;
+    QLineEdit* lineEditCustomDir;
+    QPushButton* pushOpenDir;
     QCheckBox* checkSyncTree;
+    QLabel* textLabel2;
+    QCheckBox* checkRunUnknown;
+    QLabel* textLabel1_2;
     QComboBox* comboIconIndex;
     QComboBox* comboListIndex;
+    QCheckBox* checkClickSystem;
+    QButtonGroup* buttonGroupClickPolicy;
+    QRadioButton* radioButton18;
+    QRadioButton* radioButton17;
     QWidget* page_4;
     QLabel* textPrefix;
     QLabel* textLabel1;
+    QCheckBox* checkFAMDetectNew;
+    QCheckBox* checkFAMMessage;
     QCheckBox* checkShowLinks;
     QListView* tableLib;
+    QFrame* line1;
     QWidget* page_5;
     QCheckBox* checkCacheDisk;
     QCheckBox* checkCacheGL;
@@ -84,12 +98,13 @@ public:
     QWidget* page_6;
     QTabWidget* tabWidget2;
     QWidget* tab;
-    QCheckBox* checkAdjust;
-    KColorButton* kColorGLbackground;
-    QLabel* textLabel1_5;
     QButtonGroup* buttonGroupShadeModel;
     QRadioButton* radioSmooth_2;
     QRadioButton* radioFlat_2;
+    QCheckBox* checkDrop;
+    QLabel* textLabel1_5;
+    QCheckBox* checkAdjust;
+    KColorButton* kColorGLbackground;
     QWidget* tab_2;
     QButtonGroup* buttonGroupZoomModel;
     QRadioButton* radioLinear_2_2;
@@ -109,18 +124,21 @@ public slots:
     virtual void slotShowLinks( bool show );
 
 protected:
-    bool showlinks;
-    typedef struct { QListViewItem *item; int id;} ListViewItemID;
     QListViewItem *itemMain,*itemInterface,*itemFileView,*itemLibraries, *itemCache, *itemGLview;
+    typedef struct { QListViewItem *item; int id;} ListViewItemID;
+    bool showlinks;
 
     QGridLayout* SQ_OptionsLayout;
     QHBoxLayout* layout1;
     QGridLayout* pageLayout;
+    QGridLayout* buttonGroupSetPathLayout;
+    QGridLayout* pageLayout_2;
+    QGridLayout* pageLayout_3;
 
 protected slots:
     virtual void languageChange();
 private:
-    QPixmap a[5];
+    QPixmap a[6];
 
     void init();
 

@@ -31,7 +31,7 @@ SQ_FileDetailView::~SQ_FileDetailView()
 
 void SQ_FileDetailView::slotSelected(QListViewItem *item, const QPoint &point, int c)
 {
-    emit doubleClicked(item, point, c);
+	emit doubleClicked(item, point, c);
 }
 
 QDragObject* SQ_FileDetailView::dragObject()
