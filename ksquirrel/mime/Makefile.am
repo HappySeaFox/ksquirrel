@@ -1,7 +1,7 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = x-avs.desktop x-cut.desktop x-dxf.desktop x-iff.desktop x-jbig.desktop x-koala.desktop x-leaf.desktop x-lif.desktop x-mac.desktop x-msp.desktop x-mtv.desktop x-neo.desktop x-pi1.desktop x-pict.desktop x-pix.desktop x-pxr.desktop x-ras.desktop x-ras.magic x-rawrgb.desktop x-sct.desktop x-sun.desktop x-sun.magic x-utah.desktop x-utah.magic x-wal.desktop x-wbmp.desktop x-xim.desktop x-xwd.desktop x-pi3.desktop 
+EXTRA_DIST = x-avs.desktop x-cut.desktop x-dxf.desktop x-iff.desktop x-jbig.desktop x-koala.desktop x-leaf.desktop x-lif.desktop x-mac.desktop x-msp.desktop x-mtv.desktop x-neo.desktop x-pi1.desktop x-pict.desktop x-pix.desktop x-pxr.desktop x-ras.desktop x-ras.magic x-rawrgb.desktop x-sct.desktop x-sun.desktop x-sun.magic x-utah.desktop x-utah.magic x-wal.desktop x-wbmp.desktop x-xim.desktop x-xwd.desktop x-pi3.desktop ljpeg.desktop 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_mimedir)/image/
@@ -28,8 +28,8 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/x-mtv.desktop $(kde_mimedir)/image/x-mtv.desktop
 	$(mkinstalldirs) $(kde_mimedir)/image/
 	$(INSTALL_DATA) $(srcdir)/x-neo.desktop $(kde_mimedir)/image/x-neo.desktop
-	$(mkinstalldirs) 
-	$(INSTALL_DATA) $(srcdir)/x-pi1.desktop c
+	$(mkinstalldirs) $(kde_mimedir)/image/
+	$(INSTALL_DATA) $(srcdir)/x-pi1.desktop $(kde_mimedir)/image/x-pi1.desktop
 	$(mkinstalldirs) $(kde_mimedir)/image/
 	$(INSTALL_DATA) $(srcdir)/x-pict.desktop $(kde_mimedir)/image/x-pict.desktop
 	$(mkinstalldirs) $(kde_mimedir)/image/
@@ -62,6 +62,8 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/x-xwd.desktop $(kde_mimedir)/image/x-xwd.desktop
 	$(mkinstalldirs) $(kde_mimedir)/image/
 	$(INSTALL_DATA) $(srcdir)/x-pi3.desktop $(kde_mimedir)/image/x-pi3.desktop
+	$(mkinstalldirs) $(kde_mimedir)/image/
+	$(INSTALL_DATA) $(srcdir)/ljpeg.desktop $(kde_mimedir)/image/ljpeg.desktop
 
 uninstall-local:
 	-rm -f $(kde_mimedir)/image/x-avs.desktop
@@ -76,7 +78,7 @@ uninstall-local:
 	-rm -f $(kde_mimedir)/image/x-msp.desktop
 	-rm -f $(kde_mimedir)/image/x-mtv.desktop
 	-rm -f $(kde_mimedir)/image/x-neo.desktop
-	-rm -f c
+	-rm -f $(kde_mimedir)/image/x-pi1.desktop
 	-rm -f $(kde_mimedir)/image/x-pict.desktop
 	-rm -f $(kde_mimedir)/image/x-pix.desktop
 	-rm -f $(kde_mimedir)/image/x-pxr.desktop
@@ -93,5 +95,6 @@ uninstall-local:
 	-rm -f $(kde_mimedir)/image/x-xim.desktop
 	-rm -f $(kde_mimedir)/image/x-xwd.desktop
 	-rm -f $(kde_mimedir)/image/x-pi3.desktop
+	-rm -f $(kde_mimedir)/image/ljpeg.desktop
 
 ####### kdevelop will overwrite this part!!! (end)############

@@ -103,6 +103,39 @@ QImage SQ_Utils::scaleImage(unsigned char *im, int w, int h, int fitwithin)
 
 bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
 {
+    SQ_LIBRARY *lib = 0;
+
+#ifdef SQ_HAVE_KEXIF
+    lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath.path());
+    bool th = false;
+
+    if(lib)
+    {
+        KExifData data;
+        data.readFromFile(pixPath.path());
+        QImage im = data.getThumbnail();
+
+        if(!im.isNull())
+        {
+            th = true;
+            t.w = 0;
+            t.h = 0;
+            t.mime = lib->mime;
+
+            t.thumbnail = SQ_Utils::scaleImage((unsigned char *)im.bits(), im.width(),
+                im.height(), SQ_ThumbnailSize::biggest());
+            t.thumbnail = t.thumbnail.swapRGB();
+        }
+    }
+    else
+        return false;
+
+    // thumbnail loaded - nothing to do,
+    // or load thumbnail by hands otherwise.
+    if(th)
+        return true;
+#endif
+
     fmt_info *finfo;
 
     RGBA *all;
@@ -132,7 +165,7 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
         }
     }
 
-    SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath.path());
+    if(!lib) lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath.path());
 
     t.w = finfo->image[0].w;
     t.h = finfo->image[0].h;

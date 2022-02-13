@@ -22,24 +22,24 @@ bin_program=ksquirrel
 cflags=
 cppflags=
 cxxflags=\s-O2 -Wall
-ldadd=$(LIB_KUTILS) $(LIB_KIO) $(ksquirrellibs_LIBS) -Llibpixops -lpixops -lkonq -lqui $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
-ldflags=\s-s                                                       \s
+ldadd=$(KDE_LDFLAGS) $(QT_LDFLAGS) $(LIB_KUTILS) $(LIB_KIO) $(ksquirrellibs_LIBS) -Llibpixops -lpixops -lkonq -lqui $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
+ldflags=\s-s                                                        \s
 
 [General]
-AMChanged=false
+AMChanged=true
 author=Baryshev Dmitry
-configure_args=--prefix=/usr --without-arts
+configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux --prefix=/usr --without-arts
 email=ksquirrel@tut.by
 kdevprj_version=1.3
-lfv_open_groups=Headers,Sources,User Interface
-make_options=\s-j2
+lfv_open_groups=Headers,Others,Sources,User Interface
+make_options=\s-j1
 makefiles=Makefile.am,ksquirrel/Makefile.am,doc/Makefile.am,po/Makefile.am,pics/Makefile.am,pics/menu/Makefile.am,pics/imageedit/Makefile.am,ksquirrel/sidebar/Makefile.am,pics/toolbar/Makefile.am,ksquirrel/imageedit/Makefile.am,ksquirrel/mime/Makefile.am
 modifyMakefiles=true
 project_name=KSquirrel
 project_type=mini_kde2
 short_info=KSquirrel - image viewer for KDE >= 3.2
 sub_dir=ksquirrel/
-version=0.7.0
+version=0.7.1
 version_control=CVS
 workspace=1
 
@@ -287,9 +287,15 @@ install_location=
 type=SOURCE
 
 [ksquirrel/mime/Makefile.am]
-files=ksquirrel/mime/x-avs.desktop,ksquirrel/mime/x-cut.desktop,ksquirrel/mime/x-dxf.desktop,ksquirrel/mime/x-iff.desktop,ksquirrel/mime/x-jbig.desktop,ksquirrel/mime/x-koala.desktop,ksquirrel/mime/x-leaf.desktop,ksquirrel/mime/x-lif.desktop,ksquirrel/mime/x-mac.desktop,ksquirrel/mime/x-msp.desktop,ksquirrel/mime/x-mtv.desktop,ksquirrel/mime/x-neo.desktop,ksquirrel/mime/x-pi1.desktop,ksquirrel/mime/x-pict.desktop,ksquirrel/mime/x-pix.desktop,ksquirrel/mime/x-pxr.desktop,ksquirrel/mime/x-ras.desktop,ksquirrel/mime/x-ras.magic,ksquirrel/mime/x-rawrgb.desktop,ksquirrel/mime/x-sct.desktop,ksquirrel/mime/x-sun.desktop,ksquirrel/mime/x-sun.magic,ksquirrel/mime/x-utah.desktop,ksquirrel/mime/x-utah.magic,ksquirrel/mime/x-wal.desktop,ksquirrel/mime/x-wbmp.desktop,ksquirrel/mime/x-xim.desktop,ksquirrel/mime/x-xwd.desktop,ksquirrel/mime/x-pi3.desktop
+files=ksquirrel/mime/x-avs.desktop,ksquirrel/mime/x-cut.desktop,ksquirrel/mime/x-dxf.desktop,ksquirrel/mime/x-iff.desktop,ksquirrel/mime/x-jbig.desktop,ksquirrel/mime/x-koala.desktop,ksquirrel/mime/x-leaf.desktop,ksquirrel/mime/x-lif.desktop,ksquirrel/mime/x-mac.desktop,ksquirrel/mime/x-msp.desktop,ksquirrel/mime/x-mtv.desktop,ksquirrel/mime/x-neo.desktop,ksquirrel/mime/x-pi1.desktop,ksquirrel/mime/x-pict.desktop,ksquirrel/mime/x-pix.desktop,ksquirrel/mime/x-pxr.desktop,ksquirrel/mime/x-ras.desktop,ksquirrel/mime/x-ras.magic,ksquirrel/mime/x-rawrgb.desktop,ksquirrel/mime/x-sct.desktop,ksquirrel/mime/x-sun.desktop,ksquirrel/mime/x-sun.magic,ksquirrel/mime/x-utah.desktop,ksquirrel/mime/x-utah.magic,ksquirrel/mime/x-wal.desktop,ksquirrel/mime/x-wbmp.desktop,ksquirrel/mime/x-xim.desktop,ksquirrel/mime/x-xwd.desktop,ksquirrel/mime/x-pi3.desktop,ksquirrel/mime/ljpeg.desktop
 sub_dirs=
 type=normal
+
+[ksquirrel/mime/ljpeg.desktop]
+dist=true
+install=true
+install_location=$$(kde_mimedir)/image/ljpeg.desktop
+type=DATA
 
 [ksquirrel/mime/x-avs.desktop]
 dist=true
