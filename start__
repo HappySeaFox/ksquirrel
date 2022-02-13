@@ -1,0 +1,13 @@
+tst=`cat ./ksquirrel/sq_version`
+tst=`expr $tst + 1`
+echo $tst > ./ksquirrel/sq_version
+echo "#ifndef __APP_VERSION__" > ./ksquirrel/sq_version.h
+echo "#define __APP_VERSION__" >> ./ksquirrel/sq_version.h
+echo >> ./ksquirrel/sq_version.h
+echo 'const char APP[] = "Squirrel development build #";' >> ./ksquirrel/sq_version.h
+echo "const int version=$tst;">> ./ksquirrel/sq_version.h
+echo >> ./ksquirrel/sq_version.h
+echo "#endif" >> ./ksquirrel/sq_version.h
+echo >> ./ksquirrel/sq_version.h
+
+make
