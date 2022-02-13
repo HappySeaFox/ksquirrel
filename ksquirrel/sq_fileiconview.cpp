@@ -56,16 +56,6 @@ void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
     emit doubleClicked(item, point);
 }
 
-/*
- *  Get SQ_FileIconViewItem by KFileItem. All KFileItems store
- *  a pointer to appropriate SQ_FileIconViewItem as extra data.
- *  See also KFileItem::setExtraData() and insertItem().
- */
-SQ_FileIconViewItem* SQ_FileIconView::viewItem(const KFileItem *item)
-{
-    return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : 0;
-}
-
 void SQ_FileIconView::updateView(bool b)
 {
     if(!b)
@@ -81,30 +71,6 @@ void SQ_FileIconView::updateView(bool b)
             item = static_cast<SQ_FileIconViewItem*>(item->nextItem());
         }while(item);
     }
-}
-
-void SQ_FileIconView::updateView(const KFileItem *i)
-{
-    SQ_FileIconViewItem *item = viewItem(i);
-
-    if(item)
-        initItem(item, i);
-}
-
-/*
- *  Internal. Set item's sorting key.
- */
-void SQ_FileIconView::initItem(SQ_FileIconViewItem *item, const KFileItem *i)
-{
-    // determine current sorting type
-    QDir::SortSpec spec = KFileView::sorting();
-
-    if(spec & QDir::Time)
-        item->setKey(sortingKey((unsigned long)i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
-    else if(spec & QDir::Size)
-        item->setKey(sortingKey(i->size(), i->isDir(), spec));
-    else
-        item->setKey(sortingKey(i->text(), i->isDir(), spec));
 }
 
 /*
@@ -124,7 +90,7 @@ void SQ_FileIconView::insertItem(KFileItem *i)
     // add new item
     item = new SQ_FileIconViewItem((QIconView*)this, i->text(), i->pixmap(iconSize()), i);
 
-    initItem(item, i);
+    initItemMy(item, i);
 
     i->setExtraData(this, item);
 }
@@ -134,10 +100,12 @@ void SQ_FileIconView::insertItem(KFileItem *i)
  */
 void SQ_FileIconView::insertCdUpItem(const KURL &base)
 {
-    KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+    static const QString &dirup = KGlobal::staticQString("..");
+
+    KFileItem *fi = new KFileItem(base.upURL(), "inode/directory", S_IFDIR);
 
     // create ".." item
-    SQ_FileIconViewItem *item = new SQ_FileIconViewItem(this, QString::fromLatin1(".."), dirPix, fi);
+    SQ_FileIconViewItem *item = new SQ_FileIconViewItem(this, dirup, dirPix, fi);
 
     item->setSelectable(false);
 

@@ -1,13 +1,10 @@
 #MIN_CONFIG(3.3)
 
-AM_INIT_AUTOMAKE([ksquirrel], [0.7.0])
+AM_INIT_AUTOMAKE(ksquirrel,0.7.1)
 
 AM_PROG_AS
 
-AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
-
-AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
-AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
+AC_CHECK_HEADER([utime.h], AC_DEFINE([HAVE_UTIME_H], [], [utime.h support]), [])
 
 PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
 
@@ -126,4 +123,27 @@ PKG_CHECK_MODULES([libkipi], libkipi, [
         [AC_WARN([KIPI development file (.pc) was not found. KIPI support will be disabled.])]
 )
 
-AM_CONDITIONAL(SQ_HAVE_KIPI, test x$have_kipi = xyes)
+# KEXIF
+have_kexif=no
+PKG_CHECK_MODULES([libkexif], libkexif, [
+        _cppflags=$CPPFLAGS
+        _ldflags=$LDFLAGS
+
+        CPPFLAGS="$libkexif_CFLAGS $CPPFLAGS"
+        LDFLAGS="$LDFLAGS $libkexif_LIBS"
+
+        KDE_CHECK_HEADER(libkexif/kexifdata.h, have_kexif=yes, have_kexif=no)
+          if test "$have_kexif" = "yes"; then
+                AC_DEFINE(SQ_HAVE_KEXIF, [], [If we have libkexif installed])
+          else
+            AC_WARN([Can't find KEXIF headers, KSquirrel won't be compiled with KEXIF support])
+          fi
+
+            CPPFLAGS=$_cppflags
+            LDFLAGS=$_ldflags
+    ],
+        [AC_WARN([KEXIF development file (.pc) was not found. KEXIF support will be disabled.])]
+)
+
+AM_CONDITIONAL(SQ_HAVE_KIPI,  test x$have_kipi  = xyes)
+AM_CONDITIONAL(SQ_HAVE_KEXIF, test x$have_kexif = xyes)

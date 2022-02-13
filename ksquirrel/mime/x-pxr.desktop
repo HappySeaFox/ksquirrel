@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-pxr
+Icon=image
+Patterns=*.pxr;*.PXR;
+Comment=Pxrar format

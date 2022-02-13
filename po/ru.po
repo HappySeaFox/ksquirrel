@@ -1,0 +1,2131 @@
+# translation of ru.po to
+# Baryshev Dmitry <ksquirrel@tut.by>, 2007.
+# krasu <ksquirrel@tut.by>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: ru\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-08-07 09:45+0200\n"
+"PO-Revision-Date: 2007-08-07 12:26+0300\n"
+"Last-Translator: krasu <ksquirrel@tut.by>\n"
+"Language-Team:  <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: sq_filters.ui.h:56 sq_filters.ui.h:58 sq_externaltools.cpp:67
+#: sq_externaltools.cpp:194 sidebar/sq_mountview.cpp:64 sq_viewcache.cpp:47
+#: sq_viewcache.cpp:105 sq_filters.cpp:123 sq_filters.cpp:196
+msgid "Name"
+msgstr "Имя"
+
+#: sq_externaltool.cpp:102 sq_externaltool.cpp:162 sq_externaltool.cpp:170
+msgid "No file selected"
+msgstr "Не выбрано файлов"
+
+#: sq_kipimanager.cpp:68
+msgid "No Plugins"
+msgstr "Нет модулей"
+
+#: sq_kipimanager.cpp:125
+msgid "Image Actions"
+msgstr "Изображения"
+
+#: sq_kipimanager.cpp:126
+msgid "Effects"
+msgstr "Эффекты"
+
+#: sq_kipimanager.cpp:127
+msgid "Tools"
+msgstr "Утилиты"
+
+#: sq_kipimanager.cpp:130
+msgid "Batch processing"
+msgstr "Пакетная обработка"
+
+#: sq_kipimanager.cpp:131
+msgid "Collections"
+msgstr "Коллекции"
+
+#: sq_libraryhandler.cpp:148
+msgid "All files"
+msgstr "Все файлы"
+
+#: sq_navigatordropmenu.cpp:40
+msgid "Copy here"
+msgstr "Копировать сюда"
+
+#: sq_navigatordropmenu.cpp:43
+msgid "Move here"
+msgstr "Переместить сюда"
+
+#: sq_navigatordropmenu.cpp:46
+msgid "Link here"
+msgstr "Создать ссылку сюда"
+
+#: sq_glinfo.cpp:45 sq_glinfo.cpp:92
+msgid "Parameter"
+msgstr "Параметр"
+
+#: sq_glinfo.cpp:46 sq_glinfo.cpp:93 sq_imageproperties.cpp:321
+#: sq_imageproperties.cpp:408 imageedit/sq_imagefilter.cpp:487
+msgid "Value"
+msgstr "Значение"
+
+#: sq_glinfo.cpp:91
+msgid "OpenGL Information"
+msgstr "Информация об OpenGL"
+
+#: sq_glinfo.cpp:96
+msgid "GL_VENDOR"
+msgstr "GL_VENDOR"
+
+#: sq_glinfo.cpp:99
+msgid "GL_RENDERER"
+msgstr "GL_RENDERER"
+
+#: sq_glinfo.cpp:102
+msgid "GL_VERSION"
+msgstr "GL_VERSION"
+
+#: sq_externaltools.cpp:66 sq_externaltools.cpp:193
+msgid "Pixmap"
+msgstr "Иконка"
+
+#: sq_externaltools.cpp:68 sq_externaltools.cpp:195
+msgid "Command"
+msgstr "Команда"
+
+#: sq_externaltools.cpp:190
+msgid "Adjust External Tools"
+msgstr "Настроить Внешние Утилиты"
+
+#: sq_externaltools.cpp:192 sq_filters.cpp:182
+msgid " OK "
+msgstr "OK "
+
+#: sq_externaltools.cpp:196 sq_externaltools.ui.h:146
+#, c-format
+msgid "<b>Command</b> can contain <ul><li>%f: one file<li>%F: multiple files</ul>"
+msgstr "<b>Команда</b> может содержать <ul><li>%f: один файл<li>%F: несколько файлов</ul>"
+
+#: sq_externaltools.cpp:199
+msgid "New tool"
+msgstr "Новая утилита"
+
+#: sq_externaltools.cpp:206
+msgid "Move tool up"
+msgstr "Переместить утилиту вверх"
+
+#: sq_externaltools.cpp:208
+msgid "Move tool down"
+msgstr "Переместить утилиту вниз"
+
+#: sq_kipiinterface.cpp:72
+msgid "Root directory"
+msgstr "Корневая папка"
+
+#: sq_kipiinterface.cpp:144
+msgid "Folder content"
+msgstr "Содержимое папки"
+
+#: sq_kipiinterface.cpp:161
+msgid "Selected images"
+msgstr "Выбранные изображения"
+
+#: sq_kipiinterface.cpp:175 ksquirrel.cpp:513
+msgid "Image basket"
+msgstr "Корзина изображений"
+
+#: main.cpp:40
+msgid "File to be opened at startup."
+msgstr "Файл для открытия во время старта."
+
+#: main.cpp:41
+msgid "Print found libraries and exit."
+msgstr "Вывести на консоль найденные библиотеки и выйти"
+
+#: main.cpp:43
+msgid "Directory to be opened at startup."
+msgstr "Папка для открытия во время старта."
+
+#: main.cpp:57
+msgid "KSquirrel - image viewer for KDE"
+msgstr "KSquirrel - просмотрщик изображений для KDE"
+
+#: main.cpp:66
+msgid "Bug reports, patches"
+msgstr "Отчёты об ошибках, заплатки"
+
+#: main.cpp:67
+msgid "Bug reports"
+msgstr "Заплатки"
+
+#: main.cpp:68
+msgid "Translation help"
+msgstr "Помощь в переводе"
+
+#: main.cpp:69
+msgid "TiamaT"
+msgstr "TiamaT"
+
+#: main.cpp:69
+msgid "Initial artwork for edit tools"
+msgstr "Начальная графическая работа для утилит редактирования"
+
+#: main.cpp:70
+msgid "Fera"
+msgstr "Fera"
+
+#: main.cpp:70
+msgid "Great artwork for edit tools"
+msgstr "Отличная графическая работа для утилит редактирования"
+
+#: main.cpp:71
+msgid "OpenGL forum at"
+msgstr "OpenGL форум на"
+
+#: main.cpp:72
+msgid "GameDev forum at"
+msgstr "GameDev форум на"
+
+#: sq_imageproperties.cpp:320 sq_imageproperties.cpp:407
+msgid "Group"
+msgstr "Группа"
+
+#: sq_imageproperties.cpp:359 sq_glwidget.cpp:350
+msgid "Image Properties"
+msgstr "Свойства изображения"
+
+#: sq_imageproperties.cpp:361
+msgid "Attributes"
+msgstr "Аттрибуты"
+
+#: sq_imageproperties.cpp:362
+msgid "Owner:"
+msgstr "Владелец:"
+
+#: sq_imageproperties.cpp:363
+msgid "Group:"
+msgstr "Группа:"
+
+#: sq_imageproperties.cpp:365
+msgid "Permissions:"
+msgstr "Права:"
+
+#: sq_imageproperties.cpp:368
+msgid "Time"
+msgstr "Время"
+
+#: sq_imageproperties.cpp:369
+msgid "Created:"
+msgstr "Создан:"
+
+#: sq_imageproperties.cpp:370
+msgid "Last read:"
+msgstr "Последнее чтение:"
+
+#: sq_imageproperties.cpp:371
+msgid "Last modified:"
+msgstr "Модификация:"
+
+#: sq_imageproperties.cpp:375 sq_helpwidget.cpp:181 sq_options.ui.h:134
+msgid "General"
+msgstr "Общие"
+
+#: sq_imageproperties.cpp:376
+msgid "File:"
+msgstr "Файл:"
+
+#: sq_imageproperties.cpp:378 sq_pluginsinfo.cpp:137 sq_slideshow.cpp:211
+msgid "Directory:"
+msgstr "Папка:"
+
+#: sq_imageproperties.cpp:379
+msgid "Size:"
+msgstr "Размер:"
+
+#: sq_imageproperties.cpp:381
+msgid "Type:"
+msgstr "Тип:"
+
+#: sq_imageproperties.cpp:382
+msgid "Number of frames:"
+msgstr "Количество страниц:"
+
+#: sq_imageproperties.cpp:383
+msgid "Current frame"
+msgstr "Текущая страница"
+
+#: sq_imageproperties.cpp:384 sq_slideshow.cpp:219
+msgid "Delay:"
+msgstr "Задержка:"
+
+#: sq_imageproperties.cpp:385
+msgid "Dimensions:"
+msgstr "Размеры:"
+
+#: sq_imageproperties.cpp:386
+msgid "Bits per pixel:"
+msgstr "Бит на пиксель:"
+
+#: sq_imageproperties.cpp:387
+msgid "Color space:"
+msgstr "Цветовое пространство:"
+
+#: sq_imageproperties.cpp:388
+msgid "Compression:"
+msgstr "Сжатие:"
+
+#: sq_imageproperties.cpp:389
+msgid "Uncompressed size:"
+msgstr "Распакованный размер:"
+
+#: sq_imageproperties.cpp:390
+msgid "Compress ratio:"
+msgstr "Степень сжатия:"
+
+#: sq_imageproperties.cpp:391
+msgid "Interlaced:"
+msgstr "Черезстрочное:"
+
+#: sq_imageproperties.cpp:392
+msgid "Status:"
+msgstr "Состояние:"
+
+#: sq_imageproperties.cpp:406 sq_glwidget.cpp:2662 sq_options.cpp:816
+msgid "Image"
+msgstr "Изображение"
+
+#: sq_imageproperties.cpp:409
+msgid "Metadata"
+msgstr "Метаданные"
+
+#: sq_pluginsinfo.cpp:55 sq_pluginsinfo.cpp:129
+msgid "..."
+msgstr "..."
+
+#: sq_pluginsinfo.cpp:56 sq_pluginsinfo.cpp:130
+msgid "Icon"
+msgstr "Иконка"
+
+#: sq_pluginsinfo.cpp:57 sq_pluginsinfo.cpp:131
+msgid "Library"
+msgstr "Библиотека"
+
+#: sq_pluginsinfo.cpp:58 sq_pluginsinfo.cpp:132
+msgid "Version"
+msgstr "Версия"
+
+#: sq_pluginsinfo.cpp:59 sq_pluginsinfo.cpp:133 sq_viewcache.cpp:48
+#: sq_viewcache.cpp:106
+msgid "MIME"
+msgstr "MIME"
+
+#: sq_pluginsinfo.cpp:60 sq_pluginsinfo.cpp:134
+msgid "R"
+msgstr "R"
+
+#: sq_pluginsinfo.cpp:61 sq_pluginsinfo.cpp:135
+msgid "W"
+msgstr "W"
+
+#: sq_pluginsinfo.cpp:128
+msgid "Codecs Information and Settings"
+msgstr "Информация и Настройки Кодеков"
+
+#: sq_pluginsinfo.cpp:138
+msgid "Total found:"
+msgstr "Всего найдено:"
+
+#: sq_errorstring.cpp:34
+msgid "can't open file for reading"
+msgstr "не могу открыть файл на чтение"
+
+#: sq_errorstring.cpp:35
+msgid "file corrupted"
+msgstr "файл повреждён"
+
+#: sq_errorstring.cpp:36
+msgid "no memory"
+msgstr "недостаточно памяти"
+
+#: sq_errorstring.cpp:37
+msgid "file type not supported"
+msgstr "тип файла не поддерживается"
+
+#: sq_errorstring.cpp:38
+msgid "wrong image dimensions"
+msgstr "неправильные размеры изображения"
+
+#: sq_errorstring.cpp:39
+msgid "can't open file for writing"
+msgstr "не могу открыть файл на запись"
+
+#: sq_errorstring.cpp:40
+msgid "write feature is not supported"
+msgstr "нет поддержки записи"
+
+#: sq_errorstring.cpp:41
+msgid "write error (check free space)"
+msgstr "ошибка записи (проверьте свободное место)"
+
+#: sq_errorstring.cpp:42
+msgid "wrong parameters"
+msgstr "неправильные параметры"
+
+#: sq_errorstring.cpp:43
+msgid "Editing process is not finished yet"
+msgstr "Процесс редактирования ещё не завершён"
+
+#: sq_selectdeselectgroup.cpp:81
+msgid "SQ_SelectDeselectGroup"
+msgstr "SQ_SelectDeselectGroup"
+
+#: sq_selectdeselectgroup.cpp:83
+msgid "Filename or mask:"
+msgstr "Имя файла или маска:"
+
+#: sidebar/sq_treeview.cpp:89
+msgid "root"
+msgstr "корень"
+
+#: sidebar/sq_categoriesview.cpp:95 ksquirrel.cpp:512
+msgid "Categories"
+msgstr "Категории"
+
+#: sidebar/sq_categoriesview.cpp:115 sidebar/sq_categoriesview.cpp:166
+msgid "New category"
+msgstr "Новая категория"
+
+#: sidebar/sq_categoriesview.cpp:153 sidebar/sq_categoriesview.cpp:218
+msgid "New Category"
+msgstr "Новая Категория"
+
+#: sidebar/sq_categoriesview.cpp:169 sidebar/sq_categoriesview.cpp:198
+msgid "Create default categories"
+msgstr "Создать категории по умолчанию"
+
+#: sidebar/sq_categoriesview.cpp:197
+msgid ""
+"It will create default categories: Concerts, Pets, Home, Friends, Free time, "
+"Traveling, Nature. Continue ?"
+msgstr ""
+"Данное действие создаст категории по умолчанию: Concerts, Pets, Home, Friends, Free time, "
+"Traveling, Nature. Продолжить ?"
+
+#: sidebar/sq_categoriesview.cpp:218
+msgid "Create new category:"
+msgstr "Создать новую категорию:"
+
+#: sidebar/sq_mountview.cpp:43
+msgid "Mount"
+msgstr "Смонтировать"
+
+#: sidebar/sq_mountview.cpp:45
+msgid "Unmount"
+msgstr "Отмонтировать"
+
+#: sidebar/sq_mountview.cpp:47
+msgid "Refresh"
+msgstr "Обновить"
+
+#: sidebar/sq_mountview.cpp:170
+msgid "Device"
+msgstr "Устройство"
+
+#: sidebar/sq_mountview.cpp:173
+msgid "FS Type"
+msgstr "Тип ФС"
+
+#: sidebar/sq_imagebasket.cpp:244
+msgid "Synchronize"
+msgstr "Синхронизировать"
+
+#: sidebar/sq_previewwidget.cpp:60
+msgid "Background color..."
+msgstr "Цвет фона..."
+
+#: sidebar/sq_categorybrowsermenu.cpp:137
+#: sidebar/sq_categorybrowsermenu.cpp:146
+msgid "Failed to Read Folder"
+msgstr "Ошибка Чтения Папки"
+
+#: sidebar/sq_categorybrowsermenu.cpp:154
+msgid "Not Authorized to Read Folder"
+msgstr "Нет Прав на Чтение"
+
+#: sidebar/sq_categorybrowsermenu.cpp:167
+msgid "Add here"
+msgstr "Добавить сюда"
+
+#: sidebar/sq_categorybrowsermenu.cpp:310
+msgid "More..."
+msgstr "Больше..."
+
+#: sq_thumbnailcachemaster.cpp:143
+msgid "Thumbnail Cache"
+msgstr "Кэш Эскизов"
+
+#: sq_thumbnailcachemaster.cpp:144
+msgid "Calculate cache size on disk"
+msgstr "Подсчитать размер кэша на диске"
+
+#: sq_thumbnailcachemaster.cpp:146
+msgid "Clear cache on disk"
+msgstr "Очистить кэш на диске"
+
+#: sq_thumbnailcachemaster.cpp:147
+msgid "View memory cache"
+msgstr "Просмотреть кэш в памяти"
+
+#: sq_thumbnailcachemaster.cpp:148
+msgid "Clear cache in memory"
+msgstr "Очистить кэш в памяти"
+
+#: sq_thumbnailcachemaster.cpp:150
+msgid "Sync cache to disk"
+msgstr "Синхронизировать кэш на диск"
+
+#: sq_thumbnailcachemaster.cpp:151
+msgid "Calculate cache size in memory"
+msgstr "Подсчитать размер кэша в памяти"
+
+#: sq_diroperator.cpp:138
+msgid "non-local filesystem"
+msgstr "нелокальная  ф.система"
+
+#: sq_diroperator.cpp:158
+msgid ""
+"<table><tr><td>Mount point:</td><td>%1</td></tr><tr><td>Total size:</td><td>%"
+"2</td></tr><tr><td>Used:</td><td>%3</td></tr><tr><td>Available:</td><td>%4</"
+"td></tr></table>"
+msgstr ""
+"<table><tr><td>Точка монтирования:</td><td>%1</td></tr><tr><td>Общий размер:</td><td>%"
+"2</td></tr><tr><td>Использовано:</td><td>%3</td></tr><tr><td>Доступно:</td><td>%4</"
+"td></tr></table>"
+
+#: sq_diroperator.cpp:245
+msgid "no files selected"
+msgstr "не выбрано файлов"
+
+#: sq_diroperator.cpp:306
+msgid "Edit file type"
+msgstr "Редактировать тип файла"
+
+#: sq_diroperator.cpp:307
+msgid "Add To Basket"
+msgstr "Добавить в Корзину"
+
+#: sq_diroperator.cpp:309 sq_diroperator.cpp:889
+msgid "File actions"
+msgstr "Действия над файлами"
+
+#: sq_diroperator.cpp:327
+msgid "Copy to..."
+msgstr "Копировать в..."
+
+#: sq_diroperator.cpp:328
+msgid "Move to..."
+msgstr "Переместить в..."
+
+#: sq_diroperator.cpp:329
+msgid "Link to..."
+msgstr "Создать ссылку в..."
+
+#: sq_diroperator.cpp:331
+msgid "Run"
+msgstr "Запустить"
+
+#: sq_diroperator.cpp:333
+msgid "Recreate selected thumbnails"
+msgstr "Пересоздать выбранные эскизы"
+
+#: sq_diroperator.cpp:336
+msgid "Convert..."
+msgstr "Преобразовать..."
+
+#: sq_diroperator.cpp:439
+msgid "Total %1 in %2 (%3, %4)"
+msgstr "Всего %1 в %2 (%3, %4)"
+
+#: sq_diroperator.cpp:441
+msgid "1 item"
+msgstr "1 элемент"
+
+#: sq_diroperator.cpp:442
+msgid "1 folder"
+msgstr "1 папка"
+
+#: sq_diroperator.cpp:443
+msgid "1 file"
+msgstr "1 файл"
+
+#: sq_diroperator.cpp:627
+#, c-format
+msgid "Command cann't contain both \"%f\" and \"%F\""
+msgstr "Команда не может содержать и \"%f\" и \"%F\""
+
+#: sq_diroperator.cpp:627 sq_diroperator.cpp:632
+msgid "Error processing command"
+msgstr "Ошибка обработки команды"
+
+#: sq_diroperator.cpp:632
+#, c-format
+msgid "Command should contain \"%f\" or \"%F\""
+msgstr "Команда должна содержать \"%f\" или \"%F\""
+
+#: sq_diroperator.cpp:741
+msgid "Unsupported format \"%1\""
+msgstr "неподдерживаемый формат \"%1\""
+
+#: sq_diroperator.cpp:886
+msgid "Add To &Category"
+msgstr "Добавить в &Категорию"
+
+#: sq_diroperator.cpp:890
+msgid "&External tools"
+msgstr "&Внешние утилиты"
+
+#: sq_slideshowwidget.cpp:345
+msgid ""
+"<table cellspacing=0><tr><td><b>Enter, Escape, Return</b></td><td>stop "
+"slideshow</td></tr><tr><td><b>Pause, Space</b></td><td>pause/unpause "
+"slideshow</td></tr><tr><td><b>Page Up</b></td><td>previous image</td></"
+"tr><tr><td><b>Page Down</b></td><td>next image</td></tr><tr><td><b>M</b></"
+"td><td>show/hide onscreen messages</td></tr></table>"
+msgstr ""
+"<table cellspacing=0><tr><td><b>Enter, Escape, Return</b></td><td>остановить показ слайдов</td></tr><tr><td><b>Pause, Space</b></td><td>приостановить/возобновить показ слайдов</td></tr><tr><td><b>Page Up</b></td><td>предыдущее изображение</td></"
+"tr><tr><td><b>Page Down</b></td><td>следующее изображение</td></tr><tr><td><b>M</b></"
+"td><td>показать/спрятать экранные сообщение</td></tr></table>"
+
+#: sq_codecsettingsskeleton.ui.h:28
+msgid ""
+"Error loading widget from <b>%1</b>. Please check your installation or "
+"contact <a href=\"mailto:ksquirrel@tut.by\">ksquirrel@tut.by</a>"
+msgstr "Ошибка загрузки компонента из <b>%1</b>. Пожалуйста, проверьте правильность установки или сообщите на <a href=\"mailto:ksquirrel@tut.by\">ksquirrel@tut.by</a>"
+
+#: sq_widgetstack.cpp:473 sq_widgetstack.cpp:507
+msgid "No files to copy or move"
+msgstr "Нет файлов для копирования или перемещения"
+
+#: sq_widgetstack.cpp:607
+msgid "Select a group of files"
+msgstr "Отметить группу файлов"
+
+#: sq_widgetstack.cpp:607
+msgid "Deselect a group of files"
+msgstr "Снять отметку с группы файлов"
+
+#: sq_widgetstack.cpp:608
+msgid "Select !"
+msgstr "Отметить!"
+
+#: sq_widgetstack.cpp:608
+msgid "Deselect !"
+msgstr "Снять отметку!"
+
+#: sq_filethumbview.cpp:370
+msgid ""
+"<table cellspacing=0><tr><td align=left>File:</td><td align=left><b>%1</b></"
+"td></tr><tr><td align=left>Size:</td><td align=left><b>%2</b></td></tr>%3%4</"
+"table>"
+msgstr ""
+"<table cellspacing=0><tr><td align=left>Файл:</td><td align=left><b>%1</b></"
+"td></tr><tr><td align=left>Размер:</td><td align=left><b>%2</b></td></tr>%3%4</"
+"table>"
+
+#: sq_filethumbview.cpp:373
+msgid "<tr><td align=left>Link destination:</td><td align=left>%1</td></tr>"
+msgstr "<tr><td align=left>Назначение ссылки:</td><td align=left>%1</td></tr>"
+
+#: imageedit/sq_writeoption.cpp:106
+msgid "SQ_WriteOption"
+msgstr "SQ_WriteOption"
+
+#: imageedit/sq_writeoption.cpp:108
+msgid "RLE compression"
+msgstr "RLE сжатие"
+
+#: imageedit/sq_writeoption.cpp:109
+msgid "Compression level"
+msgstr "Степень сжатия"
+
+#: imageedit/sq_writeoption.cpp:110
+msgid "Interlaced"
+msgstr "Черезстрочно"
+
+#: imageedit/sq_writeoption.cpp:112
+msgid "<i>No special options available for this format</i>"
+msgstr "<i>Нет специальных настроек для данного формата</i>"
+
+#: imageedit/sq_converter.cpp:47
+msgid "internal error"
+msgstr "внутренняя ошибка"
+
+#: imageedit/sq_converter.cpp:48
+msgid "failed"
+msgstr "ошибка"
+
+#: imageedit/sq_converter.cpp:50
+msgid "Converting"
+msgstr "Преобразование"
+
+#: imageedit/sq_converter.cpp:68
+msgid "Select files to edit"
+msgstr "Выберете файлы для редактирования"
+
+#: imageedit/sq_converter.cpp:73
+msgid ""
+"Converter cann't work with non-local files.\n"
+"Sorry."
+msgstr "Конвертер не может работать с нелокальными файлами.\nИзвините."
+
+#: imageedit/sq_converter.cpp:160
+msgid "Temporary file creation failed"
+msgstr "Ошибка создания временного файла"
+
+#: imageedit/sq_converter.cpp:243 sq_imageproperties.ui.h:72
+msgid "1 error"
+msgstr "1 ошибка"
+
+#: imageedit/sq_converter.cpp:250
+msgid "Removing"
+msgstr "Удаление"
+
+#: imageedit/sq_converter.cpp:436
+msgid "Convert 1 file"
+msgstr "Преобразовать 1 файл"
+
+#: imageedit/sq_imageeditoptions.cpp:134
+msgid "Edit options"
+msgstr "Редактировать настройки"
+
+#: imageedit/sq_imageeditoptions.cpp:135
+msgid "New files"
+msgstr "Новые файлы"
+
+#: imageedit/sq_imageeditoptions.cpp:136
+msgid "Put here"
+msgstr "Поместить сюда"
+
+#: imageedit/sq_imageeditoptions.cpp:137
+msgid "Replace original files"
+msgstr "Заменить оригинальные файлы"
+
+#: imageedit/sq_imageeditoptions.cpp:138
+msgid "Put files to current directory, renaming them if neccessary"
+msgstr "Поместить файлы в текущую папку, переименовывая их по необходимости"
+
+#: imageedit/sq_imageeditoptions.cpp:139
+msgid "Put files to current directory, replacing existing files"
+msgstr "Поместить файлы в текущую папку, заменяя существующие файлы"
+
+#: imageedit/sq_imageeditoptions.cpp:140
+msgid "Close, when all operations succeeded"
+msgstr "Закрыть, когда все операции завершились успешно"
+
+#: imageedit/sq_imagebcg.ui.h:17 imageedit/sq_imagebcg.ui.h:31
+#: imageedit/sq_imagebcg.cpp:382
+msgid "Brightness"
+msgstr "Яркость"
+
+#: imageedit/sq_imagebcg.ui.h:18 imageedit/sq_imagebcg.ui.h:31
+#: imageedit/sq_imagebcg.cpp:383
+msgid "Contrast"
+msgstr "Контраст"
+
+#: imageedit/sq_imagebcg.ui.h:19 imageedit/sq_imagebcg.ui.h:31
+#: imageedit/sq_imagebcg.cpp:384
+msgid "Gamma"
+msgstr "Гамма"
+
+#: imageedit/sq_imagebcg.ui.h:20 imageedit/sq_imagebcg.ui.h:32
+#: imageedit/sq_imagebcg.cpp:390
+msgid "Red"
+msgstr "Красный"
+
+#: imageedit/sq_imagebcg.ui.h:20
+#, fuzzy
+msgid "Cyan"
+msgstr "Cyan"
+
+#: imageedit/sq_imagebcg.ui.h:21 imageedit/sq_imagebcg.ui.h:32
+#: imageedit/sq_imagebcg.cpp:389
+msgid "Green"
+msgstr "Зелёный"
+
+#: imageedit/sq_imagebcg.ui.h:21
+#, fuzzy
+msgid "Magenta"
+msgstr "Magenta"
+
+#: imageedit/sq_imagebcg.ui.h:22 imageedit/sq_imagebcg.ui.h:32
+#: imageedit/sq_imagebcg.cpp:388
+msgid "Blue"
+msgstr "Синий"
+
+#: imageedit/sq_imagebcg.ui.h:22
+msgid "Yellow"
+msgstr "Жёлтый"
+
+#: imageedit/sq_imagefilter.cpp:473 imageedit/sq_imagefilter.cpp:539
+msgid "Filter"
+msgstr "Фильтр"
+
+#: imageedit/sq_imagefilter.cpp:474 imageedit/sq_imagefilter.cpp:486
+msgid "Color:"
+msgstr "Цвет:"
+
+#: imageedit/sq_imagefilter.cpp:476
+#, fuzzy
+msgid "Opacity"
+msgstr "Opacity"
+
+#: imageedit/sq_imagefilter.cpp:477 imageedit/sq_imagefilter.cpp:482
+#: imageedit/sq_imagefilter.cpp:505
+#, fuzzy
+msgid "Sigma"
+msgstr "Sigma"
+
+#: imageedit/sq_imagefilter.cpp:478 imageedit/sq_imagefilter.cpp:481
+#: imageedit/sq_imagefilter.cpp:483 imageedit/sq_imagefilter.cpp:501
+#: imageedit/sq_imagefilter.cpp:506
+#, fuzzy
+msgid "Radius"
+msgstr "Radius"
+
+#: imageedit/sq_imagefilter.cpp:479 imageedit/sq_imagefilter.cpp:492
+#: imageedit/sq_imagefilter.cpp:507
+#, fuzzy
+msgid "Factor"
+msgstr "Factor"
+
+#: imageedit/sq_imagefilter.cpp:480 imageedit/sq_imagefilter.cpp:484
+#: imageedit/sq_imagefilter.cpp:493 imageedit/sq_imagefilter.cpp:514
+msgid ""
+"There are no special options available for this filter. Just click \"Filter"
+"\"."
+msgstr "Нет специальных параметров для этого фильтра. Росто нажмите \"Фильтр\""
+
+#: imageedit/sq_imagefilter.cpp:490
+msgid "Color 1:"
+msgstr "Цвет 1"
+
+#: imageedit/sq_imagefilter.cpp:491
+msgid "Color 2:"
+msgstr "Цвет 2"
+
+#: imageedit/sq_imagefilter.cpp:494
+msgid "Noise type"
+msgstr "Тип шума"
+
+#: imageedit/sq_imagefilter.cpp:495
+msgid "Uniform"
+msgstr "Uniform"
+
+#: imageedit/sq_imagefilter.cpp:496
+msgid "Impulse"
+msgstr "Impulse"
+
+#: imageedit/sq_imagefilter.cpp:497
+msgid "MultiplicativeGaussian"
+msgstr "MultiplicativeGaussian"
+
+#: imageedit/sq_imagefilter.cpp:498
+msgid "Poisson"
+msgstr "Poisson"
+
+#: imageedit/sq_imagefilter.cpp:499
+msgid "Gaussian"
+msgstr "Gaussian"
+
+#: imageedit/sq_imagefilter.cpp:500
+msgid "Laplacian"
+msgstr "Laplacian"
+
+#: imageedit/sq_imagefilter.cpp:502
+msgid "Color"
+msgstr "Цвет"
+
+#: imageedit/sq_imagefilter.cpp:503
+#, fuzzy
+msgid "Elevation"
+msgstr "Elevation"
+
+#: imageedit/sq_imagefilter.cpp:504
+msgid "Azimuth"
+msgstr "Азимут"
+
+#: imageedit/sq_imagefilter.cpp:508
+#, fuzzy
+msgid "Amount"
+msgstr "Amount"
+
+#: imageedit/sq_imagefilter.cpp:509
+msgid "Type"
+msgstr "Тип"
+
+#: imageedit/sq_imagefilter.cpp:510
+msgid "GBR"
+msgstr "GBR"
+
+#: imageedit/sq_imagefilter.cpp:511
+msgid "BRG"
+msgstr "BRG"
+
+#: imageedit/sq_imagefilter.cpp:512
+msgid "Degrees"
+msgstr "Градусы"
+
+#: imageedit/sq_imagefilter.cpp:513 imageedit/sq_imagefilter.cpp:515
+#: imageedit/sq_imagefilter.cpp:536
+#, fuzzy
+msgid "Threshold"
+msgstr "Threshold"
+
+#: imageedit/sq_imagefilter.cpp:517
+#, fuzzy
+msgid "Blend"
+msgstr "Blend"
+
+#: imageedit/sq_imagefilter.cpp:518
+#, fuzzy
+msgid "Blur"
+msgstr "Blur"
+
+#: imageedit/sq_imagefilter.cpp:519
+#, fuzzy
+msgid "Desaturate"
+msgstr "Desaturate"
+
+#: imageedit/sq_imagefilter.cpp:520
+#, fuzzy
+msgid "Despeckle"
+msgstr "Despeckle"
+
+#: imageedit/sq_imagefilter.cpp:521
+msgid "Edge"
+msgstr "Края"
+
+#: imageedit/sq_imagefilter.cpp:522
+#, fuzzy
+msgid "Emboss"
+msgstr "Emboss"
+
+#: imageedit/sq_imagefilter.cpp:523
+#, fuzzy
+msgid "Equalize"
+msgstr "Equalize"
+
+#: imageedit/sq_imagefilter.cpp:524
+#, fuzzy
+msgid "Fade"
+msgstr "Fade"
+
+#: imageedit/sq_imagefilter.cpp:525
+#, fuzzy
+msgid "Flatten"
+msgstr "Flatten"
+
+#: imageedit/sq_imagefilter.cpp:526
+msgid "Implode"
+msgstr "Implode"
+
+#: imageedit/sq_imagefilter.cpp:527
+msgid "Negative"
+msgstr "Негатив"
+
+#: imageedit/sq_imagefilter.cpp:528
+msgid "Noise"
+msgstr "Шум"
+
+#: imageedit/sq_imagefilter.cpp:529
+msgid "Oil"
+msgstr "Масло"
+
+#: imageedit/sq_imagefilter.cpp:530
+#, fuzzy
+msgid "Shade"
+msgstr "Shade"
+
+#: imageedit/sq_imagefilter.cpp:531
+#, fuzzy
+msgid "Sharpen"
+msgstr "Sharpen"
+
+#: imageedit/sq_imagefilter.cpp:532
+#, fuzzy
+msgid "Solarize"
+msgstr "Solarize"
+
+#: imageedit/sq_imagefilter.cpp:533
+#, fuzzy
+msgid "Spread"
+msgstr "Spread"
+
+#: imageedit/sq_imagefilter.cpp:534
+msgid "Swap colors"
+msgstr "Поменять цвета"
+
+#: imageedit/sq_imagefilter.cpp:535
+msgid "Swirl"
+msgstr "Закрутка"
+
+#: imageedit/sq_imagefilter.cpp:537
+msgid "Grayscale"
+msgstr "Серое"
+
+#: imageedit/sq_imagefilter.cpp:538
+msgid "Redeye"
+msgstr "Красные глаза"
+
+#: imageedit/sq_imagefilter.cpp:541
+msgid "Image after filtering:"
+msgstr "Изображение после фильтрации:"
+
+#: imageedit/sq_imagefilter.cpp:542 imageedit/sq_imagebcg.cpp:397
+msgid "Original image:"
+msgstr "Оригинальное изображение:"
+
+#: imageedit/sq_imagebcg.cpp:378
+msgid "Color balance"
+msgstr "Баланс цвета"
+
+#: imageedit/sq_imagebcg.cpp:394
+msgid "Colorize"
+msgstr "Цветность"
+
+#: imageedit/sq_imagebcg.cpp:396
+msgid "Image after colorizing:"
+msgstr "Изображение после оцветовки:"
+
+#: imageedit/sq_imageconvert.cpp:108 imageedit/sq_imageconvert.cpp:173
+msgid "col1"
+msgstr "col1"
+
+#: imageedit/sq_imageconvert.cpp:109 imageedit/sq_imageconvert.cpp:174
+msgid "col2"
+msgstr "col2"
+
+#: imageedit/sq_imageconvert.cpp:166
+msgid "SQ_ImageConvert"
+msgstr "SQ_ImageConvert"
+
+#: imageedit/sq_imageconvert.cpp:167
+msgid "Convert"
+msgstr "Преобразовать"
+
+#: imageedit/sq_imageconvert.cpp:172
+msgid "Convertion options"
+msgstr "Опции преобразования"
+
+#: sq_viewcache.cpp:49 sq_viewcache.cpp:107
+msgid "Parameters"
+msgstr "Параметры"
+
+#: sq_viewcache.cpp:103
+msgid "Memory Cache"
+msgstr "Кэш Памяти"
+
+#: sq_viewcache.cpp:108
+msgid "<b>Total:</b>"
+msgstr "<b>Всего:</b>"
+
+#: sq_imageproperties.ui.h:29
+msgid "Copy entry"
+msgstr "Копировать запись"
+
+#: sq_imageproperties.ui.h:30
+msgid "Copy all entries"
+msgstr "Копировать все записи"
+
+#: sq_imageproperties.ui.h:95
+msgid "EXIF"
+msgstr "EXIF"
+
+#: sq_imageproperties.ui.h:105
+msgid "Simple"
+msgstr "Простой"
+
+#: sq_imageproperties.ui.h:108
+msgid "Full"
+msgstr "Расширенный"
+
+#: sq_imageproperties.ui.h:127
+msgid "EXIF (no)"
+msgstr "EXIF (нет)"
+
+#: sq_imageproperties.ui.h:177
+msgid "Metadata (no)"
+msgstr "Метаданные (нет)"
+
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr "Барышев Дмитрий"
+
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr "ksquirrel@tut.by"
+
+#: sq_glwidget.cpp:233
+msgid "Rectangle"
+msgstr "Прямоугольник"
+
+#: sq_glwidget.cpp:234
+msgid "Ellipse"
+msgstr "Эллипс"
+
+#: sq_glwidget.cpp:239
+msgid "Fit width"
+msgstr "Заполнить ширину"
+
+#: sq_glwidget.cpp:240
+msgid "Fit height"
+msgstr "Заполнить высоту"
+
+#: sq_glwidget.cpp:241
+msgid "Fit image"
+msgstr "Заполнить изображение"
+
+#: sq_glwidget.cpp:242
+msgid "Zoom 100%"
+msgstr "Увеличение 100%"
+
+#: sq_glwidget.cpp:243
+msgid "Leave previous zoom"
+msgstr "Оставить предыдущее увеличение"
+
+#: sq_glwidget.cpp:244
+msgid "Ignore, if the image is less than window"
+msgstr "Игнорировать, если изображение меньше окна"
+
+#: sq_glwidget.cpp:318
+msgid "Go to first image"
+msgstr "Перейти к первому изображению"
+
+#: sq_glwidget.cpp:319
+msgid "Previous image"
+msgstr "Предыдущее изображение"
+
+#: sq_glwidget.cpp:321
+msgid "Next image"
+msgstr "Следующее изображение"
+
+#: sq_glwidget.cpp:323
+msgid "Go to last image"
+msgstr "Перейти к последнему изображению"
+
+#: sq_glwidget.cpp:326 sq_glwidget.cpp:2685
+msgid "Zoom +"
+msgstr "Увеличить"
+
+#: sq_glwidget.cpp:328 sq_glwidget.cpp:2686
+msgid "Zoom -"
+msgstr "Уменьшить"
+
+#: sq_glwidget.cpp:332 sq_glwidget.cpp:2677
+msgid "Rotate left"
+msgstr "Повернуть влево"
+
+#: sq_glwidget.cpp:334 sq_glwidget.cpp:2678
+msgid "Rotate right"
+msgstr "Повернуть вправо"
+
+#: sq_glwidget.cpp:336 sq_glwidget.cpp:2707
+msgid "Flip vertically"
+msgstr "Отразить вертикально"
+
+#: sq_glwidget.cpp:338 sq_glwidget.cpp:2708
+msgid "Flip horizontally"
+msgstr "Отразить горизонтально"
+
+#: sq_glwidget.cpp:340
+msgid "Normalize"
+msgstr "Нормализация"
+
+#: sq_glwidget.cpp:342 sq_glwidget.cpp:2723
+msgid "Fullscreen"
+msgstr "Полный экран"
+
+#: sq_glwidget.cpp:344
+msgid "Select image"
+msgstr "Выбрать изображение"
+
+#: sq_glwidget.cpp:346
+msgid "Selection"
+msgstr "Выделение"
+
+#: sq_glwidget.cpp:348 sq_glwidget.cpp:2717 sq_codecsettingsskeleton.cpp:128
+msgid "Codec Settings"
+msgstr "Настройка кодека"
+
+#: sq_glwidget.cpp:351
+msgid "Show navigator"
+msgstr "Показать навигатор"
+
+#: sq_glwidget.cpp:1024
+msgid "yes"
+msgstr "да"
+
+#: sq_glwidget.cpp:1024
+msgid "no"
+msgstr "нет"
+
+#: sq_glwidget.cpp:1485
+msgid "Codec for %1 format not found"
+msgstr "Кодек для формата %1 не найден"
+
+#: sq_glwidget.cpp:1729
+msgid "Memory allocation failed for %1 of memory."
+msgstr "Ошибка выделения памяти для %1 памяти."
+
+#: sq_glwidget.cpp:1741
+msgid "Memory allocation failed"
+msgstr "Ошибка выделения памяти"
+
+#: sq_glwidget.cpp:1747
+msgid "Decoding failed"
+msgstr "Ошибка декодирования"
+
+#: sq_glwidget.cpp:1849
+msgid " ms."
+msgstr " мс."
+
+#: sq_glwidget.cpp:2363
+msgid ""
+"Sorry, could not perfom write operation\n"
+"for codec \"%1\""
+msgstr ""
+"Извините, не могу начать операцию записи\n"
+"для кодека \"%1\""
+
+#: sq_glwidget.cpp:2382 sq_glwidget.cpp:2390 sq_glwidget.cpp:2412
+msgid "Error writing image"
+msgstr "Ошибка записи изображения"
+
+#: sq_glwidget.cpp:2433
+msgid "Try another location ?"
+msgstr "Попробовать другой путь ?"
+
+#: sq_glwidget.cpp:2658
+msgid "Rotate"
+msgstr "Поворот"
+
+#: sq_glwidget.cpp:2661 sq_options.cpp:803
+msgid "Window"
+msgstr "Окно"
+
+#: sq_glwidget.cpp:2670
+msgid "Next"
+msgstr "Следующий"
+
+#: sq_glwidget.cpp:2671
+msgid "Previous"
+msgstr "Предыдущий"
+
+#: sq_glwidget.cpp:2672
+msgid "First"
+msgstr "Первый"
+
+#: sq_glwidget.cpp:2673
+msgid "Last"
+msgstr "Последний"
+
+#: sq_glwidget.cpp:2680
+msgid "Rotate 180'"
+msgstr "Повернуть на 180'"
+
+#: sq_glwidget.cpp:2682
+msgid "Rotate 1' left"
+msgstr "Повернуть влево на 1'"
+
+#: sq_glwidget.cpp:2683
+msgid "Rotate 1' right"
+msgstr "Повернуть вправо на 1'"
+
+#: sq_glwidget.cpp:2687
+msgid "Zoom 2x"
+msgstr "Увеличить 2х"
+
+#: sq_glwidget.cpp:2688
+msgid "Zoom 1/2x"
+msgstr "Увеличить 1/2х"
+
+#: sq_glwidget.cpp:2698
+msgid "Move left"
+msgstr "Сдвинуть влево"
+
+#: sq_glwidget.cpp:2699
+msgid "Move right"
+msgstr "Сдвинуть вправо"
+
+#: sq_glwidget.cpp:2700
+msgid "Move up"
+msgstr "Сдвинуть верх"
+
+#: sq_glwidget.cpp:2701
+msgid "Move down"
+msgstr "Сдвинуть вниз"
+
+#: sq_glwidget.cpp:2703
+msgid "Start/stop animation"
+msgstr "Начать/остановить анимацию"
+
+#: sq_glwidget.cpp:2704
+msgid "Hide/show background"
+msgstr "Показать/скрыть фон"
+
+#: sq_glwidget.cpp:2705
+msgid "Hide/show tickmarks"
+msgstr "Показать/скрыть метки"
+
+#: sq_glwidget.cpp:2710
+msgid "First page"
+msgstr "Первая страница"
+
+#: sq_glwidget.cpp:2711
+msgid "Previous page"
+msgstr "Предыдущая страница"
+
+#: sq_glwidget.cpp:2712
+msgid "Next page"
+msgstr "Следующая страница"
+
+#: sq_glwidget.cpp:2713
+msgid "Last page"
+msgstr "Последняя страница"
+
+#: sq_glwidget.cpp:2715
+msgid "To clipboard"
+msgstr "В буфер обмена"
+
+#: sq_glwidget.cpp:2720
+msgid "Color balance..."
+msgstr "Баланс цвета..."
+
+#: sq_glwidget.cpp:2721
+msgid "Apply filter..."
+msgstr "Применить фильтр..."
+
+#: sq_glwidget.cpp:2724
+msgid "Hide/show toolbar"
+msgstr "Показать/скрыть панель инстументов"
+
+#: sq_glwidget.cpp:2725
+msgid "Hide/show statusbar"
+msgstr "Показать/скрыть строку статуса"
+
+#: sq_glwidget.cpp:2728
+msgid "Reset"
+msgstr "Нормализовать"
+
+#: sq_glwidget.cpp:2731 sq_helpwidget.cpp:174
+msgid "Hotkeys"
+msgstr "Горячие клавиши"
+
+#: sq_glview.cpp:84
+msgid "Loading time"
+msgstr "Время загрузки"
+
+#: sq_options.cpp:746
+msgid "<b>The main options</b>"
+msgstr "<b>Главные настройки</b>"
+
+#: sq_options.cpp:748
+msgid "Write configuration file to disk, when I press \"OK\""
+msgstr "Записать конфигурационный файл на диск, когда я нажму \"OK\""
+
+#: sq_options.cpp:749
+msgid "Minimize to tray after closing"
+msgstr "Спрятаться в трей после закрытия"
+
+#: sq_options.cpp:750
+msgid "Show splash screen at startup"
+msgstr "Показать заставку при запуске"
+
+#: sq_options.cpp:751
+msgid "Don't show animated logo in toolbar"
+msgstr "Не показывать анимированное лого на панели инструментов"
+
+#: sq_options.cpp:752
+msgid "Apply codec settings to"
+msgstr "Применить настройки кодеков в"
+
+#: sq_options.cpp:753
+msgid "Thumbnail loader"
+msgstr "Загрузчике эскизов"
+
+#: sq_options.cpp:754
+msgid "Image viewer"
+msgstr "Просмотрщике изображений"
+
+#: sq_options.cpp:755 sq_options.cpp:773
+msgid "Both"
+msgstr "И там и там"
+
+#: sq_options.cpp:756
+msgid "RunTime"
+msgstr "Во время выполнения"
+
+#: sq_options.cpp:757
+msgid "Treat unknown mime types as unsupported"
+msgstr "Считать неизвестные типы файлов неподдерживаемыми"
+
+#: sq_options.cpp:758
+msgid "Load KIPI plugins on demand (for slow machines)"
+msgstr "Загружать KIPI плагины по требованию (для слабых машин)"
+
+#: sq_options.cpp:759
+msgid "<b>Disk navigator</b>"
+msgstr "<b>Навигатор по диску</b>"
+
+#: sq_options.cpp:760
+msgid "On starting open..."
+msgstr "При запуске открыть..."
+
+#: sq_options.cpp:762
+msgid "Custom directory:"
+msgstr "Мою папку:"
+
+#: sq_options.cpp:763
+msgid "Last visited directory"
+msgstr "Последнюю папку"
+
+#: sq_options.cpp:764
+msgid "Current directory, where KSquirrel starts"
+msgstr "Текущую папку, где запускается KSquirrel"
+
+#: sq_options.cpp:765
+msgid "Run unknown file formats separately (with default application)"
+msgstr "Открывать неизвестные типы форматов отдельно (приложением по умолчанию)"
+
+#: sq_options.cpp:767
+msgid "Save history"
+msgstr "Сохранить историю"
+
+#: sq_options.cpp:768
+msgid "Jump into archives"
+msgstr "Заходить в архивы"
+
+#: sq_options.cpp:769
+msgid "Jump to first image"
+msgstr "Перейти к первому изображению"
+
+#: sq_options.cpp:770
+msgid "Don't show directories"
+msgstr "Не показывать папки"
+
+#: sq_options.cpp:771
+msgid "Main"
+msgstr "Главные"
+
+#: sq_options.cpp:772
+msgid "Synchronization"
+msgstr "Синхронизация"
+
+#: sq_options.cpp:774
+msgid "Tree -> Navigator"
+msgstr "Дерево -> Навигатор"
+
+#: sq_options.cpp:775
+msgid "Tree <- Navigator"
+msgstr "Дерево <- Навигатор"
+
+#: sq_options.cpp:776
+msgid "Clicking"
+msgstr "Клики"
+
+#: sq_options.cpp:777
+msgid "<b>Thumbnails</b>"
+msgstr "<b>Эскизы</b>"
+
+#: sq_options.cpp:779
+msgid "Do not write thumbnails on disk"
+msgstr "Не записывать эскизы на диск"
+
+#: sq_options.cpp:780
+msgid "Show tooltips with thumbnail info"
+msgstr "Показывать подсказки с информацией об эскизе"
+
+#: sq_options.cpp:781
+msgid "Margin between thumbnails"
+msgstr "Расстояние между эскизами"
+
+#: sq_options.cpp:782 sq_options.cpp:815
+msgid " pixels"
+msgstr " точек"
+
+#: sq_options.cpp:783
+msgid "Don't show tooltips when the main window is inactive"
+msgstr "Не показывать подсказки, когда главное окно неактивно"
+
+#: sq_options.cpp:784
+msgid "Mark supported image formats with clock icon (slow)"
+msgstr "Помечать поддерживаемые форматы изображений иконкой часов (медленно)"
+
+#: sq_options.cpp:785
+msgid "Maximum cache size (in memory)"
+msgstr "Максимальный размер кэша (в памяти)"
+
+#: sq_options.cpp:786
+msgid " Kb"
+msgstr " Kб"
+
+#: sq_options.cpp:787
+msgid "No cache"
+msgstr "Нет кэша"
+
+#: sq_options.cpp:788
+msgid "On scroll event"
+msgstr "По событию скролла"
+
+#: sq_options.cpp:789
+msgid "Zoom the scene"
+msgstr "Масштабировать сцену"
+
+#: sq_options.cpp:790
+msgid "Load next/previos file"
+msgstr "Загрузить следующий/предыдущий файл"
+
+#: sq_options.cpp:791
+msgid "Background"
+msgstr "Фон"
+
+#: sq_options.cpp:792
+msgid "Custom texture"
+msgstr "Моя текстура"
+
+#: sq_options.cpp:793
+msgid "Custom color"
+msgstr "Мой цвет"
+
+#: sq_options.cpp:794
+msgid "System color"
+msgstr "Системный цвет"
+
+#: sq_options.cpp:798
+msgid "Validate"
+msgstr "Проверить"
+
+#: sq_options.cpp:800
+msgid "Hide statusbar in fullscreen"
+msgstr "Прятать строку статуса в полноэкранном режиме"
+
+#: sq_options.cpp:801
+msgid "Hide toolbar in fullscreen"
+msgstr "Прятать панель инструментов в полноэкранном режиме"
+
+#: sq_options.cpp:802
+msgid "Show images progressively"
+msgstr "Показывать изображения прогрессивно"
+
+#: sq_options.cpp:804
+msgid "Image pages"
+msgstr "Страницы изображения"
+
+#: sq_options.cpp:805
+msgid "Load all pages"
+msgstr "Загрузить все страницы"
+
+#: sq_options.cpp:806
+msgid "Load only first page"
+msgstr "Загрузить только первую страницу"
+
+#: sq_options.cpp:807
+msgid "Load no more than"
+msgstr "Загрузить не более чем"
+
+#: sq_options.cpp:808
+msgid " pages"
+msgstr " страниц"
+
+#: sq_options.cpp:809
+msgid "Loader"
+msgstr "Загрузчик"
+
+#: sq_options.cpp:810
+msgid "Draw tickmarks around the image"
+msgstr "Рисовать пометки вокруг изображения"
+
+#: sq_options.cpp:811
+msgid "Draw background for transparent images"
+msgstr "Рисовать фон для прозрачных изображений"
+
+#: sq_options.cpp:812
+msgid "Rotating"
+msgstr "Поворот"
+
+#: sq_options.cpp:813
+msgid " degrees"
+msgstr " градусов"
+
+#: sq_options.cpp:814 sq_helpwidget.cpp:183
+msgid "Moving"
+msgstr "Сдвиг"
+
+#: sq_options.cpp:817
+msgid "Zoom limit"
+msgstr "Предел масштабирования"
+
+#: sq_options.cpp:818
+msgid "Minimum: 1%, maximum: 10'000%"
+msgstr "Минимум: 1%, максимум: 10'000%"
+
+#: sq_options.cpp:819
+msgid "Custom"
+msgstr "Мой"
+
+#: sq_options.cpp:821
+msgid "mimimum"
+msgstr "минимум"
+
+#: sq_options.cpp:822 sq_options.cpp:824
+msgid " %"
+msgstr " %"
+
+#: sq_options.cpp:823
+msgid "maximum"
+msgstr "максимум"
+
+#: sq_options.cpp:825
+msgid "No limit"
+msgstr "Нет предела"
+
+#: sq_options.cpp:826
+msgid "Zoom koefficient"
+msgstr "Коэффициент масштабирования"
+
+#: sq_options.cpp:827
+msgid "%"
+msgstr "%"
+
+#: sq_options.cpp:828
+msgid "None"
+msgstr "Нет"
+
+#: sq_options.cpp:830
+msgid "<b>Customize OpenGL widget</b>"
+msgstr "<b>Настроить окно OpenGL</b>"
+
+#: sq_options.cpp:831
+msgid "Recursion"
+msgstr "Рекурсия"
+
+#: sq_options.cpp:832
+msgid "No recursion"
+msgstr "Нет рекурсии"
+
+#: sq_options.cpp:833
+msgid "Show number of files"
+msgstr "Показывать количество файлов"
+
+#: sq_options.cpp:834
+msgid "Show number of subfolders and files"
+msgstr "Показывать количество подпапок и файлов"
+
+#: sq_options.cpp:835
+msgid "Show number of subfolders"
+msgstr "Показывать количество подпапок"
+
+#: sq_options.cpp:836
+msgid "Treeview"
+msgstr "Дерево"
+
+#: sq_options.cpp:837
+msgid "Show device path"
+msgstr "Показывать путь к устройству"
+
+#: sq_options.cpp:838
+msgid "Show mount options"
+msgstr "Показывать опции монтирования"
+
+#: sq_options.cpp:839
+msgid "Show filesystem type"
+msgstr "Показывать тип файловой системы"
+
+#: sq_options.cpp:840
+msgid "Mount view"
+msgstr "Просмотр точек монтирования"
+
+#: sq_options.cpp:841
+msgid "Enable preview window"
+msgstr "Разрешить окно предпросмотра"
+
+#: sq_options.cpp:843
+msgid "Delay before image loading"
+msgstr "Задержка перед загрузкой изображения"
+
+#: sq_options.cpp:844 sq_slideshow.cpp:218
+msgid " ms"
+msgstr " мс"
+
+#: sq_options.cpp:845
+msgid "Background color for preview widget:"
+msgstr "Цвет фона для окна предпросмотра"
+
+#: sq_options.cpp:847
+msgid "Don't load preview image on file execution"
+msgstr "Не загружать изображения предпросмотра при выполнении файла"
+
+#: sq_options.cpp:848
+msgid "Disables loading preview image when user launches image with mouse"
+msgstr "Запрещает загружать изображения предпросмотра при выполнении файла с помощью мыши"
+
+#: sq_options.cpp:849
+msgid "Image preview"
+msgstr "Изображение предпросмотра"
+
+#: sq_options.cpp:850
+msgid "<b>Sidebar settings</b>"
+msgstr "<b>Настройки боковой панели</b>"
+
+#: sq_options.cpp:851
+msgid "<b>KIPI Configuration</b>"
+msgstr "<b>Конфигурация KIPI</b>"
+
+#: sq_slideshow.cpp:205
+msgid "Slideshow Options"
+msgstr "Настройки Слайдов"
+
+#: sq_slideshow.cpp:206
+msgid "Start"
+msgstr "Старт"
+
+#: sq_slideshow.cpp:209
+msgid "Set directory to current"
+msgstr "Установить папку в текущую"
+
+#: sq_slideshow.cpp:210
+msgid "Last visited directories"
+msgstr "Последние посещённые папки"
+
+#: sq_slideshow.cpp:220
+msgid "Repeats:"
+msgstr "Повторы:"
+
+#: sq_slideshow.cpp:221
+msgid "Background color:"
+msgstr "Цвет фона:"
+
+#: sq_slideshow.cpp:222
+msgid "Onscreen messages"
+msgstr "Экранные сообщения"
+
+#: sq_slideshow.cpp:223
+msgid "Show current index"
+msgstr "Показать текущий индекс"
+
+#: sq_slideshow.cpp:224
+msgid "Show file name"
+msgstr "Показать имя файла"
+
+#: sq_slideshow.cpp:225
+msgid "Show file size"
+msgstr "Показать размер файла"
+
+#: sq_slideshow.cpp:226
+msgid "Recursively"
+msgstr "Рекурсивно"
+
+#: ksquirrel.cpp:288
+msgid "Clear history"
+msgstr "Очистить историю"
+
+#: ksquirrel.cpp:289
+msgid "Clear adress"
+msgstr "Очистить адрес"
+
+#: ksquirrel.cpp:294
+msgid "Go!"
+msgstr "Понеслась!"
+
+#: ksquirrel.cpp:341
+msgid "Libraries' filters"
+msgstr "Библиотечные фильтры"
+
+#: ksquirrel.cpp:364
+msgid "All supported formats"
+msgstr "Все поддерживаемые форматы"
+
+#: ksquirrel.cpp:374
+msgid "User's filters"
+msgstr "Пользовательские фильтры"
+
+#: ksquirrel.cpp:510
+msgid "Folder tree"
+msgstr "Дерево каталогов"
+
+#: ksquirrel.cpp:511
+msgid "Mount points"
+msgstr "Точки монтирования"
+
+#: ksquirrel.cpp:628
+msgid "&Navigator"
+msgstr "&Навигатор"
+
+#: ksquirrel.cpp:630
+msgid "&Action"
+msgstr "&Действие"
+
+#: ksquirrel.cpp:633
+msgid "&KIPI Plugins"
+msgstr "&KIPI Плагины"
+
+#: ksquirrel.cpp:661
+msgid "Fi&lter"
+msgstr "Фи&льтр"
+
+#: ksquirrel.cpp:720
+msgid "Thumbnail size"
+msgstr "Размер эскизов"
+
+#: ksquirrel.cpp:723 sq_options.ui.h:137
+msgid "Image window"
+msgstr "Окно изображения"
+
+#: ksquirrel.cpp:725
+msgid "Reload codecs from disk"
+msgstr "Перезагрузить кодеки с диска"
+
+#: ksquirrel.cpp:726
+msgid "Configure external tools..."
+msgstr "Настроить внешние утилиты..."
+
+#: ksquirrel.cpp:727
+msgid "Configure filters..."
+msgstr "Настроить фильтры..."
+
+#: ksquirrel.cpp:728
+msgid "Goto tray"
+msgstr "Спрятаться в трей"
+
+#: ksquirrel.cpp:729
+msgid "Open file and change directory"
+msgstr "Открыть файл и сменить каталог"
+
+#: ksquirrel.cpp:730
+msgid "Open file"
+msgstr "Открыть файл"
+
+#: ksquirrel.cpp:731
+msgid "Thumbnail cache manager..."
+msgstr "Управление кэшем эскизов"
+
+#: ksquirrel.cpp:735
+msgid "List"
+msgstr "Список"
+
+#: ksquirrel.cpp:736
+msgid "Icons"
+msgstr "Иконки"
+
+#: ksquirrel.cpp:737
+msgid "Details"
+msgstr "Детально"
+
+#: ksquirrel.cpp:738 sq_options.ui.h:136
+msgid "Thumbnails"
+msgstr "Эскизы"
+
+#: ksquirrel.cpp:740
+msgid "Show URL box"
+msgstr "Показать строку адреса"
+
+#: ksquirrel.cpp:742
+msgid "Built-in image window"
+msgstr "Встроенное окно просмотра изображения"
+
+#: ksquirrel.cpp:745
+msgid "Slideshow"
+msgstr "Слайды"
+
+#: ksquirrel.cpp:746
+msgid "Slideshow advanced"
+msgstr "Слайды продвинуто"
+
+#: ksquirrel.cpp:748
+msgid "Codecs information..."
+msgstr "Информация о кодеках"
+
+#: ksquirrel.cpp:749
+msgid "OpenGL information..."
+msgstr "Информация об OpenGL"
+
+#: ksquirrel.cpp:751
+msgid "Medium thumbnails"
+msgstr "Средние эскизы"
+
+#: ksquirrel.cpp:752
+msgid "Large thumbnails"
+msgstr "Большие эскизы"
+
+#: ksquirrel.cpp:753
+msgid "Huge thumbnails"
+msgstr "Огромные эскизы"
+
+#: ksquirrel.cpp:755
+msgid "Select group"
+msgstr "Отметить группу"
+
+#: ksquirrel.cpp:756
+msgid "Deselect group"
+msgstr "Снять отметку с группы"
+
+#: ksquirrel.cpp:776
+msgid "Extended thumbnails"
+msgstr "Расширенные эскизы"
+
+#: ksquirrel.cpp:1085
+msgid " writing settings and thumbnails...  "
+msgstr "запись настроек и эскизов..."
+
+#: sq_filters.cpp:124 sq_filters.cpp:197
+msgid "Extensions"
+msgstr "Расширения"
+
+#: sq_filters.cpp:181
+msgid "Adjust Filters"
+msgstr "Настроить Фильтры"
+
+#: sq_filters.cpp:186
+msgid "New filter"
+msgstr "Новый фильтр"
+
+#: sq_filters.cpp:193
+msgid "Move filter up"
+msgstr "Переместить фильтр вверх"
+
+#: sq_filters.cpp:195
+msgid "Move filter down"
+msgstr "Переместить фильтр вниз"
+
+#: sq_filters.cpp:198
+msgid "Menuitem contains both name and extension"
+msgstr "Элемент меню содержит и имя и расширение"
+
+#: sq_helpwidget.cpp:175
+msgid ""
+"<p align=center><table><tr><td><b><p align=right>Esc,X,Return</p></b></"
+"td><td>close</td></tr><tr><td><b><p align=right>Middle click, F</p></b></"
+"td><td>fullscreen</td></tr><tr><td><b><p align=right>T</p></b></td><td>show/"
+"hide toolbar with actions</td></tr><tr><td><b><p align=right>Z</p></b></"
+"td><td>show 'Zoom' menu</td></tr><tr><td><b><p align=right>Y</p></b></"
+"td><td>show/hide statusbar</td></tr><tr><td><b><p align=right>/</p></b></"
+"td><td>show this help</td></tr><tr><td><b><p align=right>Right click, M, "
+"ContextMenu</p></b></td><td>show context menu</td></tr><tr><td><b><p "
+"align=right>N</p></b></td><td>toggle filter</td></tr><tr><td><b><p "
+"align=right>SHIFT+Left button</p></b></td><td>select a region</td></tr></"
+"table></p>"
+msgstr ""
+"<p align=center><table><tr><td><b><p align=right>Esc,X,Ввод</p></b></"
+"td><td>закрыть</td></tr><tr><td><b><p align=right>Средний клик, F</p></b></"
+"td><td>полный экран</td></tr><tr><td><b><p align=right>T</p></b></td><td>показать/скрыть панель с действиями</td></tr><tr><td><b><p align=right>Z</p></b></"
+"td><td>показать меню масштибирования</td></tr><tr><td><b><p align=right>Y</p></b></"
+"td><td>показать/скрыть строку статуса</td></tr><tr><td><b><p align=right>/</p></b></"
+"td><td>показать эту помощь</td></tr><tr><td><b><p align=right>Правый клик, M, "
+"ContextMenu</p></b></td><td>показать контекстное меню</td></tr><tr><td><b><p "
+"align=right>N</p></b></td><td>сменить фильтр</td></tr><tr><td><b><p "
+"align=right>SHIFT+Левая кнопка</p></b></td><td>выбрать регион</td></tr></"
+"table></p>"
+
+#: sq_helpwidget.cpp:176
+msgid ""
+"<p align=center><table><tr><td><b><p align=right>Space, Page Down</p></b></"
+"td><td>next image</td></tr><tr><td><b><p align=right>Backspace, Page Up</p></"
+"b></td><td>previous image</td></tr><tr><td><b><p align=right>Home</p></b></"
+"td><td>first image</td></tr><tr><td><b><p align=right>End</p></b></"
+"td><td>last image</td></tr></table></p>"
+msgstr ""
+"<p align=center><table><tr><td><b><p align=right>Пробел, Page Down</p></b></"
+"td><td>следующее изображение</td></tr><tr><td><b><p align=right>Backspace, Page Up</p></"
+"b></td><td>предыдущее изображение</td></tr><tr><td><b><p align=right>Home</p></b></"
+"td><td>первое изображение</td></tr><tr><td><b><p align=right>End</p></b></"
+"td><td>последнее изображение</td></tr></table></p>"
+
+#: sq_helpwidget.cpp:177
+msgid ""
+"<p align=center><table><tr><td><b><p align=right>Left Arrow, Right Arrow,"
+"<br>Up Arrow, Down Arrow</p></b></td><td>move the image</td></"
+"tr><tr><td><b><p align=right>Ctrl + Left Arrow</p></b></td><td>rotate left</"
+"td></tr><tr><td><b><p align=right>Ctrl + Right Arrow</p></b></td><td>rotate "
+"right</td></tr><tr><td><b><p align=right>Ctrl + Up/Down Arrow</p></b></"
+"td><td>rotate for 180 degrees up/down</td></tr><tr><td><b><p "
+"align=right>Shift + Left/Right Arrow</p></b></td><td>rotate for 1 degree "
+"left/right</td></tr></table</p>"
+msgstr ""
+"<p align=center><table><tr><td><b><p align=right>Стрелки Вверх, Вниз, Влево, Вправо</p></b></td><td>сдвинуть изображение</td></"
+"tr><tr><td><b><p align=right>Ctrl + Стрелка Влево</p></b></td><td>повернуть влево</"
+"td></tr><tr><td><b><p align=right>Ctrl + Стрелка Вправо</p></b></td><td>повернуть вправо</td></tr><tr><td><b><p align=right>Ctrl + Стрелка Вверх/Вниз</p></b></"
+"td><td>повернуть на 180' вверх/вниз</td></tr><tr><td><b><p "
+"align=right>Shift + Стрелка Влево/Вправо</p></b></td><td>повернуть на 1' влево/вправо</td></tr></table</p>"
+
+#: sq_helpwidget.cpp:178
+msgid ""
+"<p align=center><table><tr><td><b><p align=right>+/-</p></b></td><td>zoom "
+"Nx</td></tr><tr><td><b><p align=right>Ctrl + +/-</p></b></td><td>zoom "
+"2x/0.5x</td></tr><tr><td><b><p align=right>Scroll</p></b></td><td>load next/"
+"prev file OR zoom+/zoom-</td></tr><tr><td><b><p align=right>Shift + Scroll</"
+"p></b></td><td>zoom+/zoom-</td></tr><tr><td><b><p align=right>Ctrl + Scroll</"
+"p></b></td><td>zoom+ 2x/zoom- 2x</td></tr><tr><td><b><p align=right>1..9</"
+"p></b></td><td>zoom 1..9x</td></tr><tr><td><b><p align=right>0</p></b></"
+"td><td>zoom 10x</td></tr><tr><td><b><p align=right>comma</p></b></td><td>fit "
+"width</td></tr><tr><td><b><p align=right>period</p></b></td><td>fit height</"
+"td></tr><tr><td><b><p align=right>*</p></b></td><td>fit image</td></tr></"
+"table</p>"
+msgstr ""
+"<p align=center><table><tr><td><b><p align=right>+/-</p></b></td><td>масштабировать "
+"Nx</td></tr><tr><td><b><p align=right>Ctrl + +/-</p></b></td><td>масштабировать "
+"2x/0.5x</td></tr><tr><td><b><p align=right>Scroll</p></b></td><td>загрузить след./предыдущ. файл ИЛИ увеличить/уменьшить</td></tr><tr><td><b><p align=right>Shift + Scroll</"
+"p></b></td><td>увеличить/уменьшить</td></tr><tr><td><b><p align=right>Ctrl + Scroll</"
+"p></b></td><td>увеличить 2x/уменшить 2x</td></tr><tr><td><b><p align=right>1..9</"
+"p></b></td><td>увеличить 1..9x</td></tr><tr><td><b><p align=right>0</p></b></"
+"td><td>увеличить 10x</td></tr><tr><td><b><p align=right>запятая</p></b></td><td>заполнить ширину</td></tr><tr><td><b><p align=right>точка</p></b></td><td>заполнить высоту</"
+"td></tr><tr><td><b><p align=right>*</p></b></td><td>заполнить изображение</td></tr></"
+"table</p>"
+
+#: sq_helpwidget.cpp:179
+msgid ""
+"<p align=center><table><tr><td><p align=right><b>S</b></p></td><td>save as</"
+"td></tr><tr><td><p align=right><b>V</b></p></td><td>flip vertically</td></"
+"tr><tr><td><p align=right><b>H</b></p></td><td>flip horizontally</td></"
+"tr><tr><td><p align=right><b>R</b></p></td><td>reset</td></tr><tr><td><p "
+"align=right><b>P</b></p></td><td>image properties</td></tr><tr><td><p "
+"align=right><b>C</b></p></td><td>codec settings</td></tr><tr><td><p "
+"align=right><b>L</b></p></td><td>ignore zoom if the image is less than "
+"window</td></tr><tr><td><p align=right><b>I</b></p></td><td>menu with "
+"images</td></tr><tr><td><p align=right><b>A</b></p></td><td>stop/start "
+"animation</td></tr><tr><td><p align=right><b>B</b></p></td><td>toggle "
+"drawing background for transparent images</td></tr><tr><td><p "
+"align=right><b>K</b></p></td><td>toggle drawing tickmarks</td></"
+"tr><tr><td><p align=right><b>E</b></p></td><td>show menu with external "
+"tools</td></tr><tr><td><p align=right><b>F1</b></p></td><td>first image in "
+"miltipaged image</td></tr><tr><td><p align=right><b>F2</b></p></"
+"td><td>previous</td></tr><tr><td><p align=right><b>F3</b></p></td><td>next</"
+"td></tr><tr><td><p align=right><b>F4</b></p></td><td>last</td></tr></table></"
+"p>"
+msgstr ""
+"<p align=center><table><tr><td><p align=right><b>S</b></p></td><td>сохранить как</"
+"td></tr><tr><td><p align=right><b>V</b></p></td><td>отразить вертикально</td></"
+"tr><tr><td><p align=right><b>H</b></p></td><td>отразить горизонтально</td></"
+"tr><tr><td><p align=right><b>R</b></p></td><td>нормализовать</td></tr><tr><td><p "
+"align=right><b>P</b></p></td><td>свойства изображения</td></tr><tr><td><p "
+"align=right><b>C</b></p></td><td>настройки кодека</td></tr><tr><td><p "
+"align=right><b>L</b></p></td><td>игнорировать масштаб, если изображение меньше окна</td></tr><tr><td><p align=right><b>I</b></p></td><td>меню с изображениями</td></tr><tr><td><p align=right><b>A</b></p></td><td>старт/стоп анимации</td></tr><tr><td><p align=right><b>B</b></p></td><td>переключить рисование фона для прозрачных изображений</td></tr><tr><td><p "
+"align=right><b>K</b></p></td><td>переключить рисование пометок</td></"
+"tr><tr><td><p align=right><b>E</b></p></td><td>показать меню с внешними утилитами</td></tr><tr><td><p align=right><b>F1</b></p></td><td>первое изображение в последовательности</td></tr><tr><td><p align=right><b>F2</b></p></"
+"td><td>предыдущее</td></tr><tr><td><p align=right><b>F3</b></p></td><td>следующее</"
+"td></tr><tr><td><p align=right><b>F4</b></p></td><td>последнее</td></tr></table></"
+"p>"
+
+#: sq_helpwidget.cpp:182 sq_options.ui.h:135
+msgid "Filing"
+msgstr "Файлы"
+
+#: sq_helpwidget.cpp:184
+msgid "Current image"
+msgstr "Текущее изображение"
+
+#: sq_options.ui.h:138
+msgid "Sidebar"
+msgstr "Боковая панель"
+
+#: sq_options.ui.h:141
+msgid "KIPI"
+msgstr "KIPI"
+
+#: sq_options.ui.h:260
+msgid "Wrong dimensions: %1x%2."
+msgstr "Неправильные размеры: %1x%2."
+
+#: sq_filethumbviewitem.cpp:45
+msgid ""
+"<tr><td align=left>Type:</td><td align=left>%1</td></tr><tr><td "
+"align=left>Dimensions:</td><td align=left>%2</td></tr><tr><td "
+"align=left>Bits per pixel:</td><td align=left>%3</td></tr><tr><td "
+"align=left>Color space:</td><td align=left>%4</td></tr><tr><td "
+"align=left>Compression:</td><td align=left>%5</td></tr><tr><td "
+"align=left>Number of frames:</td><td align=left>%6</td></tr><tr><td "
+"align=left>Uncompressed size:</td><td align=left>%7</td></tr>"
+msgstr ""
+"<tr><td align=left>Тип:</td><td align=left>%1</td></tr><tr><td "
+"align=left>Размеры:</td><td align=left>%2</td></tr><tr><td "
+"align=left>Бит на пиксель:</td><td align=left>%3</td></tr><tr><td "
+"align=left>Цветовое пространство:</td><td align=left>%4</td></tr><tr><td "
+"align=left>Сжатие:</td><td align=left>%5</td></tr><tr><td "
+"align=left>Количество страниц:</td><td align=left>%6</td></tr><tr><td "
+"align=left>Распакованный размер:</td><td align=left>%7</td></tr>"
+
+#: sq_filethumbviewitem.cpp:51
+msgid "at least 2"
+msgstr "ка минимум 2"
+
+#: sq_slideshowlisting.cpp:86
+msgid "Form1"
+msgstr "Form1"
+
+#: sq_slideshowlisting.cpp:87
+msgid "Listing"
+msgstr "Просмотр"
+
+msgid ""
+"_n: 1 item\n"
+"%n items"
+msgstr ""
+"%n элементе\n"
+"%n элементах\n"
+"%n элементах"
+
+msgid ""
+"_n: 1 folder\n"
+"%n folders"
+msgstr ""
+"%n каталог\n"
+"%n каталога\n"
+"%n каталогов"
+
+msgid ""
+"_n: 1 file\n"
+"%n files"
+msgstr ""
+"%n файл\n"
+"%n файла\n"
+"%n файлов"
+
+msgid ""
+"_n: Convert 1 file\n"
+"Convert %n files"
+msgstr ""
+"Преобразовать %n файл\n"
+"Преобразовать %n файла\n"
+"Преобразовать %n файлов"
+
+#: ksquirrel.cpp:751
+msgid "Rename"
+msgstr "Переименовать"
+
+#: ksquirrel.cpp:1951
+msgid "Renaming File"
+msgstr "Переименовать Файл"
+
+#: ksquirrel.cpp:1952
+msgid "<p>Rename file <b>%1</b> to:</p>"
+msgstr "<p>Переименовать Файл <b>%1</b> в:</p>"
+
+msgid ""
+"_n: 1 error\n"
+"%n errors"
+msgstr ""
+"%n ошибка\n"
+"%n ошибки\n"
+"%n ошибок"

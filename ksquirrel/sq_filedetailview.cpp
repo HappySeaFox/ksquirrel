@@ -54,49 +54,10 @@ SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
 {
     // pixmap for directory item
     dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
-
-    disconnect(this, SIGNAL(currentChanged(QListViewItem *)), 0, 0);
-
-    connect(this, SIGNAL(mouseButtonClicked(int, QListViewItem *, const QPoint &, int)),
-                    this, SLOT(slotMouseButtonClicked(int, QListViewItem *)));
-    connect(this, SIGNAL(doubleClicked(QListViewItem *, const QPoint &, int)),
-                    this, SLOT(slotDoubleClicked(QListViewItem *)));
-    connect(this, SIGNAL(currentChanged(QListViewItem *)),
-                    this, SLOT(slotCurrentChanged(QListViewItem *)));
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
 {}
-
-void SQ_FileDetailView::exec(QListViewItem *i, bool single, bool hl)
-{
-    if(i)
-    {
-        KFileListViewItem *kvi = static_cast<KFileListViewItem *>(i);
-        KFileItem *kfi = kvi->fileInfo();
-
-        if(hl && kfi) // highlight all items
-            emit highlighted(kfi);
-        else if(single && kfi && kfi->isFile()) // execute only files
-            emit launch(kfi);
-    }
-}
-
-void SQ_FileDetailView::slotDoubleClicked(QListViewItem *i)
-{
-    exec(i, !KGlobalSettings::singleClick());
-}
-
-void SQ_FileDetailView::slotMouseButtonClicked(int btn, QListViewItem *i)
-{
-    if(btn == Qt::LeftButton)
-        exec(i, KGlobalSettings::singleClick());
-}
-
-void SQ_FileDetailView::slotCurrentChanged(QListViewItem *i)
-{
-    exec(i, true, true);
-}
 
 /*
  *  Reimplement insertItem() to enable/disable inserting
@@ -154,7 +115,7 @@ void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
     // double click was in viewport, let's invoke browser
     else
-        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
+        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().prettyURL());
 }
 
 // Accept dragging
@@ -168,9 +129,11 @@ void SQ_FileDetailView::dragEnterEvent(QDragEnterEvent *e)
  */
 void SQ_FileDetailView::insertCdUpItem(const KURL &base)
 {
-    KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+    static const QString &dirup = KGlobal::staticQString("..");
 
-    SQ_FileListViewItem *item = new SQ_FileListViewItem(this, QString::fromLatin1(".."), dirPix, fi);
+    KFileItem *fi = new KFileItem(base.upURL(), "inode/directory", S_IFDIR);
+
+    SQ_FileListViewItem *item = new SQ_FileListViewItem(this, dirup, dirPix, fi);
 
     item->setSelectable(false);
     item->setKey(sortingKey("..", true, QDir::Name|QDir::DirsFirst));

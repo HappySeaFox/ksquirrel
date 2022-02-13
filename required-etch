@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#
+# Install required packages in Debian Etch
+#
+# Run this as root before ./configure.gnu
+#
+
+aptitude install kde-devel libkexif1 libkexif1-dev kipi-plugins libkipi0 libkipi0-dev

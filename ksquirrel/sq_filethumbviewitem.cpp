@@ -22,10 +22,6 @@
 #include <qstring.h>
 #include <qpainter.h>
 
-#include <klocale.h>
-#include <kglobalsettings.h>
-#include <kpixmap.h>
-#include <kpixmapeffect.h>
 #include <kwordwrap.h>
 
 #include "sq_filethumbviewitem.h"
@@ -36,32 +32,6 @@ SQ_FileThumbViewItem::SQ_FileThumbViewItem(QIconView *parent, const QString &tex
 
 SQ_FileThumbViewItem::~SQ_FileThumbViewItem()
 {}
-
-/*
- *  Get additional information as QString object.
- */
-QString SQ_FileThumbViewItem::fullInfo() const
-{
-    QString s = i18n("<tr><td align=left>Type:</td><td align=left>%1</td></tr><tr><td align=left>Dimensions:</td><td align=left>%2</td></tr><tr><td align=left>Bits per pixel:</td><td align=left>%3</td></tr><tr><td align=left>Color space:</td><td align=left>%4</td></tr><tr><td align=left>Compression:</td><td align=left>%5</td></tr><tr><td align=left>Number of frames:</td><td align=left>%6</td></tr><tr><td align=left>Uncompressed size:</td><td align=left>%7</td></tr>")
-            .arg(info.info.type)
-            .arg(info.info.dimensions)
-            .arg(info.info.bpp)
-            .arg(info.info.color)
-            .arg(info.info.compression)
-            .arg((info.info.frames > 1 ? i18n("at least 2") : "1")) // since 0.7.0 thumbnail loader doesn't load
-                                                                                                      // more than 2 pages (performance reason)
-            .arg(info.info.uncompressed);
-
-    return s;
-}
-
-/*
- *  Set additional information.
- */
-void SQ_FileThumbViewItem::setInfo(const SQ_Thumbnail &t)
-{
-    info = t;
-}
 
 void SQ_FileThumbViewItem::paintItem(QPainter *p, const QColorGroup &cg)
 {

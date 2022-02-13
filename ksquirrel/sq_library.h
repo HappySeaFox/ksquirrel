@@ -64,6 +64,10 @@ struct SQ_LIBRARY
     // regular expression as string
     QString    regexp_str;
 
+    QString mimetype;
+
+    bool mime_multi;
+
     // information on codec
     QString    quickinfo;
 

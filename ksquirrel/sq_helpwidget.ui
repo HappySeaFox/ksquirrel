@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>512</width>
-            <height>377</height>
+            <height>479</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -36,9 +36,6 @@
         <widget class="QWidgetStack" row="1" column="0">
             <property name="name">
                 <cstring>widgetStack1</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>Box</enum>
             </property>
             <widget class="QWidget">
                 <property name="name">

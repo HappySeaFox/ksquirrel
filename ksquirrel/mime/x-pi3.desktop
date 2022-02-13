@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-pi3
+Icon=image
+Patterns=*.pi3;*.PI3;
+Comment=Degas PI3

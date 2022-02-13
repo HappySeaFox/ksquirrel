@@ -25,19 +25,20 @@ void SQ_Options::init()
     buttonOk->setIconSet(SQ_IconLoader::instance()->loadIcon("ok", KIcon::Desktop, KIcon::SizeSmall));
     int tp;
     SQ_Config *kconf = SQ_Config::instance();
+    QColor color;
 
     pagesNumber->setRange(1, 1000, 1, true);
 
-    SQ_Config::instance()->setGroup("Main");
+    kconf->setGroup("Main");
 
-    QColor color;
-
+    checkKIPIDemand->setChecked(kconf->readBoolEntry("kipi_ondemand", true));
     tp = kconf->readNumEntry("applyto", SQ_CodecSettings::Both);
     buttonGroupCS->setButton(tp);
     checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", false));
     checkSync->setChecked(kconf->readBoolEntry("sync", false));
     checkSplash->setChecked(kconf->readBoolEntry("splash", true));
     checkAnime->setChecked(kconf->readBoolEntry("anime_dont", false));
+    checkTreat->setChecked(kconf->readBoolEntry("treat", true));
 
     KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
@@ -121,7 +122,6 @@ void SQ_Options::init()
     spinMargin->setValue(kconf->readNumEntry("margin", 2));
     spinCacheSize->setValue(kconf->readNumEntry("cache", 1024*5));
     checkNoWriteThumbs->setChecked(kconf->readBoolEntry("dont write", false));
-    checkExtended->setChecked(kconf->readBoolEntry("extended", false));
     checkMark->setChecked(kconf->readBoolEntry("mark", false));
 
     if(kconf->readBoolEntry("tooltips", false))
@@ -141,9 +141,11 @@ void SQ_Options::init()
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("kipi", KIcon::Desktop, KIcon::SizeMedium), i18n("KIPI"));
 
 	QWidget *pg6 = widgetStack->widget(5);
-	QGridLayout *pageLayout6 = new QGridLayout(pg6, 1, 1, 0, 0, "pageLayout_6");
+	QGridLayout *pageLayout6 = new QGridLayout(pg6, 2, 1, 0, -1, "pageLayout_6");
 	kipi = new KIPI::ConfigWidget(pg6);
-	pageLayout6->addWidget(kipi, 0, 0);
+	pageLayout6->addWidget(textLabelKIPI, 0, 0);
+	pageLayout6->addWidget(kipi, 1, 0);
+	checkKIPIDemand->setEnabled(true);
 #endif
 
     listMain->updateAndInstall(this);
@@ -181,12 +183,13 @@ int SQ_Options::start()
         kconf->writeEntry("sync", checkSync->isChecked());
         kconf->writeEntry("splash", checkSplash->isChecked());
         kconf->writeEntry("anime_dont", checkAnime->isChecked());
+        kconf->writeEntry("kipi_ondemand", checkKIPIDemand->isChecked());
+        kconf->writeEntry("treat", checkTreat->isChecked());
 
         kconf->setGroup("Thumbnails");
         kconf->writeEntry("margin", spinMargin->value());
         kconf->writeEntry("cache", spinCacheSize->value());
         kconf->writeEntry("dont write", checkNoWriteThumbs->isChecked());
-        kconf->writeEntry("extended", checkExtended->isChecked());
         kconf->writeEntry("tooltips", checkTooltips->isChecked());
         kconf->writeEntry("tooltips_inactive", checkInactive->isChecked());
         kconf->writeEntry("mark", checkMark->isChecked());
@@ -224,22 +227,6 @@ int SQ_Options::start()
     return result;
 }
 
-QString SQ_Options::stringList2QString(QStringList list )
-{
-    QStringList::Iterator it = list.begin();
-    QString out;
- 
-    while(it != list.end())
-    {
-        out = out + "*." + *it + " ";
-        ++it;
-    }
-    
-    out += "*.jpg *.jpe";
-
-    return out.lower();
-}
-
 bool SQ_Options::validPixmap(QPixmap pix)
 {
     return (isPowerOf2(pix.width()) && isPowerOf2(pix.height()) && pix.width() <= 256 && pix.width() == pix.height() && !pix.isNull());
@@ -270,7 +257,7 @@ void SQ_Options::slotNewCustomTexture( const QString & path)
             .arg(p1.height()));
     }
     else
-        textCustomValidate->setText(i18n(QString::fromLatin1("Wrong dimensions: %1x%2."))
+        textCustomValidate->setText(i18n("Wrong dimensions: %1x%2.")
             .arg(p1.width())
             .arg(p1.height()));
 }
@@ -280,7 +267,6 @@ void SQ_Options::slotShowPage()
     int id = listMain->currentItem();
 
     widgetStack->raiseWidget(id);
-    widgetStackLines->raiseWidget(id);
 }
 
 void SQ_Options::slotCustomTextureToggled( bool en)

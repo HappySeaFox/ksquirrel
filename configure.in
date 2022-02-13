@@ -1,3 +1,7 @@
+dnl =======================================================
+dnl FILE: ./admin/configure.in.min
+dnl =======================================================
+
 dnl    This file is part of the KDE libraries/packages
 dnl    Copyright (C) 2001 Stephan Kulow (coolo@kde.org)
  
@@ -13,8 +17,8 @@ dnl    Library General Public License for more details.
  
 dnl    You should have received a copy of the GNU Library General Public License
 dnl    along with this library; see the file COPYING.LIB.  If not, write to
-dnl    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-dnl    Boston, MA 02111-1307, USA.
+dnl    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+dnl    Boston, MA 02110-1301, USA.
 
 # Original Author was Kalle@kde.org
 # I lifted it in some mater. (Stephan Kulow)
@@ -36,7 +40,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE([ksquirrel], [0.7.0]) dnl searches for some needed programs
+AM_INIT_AUTOMAKE(ksquirrel, 0.7.1) dnl searches for some needed programs
 
 KDE_SET_PREFIX
 
@@ -55,16 +59,17 @@ AM_KDE_WITH_NLS
 
 KDE_USE_QT(3.3)
 AC_PATH_KDE
+dnl =======================================================
+dnl FILE: configure.in.in
+dnl =======================================================
+
 #MIN_CONFIG(3.3)
 
 dnl PACKAGE set before
 
 AM_PROG_AS
 
-AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
-
-AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
-AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
+AC_CHECK_HEADER([utime.h], AC_DEFINE([HAVE_UTIME_H], [], [utime.h support]), [])
 
 PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
 
@@ -183,7 +188,30 @@ PKG_CHECK_MODULES([libkipi], libkipi, [
         [AC_WARN([KIPI development file (.pc) was not found. KIPI support will be disabled.])]
 )
 
-AM_CONDITIONAL(SQ_HAVE_KIPI, test x$have_kipi = xyes)
+# KEXIF
+have_kexif=no
+PKG_CHECK_MODULES([libkexif], libkexif, [
+        _cppflags=$CPPFLAGS
+        _ldflags=$LDFLAGS
+
+        CPPFLAGS="$libkexif_CFLAGS $CPPFLAGS"
+        LDFLAGS="$LDFLAGS $libkexif_LIBS"
+
+        KDE_CHECK_HEADER(libkexif/kexifdata.h, have_kexif=yes, have_kexif=no)
+          if test "$have_kexif" = "yes"; then
+                AC_DEFINE(SQ_HAVE_KEXIF, [], [If we have libkexif installed])
+          else
+            AC_WARN([Can't find KEXIF headers, KSquirrel won't be compiled with KEXIF support])
+          fi
+
+            CPPFLAGS=$_cppflags
+            LDFLAGS=$_ldflags
+    ],
+        [AC_WARN([KEXIF development file (.pc) was not found. KEXIF support will be disabled.])]
+)
+
+AM_CONDITIONAL(SQ_HAVE_KIPI,  test x$have_kipi  = xyes)
+AM_CONDITIONAL(SQ_HAVE_KEXIF, test x$have_kexif = xyes)
 KDE_CREATE_SUBDIRSLIST
 AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ doc/Makefile ])
@@ -191,6 +219,7 @@ AC_CONFIG_FILES([ doc/ru/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/imageedit/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/libpixops/Makefile ])
+AC_CONFIG_FILES([ ksquirrel/mime/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/sidebar/Makefile ])
 AC_CONFIG_FILES([ pics/Makefile ])
 AC_CONFIG_FILES([ pics/imageedit/Makefile ])
@@ -198,9 +227,42 @@ AC_CONFIG_FILES([ pics/menu/Makefile ])
 AC_CONFIG_FILES([ pics/toolbar/Makefile ])
 AC_CONFIG_FILES([ po/Makefile ])
 AC_OUTPUT
+# Check if KDE_SET_PREFIX was called, and --prefix was passed to configure
+if test -n "$kde_libs_prefix" -a -n "$given_prefix"; then
+  # And if so, warn when they don't match
+  if test "$kde_libs_prefix" != "$given_prefix"; then
+    # And if kde doesn't know about the prefix yet
+    echo ":"`kde-config --path exe`":" | grep ":$given_prefix/bin/:" 2>&1 >/dev/null
+    if test $? -ne 0; then
+      echo ""
+      echo "Warning: you chose to install this package in $given_prefix,"
+      echo "but KDE was found in $kde_libs_prefix."
+      echo "For this to work, you will need to tell KDE about the new prefix, by ensuring"
+      echo "that KDEDIRS contains it, e.g. export KDEDIRS=$given_prefix:$kde_libs_prefix"
+      echo "Then restart KDE."
+      echo ""
+    fi
+  fi
+fi
+
+if test x$GXX = "xyes" -a x$kde_have_gcc_visibility = "xyes" -a x$kde_cv_val_qt_gcc_visibility_patched = "xno"; then
+  echo ""
+  echo "Your GCC supports symbol visibility, but the patch for Qt supporting visibility"
+  echo "was not included. Therefore, GCC symbol visibility support remains disabled."
+  echo ""
+  echo "For better performance, consider including the Qt visibility supporting patch"
+  echo "located at:"
+  echo ""
+  echo "http://bugs.kde.org/show_bug.cgi?id=109386"
+  echo ""
+  echo "and recompile all of Qt and KDE. Note, this is entirely optional and"
+  echo "everything will continue to work just fine without it."
+  echo ""
+fi
+
 if test "$all_tests" = "bad"; then
   if test ! "$cache_file" = "/dev/null"; then
-    echo ""    
+    echo ""
     echo "Please remove the file $cache_file after changing your setup"
     echo "so that configure will find the changes next time."
     echo ""

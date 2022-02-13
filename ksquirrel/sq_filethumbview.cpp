@@ -91,16 +91,6 @@ void SQ_FileThumbView::slotSelected(QIconViewItem *item, const QPoint &point)
 }
 
 /*
- *  Get KFileIconViewItem by KFileItem. All KFileItems store
- *  a pointer to appropriate KFileIconViewItem as extra data.
- *  See also KFileItem::setExtraData() and insertItem().
- */
-KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
-{
-    return item ? ((KFileIconViewItem *)item->extraData(this)) : 0;
-}
-
-/*
  *  Reimplement insertItem() to enable/disable inserting
  *  directories (depends on current settings) and inserting thumbnails.
  */
@@ -122,40 +112,19 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
     }
     else
     {
-        if(i->isDir())
-            item = new SQ_FileThumbViewItem(this, i->text(), directoryCache, i);
-        else
-        {
-            QPixmap mimeall = i->pixmap(48);
-            QPixmap thumbnail(pixelSize.width(), pixelSize.height());
-            QPainter painter(&thumbnail);
-            painter.setBrush(colorGroup().base());
-            painter.setPen(colorGroup().highlight());
-            painter.drawRect(0, 0, pixelSize.width(), pixelSize.height());
-            painter.drawPixmap((pixelSize.width()-mimeall.width())/2, (pixelSize.height()-mimeall.height())/2, mimeall);
-            item = new SQ_FileThumbViewItem(this, i->text(), thumbnail, i);
-        }
+        QPixmap mimeall = i->pixmap(SQ_ThumbnailSize::smallest());
+        QPixmap thumbnail(pixelSize.width(), pixelSize.height());
+        QPainter painter(&thumbnail);
+        painter.setBrush(colorGroup().base());
+        painter.setPen(colorGroup().highlight());
+        painter.drawRect(0, 0, pixelSize.width(), pixelSize.height());
+        painter.drawPixmap((pixelSize.width()-mimeall.width())/2, (pixelSize.height()-mimeall.height())/2, mimeall);
+        item = new SQ_FileThumbViewItem(this, i->text(), thumbnail, i);
     }
 
-    initItem(item, i);
+    initItemMy(item, i);
 
     i->setExtraData(this, item);
-}
-
-/*
- *  Internal. Set item's sorting key.
- */
-void SQ_FileThumbView::initItem(KFileIconViewItem *item, const KFileItem *i)
-{
-    // determine current sorting type
-    QDir::SortSpec spec = KFileView::sorting();
-
-    if(spec & QDir::Time)
-        item->setKey(sortingKey((unsigned long)i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
-    else if(spec & QDir::Size)
-        item->setKey(sortingKey(i->size(), i->isDir(), spec));
-    else
-        item->setKey(sortingKey(i->text(), i->isDir(), spec));
 }
 
 /*
@@ -192,7 +161,7 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
         painter.drawRect(0, 0, W, H);
 
         painter.drawImage((W - t.thumbnail.width())/2, (W - t.thumbnail.height())/2, t.thumbnail);
-        painter.drawPixmap(W-t.info.mime.width()-5, H-t.info.mime.height()-4, t.info.mime);
+        painter.drawPixmap(W-t.mime.width()-5, H-t.mime.height()-4, t.mime);
         painter.drawLine(3, W-1, W-4, W-1);
 
         QFont f = painter.font();
@@ -202,7 +171,9 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
         int rest = H-W-2;
 
         painter.setPen(colorGroup().text());
-        painter.drawText(4, W+rest/2-12, 100, 12, 0, QString::fromLatin1("%1").arg(t.info.dimensions));
+
+        if(t.w && t.h) painter.drawText(4, W+rest/2-12, 100, 12, 0, QString::fromLatin1("%1x%2").arg(t.w).arg(t.h));
+
         painter.drawText(4, W+rest/2+1, 100, 12, 0, KIO::convertSize(fileItem->size()));
         painter.end();
     }
@@ -226,9 +197,6 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 
     item->setPixmap(newpix);
 
-    // store thumbnail information
-    item->setInfo(t);
-
     // update item
     item->repaint();
 }
@@ -244,6 +212,9 @@ void SQ_FileThumbView::startThumbnailUpdate()
  */
 void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList &list)
 {
+    // update progress bar
+    SQ_WidgetStack::instance()->thumbnailUpdateStart(list.count());
+
     // create new job
     thumbJob = new SQ_ThumbnailLoadJob(list);
 
@@ -252,12 +223,10 @@ void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList &list)
 
     connect(thumbJob, SIGNAL(result(KIO::Job*)), SQ_WidgetStack::instance(), SLOT(thumbnailsUpdateEnded()));
 
-    // update progress bar
-    SQ_WidgetStack::instance()->thumbnailUpdateStart(list.count());
-
     // start!
     thumbJob->start();
 }
+
 // Stop thumbnail update: delete job, reset progress bar
 void SQ_FileThumbView::stopThumbnailUpdate()
 {
@@ -280,24 +249,16 @@ void SQ_FileThumbView::slotThumbnailUpdateToggle()
 /*
  *  Append new items to thumbnail generating job.
  */
-void SQ_FileThumbView::appendItems(const KFileItemList &items)
+void SQ_FileThumbView::addItemsToJob(const KFileItemList &items, bool append)
 {
     // job is not running
-    if(thumbJob.isNull()){ //printf("Starting %d\n", items.count());
+    if(thumbJob.isNull()){ //printf("Starting job %d\n", items.count());
         doStartThumbnailUpdate(items); }
     // add new items to running job
-    else { //printf("Appending %d\n", items.count());
+    else { //printf("Appending to job %d\n", items.count());
     m_progressBox->addSteps(items.count());
-    QApplication::flush();
-        thumbJob->appendItems(items); }
-}
-
-void SQ_FileThumbView::updateView(const KFileItem *i)
-{
-     KFileIconViewItem *item = viewItem(i);
-
-    if(item)
-        initItem(item, i);
+//    QApplication::flush();
+        if(append)thumbJob->appendItems(items);else thumbJob->prependItems(items);}
 }
 
 // Show extended tooltip for item under mouse cursor
@@ -372,11 +333,11 @@ void SQ_FileThumbView::slotTooltipDelay()
     if(!f)
         return;
 
-    toolTip = new QLabel(i18n("<table cellspacing=0><tr><td align=left>File:</td><td align=left><b>%1</b></td></tr><tr><td align=left>Size:</td><td align=left><b>%2</b></td></tr>%3%4</table>")
+    toolTip = new QLabel(i18n("<table cellspacing=0><tr><td align=left>File:</td><td align=left><b>%1</b></td></tr><tr><td align=left>Size:</td><td align=left><b>%2</b></td></tr>%3</table>")
         .arg(KStringHandler::csqueeze(f->name()))
         .arg(KIO::convertSize(f->size()))
         .arg(f->isLink() ? i18n("<tr><td align=left>Link destination:</td><td align=left>%1</td></tr>").arg(KStringHandler::csqueeze(f->linkDest())) : QString::null)
-        .arg(tooltipFor->fullInfo()),
+        ,
         0, "myToolTip", WStyle_StaysOnTop | WStyle_Customize | WStyle_NoBorder
         | WStyle_Tool | WX11BypassWM);
 
@@ -439,7 +400,7 @@ void SQ_FileThumbView::insertCdUpItem(const KURL &base)
 {
     static const QString &dirup = KGlobal::staticQString("..");
 
-    KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+    KFileItem *fi = new KFileItem(base.upURL(), "inode/directory", S_IFDIR);
 
     // insert new item
     SQ_FileThumbViewItem *item = new SQ_FileThumbViewItem(this, dirup, directoryCache, fi);
@@ -492,6 +453,11 @@ void SQ_FileThumbView::rebuildCachedPixmaps()
 void SQ_FileThumbView::itemRemoved(KFileItem *i)
 {
     thumbJob->itemRemoved(i);
+}
+
+void SQ_FileThumbView::itemsRemoved(const KFileItemList &l)
+{
+    thumbJob->itemsRemoved(l);
 }
 
 void SQ_FileThumbView::showEvent(QShowEvent *e)

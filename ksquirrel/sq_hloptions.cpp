@@ -23,7 +23,7 @@
 
 SQ_HLOptions * SQ_HLOptions::m_instance = 0;
 
-SQ_HLOptions::SQ_HLOptions() : QObject(), showLibsAndExit(false)
+SQ_HLOptions::SQ_HLOptions() : showLibsAndExit(false)
 {
     m_instance = this;
 }

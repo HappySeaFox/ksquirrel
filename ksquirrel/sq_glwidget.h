@@ -19,11 +19,13 @@
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
 
-#include <qcursor.h>
 #include <qfileinfo.h>
 #include <qimage.h>
 #include <qrect.h>
 #include <qpair.h>
+#include <qwmatrix.h>
+
+#include <kurl.h>
 
 #include <vector>
 
@@ -47,7 +49,9 @@ class KActionCollection;
 class KToggleAction;
 class KPopupMenu;
 class KRadioAction;
-class KURL;
+class KTempFile;
+
+namespace KIO { class Job; }
 
 class QTimer;
 class QPopupMenu;
@@ -128,6 +132,8 @@ class SQ_GLWidget : public QGLWidget
         SQ_GLWidget(QWidget *parent = 0, const char *name = 0);
         ~SQ_GLWidget();
 
+        QString originalURL() const;
+
         /*
          *  Start decoding given image. We can call it from anywhere.
          */
@@ -143,6 +149,8 @@ class SQ_GLWidget : public QGLWidget
          *  Set clear color for context.
          */
         void setClearColor();
+
+        void setOriginalURL(const KURL &);
 
         /*
          *  Get zoom value, e.g. 1.5, 2.2 ...
@@ -221,6 +229,7 @@ class SQ_GLWidget : public QGLWidget
         static SQ_GLWidget* window() { return m_instance; }
 
     protected:
+
         /*
          *  Next three methods should be reimplemented in
          *  every QGLWidget's subclass.
@@ -236,11 +245,6 @@ class SQ_GLWidget : public QGLWidget
          *  zoom in/zoom out (depends on settings).
          */
         void wheelEvent(QWheelEvent *);
-
-        /*
-         *  Keyboard events.
-         */
-        void keyPressEvent(QKeyEvent *);
 
         /*
          *  Palette changed. Let's update tickmarks and background color.
@@ -265,9 +269,14 @@ class SQ_GLWidget : public QGLWidget
 
     private:
         QImage generatePreview();
+
+        void enableActions(bool U);
+
+        void initAccelsAndMenu();
+
         void bcg();
         void filter();
-        void  editUpdate();
+        void editUpdate();
 
         /*
          *  Save current image page to clipboard
@@ -279,7 +288,7 @@ class SQ_GLWidget : public QGLWidget
          */
         void saveAs();
 
-        void  enableSettingsButton(bool enab);
+        void enableSettingsButton(bool enab);
 
         /*
          *  Remove currently loaded textures and memory buffers.
@@ -388,12 +397,7 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Set current zoom to 'z'.
          */
-        void internalZoom(const GLfloat &z, bool U = false);
-
-        /*
-         *  Create context menu :-)
-         */
-        void createContextMenu(QPopupMenu *m);
+        void internalZoom(const GLfloat &z);
 
         /*
          *  Find best tile's width and height for given width and height.
@@ -427,19 +431,22 @@ class SQ_GLWidget : public QGLWidget
         void matrix_move(GLfloat x, GLfloat y);
         void matrix_move_z(GLfloat z);
         bool matrix_zoom(GLfloat ratio);
-        void matrix_reset();
+        void matrix_reset(bool = true);
         void matrix_pure_reset();
         void matrix_push();
         void matrix_pop();
         void write_gl_matrix();
-        void matrix_rotate(GLfloat angle);
+        void matrix_rotate(GLfloat angle, bool = true);
         void matrix_rotate2(GLfloat angle);
         void flip(int, bool = true);
         void flip_h();
         void flip_v();
+        void exifRotate(bool);
 
     private slots:
         void decode();
+
+        void slotAccelActivated();
 
         /*
          *  Slots for toolbar's actions:
@@ -475,7 +482,6 @@ class SQ_GLWidget : public QGLWidget
         void slotShowImages();
         void slotImagesHidden();
         void slotImagesShown();
-        void slotContextMenuItem(int);
         void slotShowHelp();
         void slotShowCodecSettings();
         void slotApplyCodecSettings();
@@ -487,19 +493,21 @@ class SQ_GLWidget : public QGLWidget
         void slotBCG(SQ_ImageBCGOptions *);
         void slotFilter(SQ_ImageFilterOptions *fltopt);
 
-    private:
-        KAction                *pAReset, *pAProperties, *pAHelp, *pASelectionClear;
-        KToggleAction   *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
-                                      *pAZoomH, *pAZoomWH, *pAZoom100,
-                                      *pAZoomLast, *pAHideToolbars,
-                                      *pASelectionEllipse, *pASelectionRect;
+        void slotCopyResult(KIO::Job *);
 
-        SQ_ToolButton                *pAToolQuick, *pAToolFull, *pAShowNav;
+    private:
+        KAction               *pASelectionClear;
+        KToggleAction         *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
+                              *pAZoomH, *pAZoomWH, *pAZoom100,
+                              *pAZoomLast, *pAHideToolbars,
+                              *pASelectionEllipse, *pASelectionRect;
+
+        SQ_ToolButton         *pAToolQuick, *pAToolFull;
         SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
 
-        KActionCollection     *ac;
+        KActionCollection     *ac, *acMain;
         QPopupMenu            *menu, *menuFile, *menuImage;
-        int                                  id_settings, id_saveas;
+        int                             id_saveas, id_settings;
 
         // popup menu with zoom types (fit width, fit height, zoom 100%...)
         KPopupMenu            *zoom, *selectionMenu,
@@ -526,19 +534,25 @@ class SQ_GLWidget : public QGLWidget
         std::vector<Parts>parts;
         Parts                       *parts_broken;
 
-        GLfloat                    matrix[12], saved[12], zoomfactor, movefactor, rotatefactor, curangle;
+        GLfloat                matrix[12], saved[12], zoomfactor, movefactor, rotatefactor, curangle;
 
         unsigned int           texQuads, texPixmap, mark[4];
-        int                             xmoveold, ymoveold, xmove, ymove, current,
-                                         zoom_type, old_id, total, errors, movetype;
-        bool                         reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
-                                         changed, changed2, marks, linear, use_broken;
-        float                         zoomFactor;
-        RGBA                     *buffer;
-        QSlider                   *slider_zoom;
-        int                            glselection; // selection type
-        int                            sx, sy, sw, sh; // selection geometry (sx,sy is in image
-                                                                 // coordinates, e.g. (0,0) is a left top corner in current image)
+        int                    xmoveold, ymoveold, xmove, ymove, current,
+                               zoom_type, old_id, total, errors, movetype;
+        bool                   reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
+                               changed, changed2, marks, linear, use_broken;
+        float                  zoomFactor;
+        RGBA                   *buffer;
+        QSlider                *slider_zoom;
+        int                    glselection; // selection type
+
+        int                    sx, sy, sw, sh; // selection geometry (sx,sy is in image
+                                               // coordinates, e.g. (0,0) is a left top corner in current image)
+        KTempFile              *tmp;
+        int                    orient;
+        bool                   rotate;
+        KURL                   m_original;
+        QWMatrix               wm;
 
         static SQ_GLWidget    *m_instance;
 };
@@ -565,6 +579,18 @@ inline
 KActionCollection* SQ_GLWidget::actionCollection() const
 {
     return ac;
+}
+
+inline
+void SQ_GLWidget::setOriginalURL(const KURL &u)
+{
+    m_original = u;
+}
+
+inline
+QString SQ_GLWidget::originalURL() const
+{
+    return m_original.isLocalFile() ? m_original.path() : m_original.prettyURL();
 }
 
 #endif

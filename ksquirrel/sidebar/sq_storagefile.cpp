@@ -23,32 +23,37 @@
 
 #include "sq_storagefile.h"
 
-void SQ_StorageFile::writeStorageFile(const QString &path, const QString &inpath)
+void SQ_StorageFile::writeStorageFile(const QString &path, const KURL &inpath)
 {
-    KMD5 md5(QFile::encodeName(inpath));
+    KMD5 md5(QFile::encodeName(inpath.prettyURL()));
     QFile file(path + QString::fromLatin1(".") + QString(md5.hexDigest()));
 
     if(file.open(IO_WriteOnly))
     {
-        file.writeBlock(inpath.ascii(), inpath.length());
+        QString k = inpath.prettyURL().utf8();
+        file.writeBlock(k, k.length());
         file.close();
     }
 }
 
-QString SQ_StorageFile::readStorageFIle(const QString &path)
+KURL SQ_StorageFile::readStorageFile(const QString &path)
 {
     QFile file(path);
-    QString inpath;
+    KURL url;
 
     if(file.open(IO_ReadOnly))
     {
         QByteArray ba = file.readAll();
 
         if(file.status() == IO_Ok)
-            inpath.append(ba);
+        {
+            QString k;
+            k.append(ba);
+            url = KURL::fromPathOrURL(QString::fromUtf8(k));
+        }
     }
 
     file.close();
 
-    return inpath;
+    return url;
 }

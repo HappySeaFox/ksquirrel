@@ -20,6 +20,8 @@
 
 #include <ktoolbarbutton.h>
 
+class QWMatrix;
+
 class KToolBar;
 
 class SQ_ToolButtonPopup : public KToolBarButton
@@ -50,6 +52,6 @@ int SQ_ToolButton::fixedWidth()
  * sx,sy are X and Y coordinates
  * sw x sh is a selection geometry
 */
-bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, bool flip);
+bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const QWMatrix &);
 
 #endif

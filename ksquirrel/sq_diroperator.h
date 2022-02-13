@@ -26,6 +26,9 @@ class QTimer;
 
 class KDirLister;
 class KFileIconView;
+class KFileItem;
+
+class SQ_Downloader;
 
 class SQ_DirOperator : public KDirOperator
 {
@@ -91,11 +94,11 @@ class SQ_DirOperator : public KDirOperator
          */
         void removeCdUpItem();
 
-        void execute(KFileItem *);
-
         void stopPreview();
 
         void setPendingFile(const QString &p);
+
+        void execute(KFileItem *item);
 
     protected:
         /*
@@ -104,15 +107,19 @@ class SQ_DirOperator : public KDirOperator
         virtual KFileView* createView(QWidget *parent, KFile::FileView view);
 
     private:
+        void itemKill(KFileItem *);
+
+        void executePrivate(KFileItem *);
+
         void disableSpecificActions(KFileIconView *);
 
-        void highlight(KFileItem *);
+        void fireDiskSize(const KURL &url);
 
         /*
          *  SQ_DirOperator has context menu, derived from KDirOperator.
          *  This method will change this menu, insert new actions.
          */
-        void setupActions();
+        void setupActionsMy();
 
         void clearListers();
 
@@ -133,7 +140,6 @@ class SQ_DirOperator : public KDirOperator
         void urlRemoved(const KURL &);
 
         void stopThumbnailUpdate();
-        void startThumbnailUpdate();
 
         /*
          *  Invoked, when current directory has been loaded.
@@ -151,6 +157,17 @@ class SQ_DirOperator : public KDirOperator
         void slotActivateExternalTool(int index);
 
     private slots:
+
+        /*
+         *  Since KDE 3.4 (or 3.5 ?) it is neccessary to reimplement this slot
+         *  to insert our own actions in context menu.
+         */
+        void activatedMenu(const KFileItem *, const QPoint &pos);
+
+        void slotDownloaderResult(const KURL &);
+
+        void slotSetURL(const KURL &);
+
         /*
          *  Connected to dirLister()
          */
@@ -158,6 +175,11 @@ class SQ_DirOperator : public KDirOperator
         void slotRefreshItems(const KFileItemList &);
 
         void slotDelayedFinishedLoading();
+
+        void slotFoundMountPoint(const unsigned long&,
+                    const unsigned long&,
+                    const unsigned long&,
+                    const QString&);
 
         /*
          *  Edit current item's mimetype (Konqueror-related action).
@@ -173,7 +195,6 @@ class SQ_DirOperator : public KDirOperator
          *  Execute item. If current clicking policy is "Single click",
          *  single click will execute item, and double click otherwise.
          */
-        void slotExecuted(KFileItem *item);
         void slotExecutedConst(const KFileItem *item);
 
         /*
@@ -194,6 +215,8 @@ class SQ_DirOperator : public KDirOperator
 
         void slotUpdateInformation(int,int);
 
+        void slotSelectionChanged();
+
     private:
         typedef QMap<KURL, KDirLister *> SQ_Listers;
         SQ_Listers listers;
@@ -213,6 +236,8 @@ class SQ_DirOperator : public KDirOperator
         KURL lasturl;
         bool usenew;
         QString m_pending;
+        KIO::filesize_t totalSize;
+        SQ_Downloader *down;
 };
 
 inline

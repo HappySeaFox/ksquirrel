@@ -32,6 +32,8 @@ class KAction;
 class KToggleAction;
 class KFileView;
 
+class SQ_Downloader;
+
 /*
  *  SQ_WidgetStack is a simple wrapper for file manager (navigator).
  *
@@ -103,6 +105,8 @@ class SQ_WidgetStack : public QObject
         static SQ_WidgetStack* instance() { return m_instance; }
 
     private:
+
+        void moveToFirstLast(Direction d);
         /*
          *  Save currently selected items' paths, if any.
          *
@@ -127,12 +131,6 @@ class SQ_WidgetStack : public QObject
          *  Change view type. See SQ_DirOperator::ViewT for more.
          */
         void raiseWidget(SQ_DirOperator::ViewT, bool doUpdate = true);
-
-        /*
-         *  Try to unpack an archive referenced by given KFileItem.
-         *  Used by SQ_DirOperator, when user clicked on item in filemanager.
-         */
-        void tryUnpack(KFileItem *);
 
         /*
          *  Select first supported image in current directory.
@@ -191,11 +189,6 @@ class SQ_WidgetStack : public QObject
         void slotFileLinkTo();
 
     private slots:
-        /*
-         *  Go to unpacked archive.
-         */
-        void slotDelayedSetExtractURL();
-
         void slotRecreateThumbnail();
         void slotDelayedRecreateThumbnail();
 
@@ -224,6 +217,7 @@ class SQ_WidgetStack : public QObject
         QTimer     *timerShowProgress;
         KURL::List    files; // files to copy, move or link
         FileAction    fileaction;
+        SQ_Downloader *down;
 
         static SQ_WidgetStack    *m_instance;
 };

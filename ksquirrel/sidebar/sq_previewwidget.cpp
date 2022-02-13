@@ -15,11 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qsize.h>
 #include <qimage.h>
 #include <qpainter.h>
 
 #include <klocale.h>
+#include <kfileitem.h>
 #include <kpopupmenu.h>
 #include <kcolordialog.h>
 
@@ -28,8 +33,16 @@
 #include "ksquirrel.h"
 #include "sq_previewwidget.h"
 #include "sq_imageloader.h"
+#include "sq_libraryhandler.h"
 #include "sq_config.h"
+#include "sq_downloader.h"
 #include "libpixops/pixops.h"
+
+#ifdef SQ_HAVE_KEXIF
+#include <libkexif/kexifdata.h>
+#include <algorithm>
+#include "sq_utils.h"
+#endif
 
 SQ_PreviewWidget * SQ_PreviewWidget::m_inst = 0;
 
@@ -39,6 +52,9 @@ SQ_PreviewWidget::SQ_PreviewWidget(QWidget *parent, const char *name)
     m_inst = this;
 
     rereadColor();
+
+    down = new SQ_Downloader(this);
+    connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloadResult(const KURL &)));
 
     popup = new KPopupMenu;
     popup->insertItem(i18n("Background color..."), this, SLOT(slotBackground()));
@@ -53,6 +69,9 @@ SQ_PreviewWidget::~SQ_PreviewWidget()
 
 void SQ_PreviewWidget::load(const KURL &url)
 {
+    if(SQ_LibraryHandler::instance()->maybeSupported(url) == SQ_LibraryHandler::No)
+        return;
+
     if(m_forceignore || m_ignore)
     {
 //        m_ignore = true;
@@ -67,43 +86,13 @@ void SQ_PreviewWidget::load(const KURL &url)
 //        printf("Load remembered %s\n", url.path().ascii());
     }
 
-    QString path = url.path();
-    fmt_info *finfo;
-    RGBA *bits;
-
-    // load first page
-    bool b = SQ_ImageLoader::instance()->loadImage(path, false);
-
-    finfo = SQ_ImageLoader::instance()->info();
-    bits = SQ_ImageLoader::instance()->bits();
-
-    // memory allocation failed in SQ_ImageLoader::loadImage()
-    if(!b || !bits || !finfo->image.size())
-        return;
-
-    delete [] small;
-    delete [] all;
-    all = small = 0;
-    pixmap = QPixmap();
-
-    w = finfo->image[0].w;
-    h = finfo->image[0].h;
-
-    all = bits;
-
-    const int wh = w * h;
-    unsigned char t;
-
-    for(int i = 0;i < wh;i++)
+    if(url.isLocalFile())
+        slotDownloadResult(url);
+    else
     {
-        t = (all+i)->r;
-        (all+i)->r = (all+i)->b;
-        (all+i)->b = t;
+        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, url);
+        down->start(&fi);
     }
-
-    SQ_ImageLoader::instance()->cleanup(false);
-
-    resizeEvent(0);
 }
 
 void SQ_PreviewWidget::resizeEvent(QResizeEvent *)
@@ -129,12 +118,16 @@ void SQ_PreviewWidget::paintEvent(QPaintEvent *)
 {
 //    printf("paint\n");
     QPainter p(this);
-    p.setBrush(color);
-    p.setPen(colorGroup().highlight());
-    p.drawRect(rect());
+//    p.setViewXForm(true);
+
+    p.fillRect(rect(), color);
 
     if(!m_ignore && !pixmap.isNull())
     {
+//        QWMatrix w;
+//        p.translate(width(), -height()/4);
+//        p.rotate(90);
+//        p.setWorldMatrix(w);
         p.drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
     }
 }
@@ -233,6 +226,68 @@ void SQ_PreviewWidget::loadPending()
 //        printf("Show %s\n", pending.path().ascii());
         load(tmp);
     }
+}
+
+void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
+{
+    QString path = url.path();
+    fmt_info *finfo;
+    RGBA *bits;
+
+    // load first page
+    bool b = SQ_ImageLoader::instance()->loadImage(path, false);
+
+    finfo = SQ_ImageLoader::instance()->info();
+    bits = SQ_ImageLoader::instance()->bits();
+
+    // memory allocation failed in SQ_ImageLoader::loadImage()
+    if(!b || !bits || !finfo->image.size())
+        return;
+
+    delete [] small;
+    delete [] all;
+    all = small = 0;
+    pixmap = QPixmap();
+
+    w = finfo->image[0].w;
+    h = finfo->image[0].h;
+
+    all = bits;
+
+    const int wh = w * h;
+    unsigned char t;
+
+    for(int i = 0;i < wh;i++)
+    {
+        t = (all+i)->r;
+        (all+i)->r = (all+i)->b;
+        (all+i)->b = t;
+    }
+
+#ifdef SQ_HAVE_KEXIF
+    // copy original image
+    QImage img((uchar *)all, w, h, 32, 0, 0, QImage::LittleEndian);
+
+    KExifData data;
+    data.readFromFile(path);
+    int O = data.getImageOrientation();
+
+    // rotate image
+    SQ_Utils::exifRotate(QString::null, img, O);
+
+    if(O == KExifData::ROT_90_HFLIP || O == KExifData::ROT_90
+    || O == KExifData::ROT_90_VFLIP || O == KExifData::ROT_270)
+    {
+        std::swap(w, h);
+    }
+
+    // transfer back
+    memcpy(all, img.bits(), wh*4);
+#endif
+
+    SQ_ImageLoader::instance()->cleanup(false);
+
+    resizeEvent(0);
 }
 
 #include "sq_previewwidget.moc"

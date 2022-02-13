@@ -22,22 +22,30 @@
 #include <qpixmap.h>
 #include <qimage.h>
 
-/*
- *  Information on thumbnail, where all parameters are given as strings.
- */
-struct SQ_ThumbInfo
-{
-    QString type, dimensions, bpp, color, compression, uncompressed;
-    int frames;
-    QPixmap mime;
-};
+#include <ctime>
+
+// default thumbnail format
+#define sqdirThumbFormat "PNG"
+
+// default quality
+#define sqdirThumbQuality 85
+
+#define sqdirMimeFormat "XPM"
 
 /*
  *  Represents thumbnail.
  */
 struct SQ_Thumbnail
 {
-    SQ_ThumbInfo info;
+    // mime icon from image codec
+    QPixmap mime;
+
+    // 'last modifiled' time of original file.
+    // we should store it for non-local urls
+    time_t originalTime;
+
+    int w, h;
+
     QImage thumbnail;
 };
 

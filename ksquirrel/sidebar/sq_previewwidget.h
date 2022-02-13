@@ -21,10 +21,13 @@
 #include <qwidget.h>
 #include <qpixmap.h>
 #include <qcolor.h>
+#include <qwmatrix.h>
 
 #include <kurl.h>
 
 class KPopupMenu;
+
+class SQ_Downloader;
 
 struct RGBA;
 
@@ -58,6 +61,7 @@ class SQ_PreviewWidget : public QWidget
 
     private slots:
         void slotBackground();
+        void slotDownloadResult(const KURL &);
 
     protected:
         virtual void resizeEvent(QResizeEvent *);
@@ -76,6 +80,8 @@ class SQ_PreviewWidget : public QWidget
         KPopupMenu *popup;
         KURL pending;
         int m_delay;
+        QWMatrix matrix;
+        SQ_Downloader *down;
 
         static SQ_PreviewWidget *m_inst;
 };

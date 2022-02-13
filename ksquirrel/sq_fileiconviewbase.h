@@ -34,12 +34,16 @@ class SQ_FileIconViewBase : public KFileIconView
         virtual ~SQ_FileIconViewBase();
 
         virtual void insertCdUpItem(const KURL &base) = 0;
-
-    signals:
-        void launch(KFileItem *);
-        void highlighted(KFileItem *);
+        virtual void updateView(const KFileItem *i);
 
     protected:
+
+        /*
+         *  Get KFileIconViewItem by KFileItem. All KFileItems store
+         *  a pointer to appropriate KFileIconViewItem as extra data.
+         *  See also KFileItem::setExtraData() and insertItem().
+         */
+        KFileIconViewItem* viewItem(const KFileItem *item);
         /*
          *  Accept dragging.
          */
@@ -50,13 +54,7 @@ class SQ_FileIconViewBase : public KFileIconView
          */
         virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
-    private:
-        void exec(QIconViewItem *i, bool single, bool hl = false);
-
-    private slots:
-        void slotMouseButtonClicked(int, QIconViewItem *);
-        void slotDoubleClicked(QIconViewItem *i);
-        void slotCurrentChanged(QIconViewItem *i);
+        void initItemMy(KFileIconViewItem *item, const KFileItem *i, bool upd = false);
 };
 
 #endif

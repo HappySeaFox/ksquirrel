@@ -35,7 +35,7 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 
     public: 
         SQ_BookmarkOwner(QWidget *parent = 0);
-        ~SQ_BookmarkOwner();
+        virtual ~SQ_BookmarkOwner();
 
         /*
          *  User selected some bookmark. It will emit 'openURL' signal,

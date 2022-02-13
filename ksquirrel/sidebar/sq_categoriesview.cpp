@@ -46,6 +46,8 @@
 #include "sq_widgetstack.h"
 #include "sq_categorybrowsermenu.h"
 #include "sq_storagefile.h"
+#include "sq_widgetstack.h"
+#include "sq_diroperator.h"
 
 SQ_CategoriesBox * SQ_CategoriesBox::sing = 0;
 
@@ -135,11 +137,10 @@ void SQ_CategoriesView::slotItemExecuted(QListViewItem *item)
     // file item
     if(cur && !cur->isDir())
     {
-        QString inpath = SQ_StorageFile::readStorageFIle(cur->path());
+        KURL inpath = SQ_StorageFile::readStorageFile(cur->path());
 
-        if(!inpath.isEmpty())
-            if(SQ_LibraryHandler::instance()->libraryForFile(inpath))
-                SQ_GLWidget::window()->startDecoding(inpath);
+        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, inpath);
+        SQ_WidgetStack::instance()->diroperator()->execute(&fi);
     }
 }
 
@@ -294,14 +295,10 @@ void SQ_CategoriesBox::slotItemProperties()
     // link to real file
     else
     {
-        QString inpath = SQ_StorageFile::readStorageFIle(cur->path());
+        KURL inpath = SQ_StorageFile::readStorageFile(cur->path());
 
         if(!inpath.isEmpty())
-        {
-            KURL url;
-            url.setPath(inpath);
-            (void)new KPropertiesDialog(url, KSquirrel::app());
-        }
+            (void)new KPropertiesDialog(inpath, KSquirrel::app());
     }
 }
 

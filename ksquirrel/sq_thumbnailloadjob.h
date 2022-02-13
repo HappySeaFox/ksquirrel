@@ -31,7 +31,9 @@
 #include "sq_thumbnailinfo.h"
 
 class KFileItem;
-class SQ_Dir;
+class KTempFile;
+
+class SQ_DirThumbs;
 
 typedef QPtrList<KFileItem> KFileItemList;
 
@@ -50,40 +52,41 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 
         void start();
         void itemRemoved(const KFileItem* item);
+        void itemsRemoved(const KFileItemList &list);
         void appendItem(const KFileItem* item);
         void appendItems(const KFileItemList &items);
-
-        // scale given image im with dimensions w x h to
-        // fit within a quad fitwithin x fitwithin pixels
-        static QImage scaleImage(unsigned char *im, int w, int h, int fitwithin);
-
-        static bool loadThumbnail(const QString& pixPath, SQ_Thumbnail&, bool = true);
+        void prependItems(const KFileItemList &items);
 
     private:
         void determineNextIcon();
-        bool statResultThumbnail(KIO::StatJob *);
-        void createThumbnail(const QString& path);
+        bool statResultThumbnail();
+        void createThumbnail(const KURL &);
         void emitThumbnailLoaded(SQ_Thumbnail &);
         void emitThumbnailLoadingFailed();
-        void insertOrSync(const QString &path, SQ_Thumbnail &th);
+        void insertOrSync(const KURL &, SQ_Thumbnail &th);
 
     signals:
         void thumbnailLoaded(const KFileItem* item, const SQ_Thumbnail &t);
 
     private slots:
         void slotResult(KIO::Job *job);
+        void slotData(KIO::Job *job, const QByteArray &data);
 
     private:
-        enum { STATE_STATORIG, STATE_STATTHUMB, STATE_DELETETEMP } mState;
+        enum { STATE_DETERMINE, STATE_STATORIG, STATE_PREDOWNLOAD, STATE_DOWNLOAD } mState;
 
         KFileItemList mItems;
         KFileItem *mCurrentItem;
         KURL mCurrentURL;
-        time_t mOriginalTime;
         KURL mThumbURL;
         KURL mTempURL;
-        QString mCacheDir, mime;
-        SQ_Dir *dir;
+        KIO::filesize_t totalSize, size;
+        KTempFile         *tmp;
+        time_t mOriginalTime;
+        QString mime;
+        bool continueDownload;
+
+        SQ_DirThumbs *dir;
         SQ_Thumbnail mBrokenThumbnail;
 };
 

@@ -24,7 +24,7 @@
 #include "sq_iconloader.h"
 #include "sq_progressbox.h"
 
-SQ_ProgressBox::SQ_ProgressBox(QWidget *parent, const char *name) : QHBox(parent, name), stopped(true)
+SQ_ProgressBox::SQ_ProgressBox(QWidget *parent, const char *name) : QHBox(parent, name)
 {
 //    QToolBar *progressBoxBar = new QToolBar(QString::null, NULL, this);
     buttonStop = new QPushButton(this);
@@ -41,17 +41,19 @@ SQ_ProgressBox::SQ_ProgressBox(QWidget *parent, const char *name) : QHBox(parent
     setMargin(0);
     setStretchFactor(p, 1);
     setGeometry(5, 5, 160, 22);
+
+    hide();
 }
 
 SQ_ProgressBox::~SQ_ProgressBox()
 {}
 
-void SQ_ProgressBox::toggleButtonPixmap()
+void SQ_ProgressBox::startButtonPixmap()
 {
-    stopped = !stopped;
+    buttonStop->setPixmap(SQ_IconLoader::instance()->loadIcon("player_play", KIcon::Desktop, KIcon::SizeSmall));
+}
 
-    if(stopped)
-        buttonStop->setPixmap(SQ_IconLoader::instance()->loadIcon("player_play", KIcon::Desktop, KIcon::SizeSmall));
-    else
-        buttonStop->setPixmap(SQ_IconLoader::instance()->loadIcon("player_stop", KIcon::Desktop, KIcon::SizeSmall));
+void SQ_ProgressBox::stopButtonPixmap()
+{
+    buttonStop->setPixmap(SQ_IconLoader::instance()->loadIcon("player_stop", KIcon::Desktop, KIcon::SizeSmall));
 }

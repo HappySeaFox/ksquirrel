@@ -1,7 +1,7 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png glselection_ellipse.png glselection_rect.png glselection.png 
+EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png glselection_ellipse.png glselection_rect.png glselection.png shownav.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
@@ -50,6 +50,8 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/glselection_rect.png $(kde_datadir)/ksquirrel/images/actions/glselection_rect.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/glselection.png $(kde_datadir)/ksquirrel/images/actions/glselection.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+	$(INSTALL_DATA) $(srcdir)/shownav.png $(kde_datadir)/ksquirrel/images/actions/shownav.png
 
 uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_first.png
@@ -75,5 +77,6 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/glselection_ellipse.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/glselection_rect.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/glselection.png
+	-rm -f $(kde_datadir)/ksquirrel/images/actions/shownav.png
 
 ####### kdevelop will overwrite this part!!! (end)############

@@ -24,6 +24,7 @@
 class QTimer;
 class QHBox;
 class QLabel;
+class QToolButton;
 
 /**
   *@author Baryshev Dmitry
@@ -86,6 +87,7 @@ class SQ_SlideShowWidget : public QWidget
     private slots:
         void slotHide();
         void slotShowHelp();
+        void slotResetPause();
 
     private:
         QString path;
@@ -97,6 +99,7 @@ class SQ_SlideShowWidget : public QWidget
         QHBox *options;
         bool messages, mes_name, mes_size, mes_pos;
         int total;
+        QToolButton *buttonPause;
 
         static SQ_SlideShowWidget *m_inst;
 };

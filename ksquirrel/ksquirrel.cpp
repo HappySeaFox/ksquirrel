@@ -33,6 +33,7 @@
 #include <qtoolbutton.h>
 #include <qfileinfo.h>
 #include <qtimer.h>
+#include <qstylesheet.h>
 #include <qwidgetstack.h>
 
 #include <kapplication.h>
@@ -58,6 +59,9 @@
 #include <kactioncollection.h>
 #include <kmultitabbar.h>
 #include <kurlcompletion.h>
+#include <konq_pixmapprovider.h>
+#include <kio/job.h>
+#include <kinputdialog.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
@@ -80,6 +84,7 @@
 #include "sq_pixmapcache.h"
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
+#include "sq_dirthumbs.h"
 #include "sq_thumbnailloadjob.h"
 #include "sq_navigatordropmenu.h"
 #include "sq_errorstring.h"
@@ -97,6 +102,10 @@
 #include "sq_converter.h"
 #include "sq_previewwidget.h"
 #include "sq_slideshowwidget.h"
+#include "sq_progress.h"
+#include "sq_thumbnailsunused.h"
+#include "sq_downloader.h"
+#include "sq_slideshowlisting.h"
 
 #ifdef SQ_HAVE_KIPI
 #include "sq_kipimanager.h"
@@ -118,7 +127,8 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name)
 
     slideShowStop = true;
     slideShowPaused = false;
-    m_demo = !SQ_HLOptions::instance()->path.isEmpty();
+    m_intray = false;
+    m_demo = !SQ_HLOptions::instance()->file.isEmpty();
 
     writeDefaultEntries();
 
@@ -219,7 +229,7 @@ void KSquirrel::closeEvent(QCloseEvent *ev)
 {
     kconf->setGroup("Main");
 
-    if(m_demo)
+    if(m_demo && !m_intray)
     {
         finalActions();
         qApp->quit();
@@ -228,7 +238,7 @@ void KSquirrel::closeEvent(QCloseEvent *ev)
     if(builtin && viewBrowser->id(viewBrowser->visibleWidget()))
         closeGLWidget();
     // Minimize to tray ?
-    else if(kconf->readBoolEntry("minimize to tray", false))
+    else if(kconf->readBoolEntry("minimize to tray", false) || m_intray)
     {
         // Yes, let's hide to tray
         slotGotoTray();
@@ -289,6 +299,8 @@ void KSquirrel::createLocationToolbar(KToolBar *pTLocation)
     kconf->setGroup("History");
 
     // some additional setup
+
+    pCurrentURL->setPixmapProvider(KonqPixmapProvider::self());
     pCurrentURL->setCompletionObject(new KURLCompletion(KURLCompletion::DirCompletion));
     pCurrentURL->setDuplicatesEnabled(false);
     pCurrentURL->setSizeLimit(20);
@@ -327,7 +339,7 @@ void KSquirrel::initFilterMenu()
     QStringList quickInfo;
 
     // Get extensions and names of libraries' filters
-    SQ_LibraryHandler::instance()->allFilters(libFilters, quickInfo);
+    libhandler->allFilters(libFilters, quickInfo);
 
     actionFilterMenu->insertTitle(i18n("Libraries' filters"));
 
@@ -348,7 +360,7 @@ void KSquirrel::initFilterMenu()
     }
 
     // all filters' extension in one string
-    QString allF = SQ_LibraryHandler::instance()->allFiltersString();
+    QString allF = libhandler->allFiltersString();
 
     libFilters.append(allF);
 
@@ -498,20 +510,16 @@ void KSquirrel::createWidgets(int createFirst)
 
     SQ_SplashScreen::advance();
 
-    QString prep = QString::fromLatin1("  ");
-
-    sideBar->addWidget(ptree, prep + i18n("Folder tree"), "view_tree");
-    sideBar->addWidget(mv, prep + i18n("Mount points"), "blockdevice");
-    sideBar->addWidget(cb, prep + i18n("Categories"), "folder_favorite");
-    sideBar->addWidget(new SQ_ImageBasket, prep + i18n("Image basket"), "folder_image");
+    sideBar->addWidget(ptree, i18n("Folder tree"), "view_tree");
+    sideBar->addWidget(mv, i18n("Mount points"), "blockdevice");
+    sideBar->addWidget(cb, i18n("Categories"), "bookmark");
+    sideBar->addWidget(new SQ_ImageBasket, i18n("Image basket"), "folder_image");
     sideBar->updateLayout();
 
     connect(mv, SIGNAL(path(const QString &)), pWidgetStack, SLOT(setURLForCurrent(const QString &)));
     connect(ptree, SIGNAL(urlAdded(const KURL &)), pWidgetStack->diroperator(), SLOT(urlAdded(const KURL &)));
     connect(ptree, SIGNAL(urlRemoved(const KURL &)), pWidgetStack->diroperator(), SLOT(urlRemoved(const KURL &)));
     connect(pWidgetStack->diroperator(), SIGNAL(urlEntered(const KURL &)), ptree, SLOT(slotClearChecked()));
-    connect(ptree, SIGNAL(stopUpdate()), pWidgetStack->diroperator(), SLOT(stopThumbnailUpdate()));
-    connect(ptree, SIGNAL(startUpdate()), pWidgetStack->diroperator(), SLOT(startThumbnailUpdate()));
 
     pTLocation->setShown(m_urlbox);
     pAURL->setChecked(m_urlbox);
@@ -570,8 +578,9 @@ void KSquirrel::createStatusBar(KStatusBar *bar)
     sbar->setSizeGripEnabled(true);
     sbar->show();
 
-    // directory information (for example "3 dirs, 12 iles")
+    // directory information (for example "3 dirs, 12 files")
     dirInfo = new QLabel(QString::null, sbar, "dirInfo");
+
     QHBox *vb = new QHBox(sbar);
 
     // mime icon of current file
@@ -580,18 +589,29 @@ void KSquirrel::createStatusBar(KStatusBar *bar)
 
     // name of current file
     fileName = new QLabel(QString::fromLatin1("----"), vb, "fileName");
+    fileName->setTextFormat(Qt::RichText);
+    fileName->setAlignment(Qt::AlignAuto | Qt::AlignVCenter | Qt::ExpandTabs);
     QLabel *levak = new QLabel(sbar);
+
+    diskSpace = new QLabel(QString::null, sbar, "diskSpace");
 
     // insert pointers to map, now it is possible
     // to call KSquirrel::sbarWidget(name)
     sbarwidgets["dirInfo"] = dirInfo;
     sbarwidgets["fileIcon"] = fileIcon;
     sbarwidgets["fileName"] = fileName;
+    sbarwidgets["diskSpace"] = diskSpace;
 
     // finally, add QLabels to statusbar
     sbar->addWidget(dirInfo, 0, true);
     sbar->addWidget(vb, 0, true);
     sbar->addWidget(levak, 1, true);
+
+    diskProg = new SQ_Progress(sbar, "SQ_Progress [disk space]");
+    diskProg->setFixedWidth(150);
+
+    sbar->addWidget(diskSpace, 0, true);
+    sbar->addWidget(diskProg, 0, true);
 }
 
 // Create menu
@@ -623,6 +643,7 @@ void KSquirrel::createMenu(KMenuBar *menubar)
     pAOpen->plug(pop_file);
     pAOpenAndSet->plug(pop_file);
     pop_file->insertSeparator();
+    pARename->plug(pop_file);
     pWidgetStack->action("properties")->plug(pop_file);
     pWidgetStack->action("delete")->plug(pop_file);
     pop_file->insertSeparator();
@@ -701,60 +722,69 @@ void KSquirrel::createToolbar(KToolBar *tools)
 void KSquirrel::createActions()
 {
     pAThumbs = new KActionMenu(i18n("Thumbnail size"), "thumbnail");
-    pAExit = KStdAction::quit(this, SLOT(close()), actionCollection(), "SQ close");
+    pAExit = KStdAction::quit(this, SLOT(slotClose()), actionCollection(), "SQ close");
     pAConfigure = KStdAction::preferences(this, SLOT(slotOptions()), actionCollection(), "SQ Configure");
-    pAGLView = new KAction(i18n("Image window"), "raise", CTRL+Key_I, this, SLOT(raiseGLWidget()), actionCollection(), "SQ gl view widget");
+    pAGLView = new KAction(i18n("Image window"), "raise", CTRL+Qt::Key_I, this, SLOT(raiseGLWidget()), actionCollection(), "SQ gl view widget");
     pARescan = KStdAction::redisplay(this, SLOT(slotRescan()), actionCollection(), "SQ rescan libraries");
     pARescan->setText(i18n("Reload codecs from disk"));
-    pAExtTools = new KAction(i18n("Configure external tools..."), "runprog", 0, this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
+    pAExtTools = new KAction(i18n("Configure external tools..."), "launch", 0, this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
     pAFilters = new KAction(i18n("Configure filters..."), "filefind", 0, this, SLOT(slotFilters()), actionCollection(), "SQ filters");
-    pAGotoTray = new KAction(i18n("Goto tray"), 0, 0, this, SLOT(slotGotoTray()), actionCollection(), "SQ goto tray");
-    pAOpenAndSet = new KAction(i18n("Open file and change directory"), "fileopen", CTRL+ALT+Key_O, this, SLOT(slotOpenFileAndSet()), actionCollection(), "SQ open and set");
-    pAOpen = new KAction(i18n("Open file"), "fileopen", CTRL+Key_O, this, SLOT(slotOpenFile()), actionCollection(), "SQ open file");
+    pAGotoTray = new KAction(i18n("Goto tray"), "background", CTRL+Qt::Key_T, this, SLOT(slotGotoTray()), actionCollection(), "SQ goto tray");
+    pAOpenAndSet = new KAction(i18n("Open file and change directory"), "fileopen", CTRL+ALT+Qt::Key_O, this, SLOT(slotOpenFileAndSet()), actionCollection(), "SQ open and set");
+    pAOpen = new KAction(i18n("Open file"), "fileopen", CTRL+Qt::Key_O, this, SLOT(slotOpenFile()), actionCollection(), "SQ open file");
     pATCMaster = new KAction(i18n("Thumbnail cache manager..."), "cache", 0, this, SLOT(slotTCMaster()), actionCollection(), "SQ TC Master");
     pASelectAll = KStdAction::selectAll(0, 0, actionCollection(), "SQ Select All");
     pADeselectAll = KStdAction::deselect(0, 0, actionCollection(), "SQ Deselect All");
 
-    pARaiseListView = new KRadioAction(i18n("List"), "view_multicolumn", CTRL + Key_1, this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
-    pARaiseIconView = new KRadioAction(i18n("Icons"), "view_icon", CTRL + Key_2, this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
-    pARaiseDetailView = new KRadioAction(i18n("Details"), "view_detailed", CTRL + Key_3, this, SLOT(slotRaiseDetailView()), actionCollection(), "SQ raise detailed view");
-    pARaiseThumbView = new KRadioAction(i18n("Thumbnails"), "view_icon", CTRL + Key_4, this, SLOT(slotRaiseThumbView()), actionCollection(), "SQ raise thumbs view");
+    pARaiseListView = new KRadioAction(i18n("List"), "view_multicolumn", CTRL+Qt::Key_1, this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
+    pARaiseIconView = new KRadioAction(i18n("Icons"), "view_icon", CTRL+Qt::Key_2, this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
+    pARaiseDetailView = new KRadioAction(i18n("Details"), "view_detailed", CTRL+Qt::Key_3, this, SLOT(slotRaiseDetailView()), actionCollection(), "SQ raise detailed view");
+    pARaiseThumbView = new KRadioAction(i18n("Thumbnails"), "view_icon", CTRL+Qt::Key_4, this, SLOT(slotRaiseThumbView()), actionCollection(), "SQ raise thumbs view");
 
-    pAURL = new KToggleAction(i18n("Show URL box"), "history", CTRL + Key_U, 0, 0, actionCollection(), "SQ toggle url box");
+    pAURL = new KToggleAction(i18n("Show URL box"), "history", CTRL+Qt::Key_U, 0, 0, actionCollection(), "SQ toggle url box");
 
     pAInterface = new KToggleAction(i18n("Built-in image window"), "view_choose", 0, 0, 0, actionCollection(), "SQ Change Interface");
     connect(pAInterface, SIGNAL(toggled(bool)), this, SLOT(slotChangeInterface(bool)));
 
-    pASlideShow = new KAction(i18n("Slideshow"), "folder_video", CTRL+Key_S, this, SLOT(slotSlideShowStart()), actionCollection(), "SQ Slideshow");
-    pASlideShowDialog = new KAction(i18n("Slideshow advanced"), 0, CTRL+ALT+Key_S, this, SLOT(slotSlideShowDialog()), actionCollection(), "SQ SlideShow Dialog");
+    pASlideShow = new KAction(i18n("Slideshow"), "folder_video", CTRL+Qt::Key_S, this, SLOT(slotSlideShowStart()), actionCollection(), "SQ Slideshow");
+    pASlideShowDialog = new KAction(i18n("Slideshow advanced"), 0, CTRL+ALT+Qt::Key_S, this, SLOT(slotSlideShowDialog()), actionCollection(), "SQ SlideShow Dialog");
 
-    pAPluginsInfo = new KAction(i18n("Plugins information..."), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
+    pARename = new KAction(i18n("Rename"), "file_move", Qt::Key_F2, this, SLOT(slotRename()), actionCollection(), "SQ Rename");
+
+    pAPluginsInfo = new KAction(i18n("Codecs information..."), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
     pAGLInfo = new KAction(i18n("OpenGL information..."), 0, 0, this, SLOT(slotGLInfo()), actionCollection(), "SQ OpenGL Info");
 
     pAThumb1 = new KRadioAction(i18n("Medium thumbnails"), locate("appdata", "images/thumbs/thumbs_medium.png"), 0, this, SLOT(slotThumbsMedium()), actionCollection(), "SQ thumbs1");
     pAThumb2 = new KRadioAction(i18n("Large thumbnails"), locate("appdata", "images/thumbs/thumbs_large.png"), 0, this, SLOT(slotThumbsLarge()), actionCollection(), "SQ thumbs2");
     pAThumb3 = new KRadioAction(i18n("Huge thumbnails"), locate("appdata", "images/thumbs/thumbs_huge.png"), 0, this, SLOT(slotThumbsHuge()), actionCollection(), "SQ thumbs3");
 
-    pASelectGroup = new KAction(i18n("Select group"), "viewmag+", CTRL+Key_Plus, 0, 0, actionCollection(), "SQ Select Group");
-    pADeselectGroup = new KAction(i18n("Deselect group"), "viewmag-", CTRL+Key_Minus, 0, 0, actionCollection(), "SQ Deselect Group");
+    pASelectGroup = new KAction(i18n("Select group"), "viewmag+", CTRL+Qt::Key_Plus, 0, 0, actionCollection(), "SQ Select Group");
+    pADeselectGroup = new KAction(i18n("Deselect group"), "viewmag-", CTRL+Qt::Key_Minus, 0, 0, actionCollection(), "SQ Deselect Group");
 
-    QString thumbs_size__ = QString::fromLatin1("thumbs_size__");
+    const QString thumbs_size__ = QString::fromLatin1("thumbs_size__");
     pAThumb1->setExclusiveGroup(thumbs_size__);
     pAThumb2->setExclusiveGroup(thumbs_size__);
     pAThumb3->setExclusiveGroup(thumbs_size__);
 
     switch(thumbSize->value())
     {
-        case SQ_ThumbnailSize::Medium:    pAThumb1->setChecked(true);    break;
-        case SQ_ThumbnailSize::Large:     pAThumb2->setChecked(true);    break;
+        case SQ_ThumbnailSize::Medium: pAThumb1->setChecked(true); break;
+        case SQ_ThumbnailSize::Large:  pAThumb2->setChecked(true); break;
 
-        default:
-            pAThumb3->setChecked(true);
+        default: pAThumb3->setChecked(true);
     }
 
     pAThumbs->insert(pAThumb1);
     pAThumbs->insert(pAThumb2);
     pAThumbs->insert(pAThumb3);
+    pAThumbs->insert(new KActionSeparator(actionCollection()));
+
+    pAThumbsE = new KToggleAction(i18n("Extended thumbnails"), "", CTRL+Qt::Key_E, 0, 0, actionCollection(), "SQ Extended thumbs");
+    kconf->setGroup("Thumbnails");
+    pAThumbsE->setChecked(kconf->readBoolEntry("extended", false));
+    connect(pAThumbsE, SIGNAL(toggled(bool)), this, SLOT(slotExtendedToggled(bool)));
+    pAThumbs->insert(pAThumbsE);
+
     pAThumbs->setDelayed(false);
 
     QString raise_some_widget_from_stack = QString::fromLatin1("raise_some_widget_from_stack");
@@ -773,6 +803,8 @@ void KSquirrel::slotGotoTray()
     // hide image window if needed
     if(!builtin)
         gl_view->hide();
+
+    m_intray = true;
 
     // hide main window
     hide();
@@ -819,7 +851,7 @@ void KSquirrel::raiseGLWidget()
     {
         gl_view->show();
         gl_view->raise();
-        KWin::activateWindow(gl_view->winId());
+        KWin::forceActiveWindow(gl_view->winId());
     }
 }
 
@@ -860,6 +892,8 @@ void KSquirrel::initBookmarks()
     bookmarkMenu = new KBookmarkMenu(bmanager, bookmarkOwner, bookmarks->popupMenu(), actionCollection(), true);
 
     connect(bookmarkOwner, SIGNAL(openURL(const KURL&)), pWidgetStack, SLOT(setURLForCurrent(const KURL&)));
+
+    bookmarkOwner->setURL(pWidgetStack->diroperator()->url());
 }
 
 // Create new config file in
@@ -930,6 +964,7 @@ void KSquirrel::applyDefaultSettings()
 
     kconf->setGroup("Thumbnails");
     thumbSize->setExtended(kconf->readBoolEntry("extended", false));
+    pAThumbsE->setChecked(thumbSize->extended());
 
     updateThumbs = (old_ext != kconf->readBoolEntry("extended", false));
 
@@ -949,6 +984,12 @@ void KSquirrel::applyDefaultSettings()
         pWidgetStack->updateView();
     else if(updateThumbs) // just update icons...
         pWidgetStack->diroperator()->slotSetThumbSize(SQ_ThumbnailSize::instance()->pixelSizeString());
+}
+
+void KSquirrel::slotExtendedToggled(bool e)
+{
+    thumbSize->setExtended(e);
+    pWidgetStack->diroperator()->slotSetThumbSize(SQ_ThumbnailSize::instance()->pixelSizeString());
 }
 
 // Toggle fullscreen state for image window
@@ -990,7 +1031,7 @@ void KSquirrel::saveValues()
     kconf->writeEntry("last", pWidgetStack->nameFilter());
 
     kconf->setGroup("Fileview");
-    kconf->writeEntry("last visited", (pWidgetStack->url()).path());
+    kconf->writeEntry("last visited", pWidgetStack->url().prettyURL());
 
     if(kconf->readBoolEntry("history", true) && pCurrentURL)
     {
@@ -1019,6 +1060,7 @@ void KSquirrel::saveValues()
 
     kconf->setGroup("Thumbnails");
     kconf->writeEntry("size", thumbSize->value());
+    kconf->writeEntry("extended", thumbSize->extended());
 }
 
 // Reload libraries from disk
@@ -1087,6 +1129,8 @@ void KSquirrel::finalActions()
 
     hide();
 
+    diskProg->flush();
+
     kconf->setGroup("Thumbnails");
 
     bool create_splash = (!kconf->readBoolEntry("dont write", false)) & (!SQ_PixmapCache::instance()->empty());
@@ -1113,6 +1157,7 @@ void KSquirrel::finalActions()
  */
 void KSquirrel::enableThumbsMenu(bool enable)
 {
+    pAThumbsE->setEnabled(enable); // extended thumbnails
     pAThumbs->setEnabled(enable);
 }
 
@@ -1127,6 +1172,18 @@ void KSquirrel::preCreate()
 
     new SQ_ErrorString(this);
     new SQ_Converter(this);
+    new SQ_ThumbnailsUnused(this);
+
+    listingDialog = new SQ_SlideShowListing(this, "SlideShow Listing", true, Qt::WStyle_Customize | Qt::WStyle_NoBorder);
+
+    connect(listingDialog, SIGNAL(kill()), this, SLOT(slotSlideShowListingKill()));
+
+    slideShowItems.setAutoDelete(true);
+
+    down = new SQ_Downloader(this);
+
+    connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloaderResult(const KURL &)));
+
     SQ_SlideShowWidget *sls = new SQ_SlideShowWidget(0, "ksquirrel-slideshow");
 
     connect(sls, SIGNAL(stopSlideShow()), this, SLOT(slotStopSlideShow()));
@@ -1138,8 +1195,9 @@ void KSquirrel::preCreate()
 
     // timer for slideshow
     slideShowTimer = new QTimer(this);
+    timerShowListing = new QTimer(this);
 
-    connect(slideShowTimer, SIGNAL(timeout()), this, SLOT(slotSlideShowNextImage()));
+    connect(timerShowListing, SIGNAL(timeout()), listingDialog, SLOT(show()));
 
     // create main actions
     createActions();
@@ -1161,72 +1219,13 @@ void KSquirrel::preCreate()
     if(SQ_HLOptions::instance()->showLibsAndExit)
         exit(0);
 
-    // check if we need to find images and create thumbnails
-    if(!SQ_HLOptions::instance()->thumbs)
-        continueLoading();
-    else // yes!
-    {
-        // create new KIO::Job, which will find files recursively or not.
-        job = (SQ_HLOptions::instance()->recurs) ? KIO::listRecursive(KURL(SQ_HLOptions::instance()->thumbs_p), false, true) : KIO::listDir(KURL(SQ_HLOptions::instance()->thumbs_p), false, true);
-        connect(job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)), this, SLOT(slotUDSEntries(KIO::Job*, const KIO::UDSEntryList&)));
-        connect(job, SIGNAL(result(KIO::Job*)), this, SLOT(listResult(KIO::Job*)));
-        dir = new SQ_Dir(SQ_Dir::Thumbnails);
-    }
+    continueLoading();
 }
 
 void KSquirrel::resizeEvent(QResizeEvent *e)
 {
     if(viewBrowser)
         viewBrowser->resize(e->size());
-}
-
-// Listing job found some new files
-void KSquirrel::slotUDSEntries(KIO::Job *j, const KIO::UDSEntryList &list)
-{
-    if(j != job) return;
-
-    QString m_file;
-    KURL url = SQ_HLOptions::instance()->thumbs_p;
-    SQ_Thumbnail t;
-    bool b;
-    QString other_thumb_path = QDir::homeDirPath() + "/.thumbnails";
-    other_thumb_path = QDir::cleanDirPath(other_thumb_path);
-
-    KIO::UDSEntryListConstIterator end = list.end();
-
-    // go through list of KIO::UDSEntrys
-    for(KIO::UDSEntryListConstIterator it = list.begin(); it != end; ++it)
-    {
-        KFileItem file(*it, url, true, true);
-        m_file = file.url().path();
-
-        QFileInfo ff(m_file);
-
-        // Is it a file ? Is it readable ?
-        if(!file.isDir() && ff.isReadable())
-        // ignore some special paths - "~/.ksquirrel/thumbnails" and "~/.thumbnails"
-        if(!m_file.startsWith(dir->root()) && !m_file.startsWith(other_thumb_path))
-        {
-            // Check if thumbnails should be updated
-            if(dir->updateNeeded(m_file))
-            {
-                // Yes, create thumbnail
-                b = SQ_ThumbnailLoadJob::loadThumbnail(m_file, t);
-
-                // Save thumbnail to disk
-                if(b)
-                    dir->saveThumbnail(m_file, t);
-            }
-        }
-    }
-}
-
-// Result of listing job
-void KSquirrel::listResult(KIO::Job *j)
-{
-    if(j != job) return;
-
-    continueLoading();
 }
 
 void KSquirrel::continueLoading()
@@ -1241,37 +1240,40 @@ void KSquirrel::continueLoading()
     handlePositionSize();
 
     // don't show navigator when running with file argument
-    if(SQ_HLOptions::instance()->path.isEmpty() || builtin)
+    if(!m_demo || builtin)
         show();
 
 #ifdef SQ_HAVE_KIPI
-    kipiManager->loadPlugins();
+    kconf->setGroup("Main");
+
+    // load KIPI plugins on demand ?
+    if(!kconf->readBoolEntry("kipi_ondemand", true))
+        kipiManager->loadPlugins();
 #endif
 
     tray = new SQ_Tray(this);
+
+    connect(tray, SIGNAL(quitSelected()), this, SLOT(slotTrayQuit()));
 
     SQ_SplashScreen::advance();
     SQ_SplashScreen::finish();
 
     // Check if we need to load a file at startup
     // (if one was specified in command line)
-    if(!SQ_HLOptions::instance()->path.isEmpty())
+    if(!SQ_HLOptions::instance()->file.isEmpty())
     {
-        QFileInfo fm(SQ_HLOptions::instance()->path);
+        pWidgetStack->diroperator()->setPendingFile(SQ_HLOptions::instance()->file.fileName(false));
 
-        if(fm.isFile() && fm.isReadable())
-        {
-            pWidgetStack->diroperator()->setPendingFile(SQ_HLOptions::instance()->path);
-
-            // if it is known image type - let's load it
-            SQ_GLWidget::window()->startDecoding(SQ_HLOptions::instance()->path);
-        }
+        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, SQ_HLOptions::instance()->file);
+        pWidgetStack->diroperator()->execute(&fi);
     }
 }
 
 void KSquirrel::slotChangeInterface(bool bin)
 {
     builtin = bin;
+
+    setCaption(SQ_GLWidget::window()->originalURL());
 
     if(builtin)
     {
@@ -1289,39 +1291,46 @@ void KSquirrel::slotChangeInterface(bool bin)
 void KSquirrel::setCaption(const QString &cap)
 {
     if(!builtin)
+    {
+        KMainWindow::setCaption(QString::null);
         gl_view->setCaption(cap);
+    }
     else
+    {
         KMainWindow::setCaption(cap);
+        gl_view->setCaption(QString::null);
+    }
 }
 
 // User selected "Open file" or "Open file #2" from menu.
 // Let's load file and set new URL for filemanager (if parseURL == true)
 void KSquirrel::openFile(bool parseURL)
 {
-    QString name = KFileDialog::getOpenFileName();
+    KURL url = KFileDialog::getOpenURL();
 
-    if(name.isEmpty())
-        return;
-
-    QFileInfo f(name);
-
-    if(!f.isReadable())
+    if(url.isEmpty())
         return;
 
     // if it is known file type
-    if(SQ_LibraryHandler::instance()->libraryForFile(name))
+    if(libhandler->maybeSupported(url) != SQ_LibraryHandler::No)
     {
         if(parseURL)
-            pWidgetStack->setURLForCurrent(f.dirPath(true));
+        {
+            KURL d = url;
+            d.cd("..");
+            pWidgetStack->diroperator()->setPendingFile(url.fileName(false));
+            pWidgetStack->setURLForCurrent(d);
+        }
 
-        SQ_GLWidget::window()->startDecoding(name);
+        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, url);
+        pWidgetStack->diroperator()->execute(&fi);
     }
     else
     {
         kconf->setGroup("Fileview");
 
         if(kconf->readBoolEntry("run unknown", false))
-            new KRun(name);
+            new KRun(url);
     }
 }
 
@@ -1409,32 +1418,56 @@ bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& r
         return true;
     }
     // load specified image
-    else if(fun == "load_image(QString)")
+    else if(fun == "load_image(QString)" || fun == "load_directory(QString)")
     {
         QString arg = getArg(data);
 
-        QFileInfo fm(arg);
+        KURL url = KURL::fromPathOrURL(arg), dir;
+        bool isdir = false, setc = true;
+        dir = url;
 
-        if(!fm.isDir() && fm.isReadable())
+        if(url.fileName(false).isEmpty())
+            isdir = true;
+        else
+            dir.cd("..");
+
+        if(!pWidgetStack->diroperator()->url().equals(dir, true))
         {
-            // select file in currently loaded directory
-            // TODO: change url too ?
-            KFileView *v = pWidgetStack->diroperator()->view();
-            v->clearSelection();
-            v->setCurrentItem(fm.fileName());
-            v->setSelected(v->currentFileItem(), true);
+            // don't set current item
+            setc = false;
+            pWidgetStack->diroperator()->setPendingFile(url.fileName(false));
+            pWidgetStack->diroperator()->setURL(dir, true);
+        }
 
-            // load image
-            if(SQ_LibraryHandler::instance()->libraryForFile(arg))
+        // activate this window
+        if(isdir)
+            activate();
+        else
+            raiseGLWidget();
+
+        if(!isdir)
+        {
+            if(setc)
+            {
+                KFileView *v = pWidgetStack->diroperator()->view();
+
+                if(v)
+                {
+                    v->clearSelection();
+                    v->setCurrentItem(url.fileName(false));
+                    v->setSelected(v->currentFileItem(), true);
+                }
+            }
+
+            KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, url);
+
+            if(libhandler->maybeSupported(fi.url()) != SQ_LibraryHandler::No)
             {
                 // stop slideshow if running
                 slotStopSlideShow();
 
-                // activate this window
-                activate();
-
-                // finally, load the image
-                SQ_GLWidget::window()->startDecoding(arg);
+                // load
+                pWidgetStack->diroperator()->execute(&fi);
             }
         }
 
@@ -1456,6 +1489,7 @@ QCStringList KSquirrel::functions()
     result << "void control(QString)";
     result << "void navigator(QString)";
     result << "void load_image(QString)";
+    result << "void load_directory(QString)";
     result << "void activate()";
     result << "void activate_image_window()";
 
@@ -1517,9 +1551,9 @@ void KSquirrel::control(const QString &command)
     {
         int id = it.data();
 
-        QKeyEvent *ev = new QKeyEvent(QEvent::KeyPress, id, id, Qt::NoButton);
+        KAction *a = SQ_GLWidget::window()->actionCollection()->action(QString::fromLatin1("action_%1").arg(id));
 
-        QApplication::postEvent(SQ_GLWidget::window(), ev);
+        if(a) a->activate();
     }
     else // unknown parameter !
     {
@@ -1575,9 +1609,69 @@ void KSquirrel::fillMessages()
 void KSquirrel::slotSlideShowStart()
 {
     if(slideShowDir.isEmpty())
-        slideShowDir = SQ_WidgetStack::instance()->url().path();
+        slideShowDir = SQ_WidgetStack::instance()->url().prettyURL();
 
-    slideShowPrivate();
+    kconf->setGroup("Slideshow");
+
+    // recursion ?
+    bool recurs = kconf->readBoolEntry("recurs", false);
+
+    listing = recurs ? KIO::listRecursive(slideShowDir, false, false)
+                     : KIO::listDir(slideShowDir, false, false);
+
+    connect(listing, SIGNAL(entries(KIO::Job *, const KIO::UDSEntryList &)),
+            this, SLOT(slotSlideShowEntries(KIO::Job *, const KIO::UDSEntryList &)));
+
+    connect(listing, SIGNAL(result(KIO::Job *)), this, SLOT(slotSlideShowJobResult(KIO::Job *)));
+
+    timerShowListing->start(1000, true);
+}
+
+void KSquirrel::slotSlideShowListingKill()
+{
+    if(listing) listing->kill();
+
+    slideShowItems.clear();
+    listingDialog->setFile(0, QString::null);
+    listingDialog->hide();
+}
+
+void KSquirrel::slotSlideShowEntries(KIO::Job *, const KIO::UDSEntryList &list)
+{
+    KIO::UDSEntryListConstIterator itEnd = list.end();
+
+    KURL url = KURL::fromPathOrURL(slideShowDir);
+    QString sfile;
+
+    // go through list of KIO::UDSEntrys
+    for(KIO::UDSEntryListConstIterator it = list.begin(); it != itEnd; ++it)
+    {
+        KFileItem *file = new KFileItem(*it, url, true, true);
+
+        if(file && file->isFile())
+        {
+            slideShowItems.append(file);
+
+            if(sfile.isEmpty()) sfile = file->name();
+        }
+        else
+            delete file;
+    }
+
+    if(!sfile.isEmpty())
+        listingDialog->setFile(slideShowItems.count(), sfile);
+}
+
+void KSquirrel::slotSlideShowJobResult(KIO::Job *job)
+{
+    listingDialog->setFile(0, QString::null);
+    listingDialog->hide();
+    timerShowListing->stop();
+
+    if(!job->error())
+        slideShowPrivate();
+
+    listing = 0;
 }
 
 // Invoke dialog for advanced slideshow
@@ -1595,6 +1689,11 @@ void KSquirrel::slideShowPrivate()
     // stop timer, if active
     slideShowTimer->stop();
     slideShowStop = false;
+    slideShowInit = true;
+    slideShowDirection = KSquirrel::Default;
+
+    disconnect(slideShowTimer, SIGNAL(timeout()), 0, 0);
+    connect(slideShowTimer, SIGNAL(timeout()), this, SLOT(slotSlideShowNextImage()));
 
     kconf->setGroup("Slideshow");
 
@@ -1602,13 +1701,9 @@ void KSquirrel::slideShowPrivate()
     slideShowDelay = kconf->readNumEntry("delay", 1000);
     slideShowRepeat = kconf->readNumEntry("repeat", 0);
 
-    if(slideShowDelay < 0) slideShowDelay = 1000;
-    if(slideShowRepeat < 0) slideShowRepeat = 0;
+    if(slideShowDelay < 0)     slideShowDelay = 1000;
+    if(slideShowRepeat < 0)    slideShowRepeat = 0;
     if(slideShowRepeat > 1000) slideShowRepeat = 1000;
-
-    slideShowItems.setSorting(QDir::Name);
-    slideShowItems.setFilter(QDir::Files | QDir::Readable | QDir::Hidden);
-    slideShowItems.setPath(slideShowDir);
 
     slideShowTotal = slideShowItems.count();
 
@@ -1620,12 +1715,90 @@ void KSquirrel::slideShowPrivate()
     }
 
     // initial setup
-    slideShowIndex = 0;
-    slideShowName = slideShowDir + QDir::separator() + slideShowItems[slideShowIndex];
+    slideShowIndex = -1;
 
     // start!
     SQ_SlideShowWidget::instance()->beginSlideShow(slideShowTotal);
-    slideShowTimer->start(1, true);
+
+    QTimer::singleShot(1, this, SLOT(slideShowDetermine()));
+}
+
+void KSquirrel::slotDownloaderResult(const KURL &u)
+{
+    if(u.isEmpty()) // error occured
+        slideShowDetermine();
+    else
+    {
+        KURL u2 = u;
+        slideShowName = u2;
+        int delay = slideShowInit ? 0 : slideShowDelay;
+
+        if(libhandler->libraryForFile(slideShowName.path()))
+        {
+            slideShowInit = false;
+            slideShowTimer->start(delay, true);
+        }
+        else
+            slideShowDetermine();
+    }
+}
+
+void KSquirrel::slideShowDetermine()
+{
+    do
+    {
+        // goto next file
+        if(slideShowDirection == KSquirrel::Default)
+        {
+            slideShowIndex++;
+
+            // all files loaded ?
+            if(slideShowIndex == slideShowTotal)
+            {
+                // slideshow done
+                if(!slideShowRepeat)
+                {
+                    // nice hack to make final delay
+                    disconnect(slideShowTimer, SIGNAL(timeout()), 0, 0);
+                    connect(slideShowTimer, SIGNAL(timeout()), this, SLOT(slotStopSlideShow()));
+                    slideShowTimer->start(slideShowDelay, true);
+                    return;
+                }
+                // we should repeat slideshow
+                else
+                {
+                    slideShowRepeat--;
+                    slideShowIndex = 0;
+                }
+            }
+        }
+        else // KSquirrel::MBack
+        {
+            slideShowIndex--;
+
+//            printf("MBACK %d\n", slideShowIndex);
+
+            if(slideShowIndex < 0)
+            {
+                slideShowDirection = KSquirrel::Default;
+                slideShowIndex = -1;
+                continue;
+            }
+        }
+
+        // construct new file name
+        slideShowFile = slideShowItems.at(slideShowIndex);
+        slideShowName = slideShowFile->url();
+//        printf("TRY %s\n", slideShowName.path().ascii());
+    }
+    while(libhandler->maybeSupported(slideShowName) == SQ_LibraryHandler::No);
+
+    slideShowDirection = KSquirrel::Default;
+
+    if(slideShowName.isLocalFile())
+        slotDownloaderResult(slideShowName);
+    else
+        down->start(slideShowFile);
 }
 
 // Load the next image
@@ -1635,48 +1808,9 @@ void KSquirrel::slotSlideShowNextImage()
     if(slideShowStop)
         return;
 
-    bool brk = false;
+    SQ_SlideShowWidget::instance()->loadImage(slideShowName.path(), slideShowIndex);
 
-    do
-    {
-        // if it is known image type - let's load it
-        if(SQ_LibraryHandler::instance()->libraryForFile(slideShowName))
-        {
-//            printf("SUPPORTS %s\n", slideShowName.ascii());
-            brk = true;
-            SQ_SlideShowWidget::instance()->loadImage(slideShowName, slideShowIndex);
-        }
-
-        // goto next file
-        slideShowIndex++;
-
-        // all files loaded ?
-        if(slideShowIndex == slideShowTotal)
-        {
-            // slideshow done
-            if(!slideShowRepeat)
-            {
-                slotStopSlideShow();
-                return;
-            }
-            // we should repeat slideshow
-            else
-            {
-                slideShowRepeat--;
-                slideShowIndex = 0;
-            }
-        }
-
-        // construct new file name
-        slideShowName = slideShowDir + QDir::separator() + slideShowItems[slideShowIndex];
-
-        if(brk) break;
-
-//        printf("CONTINUE -> %s\n", slideShowName.ascii());
-    }
-    while(!brk);
-
-    slideShowTimer->start(slideShowDelay, true);
+    slideShowDetermine();
 }
 
 void KSquirrel::slotNextSlideShow()
@@ -1688,16 +1822,38 @@ void KSquirrel::slotNextSlideShow()
 void KSquirrel::slotPreviousSlideShow()
 {
     slideShowTimer->stop();
-    int delay = slideShowDelay;
+    slideShowDirection = KSquirrel::MBack;
+//    printf("PREV 1 %d\n", slideShowIndex);
+//    slideShowIndex--;
+    int ssi = slideShowIndex;
+    KURL ssn;
 
-    if(slideShowIndex > 1)
+    do
     {
-        slideShowIndex -= 2;
-        slideShowName = slideShowDir + QDir::separator() + slideShowItems[slideShowIndex];
-        delay = 0;
-    }
+        // goto next file
+        ssi--;
 
-    slideShowTimer->start(delay, true);
+//        printf("MBACK %d\n", ssi);
+
+        if(ssi < 0)
+        {
+            slideShowDirection = KSquirrel::Default;
+            slideShowTimer->start(0, true);
+            return;
+        }
+
+        // construct new file name
+        ssn = slideShowItems.at(ssi)->url();
+//        printf("TRY %s\n", ssn.path().ascii());
+    }
+    while(libhandler->maybeSupported(ssn) == SQ_LibraryHandler::No);
+
+    slideShowIndex = ssi;
+    slideShowName = ssn;
+
+//    printf("PREV 2 %d\n", slideShowIndex);
+    slideShowInit = true;
+    slideShowDetermine();
 }
 
 // Stop slideshow, if running
@@ -1711,6 +1867,8 @@ void KSquirrel::slotStopSlideShow()
     slideShowTimer->stop();
     slideShowDir = QString::null;
     slideShowPaused = false;
+    slideShowItems.clear();
+    slideShowDirection = KSquirrel::Default;
 
     kconf->setGroup("Slideshow");
 
@@ -1773,4 +1931,96 @@ void KSquirrel::configAnime(bool init)
         delete anim;
 }
 
+void KSquirrel::slotTrayQuit()
+{
+    m_demo = true;
+    m_intray = false;
+}
+
+void KSquirrel::slotClose()
+{
+    m_demo = true;
+    m_intray = false;
+
+    close();
+}
+
+void KSquirrel::slotRename()
+{
+    bool ok;
+
+    KFileItemList *items = const_cast<KFileItemList *>(pWidgetStack->diroperator()->view()->selectedItems());
+
+    if(!items || !items->count())
+        return;
+
+    renameSrcURL = items->first()->url();
+
+    QString filename = QStyleSheet::escape(renameSrcURL.filename());
+
+    QString mNewFilename = KInputDialog::getText(i18n("Renaming File"),
+            i18n("<p>Rename file <b>%1</b> to:</p>").arg(filename),
+            renameSrcURL.filename(), &ok, this);
+
+    if(!ok) return;
+
+    renameDestURL = renameSrcURL;
+    renameDestURL.setFileName(mNewFilename);
+
+    KIO::Job *job = KIO::move(renameSrcURL, renameDestURL);
+    connect(job, SIGNAL(result(KIO::Job*)), this, SLOT(slotRenameResult(KIO::Job*)));
+}
+
+void KSquirrel::slotRenameResult(KIO::Job *job)
+{
+    if(job->error())
+    {
+        job->showErrorDialog(this);
+        return;
+    }
+/*
+    KFileItemList *items = const_cast<KFileItemList *>(pWidgetStack->diroperator()->view()->selectedItems());
+
+    if(!items || !items->count())
+        return;
+
+    KFileItem *fi;
+    KFileItemListIterator it(*items);
+
+    while((fi = it.current()))
+    {
+        if(fi->url().equals(renameSrcURL, true))
+        {
+            // rename thumbnail on disk, ignore all errors
+            SQ_DirThumbs dir;
+            QString srcPath = dir.absPath(renameSrcURL);
+            QString dstPath = dir.absPath(renameDestURL);
+            KURL src = KURL::fromPathOrURL(srcPath);
+            KURL dst = KURL::fromPathOrURL(dstPath);
+            KIO::move(src, dst);
+            printf("MOVE1 %s => %s\n", src.prettyURL().ascii(), dst.prettyURL().ascii());
+            src = KURL::fromPathOrURL(srcPath+".mime");
+            dst = KURL::fromPathOrURL(dstPath+".mime");
+            KIO::move(src, dst);
+            printf("MOVE2 %s => %s\n", src.prettyURL().ascii(), dst.prettyURL().ascii());
+
+            // reinsert thumbnail in thumbnail cache
+            SQ_Thumbnail th;
+            if(SQ_PixmapCache::instance()->contains2(renameSrcURL, th))
+            {
+                printf("FOUND IN CACHE\n");
+*/
+                SQ_PixmapCache::instance()->removeEntryFull(renameSrcURL);
+/*
+                SQ_PixmapCache::instance()->insert(renameDestURL, th);
+            }
+
+            break;
+        }
+
+        ++it;
+    }
+*/
+}
+    
 #include "ksquirrel.moc"

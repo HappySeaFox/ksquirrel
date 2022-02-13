@@ -19,15 +19,24 @@ void SQ_ViewCache::init()
     QListViewItem *itemafter = 0, *item;
 
     SQ_PixmapCache::iterator itEnd = SQ_PixmapCache::instance()->end();
+    SQ_Thumbnail th;
+    KURL url;
+    QString s;
 
     for(SQ_PixmapCache::iterator it = SQ_PixmapCache::instance()->begin();it != itEnd;++it)
     {
-        if(itemafter)
-            item = new QListViewItem(listCache, itemafter, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);
-        else
-            item = new QListViewItem(listCache, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);
+        th = it.data();
+        url = it.key();
+        s = url.isLocalFile() ? url.path() : url.prettyURL();
 
-        item->setPixmap(1, it.data().info.mime);
+        if(itemafter)
+            item = new QListViewItem(listCache, itemafter, s,
+                            QString::null, QString::fromLatin1("%1x%2").arg(th.w).arg(th.h));
+        else
+            item = new QListViewItem(listCache, s,
+                            QString::null, QString::fromLatin1("%1x%2").arg(th.w).arg(th.h));
+
+        item->setPixmap(1, it.data().mime);
 
         itemafter = item;
 

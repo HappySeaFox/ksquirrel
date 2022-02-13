@@ -37,10 +37,10 @@
 // Our command line options
 static KCmdLineOptions options[] =
 {
-    {"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
+    {"+[file to open]", I18N_NOOP("File to be opened at startup."), 0},
     {"l", I18N_NOOP("Print found libraries and exit."), 0},
-    {"t <starting folder>", I18N_NOOP("Find all supported images on disk and create thumbnails."), "/"},
-    {"r", I18N_NOOP("Recursively scan (with -t option)."), "/"},
+    {"d", 0, 0},
+    {"directory <directory>", I18N_NOOP("Directory to be opened at startup."), 0},
     KCmdLineLastOption
 };
 
@@ -49,6 +49,17 @@ int main(int argc, char *argv[])
     KSquirrel            *SQ;
     SQ_HLOptions         *high;
     const QCString App = "ksquirrel";
+
+    KAboutData aboutData(
+            "ksquirrel",
+            "KSquirrel",
+            SQ_VERSION,
+            I18N_NOOP("KSquirrel - image viewer for KDE"),
+            KAboutData::License_GPL,
+            "(c) 2003-2007 Baryshev Dmitry",
+            QString::null,
+            "http://ksquirrel.sourceforge.net",
+            QString::null);
 
     // setup 'About' dialog
     aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
@@ -68,8 +79,19 @@ int main(int argc, char *argv[])
     //create high level options
     high = new SQ_HLOptions;
 
-    if(sq_args->count())
-        high->path = sq_args->url(0).path();
+    high->dir = KURL::fromPathOrURL(sq_args->getOption("directory"));
+    high->showLibsAndExit = sq_args->isSet("l");
+
+    if(high->dir.isEmpty())
+    {
+        high->file = sq_args->count() ? sq_args->url(0) : KURL();
+
+        if(!high->file.isEmpty())
+        {
+            high->dir = high->file;
+            high->dir.cd("..");
+        }
+    }
 
     KApplication    a;
 
@@ -79,64 +101,64 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    bool reg = a.dcopClient()->isApplicationRegistered(App);
-
-    // Check if KSquirrel already registered.
-    // If registered, send an url to it.
-    if(reg && !high->path.isEmpty())
+    // don't even try to connect to DCOP if -l specified - 
+    // anyway we will exit later
+    if(!high->showLibsAndExit)
     {
-        // Yes, it is registered. Let's send a message to it.
-        QCString replyType;
-        QByteArray data, replyData;
-        QDataStream dataStream(data, IO_WriteOnly);
+        bool reg = a.dcopClient()->isApplicationRegistered(App);
 
-        dataStream << high->path;
+        // Check if KSquirrel already registered.
+        // If registered, send an url to it.
+        if(reg && !high->dir.isEmpty())
+        {
+            // Yes, it is registered. Let's send a message to it.
+            QCString replyType;
+            QByteArray data, replyData;
+            QDataStream dataStream(data, IO_WriteOnly);
+            KURL url = (!high->file.isEmpty()) ? high->file : high->dir;
 
-        if(!a.dcopClient()->call(App, App, "load_image(QString)", data, replyType, replyData))
-            qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+            if(high->file.isEmpty())
+                url.adjustPath(+1);
 
-        sq_args->clear();
-        delete high;
+            dataStream << url.prettyURL();
 
-        exit(0);
+            if(!a.dcopClient()->call(App, App, (high->file.isEmpty()?"load_directory(QString)":"load_image(QString)"), data, replyType, replyData))
+                qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+
+            sq_args->clear();
+            delete high;
+
+            exit(0);
+        }
+        // If registered, but no url was specified in command line
+        else if(reg)
+        {
+            QString data;
+
+            if(!a.dcopClient()->send(App, App, "activate()", data))
+                qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+
+            sq_args->clear();
+            delete high;
+
+            exit(0);
+        }
     }
-    // If registered, but no url was specified in command line
-    else if(reg)
-    {
-        QString data;
-
-        if(!a.dcopClient()->send(App, App, "activate()", data))
-            qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
-
-        sq_args->clear();
-        delete high;
-
-        exit(0);
-    }
-
-    high->showLibsAndExit = sq_args->isSet("l");
-    high->thumbs = sq_args->isSet("t");
-    high->recurs = (high->thumbs) ? sq_args->isSet("r") : false;
 
     SQ_SplashScreen *splash = 0;
 
-    if(high->thumbs)
-        high->thumbs_p = sq_args->getOption("t");
-    else
+    // should we show a splash screen ?
+    KConfig *config = new KConfig("ksquirrelrc");
+    config->setGroup("Main");
+
+    if(config->readBoolEntry("splash", true))
     {
-        // should we show a splash screen ?
-        KConfig *config = new KConfig("ksquirrelrc");
-        config->setGroup("Main");
-
-        if(config->readBoolEntry("splash", true))
-        {
-            splash = new SQ_SplashScreen;
-            if(!high->showLibsAndExit) splash->show(); // don't show splash when -l
-            KApplication::flush();
-        }
-
-        delete config;
+        splash = new SQ_SplashScreen;
+        if(!high->showLibsAndExit) splash->show(); // don't show splash when -l
+        KApplication::flush();
     }
+
+    delete config;
 
     // connect to DCOP server and register KSquirrel. Now we can
     // send messages to KSquirrel (see README for parameters)

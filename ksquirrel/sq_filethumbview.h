@@ -45,13 +45,6 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         SQ_FileThumbView(QWidget *parent = 0, const char *name = "");
         ~SQ_FileThumbView();
 
-        /*
-         *  Get KFileIconViewItem by KFileItem. All KFileItems store
-         *  a pointer to appropriate KFileIconViewItem as extra data.
-         *  See also KFileItem::setExtraData() and insertItem().
-         */
-        KFileIconViewItem* viewItem(const KFileItem *item);
-
         void rebuildCachedPixmaps();
 
         /*
@@ -63,17 +56,17 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         /*
          *  Append new items to thumbnail generating job.
          */
-        void appendItems(const KFileItemList &items);
+        void addItemsToJob(const KFileItemList &items, bool append = true);
 
         /*
          *  Delete item from thumbnail generating job.
          */
         void itemRemoved(KFileItem *i);
+        void itemsRemoved(const KFileItemList &);
 
         /*
          *  Internal.
          */
-        virtual void updateView(const KFileItem *i);
         virtual void updateView(bool)
         {}
 
@@ -122,10 +115,6 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         virtual void showEvent(QShowEvent *);
 
     private:
-        /*
-         *  Internal. Set item's sorting key.
-         */
-        void initItem(KFileIconViewItem *item, const KFileItem *i);
 
         /*
          *  rebuild "pending" thumbnail for supported items

@@ -24,7 +24,6 @@
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
 #include <qtimer.h>
-#include <qfileinfo.h>
 #include <qapplication.h>
 
 #include <kaction.h>
@@ -56,6 +55,7 @@
 #include "sq_thumbnailloadjob.h"
 #include "sq_pixmapcache.h"
 #include "sq_selectdeselectgroup.h"
+#include "sq_downloader.h"
 
 SQ_WidgetStack * SQ_WidgetStack::m_instance = 0;
 
@@ -65,42 +65,39 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QObject(parent)
 
     SQ_DirOperator::ViewT m_type = static_cast<SQ_DirOperator::ViewT>(id);
 
-    QString path;
+    KURL url;
 
     // Check Options for path
     SQ_Config::instance()->setGroup("Fileview");
 
-    if(SQ_HLOptions::instance()->path.isEmpty())
+    if(SQ_HLOptions::instance()->dir.isEmpty())
     {
         switch(SQ_Config::instance()->readNumEntry("set path", 0))
         {
-            case 2: path = SQ_Config::instance()->readEntry("custom directory", "/"); break;
-            case 1: path = ""; break;
-            case 0: path = SQ_Config::instance()->readEntry("last visited", "/"); break;
+            case 2: url = KURL::fromPathOrURL(SQ_Config::instance()->readEntry("custom directory", "/")); break;
+            case 0: url = KURL::fromPathOrURL(SQ_Config::instance()->readEntry("last visited", "/")); break;
 
-            default: path = "/";
+            default: url = KURL::fromPathOrURL("/");
         }
     }
     else // path from command line
-    {
-        QFileInfo fm(SQ_HLOptions::instance()->path);
-        path = fm.isDir() ? SQ_HLOptions::instance()->path : fm.dirPath(true);
-    }
+        url = SQ_HLOptions::instance()->dir;
 
-    KURL _url = path;
-
-    dirop = new SQ_DirOperator(_url, static_cast<SQ_DirOperator::ViewT>(id), parent);
+    dirop = new SQ_DirOperator(url, static_cast<SQ_DirOperator::ViewT>(id), parent);
 
     raiseWidget(m_type, false);
 
     connect(KSquirrel::app(), SIGNAL(thumbSizeChanged(const QString&)), dirop, SLOT(slotSetThumbSize(const QString&)));
-    connect(dirop, SIGNAL(tryUnpack(KFileItem *)), this, SLOT(tryUnpack(KFileItem *)));
     connect(dirop, SIGNAL(runSeparately(KFileItem *)), this, SLOT(slotRunSeparately()));
 
-    KSquirrel::app()->historyCombo()->setEditText(dirop->url().path());
+    KSquirrel::app()->historyCombo()->setEditText(url.isLocalFile() ? url.path() : url.prettyURL());
 
     timerShowProgress = new QTimer(this);
     connect(timerShowProgress, SIGNAL(timeout()), this, SLOT(slotDelayedShowProgress()));
+
+    down = new SQ_Downloader(this, "SQ_Downloader [wstack]");
+
+//    connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloaderResult(const KURL &)));
 }
 
 SQ_WidgetStack::~SQ_WidgetStack()
@@ -124,11 +121,8 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool parseTree)
         SQ_BookmarkOwner::instance()->setURL(url);
 
     // update history combobox
-    if(KSquirrel::app()->historyCombo())
-    {
-        KSquirrel::app()->historyCombo()->addToHistory(url.path());
-        KSquirrel::app()->historyCombo()->setEditText(url.path());
-    }
+    KSquirrel::app()->historyCombo()->setEditText(url.isLocalFile() ? url.path() : url.prettyURL());
+    KSquirrel::app()->historyCombo()->addToHistory(url.isLocalFile() ? url.path() : url.prettyURL());
 
     // set url for file tree
     if(SQ_TreeView::instance() && parseTree)
@@ -170,7 +164,8 @@ int SQ_WidgetStack::moveTo(Direction direction, KFileItem *it, bool useSupported
         {
             if(item->isFile())
                 // supported image type ?
-                if(SQ_LibraryHandler::instance()->libraryForFile(item->url().path()))
+//                if(SQ_LibraryHandler::instance()->libraryForFile(item->url().path()))
+                if(SQ_LibraryHandler::instance()->maybeSupported(item->url()) != SQ_LibraryHandler::No)
                     break;
 
             item = (direction == SQ_WidgetStack::Next)?
@@ -276,75 +271,47 @@ const KFileItemList* SQ_WidgetStack::items() const
 void SQ_WidgetStack::emitNextSelected()
 {
     if(moveTo(SQ_WidgetStack::Next) == SQ_WidgetStack::moveSuccess)
-        SQ_GLWidget::window()->startDecoding(dirop->view()->currentFileItem()->url());
+        dirop->execute(dirop->view()->currentFileItem());
 }
 
 void SQ_WidgetStack::emitPreviousSelected()
 {
     if(moveTo(SQ_WidgetStack::Previous) == SQ_WidgetStack::moveSuccess)
-        SQ_GLWidget::window()->startDecoding(dirop->view()->currentFileItem()->url());
-}
-
-void SQ_WidgetStack::tryUnpack(KFileItem *item)
-{
-    // is archive type supported ?
-    if(SQ_ArchiveHandler::instance()->findProtocolByFile(item) != -1)
-    {
-        SQ_ArchiveHandler::instance()->setFile(item);
-
-        // unpack!
-        if(SQ_ArchiveHandler::instance()->unpack())
-        {
-            QTimer::singleShot(1, this, SLOT(slotDelayedSetExtractURL()));
-        }
-    }
-}
-
-/*
- *  Go to unpacked archive.
- */
-void SQ_WidgetStack::slotDelayedSetExtractURL()
-{
-    KURL _url;
-    _url.setPath(SQ_ArchiveHandler::instance()->itemExtractedPath());
-
-    dirop->setURL(_url, true);
+        dirop->execute(dirop->view()->currentFileItem());
 }
 
 // Go to first file
 void SQ_WidgetStack::slotFirstFile()
 {
-    KFileView *local_view = dirop->view();
-    KFileItemList *list = const_cast<KFileItemList*>(local_view->items());
-    KFileItem *item = list->first();
-
-    if(!item)
-        return;
-
-    if(moveTo(SQ_WidgetStack::Next, item) == moveFailed)
-        return;
-
-    item = local_view->currentFileItem();
-    dirop->setCurrentItem(item);
-    SQ_GLWidget::window()->startDecoding(item->url());
+    moveToFirstLast(SQ_WidgetStack::Next);
 }
 
 // Go to last file
 void SQ_WidgetStack::slotLastFile()
 {
+    moveToFirstLast(SQ_WidgetStack::Previous);
+}
+
+void SQ_WidgetStack::moveToFirstLast(Direction direct)
+{
     KFileView *local_view = dirop->view();
     KFileItemList *list = const_cast<KFileItemList*>(local_view->items());
-    KFileItem *item = list->last();
 
-    if(!item)
-        return;
+    if(list)
+    {
+        KFileItem *item = (direct == SQ_WidgetStack::Next) ? list->first() : list->last();
 
-    if(moveTo(SQ_WidgetStack::Previous, item) == moveFailed)
-        return;
+        if(!item || moveTo(direct, item) == moveFailed)
+            return;
 
-    item = local_view->currentFileItem();
-    dirop->setCurrentItem(item);
-    SQ_GLWidget::window()->startDecoding(item->url());
+        item = local_view->currentFileItem();
+
+        if(item)
+        {
+            dirop->setCurrentItem(item);
+            dirop->execute(item);
+        }
+    }
 }
 
 /*
@@ -377,6 +344,7 @@ void SQ_WidgetStack::updateGrid(bool arrange)
 
 void SQ_WidgetStack::thumbnailsUpdateEnded()
 {
+//    printf("ENDED\n");
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
     if(!tv) return;
@@ -384,7 +352,7 @@ void SQ_WidgetStack::thumbnailsUpdateEnded()
     timerShowProgress->stop();
     tv->progressBox()->hide();
     tv->progressBox()->flush();
-    tv->progressBox()->toggleButtonPixmap();
+    tv->progressBox()->startButtonPixmap();
 }
 
 void SQ_WidgetStack::thumbnailUpdateStart(int count)
@@ -394,7 +362,7 @@ void SQ_WidgetStack::thumbnailUpdateStart(int count)
     if(!tv) return;
 
     tv->progressBox()->setTotalSteps(count);
-    tv->progressBox()->toggleButtonPixmap();
+    tv->progressBox()->stopButtonPixmap();
 
     timerShowProgress->start(1000, true);
 }
@@ -417,8 +385,7 @@ void SQ_WidgetStack::thumbnailProcess()
 
 void SQ_WidgetStack::setURLForCurrent(const QString &path, bool parseTree)
 {
-    KURL url;
-    url.setPath(path);
+    KURL url = KURL::fromPathOrURL(path);
 
     setURLForCurrent(url, parseTree);
 }
@@ -472,48 +439,21 @@ void SQ_WidgetStack::slotDelayedRecreateThumbnail()
     SQ_Thumbnail thumb;
 
     KFileItemList *list = const_cast<KFileItemList *>(selectedItems());
-
-    if(!list)
-        return;
-
-    KFileItem *item;
-
-    thumbnailUpdateStart(list->count());
-
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
-    qApp->processEvents();
+    if(!list || !tv)
+        return;
 
-    while((item = list->take()))
+    KFileItemListIterator it(*list);
+    KFileItem *item;
+
+    while((item = it.current()))
     {
-        QString path = item->url().path();
-
-        if(!SQ_ThumbnailLoadJob::loadThumbnail(path, thumb, true))
-            continue;
-
-        thumb.thumbnail = thumb.thumbnail.swapRGB();
-
-        // save in cache
-        SQ_PixmapCache::instance()->removeEntryFull(path);
-        SQ_PixmapCache::instance()->insert(path, thumb);
-
-        int biggestDimension = QMAX(thumb.thumbnail.width(), thumb.thumbnail.height());
-        int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize();
-
-        // scale down for thumbnail view
-        if(biggestDimension > thumbPixelSize)
-            thumb.thumbnail = SQ_ThumbnailLoadJob::scaleImage(
-                                        thumb.thumbnail.bits(),
-                                        thumb.thumbnail.width(),
-                                        thumb.thumbnail.height(),
-                                        thumbPixelSize);
-
-        thumbnailProcess();
-
-        tv->setThumbnailPixmap(item, thumb);
+        SQ_PixmapCache::instance()->removeEntryFull(item->url());
+        ++it;
     }
 
-    thumbnailsUpdateEnded();
+    tv->doStartThumbnailUpdate(*list);
 }
 
 /*

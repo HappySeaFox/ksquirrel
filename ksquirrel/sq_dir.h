@@ -19,10 +19,10 @@
 #define SQ_DIR_H
 
 #include <qdir.h>
-#include <qpixmap.h>
-#include <qfileinfo.h>
 
-#include "sq_thumbnailinfo.h"
+#include <ctime>
+
+class KURL;
 
 /*
  *  Class for managing application-specific data. It takes care
@@ -45,12 +45,6 @@ class SQ_Dir : public QDir
             // thumbnail cache (~/.ksquirrel/thumbnails).
             Thumbnails,
 
-            // SQ_ArchiveHandler cache (~/.ksquirrel/extracts).
-            Extracts,
-
-            // temporary usage (~/.ksquirrel/tmp).
-            Tmp,
-
             // image categories (~/.ksquirrel/categories).
             Categories};
 
@@ -69,14 +63,6 @@ class SQ_Dir : public QDir
         bool mkdir(const QString &relpath);
 
         /*
-         *  Change current directory to m_root directory.
-         *
-         *  For example, if prefix == Thumbnails, it will
-         *  cd to "~/.ksquirrel/thumbnails".
-         */
-        void rewind();
-
-        /*
          *  Get current root directory.
          *
          *  For example, if prefix == Thumbnails, it will
@@ -86,51 +72,21 @@ class SQ_Dir : public QDir
 
         /*
          *  Get absolute path for relative path 'relpath'.
-         */
-        QString absPath(const QString &relpath);
-
-        /*
-         *  Save thumbnail to storage.
-         */
-        void saveThumbnail(const QString &path, SQ_Thumbnail &thumb);
-
-        /*
-         *  Check if file exists. If exists, set 'fullpath'
-         *  to its full path.
-         */
-        bool fileExists(const QString &file, QString &fullpath);
-
-        /*
-         *  Check if file needs to be updated.
          *
-         *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
-         *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
-         *  archive in it. Today you replaced /opt/arc.zip with newer version. Now
-         *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
-         *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack this archive again.
+         *  Reimplemented in SQ_DirThumbs to handle MD5-encoded
+         *  urls.
          */
-        bool updateNeeded(const QString &file);
-
-        /*
-         *  Remove file from storage
-         */
-        void removeFile(const QString &file);
+        virtual QString absPath(const KURL &relurl);
 
     private:
         /*
          *  Internal, used by mkdir().
          */
-        void setRoot(const QString &name);
+        virtual void setRoot(const QString &name);
 
-private:
+    protected:
         QString m_root;
 };
-
-inline
-QString SQ_Dir::absPath(const QString &relpath)
-{
-    return m_root + "/" + relpath;
-}
 
 inline
 QString SQ_Dir::root() const

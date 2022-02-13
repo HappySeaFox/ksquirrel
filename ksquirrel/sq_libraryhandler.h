@@ -20,7 +20,6 @@
 
 #include <qvaluevector.h>
 #include <qdatetime.h>
-#include <qmap.h>
 #include <qobject.h>
 
 #include "sq_library.h"
@@ -28,6 +27,7 @@
 class QStringList;
 
 class KConfig;
+class KURL;
 
 /*
  *  SQ_LibraryHandler is a library manager. It's the main class
@@ -40,16 +40,21 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
         SQ_LibraryHandler(QObject *parent);
         ~SQ_LibraryHandler();
 
+        enum Support { Maybe = 0, Yes, No };
+
         /*
         *  Reload libraries from disk
         */
         void reload();
 
+        Support maybeSupported(const KURL &, const QString& = QString::null) const;
+
         /*
          *  Find appropriate SQ_LIBRARY by filename. If
          *  not found, return NULL.
          */
-        SQ_LIBRARY* libraryForFile(const QString &path);
+        SQ_LIBRARY* libraryForFile(const KURL &);
+        SQ_LIBRARY* libraryForFile(const QString &);
 
         /*
          *  Find appropriate SQ_LIBRARY by its name. If
@@ -124,24 +129,7 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
         void writeSettings(SQ_LIBRARY *lib);
         void readSettings(SQ_LIBRARY *lib);
 
-        void debugInfo(const QString &symbol, const QString &path, const QString &lib, int);
-
     private:
-        struct LibCacheEntry
-        {
-            LibCacheEntry() : library(0)
-            {}
-
-            LibCacheEntry(const QDateTime &dt, SQ_LIBRARY *l) : modified(dt), library(l)
-            {}
-
-            QDateTime modified;
-            SQ_LIBRARY *library;
-        };
-
-        typedef QMap<QString, LibCacheEntry> LibCache;
-        LibCache cache;
-
         KConfig *kconf;
 
         static SQ_LibraryHandler *m_instance;

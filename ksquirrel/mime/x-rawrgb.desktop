@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-rawrgb
+Icon=image
+Patterns=*.rawrgb;*.RAWRGB;
+Comment=KSquirrel RAWRGB

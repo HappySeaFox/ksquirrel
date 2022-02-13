@@ -34,11 +34,12 @@ void SQ_PluginsInfo::showLibs()
 	for(SQ_LibraryHandler::iterator it = SQ_LibraryHandler::instance()->begin();it != itEnd;++it)
 	{
 		item = new QListViewItem(tableLib, QString::null, QString::null,
-										(*it).quickinfo, (*it).version, (*it).filter);
+					(*it).quickinfo, (*it).version, 
+                                        KStringHandler::rsqueeze((*it).mimetype, 20));
 
 		if(!(*it).config.isEmpty())
 			item->setPixmap(0, configure);
-		
+
 		if((*it).readable)
 			item->setPixmap(5, ok);
 

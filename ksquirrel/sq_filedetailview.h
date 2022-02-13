@@ -83,18 +83,6 @@ class SQ_FileDetailView : public KFileDetailView
         virtual void dragEnterEvent(QDragEnterEvent *);
 
     private:
-        void exec(QListViewItem *i, bool single, bool hl = false);
-
-    signals:
-        void launch(KFileItem *);
-        void highlighted(KFileItem *);
-
-    private slots:
-        void slotMouseButtonClicked(int, QListViewItem *);
-        void slotDoubleClicked(QListViewItem *i);
-        void slotCurrentChanged(QListViewItem *i);
-
-    private:
         QPixmap    dirPix;
 };
 

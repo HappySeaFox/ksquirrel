@@ -34,7 +34,8 @@ class SQ_ProgressBox : public QHBox
 
         QPushButton* button() const;
 
-        void toggleButtonPixmap();
+        void stopButtonPixmap();
+        void startButtonPixmap();
 
         // redirect to SQ_Progress
         void flush();
@@ -45,7 +46,6 @@ class SQ_ProgressBox : public QHBox
     private:
         SQ_Progress *p;
         QPushButton  *buttonStop;
-        bool stopped;
 };
 
 inline

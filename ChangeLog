@@ -1,3 +1,31 @@
+ksquirrel-0.7.1 and ksquirrel-libs-0.7.1
+******************************************
+
+ksquirrel:
+* context menu in file manager now have proper content (it worked in KDE 3.3, but in 3.5 it didn't)
+* kio-slaves support (including smb:/, tar:/ etc.)
+* archive extractor now uses kio-slaves (see previous). In general, it supports
+   zip, ar, tar.gz, tar.bz2, iso, rar, 7zip. To add support of rar and 7zip please install
+   kio_rar and kio_p7zip (search http://kde-apps.org)
+* thumbnail creation on non-local filesystems (for ex. smb:/ or tar:/)
+* statusbar improvements
+* hotkeys in image window now don't depend on current keyboard layout
+* history combobox now shows mime types
+* bugfixes in slideshow
+* new thumbnails' cache directory. Please remove old thumbnails from ~/.ksquirrel/thumbnails
+* image rotation using EXIF in thumbnail loader and image viewer
+* KIPI plugins now could be loaded on demand
+* F2 to rename files
+* thumbnail loader now corresponds thumbnail spec from freedesktop.org
+* other small bugfixes
+
+ksquirrel-libs:
+* added XFIG (transfig package is required)
+* added Degas PI3
+* TTF codec is designed for freetype 2.2.1 (it should work at least in Debian Etch)
+* CAMERA codec now uses dcraw v8.77 without modifications, which doesn't violate dcraw license
+* bugfixes in scripts
+
 ksquirrel-0.7.0try5
 *********************
 * navigator is now hidden when running with file argument

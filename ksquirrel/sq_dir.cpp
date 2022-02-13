@@ -20,16 +20,14 @@
 #endif
 
 #include <qstringlist.h>
-#include <qimage.h>
 #include <qfile.h>
+#include <qdatetime.h>
+#include <qfileinfo.h>
+
+#include <kurl.h>
 
 #include "sq_dir.h"
-
-// default thumbnail format
-static const QString sqdirThumbFormat = "PNG";
-
-// default quality
-static const int thumbQuality = 85;
+#include "sq_thumbnailinfo.h"
 
 SQ_Dir::SQ_Dir(Prefix p) : QDir()
 {
@@ -40,12 +38,6 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
         break;
         case SQ_Dir::Thumbnails:
             setRoot("thumbnails");
-        break;
-        case SQ_Dir::Extracts:
-            setRoot("extracts");
-        break;
-        case SQ_Dir::Tmp:
-            setRoot("tmp");
         break;
         case SQ_Dir::Categories:
             setRoot("categories");
@@ -91,84 +83,7 @@ void SQ_Dir::setRoot(const QString &name)
     QDir::mkdir(m_root);
 }
 
-/*
- *  Change current directory to m_root directory.
- *
- *  For example, if prefix == Thumbnails, it will
- *  cd to "/home/krasu/.ksquirrel/thumbnails".
- */
-void SQ_Dir::rewind()
+QString SQ_Dir::absPath(const KURL &relurl)
 {
-    cd(m_root);
-}
-
-/*
- *  Save thumbnail to storage.
- */
-void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
-{
-    if(thumb.thumbnail.isNull())
-        return;
-
-    QString fullpath(m_root + path), s;
-    QFileInfo fpath(path), ffullpath(fullpath);
-
-    if(fpath.lastModified() < ffullpath.lastModified())
-        return;
-
-    if(!mkdir(fpath.dirPath(true)))
-        return;
-
-    QString k = thumb.info.uncompressed.utf8();
-    thumb.thumbnail.setText("sq_type", 0, thumb.info.type);
-    thumb.thumbnail.setText("sq_dimensions", 0, thumb.info.dimensions);
-    thumb.thumbnail.setText("sq_bpp", 0, thumb.info.bpp);
-    thumb.thumbnail.setText("sq_color", 0, thumb.info.color);
-    thumb.thumbnail.setText("sq_compression", 0, thumb.info.compression);
-    thumb.thumbnail.setText("sq_frames", 0, QString::number(thumb.info.frames));
-    thumb.thumbnail.setText("sq_uncompressed", 0, k);
-
-    thumb.thumbnail.save(fullpath, sqdirThumbFormat, thumbQuality);
-}
-
-/*
- *  Check if file exists. If exists, set 'fullpath'
- *  to its full path.
- */
-bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
-{
-    QFileInfo f(m_root + file);
-
-    // file exists ?
-    bool b = f.exists();
-
-    // yes!
-    if(b)
-        fullpath = m_root + file;
-
-    return b;
-}
-
-/*
- *  Check if file needs to be updated.
- */
-bool SQ_Dir::updateNeeded(const QString &file)
-{
-    // file doesn't exist in storage, update needed!
-    if(!QFile::exists(absPath(file)))
-        return true;
-
-    QFileInfo fpath(file), ffullpath(absPath(file));
-
-    // compare "last modified" time
-    return fpath.lastModified() > ffullpath.lastModified();
-}
-
-/*
- *  Remove file from storage
- */
-void SQ_Dir::removeFile(const QString &file)
-{
-    // determine absolute path and remove file
-    QFile::remove(absPath(file));
+    return m_root + QDir::separator() + relurl.path();
 }

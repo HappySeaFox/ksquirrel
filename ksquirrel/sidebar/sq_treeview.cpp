@@ -216,7 +216,7 @@ void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 void SQ_TreeView::emitNewURL(const KURL &url)
 {
     // already selected?
-    if(url.equals(currentURL(), true))
+    if(!url.isLocalFile() || url.equals(currentURL(), true))
         return;
 
     // tree is invisible.
@@ -254,18 +254,23 @@ void SQ_TreeView::slotNewURL(const KURL &url)
 
     KURL last = k;
 
+    QString s;
+
     // divide url to paths.
     // for example, "/home/krasu/1/2" will be divided to
     //
     // "/home/krasu/1/2"
     // "/home/krasu/1"
-    // "/home/krasu/"
-    // "/home/"
+    // "/home/krasu"
+    // "/home"
     // "/"
     //
     while(true)
     {
-        paths.prepend(k.path());
+        s = k.path(); // remove "/"
+        s.remove(0, 1);
+
+        paths.prepend(s);
         k = k.upURL();
 
         if(k.equals(last, true))
@@ -435,22 +440,22 @@ void SQ_TreeView::viewportResizeEvent(QResizeEvent *)
 
 void SQ_TreeView::clearSelection()
 {
-    if(!m_ignoreClick) QListView::clearSelection();
+    if(!m_ignoreClick) KFileTreeView::clearSelection();
 }
 
 void SQ_TreeView::setSelected(QListViewItem *item, bool selected)
 {
-    if(!m_ignoreClick) QListView::setSelected(item, selected);
+    if(!m_ignoreClick) KFileTreeView::setSelected(item, selected);
 }
 
 void SQ_TreeView::setCurrentItem(QListViewItem *item)
 {
-    if(!m_ignoreClick) QListView::setCurrentItem(item);
+    if(!m_ignoreClick) KFileTreeView::setCurrentItem(item);
 }
 
 void SQ_TreeView::setOpen(QListViewItem *item, bool open)
 {
-    if(!m_ignoreClick) QListView::setOpen(item, open);
+    if(!m_ignoreClick) KFileTreeView::setOpen(item, open);
 }
 
 void SQ_TreeView::contentsMousePressEvent(QMouseEvent *e)
@@ -468,11 +473,6 @@ void SQ_TreeView::contentsMousePressEvent(QMouseEvent *e)
         {
             int state = e->state();
 
-            bool thumbnailJob = SQ_WidgetStack::instance()->updateRunning();
-
-            if(thumbnailJob)
-                emit stopUpdate();
-
             if(!state)
                 toggle(m, true);
             else
@@ -480,9 +480,9 @@ void SQ_TreeView::contentsMousePressEvent(QMouseEvent *e)
                 QListViewItemIterator it(this);
 
                 // toggle parent item
-                if(state == Qt::ShiftButton)               toggle(m, true);
+                if(state == Qt::ShiftButton)        toggle(m, true);
                 else if(state == Qt::ControlButton) toggle(m, false, true);
-                else if(state == Qt::AltButton)          toggle(m, false, false);
+                else if(state == Qt::AltButton)     toggle(m, false, false);
 
                 SQ_TreeViewItem *tvi = static_cast<SQ_TreeViewItem *>(m->firstChild());
 
@@ -496,15 +496,12 @@ void SQ_TreeView::contentsMousePressEvent(QMouseEvent *e)
                     tvi = static_cast<SQ_TreeViewItem *>(tvi->nextSibling());
                 }
             }
-
-            if(thumbnailJob)
-                emit startUpdate();
         }
 
         m_ignoreClick = true;
     }
 
-    QListView::contentsMousePressEvent(e);
+    KFileTreeView::contentsMousePressEvent(e);
 
     m_ignoreClick = false;
 }
@@ -514,7 +511,7 @@ void SQ_TreeView::contentsMouseDoubleClickEvent(QMouseEvent *e)
     if(header()->sectionAt(e->x()))
         m_ignoreClick = true;
 
-    QListView::contentsMouseDoubleClickEvent(e);
+    KFileTreeView::contentsMouseDoubleClickEvent(e);
 
     m_ignoreClick = false;
 }

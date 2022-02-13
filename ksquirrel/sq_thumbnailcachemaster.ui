@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>339</width>
-            <height>273</height>
+            <width>331</width>
+            <height>244</height>
         </rect>
     </property>
     <property name="caption">
@@ -33,89 +33,6 @@
                 <bool>false</bool>
             </property>
         </widget>
-        <widget class="KPushButton" row="1" column="0">
-            <property name="name">
-                <cstring>pushCacheBrowse</cstring>
-            </property>
-            <property name="text">
-                <string>Browse disk cache</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <widget class="KPushButton" row="3" column="0">
-            <property name="name">
-                <cstring>pushCacheMemory</cstring>
-            </property>
-            <property name="text">
-                <string>Calculate cache size in memory</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <widget class="QLabel" row="3" column="1">
-            <property name="name">
-                <cstring>textCacheMemSize</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>StyledPanel</enum>
-            </property>
-            <property name="margin">
-                <number>1</number>
-            </property>
-            <property name="text">
-                <string></string>
-            </property>
-            <property name="alignment">
-                <set>AlignCenter</set>
-            </property>
-        </widget>
-        <widget class="KPushButton" row="6" column="0">
-            <property name="name">
-                <cstring>pushSyncCache</cstring>
-            </property>
-            <property name="text">
-                <string>Sync cache to disk</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <widget class="KPushButton" row="4" column="0">
-            <property name="name">
-                <cstring>pushShowCache</cstring>
-            </property>
-            <property name="text">
-                <string>View memory cache</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <widget class="KPushButton" row="5" column="0">
-            <property name="name">
-                <cstring>pushClearCacheMemory</cstring>
-            </property>
-            <property name="text">
-                <string>Clear cache in memory</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <widget class="KPushButton" row="2" column="0">
-            <property name="name">
-                <cstring>pushClearCache</cstring>
-            </property>
-            <property name="text">
-                <string>Clear cache on disk</string>
-            </property>
-            <property name="autoDefault">
-                <bool>false</bool>
-            </property>
-        </widget>
         <widget class="QLabel" row="0" column="1">
             <property name="name">
                 <cstring>textThumbSize</cstring>
@@ -133,7 +50,79 @@
                 <set>AlignCenter</set>
             </property>
         </widget>
-        <widget class="Line" row="7" column="0" rowspan="1" colspan="2">
+        <widget class="KPushButton" row="1" column="0">
+            <property name="name">
+                <cstring>pushClearCache</cstring>
+            </property>
+            <property name="text">
+                <string>Clear cache on disk</string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="3" column="0">
+            <property name="name">
+                <cstring>pushShowCache</cstring>
+            </property>
+            <property name="text">
+                <string>View memory cache</string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="4" column="0">
+            <property name="name">
+                <cstring>pushClearCacheMemory</cstring>
+            </property>
+            <property name="text">
+                <string>Clear cache in memory</string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="1">
+            <property name="name">
+                <cstring>textCacheMemSize</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>StyledPanel</enum>
+            </property>
+            <property name="margin">
+                <number>1</number>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="5" column="0">
+            <property name="name">
+                <cstring>pushSyncCache</cstring>
+            </property>
+            <property name="text">
+                <string>Sync cache to disk</string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="2" column="0">
+            <property name="name">
+                <cstring>pushCacheMemory</cstring>
+            </property>
+            <property name="text">
+                <string>Calculate cache size in memory</string>
+            </property>
+            <property name="autoDefault">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="Line" row="6" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>line1</cstring>
             </property>
@@ -147,42 +136,46 @@
                 <enum>Horizontal</enum>
             </property>
         </widget>
-        <spacer row="8" column="0">
+        <widget class="QLayoutWidget" row="7" column="0" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>spacer1</cstring>
+                <cstring>layout1</cstring>
             </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>176</width>
-                    <height>21</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QPushButton" row="8" column="1">
-            <property name="name">
-                <cstring>pushClose</cstring>
-            </property>
-            <property name="text">
-                <string>Close</string>
-            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>195</width>
+                            <height>21</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushClose</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Close</string>
+                    </property>
+                </widget>
+            </hbox>
         </widget>
     </grid>
 </widget>
 <customwidgets>
 </customwidgets>
 <connections>
-    <connection>
-        <sender>pushCacheBrowse</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ThumbnailCacheMaster</receiver>
-        <slot>slotBrowseDiskCache()</slot>
-    </connection>
     <connection>
         <sender>pushSyncCache</sender>
         <signal>clicked()</signal>
@@ -228,7 +221,6 @@
 </connections>
 <tabstops>
     <tabstop>pushCache</tabstop>
-    <tabstop>pushCacheBrowse</tabstop>
     <tabstop>pushClearCache</tabstop>
     <tabstop>pushCacheMemory</tabstop>
     <tabstop>pushShowCache</tabstop>
@@ -242,10 +234,10 @@
     <include location="global" impldecl="in implementation">kdirsize.h</include>
     <include location="local" impldecl="in implementation">sq_viewcache.h</include>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
-    <include location="global" impldecl="in implementation">kstandarddirs.h</include>
-    <include location="global" impldecl="in implementation">kapplication.h</include>
-    <include location="local" impldecl="in implementation">sq_dir.h</include>
+    <include location="local" impldecl="in implementation">sq_dirthumbs.h</include>
     <include location="local" impldecl="in implementation">sq_iconloader.h</include>
+    <include location="global" impldecl="in implementation">kio/global.h</include>
+    <include location="global" impldecl="in implementation">kio/job.h</include>
     <include location="local" impldecl="in implementation">sq_thumbnailcachemaster.ui.h</include>
 </includes>
 <slots>
@@ -256,14 +248,12 @@
     <slot access="private">slotCalcCacheMemory()</slot>
     <slot access="private">slotShowDiskCache()</slot>
     <slot access="private">slotSyncCache()</slot>
-    <slot access="private">slotBrowseDiskCache()</slot>
 </slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-jbig
+Icon=image
+Patterns=*.jbg;*.JBG;*.jbig;*.JBIG;
+Comment=JBIG

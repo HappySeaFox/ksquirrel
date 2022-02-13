@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-xim
+Icon=image
+Patterns=*.xim;*.XIM;
+Comment=X Image

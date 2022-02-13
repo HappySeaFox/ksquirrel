@@ -21,9 +21,11 @@
 #include <qmap.h>
 #include <qobject.h>
 
+#include <kurl.h>
+
 #include "sq_thumbnailinfo.h"
 
-class SQ_Dir;
+class SQ_DirThumbs;
 
 /*
  *  SQ_PixmapCache represents a simple memory cache, which
@@ -32,10 +34,10 @@ class SQ_Dir;
  *  Uses SQ_Dir(Thumbnails) to store thumbnails on disk.
  */
 
-class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
+class SQ_PixmapCache : public QObject, public QMap<KURL, SQ_Thumbnail>
 {
     public:
-        SQ_PixmapCache(QObject *parent, int limit = 5*1024);
+        SQ_PixmapCache(QObject *parent, int limit = 20*1024);
         ~SQ_PixmapCache();
 
         /*
@@ -58,17 +60,17 @@ class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
         /*
          *  Write one entry to disk and remove it from cache.
          */
-        void syncEntry(const QString &key, SQ_Thumbnail &thumb);
+        void syncEntry(const KURL &key, SQ_Thumbnail &thumb);
 
         /*
          *  Insert new entry to cache
          */
-        void insert(const QString &key, const SQ_Thumbnail &thumb);
+        void insert(const KURL &key, const SQ_Thumbnail &thumb);
 
         /*
          *  Check if pixmap, represented by 'key', is already in cache.
          */
-        bool contains2(const QString &key, SQ_Thumbnail &th);
+        bool contains2(const KURL &key, SQ_Thumbnail &th);
 
         /*
          *  Calculate total size used by cache (not exact!)
@@ -86,29 +88,27 @@ class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
         void clear();
 
         /*
-         *  Get root directory, where all thumbnails are saved.
-         */
-        QString root() const;
-
-        /*
          *  Remove entry from cache.
          */
-        void removeEntry(const QString &key);
+        void removeEntry(const KURL &key);
 
         /*
          *  Remove entry from cache and from disk.
          */
-        void removeEntryFull(const QString &key);
+        void removeEntryFull(const KURL &key);
 
         static SQ_PixmapCache* instance() { return m_instance; }
+
+    private:
+        int entrySize(const SQ_Thumbnail &th) const;
 
     private:
         int cache_limit;
         int last_full;
         bool valid_full;
-        SQ_Dir *dir;
+        SQ_DirThumbs *dir;
+
         static SQ_PixmapCache *m_instance;
-        int entrySize;
 };
 
 inline

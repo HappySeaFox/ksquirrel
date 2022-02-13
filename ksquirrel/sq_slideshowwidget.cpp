@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qimage.h>
 #include <qpainter.h>
 #include <qtimer.h>
@@ -25,13 +29,14 @@
 #include <qlabel.h>
 #include <qwhatsthis.h>
 
-#include <kwin.h>
 #include <kcursor.h>
 #include <klocale.h>
 #include <kio/global.h>
+#include <kglobalsettings.h>
 
 #include <ksquirrel-libs/fmt_defs.h>
 
+#include "ksquirrel.h"
 #include "sq_slideshowwidget.h"
 #include "sq_imageloader.h"
 #include "sq_iconloader.h"
@@ -39,10 +44,16 @@
 
 #include "libpixops/pixops.h"
 
+#ifdef SQ_HAVE_KEXIF
+#include <libkexif/kexifdata.h>
+#include <algorithm>
+#include "sq_utils.h"
+#endif
+
 SQ_SlideShowWidget * SQ_SlideShowWidget::m_inst = 0;
 
 SQ_SlideShowWidget::SQ_SlideShowWidget(QWidget *parent, const char *name)
-    : QWidget(parent,name, Qt::WNoAutoErase)
+    : QWidget(parent,name, Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WStyle_StaysOnTop | Qt::WNoAutoErase)
 {
     m_inst = this;
 
@@ -70,14 +81,17 @@ SQ_SlideShowWidget::SQ_SlideShowWidget(QWidget *parent, const char *name)
     QToolButton *b = new QToolButton(options);
     b->setIconSet(SQ_IconLoader::instance()->loadIcon("previous", KIcon::Desktop, is));
     connect(b, SIGNAL(clicked()), this, SIGNAL(previous()));
+    connect(b, SIGNAL(clicked()), this, SLOT(slotResetPause()));
 
     b = new QToolButton(options);
     b->setIconSet(SQ_IconLoader::instance()->loadIcon("next", KIcon::Desktop, is));
     connect(b, SIGNAL(clicked()), this, SIGNAL(next()));
+    connect(b, SIGNAL(clicked()), this, SLOT(slotResetPause()));
 
-    b = new QToolButton(options);
-    b->setIconSet(SQ_IconLoader::instance()->loadIcon("player_pause", KIcon::Desktop, is));
-    connect(b, SIGNAL(clicked()), this, SIGNAL(pause()));
+    buttonPause = new QToolButton(options);
+    buttonPause->setToggleButton(true);
+    buttonPause->setIconSet(SQ_IconLoader::instance()->loadIcon("player_pause", KIcon::Desktop, is));
+    connect(buttonPause, SIGNAL(clicked()), this, SIGNAL(pause()));
 
     b = new QToolButton(options);
     b->setIconSet(SQ_IconLoader::instance()->loadIcon("help", KIcon::Desktop, is));
@@ -113,7 +127,7 @@ void SQ_SlideShowWidget::beginSlideShow(int totl)
     mes_size = SQ_Config::instance()->readBoolEntry("messages_size", false);
 
     show();
-    KWin::setState(winId(), NET::FullScreen);
+    setGeometry(KGlobalSettings::desktopGeometry(KSquirrel::app()));
 
     message->hide();
     options->hide();
@@ -126,6 +140,7 @@ void SQ_SlideShowWidget::beginSlideShow(int totl)
 
     path = "";
     current = 0;
+    buttonPause->setOn(false);
 
     setFocus();
 }
@@ -135,8 +150,6 @@ void SQ_SlideShowWidget::endSlideShow()
     options->hide();
     message->hide();
     hide();
-
-    KWin::clearState(winId(), NET::FullScreen);
 
     pixmap = QPixmap();
 }
@@ -212,6 +225,27 @@ void SQ_SlideShowWidget::loadImage(const QString &_path, int _current)
         (small+i)->r = (small+i)->b;
         (small+i)->b = t;
     }
+
+#ifdef SQ_HAVE_KEXIF
+    // copy original image
+    QImage img((uchar *)small, smallw, smallh, 32, 0, 0, QImage::LittleEndian);
+
+    KExifData data;
+    data.readFromFile(_path);
+    int O = data.getImageOrientation();
+
+    // rotate image
+    SQ_Utils::exifRotate(QString::null, img, O);
+
+    if(O == KExifData::ROT_90_HFLIP || O == KExifData::ROT_90
+    || O == KExifData::ROT_90_VFLIP || O == KExifData::ROT_270)
+    {
+        std::swap(smallw, smallh);
+    }
+
+    // transfer back
+    memcpy(small, img.bits(), wh*4);
+#endif
 
     QImage image((unsigned char *)small, smallw, smallh, 32, 0, 0, QImage::LittleEndian);
 
@@ -336,6 +370,11 @@ void SQ_SlideShowWidget::constructMessage()
         message->setText(s_message);
         message->adjustSize();
     }
+}
+
+void SQ_SlideShowWidget::slotResetPause()
+{
+    buttonPause->setOn(false);
 }
 
 #include "sq_slideshowwidget.moc"

@@ -8,12 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>528</width>
-            <height>412</height>
+            <width>604</width>
+            <height>474</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Plugins Information and Settings</string>
+        <string>Codecs Information and Settings</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>
@@ -83,7 +83,7 @@
             </column>
             <column>
                 <property name="text">
-                    <string>Filter</string>
+                    <string>MIME</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
@@ -260,6 +260,7 @@
     <include location="local" impldecl="in implementation">sq_codecsettingsskeleton.h</include>
     <include location="global" impldecl="in implementation">ksquirrel-libs/fileio.h</include>
     <include location="global" impldecl="in implementation">ksquirrel-libs/fmt_codec_base.h</include>
+    <include location="global" impldecl="in implementation">kstringhandler.h</include>
     <include location="local" impldecl="in implementation">sq_pluginsinfo.ui.h</include>
 </includes>
 <slots>

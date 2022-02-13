@@ -137,9 +137,6 @@ class SQ_TreeView : public KFileTreeView
     signals:
         void newURL(const KURL &url);
 
-        void stopUpdate();
-        void startUpdate();
-
         /*
          *  Since 0.7.0 our file manager supports multiple directories.
          *  These signals tell SQ_DirOperator to add or remove some

@@ -54,13 +54,11 @@ class SQ_ThumbnailSize : public QObject
 
         QSize extendedSize() const;
 
-        bool operator== (const SQ_ThumbnailSize& size) const
-        { return mValue == size.mValue; }
-
         int value() const;
         QString stringValue() const;
 
         static int biggest() { return 128; }
+        static int smallest() { return 48; }
 
         static SQ_ThumbnailSize* instance() { return m_instance; }
 

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-cut
+Icon=image
+Patterns=*.cut;*.CUT;
+Comment=Dr. Halo CUT

@@ -18,14 +18,13 @@
 #ifndef SQ_HLOPTIONS_H
 #define SQ_HLOPTIONS_H
 
-#include <qobject.h>
-#include <qstring.h>
+#include <kurl.h>
 
 /*
  *  SQ_HLOptions stores command line options.
  */
 
-class SQ_HLOptions : public QObject
+class SQ_HLOptions
 {
     public: 
         SQ_HLOptions();
@@ -35,29 +34,14 @@ class SQ_HLOptions : public QObject
 
     public:
         /*
-         *  Generate thumbnails for given directory ?
-         */
-        bool         thumbs;
-
-        /*
          *  Directory or file to open.
          */
-        QString        path;
-
-        /*
-         *  Starting folder for thumbnail generator.
-         */
-        QString        thumbs_p;
+        KURL        file, dir;
 
         /*
          *  Just show found libraries and exit ?
          */
         bool         showLibsAndExit;
-
-        /*
-         *  Scan recursively ? (with -t)
-         */
-        bool        recurs;
 
         static SQ_HLOptions *m_instance;
 };

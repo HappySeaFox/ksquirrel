@@ -11,6 +11,17 @@
  *  SQ_ImageProperties shows image properties.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef SQ_HAVE_KEXIF
+#include <libkexif/kexifwidget.h>
+#include <libkexif/kexifdata.h>
+#include <qobjectlist.h>
+#include "sq_config.h"
+#endif
+
 void SQ_ImageProperties::init()
 {
     menu = new KPopupMenu;
@@ -31,6 +42,11 @@ void SQ_ImageProperties::init()
 
 void SQ_ImageProperties::destroy()
 {
+#ifdef SQ_HAVE_KEXIF
+    SQ_Config::instance()->setGroup("GL view");
+    SQ_Config::instance()->writeEntry("exifmode", exifMode);
+#endif
+
     delete copyall;
     delete copyentry;
     delete copy;
@@ -56,42 +72,85 @@ void SQ_ImageProperties::setParams(QStringList &l)
     QString s = QString::fromLatin1("%1").arg(i18n("1 error", "%n errors", errors));
     textStatus->setText((errors)?s:QString::null);
     textStatusIcon->setPixmap((errors)?error:ok);
-    
-    s = QString::fromLatin1("%1 ms.").arg(*it);
+
+    s = QString::fromLatin1("%1%2").arg(*it).arg(i18n(" ms."));
     textDelay->setText(s);
 }
 
-void SQ_ImageProperties::setFile( const QString &filen )
+void SQ_ImageProperties::setURL(const KURL &_url)
 {
-    file = filen;
+    url = _url;
 }
 
 void SQ_ImageProperties::setFileParams()
 {
-    QFileInfo fm(file);
-    
-    lineDirectory->setText(fm.dirPath(true));
-    lineFile->setText(fm.fileName());
-    textSize->setText(KIO::convertSize(fm.size()));
-    textOwner->setText(QString("%1 (id: %2)").arg(fm.owner()).arg(fm.ownerId()));
-    textGroup->setText(QString("%1 (id: %2)").arg(fm.group()).arg(fm.groupId()));
-    textPermissions->setText(QString("%1%2%3%4%5%6%7%8%9")
-       .arg(fm.permission(QFileInfo::ReadUser)?"r":"-")
-       .arg(fm.permission(QFileInfo::WriteUser)?"w":"-")
-       .arg(fm.permission(QFileInfo::ExeUser)?"x":"-")
-       .arg(fm.permission(QFileInfo::ReadGroup)?"r":"-")
-       .arg(fm.permission(QFileInfo::WriteGroup)?"w":"-")
-       .arg(fm.permission(QFileInfo::ExeGroup)?"x":"-")
-       .arg(fm.permission(QFileInfo::ReadOther)?"r":"-")
-       .arg(fm.permission(QFileInfo::WriteOther)?"w":"-")
-       .arg(fm.permission(QFileInfo::ExeOther)?"x":"-"));
-    
-    QDateTime abs = fm.created();
-    textCreated->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
-    abs = fm.lastRead();
-    textLastRead->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
-    abs = fm.lastModified();
-    textLastMod->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
+    KIO::Job *stjob = KIO::stat(url, false);
+    connect(stjob, SIGNAL(result(KIO::Job *)), this, SLOT(slotStatResult(KIO::Job *)));
+
+#ifdef SQ_HAVE_KEXIF
+        SQ_Config::instance()->setGroup("GL view");
+        exifMode = SQ_Config::instance()->readNumEntry("exifmode", 0);
+
+        QWidget *tabWidgetEXIF = new QWidget(tabWidget, "tabWidgetEXIF");
+        tabWidget->addTab(tabWidgetEXIF, i18n("EXIF"));
+        QGridLayout *pageLayout6 = new QGridLayout(tabWidgetEXIF, 2, 1, 11, 6, "tabWidgetEXIFLayout");
+
+        QButtonGroup *gr = new QButtonGroup(tabWidgetEXIF, "EXIF mode");
+        gr->setFrameShape(QFrame::NoFrame);
+        gr->setExclusive(true);
+        connect(gr, SIGNAL(clicked(int)), this, SLOT(slotModeClicked(int)));
+
+        QGridLayout *pageLayoutGR = new QGridLayout(gr, 1, 3, 0, -1, "tabWidgetEXIFGRLayout");
+
+        QPushButton *mode1 = new QPushButton(i18n("Simple"), gr, "mode1");
+        mode1->setToggleButton(true);
+
+        QPushButton *mode2 = new QPushButton(i18n("Full"), gr, "mode2");
+        mode2->setToggleButton(true);
+
+        QSpacerItem *spacer = new QSpacerItem(15, 1, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        // create KEXIF widget and load metadata from file
+        KExifWidget *kew1 = new KExifWidget(tabWidgetEXIF);
+        kew1->loadFile(file);
+
+        // hack to workaround poor libkexif API
+        QObjectList *ch = const_cast<QObjectList *>(kew1->children());
+        for(QObjectList::iterator it = ch->begin();it != ch->end();++it)
+        {
+            if((*it)->inherits("QListView"))
+            {
+                QListView *l = dynamic_cast<QListView *>(*it);
+                QWidget   *w = tabWidget->page(3);
+
+                if(l && w && !l->childCount())
+                    tabWidget->changeTab(w, i18n("EXIF (no)"));
+
+                break;
+            }
+        }
+
+        // set proper button on
+        if(exifMode)
+        {
+            mode2->setOn(true);
+            kew1->setMode(KExifWidget::FULL);
+        }
+        else
+        {
+            mode1->setOn(true);
+            kew1->setMode(KExifWidget::SIMPLE);
+        }
+
+        // finally, add all widgets to layouts
+        pageLayoutGR->addWidget(mode1, 0, 0);
+        pageLayoutGR->addWidget(mode2, 0, 1);
+        pageLayoutGR->addItem(spacer, 0, 2);
+
+        pageLayout6->addWidget(gr, 0, 0);
+        pageLayout6->addWidget(kew1, 1, 0);
+        kew = kew1;
+#endif
 }
 
 void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta )
@@ -104,7 +163,7 @@ void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta 
             item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second);
         else
             after = item = new QListViewItem(listMeta, (*it).first+QString::fromLatin1("  "), (*it).second);
-    
+
         listMeta->insertItem(item);
     }
     
@@ -112,10 +171,10 @@ void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta 
     {
         listMeta->header()->hide();
 
-        QWidget *w = tabWidget3->page(2);
+        QWidget *w = tabWidget->page(2);
 
         if(w)
-            tabWidget3->changeTab(w, i18n("Metadata (no)"));
+            tabWidget->changeTab(w, i18n("Metadata (no)"));
     }
 }
 
@@ -134,24 +193,19 @@ void SQ_ImageProperties::slotCopyString()
     QApplication::clipboard()->setText(data->text(z), QClipboard::Clipboard);
 }
 
-
 void SQ_ImageProperties::slotCopyAll()
 {
     if(!data)
         return;
 
     QString app;
-    int count = listMeta->childCount();
     QListViewItem *item = listMeta->firstChild();
-    
-    for(int i = 0;i < count;i++)
+
+    for(;item;item = item->itemBelow())
     {
-        if(item)
-            app.append(item->text(0) + "\n" + item->text(1) + "\n");
-    
-        item = item->itemBelow();
+        app.append(item->text(0) + "\n" + item->text(1) + "\n");
     }
-    
+
     QApplication::clipboard()->setText(app, QClipboard::Clipboard);
 }
 
@@ -160,9 +214,49 @@ void SQ_ImageProperties::slotCopyEntry()
     if(!data)
         return;
 
-    QString app;
-    
-    app = data->text(0) + "\n" + data->text(1) + "\n";
-    
+    QString app = data->text(0) + "\n" + data->text(1) + "\n";
+
     QApplication::clipboard()->setText(app, QClipboard::Clipboard);
+}
+
+void SQ_ImageProperties::slotModeClicked(int id)
+{
+// change mode: simple or full
+#ifdef SQ_HAVE_KEXIF
+    exifMode = id;
+    static_cast<KExifWidget *>(kew)->setMode(id ? KExifWidget::FULL : KExifWidget::SIMPLE);
+#endif
+}
+
+void SQ_ImageProperties::slotStatResult(KIO::Job *job)
+{
+    if(!job->error())
+    {
+	KIO::UDSEntry entry = static_cast<KIO::StatJob*>(job)->statResult();
+	KFileItem fi(entry, url);
+
+	KURL t = url;
+	t.cd("..");
+	lineDirectory->setText(t.isLocalFile() ? t.path() : t.prettyURL());
+	lineFile->setText(fi.name());
+
+	textSize->setText(KIO::convertSize(fi.size()));
+	textOwner->setText(QString("%1").arg(fi.user()));
+	textGroup->setText(QString("%1").arg(fi.group()));
+	textPermissions->setText(fi.permissionsString());
+    
+	QDateTime abs;
+	abs.setTime_t(fi.time(KIO::UDS_CREATION_TIME));
+	textCreated->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
+	abs.setTime_t(fi.time(KIO::UDS_ACCESS_TIME));
+	textLastRead->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
+	abs.setTime_t(fi.time(KIO::UDS_MODIFICATION_TIME));
+	textLastMod->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
+    }
+}
+
+// set local file for KEXIF
+void SQ_ImageProperties::setFile(const QString &_file)
+{
+    file = _file;
 }

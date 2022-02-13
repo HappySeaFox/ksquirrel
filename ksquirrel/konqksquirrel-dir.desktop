@@ -1,0 +1,11 @@
+[Desktop Entry]
+ServiceTypes=inode/directory
+Actions=KSquirrel;
+Encoding=UTF-8
+Type=Application
+
+[Desktop Action KSquirrel]
+Type=Application
+Name=Browse with KSquirrel
+Icon=ksquirrel
+Exec=ksquirrel --directory %u

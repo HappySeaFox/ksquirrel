@@ -13,6 +13,7 @@ Then follow the installation instructions:
    a) from sources
    # tar zxfv ksquirrel-libs-0.6.0.tar.gz
    # cd ksquirrel-libs-0.6.0/
+ * # su -c './required-etch'
    # ./configure.gnu
    # make
    # su -c 'make install'
@@ -27,10 +28,14 @@ DEB  # dpkg -i ksquirrel-libs-0.6.0.deb
    a) from sources
    # tar zxfv ksquirrel-0.6.0.tar.gz
    # cd ksquirrel-0.6.0/
+ * # su -c './required-etch'
    # ./configure.gnu
    # make
    # su -c 'make install'
-   
+
+* For Debian Etch and Ubuntu Feisty only.
+  This will install all required packages with aptitude.
+
    b) from binary packages
 RPM  # rpm -ihv ksquirrel-0.6.0.rpm
 TGZ  # installpkg ksquirrel-0.6.0.tgz

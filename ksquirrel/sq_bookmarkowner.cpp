@@ -37,7 +37,9 @@ SQ_BookmarkOwner::~SQ_BookmarkOwner()
  */
 void SQ_BookmarkOwner::openBookmarkURL(const QString &url)
 {
-    emit openURL(KURL(url));
+    KURL u = KURL::fromPathOrURL(url);
+
+    emit openURL(u);
 }
 
 /*
@@ -46,7 +48,7 @@ void SQ_BookmarkOwner::openBookmarkURL(const QString &url)
  */
 QString SQ_BookmarkOwner::currentURL() const
 {
-    return URL.path();
+    return URL.prettyURL();
 }
 
 /*

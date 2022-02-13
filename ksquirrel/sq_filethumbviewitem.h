@@ -22,8 +22,6 @@
 
 #include <kfileiconview.h>
 
-#include "sq_thumbnailinfo.h"
-
 /*
  *  SQ_FileThumbViewItem represents a thumbnail item in SQ_FileThumbView.
  *  Additianally it stores some useful info.
@@ -34,16 +32,6 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
     public: 
         SQ_FileThumbViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi);
         ~SQ_FileThumbViewItem();
-
-        /*
-         *  Get additional information as QString object.
-         */
-        QString fullInfo() const;
-
-        /*
-         *  Set additional information.
-         */
-        void setInfo(const SQ_Thumbnail &t);
 
     protected:
         /*
@@ -57,7 +45,6 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
         /*
          *  Additional information.
          */
-        SQ_Thumbnail info;
         QString  tmpText;
 };
 

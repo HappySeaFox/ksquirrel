@@ -20,6 +20,8 @@
 
 #include <kdiroperator.h>
 
+namespace KIO { class Job; }
+
 /**
   *@author Baryshev Dmitry
   */
@@ -45,8 +47,13 @@ class SQ_ImageBasket : public KDirOperator
             void slotBasketProperties();
             void slotSync();
             void slotViewChanged(KFileView *);
+            void slotExecuted(const KFileItem *fi);
+            void slotStatResult(KIO::Job *job);
+
+            void activatedMenu(const KFileItem *, const QPoint &pos);
 
         private:
+            bool m_stat, m_exist;
             static SQ_ImageBasket *m_inst;
 };
 

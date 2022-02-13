@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+MimeType=image/x-neo
+Icon=image
+Patterns=*.neo;*.NEO;
+Comment=Neochrome NEO

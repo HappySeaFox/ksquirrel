@@ -92,6 +92,7 @@ class SQ_KIPIManager : public QObject
 
     private slots:
         void slotReplug();
+        void slotAboutToShow();
 
     private:
         typedef QMap<KIPI::Category, SQ_ActionMenu*> CategoryMap;
@@ -101,6 +102,7 @@ class SQ_KIPIManager : public QObject
         KAction *noPlugin;
         QWidget *parent;
         KPopupMenu *p;
+        bool loaded;
 };
 
 inline

@@ -16,7 +16,6 @@
 void SQ_ThumbnailCacheMaster::init()
 {
     pushCache->setIconSet(SQ_IconLoader::instance()->loadIcon("kcalc", KIcon::Desktop, KIcon::SizeSmall));
-    pushCacheBrowse->setIconSet(SQ_IconLoader::instance()->loadIcon("konqueror", KIcon::Desktop, KIcon::SizeSmall));
     pushCacheMemory->setIconSet(SQ_IconLoader::instance()->loadIcon("kcalc", KIcon::Desktop, KIcon::SizeSmall));
     pushShowCache->setIconSet(SQ_IconLoader::instance()->loadIcon("memory", KIcon::Desktop, KIcon::SizeSmall));
 }
@@ -39,7 +38,7 @@ void SQ_ThumbnailCacheMaster::slotClearCache()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
-    SQ_Dir tmp(SQ_Dir::Thumbnails);
+    SQ_DirThumbs tmp;
     
     KURL url = tmp.root();
 
@@ -65,7 +64,9 @@ void SQ_ThumbnailCacheMaster::slotClearMemoryCache()
 
 void SQ_ThumbnailCacheMaster::slotCalcCacheMemory()
 {
-	textCacheMemSize->setText(QString::fromLatin1("%1/%2").arg(KIO::convertSize(SQ_PixmapCache::instance()->totalSize())).arg(KIO::convertSize(SQ_PixmapCache::instance()->cacheLimit())));
+	textCacheMemSize->setText(QString::fromLatin1("%1/%2")
+				  .arg(KIO::convertSize(SQ_PixmapCache::instance()->totalSize()))
+				  .arg(KIO::convertSize(SQ_PixmapCache::instance()->cacheLimit())));
 }
 
 void SQ_ThumbnailCacheMaster::slotShowDiskCache()
@@ -84,11 +85,4 @@ void SQ_ThumbnailCacheMaster::slotSyncCache()
     slotCalcCache();
 
     QApplication::restoreOverrideCursor();
-}
-
-void SQ_ThumbnailCacheMaster::slotBrowseDiskCache()
-{
-    SQ_Dir tmp(SQ_Dir::Thumbnails);
-
-    kapp->invokeBrowser(tmp.root());
 }

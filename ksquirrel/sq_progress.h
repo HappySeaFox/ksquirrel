@@ -39,6 +39,11 @@ class SQ_Progress : public QLabel
         void setColor(const QColor &c); // alternative progress color
 
         /*
+         *  Set current progress to 'progress'.
+         */
+        void setIndicator(int progress);
+
+        /*
          *  Add 'step_new' to current step.
          */
         void advance(int step_new = 1);
@@ -56,10 +61,6 @@ class SQ_Progress : public QLabel
             virtual void paintEvent(QPaintEvent *);
 
     private:
-        /*
-         *  Internal. Set current progress to 'progress'.
-         */
-        void setIndicator(int progress);
         void drawProgress();
 
     private:

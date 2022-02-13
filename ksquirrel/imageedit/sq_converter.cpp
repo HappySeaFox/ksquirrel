@@ -63,11 +63,14 @@ void SQ_Converter::slotStartEdit()
 
     KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
 
-    if(!items) return;
-
-    if(!items->count())
+    if(!items || !items->count())
     {
         KMessageBox::information(KSquirrel::app(), i18n("Select files to edit"));
+        return;
+    }
+    else if(!items->first()->url().isLocalFile())
+    {
+        KMessageBox::information(KSquirrel::app(), i18n("Converter cann't work with non-local files.\nSorry."));
         return;
     }
 
@@ -77,12 +80,6 @@ void SQ_Converter::slotStartEdit()
     {
         if(i->isFile())
             files.append(i->url().path());
-    }
-
-    if(!files.count())
-    {
-        KMessageBox::information(KSquirrel::app(), i18n("Select files to edit"));
-        return;
     }
 
     startEditPrivate();

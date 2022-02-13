@@ -24,13 +24,23 @@
 
 #include <qstringlist.h>
 #include <qmap.h>
-#include <qdir.h>
 
 #include <kmainwindow.h>
 #include <dcopobject.h>
-#include <kio/job.h>
+#include <kfileitem.h>
+#include <kurl.h>
 
 // forward declarations
+
+template <class T> class QValueVector;
+class QLabel;
+class QWidgetStack;
+class QHBox;
+class QVBox;
+class QTimer;
+class QSplitter;
+
+namespace KIO { class Job; }
 
 class KMenuBar;
 class KToolBar;
@@ -43,13 +53,6 @@ class KHistoryCombo;
 class KToggleAction;
 class KBookmarkMenu;
 
-template <class T> class QValueVector;
-class QLabel;
-class QWidgetStack;
-class QHBox;
-class QVBox;
-class QTimer;
-class QSplitter;
 
 class SQ_SplashScreen;
 class SQ_WidgetStack;
@@ -65,7 +68,10 @@ class SQ_GLWidget;
 class SQ_ArchiveHandler;
 class SQ_MultiBar;
 class SQ_KIPIManager;
+class SQ_Progress;
 class SQ_Dir;
+class SQ_Downloader;
+class SQ_SlideShowListing;
 
 /*
  *  Main widget, which can accept DCOP messages
@@ -82,6 +88,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
         KSquirrel(QWidget *parent, const char *name);
         ~KSquirrel();
 
+        SQ_Progress* diskProgress();
+
         /*
          *  "history combo"
          */
@@ -96,6 +104,13 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  when user closes image viewer (OpenGL widget)
          */
         void setDemo(bool b);
+
+        bool demo() const;
+
+        /*
+         *  Activate main window.
+         */
+        void activate();
 
         /*
          *  Close (hide) SQ_GLWidget.
@@ -328,11 +343,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void navigatorSend(const QString &command);
 
         /*
-         *  Activate this instance (DCOP method)
-         */
-        void activate();
-
-        /*
          *  Get QString argument from incoming QByteArray.
          */
         QString getArg(const QByteArray &data);
@@ -374,6 +384,34 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotPreviousSlideShow();
 
     private slots:
+
+        void slotRename();
+        void slotRenameResult(KIO::Job *);
+        void slotExtendedToggled(bool);
+        void slotTrayQuit();
+        void slotClose();
+
+        /*
+         *  Deetrmine next supported image in slideshow
+         */
+        void slideShowDetermine();
+
+        /*
+         *  Non-local file downloaded (for slideshow)
+         */
+        void slotDownloaderResult(const KURL &);
+
+        /*
+         *  Got new urls while listing directory for slideshow
+         */
+        void slotSlideShowEntries(KIO::Job *, const KIO::UDSEntryList &);
+
+        /*
+         *  Directory listed for slideshow
+         */
+        void slotSlideShowJobResult(KIO::Job *);
+
+        void slotSlideShowListingKill();
 
         /*
          *  Invoke 'Options' dialog.
@@ -457,16 +495,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotAnimatedClicked();
 
         /*
-         *  This slot will catch signals from image finder (if -t option specified)
-         */
-        void slotUDSEntries(KIO::Job*, const KIO::UDSEntryList&);
-
-        /*
-         *  Invoked, when image finder found all images (or didn't find any image)
-         */
-        void listResult(KIO::Job *);
-
-        /*
          *  Invokes a dialog with specific thumbnails actions:
          *  delete thumbnails on disk, show thumbnails on disk, ...
          */
@@ -511,7 +539,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         bool builtin, m_demo;
 
-        KToggleAction *pAInterface;
+        KToggleAction *pAInterface, *pAThumbsE;
 
         // main toolbar
         KToolBar    *tools;
@@ -541,11 +569,10 @@ class KSquirrel : public KMainWindow, public DCOPObject
         KActionMenu     *bookmarks;
         KBookmarkMenu    *bookmarkMenu;
 
-        // KIO::Job, which will find images (if -t option specified)
-        KIO::ListJob    *job;
-
         // "Open file", "open file #2"
         KAction    *pAOpen, *pAOpenAndSet,
+
+        *pARename,
 
         // Open "SQ_ThumbnailCacheMaster"
         *pATCMaster,
@@ -600,10 +627,10 @@ class KSquirrel : public KMainWindow, public DCOPObject
         //
         // KSquirrel::app()->sbarWidget("fileName")->setText("Filename.txt");
         //
-        QMap<QString, QLabel*>sbarwidgets;
+        QMap<QString, QLabel*> sbarwidgets;
 
         // QLabels for statusbar
-        QLabel    *dirInfo, *fileIcon, *fileName;
+        QLabel    *dirInfo, *fileIcon, *fileName, *diskSpace;
 
         // QMap, which contains available DCOP
         // parameters (such as "image_next", "image_prev")
@@ -634,33 +661,38 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *
          *  Is slideshow paused by user (with 'Pause') ?
          */
-         bool slideShowPaused;
+        bool slideShowPaused;
+
+        KIO::Job *listing;
+
+        SQ_SlideShowListing *listingDialog;
 
         // Directory for slideshow.
         // KSquirrel will use it to load file names.
         QString    slideShowDir;
 
+        bool slideShowInit;
+
+        KFileItem *slideShowFile;
+
         // Contains found files
-        QDir    slideShowItems;
+        KFileItemList  slideShowItems;
 
         // Delay, total files in selected directory and 
         // current file index
         int    slideShowIndex, slideShowDelay, slideShowTotal, slideShowRepeat;
 
         // current file name
-        QString    slideShowName;
+        KURL    slideShowName;
 
-        // timer for slideshow
-        QTimer    *slideShowTimer;
+        // timers for slideshow
+        QTimer    *slideShowTimer, *timerShowListing;
 
         // is slideshow stopped ?
         bool    slideShowStop;
 
         // url box
         KToolBar    *pTLocation;
-
-        // used by image finder (if -t option specified)
-        SQ_Dir    *dir;
 
         // our config file
         SQ_Config    *kconf;
@@ -700,15 +732,21 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         SQ_SplashScreen     *splash_to_delete;
 
+        SQ_Progress         *diskProg;
+
         // KIPI plugins loader
 #ifdef SQ_HAVE_KIPI
         SQ_KIPIManager *kipiManager;
 #endif
 
+        enum SSD { MBack, Default } slideShowDirection;
+
         // not interesting ;)
+        KURL renameSrcURL, renameDestURL;
         int     old_id;
         bool   old_disable, old_ext,
-                 m_urlbox, old_marks;
+                 m_urlbox, old_marks, m_intray;
+        SQ_Downloader *down;
 };
 
 // Is slideshow running ?
@@ -758,6 +796,18 @@ inline
 void KSquirrel::setDemo(bool b)
 {
     m_demo = b;
+}
+
+inline
+SQ_Progress* KSquirrel::diskProgress()
+{
+    return diskProg;
+}
+
+inline
+bool KSquirrel::demo() const
+{
+    return m_demo;
 }
 
 #endif

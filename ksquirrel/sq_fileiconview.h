@@ -53,16 +53,8 @@ class SQ_FileIconView : public SQ_FileIconViewBase
         ~SQ_FileIconView();
 
         /*
-         *  Get SQ_FileIconViewItem by KFileItem. All KFileItems store
-         *  a pointer to appropriate SQ_FileIconViewItem as extra data.
-         *  See also KFileItem::setExtraData() and insertItem().
-         */
-        SQ_FileIconViewItem* viewItem(const KFileItem *item);
-
-        /*
          *  Internal.
          */
-        virtual void updateView(const KFileItem *i);
         virtual void updateView(bool b);
 
         /*
@@ -85,12 +77,6 @@ class SQ_FileIconView : public SQ_FileIconViewBase
          *  Insert ".." item.
          */
         virtual void insertCdUpItem(const KURL &baseurl);
-
-    private:
-        /*
-         *  Internal. Set item's sorting key.
-         */
-        void initItem(SQ_FileIconViewItem *item, const KFileItem *i);
 
     protected slots:
         void slotSelected(QIconViewItem *item, const QPoint &point);

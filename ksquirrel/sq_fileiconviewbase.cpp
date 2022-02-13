@@ -34,49 +34,10 @@
 
 SQ_FileIconViewBase::SQ_FileIconViewBase(QWidget *parent, const char *name)
     : KFileIconView(parent, name)
-{
-    disconnect(this, SIGNAL(currentChanged(QIconViewItem *)), 0, 0);
-
-    connect(this, SIGNAL(mouseButtonClicked(int, QIconViewItem *, const QPoint &)),
-                    this, SLOT(slotMouseButtonClicked(int, QIconViewItem *)));
-    connect(this, SIGNAL(doubleClicked(QIconViewItem *)),
-                    this, SLOT(slotDoubleClicked(QIconViewItem *)));
-    connect(this, SIGNAL(currentChanged(QIconViewItem *)),
-                    this, SLOT(slotCurrentChanged(QIconViewItem *)));
-}
+{}
 
 SQ_FileIconViewBase::~SQ_FileIconViewBase()
 {}
-
-void SQ_FileIconViewBase::exec(QIconViewItem *i, bool single, bool hl)
-{
-    if(i)
-    {
-        KFileIconViewItem *kvi = static_cast<KFileIconViewItem *>(i);
-        KFileItem *kfi = kvi->fileInfo();
-
-        if(hl && kfi) // highlight all items
-            emit highlighted(kfi);
-        else if(single && kfi && kfi->isFile()) // execute only files
-            emit launch(kfi);
-    }
-}
-
-void SQ_FileIconViewBase::slotDoubleClicked(QIconViewItem *i)
-{
-    exec(i, !KGlobalSettings::singleClick());
-}
-
-void SQ_FileIconViewBase::slotMouseButtonClicked(int btn, QIconViewItem *i)
-{
-    if(btn == Qt::LeftButton)
-        exec(i, KGlobalSettings::singleClick());
-}
-
-void SQ_FileIconViewBase::slotCurrentChanged(QIconViewItem *i)
-{
-    exec(i, true, true);
-}
 
 // Accept drag
 void SQ_FileIconViewBase::dragEnterEvent(QDragEnterEvent *e)
@@ -99,7 +60,36 @@ void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
     // double click in viewport, lets invoke browser
     else
-        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
+        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().prettyURL());
+}
+
+void SQ_FileIconViewBase::updateView(const KFileItem *i)
+{
+    KFileIconViewItem *item = viewItem(i);
+
+    if(item)
+        initItemMy(item, i, true);
+}
+
+KFileIconViewItem* SQ_FileIconViewBase::viewItem(const KFileItem *item)
+{
+    return item ? reinterpret_cast<KFileIconViewItem *>((void *)item->extraData(this)) : 0;
+}
+
+void SQ_FileIconViewBase::initItemMy(KFileIconViewItem *item, const KFileItem *i, bool upd)
+{
+    if(upd)
+        item->setText(i->text(), true, true);
+
+    // determine current sorting type
+    QDir::SortSpec spec = KFileView::sorting();
+
+    if(spec & QDir::Time)
+        item->setKey(sortingKey((unsigned long)i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
+    else if(spec & QDir::Size)
+        item->setKey(sortingKey(i->size(), i->isDir(), spec));
+    else
+        item->setKey(sortingKey(i->text(), i->isDir(), spec));
 }
 
 #include "sq_fileiconviewbase.moc"

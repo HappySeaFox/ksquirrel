@@ -8,7 +8,7 @@ EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TO
 
 SUBDIRS += doc
 
-EXTRA_DIST += fmt_filters_README
+EXTRA_DIST += fmt_filters_README required-etch
 
 # not a GNU package. You can remove this line, if 
 # have all needed files, that a GNU package needs

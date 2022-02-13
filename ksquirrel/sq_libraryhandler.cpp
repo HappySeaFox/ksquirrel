@@ -23,7 +23,6 @@
 #include <qfileinfo.h>
 #include <qstringlist.h>
 #include <qfile.h>
-#include <qdatetime.h>
 #include <qdir.h>
 
 #include <kstringhandler.h>
@@ -31,6 +30,8 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kurl.h>
+#include <kmimetype.h>
 
 #include "sq_libraryhandler.h"
 #include "sq_config.h"
@@ -70,128 +71,47 @@ SQ_LibraryHandler::~SQ_LibraryHandler()
  *  Find appropriate SQ_LIBRARY by filename. If
  *  not found, return NULL.
  */
-SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
+SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const KURL &url)
 {
-    // wrong parameter, or file doesn't exist
-    if(!QFile::exists(full_path))
-        return 0;
-
-    SQ_LIBRARY *latest = 0;
-
-    QTime tm;
-    tm.start();
-
-    QFileInfo fi(full_path);
-
-    if(fi.isDir() || !fi.isReadable())
-        return 0;
-
-    // Cache support since 0.7.0 :)
-    LibCache::iterator it = cache.find(full_path);
-
-    if(it != cache.end())
-    {
-        if(fi.lastModified().isValid() && fi.lastModified() == it.data().modified)
-        {
-            latest = it.data().library;
-
-            debugInfo("[C]", full_path, latest->quickinfo, tm.elapsed());
-
-            return latest;
-        }
-    }
-
-    SQ_LIBRARY *l, *found = 0;
-
-    QFile file(full_path);
-    char buffer[buffer_size+1];
-
-    if(!file.open(IO_ReadOnly))
-        return 0;
-
-    // read some bytes from file, and compare it with
-    // regexps. If regexp succeeded, we found library!
-    int rr = file.readBlock(buffer, buffer_size);
-
-    if(rr != buffer_size || file.status() != IO_Ok)
-    {
-        file.close();
-        return 0;
-    }
-    else
-        file.close();
-
-    for(int j = 0;j < buffer_size;j++)
-        if(buffer[j] == '\0')
-            buffer[j] = '\001';
-
-    buffer[buffer_size] = '\0';
-
-    QString read = QString::fromLatin1(buffer);
+    KMimeType::Ptr mime = KMimeType::findByURL(url);
 
     iterator itEnd = end();
 
-    // go through array and compare current regexp with 'read'
+    SQ_LIBRARY *l = 0;
+
+    // go through array and compare names
     for(iterator it = begin();it != itEnd;++it)
     {
-        l = &(*it);
-
-        if(!l->regexp_str.isEmpty())
-            if(read.find(l->regexp) == 0) // we found library!
+        if((*it).mime_multi)
+        {
+            if((*it).mimetype.find(mime->name()) != -1)
             {
-                found = l;
-                latest = found;
+                l = &(*it);
                 break;
             }
-    }
-
-    // we found something...
-    if(found)
-    {
-        // can found library read files ?
-        if(found->readable)
-        {
-            debugInfo("[1]", full_path, found->quickinfo, tm.elapsed());
-
-            if(fi.lastModified().isValid())
-                cache.insert(full_path, LibCacheEntry(fi.lastModified(), found));
-
-            return found;
         }
-
-        // oops, library can't read files !
-        return 0;
-    }
-
-    QString ext = "*.";
-    ext += fi.extension(false);
-    ext += " ";
-
-    // library still not found ...
-    // let's find it by file extension
-    for(iterator it = begin();it != itEnd;++it)
-    {
-        l = &(*it);
-
-        if(l->filter.find(ext, 0, false) != -1 && l->regexp_str.isEmpty())
+        else if((*it).mimetype == mime->name())
         {
-            debugInfo("[2]", full_path, l->quickinfo, tm.elapsed());
-
-            latest = l;
-
-            if(l && l->readable)
-            {
-                if(fi.lastModified().isValid())
-                    cache.insert(full_path, LibCacheEntry(fi.lastModified(), l));
-
-                return l;
-            }
-
-            return 0;
+            l = &(*it);
+            break;
         }
     }
 
-    return 0;
+    if(l)
+        kdDebug() << KStringHandler::lsqueeze(url.prettyURL())
+                  << "\" => "
+                  << l->quickinfo
+                  << endl;
+
+    return l;
+}
+
+SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &path)
+{
+    KURL u;
+    u.setPath(path);
+
+    return libraryForFile(u);
 }
 
 /*
@@ -286,8 +206,6 @@ void SQ_LibraryHandler::clear()
 {
     kdDebug() << "SQ_LibraryHandler::clear()" << endl;
 
-    cache.clear();
-
     iterator itEnd = end();
 
     // unload libraries on clear()
@@ -320,12 +238,7 @@ void SQ_LibraryHandler::add(QStringList &foundLibraries)
     {
         QFileInfo ff(*it);
 
-        // bad library file
-        if(ff.isDir() || !ff.isReadable())
-            continue;
-
         SQ_LIBRARY libtmp;
-        QStringList formats;
 
         // create QLibrary object
         libtmp.lib = new QLibrary(*it);
@@ -355,9 +268,9 @@ void SQ_LibraryHandler::add(QStringList &foundLibraries)
             // Yet unknown library ?
             if(!alreadyInMap(q))
             {
-
-                // get all information on codec: filter, mime icon, mime regexp,
                 libtmp.mime = QPixmap(reinterpret_cast<const char **>(o.pixmap));
+                libtmp.mimetype = o.mimetype;
+                libtmp.mime_multi = libtmp.mimetype.find(';') != -1;
                 libtmp.quickinfo = q;
                 libtmp.filter = o.filter;
                 libtmp.version = o.version;
@@ -602,19 +515,6 @@ void SQ_LibraryHandler::readSettings(SQ_LIBRARY *lib)
     lib->codec->set_settings(sett);
 }
 
-void SQ_LibraryHandler::debugInfo(const QString &symbol, const QString &path, const QString &lib, int ms)
-{
-    kdDebug() << symbol
-              << " SQ_LibraryHandler: \""
-              << KStringHandler::lsqueeze(path, 20)
-              << "\" => \""
-              << lib
-              << "\" ["
-              << ms
-              << " ms.]"
-              << endl;
-}
-
 void SQ_LibraryHandler::reload()
 {
     clear();
@@ -643,4 +543,36 @@ void SQ_LibraryHandler::load()
 
     // just show dump, if no libs were found
     add(libs);
+}
+
+SQ_LibraryHandler::Support SQ_LibraryHandler::maybeSupported(const KURL &u, const QString &mime) const
+{
+    const_iterator itEnd = constEnd();
+
+    SQ_Config::instance()->setGroup("Main");
+    bool treat =  SQ_Config::instance()->readBoolEntry("treat", true);
+
+    // we can determine mimetype by hand or use "mime"
+    QString mimeDet = mime.isEmpty() ? KMimeType::findByURL(u)->name() : mime;
+
+    // mimetype by magic is not determined automatically
+    // for non-local urls - we may support this file type or may not
+    // (we don't know exactly at this moment)
+    if(!u.isLocalFile() && mimeDet == KMimeType::defaultMimeType())
+        return (treat ? SQ_LibraryHandler::No : SQ_LibraryHandler::Maybe);
+
+    // go through array and compare mimetype names
+    for(const_iterator it = constBegin();it != itEnd;++it)
+    {
+        if((*it).mime_multi)
+        {
+            if((*it).mimetype.find(mimeDet, 0, false) != -1)
+                return SQ_LibraryHandler::Yes;
+        }
+        else if((*it).mimetype == mimeDet) // don't waste CPU time with find()
+            return SQ_LibraryHandler::Yes;
+    }
+
+    // we don't know about given mimetype
+    return SQ_LibraryHandler::No;
 }

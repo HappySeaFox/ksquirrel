@@ -28,6 +28,7 @@
 #include <kactioncollection.h>
 #include <kpopupmenu.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include <libkipi/pluginloader.h>
 #include <libkipi/interface.h>
@@ -44,7 +45,9 @@ SQ_ActionMenu::SQ_ActionMenu(const QString &text, const QString &icon, QObject *
 
 SQ_ActionMenu::~SQ_ActionMenu()
 {
-    for(QValueVector<KAction *>::iterator it = plugged.begin();it != plugged.end();++it)
+    QValueVector<KAction *>::iterator itEnd = plugged.end();
+
+    for(QValueVector<KAction *>::iterator it = plugged.begin();it != itEnd;++it)
         remove(*it);
 }
 
@@ -59,12 +62,17 @@ void SQ_ActionMenu::insert(KAction *ka, int index)
 
 SQ_KIPIManager::SQ_KIPIManager(QWidget *_parent, const char *name) : QObject(_parent, name), parent(_parent)
 {
+    kdDebug() << "+SQ_KIPIManager" << endl;
+
     // Create a dummy "no plugin" action
     noPlugin = new KAction(i18n("No Plugins"), 0, 0, 0, (KActionCollection *)0/*actionCollection()*/, "no_plugin");
     noPlugin->setShortcutConfigurable(false);
     noPlugin->setEnabled(false);
 
+    loaded = false;
     p = new KPopupMenu;
+
+    connect(p, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShow()));
 
     SQ_KIPIInterface *interface = new SQ_KIPIInterface(_parent);
     mPluginLoader = new KIPI::PluginLoader(QStringList(), interface);
@@ -73,6 +81,8 @@ SQ_KIPIManager::SQ_KIPIManager(QWidget *_parent, const char *name) : QObject(_pa
 
 SQ_KIPIManager::~SQ_KIPIManager()
 {
+    kdDebug() << "-SQ_KIPIManager" << endl;
+
     delete mPluginLoader;
 
     //unplug all & delete popup menu
@@ -84,7 +94,12 @@ SQ_KIPIManager::~SQ_KIPIManager()
 
 void SQ_KIPIManager::loadPlugins()
 {
+    kdDebug() << "Loading KIPI plugins..." << endl;
+
+    loaded = true;
     mPluginLoader->loadPlugins();
+
+    kdDebug() << "Done" << endl;
 }
 
 void SQ_KIPIManager::clearMap()
@@ -161,6 +176,12 @@ void SQ_KIPIManager::slotReplug()
 
         it.data()->plug(p);
     }
+}
+
+void SQ_KIPIManager::slotAboutToShow()
+{
+    // load KIPI plugins on demand
+    if(!loaded) loadPlugins();
 }
 
 #include "sq_kipimanager.moc"

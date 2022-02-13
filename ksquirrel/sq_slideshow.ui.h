@@ -11,11 +11,12 @@
 
 void SQ_SlideShow::init()
 {
-    KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
+    KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly);
     kurl->setMode(mode);
 
     SQ_Config::instance()->setGroup("Slideshow");
 
+    checkRecurs->setChecked(SQ_Config::instance()->readBoolEntry("recurs", false));
     spinDelay->setValue(SQ_Config::instance()->readNumEntry("delay", 1000));
     spinCycle->setValue(SQ_Config::instance()->readNumEntry("repeat", 0));
     pushCurrent->setPixmap(SQ_IconLoader::instance()->loadIcon("folder_green", KIcon::Desktop, 16));
@@ -64,6 +65,7 @@ int SQ_SlideShow::exec(QString &path)
         SQ_Config::instance()->writeEntry("messages_size", checkSize->isChecked());
         SQ_Config::instance()->writeEntry("messages_pos", checkPos->isChecked());
         SQ_Config::instance()->writeEntry("history", items);
+        SQ_Config::instance()->writeEntry("recurs", checkRecurs->isChecked());
         path = kurl->url();
     }
 
@@ -103,7 +105,7 @@ void SQ_SlideShow::appendPath(const QString &path)
 
 void SQ_SlideShow::slotCurrent()
 {
-    QString path = SQ_WidgetStack::instance()->url().path();
+    QString path = SQ_WidgetStack::instance()->url().prettyURL();
 
     setPath(path);
     appendPath(path);
