@@ -5,7 +5,7 @@
  <Mainframe MaximizeMode="1" />
  <DocsAndViews NumberOfDocuments="1" >
   <Doc0 CursorPosLine="89" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_utils.cpp" >
-   <View0 Top="0" Width="955" Attach="1" Height="636" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
+   <View0 Top="0" Width="955" Attach="1" Height="610" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
   </Doc0>
  </DocsAndViews>
 </KDevPrjSession>

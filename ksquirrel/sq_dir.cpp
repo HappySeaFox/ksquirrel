@@ -29,15 +29,15 @@
 #include "sq_dir.h"
 #include "sq_thumbnailinfo.h"
 
+SQ_Dir::SQ_Dir() : QDir()
+{}
+
 SQ_Dir::SQ_Dir(Prefix p) : QDir()
 {
     switch(p)
     {
         case SQ_Dir::Basket:
             setRoot("basket");
-        break;
-        case SQ_Dir::Thumbnails:
-            setRoot("thumbnails");
         break;
         case SQ_Dir::Categories:
             setRoot("categories");

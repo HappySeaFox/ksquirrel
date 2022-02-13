@@ -34,7 +34,7 @@
 #include "sq_dirthumbs.h"
 #include "sq_thumbnailinfo.h"
 
-SQ_DirThumbs::SQ_DirThumbs() : SQ_Dir(SQ_Dir::Thumbnails)
+SQ_DirThumbs::SQ_DirThumbs() : SQ_Dir()
 {
     setRoot();
 }

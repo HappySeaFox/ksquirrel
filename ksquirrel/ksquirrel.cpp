@@ -62,11 +62,11 @@
 #include <konq_pixmapprovider.h>
 #include <kio/job.h>
 #include <kinputdialog.h>
+#include <ksystemtray.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
 #include "sq_widgetstack.h"
-#include "sq_tray.h"
 #include "sq_treeview.h"
 #include "sq_options.h"
 #include "sq_about.h"
@@ -1266,7 +1266,8 @@ void KSquirrel::continueLoading()
         kipiManager->loadPlugins();
 #endif
 
-    tray = new SQ_Tray(this);
+    tray = new KSystemTray(this);
+    tray->setPixmap(QPixmap(locate("appdata", "images/tray.png")));
 
     connect(tray, SIGNAL(quitSelected()), this, SLOT(slotTrayQuit()));
 

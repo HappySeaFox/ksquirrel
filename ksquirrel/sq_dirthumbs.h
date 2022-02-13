@@ -46,6 +46,8 @@ class SQ_DirThumbs : public SQ_Dir
          */
         bool needUpdate(const QString &turl, time_t tm);
 
+        virtual QString root() const;
+
     private:
         /*
          *  Thumbnail cache will have ~/.thumbnails/normal path
@@ -58,5 +60,11 @@ class SQ_DirThumbs : public SQ_Dir
          */
         QString m_orig;
 };
+
+inline
+QString SQ_DirThumbs::root() const
+{
+    return m_orig;
+}
 
 #endif

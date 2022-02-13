@@ -42,12 +42,17 @@ class SQ_Dir : public QDir
             // image basket cache
             Basket,
 
-            // thumbnail cache (~/.ksquirrel/thumbnails).
-            Thumbnails,
-
             // image categories (~/.ksquirrel/categories).
             Categories};
 
+        /*
+         * don't create root directory
+         */
+        SQ_Dir();
+
+        /*
+         * create root directory according to Prefix
+         */
         SQ_Dir(Prefix);
         ~SQ_Dir();
 
@@ -65,10 +70,10 @@ class SQ_Dir : public QDir
         /*
          *  Get current root directory.
          *
-         *  For example, if prefix == Thumbnails, it will
-         *  return "/home/krasu/.ksquirrel/thumbnails".
+         *  For example, if prefix == Basket, it will
+         *  return "/home/krasu/.ksquirrel/basket".
          */
-        QString root() const;
+        virtual QString root() const;
 
         /*
          *  Get absolute path for relative path 'relpath'.

@@ -53,10 +53,8 @@ class KHistoryCombo;
 class KToggleAction;
 class KBookmarkMenu;
 
-
 class SQ_SplashScreen;
 class SQ_WidgetStack;
-class SQ_Tray;
 class SQ_LibraryHandler;
 class SQ_Config;
 class SQ_ExternalTool;
@@ -704,7 +702,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         SQ_LibraryHandler    *libhandler;
 
         // ou tray instance
-        SQ_Tray    *tray;
+        KSystemTray    *tray;
 
         // external tools
         SQ_ExternalTool    *extool;

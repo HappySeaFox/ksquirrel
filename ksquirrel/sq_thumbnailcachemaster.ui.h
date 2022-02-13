@@ -22,10 +22,9 @@ void SQ_ThumbnailCacheMaster::init()
 
 void SQ_ThumbnailCacheMaster::slotCalcCache()
 {
-    KURL url;
-    SQ_Dir tmp(SQ_Dir::Thumbnails);
+    SQ_DirThumbs tmp;
 
-    url.setPath(tmp.root());
+    KURL url = tmp.root();
 
     int size = KDirSize::dirSize(url);
 
@@ -37,9 +36,9 @@ void SQ_ThumbnailCacheMaster::slotCalcCache()
 void SQ_ThumbnailCacheMaster::slotClearCache()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    
+
     SQ_DirThumbs tmp;
-    
+
     KURL url = tmp.root();
 
     KIO::DeleteJob *job = KIO::del(url);

@@ -1,4 +1,12 @@
+ksquirrel-0.7.1try4
+*********************
+* thumbnail loader now uses EXIF thumbnails if present
+* thumbnail rotation using exif
+* small fixes in thumbnail loader
+* small fixes thumbnail cache master
+
 ksquirrel-0.7.1try3
+********************
 * context menu in folder tree
 * folder tree now accepts drops
 * previous directory now selected during navigating
