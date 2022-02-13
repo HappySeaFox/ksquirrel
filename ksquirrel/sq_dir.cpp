@@ -23,8 +23,6 @@
 #include <qimage.h>
 #include <qfile.h>
 
-#include <kdebug.h>
-
 #include "sq_dir.h"
 
 // default thumbnail format
@@ -53,14 +51,10 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
             setRoot("categories");
         break;
     }
-
-    kdDebug() << "+SQ_Dir" << " [" << m_root << "]" << endl;
 }
 
 SQ_Dir::~SQ_Dir()
-{
-    kdDebug() << "-SQ_Dir" << " [" << m_root << "]" << endl;
-}
+{}
 
 /*
  *  Create relative directory in storage.
@@ -123,10 +117,7 @@ void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
         return;
 
     if(!mkdir(fpath.dirPath(true)))
-    {
-        kdDebug() << "SQ_Dir::saveThumbnail: mkdir() falied" << endl;
         return;
-    }
 
     QString k = thumb.info.uncompressed.utf8();
     thumb.thumbnail.setText("sq_type", 0, thumb.info.type);

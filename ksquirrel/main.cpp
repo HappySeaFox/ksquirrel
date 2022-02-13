@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
         if(config->readBoolEntry("splash", true))
         {
             splash = new SQ_SplashScreen;
-            splash->show();
+            if(!high->showLibsAndExit) splash->show(); // don't show splash when -l
             KApplication::flush();
         }
 

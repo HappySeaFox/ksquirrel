@@ -13,7 +13,7 @@
 <title>Лицензия, авторские права и благодарности</title>
 
 <para>
-&kappname; и &klibname; разработаны и сопровождаются &copy; 2003-2006 Барышевым Дмитрием Алексеевичем. Русская версия данного документа создана &copy; 2006 Барышевым Дмитрием Алексеевичем. Вы можете связаться со мной по электронному адресу <email>ksquirrel@tut.by</email>.
+&kappname; и &klibname; разработаны и сопровождаются &copy; 2003-2007 Барышевым Дмитрием Алексеевичем. Русская версия данного документа создана &copy; 2006 Барышевым Дмитрием Алексеевичем. Вы можете связаться со мной по электронному адресу <email>ksquirrel@tut.by</email>.
 </para>
 
 <segmentedlist>
@@ -22,7 +22,7 @@
 <segtitle>Лицензирование  этого документа</segtitle>
 <seglistitem>
 <seg>&underGPL;</seg>
-<seg>LGPL</seg>
+<seg>GNU LIBRARY GENERAL PUBLIC LICENSE v.2</seg>
 <seg>&underFDL;</seg>
 </seglistitem>
 </segmentedlist>

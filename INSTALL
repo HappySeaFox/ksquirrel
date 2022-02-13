@@ -1,3 +1,13 @@
+To compile KSquirrel from sources you need to install kde-devel package.
+It will install all needed header files. In Mandriva or same systems
+you should also install kdebase-devel package.
+
+In Debian do
+
+# apt-get install kde-devel
+
+Then follow the installation instructions:
+
 1. First install 'ksquirrel-libs' package:
 
    a) from sources

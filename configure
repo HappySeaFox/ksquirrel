@@ -1989,8 +1989,8 @@ fi
 
 
 # Define the identity of the package.
- PACKAGE=ksquirrel-0.7.0-pre2
- VERSION="3.1.0"
+ PACKAGE=ksquirrel
+ VERSION=0.7.0
 
 
 cat >>confdefs.h <<_ACEOF
@@ -21204,17 +21204,17 @@ echo "${ECHO_T}found xgettext programs is not GNU xgettext; ignore it" >&6
 
 
 
-if test -z "3.1"; then
+if test -z "3.3"; then
   # Current default Qt version: 3.2
   kde_qtver=3
   kde_qtsubver=2
 else
-  kde_qtsubver=`echo "3.1" | sed -e 's#[0-9][0-9]*\.\([0-9][0-9]*\).*#\1#'`
+  kde_qtsubver=`echo "3.3" | sed -e 's#[0-9][0-9]*\.\([0-9][0-9]*\).*#\1#'`
   # following is the check if subversion isnt found in passed argument
-  if test "$kde_qtsubver" = "3.1"; then
+  if test "$kde_qtsubver" = "3.3"; then
     kde_qtsubver=1
   fi
-  kde_qtver=`echo "3.1" | sed -e 's#^\([0-9][0-9]*\)\..*#\1#'`
+  kde_qtver=`echo "3.3" | sed -e 's#^\([0-9][0-9]*\)\..*#\1#'`
   if test "$kde_qtver" = "1"; then
     kde_qtsubver=42
   fi
@@ -30830,7 +30830,9 @@ else
 fi
 
 
-#MIN_CONFIG(3.1)
+#MIN_CONFIG(3.3)
+
+
 # By default we simply use the C compiler to build assembly code.
 
 test "${CCAS+set}" = set || CCAS=$CC

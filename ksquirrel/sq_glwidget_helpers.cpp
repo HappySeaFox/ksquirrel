@@ -43,3 +43,20 @@ SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel,
 
 SQ_ToolButton::~SQ_ToolButton()
 {}
+
+bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, bool flip)
+{
+    if(sx > w || sy > h || sx + sw < 0 || sy + sh < 0)
+        return false;
+
+    if(sx < 0) { sw = sw+sx; sx = 0; }
+    if(sy < 0) { sh = sh+sy; sy = 0; }
+
+    if(sx + sw > w) sw = w - sx;
+    if(sy + sh > h) sh = h - sy;
+
+    if(flip)
+        sy = h - sy - sh;
+
+    return (sw && sh);
+}

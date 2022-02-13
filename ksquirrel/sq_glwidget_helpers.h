@@ -45,4 +45,11 @@ int SQ_ToolButton::fixedWidth()
     return 26;
 }
 
+/*
+ * normalize selection rectangle
+ * sx,sy are X and Y coordinates
+ * sw x sh is a selection geometry
+*/
+bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, bool flip);
+
 #endif

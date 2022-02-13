@@ -29,8 +29,8 @@
 
 #include "sq_progress.h"
 
-SQ_Progress::SQ_Progress(QWidget *parent, const char *name, WFlags f) 
-    : QLabel(parent, name, f), m_text(true), painter(0)
+SQ_Progress::SQ_Progress(QWidget *parent, const char *name)
+    : QLabel(parent, name, Qt::WNoAutoErase), m_text(true), painter(0)
 {}
 
 SQ_Progress::~SQ_Progress()

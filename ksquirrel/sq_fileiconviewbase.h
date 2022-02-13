@@ -56,7 +56,6 @@ class SQ_FileIconViewBase : public KFileIconView
     private slots:
         void slotMouseButtonClicked(int, QIconViewItem *);
         void slotDoubleClicked(QIconViewItem *i);
-        void slotReturnPressed(QIconViewItem *i);
         void slotCurrentChanged(QIconViewItem *i);
 };
 

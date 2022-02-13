@@ -92,7 +92,6 @@ class SQ_FileDetailView : public KFileDetailView
     private slots:
         void slotMouseButtonClicked(int, QListViewItem *);
         void slotDoubleClicked(QListViewItem *i);
-        void slotReturnPressed(QListViewItem *i);
         void slotCurrentChanged(QListViewItem *i);
 
     private:

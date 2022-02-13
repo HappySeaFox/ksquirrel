@@ -557,8 +557,8 @@
                     <property name="text">
                         <string>Colorize</string>
                     </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
+                    <property name="default">
+                        <bool>true</bool>
                     </property>
                 </widget>
                 <widget class="QPushButton">
@@ -927,6 +927,8 @@
     <tabstop>spinRed</tabstop>
     <tabstop>spinGreen</tabstop>
     <tabstop>spinBlue</tabstop>
+    <tabstop>pushGO</tabstop>
+    <tabstop>pushCancel</tabstop>
     <tabstop>pushResetB</tabstop>
     <tabstop>pushResetC</tabstop>
     <tabstop>pushResetG</tabstop>
@@ -936,8 +938,6 @@
     <tabstop>spinB</tabstop>
     <tabstop>spinC</tabstop>
     <tabstop>spinG</tabstop>
-    <tabstop>pushGO</tabstop>
-    <tabstop>pushCancel</tabstop>
 </tabstops>
 <includes>
     <include location="local" impldecl="in declaration">sq_imageedit.h</include>

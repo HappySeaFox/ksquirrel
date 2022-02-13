@@ -8,7 +8,8 @@ documentation and simple examples.
 
 Due to usage OpenGL show and a manipulation the image is characterized by extreme speed :).
 Also in the program customized filters, external programs, tree, thumbnails,
-extended thumbnails with the information on the image, flexible options, etc. are available.
+extended thumbnails with the information on the image, flexible options, KIPI support,
+archives support are available.
 
 Here is some history :)
 In November 2003, testing long time other programs on my collection of images,
@@ -26,6 +27,15 @@ visiting page http://ksquirrel.sourceforge.net/
 
 ***********************************************************************************
 
+Notes
+-----
+
+* OpenGL drivers are required to run KSquirrel successfully
+* To let KSquirrel unpack RAR archives please install "unrar"
+  program
+
+***********************************************************************************
+
 Copyrights
 ----------
 
@@ -36,7 +46,7 @@ see COPYING
 Keyboard shortcuts
 ------------------
 
-Image windows understands many hotkeys. You can invoke help window with either pressing
+Image window understands many hotkeys. You can invoke help window with either pressing
 "/" in image window, or selecting "Hotkeys" from context menu.
 
 ***********************************************************************************
@@ -50,6 +60,7 @@ Use the following keys in slideshow:
      *  Pause, Space    = pause/unpause slideshow
      *  Page Up         = previous image
      *  Page Down       = next image
+     *  M               = enable/disable onscreen messages
 
 ***********************************************************************************
 

@@ -1,7 +1,7 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png 
+EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png glselection_ellipse.png glselection_rect.png glselection.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
@@ -44,6 +44,12 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/zoomWH.png $(kde_datadir)/ksquirrel/images/actions/zoomWH.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/zoomW.png $(kde_datadir)/ksquirrel/images/actions/zoomW.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+	$(INSTALL_DATA) $(srcdir)/glselection_ellipse.png $(kde_datadir)/ksquirrel/images/actions/glselection_ellipse.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+	$(INSTALL_DATA) $(srcdir)/glselection_rect.png $(kde_datadir)/ksquirrel/images/actions/glselection_rect.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+	$(INSTALL_DATA) $(srcdir)/glselection.png $(kde_datadir)/ksquirrel/images/actions/glselection.png
 
 uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_first.png
@@ -66,5 +72,8 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoom_template.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoomWH.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoomW.png
+	-rm -f $(kde_datadir)/ksquirrel/images/actions/glselection_ellipse.png
+	-rm -f $(kde_datadir)/ksquirrel/images/actions/glselection_rect.png
+	-rm -f $(kde_datadir)/ksquirrel/images/actions/glselection.png
 
 ####### kdevelop will overwrite this part!!! (end)############

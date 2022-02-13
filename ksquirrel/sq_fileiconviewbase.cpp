@@ -41,8 +41,6 @@ SQ_FileIconViewBase::SQ_FileIconViewBase(QWidget *parent, const char *name)
                     this, SLOT(slotMouseButtonClicked(int, QIconViewItem *)));
     connect(this, SIGNAL(doubleClicked(QIconViewItem *)),
                     this, SLOT(slotDoubleClicked(QIconViewItem *)));
-    connect(this, SIGNAL(returnPressed(QIconViewItem *)),
-                    this, SLOT(slotReturnPressed(QIconViewItem *)));
     connect(this, SIGNAL(currentChanged(QIconViewItem *)),
                     this, SLOT(slotCurrentChanged(QIconViewItem *)));
 }
@@ -58,15 +56,9 @@ void SQ_FileIconViewBase::exec(QIconViewItem *i, bool single, bool hl)
         KFileItem *kfi = kvi->fileInfo();
 
         if(hl && kfi) // highlight all items
-        {
-//            printf("HL: url: %s\n", kfi->url().path().ascii());
             emit highlighted(kfi);
-        }
         else if(single && kfi && kfi->isFile()) // execute only files
-        {
-//            printf("EXEC: url: %s\n", kfi->url().path().ascii());
             emit launch(kfi);
-        }
     }
 }
 
@@ -79,11 +71,6 @@ void SQ_FileIconViewBase::slotMouseButtonClicked(int btn, QIconViewItem *i)
 {
     if(btn == Qt::LeftButton)
         exec(i, KGlobalSettings::singleClick());
-}
-
-void SQ_FileIconViewBase::slotReturnPressed(QIconViewItem *i)
-{
-    exec(i, true);
 }
 
 void SQ_FileIconViewBase::slotCurrentChanged(QIconViewItem *i)

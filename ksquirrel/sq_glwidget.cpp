@@ -46,9 +46,10 @@
 #include <kimageeffect.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <kurl.h>
 
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 
 #include "ksquirrel.h"
 #include "sq_externaltool.h"
@@ -120,6 +121,7 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
     total = 0;
     old_id = -1;
     zoomFactor = 1.0f;
+    glselection = -1;
     menu = new QPopupMenu(this);
 
     SQ_Config::instance()->setGroup("GL view");
@@ -198,6 +200,7 @@ SQ_GLWidget::~SQ_GLWidget()
 
     removeCurrentParts();
 
+    delete selectionMenu;
     delete zoom;
     delete images;
     delete buffer;
@@ -215,6 +218,10 @@ bool SQ_GLWidget::actionsHidden() const
 // Create actions
 void SQ_GLWidget::createActions()
 {
+    pASelectionRect = new KToggleAction(i18n("Rectangle") + "\tCtrl+R", QPixmap(locate("appdata", "images/actions/glselection_rect.png")), 0, this, SLOT(slotSelectionRect()), ac, "SQ Selection Rect");
+    pASelectionEllipse = new KToggleAction(i18n("Ellipse") + "\tCtrl+E", QPixmap(locate("appdata", "images/actions/glselection_ellipse.png")), 0, this, SLOT(slotSelectionEllipse()), ac, "SQ Selection Ellipse");
+    pASelectionClear = new KAction(i18n("Clear") + "\tCtrl+C", 0, 0, this, SLOT(slotSelectionClear()), ac, "SQ Selection Clear");
+
     pAZoomW = new KToggleAction(i18n("Fit width"), QPixmap(locate("appdata", "images/actions/zoomW.png")), 0, this, SLOT(slotZoomW()), ac, "SQ ZoomW");
     pAZoomH = new KToggleAction(i18n("Fit height"), QPixmap(locate("appdata", "images/actions/zoomH.png")), 0, this, SLOT(slotZoomH()), ac, "SQ ZoomH");
     pAZoomWH = new KToggleAction(i18n("Fit image"), QPixmap(locate("appdata", "images/actions/zoomWH.png")), 0, this, SLOT(slotZoomWH()), ac, "SQ ZoomWH");
@@ -230,11 +237,16 @@ void SQ_GLWidget::createActions()
     pAHideToolbars = new KToggleAction(QString::null, QPixmap(), 0, 0, 0, ac, "toggle toolbar");
     pAStatus = new KToggleAction(QString::null, QPixmap(), 0, 0, 0, ac, "toggle status");
 
-    pAZoomW->setExclusiveGroup("squirrel_zoom_actions");
-    pAZoomH->setExclusiveGroup("squirrel_zoom_actions");
-    pAZoomWH->setExclusiveGroup("squirrel_zoom_actions");
-    pAZoom100->setExclusiveGroup("squirrel_zoom_actions");
-    pAZoomLast->setExclusiveGroup("squirrel_zoom_actions");
+    QString squirrel_zoom_actions = QString::fromLatin1("squirrel_zoom_actions");
+    pAZoomW->setExclusiveGroup(squirrel_zoom_actions);
+    pAZoomH->setExclusiveGroup(squirrel_zoom_actions);
+    pAZoomWH->setExclusiveGroup(squirrel_zoom_actions);
+    pAZoom100->setExclusiveGroup(squirrel_zoom_actions);
+    pAZoomLast->setExclusiveGroup(squirrel_zoom_actions);
+
+    QString squirrel_selection_type = QString::fromLatin1("squirrel_selection_type");
+    pASelectionEllipse->setExclusiveGroup(squirrel_selection_type);
+    pASelectionRect->setExclusiveGroup(squirrel_selection_type);
 
     connect(pAIfLess, SIGNAL(toggled(bool)), this, SLOT(slotZoomIfLess()));
 
@@ -253,12 +265,18 @@ void SQ_GLWidget::createActions()
 void SQ_GLWidget::createToolbar()
 {
     zoom = new KPopupMenu;
+    selectionMenu = new KPopupMenu;
     SQ_ToolButton    *pATool;
 
     SQ_ToolBar *toolbar = SQ_GLView::window()->toolbar();
 
     if(pAHideToolbars->isChecked())
         toolbar->hide();
+
+    pASelectionRect->plug(selectionMenu);
+    pASelectionEllipse->plug(selectionMenu);
+    selectionMenu->insertSeparator();
+    pASelectionClear->plug(selectionMenu);
 
     pAZoom100->plug(zoom);
     pAZoomLast->plug(zoom);
@@ -317,6 +335,8 @@ void SQ_GLWidget::createToolbar()
     pAToolFull->setToggleButton(true);
     pAToolImages = new SQ_ToolButtonPopup(QPixmap(locate("appdata", "images/actions/images.png")), i18n("Select image"), toolbar);
     pAToolImages->setPopup(images);
+    SQ_ToolButtonPopup *pAToolSel = new SQ_ToolButtonPopup(QPixmap(locate("appdata", "images/actions/glselection.png")), i18n("Selection"), toolbar);
+    pAToolSel->setPopup(selectionMenu);
 
     pAToolQuick = new SQ_ToolButton(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, 22), i18n("Codec Settings"), this, SLOT(slotShowCodecSettings()), toolbar);
     pAToolQuick->setEnabled(false);
@@ -512,7 +532,7 @@ void SQ_GLWidget::paintGL()
         // draw tickmarks ("broken" image won't have tickmarks)
         if(!use_broken && marks && SQ_Config::instance()->readBoolEntry("marks", true))
         {
-            GLfloat zum = get_zoom();
+            GLfloat zum = getZoom();
             GLfloat x = fabsf(pt->m_parts[0].x1) * zum, y = pt->m_parts[0].y1 * zum;
             GLfloat X = MATRIX_X, Y = MATRIX_Y;
 
@@ -570,7 +590,7 @@ void SQ_GLWidget::matrixChanged()
 {
     QString str;
 
-    float m = get_zoom();
+    float m = getZoom();
     float zoom = m * 100.0f;
     float z = (m < 1.0f) ? 1.0f/m : m;
     int i_zoom = (int)zoom;
@@ -640,7 +660,7 @@ void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
     setFocus();
 
     // left button, update cursor
-    if(e->button() == Qt::LeftButton && e->state() == Qt::NoButton)
+    if(e->button() == Qt::LeftButton && e->state() == Qt::NoButton && glselection == -1)
     {
         setCursor(KCursor::sizeAllCursor());
 
@@ -650,7 +670,7 @@ void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
         movetype = 1;
     }
     // left button + SHIFT, let's start drawing zoom frame
-    else if(e->button() == Qt::LeftButton && e->state() == Qt::ShiftButton)
+    else if(e->button() == Qt::LeftButton && (e->state() == Qt::ShiftButton || glselection != -1))
     {
         // stop animation!
         stopAnimation();
@@ -658,7 +678,10 @@ void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
         // update cursor to crosshair
         setCursor(KCursor::crossCursor());
 
-        gls->begin(SQ_GLSelection::Rectangle, e->x(), e->y());
+        if(glselection == SQ_GLSelection::Rectangle || glselection == SQ_GLSelection::Ellipse)
+            gls->begin(static_cast<SQ_GLSelection::Type>(glselection), e->x(), e->y());
+        else
+            gls->begin(SQ_GLSelection::Rectangle, e->x(), e->y());
 
         movetype = 2;
     }
@@ -702,8 +725,48 @@ void SQ_GLWidget::mouseReleaseEvent(QMouseEvent *)
     // left button - restore cursor
     if(movetype == 1)
         setCursor(KCursor::arrowCursor());
+    else if(movetype == 2 && glselection != -1) // permanent selection
+    {
+        setCursor(KCursor::arrowCursor());
+
+        QSize sz = gls->size();
+        QPoint pt = gls->pos();
+
+//        printf("SELECTION %.1f , %.1f\n", MATRIX_X, MATRIX_Y);
+
+        float z = getZoom();
+        float x = pt.x(), y = pt.y(), w = sz.width(), h = sz.height();
+        x = x - (float)width()/2 - MATRIX_X + (float)parts[current].w/2 * z;
+        y = y - (float)height()/2 + MATRIX_Y + (float)parts[current].h/2 * z;
+
+//        printf("SELECTION ZOOM=%.1f   %.1f, %.1f %.1fx%.1f\n", z, x, y, w, h);
+
+        x /= z;
+        y /= z;
+        w /= z;
+        h /= z;
+
+        sx = (int)(x + 0.5);
+        sy = (int)(y + 0.5);
+        sw = (int)(w + 0.5);
+        sh = (int)(h + 0.5);
+
+        if(sw <= 1 || sh <= 1)
+        {
+            gls->end();
+        }
+        else
+        {
+//            printf("SELECTION %d,%d %dx%d\n", sx, sy, sw, sh);
+
+            if(!normalizeSelection(sx, sy, sw, sh, parts[current].w, parts[current].h, finfo.image[current].needflip))
+                gls->end();
+
+//            printf("SELECTION NORM %d,%d %dx%d\n", sx, sy, sw, sh);
+        }
+    }
     // left button + SHIFT - zoom to selected rectangle (if needed)
-    else if(movetype == 2)
+    else if(movetype == 2 && glselection == -1)
     {
         setCursor(KCursor::arrowCursor());
 
@@ -712,8 +775,6 @@ void SQ_GLWidget::mouseReleaseEvent(QMouseEvent *)
         QRect lastRect(pt.x(), pt.y(), sz.width(), sz.height());
 
         gls->end();
-
-        printf("%d,%d %dx%d\n", lastRect.x(), lastRect.y(), lastRect.width(), lastRect.height());
 
         QPoint lastC = lastRect.center();
         QPoint O(width() / 2, height() / 2);
@@ -851,6 +912,10 @@ void SQ_GLWidget::keyPressEvent(QKeyEvent *e)
         case SQ_KEYSTATES(Qt::Key_Delete, Qt::NoButton):     deleteWrapper();            break;
         case SQ_KEYSTATES(Qt::Key_D, Qt::NoButton):              bcg();             break;
         case SQ_KEYSTATES(Qt::Key_U, Qt::NoButton):              filter();             break;
+
+        case SQ_KEYSTATES(Qt::Key_R, Qt::ControlButton): slotSelectionRect(); break;
+        case SQ_KEYSTATES(Qt::Key_E, Qt::ControlButton): slotSelectionEllipse(); break;
+        case SQ_KEYSTATES(Qt::Key_C, Qt::ControlButton): slotSelectionClear(); break;
 
         case SQ_KEYSTATES(Qt::Key_Menu, Qt::NoButton):
         case SQ_KEYSTATES(Qt::Key_M, Qt::NoButton):          menu->exec(QCursor::pos()); break;
@@ -1256,7 +1321,7 @@ bool SQ_GLWidget::matrix_zoom(GLfloat ratio)
 
     if(zoom_lim)
     {
-        float z = get_zoom_pc();
+        float z = getZoomPercents();
 
         // zoom limit exceeded - do nothing
         if((z >= zoom_max && ratio > 1.0) || (z <= zoom_min && ratio < 1.0))
@@ -1285,14 +1350,14 @@ bool SQ_GLWidget::matrix_zoom(GLfloat ratio)
     return true;
 }
 
-GLfloat SQ_GLWidget::get_zoom() const
+GLfloat SQ_GLWidget::getZoom() const
 {
     return hypotf(MATRIX_C1, MATRIX_S1);
 }
 
-GLfloat SQ_GLWidget::get_zoom_pc() const
+GLfloat SQ_GLWidget::getZoomPercents() const
 {
-    return get_zoom() * 100.0f;
+    return getZoom() * 100.0f;
 }
 
 void SQ_GLWidget::matrix_rotate(GLfloat angle)
@@ -1691,7 +1756,7 @@ void SQ_GLWidget::decode()
     if(!pAHideToolbars->isChecked())
         SQ_GLView::window()->toolbar()->show();
 
-    zoomFactor = get_zoom();
+    zoomFactor = getZoom();
     matrix_pure_reset();
     matrixChanged();
 
@@ -2624,41 +2689,50 @@ void SQ_GLWidget::filter()
 
 void SQ_GLWidget::slotFilter(SQ_ImageFilterOptions *filtopt)
 {
-    fmt_filters::image img((unsigned char *)parts[current].buffer->data(), parts[current].realw, parts[current].realh);
+    QImage im((uchar *)parts[current].buffer->data(), parts[current].realw, parts[current].realh, 32, 0, 0, QImage::LittleEndian);
+    QImage img = gls->valid() ? im.copy(sx, sy, sw, sh) : im;
+
+    fmt_filters::image image((unsigned char *)img.bits(), img.width(), img.height());
+
     fmt_filters::rgba c = fmt_filters::white;
 
     switch(filtopt->type)
     {
-        case F::fblend:      fmt_filters::blend(img, filtopt->rgb1, filtopt->_float); break;
-        case F::fblur:       fmt_filters::blur(img, filtopt->_double1, filtopt->_double2);break;
-        case F::fdesaturate: fmt_filters::desaturate(img, filtopt->_float); break;
-        case F::fdespeckle:  fmt_filters::despeckle(img); break;
-        case F::fedge:       fmt_filters::edge(img, filtopt->_double1); break;
-        case F::femboss:     fmt_filters::emboss(img, filtopt->_double1, filtopt->_double2); break;
-        case F::fequalize:   fmt_filters::equalize(img); break;
-        case F::ffade:       fmt_filters::fade(img, filtopt->rgb1, filtopt->_float); break;
-        case F::fflatten:    fmt_filters::flatten(img, filtopt->rgb1, filtopt->rgb2); break;
-        case F::fimplode:    fmt_filters::implode(img, filtopt->_double1, c); break;
-        case F::fnegative:   fmt_filters::negative(img); break;
-        case F::fnoise:      fmt_filters::noise(img, (fmt_filters::NoiseType)filtopt->_uint); break;
-        case F::foil:        fmt_filters::oil(img, filtopt->_double1); break;
-        case F::fshade:      fmt_filters::shade(img, filtopt->_bool, filtopt->_double1, filtopt->_double2); break;
-        case F::fsharpen:    fmt_filters::sharpen(img, filtopt->_double1, filtopt->_double2); break;
-        case F::fsolarize:   fmt_filters::solarize(img, filtopt->_double1); break;
-        case F::fspread:     fmt_filters::spread(img, filtopt->_uint); break;
-        case F::fswapRGB:    fmt_filters::swapRGB(img, filtopt->_uint); break;
-        case F::fswirl:      fmt_filters::swirl(img, filtopt->_double1, c); break;
-        case F::fthreshold:  fmt_filters::threshold(img, filtopt->_uint); break;
-        case F::fgray:       fmt_filters::gray(img); break;
-        case F::fredeye:     fmt_filters::redeye(img, img.w, img.h, 0, 0, filtopt->_uint); break;
+        case F::fblend:      fmt_filters::blend(image, filtopt->rgb1, filtopt->_float); break;
+        case F::fblur:       fmt_filters::blur(image, filtopt->_double1, filtopt->_double2);break;
+        case F::fdesaturate: fmt_filters::desaturate(image, filtopt->_float); break;
+        case F::fdespeckle:  fmt_filters::despeckle(image); break;
+        case F::fedge:       fmt_filters::edge(image, filtopt->_double1); break;
+        case F::femboss:     fmt_filters::emboss(image, filtopt->_double1, filtopt->_double2); break;
+        case F::fequalize:   fmt_filters::equalize(image); break;
+        case F::ffade:       fmt_filters::fade(image, filtopt->rgb1, filtopt->_float); break;
+        case F::fflatten:    fmt_filters::flatten(image, filtopt->rgb1, filtopt->rgb2); break;
+        case F::fimplode:    fmt_filters::implode(image, filtopt->_double1, c); break;
+        case F::fnegative:   fmt_filters::negative(image); break;
+        case F::fnoise:      fmt_filters::noise(image, (fmt_filters::NoiseType)filtopt->_uint); break;
+        case F::foil:        fmt_filters::oil(image, filtopt->_double1); break;
+        case F::fshade:      fmt_filters::shade(image, filtopt->_bool, filtopt->_double1, filtopt->_double2); break;
+        case F::fsharpen:    fmt_filters::sharpen(image, filtopt->_double1, filtopt->_double2); break;
+        case F::fsolarize:   fmt_filters::solarize(image, filtopt->_double1); break;
+        case F::fspread:     fmt_filters::spread(image, filtopt->_uint); break;
+        case F::fswapRGB:    fmt_filters::swapRGB(image, filtopt->_uint); break;
+        case F::fswirl:      fmt_filters::swirl(image, filtopt->_double1, c); break;
+        case F::fthreshold:  fmt_filters::threshold(image, filtopt->_uint); break;
+        case F::fgray:       fmt_filters::gray(image); break;
+        case F::fredeye:     fmt_filters::redeye(image, image.w, image.h, 0, 0, filtopt->_uint); break;
     }
+
+    if(gls->valid()) bitBlt(&im, sx, sy, &img, 0, 0, img.width(), img.height());
 
     editUpdate();
 }
 
 void SQ_GLWidget::slotBCG(SQ_ImageBCGOptions *bcgopt)
 {
-    fmt_filters::image image((unsigned char *)parts[current].buffer->data(), parts[current].realw, parts[current].realh);
+    QImage im((uchar *)parts[current].buffer->data(), parts[current].realw, parts[current].realh, 32, 0, 0, QImage::LittleEndian);
+    QImage img = gls->valid() ? im.copy(sx, sy, sw, sh) : im;
+
+    fmt_filters::image image((unsigned char *)img.bits(), img.width(), img.height());
 
     if(bcgopt->b)
         fmt_filters::brightness(image, bcgopt->b);
@@ -2672,6 +2746,8 @@ void SQ_GLWidget::slotBCG(SQ_ImageBCGOptions *bcgopt)
     if(bcgopt->red || bcgopt->green || bcgopt->blue)
         fmt_filters::colorize(image, bcgopt->red, bcgopt->green, bcgopt->blue);
 
+    if(gls->valid()) bitBlt(&im, sx, sy, &img, 0, 0, img.width(), img.height());
+
     editUpdate();
 }
 
@@ -2680,10 +2756,15 @@ QImage SQ_GLWidget::generatePreview()
     QImage im((uchar *)parts[current].buffer->data(), parts[current].realw, parts[current].realh, 32, 0, 0, QImage::LittleEndian);
     QImage img, ret;
 
-    if(parts[current].realw == parts[current].w && parts[current].realh == parts[current].h)
-        img = im;
+    if(!gls->valid())
+    {
+        if(parts[current].realw == parts[current].w && parts[current].realh == parts[current].h)
+            img = im;
+        else
+            img = im.copy(0, 0, parts[current].w, parts[current].h);
+    }
     else
-        img = im.copy(0, 0, parts[current].w, parts[current].h);
+        img = im.copy(sx, sy, sw, sh);
 
     ret = SQ_ThumbnailLoadJob::scaleImage((unsigned char *)img.bits(), img.width(), img.height(), 128).swapRGB();
 
@@ -2693,18 +2774,39 @@ QImage SQ_GLWidget::generatePreview()
     return ret;
 }
 
-void  SQ_GLWidget::editUpdate()
+void SQ_GLWidget::editUpdate()
 {
     int tlsy = parts[current].tilesy.size();
 
     glDeleteLists(parts[current].m_parts[0].list, tlsy);
 
     for(int i = 0;i < tlsy;i++)
-    {
         showFrames(i, &parts[current], false);
-    }
 
     updateGL();
+}
+
+void SQ_GLWidget::slotSelectionRect()
+{
+    stopAnimation();
+    glselection = SQ_GLSelection::Rectangle;
+    gls->end();
+}
+
+void SQ_GLWidget::slotSelectionEllipse()
+{
+    stopAnimation();
+    glselection = SQ_GLSelection::Ellipse;
+    gls->end();
+}
+
+void SQ_GLWidget::slotSelectionClear()
+{
+    glselection = -1;
+    gls->end();
+
+    if(!manualBlocked())
+        startAnimation();
 }
 
 #include "sq_glwidget.moc"

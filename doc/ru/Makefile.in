@@ -477,10 +477,10 @@ uninstall-am: uninstall-info-am
 
 
 #>+ 2
-KDE_DIST=plugins_info.png imagewindow.docbook menu.png sidebar.png Makefile.in credits.docbook sidebar_categories.png sidebar_actions.png view_detailed.png intro.docbook view_icons.png sidebar_mounts.png index.docbook view_list.png imagewindow_separate.png imagewindow_builtin.png interface.docbook imagewindow_button.png view_thumbnails.png Makefile.am imagewindow_gqview.png internals.docbook index.cache.bz2 running.docbook 
+KDE_DIST=plugins_info.png running.html imagewindow.html license.html imagewindow.docbook sidebar.png Makefile.in credits.docbook sidebar_categories.png interface-iw.html intro.docbook index.html internals.html intro.html install-binary.html internals-libs.html sidebar_mounts.png sidebar_basket.png index.docbook imagewindow_separate.png imagewindow_builtin.png installation.html interface.html interface.docbook interface-menu.html interface-sidebar.html imagewindow_button.png view_thumbnails.png Makefile.am internals.docbook running.docbook 
 
 #>+ 24
-index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) credits.docbook view_icons.png index.docbook view_list.png interface.docbook plugins_info.png view_detailed.png view_thumbnails.png sidebar.png internals.docbook intro.docbook running.docbook imagewindow_gqview.png sidebar_mounts.png sidebar_actions.png imagewindow_builtin.png imagewindow_separate.png menu.png imagewindow.docbook sidebar_categories.png imagewindow_button.png 
+index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) credits.docbook plugins_info.png sidebar.png index.docbook imagewindow_builtin.png imagewindow_button.png index.html interface.docbook imagewindow_separate.png sidebar_basket.png sidebar_categories.png sidebar_mounts.png internals.docbook intro.docbook intro.html running.docbook view_thumbnails.png internals.html internals-libs.html interface.html interface-iw.html interface-sidebar.html interface-menu.html imagewindow.html running.html license.html installation.html install-binary.html imagewindow.docbook 
 	@if test -n "$(MEINPROC)"; then echo $(MEINPROC) --check --cache index.cache.bz2 $(srcdir)/index.docbook; $(MEINPROC) --check --cache index.cache.bz2 $(srcdir)/index.docbook; fi
 
 docs-am: index.cache.bz2
@@ -507,20 +507,20 @@ clean-docs:
 #>+ 13
 install-nls:
 	$(mkinstalldirs) $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel
-	@for base in credits.docbook view_icons.png index.docbook view_list.png interface.docbook plugins_info.png view_detailed.png view_thumbnails.png sidebar.png internals.docbook intro.docbook running.docbook imagewindow_gqview.png sidebar_mounts.png sidebar_actions.png imagewindow_builtin.png imagewindow_separate.png menu.png imagewindow.docbook sidebar_categories.png imagewindow_button.png ; do \
+	@for base in credits.docbook plugins_info.png sidebar.png index.docbook imagewindow_builtin.png imagewindow_button.png index.html interface.docbook imagewindow_separate.png sidebar_basket.png sidebar_categories.png sidebar_mounts.png internals.docbook intro.docbook intro.html running.docbook view_thumbnails.png internals.html internals-libs.html interface.html interface-iw.html interface-sidebar.html interface-menu.html imagewindow.html running.html license.html installation.html install-binary.html imagewindow.docbook ; do \
 	  echo $(INSTALL_DATA) $$base $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel/$$base ;\
 	  $(INSTALL_DATA) $(srcdir)/$$base $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel/$$base ;\
 	done
 
 uninstall-nls:
-	for base in credits.docbook view_icons.png index.docbook view_list.png interface.docbook plugins_info.png view_detailed.png view_thumbnails.png sidebar.png internals.docbook intro.docbook running.docbook imagewindow_gqview.png sidebar_mounts.png sidebar_actions.png imagewindow_builtin.png imagewindow_separate.png menu.png imagewindow.docbook sidebar_categories.png imagewindow_button.png ; do \
+	for base in credits.docbook plugins_info.png sidebar.png index.docbook imagewindow_builtin.png imagewindow_button.png index.html interface.docbook imagewindow_separate.png sidebar_basket.png sidebar_categories.png sidebar_mounts.png internals.docbook intro.docbook intro.html running.docbook view_thumbnails.png internals.html internals-libs.html interface.html interface-iw.html interface-sidebar.html interface-menu.html imagewindow.html running.html license.html installation.html install-binary.html imagewindow.docbook ; do \
 	  rm -f $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel/$$base ;\
 	done
 
 
 #>+ 5
 distdir-nls:
-	for file in credits.docbook view_icons.png index.docbook view_list.png interface.docbook plugins_info.png view_detailed.png view_thumbnails.png sidebar.png internals.docbook intro.docbook running.docbook imagewindow_gqview.png sidebar_mounts.png sidebar_actions.png imagewindow_builtin.png imagewindow_separate.png menu.png imagewindow.docbook sidebar_categories.png imagewindow_button.png ; do \
+	for file in credits.docbook plugins_info.png sidebar.png index.docbook imagewindow_builtin.png imagewindow_button.png index.html interface.docbook imagewindow_separate.png sidebar_basket.png sidebar_categories.png sidebar_mounts.png internals.docbook intro.docbook intro.html running.docbook view_thumbnails.png internals.html internals-libs.html interface.html interface-iw.html interface-sidebar.html interface-menu.html imagewindow.html running.html license.html installation.html install-binary.html imagewindow.docbook ; do \
 	  cp $(srcdir)/$$file $(distdir); \
 	done
 

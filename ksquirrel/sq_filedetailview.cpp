@@ -61,8 +61,6 @@ SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
                     this, SLOT(slotMouseButtonClicked(int, QListViewItem *)));
     connect(this, SIGNAL(doubleClicked(QListViewItem *, const QPoint &, int)),
                     this, SLOT(slotDoubleClicked(QListViewItem *)));
-    connect(this, SIGNAL(returnPressed(QListViewItem *)),
-                    this, SLOT(slotReturnPressed(QListViewItem *)));
     connect(this, SIGNAL(currentChanged(QListViewItem *)),
                     this, SLOT(slotCurrentChanged(QListViewItem *)));
 }
@@ -78,15 +76,9 @@ void SQ_FileDetailView::exec(QListViewItem *i, bool single, bool hl)
         KFileItem *kfi = kvi->fileInfo();
 
         if(hl && kfi) // highlight all items
-        {
-//            printf("HL: url: %s\n", kfi->url().path().ascii());
             emit highlighted(kfi);
-        }
         else if(single && kfi && kfi->isFile()) // execute only files
-        {
-//            printf("EXEC: url: %s\n", kfi->url().path().ascii());
             emit launch(kfi);
-        }
     }
 }
 
@@ -99,11 +91,6 @@ void SQ_FileDetailView::slotMouseButtonClicked(int btn, QListViewItem *i)
 {
     if(btn == Qt::LeftButton)
         exec(i, KGlobalSettings::singleClick());
-}
-
-void SQ_FileDetailView::slotReturnPressed(QListViewItem *i)
-{
-    exec(i, true);
 }
 
 void SQ_FileDetailView::slotCurrentChanged(QListViewItem *i)

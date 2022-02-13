@@ -37,11 +37,13 @@
 #include <kar.h>
 #include <ktar.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
 #include <kfileitem.h>
 #include <klocale.h>
 #include <kprocess.h>
 #include <kdebug.h>
 
+#include "ksquirrel.h"
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
 
@@ -60,6 +62,14 @@ SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObje
     protocols.insert("application/x-tbz", 4);
     protocols.insert("application/x-tgz", 5);
     protocols.insert("application/x-zip", 6);
+
+    // find "unrar" executable to handle RAR archives.
+    // we will execute "unrar x <archive.rar> <extract_path>"
+    // via KShellProcess
+    QString unrar = KStandardDirs::findExe("unrar");
+
+    if(!unrar.isEmpty())
+        protocols.insert("application/x-rar", 7);
 }
 
 SQ_ArchiveHandler::~SQ_ArchiveHandler()
@@ -142,16 +152,17 @@ bool SQ_ArchiveHandler::unpack()
 
     // Check if directory already exists and needs update
     if(dir->fileExists(extracteddir, ss))
+    {
         if(dir->updateNeeded(extracteddir))
             clean(ss); // clean it!
         else
-    return true; // Archive already been unpacked,
-     // and didn't changed. 
+            return true; // Archive already been unpacked,
+    }                    // and was not changed. 
 
     // try to create new directory in temporary directory
     if(!dir->mkdir(extracteddir))
     {
-        KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to create directory: %1").arg(extracteddir)+("</qt>"), i18n("Archive problem"));
+        KMessageBox::error(KSquirrel::app(), QString::fromLatin1("<qt>") + i18n("Unable to create directory: %1").arg(extracteddir)+("</qt>"), i18n("Archive problem"));
         return false;
     }
 
@@ -161,10 +172,10 @@ bool SQ_ArchiveHandler::unpack()
     // ooh, archive file is too big!
     if(qfile.size() > big)
     {
-        QString msg = QString(i18n("The size of selected archive seems to be too big;\ncontinue? (size: %1MB)")).arg((qfile.size()) >> 20);
+        QString msg = i18n("The size of selected archive seems to be too big;\ncontinue? (size: %1MB)").arg((qfile.size()) >> 20);
 
-        if(KMessageBox::warningContinueCancel(0, msg, i18n("Confirm")) == KMessageBox::Cancel)
-        return false;
+        if(KMessageBox::warningContinueCancel(KSquirrel::app(), msg, i18n("Confirm")) == KMessageBox::Cancel)
+            return false;
     }
 
     KArchive *arc = 0;
@@ -172,6 +183,25 @@ bool SQ_ArchiveHandler::unpack()
     // find protocol number
     switch(findProtocolByFile(item))
     {
+        // RAR
+        case 7:
+        {
+            KShellProcess   unrar;
+
+            unrar << "unrar" << "x" << KShellProcess::quote(fullpath) << KShellProcess::quote(fullextracteddir);
+
+            // show 'busy' cursor
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+            bool ok = unrar.start(KProcess::Block);
+
+            // restore cursor
+            QApplication::restoreOverrideCursor();
+
+            return ok;
+        }
+        break;
+
         // archive is ZIP
         case 6:
             arc = new KZip(fullpath);
@@ -217,7 +247,11 @@ bool SQ_ArchiveHandler::unpack()
     }
     else
     {
-        KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to open the archive '<b>%1</b>'.").arg(fullpath)+QString::fromLatin1("</qt>"), i18n("Archive problem"));
+        KMessageBox::error(KSquirrel::app(), QString::fromLatin1("<qt>") 
+                                            + i18n("Unable to open the archive '<b>%1</b>'.").arg(fullpath)
+                                            + QString::fromLatin1("</qt>")
+
+                                            ,i18n("Archive problem"));
         return false;
     }
 
@@ -249,10 +283,10 @@ void SQ_ArchiveHandler::clean(QString s)
     // hehe, rm -rf
     del << "rm -rf " << KShellProcess::quote(s) << "/*";
 
-    kdDebug() << "SQ_ArchiveHandler: cleaning archive... " << endl;
+    kdDebug() << "SQ_ArchiveHandler: cleaning archive " << s << "..." << endl;
 
     // start process!
     bool removed = del.start(KProcess::Block);
 
-    kdDebug() << (removed ? "OK" : "error") << endl;
+    kdDebug() << "SQ_ArchiveHandler: " << (removed ? "OK" : "error") << endl;
 }

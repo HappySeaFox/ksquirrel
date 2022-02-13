@@ -172,6 +172,7 @@ class SQ_DirOperator : public KDirOperator
          *  single click will execute item, and double click otherwise.
          */
         void slotExecuted(KFileItem *item);
+        void slotExecutedConst(const KFileItem *item);
 
         /*
          *  Item selected.

@@ -1,3 +1,14 @@
+ksquirrel-0.7.0 and ksquirrel-libs-0.7.0
+********************************************
+
+ksquirrel:
+* filtering using selection is now available in image window
+* fixed flicker of thumbnail loading progressbar
+* fixed segfault on directory execution with "Return" button
+* RAR archives are now supported ("unrar" program is required)
+* fixed -l option
+* fixed crashing when no image plugins were found
+
 ksquirrel-0.7.0-pre2 and ksquirrel-libs-0.7.0-pre2
 ********************************************
 

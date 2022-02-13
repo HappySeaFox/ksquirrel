@@ -37,6 +37,9 @@
 
 #include <ksquirrel-libs/fmt_codec_base.h>
 
+#include <iostream>
+#include <iomanip>
+
 static const int buffer_size = 10;
 
 SQ_LibraryHandler * SQ_LibraryHandler::m_instance = 0;
@@ -423,13 +426,18 @@ bool SQ_LibraryHandler::alreadyInMap(const QString &quick) const
  */
 void SQ_LibraryHandler::dump() const
 {
-    kdDebug() << "SQ_LibraryHandler: memory dump (total " << count() << ")" << endl;
+    std::cerr << "SQ_LibraryHandler: memory dump (total " << count() << ")" << endl;
 
     const_iterator itEnd = end();
 
+    std::cerr.setf(ios::left);
+
     for(const_iterator it = begin();it != itEnd;++it)
     {
-        kdDebug() << KStringHandler::csqueeze(QFileInfo((*it).libpath).fileName(), 30) << "  [" 
+        std::cerr << std::setw(30)
+                  << KStringHandler::csqueeze(QFileInfo((*it).libpath).fileName(), 30)
+                  << std::setw(0)
+                  << "  [" 
                   << KStringHandler::rsqueeze((*it).quickinfo, 45)
                   << "]"
                   << endl;
@@ -620,14 +628,19 @@ void SQ_LibraryHandler::load()
     QDir dir(SQ_KLIBS, QString::null, QDir::Unsorted, QDir::Files);
 
     const QFileInfoList *list = dir.entryInfoList();
-    QFileInfoListIterator it(*list);
-    QFileInfo *fi;
 
-    while((fi = it.current()) != 0)
+    if(list)
     {
-        libs.append(fi->absFilePath());
-        ++it;
+        QFileInfoListIterator it(*list);
+        QFileInfo *fi;
+
+        while((fi = it.current()) != 0)
+        {
+            libs.append(fi->absFilePath());
+            ++it;
+        }
     }
 
+    // just show dump, if no libs were found
     add(libs);
 }

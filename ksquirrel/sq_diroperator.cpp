@@ -27,7 +27,6 @@
 #include <klocale.h>
 #include <kprogress.h>
 #include <kglobal.h>
-#include <kdebug.h>
 #include <kprocess.h>
 #include <kstdaccel.h>
 #include <kmessagebox.h>
@@ -61,8 +60,6 @@ static const int  SQ_MAX_WORD_LENGTH = 50;
 SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, const char *name)
     : KDirOperator(url, parent, name), type(type_)
 {
-    kdDebug() << "+SQ_DirOperator" << endl;
-
     usenew = false;
 
     // create and insert new actions in context menu
@@ -73,6 +70,7 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, co
     connect(this, SIGNAL(urlEntered(const KURL&)), this, SLOT(slotUrlEntered(const KURL&)));
     connect(this, SIGNAL(dropped(const KFileItem *, QDropEvent*, const KURL::List&)),
             this, SLOT(slotDropped(const KFileItem *, QDropEvent*, const KURL::List&)));
+    connect(this, SIGNAL(fileSelected(const KFileItem *)), this, SLOT(slotExecutedConst(const KFileItem *)));
 
     connect(SQ_ExternalTool::instance()->constPopupMenu(), SIGNAL(activated(int)), this, SLOT(slotActivateExternalTool(int)));
     connect(dirLister(), SIGNAL(deleteItem(KFileItem *)), this, SLOT(slotItemDeleted(KFileItem *)));
@@ -88,9 +86,7 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, co
 }
 
 SQ_DirOperator::~SQ_DirOperator()
-{
-    kdDebug() << "-SQ_DirOperator" << endl;
-}
+{}
 
 void SQ_DirOperator::slotUrlEntered(const KURL &url)
 {
@@ -99,6 +95,11 @@ void SQ_DirOperator::slotUrlEntered(const KURL &url)
     clearListers();
 
     SQ_WidgetStack::instance()->setURLForCurrent(url);
+}
+
+void SQ_DirOperator::slotExecutedConst(const KFileItem *fi)
+{
+    execute(const_cast<KFileItem *>(fi));
 }
 
 void SQ_DirOperator::slotExecuted(KFileItem *fi)
@@ -688,8 +689,6 @@ void SQ_DirOperator::slotRefreshItems(const KFileItemList &list)
 void SQ_DirOperator::slotItemDeleted(KFileItem *item)
 {
     if(!item) return;
-
-    kdDebug() << "Deleting " << item->url().path() << endl;
 
     // start delayed thumbnail update, if needed
     if(type == SQ_DirOperator::TypeThumbs)

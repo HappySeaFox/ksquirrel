@@ -39,7 +39,7 @@
 <date>2007-03-10</date>
 <releaseinfo>0.3.0</releaseinfo>
 <abstract>
-<para>&kappname; это просмотрщик изображений для KDE реализующий OpenGL.</para>
+<para>&kappname; это просмотрщик изображений для KDE реализующий OpenGL и поддерживающий модули KIPI.</para>
 </abstract>
 <keywordset>
 <keyword>KDE</keyword>
@@ -62,7 +62,7 @@
 <title>Установка из исходников</title>
 
 <para>
-&kappname; из исходников устанавливается как обычно, за исключением некоторых моментов. Рассмотрим все шаги инсталляции подробнее.
+&kappname; из исходников устанавливается как обычно, за исключением некоторых моментов. Для успешной компиляции &kappname; Вам необходимо установить пакет kde-devel, и в системах типа Mandriva дополнительно kdebase-devel. Рассмотрим все шаги инсталляции подробнее.
 </para>
 
 <sect2 id="install-source-ksquirrel-libs">
@@ -72,7 +72,7 @@
 Сперва необходимо установить &klibname;.
 
 <orderedlist>
-<listitem><para>tar jxfv <filename><replaceable>ksquirrel-libs-0.6.2.tar.bz2</replaceable></filename></para></listitem>
+<listitem><para>tar jxfv <filename><replaceable>ksquirrel-libs-0.7.0.tar.bz2</replaceable></filename></para></listitem>
 <listitem><para>./configure.gnu</para></listitem>
 <listitem><para>make</para></listitem>
 <listitem><para>su -c <quote>make install</quote></para></listitem>
@@ -101,7 +101,7 @@ configure.gnu это просто обёртка вокруг configure - это
 Теперь установим &kappname;
 
 <orderedlist>
-<listitem><para>tar jxfv <filename><replaceable>ksquirrel-0.6.2.tar.bz2</replaceable></filename></para></listitem>
+<listitem><para>tar jxfv <filename><replaceable>ksquirrel-0.7.0.tar.bz2</replaceable></filename></para></listitem>
 <listitem><para>./configure.gnu</para></listitem>
 <listitem><para>make</para></listitem>
 <listitem><para>su -c <quote>make install</quote></para></listitem>

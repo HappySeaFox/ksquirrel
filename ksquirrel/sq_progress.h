@@ -30,7 +30,7 @@ class QPainter;
 class SQ_Progress : public QLabel
 {
     public:
-        SQ_Progress(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+        SQ_Progress(QWidget *parent = 0, const char *name = 0);
         ~SQ_Progress();
 
         void setTotalSteps(int totalSteps);

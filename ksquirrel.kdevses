@@ -3,18 +3,24 @@
 <KDevPrjSession>
  <LastCompileConfig>(Default)</LastCompileConfig>
  <Mainframe MaximizeMode="1" />
- <DocsAndViews NumberOfDocuments="4" >
+ <DocsAndViews NumberOfDocuments="6" >
   <Doc0 CursorPosLine="88" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="18" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glselectionpainter.h" >
    <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc0>
   <Doc1 CursorPosLine="106" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glselectionpainter.cpp" >
    <View0 Top="0" Width="96" Attach="1" Height="26" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc1>
-  <Doc2 CursorPosLine="489" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="49" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget.h" >
+  <Doc2 CursorPosLine="489" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="82" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget.h" >
    <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc2>
-  <Doc3 CursorPosLine="720" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="20" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget.cpp" >
-   <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
+  <Doc3 CursorPosLine="918" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget.cpp" >
+   <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc3>
+  <Doc4 CursorPosLine="48" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="53" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget_helpers.cpp" >
+   <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
+  </Doc4>
+  <Doc5 CursorPosLine="52" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="83" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget_helpers.h" >
+   <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc5>
  </DocsAndViews>
 </KDevPrjSession>

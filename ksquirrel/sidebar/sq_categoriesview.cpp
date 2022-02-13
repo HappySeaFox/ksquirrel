@@ -214,7 +214,7 @@ void SQ_CategoriesBox::slotNewCategory()
 
     if(!cur) return;
 
-    QString tmp = KInputDialog::getText(i18n("New Category"), i18n("Create new category"),
+    QString tmp = KInputDialog::getText(i18n("New Category"), i18n("Create new category:"),
                                          lastdir, &ok, this);
     if(ok)
     {

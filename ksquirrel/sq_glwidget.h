@@ -25,8 +25,6 @@
 #include <qrect.h>
 #include <qpair.h>
 
-#include <kurl.h>
-
 #include <vector>
 
 #include "sq_glparts.h"
@@ -49,6 +47,7 @@ class KActionCollection;
 class KToggleAction;
 class KPopupMenu;
 class KRadioAction;
+class KURL;
 
 class QTimer;
 class QPopupMenu;
@@ -148,12 +147,12 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Get zoom value, e.g. 1.5, 2.2 ...
          */
-        GLfloat get_zoom() const;
+        GLfloat getZoom() const;
 
         /*
          *  Get zoom value in percents, e.g. 150, 220 ...
          */
-        GLfloat get_zoom_pc() const;
+        GLfloat getZoomPercents() const;
 
         KActionCollection* actionCollection() const;
 
@@ -480,14 +479,19 @@ class SQ_GLWidget : public QGLWidget
         void slotShowCodecSettings();
         void slotApplyCodecSettings();
 
+        void slotSelectionEllipse();
+        void slotSelectionRect();
+        void slotSelectionClear();
+
         void slotBCG(SQ_ImageBCGOptions *);
         void slotFilter(SQ_ImageFilterOptions *fltopt);
 
     private:
-        KAction                *pAReset, *pAProperties, *pAHelp;
+        KAction                *pAReset, *pAProperties, *pAHelp, *pASelectionClear;
         KToggleAction   *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
                                       *pAZoomH, *pAZoomWH, *pAZoom100,
-                                      *pAZoomLast, *pAHideToolbars;
+                                      *pAZoomLast, *pAHideToolbars,
+                                      *pASelectionEllipse, *pASelectionRect;
 
         SQ_ToolButton                *pAToolQuick, *pAToolFull;
         SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
@@ -497,7 +501,7 @@ class SQ_GLWidget : public QGLWidget
         int                                  id_settings, id_saveas;
 
         // popup menu with zoom types (fit width, fit height, zoom 100%...)
-        KPopupMenu            *zoom,
+        KPopupMenu            *zoom, *selectionMenu,
 
                                       // popup menu with image pages
                                       *images;
@@ -531,7 +535,9 @@ class SQ_GLWidget : public QGLWidget
         float                         zoomFactor;
         RGBA                     *buffer;
         QSlider                   *slider_zoom;
-        bool                        messages;
+        int                            glselection; // selection type
+        int                            sx, sy, sw, sh; // selection geometry (sx,sy is in image
+                                                                 // coordinates, e.g. (0,0) is a left top corner in current image)
 
         static SQ_GLWidget    *m_instance;
 };
