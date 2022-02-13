@@ -11,7 +11,7 @@ void SQ_ImageBCG::init()
 {
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_colorize.png")));
-    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
+    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().dark(115));
 
     QPixmap p = QPixmap::fromMimeSource(locate("appdata", "images/imageedit/reset_value.png"));
 /*
@@ -80,13 +80,13 @@ void SQ_ImageBCG::slotDebugText(const QString &text, bool bold)
 
 void SQ_ImageBCG::slotOptions()
 {
-    SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
+    SQ_ImageEditOptions o(this);
 
     // SQ_ImageEditOptions will write needed KConfig entries, if
     // exec() will return QDialog::Accepted
-    o->setConfigPrefix("bcg");
+    o.setConfigPrefix("bcg");
 
-    o->exec(&imageopt);
+    o.exec(&imageopt);
 }
 
 void SQ_ImageBCG::slotResetG()

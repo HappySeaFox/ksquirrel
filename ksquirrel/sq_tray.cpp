@@ -21,8 +21,10 @@
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kstandarddirs.h>
+#include <kactioncollection.h>
 #include <kpopupmenu.h>
 #include <kwin.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_tray.h"
@@ -30,24 +32,31 @@
 
 SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 {
+    kdDebug() << "+SQ_SystemTray" << endl;
+
     // create popup menu
     rightMenu = new KPopupMenu;
-
-    KActionSeparator *pASep = new KActionSeparator;
 
     pAOpen = KStdAction::open(this, SLOT(slotActivate()), KSquirrel::app()->actionCollection(), "Open SQ from tray");
     pAExit = KStdAction::quit(this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ close from tray");
 
     // insert actions to popup menu
     pAOpen->plug(rightMenu);
-    KSquirrel::app()->pAConfigure->plug(rightMenu);
-    pASep->plug(rightMenu);
+    KSquirrel::app()->actionCollection()->action("SQ Configure")->plug(rightMenu);
+    rightMenu->insertSeparator();
     pAExit->plug(rightMenu);
 
     // set pixmap
     //
     // TODO: load icon "ksquirrel" ?
     setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/tray.png")));
+}
+
+SQ_SystemTray::~SQ_SystemTray()
+{
+    kdDebug() << "-SQ_SystemTray" << endl;
+
+    delete rightMenu;
 }
 
 /*

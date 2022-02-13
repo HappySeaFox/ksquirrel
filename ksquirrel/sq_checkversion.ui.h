@@ -7,6 +7,13 @@
 ** place of a destructor.
 *****************************************************************************/
 
+/*
+ *  Version checker. It will try to connect to http://ksquirrel.sf.net
+ *  and retrieve versions of KSquirrel and ksquirrel-libs. Version of KSquirrel
+ *  is defined by SQ_VERSION macro in sq_about.h, and ksquirrel-libs  version
+ *  is determined from /usr/lib/ksquirrel-libs/version.
+ */
+
 void SQ_CheckVersion::init()
 {
     k = kl = false;
@@ -18,6 +25,7 @@ void SQ_CheckVersion::init()
 
     textAction->setText(tr2i18n("Creating&nbsp;temporary&nbsp;files..."));
 
+    // temporary files. Here we will store downloaded files.
     f1 = new KTempFile;
     f1->setAutoDelete(true);
 
@@ -42,12 +50,13 @@ void SQ_CheckVersion::destroy()
 void SQ_CheckVersion::slotCheck()
 {
     textAction->setText(tr2i18n("Checking&nbsp;version&nbsp;of&nbsp;KSquirrel..."));
-    
+
     QUrlOperator *op = new QUrlOperator();
 
     connect(op, SIGNAL(finished(QNetworkOperation*)), this, SLOT(slotFinished(QNetworkOperation*)));
     // ksquirrel.sourceforge.net
-    op->copy(QString::fromLatin1("http://ksquirrel.sourceforge.net/sq_version"), f1->name(), false, false);}
+    op->copy(QString::fromLatin1("http://ksquirrel.sourceforge.net/sq_version"), f1->name(), false, false);
+}
 
 void SQ_CheckVersion::slotFinished(QNetworkOperation *netop)
 {
@@ -56,7 +65,10 @@ void SQ_CheckVersion::slotFinished(QNetworkOperation *netop)
     if(netop->operation() == QNetworkProtocol::OpGet)
     {
          if(netop->state() == QNetworkProtocol::StFailed)
+         {
+             k = false;
              goto S;
+         }
 
          return;
     }
@@ -64,16 +76,19 @@ void SQ_CheckVersion::slotFinished(QNetworkOperation *netop)
     if(netop->state() == QNetworkProtocol::StDone)
     {
         k = true;
-    
+
         QFile f(f1->name());
-    
+
         if(f.open(IO_ReadOnly))
         {
             QString ver;
             f.readLine(ver, 100);
             f.close();
 
-            if(!ver.startsWith(SQ_VERSION))
+            ver = ver.stripWhiteSpace();
+
+            // version changed!
+            if(ver != SQ_VERSION)
                 kv = ver;
         }
     }
@@ -113,7 +128,10 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
     if(netop->operation() == QNetworkProtocol::OpGet)
     {
         if(netop->state() == QNetworkProtocol::StFailed)
+        {
+            kl = false;
             goto S2;
+        }
 
         return;
     }
@@ -125,6 +143,7 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
         QFile f(f2->name());
         QFile l("/usr/lib/ksquirrel-libs/version");
 
+        // read version of ksquirrel-libs.
         if(l.open(IO_ReadOnly))
         {
             l.readLine(KL_VER, 100);
@@ -136,7 +155,11 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
                 f.readLine(ver, 100);
                 f.close();
 
-                if(!ver.startsWith(KL_VER))
+                ver = ver.stripWhiteSpace();
+                KL_VER = KL_VER.stripWhiteSpace();
+
+                // version changed!
+                if(ver != KL_VER)
                     klv = ver;
             }
             else
@@ -151,6 +174,7 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
     S2:
     textAction->setText(tr2i18n("Done"));
 
+    // update text labels
     klresult = (tr2i18n("Checking&nbsp;version&nbsp;of&nbsp;ksquirrel-libs...") + "&nbsp;%1%2")
        .arg(kl ? tr2i18n("<b>ok</b>") : tr2i18n("<font color=red><b>failed</b></font>"))
        .arg(kl ? (klv.isEmpty() ? "<br>Version&nbsp;not&nbsp;changed" : QString::fromLatin1("<br>New&nbsp;version:&nbsp;<font color=magenta><b>%1</b></font>").arg(klv)) : QString::null);
@@ -169,9 +193,13 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
 
 void SQ_CheckVersion::slotDownload(const QString &url)
 {
+    // let KRun do all stuff for us
     new KRun(KURL(QString::fromLatin1("http://prdownloads.sourceforge.net/ksquirrel/%1?download").arg(url)));
 }
 
+/*
+ *  Update geometry.
+ */
 void SQ_CheckVersion::updateSize()
 {
     qApp->processEvents();

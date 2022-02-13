@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_contraster.h"
@@ -26,9 +27,11 @@
 
 SQ_Contraster * SQ_Contraster::sing = NULL;
 
-SQ_Contraster::SQ_Contraster() : SQ_EditBase()
+SQ_Contraster::SQ_Contraster(QObject *parent) : SQ_EditBase(parent)
 {
     sing = this;
+
+    kdDebug() << "+SQ_Contraster" << endl;
 
     special_action = i18n("Colorizing");
 
@@ -38,7 +41,9 @@ SQ_Contraster::SQ_Contraster() : SQ_EditBase()
 }
 
 SQ_Contraster::~SQ_Contraster()
-{}
+{
+    kdDebug() << "-SQ_Contraster" << endl;
+}
 
 void SQ_Contraster::startEditPrivate()
 {
@@ -89,4 +94,9 @@ int SQ_Contraster::manipDecodedImage(fmt_image *im)
         fmt_filters::colorize(fmt_filters::image((unsigned char *)image, im->w, im->h), bcgopt.red, bcgopt.green, bcgopt.blue);
 
     return SQE_OK;
+}
+
+void SQ_Contraster::cycleDone()
+{
+    delete bcg;
 }

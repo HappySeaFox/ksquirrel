@@ -15,20 +15,26 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <kdebug.h>
+
 #include "sq_iconloader.h"
 #include "sq_iconloader_pixmaps.h"
 
-SQ_IconLoader* SQ_IconLoader::sing = NULL;
+SQ_IconLoader* SQ_IconLoader::m_instance = NULL;
 
-SQ_IconLoader::SQ_IconLoader() : KIconLoader("ksquirrel")
+SQ_IconLoader::SQ_IconLoader(QObject *parent) : QObject(parent), KIconLoader("ksquirrel")
 {
-    sing = this;
+    m_instance = this;
+
+    kdDebug() << "+SQ_IconLoader" << endl;
 
     fillPixmaps();
 }
 
 SQ_IconLoader::~SQ_IconLoader()
-{}
+{
+    kdDebug() << "-SQ_IconLoader" << endl;
+}
 
 QPixmap SQ_IconLoader::loadIcon(const QString& name, KIcon::Group group, int size) const
 {
@@ -72,9 +78,4 @@ void SQ_IconLoader::fillPixmaps()
     pixmap_images  = QPixmap(xpm_images);
     pixmap_binary  = QPixmap(xpm_binary);
     pixmap_edit    = QPixmap(xpm_edit);
-}
-
-SQ_IconLoader* SQ_IconLoader::instance()
-{
-    return sing;
 }

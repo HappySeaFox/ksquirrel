@@ -33,7 +33,7 @@ class SQ_Resizer : public SQ_EditBase
     Q_OBJECT
 
     public:
-        SQ_Resizer();
+        SQ_Resizer(QObject *parent);
         ~SQ_Resizer();
 
         static SQ_Resizer* instance();
@@ -42,6 +42,7 @@ class SQ_Resizer : public SQ_EditBase
         virtual void startEditPrivate();
         virtual void dialogReset();
         virtual int manipDecodedImage(fmt_image *im);
+        virtual void cycleDone();
 
     private slots:
         void slotStartResize(SQ_ImageOptions*, SQ_ImageResizeOptions*);

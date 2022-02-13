@@ -19,6 +19,7 @@
 #define SQ_PIXMAPCACHE_H
 
 #include <qmap.h>
+#include <qobject.h>
 
 #include "sq_thumbnailinfo.h"
 
@@ -31,10 +32,10 @@ class SQ_Dir;
  *  Uses SQ_Dir(Thumbnails) to store thumbnails on disk.
  */
 
-class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
+class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
 {
     public:
-        SQ_PixmapCache(int limit = 5*1024);
+        SQ_PixmapCache(QObject *parent, int limit = 5*1024);
         ~SQ_PixmapCache();
 
         /*
@@ -104,7 +105,7 @@ class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
          */
         static int entrySize(const SQ_Thumbnail &t);
 
-        static SQ_PixmapCache* instance();
+        static SQ_PixmapCache* instance() { return m_instance; }
 
         typedef QMapIterator<QString, SQ_Thumbnail> cache_iterator;
         typedef QMapConstIterator<QString, SQ_Thumbnail> cache_constiterator;
@@ -114,7 +115,7 @@ class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
         int last_full;
         bool valid_full;
         SQ_Dir *dir;
-        static SQ_PixmapCache *cache;
+        static SQ_PixmapCache *m_instance;
 };
 
 inline

@@ -18,6 +18,8 @@
 #include <qstring.h>
 #include <qfile.h>
 
+#include <kdebug.h>
+
 #ifndef SQ_SMALL
 
 #include "ksquirrel.h"
@@ -29,12 +31,14 @@
 #include "sq_librarylistener.h"
 #include "sq_libraryhandler.h"
 
-SQ_LibraryListener * SQ_LibraryListener::listener = NULL;
+SQ_LibraryListener * SQ_LibraryListener::m_instance = NULL;
 
 SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {
-    listener = this;
+    m_instance = this;
     operation = true;
+
+    kdDebug() << "+SQ_LibraryListener" << endl;
 
     // some setup ...
     setAutoUpdate(true);
@@ -55,7 +59,9 @@ SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 }
 
 SQ_LibraryListener::~SQ_LibraryListener()
-{}
+{
+    kdDebug() << "-SQ_LibraryListener" << endl;
+}
 
 /*
  *  All operations completed.
@@ -84,7 +90,7 @@ void SQ_LibraryListener::slotCompleted()
     setAutoUpdate(mon);
 
     if(mon)
-        if(SQ_Config::instance()->readBoolEntry("show dialog", true))
+        if(SQ_Config::instance()->readBoolEntry("show dialog", false))
             emit showInfo(list, operation);
 
 #endif
@@ -163,9 +169,4 @@ void SQ_LibraryListener::slotOpenURL(const KURL &url, bool b1, bool b2)
     }
 
     KDirLister::openURL(url, b1, b2);
-}
-
-SQ_LibraryListener* SQ_LibraryListener::instance()
-{
-    return listener;
 }

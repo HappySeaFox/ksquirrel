@@ -13,7 +13,7 @@
 void SQ_ImagePrint::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_print.png")));
-    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().dark(115));
 
     SQ_Config::instance()->setGroup("Image edit options");
 

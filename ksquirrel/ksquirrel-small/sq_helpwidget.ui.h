@@ -10,16 +10,33 @@
 ** destructor.
 *****************************************************************************/
 
+/*
+ *  SQ_HelpWidget is a helper widget. It shows hotkeys, which
+ *  are accepted by SQ_GLWidget. Called from SQ_GLWidget.
+ */
+
 void SQ_HelpWidget::init()
 {
     setPalette(QToolTip::palette());
+    SQ_Config::instance()->setGroup("GL view");
+
+    int pg = SQ_Config::instance()->readNumEntry("help_id", 0);
+
+    buttonGroup->setButton(pg);
+    widgetStack1->raiseWidget(pg);
+}
+
+void SQ_HelpWidget::destroy()
+{
+    SQ_Config::instance()->setGroup("GL view");
+    SQ_Config::instance()->writeEntry("help_id", buttonGroup->selectedId());
 }
 
 bool SQ_HelpWidget::event(QEvent *e)
 {
     if(e->type() == QEvent::WindowDeactivate 
-    || e->type() == QEvent::MouseButtonPress 
-    || e->type() == QEvent::KeyPress)
+        || e->type() == QEvent::MouseButtonPress 
+        || e->type() == QEvent::KeyPress)
     {
         reject();
     }

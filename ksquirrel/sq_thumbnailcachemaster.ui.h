@@ -7,6 +7,12 @@
 ** place of a destructor.
 *****************************************************************************/
 
+/*
+ *  SQ_ThumbnailCacheMaster manipulates thumbnail cache
+ *  in memory and on disk. It can show current cache size,
+ *  delete cache on disk, clear cache etc.
+ */
+
 void SQ_ThumbnailCacheMaster::init()
 {
     pushCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_disk.png")));

@@ -33,7 +33,7 @@ class SQ_Contraster : public SQ_EditBase
     Q_OBJECT
 
     public: 
-        SQ_Contraster();
+        SQ_Contraster(QObject *parent);
         ~SQ_Contraster();
 
         static SQ_Contraster* instance();
@@ -42,6 +42,7 @@ class SQ_Contraster : public SQ_EditBase
         virtual void startEditPrivate();
         virtual void dialogReset();
         virtual int manipDecodedImage(fmt_image *im);
+        virtual void cycleDone();
 
     private slots:
         void slotStartContrast(SQ_ImageOptions*, SQ_ImageBCGOptions*);

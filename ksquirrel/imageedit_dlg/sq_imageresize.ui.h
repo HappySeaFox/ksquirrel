@@ -10,7 +10,7 @@
 void SQ_ImageResize::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_resize.png")));
-    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().dark(115));
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     groupBoxApsect->setEnabled(false);
 
@@ -136,13 +136,13 @@ void SQ_ImageResize::slotStartResize()
 
 void SQ_ImageResize::slotOptions()
 {
-    SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
+    SQ_ImageEditOptions o(this);
 
     // SQ_ImageEditOptions will write needed KConfig entries, if
     // exec() will return QDialog::Accepted
-    o->setConfigPrefix("resize");
+    o.setConfigPrefix("resize");
 
-    o->exec(&imageopt);
+    o.exec(&imageopt);
 }
 
 void SQ_ImageResize::slotDone(bool close)

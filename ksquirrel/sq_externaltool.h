@@ -18,33 +18,33 @@
 #ifndef SQ_EXTERNALTOOL_H
 #define SQ_EXTERNALTOOL_H
 
-#include <qptrlist.h>
 #include <qstring.h>
 #include <qobject.h>
-
-#include <kdesktopfile.h>
+#include <qvaluevector.h>
 
 class KPopupMenu;
 
-class SQ_Dir;
+struct Tool
+{
+    Tool();
+    Tool(const QString &, const QString &, const QString &);
+
+    QString name, command;
+    QString icon;
+};
 
 /*
  *  Class which manages external tools. It store all available external tools
  *  in memory, and create popup menu where external tools been inserted.
  */
 
-class SQ_ExternalTool : public QObject, public QPtrList<KDesktopFile>
+class SQ_ExternalTool : public QObject, public QValueVector<Tool>
 {
     Q_OBJECT
 
     public: 
-        SQ_ExternalTool();
+        SQ_ExternalTool(QObject *parent);
         ~SQ_ExternalTool();
-
-        /*
-         *  Add new tool with name, pixmap and external command.
-         */
-        void addTool(const QString &pixmap, const QString &name, const QString &command);
 
         /*
          *  Get pixmap, name or command of external tool.
@@ -68,7 +68,7 @@ class SQ_ExternalTool : public QObject, public QPtrList<KDesktopFile>
          */
         void writeEntries();
 
-        static SQ_ExternalTool* instance();
+        static SQ_ExternalTool* instance() { return m_instance; }
 
     private slots:
         /*
@@ -79,7 +79,7 @@ class SQ_ExternalTool : public QObject, public QPtrList<KDesktopFile>
 
     private:
         /*
-         *  Popup menu.
+         *  Popup menu with all tools.
          */
         KPopupMenu *menu;
 
@@ -88,12 +88,7 @@ class SQ_ExternalTool : public QObject, public QPtrList<KDesktopFile>
          */
         int title;
 
-        /*
-         *  For saving .desktop files.
-         */
-        SQ_Dir *dir;
-
-        static SQ_ExternalTool *ext;
+        static SQ_ExternalTool *m_instance;
 };
 
 #endif

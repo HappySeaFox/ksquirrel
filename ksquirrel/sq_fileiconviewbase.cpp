@@ -33,8 +33,8 @@ SQ_FileIconViewBase::SQ_FileIconViewBase(QWidget *parent, const char *name)
     : KFileIconView(parent, name)
 {
     setAcceptDrops(true);
-
-    connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
+    connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)),
+                this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
 }
 
 SQ_FileIconViewBase::~SQ_FileIconViewBase()
@@ -71,7 +71,7 @@ void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
     // double click on item
     if(item)
     {
-        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
+        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->diroperator()->singleClick())
             emitExecute(item, e->globalPos());
 
         emit doubleClicked(item, e->globalPos());

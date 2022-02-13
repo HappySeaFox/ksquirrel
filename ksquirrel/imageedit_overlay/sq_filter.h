@@ -27,7 +27,7 @@ class SQ_Filter : public SQ_EditBase
     Q_OBJECT
 
     public: 
-        SQ_Filter();
+        SQ_Filter(QObject *parent);
         ~SQ_Filter();
 
         static SQ_Filter* instance();
@@ -36,6 +36,7 @@ class SQ_Filter : public SQ_EditBase
         virtual void startEditPrivate();
         virtual void dialogReset();
         virtual int manipDecodedImage(fmt_image *im);
+        virtual void cycleDone();
 
     private slots:
         void slotStartFilter(SQ_ImageOptions*, SQ_ImageFilterOptions*);
@@ -44,7 +45,6 @@ class SQ_Filter : public SQ_EditBase
         SQ_ImageFilter        *filter;
         static SQ_Filter        *sing;
         SQ_ImageFilterOptions filtopt;
-        bool s_all;
 };
 
 #endif

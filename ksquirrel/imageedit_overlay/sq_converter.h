@@ -33,7 +33,7 @@ class SQ_Converter : public SQ_EditBase
     Q_OBJECT
 
     public: 
-        SQ_Converter();
+        SQ_Converter(QObject *parent);
         ~SQ_Converter();
 
         static SQ_Converter* instance();
@@ -44,6 +44,7 @@ class SQ_Converter : public SQ_EditBase
         virtual void dialogReset();
         virtual void initWriteOptions();
         virtual int manipDecodedImage(fmt_image *im);
+        virtual void cycleDone();
 
     private slots:
         void slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*);

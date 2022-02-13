@@ -15,19 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <kdebug.h>
+
 #include "sq_config.h"
 
-SQ_Config * SQ_Config::sing = NULL;
+SQ_Config * SQ_Config::m_instance = NULL;
 
 SQ_Config::SQ_Config(const QString& fileName) : KConfig(fileName)
 {
-    sing = this;
+    m_instance = this;
+
+    kdDebug() << "+SQ_Config" << endl;
 }
 
 SQ_Config::~SQ_Config()
-{}
-
-SQ_Config* SQ_Config::instance()
 {
-    return sing;
+    kdDebug() << "-SQ_Config" << endl;
 }

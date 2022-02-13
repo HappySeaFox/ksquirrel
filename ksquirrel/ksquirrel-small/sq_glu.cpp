@@ -30,8 +30,6 @@
 
 #include <math.h>
 
-#ifndef SQ_DISABLE_OPENGL
-
 /*
  *  Replacement for gluLookAt().
  */
@@ -106,10 +104,3 @@ void SQ_GLU::gluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez, GLdouble cen
     glMultMatrixd(m);
     glTranslated(-eyex, -eyey, -eyez);
 }
-
-#else
-
-void SQ_GLU::gluLookAt(GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble)
-{}
-
-#endif

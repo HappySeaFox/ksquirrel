@@ -20,6 +20,7 @@
 
 #include <klocale.h>
 #include <kprinter.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_libraryhandler.h"
@@ -35,9 +36,11 @@
 
 SQ_Printer * SQ_Printer::sing = NULL;
 
-SQ_Printer::SQ_Printer() : SQ_EditBase()
+SQ_Printer::SQ_Printer(QObject *parent) : SQ_EditBase(parent)
 {
     sing = this;
+
+    kdDebug() << "+SQ_Printer" << endl;
 
     special_action = i18n("Printing");
 
@@ -47,7 +50,9 @@ SQ_Printer::SQ_Printer() : SQ_EditBase()
 }
 
 SQ_Printer::~SQ_Printer()
-{}
+{
+    kdDebug() << "-SQ_Printer" << endl;
+}
 
 void SQ_Printer::startEditPrivate()
 {
@@ -286,4 +291,5 @@ void SQ_Printer::cycleDone()
 
     delete mt;
     delete printer;
+    delete print;
 }

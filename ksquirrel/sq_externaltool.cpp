@@ -28,16 +28,23 @@
 #include "sq_diroperator.h"
 #include "sq_externaltool.h"
 #include "sq_config.h"
-#include "sq_dir.h"
 
-SQ_ExternalTool * SQ_ExternalTool::ext = NULL;
+SQ_ExternalTool * SQ_ExternalTool::m_instance = NULL;
 
-SQ_ExternalTool::SQ_ExternalTool() : QObject(), QPtrList<KDesktopFile>()
+Tool::Tool()
+{}
+
+Tool::Tool(const QString &pix, const QString &nam, const QString &com)
 {
-    ext = this;
-    menu = new KPopupMenu(NULL, "External tools");
+    icon = pix;
+    name = nam;
+    command = com;
+}
 
-    dir = new SQ_Dir(SQ_Dir::Desktops);
+SQ_ExternalTool::SQ_ExternalTool(QObject *parent) : QObject(parent), QValueVector<Tool>()
+{
+    m_instance = this;
+    menu = new KPopupMenu(NULL, "External tools");
 
     connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
 
@@ -45,61 +52,36 @@ SQ_ExternalTool::SQ_ExternalTool() : QObject(), QPtrList<KDesktopFile>()
 
     SQ_Config::instance()->setGroup("External tools");
 
-    for(int i = 1;;i++)
+    QStringList names = SQ_Config::instance()->readListEntry("names");
+    QStringList commands = SQ_Config::instance()->readListEntry("commands");
+    QStringList icons = SQ_Config::instance()->readListEntry("icons");
+
+    for(QStringList::iterator it_n = names.begin(),it_c = commands.begin(),it_i = icons.begin();
+            it_n != names.end() || it_c != commands.end() || it_i != icons.end();
+            ++it_n, ++it_c, ++it_i)
     {
-        str.sprintf("%d", i);
-        tmp = SQ_Config::instance()->readEntry(str, QString::null);
-
-        if(tmp.isEmpty())
-            break;
-
-        QString path = dir->absPath(tmp + ".desktop");
-
-        if(!QFile::exists(path))
-            continue;
-
-        KDesktopFile *d = new KDesktopFile(path);
-        append(d);
+        append(Tool(*it_i, *it_n, *it_c));
     }
 }
 
 SQ_ExternalTool::~SQ_ExternalTool()
-{}
-
-void SQ_ExternalTool::addTool(const QString &pixmap, const QString &name, const QString &command)
 {
-    // construct a path to new .desktop file
-    QString abs = dir->absPath(name + ".desktop");
-
-    QFile::remove(abs);
-
-    // create and init new KDesktopFile
-    KDesktopFile *d = new KDesktopFile(abs);
-    d->writeEntry("ServiceTypes", "*");
-    d->writeEntry("Exec", command);
-    d->writeEntry("Icon", pixmap);
-    d->writeEntry("Name", name);
-
-    // save it to disk now!
-    d->sync();
-
-    // add new entry
-    append(d);
+    delete menu;
 }
 
 QString SQ_ExternalTool::toolPixmap(const int i)
 {
-    return at(i)->readIcon();
+    return (*this)[i].icon;
 }
 
 QString SQ_ExternalTool::toolName(const int i)
 {
-    return at(i)->readName();
+    return (*this)[i].name;
 }
 
 QString SQ_ExternalTool::toolCommand(const int i)
 {
-    return at(i)->readEntry("Exec");
+    return (*this)[i].command;
 }
 
 /*
@@ -137,24 +119,27 @@ KPopupMenu* SQ_ExternalTool::constPopupMenu() const
  */
 void SQ_ExternalTool::writeEntries()
 {
-    int ncount = count(), cur = 1, i;
-
     // no tools ?
-    if(!ncount)
-        return;
+    if(!count()) return;
 
     QString num;
 
     // delete old group with old items
     SQ_Config::instance()->deleteGroup("External tools");
     SQ_Config::instance()->setGroup("External tools");
+    QStringList names, icons, commands;
 
     // write items in config file
-    for(i = 0;i < ncount;i++,cur++)
+    for(QValueVector<Tool>::iterator it = begin();it != end();++it)
     {
-        num.sprintf("%d", cur);
-        SQ_Config::instance()->writeEntry(num, toolName(i));
+        names.append((*it).name);
+        icons.append((*it).icon);
+        commands.append((*it).command);
     }
+
+    SQ_Config::instance()->writeEntry("names", names);
+    SQ_Config::instance()->writeEntry("commands", commands);
+    SQ_Config::instance()->writeEntry("icons", icons);
 }
 
 /*
@@ -164,7 +149,7 @@ void SQ_ExternalTool::writeEntries()
 void SQ_ExternalTool::slotAboutToShowMenu()
 {
     // get selected items in filemanager
-    KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->visibleWidget()->selectedItems();
+    KFileItemList *items = const_cast<KFileItemList *>(SQ_WidgetStack::instance()->selectedItems());
 
     if(!items || !items->count())
     {
@@ -191,9 +176,4 @@ void SQ_ExternalTool::slotAboutToShowMenu()
     }
     else
         menu->changeTitle(title, file);
-}
-
-SQ_ExternalTool* SQ_ExternalTool::instance()
-{
-    return ext;
 }

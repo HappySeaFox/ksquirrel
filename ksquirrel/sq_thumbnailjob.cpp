@@ -62,7 +62,9 @@ SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList *items) : KIO::Job(
 }
 
 SQ_ThumbnailLoadJob::~SQ_ThumbnailLoadJob()
-{}
+{
+    delete dir;
+}
 
 void SQ_ThumbnailLoadJob::start()
 {
@@ -297,11 +299,26 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 
     bool b = SQ_ImageLoader::instance()->loadImage(pixPath);
 
-    if(!b)
+    finfo = SQ_ImageLoader::instance()->info();
+    all = SQ_ImageLoader::instance()->bits();
+
+    // memory allocation failed in SQ_ImageLoader::loadImage()
+    if(!all)
         return false;
 
-    all = SQ_ImageLoader::instance()->bits();
-    finfo = SQ_ImageLoader::instance()->info();
+    // another error occured...
+    if(!b)
+    {
+        if(!finfo->image.size() 
+            || (SQ_ImageLoader::instance()->errors() == finfo->image[0].h && finfo->image.size() == 1))
+        {
+            SQ_ImageLoader::instance()->cleanup();
+            return false;
+        }
+    }
+    // if our image is partially corrupted - show it. The image
+    // is partially corrupted, if number of errors < number of scanlines
+    // and at least one page was saved.
 
     SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->latestLibrary();
 
@@ -333,6 +350,8 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
         t.thumbnail = SQ_ThumbnailLoadJob::makeBigThumb(&image);
     else
         t.thumbnail = image;
+
+    SQ_ImageLoader::instance()->cleanup();
 
     return true;
 }

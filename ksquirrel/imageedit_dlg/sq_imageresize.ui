@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>430</width>
-            <height>370</height>
+            <width>417</width>
+            <height>306</height>
         </rect>
     </property>
     <property name="caption">
@@ -112,23 +112,16 @@
                             <number>6</number>
                         </property>
                         <property name="text">
-                            <string>Resize tool will help you resize your images.
+                            <string>Resize tool will help you resize your images with six different methods:
 
-&lt;p&gt;It can use six resize methods:
-
-&lt;ol&gt;
-&lt;li&gt;&lt;i&gt;BOX&lt;/i&gt; - This is the fastest and lowest quality mode.
-
-&lt;li&gt;&lt;i&gt;TRIANGLE&lt;/i&gt; -
-
-&lt;li&gt;&lt;i&gt;BELL&lt;/i&gt; -
-
-&lt;li&gt;&lt;i&gt;BSPLINE&lt;/i&gt; - 
-
-&lt;li&gt;&lt;i&gt;LANCZOS3&lt;/i&gt; - 
-
-&lt;li&gt;&lt;i&gt;MITCHELL&lt;/i&gt; - 
-&lt;/ol&gt;</string>
+&lt;ul&gt;
+&lt;li&gt;&lt;i&gt;BOX&lt;/i&gt;
+&lt;li&gt;&lt;i&gt;TRIANGLE&lt;/i&gt;
+&lt;li&gt;&lt;i&gt;BELL&lt;/i&gt;
+&lt;li&gt;&lt;i&gt;BSPLINE&lt;/i&gt;
+&lt;li&gt;&lt;i&gt;LANCZOS3&lt;/i&gt;
+&lt;li&gt;&lt;i&gt;MITCHELL&lt;/i&gt;
+&lt;/ul&gt;</string>
                         </property>
                         <property name="textFormat">
                             <enum>RichText</enum>

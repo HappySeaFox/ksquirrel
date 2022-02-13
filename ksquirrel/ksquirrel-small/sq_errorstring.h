@@ -18,9 +18,10 @@
 #ifndef SQ_ERRORSTRING_H
 #define SQ_ERRORSTRING_H
 
-#include <klocale.h>
-
 #include <qmap.h>
+#include <qobject.h>
+
+#include <klocale.h>
 
 #define SQE_NOTFINISHED 10000
 
@@ -29,10 +30,10 @@
  *  error code.
  */
 
-class SQ_ErrorString
+class SQ_ErrorString : public QObject
 {
     public: 
-        SQ_ErrorString();
+        SQ_ErrorString(QObject *parent);
         ~SQ_ErrorString();
 
         /*
@@ -45,11 +46,11 @@ class SQ_ErrorString
          */
         QString stringSN(const int code);
 
-        static SQ_ErrorString* instance();
+        static SQ_ErrorString* instance() { return m_instance; }
 
     private:
         QMap<int, QString> messages;
-        static SQ_ErrorString *sing;
+        static SQ_ErrorString *m_instance;
 };
 
 #endif

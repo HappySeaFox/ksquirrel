@@ -24,10 +24,14 @@
 #include <kstatusbar.h>
 #include <ktoolbar.h>
 #include <kstandarddirs.h>
+#include <kactioncollection.h>
 #include <klocale.h>
+#include <kdebug.h>
+#include <ksqueezedtextlabel.h>
 
 #include "sq_glview.h"
 #include "sq_glwidget.h"
+#include "sq_glwidget_helpers.h"
 #include "sq_config.h"
 
 #undef SQ_SECTION
@@ -54,11 +58,13 @@
 
 #endif
 
-SQ_GLView * SQ_GLView::sing = NULL;
+SQ_GLView * SQ_GLView::m_instance = NULL;
 
 SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 {
-    sing = this;
+    m_instance = this;
+
+    kdDebug() << "+SQ_GLView" << endl;
 
 #ifndef SQ_SMALL
 
@@ -70,11 +76,11 @@ SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 
 #else
 
-    new SQ_ErrorString;
-    new SQ_IconLoader;
+    new SQ_ErrorString(this);
+    new SQ_IconLoader(this);
 
-    libl = new SQ_LibraryListener;
-    libh = new SQ_LibraryHandler;
+    libl = new SQ_LibraryListener(this);
+    libh = new SQ_LibraryHandler(this);
 
     kconf = new SQ_Config("ksquirrelrc");
 
@@ -95,7 +101,14 @@ SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 }
 
 SQ_GLView::~SQ_GLView()
-{}
+{
+    kdDebug() << "-SQ_GLView" << endl;
+
+#ifdef SQ_SMALL
+    delete kconf;
+#endif
+
+}
 
 void SQ_GLView::createContent()
 {
@@ -109,25 +122,24 @@ void SQ_GLView::createContent()
     sbar = new KStatusBar(this);
 
     // create QLabels, fill 'names' with pointers
-    QString fourlines = QString::fromLatin1("----");
     QHBox *sqSBDecodedBox = new QHBox;
     sqSBDecodedBox->setSpacing(2);
-    QLabel *sqSBDecodedI = new QLabel(QString::fromLatin1("--"), sqSBDecodedBox, "SBDecodedI");
+    QLabel *sqSBDecodedI = new QLabel(QString::null, sqSBDecodedBox, "SBDecodedI");
     names["SBDecodedI"] = sqSBDecodedI;
-    QLabel *sqSBDecoded = new QLabel(fourlines, sqSBDecodedBox, "SBDecoded");
+    QLabel *sqSBDecoded = new QLabel(QString::null, sqSBDecodedBox, "SBDecoded");
     names["SBDecoded"] = sqSBDecoded;
 
-    QLabel *sqSBGLZoom = new QLabel(fourlines, 0, "SBGLZoom");
+    QLabel *sqSBGLZoom = new QLabel(QString::null, 0, "SBGLZoom");
     names["SBGLZoom"] = sqSBGLZoom;
-    QLabel *sqSBGLAngle = new QLabel(fourlines, 0, "SBGLAngle");
+    QLabel *sqSBGLAngle = new QLabel(QString::null, 0, "SBGLAngle");
     names["SBGLAngle"] = sqSBGLAngle;
-    QLabel *sqSBGLCoord = new QLabel(fourlines, 0, "SBGLCoord");
+    QLabel *sqSBGLCoord = new QLabel(QString::null, 0, "SBGLCoord");
     names["SBGLCoord"] = sqSBGLCoord;
-    QLabel *sqSBLoaded = new QLabel(fourlines, 0, "SBLoaded");
+    QLabel *sqSBLoaded = new QLabel(QString::null, 0, "SBLoaded");
     names["SBLoaded"] = sqSBLoaded;
-    QLabel *sqSBFrame = new QLabel(QString::fromLatin1("0/0"), 0, "SBFrame");
+    QLabel *sqSBFrame = new QLabel(QString::null, 0, "SBFrame");
     names["SBFrame"] = sqSBFrame;
-    QLabel *sqSBFile = new QLabel(QString::null, NULL, "SBFile");
+    KSqueezedTextLabel *sqSBFile = new KSqueezedTextLabel(QString::null, NULL, "SBFile");
     names["SBFile"] = sqSBFile;
 
     sqSBFrame->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs);
@@ -138,13 +150,14 @@ void SQ_GLView::createContent()
 
     // fill statusbar
     sbar->addWidget(sqSBDecodedBox, 0, true);
-//    sbar->addWidget(sqSBDecoded, 0, true);
     sbar->addWidget(sqSBFrame, 0, true);
     sbar->addWidget(sqSBLoaded, 0, true);
     sbar->addWidget(sqSBGLZoom, 0, true);
     sbar->addWidget(sqSBGLAngle, 0, true);
     sbar->addWidget(sqSBGLCoord, 0, true);
     sbar->addWidget(sqSBFile, 1, true);
+
+    resetStatusBar();
 
     SQ_Config::instance()->setGroup(SQ_SECTION);
     sbar->setShown(SQ_Config::instance()->readBoolEntry("statusbar", true));
@@ -157,20 +170,9 @@ void SQ_GLView::createContent()
 #endif
 
     // restore geometry from config file
-    QRect rect(0,0,660,480);
-    QRect geom = SQ_Config::instance()->readRectEntry("geometry", &rect);
-
-    setGeometry(geom);
+    restoreGeometry();
 
     gl->matrixChanged();
-}
-
-/*
- *  Get a pointer to statusbar.
- */
-KStatusBar* SQ_GLView::statusbar()
-{
-    return sbar;
 }
 
 void SQ_GLView::closeEvent(QCloseEvent *e)
@@ -188,9 +190,9 @@ void SQ_GLView::closeEvent(QCloseEvent *e)
     // in 'small' version accept close event,
     // and save geometry to config file
     kconf->setGroup(SQ_SECTION);
-    kconf->writeEntry("geometry", geometry());
-    kconf->writeEntry("statusbar", gl->pAStatus->isChecked());
-    kconf->writeEntry("ignore", gl->pAIfLess->isChecked());
+    saveGeometry();
+    kconf->writeEntry("statusbar", dynamic_cast<KToggleAction *>(gl->actionCollection()->action("toggle status"))->isChecked());
+    kconf->writeEntry("ignore", dynamic_cast<KToggleAction *>(gl->actionCollection()->action("if less"))->isChecked());
     kconf->writeEntry("zoom type", gl->zoomType());
     kconf->writeEntry("toolbars_hidden", gl->actionsHidden());
     kconf->writeEntry("zoom_nice", gl->isnice());
@@ -251,6 +253,8 @@ bool SQ_GLView::eventFilter(QObject *watched, QEvent *e)
         return QVBox::eventFilter(watched, e);
 }
 
+// evil stuff, but MOC doesn't understand "#ifdef" in .h files.
+// It means we MUST create slots, even if they are not used.
 void SQ_GLView::slotContinueLoading()
 {}
 
@@ -271,7 +275,7 @@ void SQ_GLView::slotContinueLoading()
     {
         // if it is known image type - let's load it
         if(SQ_LibraryHandler::instance()->supports(SQ_HLOptions::instance()->path))
-            SQ_GLWidget::window()->slotStartDecoding(SQ_HLOptions::instance()->path, true);
+            gl->slotStartDecoding(SQ_HLOptions::instance()->path, true);
     }
 }
 
@@ -286,10 +290,17 @@ void SQ_GLView::slotFullScreen(bool full)
     SQ_Config::instance()->setGroup(SQ_SECTION);
 
     // hide statusbar in fullscreen mode ?
-    if(sbar && kconf->readBoolEntry("hide_sbar", true))
+    if(kconf->readBoolEntry("hide_sbar", true))
     {
         sbar->setShown(!full);
-        SQ_GLWidget::window()->pAStatus->setChecked(!full);
+        dynamic_cast<KToggleAction *>(gl->actionCollection()->action("toggle status"))->setChecked(!full);
+    }
+
+    // hide toolbar in fullscreen mode ?
+    if(kconf->readBoolEntry("hide_toolbar", true))
+    {
+        m_toolbar->setShown(!full);
+        dynamic_cast<KToggleAction *>(SQ_GLWidget::window()->actionCollection()->action("toggle toolbar"))->setChecked(full);
     }
 
     // goto fullscreen
@@ -301,19 +312,53 @@ void SQ_GLView::slotFullScreen(bool full)
 
 #endif
 
-SQ_GLView* SQ_GLView::window()
+void SQ_GLView::saveGeometry()
 {
-    return sing;
+    SQ_Config::instance()->writeEntry("pos", pos());
+    SQ_Config::instance()->writeEntry("size", size());
+}
+
+void SQ_GLView::restoreGeometry()
+{
+    QPoint p_def(0,0);
+    QSize  sz_def(660, 480);
+
+    QPoint p = SQ_Config::instance()->readPointEntry("pos", &p_def);
+    QSize sz = SQ_Config::instance()->readSizeEntry("size", &sz_def);
+
+    move(p);
+    resize(sz);
+}
+
+/*
+ *  Reset all statusbar's labels to default values.
+ */
+void SQ_GLView::resetStatusBar()
+{
+    QString fl = QString::fromLatin1("----");
+
+    names["SBGLCoord"]->setText(fl);
+    names["SBGLZoom"]->setText(fl);
+    names["SBGLAngle"]->setText(fl);
+    names["SBLoaded"]->setText(fl);
+    names["SBDecodedI"]->setText(QString::fromLatin1("--"));
+    names["SBFile"]->setText(QString::fromLatin1("--------"));
+    names["SBDecoded"]->setText(fl);
+    names["SBFrame"]->setText(QString::fromLatin1("0/0"));
 }
 
 SQ_ToolBar::SQ_ToolBar(QWidget *parent) : KToolBar(parent)
 {
-    setIconSize(22);
+    kdDebug() << "+SQ_ToolBar" << endl;
+
+    setFixedHeight(SQ_ToolButton::fixedWidth() + 4);
     boxLayout()->setSpacing(0);
 }
 
 SQ_ToolBar::~SQ_ToolBar()
-{}
+{
+    kdDebug() << "-SQ_ToolBar" << endl;
+}
 
 void SQ_ToolBar::mouseReleaseEvent(QMouseEvent *e)
 {

@@ -16,12 +16,12 @@ void SQ_ExternalTools::init()
     int count = SQ_ExternalTool::instance()->count();
     QListViewItem *itemafter = 0L, *item;
 
-    for(int i = 0;i < count;i++)
+    for(QValueVector<Tool>::iterator it = SQ_ExternalTool::instance()->begin();it != SQ_ExternalTool::instance()->end();++it)
     {
         if(itemafter)
-            item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
+            item = new QListViewItem(listTools, itemafter, QString::null, (*it).name, (*it).command, (*it).icon);
         else
-            item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
+            item = new QListViewItem(listTools, QString::null, (*it).name, (*it).command, (*it).icon);
 
         item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(item->text(3), KIcon::Desktop, 16));
         itemafter = item;
@@ -104,8 +104,8 @@ void SQ_ExternalTools::slotToolDown()
 
 int SQ_ExternalTools::start()
 {
-     int result = exec();
-    
+    int result = exec();
+
     if(result == QDialog::Accepted)
     {
         QListViewItem *cur = listTools->firstChild();
@@ -114,7 +114,7 @@ int SQ_ExternalTools::start()
 
         for(;cur;cur = cur->itemBelow())
         {
-            SQ_ExternalTool::instance()->addTool(cur->text(3), cur->text(1), cur->text(2));
+            SQ_ExternalTool::instance()->append(Tool(cur->text(3), cur->text(1), cur->text(2)));
         }
     }
     

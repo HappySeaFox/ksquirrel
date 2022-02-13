@@ -96,7 +96,6 @@ namespace F
     fnegative,
     fnoise,
     foil,
-    fredeye,
     fshade,
     fsharpen,
     fsolarize,

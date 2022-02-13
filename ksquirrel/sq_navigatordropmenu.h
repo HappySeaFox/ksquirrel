@@ -31,7 +31,6 @@ class KPopupMenu;
  *  (copy, move, ...), which will be executed by SQ_FileIconViewBase,
  *  when user dropped some files:
  *
- *
  *  void SQ_FileIconViewBase::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
  *  {
  *      KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
@@ -47,10 +46,10 @@ class SQ_NavigatorDropMenu : public QObject
     Q_OBJECT
 
     public:
-        SQ_NavigatorDropMenu();
-        virtual ~SQ_NavigatorDropMenu();
+        SQ_NavigatorDropMenu(QObject *parent = 0);
+        ~SQ_NavigatorDropMenu();
 
-        static SQ_NavigatorDropMenu* instance();
+        static SQ_NavigatorDropMenu* instance() { return m_instance; }
 
         /*
          *  Save destination url and urls of dropped files.
@@ -76,7 +75,7 @@ class SQ_NavigatorDropMenu : public QObject
         KURL::List list;
         KURL url;
 
-        static SQ_NavigatorDropMenu *app;
+        static SQ_NavigatorDropMenu *m_instance;
 };
 
 #endif

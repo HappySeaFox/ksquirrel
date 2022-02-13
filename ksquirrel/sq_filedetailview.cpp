@@ -20,6 +20,7 @@
 
 #include <kapplication.h>
 #include <kpopupmenu.h>
+#include <kdebug.h>
 
 #include "sq_config.h"
 #include "sq_iconloader.h"
@@ -48,6 +49,8 @@ void SQ_FileListViewItem::paintFocus(QPainter *, const QColorGroup &, const QRec
 SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
     : KFileDetailView(parent, name)
 {
+    kdDebug() << "+SQ_FileDetailView" << endl;
+
     // drag & drop support
     setAcceptDrops(true);
     connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this,
@@ -58,7 +61,9 @@ SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
-{}
+{
+    kdDebug() << "-SQ_FileDetailView" << endl;
+}
 
 /*
  *  Reimplement insertItem() to enable/disable inserting
@@ -113,7 +118,7 @@ void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
     // double click on item
     if(item)
     {
-        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
+        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->diroperator()->singleClick())
             emitExecute(item, e->globalPos(), col);
 
         emit doubleClicked(item, e->globalPos(), col);
@@ -165,7 +170,7 @@ void SQ_FileDetailView::insertCdUpItem(const KURL &base)
 void SQ_FileDetailView::clearView()
 {
     // call default clearing method
-    KListView::clear();
+    KFileDetailView::clearView();
 
     // insert ".."
     insertCdUpItem(SQ_WidgetStack::instance()->url());

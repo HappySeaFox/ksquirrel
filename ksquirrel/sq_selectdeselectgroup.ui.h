@@ -23,9 +23,11 @@ int SQ_SelectDeselectGroup::exec(QString &mask)
         for(int i = 0;i < comboMask->count();i++)
             list.append(comboMask->text(i));
 
+        // save history
         SQ_Config::instance()->setGroup("Fileview");
         SQ_Config::instance()->writeEntry("selectdeselecthistory", list);
 
+        // save mask
         mask = comboMask->currentText();
     }
 

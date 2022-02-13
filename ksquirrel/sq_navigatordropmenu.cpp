@@ -19,16 +19,19 @@
 #include <kpopupmenu.h>
 #include <kaction.h>
 #include <kio/job.h>
+#include <kdebug.h>
 
 #include "sq_navigatordropmenu.h"
 
-SQ_NavigatorDropMenu * SQ_NavigatorDropMenu::app = 0;
+SQ_NavigatorDropMenu * SQ_NavigatorDropMenu::m_instance= 0;
 
-SQ_NavigatorDropMenu::SQ_NavigatorDropMenu() : QObject()
+SQ_NavigatorDropMenu::SQ_NavigatorDropMenu(QObject *parent) : QObject(parent)
 {
-    app = this;
+    m_instance = this;
 
-    KActionCollection *ac = new KActionCollection(NULL, this, "SQ_NavigatorDropMenu");
+    kdDebug() << "+SQ_NavigatorDropMenu" << endl;
+
+    KActionCollection *ac = new KActionCollection(NULL, this, "Actions for drop menu");
 
     dropmenu = new KPopupMenu(NULL);
 
@@ -53,7 +56,11 @@ SQ_NavigatorDropMenu::SQ_NavigatorDropMenu() : QObject()
 }
 
 SQ_NavigatorDropMenu::~SQ_NavigatorDropMenu()
-{}
+{
+    kdDebug() << "-SQ_NavigatorDropMenu" << endl;
+
+    delete dropmenu;
+}
 
 void SQ_NavigatorDropMenu::slotCopy()
 {
@@ -71,11 +78,6 @@ void SQ_NavigatorDropMenu::slotLink()
 {
     // use KIO
     KIO::link(list, url);
-}
-
-SQ_NavigatorDropMenu* SQ_NavigatorDropMenu::instance()
-{
-    return app;
 }
 
 /*

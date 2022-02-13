@@ -18,11 +18,12 @@
 #include "sq_pixmapcache.h"
 #include "sq_dir.h"
 
-SQ_PixmapCache * SQ_PixmapCache::cache = NULL;
+SQ_PixmapCache * SQ_PixmapCache::m_instance = NULL;
 
-SQ_PixmapCache::SQ_PixmapCache(int limit) : QMap<QString, SQ_Thumbnail>()
+SQ_PixmapCache::SQ_PixmapCache(QObject *parent, int limit) 
+    : QObject(parent), QMap<QString, SQ_Thumbnail>()
 {
-    cache = this;
+    m_instance = this;
     cache_limit = limit << 10;
 
     dir = new SQ_Dir(SQ_Dir::Thumbnails);
@@ -31,7 +32,9 @@ SQ_PixmapCache::SQ_PixmapCache(int limit) : QMap<QString, SQ_Thumbnail>()
 }
 
 SQ_PixmapCache::~SQ_PixmapCache()
-{}
+{
+    delete dir;
+}
 
 /*
  *  Write all entries to disk and clear cache.
@@ -42,11 +45,8 @@ void SQ_PixmapCache::sync()
     if(empty())
         return;
 
-    QMapIterator<QString, SQ_Thumbnail> BEGIN = begin();
-    QMapIterator<QString, SQ_Thumbnail>    END = end();
-
     // go through array and sync each entry
-    for(QMapIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;++it)
+    for(QMapIterator<QString, SQ_Thumbnail> it = begin();it != end();++it)
         syncEntry(it.key(), it.data());
 
     // remove all entries from cache
@@ -132,13 +132,10 @@ int SQ_PixmapCache::totalSize()
     if(valid_full)
         return last_full;
 
-    cache_constiterator BEGIN = constBegin();
-    cache_constiterator   END = constEnd();
-
     int total = 0;
 
     // go through rray and calculate total size
-    for(cache_constiterator it = BEGIN;it != END;++it)
+    for(cache_constiterator it = constBegin();it != constEnd();++it)
     {
         total += SQ_PixmapCache::entrySize(it.data());
     }
@@ -177,9 +174,4 @@ void SQ_PixmapCache::clear()
     valid_full = false;
 
     QMap<QString, SQ_Thumbnail>::clear();
-}
-
-SQ_PixmapCache* SQ_PixmapCache::instance()
-{
-    return cache;
 }

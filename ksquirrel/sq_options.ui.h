@@ -7,20 +7,27 @@
 ** place of a destructor.
 *****************************************************************************/
 
+/*
+ *  SQ_Options is a configuration dialog for KSquirrel.
+ */
+
 void SQ_Options::init()
 {
     int tp;
     SQ_Config *kconf = SQ_Config::instance();
 
+    pagesNumber->setRange(1, 1000, 1, true);
+    pagesNumberET->setRange(1, 1000, 1, true);
+
     SQ_Config::instance()->setGroup("Main");
 
-    checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", true));
-    checkSync->setChecked(kconf->readBoolEntry("sync", true));
+    checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", false));
+    checkSync->setChecked(kconf->readBoolEntry("sync", false));
 
     SQ_Config::instance()->setGroup("Libraries");
 
     checkMonitor->setChecked(kconf->readBoolEntry("monitor", true));
-    checkFAMMessage->setChecked(kconf->readBoolEntry("show dialog", true));
+    checkFAMMessage->setChecked(kconf->readBoolEntry("show dialog", false));
 
     KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
@@ -45,10 +52,18 @@ void SQ_Options::init()
 // Init GLView page
     QPixmap p1;
     checkStatus->setChecked(kconf->readBoolEntry("hide_sbar", true));
+    checkToolbar->setChecked(kconf->readBoolEntry("hide_toolbar", true));
+    checkProgress->setChecked(kconf->readBoolEntry("progressiv", true));
     checkDrawQuads->setChecked(kconf->readBoolEntry("alpha_bkgr", true));
     checkMarks->setChecked(kconf->readBoolEntry("marks", true));    
 
-    tp = kconf->readNumEntry("GL view background type", 0);
+    tp = kconf->readNumEntry("load_pages", 0);
+    buttonGroupPages->setButton(tp);
+    pagesNumber->setEnabled(tp == 2);
+    tp = kconf->readNumEntry("load_pages_number", 1);
+    pagesNumber->setValue(tp);
+
+    tp = kconf->readNumEntry("GL view background type", 1);
     buttonGroupColor->setButton(tp);
     widgetStack4->raiseWidget(tp);
 
@@ -75,7 +90,7 @@ void SQ_Options::init()
     sliderMove->setValue(kconf->readNumEntry("move", 5));
 
     QColor color;
-    color.setNamedColor(kconf->readEntry("GL view background", "#cccccc"));
+    color.setNamedColor(kconf->readEntry("GL view background", "#4e4e4e"));
     kColorGLbackground->setColor(color);
 
     SQ_Config::instance()->setGroup("Thumbnails");
@@ -84,25 +99,30 @@ void SQ_Options::init()
     spinMargin->setRange(0, 20, 1, true);
     spinMargin->setValue(kconf->readNumEntry("margin", 2));
     spinCacheSize->setValue(kconf->readNumEntry("cache", 1024*5));
-    if(kconf->readBoolEntry("disable_mime", true)) checkMime->toggle();
+    if(kconf->readBoolEntry("disable_mime", false)) checkMime->toggle();
     if(kconf->readBoolEntry("dont write", false)) checkNoWriteThumbs->toggle();
     if(kconf->readBoolEntry("extended", false)) checkExtended->toggle();
     if(kconf->readBoolEntry("tooltips", false)) checkTooltips->toggle();
 
     SQ_Config::instance()->setGroup("Edit tools");
 
+    tp = kconf->readNumEntry("load_pages", 0);
+    buttonGroupPagesET->setButton(tp);
+    pagesNumberET->setEnabled(tp == 2);
+    tp = kconf->readNumEntry("load_pages_number", 1);
+    pagesNumberET->setValue(tp);
+
     if(kconf->readBoolEntry("preview", false)) checkPreview->toggle();
     if(kconf->readBoolEntry("preview_dont", true)) checkDontGenerate->toggle();
     spinLargerW->setValue(kconf->readNumEntry("preview_larger_w", 1024));
     spinLargerH->setValue(kconf->readNumEntry("preview_larger_h", 768));
-    if(kconf->readBoolEntry("multi", true)) checkMultiPaged->toggle();
 
-    (void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, 32), i18n("Main"));    
-    (void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 32), i18n("Filing"));
-    (void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, 32), i18n("Thumbnails"));
-    (void)new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
-    (void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("binary", KIcon::Desktop, 32), i18n("Libraries"));
-    (void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("edit", KIcon::Desktop, 32), i18n("Edit tools"));
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, 32), i18n("Main"));    
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 32), i18n("Filing"));
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, 32), i18n("Thumbnails"));
+    new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("binary", KIcon::Desktop, 32), i18n("Libraries"));
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("edit", KIcon::Desktop, 32), i18n("Edit tools"));
 
     listMain->updateAndInstall(this);
 
@@ -147,7 +167,7 @@ void SQ_Options::init()
 
 int SQ_Options::start()
 {
-    int result = this->exec();
+    int result = QDialog::exec();
 
     if(result == QDialog::Accepted)
     {
@@ -177,6 +197,8 @@ int SQ_Options::start()
         kconf->writeEntry("tooltips", checkTooltips->isChecked());
     
         kconf->setGroup("GL view");
+        kconf->writeEntry("load_pages", buttonGroupPages->selectedId());
+        kconf->writeEntry("load_pages_number", pagesNumber->value());
         kconf->writeEntry("GL view background", (kColorGLbackground->color()).name());
         kconf->writeEntry("GL view custom texture", custpixmap);
         kconf->writeEntry("GL view background type", buttonGroupColor->selectedId());
@@ -184,6 +206,8 @@ int SQ_Options::start()
         kconf->writeEntry("alpha_bkgr", checkDrawQuads->isChecked());
         kconf->writeEntry("marks", checkMarks->isChecked());
         kconf->writeEntry("hide_sbar", checkStatus->isChecked());
+        kconf->writeEntry("hide_toolbar", checkToolbar->isChecked());
+        kconf->writeEntry("progressiv", checkProgress->isChecked());
         kconf->writeEntry("scroll", buttonGroupScrolling->selectedId());
         kconf->writeEntry("angle", sliderAngle->value());
         kconf->writeEntry("zoom", spinZoomFactor->value());
@@ -196,12 +220,13 @@ int SQ_Options::start()
         kconf->writeEntry("show dialog", checkFAMMessage->isChecked());
 
         kconf->setGroup("Edit tools");
+        kconf->writeEntry("load_pages", buttonGroupPagesET->selectedId());
+        kconf->writeEntry("load_pages_number", pagesNumberET->value());
         kconf->writeEntry("preview", checkPreview->isChecked());
         kconf->writeEntry("preview_dont", checkDontGenerate->isChecked());
         kconf->writeEntry("preview_larger_w", spinLargerW->value());
         kconf->writeEntry("preview_larger_h", spinLargerH->value());
         kconf->writeEntry("altlibrary", comboAlt->currentText());
-        kconf->writeEntry("multi", checkMultiPaged->isChecked());
     }
 
     return result;
@@ -297,10 +322,8 @@ void SQ_Options::fillAltCombo()
     if(!SQ_LibraryHandler::instance()->count())
         return;
 
-    QValueVector<SQ_LIBRARY>::iterator   BEGIN = SQ_LibraryHandler::instance()->begin();
-    QValueVector<SQ_LIBRARY>::iterator      END = SQ_LibraryHandler::instance()->end();
-
-    for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
+    for(QValueVector<SQ_LIBRARY>::iterator it = SQ_LibraryHandler::instance()->begin();
+            it != SQ_LibraryHandler::instance()->end();++it)
     {
         if(pix.convertFromImage((*it).mime))
         {

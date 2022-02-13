@@ -40,7 +40,6 @@ class KToggleAction;
 class KBookmarkMenu;
 
 template <class T> class QValueVector;
-class QSplitter;
 class QLabel;
 class QWidgetStack;
 class QHBox;
@@ -60,6 +59,7 @@ class SQ_LocationToolbar;
 class SQ_GLView;
 class SQ_GLWidget;
 class SQ_ArchiveHandler;
+class SQ_MultiBar;
 class SQ_Dir;
 
 /*
@@ -76,6 +76,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         KSquirrel(QWidget *parent = 0, const char *name = 0);
         ~KSquirrel();
+
+        /*
+         *  "history combo"
+         */
+        KHistoryCombo* historyCombo();
 
         /*
          *  Do some actions before exit - show final splash (if needed),
@@ -124,7 +129,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  All pointers to statusbar widgets are saved in 
          *  'sbarwidgets' object (QMap).
          */
-        QLabel*        sbarWidget(const QString &name);
+        QLabel* sbarWidget(const QString &name);
 
         /*
          *   DCOP methods
@@ -145,6 +150,15 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         void pauseSlideShow();
 
+        /*
+         *  Names and extensions of name filters for
+         *  file manager.
+         */
+        QStringList* filtersNames() const;
+        QStringList* filtersExtensions() const;
+
+        static KSquirrel*     app() { return m_instance; }
+
     protected:
         /*
          *  Catch some events and do specific actions.
@@ -156,6 +170,20 @@ class KSquirrel : public KMainWindow, public DCOPObject
      *  Internal methods
      */
     private:
+
+        /*
+         *  Check if current config file left from older KSquirrel's
+         *  version. If so, return true, and new config file will be
+         *  copied instead of old.
+         */
+        bool checkConfigFileVersion();
+
+        /*
+         *  Create a final splash. It will be shown only if SQ_PixmapCache
+         *  is not empty.
+         */
+        void createPostSplash();
+
         /*
          *  Create location toolbar and store a pointer to
          *  it in passed argument.
@@ -189,12 +217,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void preCreate();
 
         /*
-         *  Create a final splash. It will be shown only if SQ_PixmapCache
-         *  is not empty
-         */
-        void createPostSplash();
-
-        /*
          *  Create QStrinLists, containing filters and filters' names (if needed)
          *  and fill popup menu with new filters.
          */
@@ -209,12 +231,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Init bookmarks and create popup menu for them.
          */
         void initBookmarks();
-
-        /*
-         *  Copy .desktop files, representing external tools,
-         *  from system directory ($KDE_APPSDIR/ksquirrel/desktop) to ~/.ksquirrel/desktop
-         */
-        void tryCopyDesktops();
 
         /*
          *  Create all widgets (filemanager, file tree, toolbar, etc.)
@@ -269,13 +285,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  to perform an action, needed by DCOP client.
          */
         void fillMessages();
-
-        /*
-         *  Check if current config file left from older KSquirrel's
-         *  version. If so, return true, and new config file will be
-         *  copied instead of old.
-         */
-        bool checkConfigFileVersion();
 
         /*
          *  DCOP helper methods
@@ -337,9 +346,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         void raiseGLWidget();
 
-    private slots:
+        /*
+         *  Switch fullscreen state of SQ_GLView.
+         */
+        void slotFullScreen(bool full);
 
-        void slotEat();
+    private slots:
 
         /*
          *  Invoke 'Options' dialog.
@@ -392,11 +404,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotGotoTray();
 
         /*
-         *  Switch fullscreen state of SQ_GLView.
-         */
-        void slotFullScreen(bool full);
-
-        /*
          *  Next four slots will be called, when user selected
          *  subitem in 'Thumbnail size' menu.
          */
@@ -410,11 +417,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  in /usr/lib/ksquirrel-libs. Now we can decode images.
          */
         void slotContinueLoading();
-
-        /*
-         *  Invoked, when user toggles "Show tree" button.
-         */
-        void slotSetTreeShown(bool shown);
 
         /*
          *  Invoked, when user toggles "Separate image window" button.
@@ -460,11 +462,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotContinueLoading2();
 
         /*
-         *  Show a splash screen with available image actions (Convert, Rotate, ...)
-         */
-        void slotShowImageEditActions();
-
-        /*
          *  Invokes a dialog with specific thumbnails actions:
          *  delete thumbnails on disk, show thumbnails on disk, ...
          */
@@ -497,32 +494,10 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Convinience slot.
          *  Reload libraries from disk.
          */
-        QString slotRescan();
-
-    public:
-        static KSquirrel*     app();
-
-        // combobox with history urls
-        KHistoryCombo    *pCurrentURL;
-
-        // filters' names and extensions
-        QStringList    *sqFiltersName, *sqFiltersExt;
-
-        // Image edit actions.
-        KAction    *pAImageConvert, *pAImageResize, *pAImageBCG, *pAImageRotate,
-                    *pAImageToolbar, *pAImageFilter, *pAPrintImages, *pAConfigure,
-
-        // "Check for a newer version"
-        *pACheck,
-
-        // "Select group", "Deselect group", "Select all", "Deselect"
-        // actions for filemanager
-        *pASelectGroup, *pADeselectGroup, *pASelectAll, *pADeselectAll;
-        // "Slideshow"
-        KToggleAction    *pASlideShow;
+        void slotRescan();
 
     private:
-        static KSquirrel     *sing;
+        static KSquirrel     *m_instance;
 
         // main toolbar
         KToolBar    *tools;
@@ -539,12 +514,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // thumbnail sizes (small, normal, ...)
         KRadioAction    *pAThumb0, *pAThumb1, *pAThumb2, *pAThumb3;
 
-        // toggle actions: show/hide tree, show/hide url box, make image window
+        // toggle actions: show/hide url box, make image window
         // built-in/separate
-        KToggleAction    *pATree, *pAURL, *pASeparateGL;
+        KToggleAction    *pAURL, *pASeparateGL;
 
         // popup menus: "File", "View" ...
-        KPopupMenu    *pop_file, *pop_view, *pop_edit, *pop_action;
+        KPopupMenu    *pop_file, *pop_view, *pop_action, *pop_nav;
 
         // filters and views
         KPopupMenu    *actionFilterMenu, *actionViews;
@@ -586,10 +561,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // Main statusbar
         KStatusBar    *sbar;
 
-        // QSplitter, which contains
-        // tree on he left hand and filemanager on the right
-        QSplitter    *mainSplitter;
-
         // contains paths of found libraries
         QStringList    strlibFound;
 
@@ -627,6 +598,25 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // "image_prev" - to "Qt::Key_PageUp"
         QMap<QString, int>    messages;
 
+        // combobox with history urls
+        KHistoryCombo    *pCurrentURL;
+
+        // filters' names and extensions
+        QStringList    *sqFiltersName, *sqFiltersExt;
+
+        // "Configure KSquirrel"
+        KAction    *pAConfigure,
+
+        // "Check for a newer version"
+        *pACheck,
+
+        // "Select group", "Deselect group", "Select all", "Deselect"
+        // actions for filemanager
+        *pASelectGroup, *pADeselectGroup, *pASelectAll, *pADeselectAll;
+
+        // "Slideshow"
+        KToggleAction    *pASlideShow;
+
         /*
          * Slideshow-specififc members
          */
@@ -645,7 +635,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         // Delay, total files in selected directory and 
         // current file index
-        int    slideShowIndex, slideShowDelay, slideShowTotal;
+        int    slideShowIndex, slideShowDelay, slideShowTotal, slideShowRepeat;
 
         // current file name
         QString    slideShowName;
@@ -696,9 +686,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // thumbnails' memory cache
         SQ_PixmapCache    *cache;
 
+        // sidebar
+        SQ_MultiBar       *sideBar;
+
         // not interesting ;)
         int     old_id;
-        bool   first_time, hastree, old_disable, old_ext,
+        bool   first_time, old_disable, old_ext,
                  m_urlbox, m_sep, old_marks;
 };
 
@@ -707,6 +700,36 @@ inline
 bool KSquirrel::slideShowRunning() const
 {
     return !slideShowStop;
+}
+
+inline
+KHistoryCombo* KSquirrel::historyCombo()
+{
+    return pCurrentURL;
+}
+
+inline
+QStringList* KSquirrel::filtersNames() const
+{
+    return sqFiltersName;
+}
+
+inline
+QStringList* KSquirrel::filtersExtensions() const
+{
+    return sqFiltersExt;
+}
+
+inline
+KPopupMenu* KSquirrel::menuFilters()
+{
+    return actionFilterMenu;
+}
+
+inline
+KPopupMenu* KSquirrel::menuViews()
+{
+    return actionViews;
 }
 
 #endif

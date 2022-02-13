@@ -17,6 +17,8 @@
 
 #include <qpoint.h>
 
+#include <kdebug.h>
+
 #include "sq_config.h"
 #include "sq_iconloader.h"
 #include "sq_fileiconview.h"
@@ -36,15 +38,19 @@ void SQ_FileIconViewItem::paintFocus(QPainter *, const QColorGroup &)
 
 SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
 {
+    kdDebug() << "+SQ_FileIconView" << endl;
+
     QString n = name;
     disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
     setSorting(QDir::IgnoreCase);
     dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, (n == "icon view")
-    ? KIcon::SizeMedium : KIcon::SizeSmall);
+                    ? KIcon::SizeMedium : KIcon::SizeSmall);
 }
 
 SQ_FileIconView::~SQ_FileIconView()
-{}
+{
+    kdDebug() << "-SQ_FileIconView" << endl;
+}
 
 void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
 {
@@ -145,7 +151,7 @@ void SQ_FileIconView::insertCdUpItem(const KURL &base)
 void SQ_FileIconView::clearView()
 {
     // call default clearing method
-    KIconView::clear();
+    KFileIconView::clearView();
 
     // insert ".."
     insertCdUpItem(SQ_WidgetStack::instance()->url());

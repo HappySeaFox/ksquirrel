@@ -38,7 +38,7 @@
 #include "sq_imageloader.h"
 #include "sq_bcglabel.h"
 
-SQ_EditBase::SQ_EditBase() : QObject()
+SQ_EditBase::SQ_EditBase(QObject *parent) : QObject(parent)
 {
     err_internal = i18n("internal error") + "\n";
     err_failed = i18n("failed") + "\n";
@@ -148,15 +148,21 @@ void SQ_EditBase::errorjmp(jmp_buf jmp, const int code)
 
 void SQ_EditBase::decodingCycle()
 {
-    int     i, j;
-    QString    name;
-    jmp_buf    jmp;
-    RGBA    *scan;
-    int    errors, gerrors = 0, current;
-    QString     putto;
-    int    replace = imageopt.where_to_put;
+    int      i, j;
+    QString  name;
+    jmp_buf  jmp;
+    RGBA     *scan;
+    int      errors, gerrors = 0, current;
+    QString  putto;
+    int      replace = imageopt.where_to_put;
+    bool    brk;
 
     SQ_Config::instance()->setGroup("Edit tools");
+
+    int allpages = SQ_Config::instance()->readNumEntry("load_pages", 0);
+    int pages_num = SQ_Config::instance()->readNumEntry("load_pages_number", 1);
+
+    if(pages_num < 1) pages_num = 1;
 
     altw = SQ_LibraryHandler::instance()->libraryByName(SQ_Config::instance()->readEntry("altlibrary", "Portable Network Graphics"));
     multi = SQ_Config::instance()->readBoolEntry("multi", true);
@@ -176,14 +182,11 @@ void SQ_EditBase::decodingCycle()
     }
 
     QValueList<QString>::iterator last_it = files.fromLast();
-    QValueList<QString>::iterator   BEGIN = files.begin();
-    QValueList<QString>::iterator   END   = files.end();
-
     dialogReset();
 
     putto = imageopt.putto;
 
-    for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
+    for(QValueList<QString>::iterator it = files.begin();it != files.end();++it)
     {
         currentFile = *it;
         last = (it == last_it);
@@ -206,9 +209,8 @@ void SQ_EditBase::decodingCycle()
             }
 
             name = QFile::encodeName(*it);
-            const char *s = name.ascii();
 
-            i = lr->codec->fmt_read_init(s);
+            i = lr->codec->fmt_read_init(name.ascii());
 
             if(setjmp(jmp))
             {
@@ -230,6 +232,8 @@ void SQ_EditBase::decodingCycle()
 
             while(true)
             {
+                brk = (allpages == 1 && current) || (allpages == 2 && current == pages_num);
+
 //    finfo->image = (fmt_image *)realloc(finfo->image, sizeof(fmt_image) * (finfo->images+1));
 //    memset(&finfo->image[current], 0, sizeof(fmt_image));
 
@@ -242,9 +246,9 @@ void SQ_EditBase::decodingCycle()
 
                 im = lr->codec->image(current-1);
 
-                if(i != SQE_OK)
+                if(i != SQE_OK || brk)
                 {
-                    if(i == SQE_NOTOK)
+                    if(i == SQE_NOTOK || brk)
                     {
                         if(ondisk)
                         {
@@ -256,7 +260,7 @@ void SQ_EditBase::decodingCycle()
                         else
                             name = QString::null;
 
-                        lastFrame = last ? true : false;
+                        lastFrame = last;
 
                         if(ondisk)
                             i = manipAndWriteDecodedImage(tempfile->name(), im);
@@ -315,7 +319,6 @@ void SQ_EditBase::decodingCycle()
 
                 im = lr->codec->image(current);
 
-//    printf("%dx%d@%d...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
                 image = (RGBA *)realloc(image, im->w * im->h * sizeof(RGBA));
 
                 if(!image)
@@ -325,9 +328,6 @@ void SQ_EditBase::decodingCycle()
                 }
 
                 memset(image, 255, im->w * im->h * sizeof(RGBA));
-
-//    printf("FOR: %dx%d@%d\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
-//    printf("passes: %d\n", finfo.image[0].passes);
 
                 for(int pass = 0;pass < im->passes;pass++)
                 {
@@ -382,9 +382,6 @@ int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im)
     int     passes = opt.interlaced ?  lw->opt.passes : 1;
     int     s, j, err;
     RGBA     *scan = NULL;
-
-//    if(lw->opt.needflip)
-//    fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
 
     err = manipDecodedImage(im);
 

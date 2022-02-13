@@ -1,5 +1,0 @@
-[Desktop Entry]
-Exec=kfmclient exec %f
-Icon=kfm
-Name=Run within KDE
-ServiceTypes=*

@@ -31,10 +31,10 @@ class SQ_Config : public KConfig
         SQ_Config(const QString& fileName = QString::null);
         ~SQ_Config();
 
-        static SQ_Config* instance();
+        static SQ_Config* instance() { return m_instance; }
 
     private:
-        static SQ_Config *sing;
+        static SQ_Config *m_instance;
 };
 
 #endif

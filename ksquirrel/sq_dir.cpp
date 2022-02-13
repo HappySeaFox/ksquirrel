@@ -39,17 +39,18 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
         case SQ_Dir::Extracts:
             setRoot("extracts");
         break;
-        case SQ_Dir::Desktops:
-            setRoot("desktop");
-        break;
         case SQ_Dir::Tmp:
             setRoot("tmp");
         break;
     }
+
+    kdDebug() << "+SQ_Dir" << " [" << m_root << "]" << endl;
 }
 
 SQ_Dir::~SQ_Dir()
-{}
+{
+    kdDebug() << "-SQ_Dir" << " [" << m_root << "]" << endl;
+}
 
 /*
  *  Create relative directory in storage.
@@ -64,13 +65,10 @@ bool SQ_Dir::mkdir(const QString &relpath)
 
     QStringList paths = QStringList::split('/', _relpath);
 
-    QStringList::iterator BEGIN = paths.begin();
-    QStringList::iterator    END = paths.end();
-
     cd(m_root);
 
     // recursively create directories
-    for(QStringList::iterator it = BEGIN;it != END;++it)
+    for(QStringList::iterator it = paths.begin();it != paths.end();++it)
     {
         if(!exists(*it, false))
             if(!QDir::mkdir(*it))
@@ -119,21 +117,13 @@ QString SQ_Dir::root() const
 void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
 {
     if(thumb.thumbnail.isNull())
-    {
-        kdDebug() << "SQ_Dir::saveThumbnail: thumbnail is NULL!" << endl;
         return;
-    }
 
     QString fullpath(m_root + path), s;
     QFileInfo fpath(path), ffullpath(fullpath);
 
     if(fpath.lastModified() < ffullpath.lastModified())
-    {
-        kdDebug() << "SQ_Dir::saveThumbnail: equal => skipping writing..." << endl;
         return;
-    }
-
-    kdDebug() << "SQ_Dir::saveThumbnail: writing accepted..." << endl;
 
     if(!mkdir(fpath.dirPath(true)))
     {
@@ -172,25 +162,17 @@ bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
 }
 
 /*
- *  Get absolute path for relative path 'relpath'.
- */
-QString SQ_Dir::absPath(const QString &relpath)
-{
-    return m_root + "/" + relpath;
-}
-
-/*
  *  Check if file needs to be updated.
  *
  *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
  *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
  *  archive to it. Today you replaced /opt/arc.zip with newer version. Now
  *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
- *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack it ince more.
+ *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack it once more.
  */
 bool SQ_Dir::updateNeeded(const QString &file)
 {
-    // file even mot exist in storage, update needed!
+    // file doesn't exist in storage, update needed!
     if(!QFile::exists(absPath(file)))
         return true;
 
@@ -205,9 +187,6 @@ bool SQ_Dir::updateNeeded(const QString &file)
  */
 void SQ_Dir::removeFile(const QString &file)
 {
-    // get absolute path
-    QString full = absPath(file);
-
-    // and remove file
-    QFile::remove(full);
+    // determine absolute path and remove file
+    QFile::remove(absPath(file));
 }

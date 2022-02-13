@@ -1,5 +1,0 @@
-[Desktop Entry]
-Exec=dcop kdesktop KBackgroundIface setWallpaper %f 2
-Icon=mac
-Name=Set as tiled wallpaper on desktop
-ServiceTypes=*

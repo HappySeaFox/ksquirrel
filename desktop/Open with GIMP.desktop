@@ -1,5 +1,0 @@
-[Desktop Entry]
-Exec=gimp %F
-Icon=gimp
-Name=Open with GIMP
-ServiceTypes=*

@@ -10,7 +10,7 @@ void SQ_ImageFilter::init()
 {
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_filter.png")));
-    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
+    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().dark(115));
 
     SQ_Config::instance()->setGroup("Image edit options");
 
@@ -44,7 +44,6 @@ void SQ_ImageFilter::init()
     sharpenRadius->setRange(radiusMin, radiusMax, 0.01f, true);
     sharpenSigma->setRange(sigmaMin, 30.0, 0.01f, true);
     oilRadius->setRange(1, 5, 1, true);
-    redeyeValue->setRange(0, 255, 1, true);
 
     SQ_Config::instance()->setGroup("Image edit options");
 
@@ -116,32 +115,28 @@ void SQ_ImageFilter::init()
     // oil
     oilRadius->setValue(SQ_Config::instance()->readNumEntry("filter_oil_radius", 1));
 
-    // redeye
-    redeyeValue->setValue(SQ_Config::instance()->readNumEntry("filter_redeye_value", 1));
-
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_blend.png")), i18n("Blend"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_blur.png")), i18n("Blur"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_desaturate.png")), i18n("Desaturate"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_despeckle.png")), i18n("Despeckle"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_edge.png")), i18n("Edge"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_emboss.png")), i18n("Emboss"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_equalize.png")), i18n("Equalize"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_fade.png")), i18n("Fade"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_flatten.png")), i18n("Flatten"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_implode.png")), i18n("Implode"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_negative.png")), i18n("Negative"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_noise.png")), i18n("Noise"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_oil.png")), i18n("Oil"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_redeye.png")), i18n("Red eyes"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_shade.png")), i18n("Shade"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_sharpen.png")), i18n("Sharpen"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_solarize.png")), i18n("Solarize"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_spread.png")), i18n("Spread"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_swaprgb.png")), i18n("Swap RGB"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_swirl.png")), i18n("Swirl"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_threshold.png")), i18n("Threshold"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_togray.png")), i18n("Gray"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_wave.png")), i18n("Wave"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_blend.png")), i18n("Blend"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_blur.png")), i18n("Blur"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_desaturate.png")), i18n("Desaturate"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_despeckle.png")), i18n("Despeckle"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_edge.png")), i18n("Edge"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_emboss.png")), i18n("Emboss"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_equalize.png")), i18n("Equalize"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_fade.png")), i18n("Fade"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_flatten.png")), i18n("Flatten"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_implode.png")), i18n("Implode"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_negative.png")), i18n("Negative"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_noise.png")), i18n("Noise"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_oil.png")), i18n("Oil"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_shade.png")), i18n("Shade"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_sharpen.png")), i18n("Sharpen"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_solarize.png")), i18n("Solarize"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_spread.png")), i18n("Spread"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_swaprgb.png")), i18n("Swap RGB"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_swirl.png")), i18n("Swirl"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_threshold.png")), i18n("Threshold"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_togray.png")), i18n("Gray"));
+    new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_wave.png")), i18n("Wave"));
 
     listMain->updateAndInstall(this);
 
@@ -166,13 +161,13 @@ void SQ_ImageFilter::slotDebugText(const QString &text, bool bold)
 
 void SQ_ImageFilter::slotOptions()
 {
-    SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
+    SQ_ImageEditOptions o(this);
 
     // SQ_ImageEditOptions will write needed KConfig entries, if
     // exec() will return QDialog::Accepted
-    o->setConfigPrefix("filter");
+    o.setConfigPrefix("filter");
 
-    o->exec(&imageopt);
+    o.exec(&imageopt);
 }
 
 void SQ_ImageFilter::slotStartFiltering()
@@ -215,7 +210,6 @@ void SQ_ImageFilter::slotStartFiltering()
     kconf->writeEntry("filter_sharpen_radius", sharpenRadius->value());
     kconf->writeEntry("filter_sharpen_sigma", sharpenSigma->value());
     kconf->writeEntry("filter_oil_radius", oilRadius->value());
-    kconf->writeEntry("filter_redeye_value", redeyeValue->value());
     kconf->writeEntry("filter_filter", listMain->currentItem());
 
     SQ_ImageFilterOptions opt;
@@ -265,7 +259,6 @@ void SQ_ImageFilter::slotStartFiltering()
         case F::fthreshold: opt._uint = thresholdValue->value(); break;
         case F::fgray: break;
         case F::fwave: opt._double1 = waveAmpl->value(); opt._double2 = waveLength->value(); break;
-        case F::fredeye: opt._uint = redeyeValue->value(); break;
     }
 
     emit filter(&imageopt, &opt);
@@ -357,7 +350,6 @@ void SQ_ImageFilter::slotShowPage()
         case F::fthreshold:   threshold();  break;
         case F::fgray:        togray();     break;
         case F::fwave:        wave();       break;
-        case F::fredeye:      redeye();     break;
     }
 
     qApp->processEvents();
@@ -719,20 +711,6 @@ void SQ_ImageFilter::oil()
     assignNewImage(sample);
 }
 
-void SQ_ImageFilter::redeye()
-{
-    if(sample.isNull() || sample_saved.isNull())
-        return;
-
-    sample = sample_saved.copy();
-
-    fmt_filters::image im(sample.bits(), sample.width(), sample.height());
-
-    fmt_filters::redeye(im, im.w, im.h, 0, 0, redeyeValue->value());
-
-    assignNewImage(sample);
-}
-
 void SQ_ImageFilter::hackConnect()
 {
     connect( blendOpacity, SIGNAL( valueChanged(double) ), this, SLOT( blend() ) );
@@ -762,7 +740,6 @@ void SQ_ImageFilter::hackConnect()
     connect( thresholdValue, SIGNAL( valueChanged(int) ), this, SLOT( threshold() ) );
     connect( waveAmpl, SIGNAL( valueChanged(double) ), this, SLOT( wave() ) );
     connect( waveLength, SIGNAL( valueChanged(double) ), this, SLOT( wave() ) );
-    connect( redeyeValue, SIGNAL( valueChanged(int) ), this, SLOT( redeye() ) );
 }
 
 void SQ_ImageFilter::slotGoOut(int)

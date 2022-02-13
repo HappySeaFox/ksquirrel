@@ -156,9 +156,6 @@
 /* The size of a `unsigned long', as computed by sizeof. */
 #undef SIZEOF_UNSIGNED_LONG
 
-/* Disable OpenGL support */
-#undef SQ_DISABLE_OPENGL
-
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 

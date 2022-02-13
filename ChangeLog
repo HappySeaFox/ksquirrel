@@ -1,3 +1,45 @@
+ksquirrel-0.6.0-final and ksquirrel-libs-0.6.0-final
+************************************************************
+
+ksquirrel:
+* small fix in animating mechanism
+* fixed F1/F4 bug in image window (only in pre9)
+* fixed small memory leak
+* closing image window now stops slideshow (if running)
+* fixed flicker in image window in fullscreen state with hidden toolbar
+* help widget now saves current page
+* fixes in help widget
+* If the image is broken, "broken" image will appear (like in GQview)
+* image window: right click = context menu, middle click = toggle fullscreen,
+   left click = start drag, left click+SHIFT = select zoom area
+* small fix in maximum/minimum zoom 
+* improved Xinerama support (I hope)
+* small improvements in file manager
+* added new options:
+  - show images progressively
+  - hide toolbar in fullscreen
+  - ability to choose number of image pages to be loaded (in edit tools too)
+* added sidebar with
+   - file/image actions
+   - file tree
+   - view of currently mounted partitions
+* small memory optimizations in file manager
+* changing thumbnails' size now a little bit faster
+* fixed small bug in DCOP connection, which could cause strange behaviour of file manager
+* menu layout changes
+* small fix in version checker
+* small fix in setting background image in image window
+* new toolbar in image window
+* fixes in external tools
+* saving geometry now works properly
+* CTRL+T to recreate selected thumbnails + bugfixes
+* code cleanups, comments
+
+ksquirrel-libs:
+* SVG: added ".svgz" extension
+* MNG: small fix in data types
+* KOALA: small fix in bitdepth (bitdepth was always '0')
+
 ksquirrel-0.6.0-pre9 and ksquirrel-libs 0.6.0-pre9
 ************************************************************
 

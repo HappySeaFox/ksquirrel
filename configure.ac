@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0-pre9], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.0], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre9)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -14,18 +14,6 @@ unset CDPATH
 #AC_ARG_PROGRAM
 
 KDE_SET_PREFIX
-
-sq_ogl="yes"
-
-AC_ARG_ENABLE(opengl,
-              [AS_HELP_STRING([--disable-opengl], [don't use OpenGL  [default=no]])],
-              [     case "${enableval}" in
-                       yes) sq_ogl="yes" ;;
-                       no)  sq_ogl="no"; AC_DEFINE([SQ_DISABLE_OPENGL], [], [Disable OpenGL support])  ;;
-                       *)   AC_MSG_ERROR([bad value ${enableval} for opengl param]) ;;
-                    esac]
-             )
-
 
 AC_ENABLE_SHARED(yes)
 AC_ENABLE_STATIC(no)
@@ -63,8 +51,6 @@ AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
 CFLAGS="$X_INCLUDES $CFLAGS"
 LDFLAGS="$X_PRE_LIBS -lX11 $X_LDFLAGS $X_EXTRA_LIBS $LDFLAGS"
 
-if test "x$sq_ogl" = "xyes"; then
-
 AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h, ...) and GLU (GL/glu.h) headers to be installed."))
 
 SQ_GL_ERROR="OpenGL library is corrupted or not installed"
@@ -94,8 +80,6 @@ AC_CHECK_FUNC([glLoadMatrixf], [], AC_MSG_ERROR($SQ_GL_ERROR))
 AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR($SQ_GL_ERROR))
 AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR($SQ_GL_ERROR))
 AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR($SQ_GL_ERROR))
-
-fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -175,8 +159,9 @@ AC_CONFIG_FILES([ksquirrel/libpixops/Makefile])
 AC_CONFIG_FILES([ksquirrel/ksquirrel-small/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_dlg/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_overlay/Makefile])
-AC_CONFIG_FILES([desktop/Makefile])
+AC_CONFIG_FILES([ksquirrel/sidebar/Makefile])
 AC_CONFIG_FILES([pics/Makefile])
+AC_CONFIG_FILES([pics/toolbar/Makefile])
 AC_CONFIG_FILES([pics/menu/Makefile])
 AC_CONFIG_FILES([pics/imageedit/Makefile])
 AC_CONFIG_FILES([pics/imageedit/squirrels/Makefile])
@@ -185,6 +170,11 @@ AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/en/Makefile])
 
 AC_OUTPUT
+
+if [ test -e /usr/lib/ksquirrel-libs/version ]; then
+sq_kl="yes" && sq_kl_help="";
+else sq_kl="no" && sq_kl_help=" (ksquirrel-libs package is not installed, please don't forget to install it)";
+fi
 
 echo "
 KSquirrel configuration:
@@ -198,12 +188,10 @@ KSquirrel configuration:
   
 Installation options:
 ----------------------
-  prefix:               ${prefix}
-  KSquirrel binary:     ${prefix}/bin/${PACKAGE}
-  Enable OpenGL:        $sq_ogl
+  prefix:                   ${prefix}
+  KSquirrel binary:         ${prefix}/bin/${PACKAGE}
+  ksquirrel-libs installed: $sq_kl $sq_kl_help
 
-
-  Note: Please, don't forget to install ksquirrel-libs
   ----------------------------------------------------
 
 "

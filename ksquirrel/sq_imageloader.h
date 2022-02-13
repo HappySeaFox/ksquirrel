@@ -20,6 +20,7 @@
 
 #include <qstring.h>
 #include <qimage.h>
+#include <qobject.h>
 
 struct fmt_info;
 struct RGBA;
@@ -30,10 +31,10 @@ struct RGBA;
  *  (for generating thumbnails).
  */
 
-class SQ_ImageLoader
+class SQ_ImageLoader : public QObject
 {
     public:
-        SQ_ImageLoader();
+        SQ_ImageLoader(QObject *parent);
         ~SQ_ImageLoader();
 
         /*
@@ -70,13 +71,16 @@ class SQ_ImageLoader
          */
         fmt_info* info() const;
 
-        static SQ_ImageLoader* instance();
+        int errors() const;
+
+        static SQ_ImageLoader* instance() { return m_instance; }
 
     private:
         RGBA *m_image, *dumbscan;
         fmt_info *finfo;
+        int m_errors;
 
-        static SQ_ImageLoader * sing;
+        static SQ_ImageLoader *m_instance;
 };
 
 inline
@@ -89,6 +93,12 @@ inline
 fmt_info* SQ_ImageLoader::info() const
 {
     return finfo;
+}
+
+inline
+int SQ_ImageLoader::errors() const
+{
+    return m_errors;
 }
 
 #endif

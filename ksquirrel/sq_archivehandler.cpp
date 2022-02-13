@@ -41,11 +41,11 @@
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
 
-SQ_ArchiveHandler * SQ_ArchiveHandler::ar = NULL;
+SQ_ArchiveHandler * SQ_ArchiveHandler::m_instance = NULL;
 
 SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObject(parent, name)
 {
-    ar = this;
+    m_instance = this;
     dir = new SQ_Dir(SQ_Dir::Extracts);
 
     // fill the map with protocols
@@ -59,7 +59,9 @@ SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObje
 }
 
 SQ_ArchiveHandler::~SQ_ArchiveHandler()
-{}
+{
+    delete dir;
+}
 
 /*
  *  Find protocol number by its name.
@@ -243,15 +245,10 @@ void SQ_ArchiveHandler::clean(QString s)
     // hehe, rm -rf
     del << "rm -rf " << KShellProcess::quote(s) << "/*";
 
-    kdDebug() << "SQ_ArchiveHandler::clean: cleaning archive... ";
+    kdDebug() << "SQ_ArchiveHandler: cleaning archive... " << endl;
 
     // start process!
     bool removed = del.start(KProcess::Block);
 
-    kdDebug() << ((removed)?"OK":"error") << endl;
-}
-
-SQ_ArchiveHandler* SQ_ArchiveHandler::instance()
-{
-    return ar;
+    kdDebug() << (removed ? "OK" : "error") << endl;
 }

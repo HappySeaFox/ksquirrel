@@ -25,11 +25,30 @@ class SQ_DirOperator : public SQ_DirOperatorBase
     Q_OBJECT
 
     public:
-        SQ_DirOperator(const KURL &url = KURL(), VV type_ = SQ_DirOperator::TypeList,
-        QWidget *parent = 0, const char *name = 0);
+        SQ_DirOperator(const KURL &url = KURL(), ViewT type_ = SQ_DirOperator::TypeList,
+                                    QWidget *parent = 0, const char *name = 0);
         virtual ~SQ_DirOperator();
 
-        void setDirLister(KDirLister *lister);
+        /*
+         *  If current view type is "thumbnail view", then
+         *     - if thumbnail view is visible (QWidget::isVisible()), start
+         *       thumbnail update;
+         *     - if thumbnail view is not visible, keep in mind
+         *       (SQ_FileThumbView::waitForShowEvent()) that we should start
+         *       thumbnail update later.
+         */
+        void startOrNotThumbnailUpdate();
+
+        /*
+         *  Smart update. Store all file items, reset view,
+         *  and transfer all items back.
+         */
+        void smartUpdate();
+
+        /*
+         *  Remove ".." item from current view
+         */
+        void removeCdUpItem();
 
     private:
         /*
@@ -55,12 +74,19 @@ class SQ_DirOperator : public SQ_DirOperatorBase
          */
         void slotSetThumbSize(const QString&);
 
+        /*
+         *  Invoked, when user selected some external tool in menu.
+         */
+        void slotActivateExternalTool(int index);
+
     protected slots:
+
         /*
          *  Invoked, when some item has been deleted. We should
          *  remove appropriate thumbnail from pixmap cache.
          */
-        void slotDeletedItem(KFileItem *);
+        void slotItemDeleted(KFileItem *);
+
         void slotUpdateInformation(int,int);
 
         /*

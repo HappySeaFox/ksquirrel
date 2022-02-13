@@ -20,16 +20,19 @@
 #include <qtoolbar.h>
 #include <qtoolbutton.h>
 #include <qlabel.h>
-#include <qapplication.h>
 #include <qtooltip.h>
 #include <qtimer.h>
 
 #include <kurldrag.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
+#include <kglobalsettings.h>
 #include <klocale.h>
 #include <kapplication.h>
+#include <kglobal.h>
+#include <kdebug.h>
 
+#include "ksquirrel.h"
 #include "sq_iconloader.h"
 #include "sq_config.h"
 #include "sq_dir.h"
@@ -45,6 +48,8 @@
 
 SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name), isPending(false)
 {
+    kdDebug() << "+SQ_FileThumbView" << endl;
+
     toolTip = NULL;
     disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
 
@@ -94,11 +99,15 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
 
     // load "directory" pixmap
     dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 48);
-    pixelSize = (SQ_ThumbnailSize::instance()->extended())? SQ_ThumbnailSize::instance()->extendedPixelSize() : SQ_ThumbnailSize::instance()->pixelSize();
+    pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
 }
 
 SQ_FileThumbView::~SQ_FileThumbView()
 {
+    kdDebug() << "-SQ_FileThumbView" << endl;
+
+    pending.clear();
+
     slotRemoveToolTip();
 }
 
@@ -114,7 +123,7 @@ void SQ_FileThumbView::slotSelected(QIconViewItem *item, const QPoint &point)
  */
 KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
 {
-    return item ? ((KFileIconViewItem*)item->extraData(this)) : NULL;
+    return item ? ((KFileIconViewItem *)item->extraData(this)) : NULL;
 }
 
 /*
@@ -123,8 +132,7 @@ KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
  */
 void SQ_FileThumbView::insertItem(KFileItem *i)
 {
-    int pixelSize = (SQ_ThumbnailSize::instance()->extended())?
-    SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
+//    int pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
 
     SQ_Config::instance()->setGroup("Fileview");
 
@@ -135,15 +143,13 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
     SQ_Config::instance()->setGroup("Thumbnails");
 
     // mimetype disabled ?
-    bool disable_mime = SQ_Config::instance()->readBoolEntry("disable_mime", true);
+    bool disable_mime = SQ_Config::instance()->readBoolEntry("disable_mime", false);
 
     // common icon for all mimetypes
-    const QPixmap mimeall = SQ_IconLoader::instance()->loadIcon("unknown", KIcon::Desktop, (SQ_ThumbnailSize::instance()->extended())?
-    SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize());
+    const QPixmap mimeall = SQ_IconLoader::instance()->loadIcon("unknown", KIcon::Desktop,
+                pixelSize);
 
     SQ_FileThumbViewItem *item;
-
-//    int pixelSize = SQ_ThumbnailSize::instance()->pixelSize();
 
     QPixmap thumbnail(pixelSize, pixelSize);
     QPainter painter(&thumbnail);
@@ -153,13 +159,10 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
     painter.drawRect(0, 0, pixelSize, pixelSize);
 
     if(i->isDir())
-    {
         painter.drawPixmap((pixelSize-dirPix.width())/2, (pixelSize-dirPix.height())/2, dirPix);
-    }
     else
-    {
-        painter.drawPixmap((pixelSize-mimeall.width())/2, (pixelSize-mimeall.height())/2, ((disable_mime)?mimeall:i->pixmap(pixelSize)));
-    }
+        painter.drawPixmap((pixelSize-mimeall.width())/2, (pixelSize-mimeall.height())/2,
+                            (disable_mime ? mimeall : i->pixmap(pixelSize)));
 
     // "pending" thumbnail
     QPixmap p = pending[QString(SQ_ThumbnailSize::instance()->stringValue())];
@@ -218,8 +221,7 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 
     if(!item) return;
 
-    int pixelSize = (SQ_ThumbnailSize::instance()->extended())?
-    SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
+    int pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
 
     // erase original pixmap
     QPainter painter(item->pixmap());
@@ -462,7 +464,7 @@ void SQ_FileThumbView::slotTooltipDelay()
     toolTip->move(QCursor::pos() + QPoint(5, 5));
     toolTip->adjustSize();
 
-    QRect screen = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(QCursor::pos()));
+    QRect screen = KGlobalSettings::desktopGeometry(KSquirrel::app());
 
     if(toolTip->x() + toolTip->width() > screen.right())
         toolTip->move(toolTip->x()+screen.right()-toolTip->x()-toolTip->width(), toolTip->y());
@@ -489,10 +491,10 @@ void SQ_FileThumbView::clearView()
     // stop job
     stopThumbnailUpdate();
 
-    pixelSize = (SQ_ThumbnailSize::instance()->extended()) ? SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
+    pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
 
     // clear
-    KIconView::clear();
+    KFileIconView::clearView();
 
     // insert ".."
     insertCdUpItem(SQ_WidgetStack::instance()->url());
@@ -511,6 +513,8 @@ bool SQ_FileThumbView::updateRunning() const
  */
 void SQ_FileThumbView::insertCdUpItem(const KURL &base)
 {
+    static const QString &dirup = KGlobal::staticQString("..");
+
     // create pixmap for ".."
     QPixmap thumbnail(pixelSize, pixelSize);
     QPainter painter(&thumbnail);
@@ -525,7 +529,7 @@ void SQ_FileThumbView::insertCdUpItem(const KURL &base)
     KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
 
     // insert new item
-    SQ_FileThumbViewItem *item = new SQ_FileThumbViewItem(this, QString::fromLatin1(".."), thumbnail, fi);
+    SQ_FileThumbViewItem *item = new SQ_FileThumbViewItem(this, dirup, thumbnail, fi);
 
     // item ".." won't be selectable
     item->setSelectable(false);

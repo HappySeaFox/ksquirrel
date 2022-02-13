@@ -2,15 +2,14 @@ Name: ksquirrel
 Summary: KSquirrel - image viewer for KDE 
 Group: User Interface/Desktops 
 Version: 0.6.0
-Release: pre9
+Release: 1
 Copyright: GPL 
 Source: %{name}-%{version}-%{release}.tar.bz2 
 URL: http://ksquirrel.sf.net 
 Packager: - 
 Vendor: Baryshev Dmitry aka Krasu <ksquirrel@tut.by> 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root 
-BuildRequires: gcc, gcc-c++, gettext 
-BuildRequires: kdelibs-devel
+BuildRequires: gcc, gcc-c++, gettext, kdelibs-devel
 Requires: kdelibs, libpng, libjpeg 
 
 %description 

@@ -27,7 +27,6 @@
 
 #include <kurl.h>
 
-//#define SQ_NEED_RGBA_OPERATOR
 #include "fmt_types.h"
 #include "fmt_defs.h"
 
@@ -36,11 +35,11 @@
 // parameters in GL matrix
 #define    MATRIX_C1    matrix[0]
 #define    MATRIX_S1    matrix[1]
-#define    MATRIX_X        matrix[3]
+#define    MATRIX_X     matrix[3]
 #define    MATRIX_S2    matrix[4]
 #define    MATRIX_C2    matrix[5]
-#define    MATRIX_Y        matrix[7]
-#define    MATRIX_Z        matrix[11]
+#define    MATRIX_Y     matrix[7]
+#define    MATRIX_Z     matrix[11]
 
 class KAction;
 class KActionCollection;
@@ -50,6 +49,7 @@ class KRadioAction;
 
 class QTimer;
 class QPainter;
+class QPopupMenu;
 
 #ifndef SQ_SMALL
 
@@ -80,13 +80,52 @@ class memoryPart;
  *
  *   |----------------------------------
  *   |                |                |
- *   |    tex ¹1      |     tex ¹2     |
+ *   |    tex N1      |     tex N2     |
  *   |                |                |
  *   -----------------------------------    <= Entire image
  *   |                |                |
- *   |    tex ¹3      |     tex ¹4     |
+ *   |    tex N3      |     tex N4     |
  *   |                |                |
  *   -----------------------------------
+ *
+ *
+ *  The main class member is 'parts'. It is an array of decoded images
+ *  and appropriate memory buffers and textures. Here comes an explanation:
+ *
+ *
+ *
+ *                                                           textures & coordinates           Part
+ *     +-----------------------------------+                 #####################     ##################
+ *     |                          parts[2] |                 #         #         #===> #                #
+ *     | +-------------------------------------+             #         #         #     # texture id     #
+ *     | |                            parts[1] |    |======> #####################     # texture coords #
+ *     | | +-------------------------------------+  |        #         #         #     # ...            #
+ *     | | |    m_parts                 parts[0] |  |        #         #         #     ##################
+ *     | | |    #####                            |  |        #####################
+ *     | | |    #   #                            |  |
+ *     | | |    #   #===============================|
+ *     | | |    #   #                            |
+ *     | | |    #####                            |
+ *     | | |                                     |              memory buffers
+ *     | | |     m32                             |       ###############################
+ *     | | |    #####                            |       #RGBA.#.....#.....#.....#.....#
+ *     | | |    #   #                            |       #RGBA.#.....#.....#.....#.....#
+ *     | | |    #   #==================================> ###############################
+ *     +-| |    #   #                            |       #RGBA.#.....#.....#.....#.....#
+ *       +-|    #####                            |       #RGBA.#.....#.....#.....#.....#
+ *         +-------------------------------------+       ###############################
+ *                       \      / 
+ *                         \  /
+ *                        parts
+ *
+ *
+ ******************************************************************************
+ *
+ *
+ *  Since 0.6.0-pre9 KSquirrel stores only one image page in video memory.
+ *  When user presses F2 or F3 (previous page/next page) current textures
+ *  are deleted and new ones are bound (see reassignParts()).
+ *
  */
 
 class SQ_GLWidget : public QGLWidget
@@ -97,6 +136,9 @@ class SQ_GLWidget : public QGLWidget
         SQ_GLWidget(QWidget *parent = 0, const char *name = 0);
         ~SQ_GLWidget();
 
+        /*
+         *  Set zoom, move and rotate factors.
+         */
         void setZoomFactor(const GLfloat &newfactor);
         void setMoveFactor(const GLfloat &newfactor);
         void setRotateFactor(const GLfloat &newfactor);
@@ -110,14 +152,26 @@ class SQ_GLWidget : public QGLWidget
         GLfloat get_zoom_pc() const;
         GLfloat get_angle() const;
 
+        KActionCollection* actionCollection() const;
+
+        /*
+         *  Are we in fullscreen state ?
+         */
+        bool fullscreen() const;
+
+        /*
+         * Toggle fullscreen state.
+         */
+        void toggleFullScreen();
+
         /*
          *  Direct call to updateGL().
          */
         void updateGLA() { updateGL(); }
 
         /*
-         *  With 'T' user can totally hide toolbars (with KToolBar::hide()).
-         *  This method will help determine if toolbars are visible.
+         *  With 'T' user can hide toolbar (with KToolBar::hide()).
+         *  This method will help determine if toolbar is visible.
          */
         bool actionsHidden() const;
 
@@ -139,6 +193,11 @@ class SQ_GLWidget : public QGLWidget
          *  in fullscreen mode.
          */
         void createQuickBrowser();
+
+        /*
+         * Show/hide quickbrowser.
+         */
+        void toggleQuickBrowser();
 
 #endif
 
@@ -176,7 +235,7 @@ class SQ_GLWidget : public QGLWidget
         void updateSlideShowButton(bool toggled);
 
 #endif
-        static SQ_GLWidget* window();
+        static SQ_GLWidget* window() { return m_instance; }
 
     protected:
 
@@ -223,6 +282,24 @@ class SQ_GLWidget : public QGLWidget
     private:
 
         /*
+         *  Remove currently loaded textures and memory buffers.
+         */
+        void removeCurrentParts();
+
+        /*
+         *  Since 0.6.0-final KSquirrel doesn't show error messages,
+         *  if the image is broken or not supported. It uses "broken" image
+         *  instead. This method does all needed init.
+         */
+        void initBrokenImage();
+
+        /*
+         *  Force using broken image + update context.
+         *  Show appropriate error message in statusbar.
+         */
+        void useBrokenImage(const int err_index);
+
+        /*
          *  Remove parts (Parts::m32).
          */
         void clearParts(Parts *p, const int s = -1);
@@ -260,7 +337,7 @@ class SQ_GLWidget : public QGLWidget
 
         /*
          *  Change statusbar info according with
-         *  current matrix (it shows current coordnates).
+         *  current matrix (it shows current coordinates).
          */
         void coordChanged();
 
@@ -356,7 +433,7 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Create context menu :-)
          */
-        void createContextMenu(KPopupMenu *m);
+        void createContextMenu(QPopupMenu *m);
 
         /*
          *  Find best tile's width and height for given width and height.
@@ -373,8 +450,8 @@ class SQ_GLWidget : public QGLWidget
         bool prepare();
 
         /*
-         *  Zoom to 'r'. Will be called after somebody used right mouse button
-         *  to select zoom region.
+         *  Zoom to 'r'. Will be called after somebody used mouse button
+         *  to select zoom region. Return true, if zoomed.
          */
         bool zoomRect(const QRect &r);
 
@@ -457,37 +534,35 @@ class SQ_GLWidget : public QGLWidget
         void slotShowImages();
         void slotImagesHidden();
         void slotImagesShown();
-        void signalMapped(int);
+        void slotContextMenuItem(int);
         void slotShowHelp();
 
-    public:
-        KAction         *pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus,
-                        *pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pAHide, *pAShow, *pAHelp;
-
-        KToggleAction   *pAFull, *pAIfLess, *pAStatus;
-        KToggleAction   *pAZoomW, *pAZoomH, *pAZoomWH, *pAZoom100, *pAHideToolbars, *pAZoomLast;
+    private:
+        KAction         *pAReset, *pAClose, *pAProperties, *pAHelp;
+        KToggleAction   *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
+                        *pAZoomH, *pAZoomWH, *pAZoom100,
+                        *pAZoomLast, *pAHideToolbars;
 
 #ifndef SQ_SMALL // light version of KSquirrel (ksquirrel-small) won't have these actions
 
-        KAction         *pANext, *pAPrev, *pAFirst, *pALast, *pAQuick;
+        KToggleAction   *pAQuick;
         SQ_ToolButton   *pAToolSlideShow, *pAToolQuick;
         SQ_QuickBrowser *v;
 
 #endif
 
-        SQ_ToolButton           *pAToolClose,     *pAToolFull;
-        SQ_ToolButtonPopup      *pAToolZoom, *pAToolImages;
+        SQ_ToolButton         *pAToolClose, *pAToolFull;
+        SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
 
-    private:
-        KActionCollection    *ac;
-        KPopupMenu           *menu;
-        SQ_ToolButtonPage *anim;
+        KActionCollection     *ac;
+        QPopupMenu            *menu;
+        SQ_ToolButtonPage     *anim;
 
         // popup menu with zoom types (fit width, fit height, zoom 100%...)
-        KPopupMenu      *zoom,
+        KPopupMenu            *zoom,
 
-                        // popup menu with image pages
-                        *images;
+                              // popup menu with image pages
+                              *images;
 
         QString               File, m_File;
         QCursor               cusual, cdrag, cZoomIn;
@@ -509,19 +584,21 @@ class SQ_GLWidget : public QGLWidget
         fmt_codec_base        *codeK;
         RGBA                  *next;
         fmt_info              finfo;
+        fmt_image             image_broken;
 
         std::vector<Parts>    parts;
+        Parts                 *parts_broken;
 
         GLfloat               matrix[12], saved[12], zoomfactor, movefactor, rotatefactor, curangle;
 
         unsigned int          texQuads, texPixmap, mark[4];
         int                   xmoveold, ymoveold, xmove, ymove, current,
-                              zoom_type, old_id, total, errors;
+                              zoom_type, old_id, total, errors, movetype;
         bool                  reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
-                              changed, inMouse, crossDrawn, changed2, marks, linear;
+                              changed, crossDrawn, changed2, marks, linear, use_broken;
         float                 zoomFactor;
 
-        static SQ_GLWidget    *sing;
+        static SQ_GLWidget    *m_instance;
 };
 
 inline
@@ -542,41 +619,64 @@ bool SQ_GLWidget::isnice()
     return linear;
 }
 
+// Set zoom factor.
+inline
+void SQ_GLWidget::setZoomFactor(const GLfloat &newfactor)
+{
+    zoomfactor = newfactor;
+}
+
+// Set move factor.
+inline
+void SQ_GLWidget::setMoveFactor(const GLfloat &newfactor)
+{
+    movefactor = newfactor;
+}
+
+// Set rotate factor.
+inline
+void SQ_GLWidget::setRotateFactor(const GLfloat &newfactor)
+{
+    rotatefactor = newfactor;
+}
+
+inline
+KActionCollection* SQ_GLWidget::actionCollection() const
+{
+    return ac;
+}
+
 /* *************************************************************** */
 
 class memoryPart
 {
     public:
-        memoryPart();
-        virtual ~memoryPart();
+        memoryPart(const int sz);
+        ~memoryPart();
 
-        virtual void create() = 0;
-
-        int  size() const;
-        bool valid() const;
+        // create/delete memory buffer
+        void create();
         void del();
 
-    protected:
-        int m_size;
+        bool valid() const;
+        unsigned char *data();
 
-    public:
+    private:
+        int m_size;
         unsigned char *m_data;
 };
 
 inline
-int memoryPart::size() const
+unsigned char *memoryPart::data()
 {
-    return m_size;
+    return m_data;
 }
 
 inline
 void memoryPart::del()
 {
-    if(m_data)
-    {
-        delete m_data;
-        m_data = NULL;
-    }
+    delete [] m_data;
+    m_data = NULL;
 }
 
 inline
@@ -585,41 +685,7 @@ bool memoryPart::valid() const
     return m_data != NULL;
 }
 
-class memoryPart32 : public memoryPart
-{
-    public:
-        memoryPart32();
-        ~memoryPart32();
-
-        virtual void create();
-};
-
-class memoryPart64 : public memoryPart
-{
-    public:
-        memoryPart64();
-        ~memoryPart64();
-
-        virtual void create();
-};
-
-class memoryPart128 : public memoryPart
-{
-    public:
-        memoryPart128();
-        ~memoryPart128();
-
-        virtual void create();
-};
-
-class memoryPart256 : public memoryPart
-{
-    public:
-        memoryPart256();
-        ~memoryPart256();
-
-        virtual void create();
-};
+/* *************************************************************** */
 
 struct Part
 {
@@ -629,6 +695,8 @@ struct Part
     unsigned int    tex;
     GLuint          list;
 };
+
+/* *************************************************************** */
 
 struct Parts
 {

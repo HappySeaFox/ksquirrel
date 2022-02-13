@@ -23,7 +23,7 @@
 /* 
  *  SQ_IconListBox represents a listbox with fixed width.
  *
- *  With SQ_IconListItem it is used in SQ_Options.
+ *  SQ_IconListBox and SQ_IconListItem are used in SQ_Options.
  */
 
 class SQ_IconListBox : public KListBox

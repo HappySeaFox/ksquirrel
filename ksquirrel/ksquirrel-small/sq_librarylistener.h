@@ -22,7 +22,7 @@
 #include <kdirlister.h>
 
 /*
- *  SQ_LibraryListener monitors dirctory with libraries, and
+ *  SQ_LibraryListener monitors directory with libraries, and
  *  reports if it has changed. It will call SQ_LibraryHandler::add(),
  *  if somebody copied new libraries, and SQ_LibraryHandler::remove(), if
  *  deleted.
@@ -36,15 +36,17 @@ class SQ_LibraryListener : public KDirLister
         SQ_LibraryListener(bool = false);
         ~SQ_LibraryListener();
 
-        static SQ_LibraryListener* instance();
+        static SQ_LibraryListener* instance() { return m_instance; }
 
     public slots:
+
         /*
          *  Start monitor given directory.
          */
         void slotOpenURL(const KURL&, bool, bool);
 
     private slots:
+
         /*
          *  All operations completed.
          */
@@ -77,7 +79,7 @@ class SQ_LibraryListener : public KDirLister
         QStringList    list;
         bool     operation;
 
-        static SQ_LibraryListener *listener;
+        static SQ_LibraryListener *m_instance;
 };
 
 #endif

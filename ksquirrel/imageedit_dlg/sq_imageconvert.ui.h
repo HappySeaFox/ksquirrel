@@ -10,7 +10,7 @@
 void SQ_ImageConvert::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_convert.png")));
-    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().dark(115));
 
     tableLib->header()->hide();   
 
@@ -37,13 +37,11 @@ void SQ_ImageConvert::init()
 
 void SQ_ImageConvert::initLibs()
 {
-    QValueVector<SQ_LIBRARY>::iterator   BEGIN = SQ_LibraryHandler::instance()->begin();
-    QValueVector<SQ_LIBRARY>::iterator      END = SQ_LibraryHandler::instance()->end();
-    
     QPixmap pix;
     QListViewItem *first;
     
-    for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
+    for(QValueVector<SQ_LIBRARY>::iterator it = SQ_LibraryHandler::instance()->begin();
+            it != SQ_LibraryHandler::instance()->end();++it)
     {
         if((*it).writable)
         {
@@ -73,7 +71,8 @@ void SQ_ImageConvert::slotShowExtWrapper(bool show)
 
 void SQ_ImageConvert::createExtension()
 {
-    SQ_WriteOption *c = new SQ_WriteOption;
+    SQ_WriteOption *c = new SQ_WriteOption(this);
+    c->slider->setRange(0, 255, 1, true);
     setExtension(c);
     setOrientation(Qt::Horizontal);
 }
@@ -93,11 +92,11 @@ void SQ_ImageConvert::slotStartConvert()
     pushCancel->setFocus();
     widgetStack->raiseWidget(1);
     showExtension(false);
-    
+
     qApp->processEvents();
 
     QListViewItem *i = tableLib->selectedItem();
-    
+
     if(!i)
         return;
 
@@ -190,13 +189,13 @@ void SQ_ImageConvert::fillWriteOptions(fmt_writeoptions *opt, const fmt_writeopt
 
 void SQ_ImageConvert::slotOptions()
 {
-    SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
+    SQ_ImageEditOptions o(this);
 
     // SQ_ImageEditOptions will write needed KConfig entries, if
     // exec() will return QDialog::Accepted
-    o->setConfigPrefix("convert");
+    o.setConfigPrefix("convert");
 
-    o->exec(&imageopt);
+    o.exec(&imageopt);
 }
 
 void SQ_ImageConvert::slotDone(bool close)

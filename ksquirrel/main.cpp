@@ -50,11 +50,13 @@ int main(int argc, char *argv[])
 
     // setup 'About' dialog
     aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
+    aboutData.addCredit("Andrey Rahmatullin aka wrar", I18N_NOOP("Bug reports, patches"), "wrar@altlinux.ru", QString::null);
+    aboutData.addCredit("JaguarWan", I18N_NOOP("Bug reports"), "jaguarwan@gmail.com", QString::null);
     aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
-    aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Great artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");
+    aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Initial artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");
+    aboutData.addCredit(I18N_NOOP("Fera"), I18N_NOOP("Great artwork for edit tools"), "morrigan171@mail.ru", QString::null);
     aboutData.addCredit(I18N_NOOP("OpenGL forum at"), 0, 0, "http://opengl.org");
     aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
-    aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
 
     // parse command line
     KCmdLineArgs::init(argc, argv, &aboutData);
@@ -117,16 +119,17 @@ int main(int argc, char *argv[])
     if(high->thumbs)
         high->thumbs_p = sq_args->getOption("t");
 
+    // connect to DCOP server and register KSquirrel. Now we can
+    // send messages to KSquirrel (see README for parameters)
+    if(a.dcopClient()->attach())
+        a.dcopClient()->registerAs(App, false);
+
     // create instance
     SQ = new KSquirrel(NULL, App);
 
     a.setMainWidget(SQ);
 
     sq_args->clear();
-
-    // Attach to DCOP server
-    if(a.dcopClient()->attach())
-        a.dcopClient()->registerAs(App, false);
 
     return a.exec();
 }

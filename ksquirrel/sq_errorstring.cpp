@@ -15,15 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <kdebug.h>
+
 #include "sq_errorstring.h"
 
 #include "error.h"
 
-SQ_ErrorString * SQ_ErrorString::sing = 0;
+SQ_ErrorString * SQ_ErrorString::m_instance = 0;
 
-SQ_ErrorString::SQ_ErrorString()
+SQ_ErrorString::SQ_ErrorString(QObject *parent) : QObject(parent)
 {
-    sing = this;
+    m_instance = this;
+
+    kdDebug() << "+SQ_ErrorString" << endl;
 
     // fill map with translated messages
     messages[SQE_OK] = QString::fromLatin1("OK");
@@ -40,11 +44,10 @@ SQ_ErrorString::SQ_ErrorString()
 }
 
 SQ_ErrorString::~SQ_ErrorString()
-{}
-
-SQ_ErrorString* SQ_ErrorString::instance()
 {
-    return sing;
+    kdDebug() << "-SQ_ErrorString" << endl;
+
+    messages.clear();
 }
 
 // Get string by error code.

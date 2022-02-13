@@ -34,6 +34,8 @@ original code by (C) Guillaume Chazarain <guichaz@yahoo.fr>.
 
 - KSquirrel uses fmt_filters package. See fmt_filters_README for more.
 
+- "broken" pixmap was taken from "Nuvola" icon theme.
+
 ***********************************************************************************
 
 Since 0.6.0-pre5 you can use DCOP interface to manipulate KSquirrel. Just run

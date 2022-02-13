@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>421</width>
-            <height>400</height>
+            <width>531</width>
+            <height>317</height>
         </rect>
     </property>
     <property name="caption">
@@ -89,7 +89,7 @@
                             <number>6</number>
                         </property>
                         <property name="text">
-                            <string>Colorize will help you adjust color balance and brightness, gamma and contrast of your images.</string>
+                            <string>Colorize tool will help you adjust color balance and brightness, gamma and contrast of your images.</string>
                         </property>
                         <property name="textFormat">
                             <enum>RichText</enum>
@@ -226,96 +226,7 @@
                                 <property name="margin">
                                     <number>0</number>
                                 </property>
-                                <spacer row="2" column="2">
-                                    <property name="name">
-                                        <cstring>spacer11</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>MinimumExpanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>5</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="SQ_BCGLabel" row="3" column="2">
-                                    <property name="name">
-                                        <cstring>pixmap</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="minimumSize">
-                                        <size>
-                                            <width>128</width>
-                                            <height>128</height>
-                                        </size>
-                                    </property>
-                                </widget>
-                                <spacer row="4" column="2">
-                                    <property name="name">
-                                        <cstring>spacer10</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Fixed</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>1</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="SQ_BCGLabel" row="5" column="2">
-                                    <property name="name">
-                                        <cstring>pixmap1</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="minimumSize">
-                                        <size>
-                                            <width>128</width>
-                                            <height>128</height>
-                                        </size>
-                                    </property>
-                                </widget>
-                                <spacer row="6" column="2">
-                                    <property name="name">
-                                        <cstring>spacer12_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>MinimumExpanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>5</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QWidgetStack" row="2" column="0" rowspan="5" colspan="1">
+                                <widget class="QWidgetStack" row="1" column="0" rowspan="3" colspan="1">
                                     <property name="name">
                                         <cstring>widgetStackParams</cstring>
                                     </property>
@@ -435,7 +346,7 @@
                                                             <enum>Above</enum>
                                                         </property>
                                                         <property name="tickInterval">
-                                                            <number>20</number>
+                                                            <number>25</number>
                                                         </property>
                                                         <property name="whatsThis" stdset="0">
                                                             <string>Brightness</string>
@@ -473,7 +384,7 @@
                                                             <enum>Above</enum>
                                                         </property>
                                                         <property name="tickInterval">
-                                                            <number>20</number>
+                                                            <number>25</number>
                                                         </property>
                                                         <property name="whatsThis" stdset="0">
                                                             <string>Contrast</string>
@@ -514,7 +425,7 @@
                                                             <enum>Above</enum>
                                                         </property>
                                                         <property name="tickInterval">
-                                                            <number>17</number>
+                                                            <number>22</number>
                                                         </property>
                                                         <property name="whatsThis" stdset="0">
                                                             <string>Gamma</string>
@@ -640,7 +551,7 @@
                                                             <enum>Above</enum>
                                                         </property>
                                                         <property name="tickInterval">
-                                                            <number>20</number>
+                                                            <number>25</number>
                                                         </property>
                                                         <property name="whatsThis" stdset="0">
                                                             <string>Blue</string>
@@ -675,7 +586,7 @@
                                                             <enum>Above</enum>
                                                         </property>
                                                         <property name="tickInterval">
-                                                            <number>20</number>
+                                                            <number>25</number>
                                                         </property>
                                                         <property name="whatsThis" stdset="0">
                                                             <string>Green</string>
@@ -710,7 +621,7 @@
                                                             <enum>Above</enum>
                                                         </property>
                                                         <property name="tickInterval">
-                                                            <number>20</number>
+                                                            <number>25</number>
                                                         </property>
                                                         <property name="whatsThis" stdset="0">
                                                             <string>Red</string>
@@ -721,7 +632,7 @@
                                         </grid>
                                     </widget>
                                 </widget>
-                                <widget class="QGroupBox" row="0" column="0" rowspan="2" colspan="3">
+                                <widget class="QGroupBox" row="0" column="0" rowspan="1" colspan="3">
                                     <property name="name">
                                         <cstring>groupBox3</cstring>
                                     </property>
@@ -818,7 +729,41 @@
                                         </widget>
                                     </grid>
                                 </widget>
-                                <spacer row="3" column="1">
+                                <spacer row="3" column="2">
+                                    <property name="name">
+                                        <cstring>spacer12_2</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>MinimumExpanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>16</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <spacer row="1" column="2">
+                                    <property name="name">
+                                        <cstring>spacer11</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>MinimumExpanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>16</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <spacer row="2" column="1">
                                     <property name="name">
                                         <cstring>spacer13</cstring>
                                     </property>
@@ -830,8 +775,73 @@
                                     </property>
                                     <property name="sizeHint">
                                         <size>
-                                            <width>150</width>
+                                            <width>16</width>
                                             <height>16</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QLayoutWidget" row="2" column="2">
+                                    <property name="name">
+                                        <cstring>layout7</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="SQ_BCGLabel">
+                                            <property name="name">
+                                                <cstring>pixmap</cstring>
+                                            </property>
+                                            <property name="sizePolicy">
+                                                <sizepolicy>
+                                                    <hsizetype>0</hsizetype>
+                                                    <vsizetype>0</vsizetype>
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="minimumSize">
+                                                <size>
+                                                    <width>128</width>
+                                                    <height>128</height>
+                                                </size>
+                                            </property>
+                                        </widget>
+                                        <widget class="SQ_BCGLabel">
+                                            <property name="name">
+                                                <cstring>pixmap1</cstring>
+                                            </property>
+                                            <property name="sizePolicy">
+                                                <sizepolicy>
+                                                    <hsizetype>0</hsizetype>
+                                                    <vsizetype>0</vsizetype>
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="minimumSize">
+                                                <size>
+                                                    <width>128</width>
+                                                    <height>128</height>
+                                                </size>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                                <spacer row="1" column="3" rowspan="3" colspan="1">
+                                    <property name="name">
+                                        <cstring>spacer12</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>375</height>
                                         </size>
                                     </property>
                                 </spacer>
@@ -846,23 +856,6 @@
                                         <bool>true</bool>
                                     </property>
                                 </widget>
-                                <spacer row="1" column="3" rowspan="6" colspan="1">
-                                    <property name="name">
-                                        <cstring>spacer12</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>295</height>
-                                        </size>
-                                    </property>
-                                </spacer>
                             </grid>
                         </widget>
                         <widget class="QWidget">
@@ -1234,8 +1227,6 @@
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>sq_bcglabel.h</includehint>
-    <includehint>sq_bcglabel.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>sq_label.h</includehint>
     <includehint>sq_label.h</includehint>
@@ -1243,6 +1234,8 @@
     <includehint>sq_label.h</includehint>
     <includehint>sq_label.h</includehint>
     <includehint>sq_label.h</includehint>
+    <includehint>sq_bcglabel.h</includehint>
+    <includehint>sq_bcglabel.h</includehint>
     <includehint>kprogress.h</includehint>
 </includehints>
 </UI>

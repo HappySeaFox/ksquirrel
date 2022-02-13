@@ -1,5 +1,0 @@
-[Desktop Entry]
-Exec=konqueror %F
-Icon=konqueror
-Name=Open with Konqueror
-ServiceTypes=*

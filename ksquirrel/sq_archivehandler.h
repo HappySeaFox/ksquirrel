@@ -46,7 +46,7 @@ class SQ_Dir;
 class SQ_ArchiveHandler : public QObject
 {
     public: 
-        SQ_ArchiveHandler(QObject * parent = 0, const char *name = 0);
+        SQ_ArchiveHandler(QObject *parent = 0, const char *name = 0);
         ~SQ_ArchiveHandler();
 
         /*
@@ -105,7 +105,7 @@ class SQ_ArchiveHandler : public QObject
          */
         void clean(QString s);
 
-        static SQ_ArchiveHandler* instance();
+        static SQ_ArchiveHandler* instance() { return m_instance; }
 
     private:
         QString    extracteddir, fullextracteddir;
@@ -129,7 +129,7 @@ class SQ_ArchiveHandler : public QObject
         // Fileitem
         KFileItem *item;
 
-        static SQ_ArchiveHandler *ar;
+        static SQ_ArchiveHandler *m_instance;
 };
 
 #endif

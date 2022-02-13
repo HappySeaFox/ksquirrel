@@ -42,7 +42,7 @@ void SQ_IconListBox::updateWidth()
         if(verticalScrollBar()->isVisible())
             maxWidth += verticalScrollBar()->sizeHint().width();
 
-        setFixedWidth(maxWidth + frameWidth()*2 + 44);
+        setFixedWidth(maxWidth + frameWidth()*2 + 30);
         mWidthValid = true;
     }
 }

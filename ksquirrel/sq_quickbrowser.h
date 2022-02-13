@@ -24,7 +24,10 @@
 
 #include <ktoolbar.h>
 
+class KFileItem;
+
 class SQ_DirOperatorBase;
+class SQ_FileIconView;
 
 /*
  *  SQ_QuickBrowser is a simpe filemanager with toolbar and statusbar.
@@ -55,8 +58,8 @@ class SQ_Header : public KToolBar
 /*
  *  SizeGrip for SQ_QuickBrowser's statusbar.
  *
- *  QSizeGrip by itself resizing toplevel widget,
- *  we want it to resize our SQ_QuickBrowser (which
+ *  QSizeGrip itself resizes toplevel widget,
+ *  but we want to resize our SQ_QuickBrowser (which
  *  is not toplevel)
  */
 class SQ_SizeGrip : public QSizeGrip
@@ -100,8 +103,10 @@ class SQ_QuickBrowser : public QVBox
 
         SQ_DirOperatorBase *quick;
 
-        static SQ_QuickBrowser* window();
-        static SQ_DirOperatorBase *quickOperator();
+        void updateCurrentFileItem();
+
+        static SQ_QuickBrowser* window() { return m_instance; }
+        static SQ_DirOperatorBase *quickOperator() { return op; }
 
     public slots:
 
@@ -118,7 +123,9 @@ class SQ_QuickBrowser : public QVBox
         void showEvent(QShowEvent *);
 
     private:
-        static SQ_QuickBrowser *view;
+        SQ_FileIconView *iv;
+
+        static SQ_QuickBrowser *m_instance;
         static SQ_DirOperatorBase *op;
 };
 

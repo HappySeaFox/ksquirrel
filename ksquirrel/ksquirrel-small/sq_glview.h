@@ -48,10 +48,32 @@ class SQ_ToolBar : public KToolBar
 };
 
 /*
- *  SQ_GLView represents a widget containing SQ_GLWidget and statusbar.
+ *  SQ_GLView represents a widget containing SQ_GLWidget, toolbar and statusbar.
  *
- *  If SQ_SMALL defined, it becomes the meain class in 'small' version
+ *  If SQ_SMALL is defined, it becomes the main widget (and class) in 'small' version
  *  of KSquirrel.
+ *
+ *
+ *  + -------------------------------------------------+
+ *  |  | | | | | | | | | | | | | | | | |               |  <= toolbar with actions (SQ_ToolBar)
+ *  |--------------------------------------------------|
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |  <= OpenGL widget (SQ_GLWidget)
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |                                                  |
+ *  |--------------------------------------------------|  <= statusbar (KStatusBar)
+ *  +--------------------------------------------------+
+ *
+ *
  */
 
 class SQ_GLView : public QVBox
@@ -79,6 +101,17 @@ class SQ_GLView : public QVBox
 #endif
 
         /*
+         *  Save current position and size to config
+         */
+        void saveGeometry();
+        void restoreGeometry();
+
+        /*
+         *  Reset all statusbar's labels to default values.
+         */
+        void resetStatusBar();
+
+        /*
          *  Get a pointer to statusbar.
          */
         KStatusBar* statusbar();
@@ -94,12 +127,19 @@ class SQ_GLView : public QVBox
          */
         QLabel* sbarWidget(const QString &name) const;
 
-        static SQ_GLView* window();
+        static SQ_GLView* window() { return m_instance; }
 
     protected:
+
+        /*
+         *  We want to eat close events. If current version is not 'small',
+         *  ignore close event. If current version is 'small', save all important
+         *  parameters to config file and accept close event (exit).
+         */
         void closeEvent(QCloseEvent *e);
 
     private:
+
         /*
          *  Internal.
          */
@@ -111,24 +151,25 @@ class SQ_GLView : public QVBox
 
 #endif
 
-    private slots:
-        /*
-         *  All libraries now loaded.
-         */
-        void slotContinueLoading();
-
+    public slots:
         /*
          *  Goto fullscreen. If current version is NOT
          *  'small', fullscreen state will be managed by KSquirrel.
          */
         void slotFullScreen(bool full);
 
+    private slots:
+        /*
+         *  All libraries now loaded.
+         */
+        void slotContinueLoading();
+
 #ifdef SQ_SMALL
 
     private:
         SQ_LibraryListener *libl;
         SQ_LibraryHandler  *libh;
-        SQ_Config            *kconf;
+        SQ_Config          *kconf;
 
 #endif
 
@@ -139,18 +180,24 @@ class SQ_GLView : public QVBox
         bool separate;
 
 #endif
-        SQ_GLWidget *gl;
-        KStatusBar *sbar;
-        QMap<QString, QLabel*> names;
-        SQ_ToolBar                *m_toolbar;
+        SQ_GLWidget             *gl;
+        KStatusBar              *sbar;
+        QMap<QString, QLabel* > names;
+        SQ_ToolBar              *m_toolbar;
 
-        static SQ_GLView *sing;
+        static SQ_GLView *m_instance;
 };
 
 inline
 SQ_ToolBar* SQ_GLView::toolbar()
 {
     return m_toolbar;
+}
+
+inline
+KStatusBar* SQ_GLView::statusbar()
+{
+    return sbar;
 }
 
 inline

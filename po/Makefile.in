@@ -52,9 +52,7 @@ SOURCES =
 DIST_SOURCES =
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 1
-#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
-#>+ 1
-DISTFILES = $(GMOFILES) $(POFILES) $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
@@ -279,13 +277,10 @@ xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 
 ####### kdevelop will overwrite this part!!! (end)############
-#>- POFILES = AUTO
-#>+ 2
-POFILES = ru.po nl.po
-GMOFILES = ru.gmo nl.gmo
+POFILES = AUTO
 #>- all: all-am
 #>+ 1
-all: all-nls docs-am  all-am
+all: docs-am  all-am
 
 .SUFFIXES:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -347,9 +342,7 @@ ctags: CTAGS
 CTAGS:
 
 
-#>- distdir: $(DISTFILES)
-#>+ 1
-distdir: distdir-nls  $(DISTFILES)
+distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -383,9 +376,7 @@ installdirs:
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
-#>- uninstall: uninstall-am
-#>+ 1
-uninstall: uninstall-nls  uninstall-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
@@ -428,9 +419,7 @@ info: info-am
 
 info-am:
 
-#>- install-data-am:
-#>+ 1
-install-data-am: install-nls 
+install-data-am:
 
 install-exec-am:
 
@@ -440,9 +429,7 @@ install-man:
 
 installcheck-am:
 
-#>- maintainer-clean: maintainer-clean-am
-#>+ 1
-maintainer-clean: clean-nls  maintainer-clean-am
+maintainer-clean: maintainer-clean-am
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -476,52 +463,7 @@ uninstall-am: uninstall-info-am
 
 
 #>+ 2
-KDE_DIST=Makefile.in ru.gmo ksquirrel.pot nl.gmo nl.po ru.po Makefile.am 
-
-#>+ 7
-ru.gmo: ru.po
-	rm -f ru.gmo; $(GMSGFMT) -o ru.gmo $(srcdir)/ru.po
-	test ! -f ru.gmo || touch ru.gmo
-nl.gmo: nl.po
-	rm -f nl.gmo; $(GMSGFMT) -o nl.gmo $(srcdir)/nl.po
-	test ! -f nl.gmo || touch nl.gmo
-
-#>+ 3
-clean-nls:
-	-rm -f  ru.gmo nl.gmo
-
-#>+ 10
-install-nls:
-	@for base in ru nl ; do \
-	  echo $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
-	  $(mkinstalldirs) $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES ; \
-	  if test -f $$base.gmo; then $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
-	  elif test -f $(srcdir)/$$base.gmo; then $(INSTALL_DATA) $(srcdir)/$$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
-	  fi ;\
-	done
-
-
-#>+ 4
-uninstall-nls:
-	rm -f $(DESTDIR)$(kde_locale)/ru/LC_MESSAGES/$(PACKAGE).mo
-	rm -f $(DESTDIR)$(kde_locale)/nl/LC_MESSAGES/$(PACKAGE).mo
-
-#>+ 2
-all-nls: $(GMOFILES)
-
-#>+ 8
-distdir-nls:$(GMOFILES)
-	for file in $(POFILES); do \
-	  cp $(srcdir)/$$file $(distdir); \
-	done
-	for file in $(GMOFILES); do \
-	  cp $(srcdir)/$$file $(distdir); \
-	done
-
-#>+ 4
-merge:
-	$(MAKE) -f $(top_srcdir)/admin/Makefile.common package-merge POFILES="${POFILES}" PACKAGE=${PACKAGE}
-
+KDE_DIST=Makefile.in ksquirrel.pot Makefile.am 
 
 #>+ 2
 docs-am:

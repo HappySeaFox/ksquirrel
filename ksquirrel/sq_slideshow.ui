@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>412</width>
-            <height>178</height>
+            <width>411</width>
+            <height>208</height>
         </rect>
     </property>
     <property name="caption">
@@ -58,36 +58,6 @@
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QLabel" row="1" column="0">
-                    <property name="name">
-                        <cstring>textLabel1</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Delay, in milliseconds:</string>
-                    </property>
-                </widget>
-                <widget class="QSpinBox" row="1" column="1">
-                    <property name="name">
-                        <cstring>spinDelay</cstring>
-                    </property>
-                    <property name="maxValue">
-                        <number>100000</number>
-                    </property>
-                    <property name="minValue">
-                        <number>500</number>
-                    </property>
-                    <property name="lineStep">
-                        <number>10</number>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="3" column="0">
-                    <property name="name">
-                        <cstring>textLabel2</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Raise image window</string>
-                    </property>
-                </widget>
                 <widget class="QLabel" row="2" column="0">
                     <property name="name">
                         <cstring>textLabel1_3</cstring>
@@ -96,23 +66,6 @@
                         <string>Fullscreen</string>
                     </property>
                 </widget>
-                <spacer row="1" column="2">
-                    <property name="name">
-                        <cstring>spacer2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>160</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
                 <widget class="QLabel" row="0" column="0">
                     <property name="name">
                         <cstring>textLabel1_2</cstring>
@@ -150,7 +103,7 @@
                                 <cstring>pushCurrent</cstring>
                             </property>
                             <property name="toolTip" stdset="0">
-                                <string>Set current directory</string>
+                                <string>Set directory to current</string>
                             </property>
                         </widget>
                         <widget class="SQ_PushButton">
@@ -158,7 +111,7 @@
                                 <cstring>pushHistory</cstring>
                             </property>
                             <property name="toolTip" stdset="0">
-                                <string>History of last visited urls</string>
+                                <string>Last visited directories</string>
                             </property>
                         </widget>
                     </hbox>
@@ -169,6 +122,72 @@
                     </property>
                     <property name="text">
                         <string></string>
+                    </property>
+                </widget>
+                <widget class="KIntSpinBox" row="4" column="1">
+                    <property name="name">
+                        <cstring>spinCycle</cstring>
+                    </property>
+                    <property name="specialValueText">
+                        <string>No</string>
+                    </property>
+                    <property name="maxValue">
+                        <number>1000</number>
+                    </property>
+                </widget>
+                <widget class="KIntSpinBox" row="1" column="1">
+                    <property name="name">
+                        <cstring>spinDelay</cstring>
+                    </property>
+                    <property name="maxValue">
+                        <number>100000</number>
+                    </property>
+                    <property name="minValue">
+                        <number>500</number>
+                    </property>
+                    <property name="lineStep">
+                        <number>10</number>
+                    </property>
+                </widget>
+                <spacer row="1" column="2">
+                    <property name="name">
+                        <cstring>spacer2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>150</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="3" column="0">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Raise image window</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Delay, in milliseconds:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="0">
+                    <property name="name">
+                        <cstring>textLabel1_4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Repeats</string>
                     </property>
                 </widget>
             </grid>
@@ -238,7 +257,6 @@
 </connections>
 <tabstops>
     <tabstop>kurl</tabstop>
-    <tabstop>spinDelay</tabstop>
     <tabstop>checkFull</tabstop>
     <tabstop>checkForce</tabstop>
     <tabstop>pushStart</tabstop>
@@ -273,5 +291,7 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>sq_pushbutton.h</includehint>
     <includehint>sq_pushbutton.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
 </includehints>
 </UI>

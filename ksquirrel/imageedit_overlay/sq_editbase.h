@@ -36,40 +36,97 @@ struct SQ_LIBRARY;
 
 class KTempFile;
 
+/*
+ *  Base class for all edit tools. It contains all methods needed by
+ *  converter, resizer, printer etc. It decodes an image, writes it back to
+ *  disk. All specific actions (like colorizing, resizing etc.) are done by
+ *  appropriate edit tool.
+ */
+
 class SQ_EditBase : public QObject
 {
     Q_OBJECT
 
     public: 
-        SQ_EditBase();
+        SQ_EditBase(QObject *parent);
         virtual ~SQ_EditBase();
 
     protected:
+
+        /*
+         *  Do something with decoded image. SQ_Resizer will resize image,
+         *  SQ_Contraster will adjust colors etc.
+         */
         virtual int manipDecodedImage(fmt_image *im) = 0;
+
+        /*
+         *  Create edit tool-specific dialog, and wait for user
+         *  input
+         */
         virtual void startEditPrivate() = 0;
+
+        /*
+         *  Execute specific dialog.
+         */
         virtual void dialogReset() = 0;
 
+        /*
+         *  Do something with decoded image(manipDecodedImage()) and write it
+         *  on disk.
+         */
         virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
+
+        /*
+         *  Determine next scanline to write on disk. For example, rotate tool
+         *  will reimplement this method.
+         */
         virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
 
+        /*
+         *  Reset writing options to default. Convert tool will
+         *  reimplement this method to set custom options.
+         */
         virtual void initWriteOptions();
+
+        /*
+         *  Determine library that should write decoded image.
+         */
         virtual void setWritingLibrary();
+
+        /*
+         *  Decoding done. Do some cleanup...
+         */
         virtual void cycleDone();
 
+        /*
+         *  Main decoding loop.
+         */
         void decodingCycle();
 
+        /*
+         *  Generate preview image for dialog. For example, rotate tool
+         *  and filter tool need preview image.
+         */
         QImage generatePreview() const;
 
     private:
+
+        /*
+         *  Determine file name. In this file SQ_EditBase will save new image.
+         */
         QString adjustFileName(const QString &globalprefix, const QString &name, int replace,
                     QString putto, bool paged = false, int page = 0);
+
+        /*
+         *  Copy file :-)
+         */
         int copyFile(const QString &src, const QString &dst) const;
         void errorjmp(jmp_buf jmp, const int code);
 
     signals:
         void convertText(const QString &, bool);
         void oneFileProcessed();
-        void done(bool);
+        void done(bool allok);
 
     protected slots:
         void slotStartEdit();

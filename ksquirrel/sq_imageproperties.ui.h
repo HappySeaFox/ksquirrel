@@ -7,22 +7,34 @@
 ** place of a destructor.
 *****************************************************************************/
 
+/*
+ *  SQ_ImageProperties shows image properties.
+ */
+
 void SQ_ImageProperties::init()
 {
     menu = new KPopupMenu;
-    KAction *copy = KStdAction::copy(this, SLOT(slotCopyString()), 0);
-    KAction *copyentry = new KAction(i18n("Copy entry"), 0, this, SLOT(slotCopyEntry()), 0);
-    KAction *copyall = new KAction(i18n("Copy all entries"), 0, this, SLOT(slotCopyAll()), 0);
-    
+    copy = KStdAction::copy(this, SLOT(slotCopyString()), 0);
+    copyentry = new KAction(i18n("Copy entry"), 0, this, SLOT(slotCopyEntry()), 0);
+    copyall = new KAction(i18n("Copy all entries"), 0, this, SLOT(slotCopyAll()), 0);
+
     copyentry->setIcon(copy->icon());
     copyall->setIcon(copy->icon());
 
     copy->plug(menu);
     copyentry->plug(menu);
     copyall->plug(menu);
-    
+
     ok = SQ_IconLoader::instance()->loadIcon("ok", KIcon::Desktop, 16);
     error = SQ_IconLoader::instance()->loadIcon("error", KIcon::Desktop, 16);
+}
+
+void SQ_ImageProperties::destroy()
+{
+    delete copyall;
+    delete copyentry;
+    delete copy;
+    delete menu;
 }
 
 void SQ_ImageProperties::setParams(QStringList &l)
@@ -84,11 +96,9 @@ void SQ_ImageProperties::setFileParams()
 
 void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta )
 {
-    QValueVector<QPair<QString,QString> >::iterator BEGIN = meta.begin();
-    QValueVector<QPair<QString,QString> >::iterator END = meta.end();
     QListViewItem *after = 0, *item;
     
-    for(QValueVector<QPair<QString,QString> >::iterator it = BEGIN;it != END;++it)
+    for(QValueVector<QPair<QString,QString> >::iterator it = meta.begin();it != meta.end();++it)
     {
         if(after)
             item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second);

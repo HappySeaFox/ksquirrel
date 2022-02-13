@@ -33,6 +33,7 @@ class SQ_SystemTray : public KSystemTray
 
     public:
         SQ_SystemTray(QWidget *parent = 0, const char *name = 0);
+        ~SQ_SystemTray();
 
     protected:
 

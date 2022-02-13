@@ -50,13 +50,17 @@ class SQ_ToolButtonPage : public SQ_ToolButton
         void advanceValue();
         void flush();
 
-        static int fixedWidth();
-
     private:
         QPixmap generatePixmap();
 
     private:
         int val;
 };
+
+inline
+int SQ_ToolButton::fixedWidth()
+{
+    return 26;
+}
 
 #endif

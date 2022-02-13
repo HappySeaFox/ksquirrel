@@ -16,22 +16,22 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <knuminput.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_filter.h"
 #include "sq_imagefilter.h"
 #include "fmt_filters.h"
 #include "sq_imageloader.h"
-#include "sq_selector.h"
-#include "sq_canvaswidget.h"
 
 SQ_Filter * SQ_Filter::sing = NULL;
 
-SRect rc;
-
-SQ_Filter::SQ_Filter() : SQ_EditBase()
+SQ_Filter::SQ_Filter(QObject *parent) : SQ_EditBase(parent)
 {
     sing = this;
+
+    kdDebug() << "+SQ_Filter" << endl;
 
     special_action = i18n("Filtering");
 
@@ -41,12 +41,12 @@ SQ_Filter::SQ_Filter() : SQ_EditBase()
 }
 
 SQ_Filter::~SQ_Filter()
-{}
+{
+    kdDebug() << "-SQ_Filter" << endl;
+}
 
 void SQ_Filter::startEditPrivate()
 {
-    s_all = false;
-
     filter = new SQ_ImageFilter(KSquirrel::app());
     filter->setCaption(i18n("Filter 1 file", "Filter %n files", files.count()));
 
@@ -116,27 +116,6 @@ int SQ_Filter::manipDecodedImage(fmt_image *im)
             }
         }
         break;
-
-        case F::fredeye:
-        {
-            if(!s_all)
-            {
-                SQ_Selector *s = new SQ_Selector(filter);
-
-                QImage qimg((unsigned char*)image, im->w, im->h, 32, NULL, 0, QImage::LittleEndian);
-                qimg.setAlphaBuffer(true);
-
-                s->setImage(qimg);
-
-                if(s->exec(&rc, &s_all) == QDialog::Accepted)
-                    fmt_filters::redeye(img, rc.width, rc.height, rc.x, rc.y, filtopt._uint);
-                else
-                    return SQE_NOTOK;
-            }
-            else
-                fmt_filters::redeye(img, rc.width, rc.height, rc.x, rc.y, filtopt._uint);
-        }
-        break;
     }
 
     return SQE_OK;
@@ -145,4 +124,9 @@ int SQ_Filter::manipDecodedImage(fmt_image *im)
 void SQ_Filter::dialogReset()
 {
     filter->startFiltering(files.count());
+}
+
+void SQ_Filter::cycleDone()
+{
+    delete filter;
 }

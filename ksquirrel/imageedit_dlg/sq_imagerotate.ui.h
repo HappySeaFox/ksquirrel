@@ -10,7 +10,7 @@
 void SQ_ImageRotate::init()
 {
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_rotate.png")));
-    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
+    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().dark(115));
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pushRotateL->setPixmap(locate("appdata", "images/imageedit/rotateL.png"));
     pushRotateR->setPixmap(locate("appdata", "images/imageedit/rotateR.png"));
@@ -187,13 +187,13 @@ void SQ_ImageRotate::rotateImage(bool right)
 
 void SQ_ImageRotate::slotOptions()
 {
-    SQ_ImageEditOptions *o = new SQ_ImageEditOptions(this);
+    SQ_ImageEditOptions o(this);
 
     // SQ_ImageEditOptions will write needed KConfig entries, if
     // exec() will return QDialog::Accepted
-    o->setConfigPrefix("rotate");
+    o.setConfigPrefix("rotate");
 
-    o->exec(&imageopt);
+    o.exec(&imageopt);
 }
 
 void SQ_ImageRotate::updateAngle()

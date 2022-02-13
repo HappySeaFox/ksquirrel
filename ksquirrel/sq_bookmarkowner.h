@@ -49,7 +49,7 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
          */
         virtual QString currentURL() const;
     
-        static SQ_BookmarkOwner* instance();
+        static SQ_BookmarkOwner* instance() { return m_instance; }
 
         /*
          *  Set current url
@@ -68,7 +68,7 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
         KURL URL;
 
         // singleton
-        static SQ_BookmarkOwner *sing;
+        static SQ_BookmarkOwner *m_instance;
 };
 
 #endif

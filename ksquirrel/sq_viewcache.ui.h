@@ -10,26 +10,24 @@
 void SQ_ViewCache::init()
 {
     textTotal->setText(QString(" %1 ").arg((int)SQ_PixmapCache::instance()->count()));
-    
+
     if(SQ_PixmapCache::instance()->isEmpty())
         return;
 
     QPixmap pix;
 
-    SQ_PixmapCache::cache_iterator BEGIN = SQ_PixmapCache::instance()->begin();
-    SQ_PixmapCache::cache_iterator END = SQ_PixmapCache::instance()->end();
-    
     listCache->setSorting(-1);
 
-    QListViewItem *itemafter = 0L, *item;
-   
-    for(SQ_PixmapCache::cache_iterator it = BEGIN;it != END;++it)
+    QListViewItem *itemafter = NULL, *item;
+
+    for(SQ_PixmapCache::cache_iterator it = SQ_PixmapCache::instance()->begin();
+            it != SQ_PixmapCache::instance()->end();++it)
     {
         if(itemafter)
             item = new QListViewItem(listCache, itemafter, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);
         else
             item = new QListViewItem(listCache, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);
-    
+
         if(pix.convertFromImage(it.data().info.mime))
             item->setPixmap(1, pix);
 

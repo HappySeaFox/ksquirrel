@@ -53,7 +53,7 @@
                             <cstring>textLabel2</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Esc,X,Return&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;close&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Q&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Quick Browser&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;F&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fullscreen&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;T&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;[&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;]&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Z&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show 'Zoom' menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;S&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide statusbar&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;/&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show this help&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Middle click, M&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show context menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;N&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;toggle filter&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Esc,X,Return&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;close&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Q&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Quick Browser&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Middle click, F&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fullscreen&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;T&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Z&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show 'Zoom' menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;S&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide statusbar&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;/&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show this help&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Right click, M, ContextMenu&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show context menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;N&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;toggle filter&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;SHIFT+Left button&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;select a region&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
                         </property>
                         <property name="alignment">
                             <set>WordBreak|AlignTop</set>
@@ -77,7 +77,7 @@
                             <cstring>textLabel3</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Space&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;next image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Backspace&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;previous image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Home&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;first image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;End&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;last image&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Space, Page Down&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;next image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Backspace, Page Up&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;previous image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Home&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;first image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;End&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;last image&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
                         </property>
                         <property name="alignment">
                             <set>WordBreak|AlignTop</set>
@@ -149,7 +149,7 @@
                             <cstring>textLabel5</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;V&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip vertically&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;H&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip horizontally&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;R&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;reset&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;P&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;image properties&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;L&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;"Ignore, if the image is less than window"&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;I&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;menu with images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;A&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;stop/start animation&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;B&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing background for transparent images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;K&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing tickmarks&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;E&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;show menu with external tools&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F1&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;first image from the miltipaged image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F2&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;previous&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F3&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;next&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F4&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;last&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;V&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip vertically&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;H&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip horizontally&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;R&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;reset&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;P&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;image properties&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;L&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;"Ignore, if the image is less than window"&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;I&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;menu with images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;A&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;stop/start animation&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;B&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing background for transparent images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;K&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing tickmarks&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;E&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;show menu with external tools&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F1&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;first image in miltipaged image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F2&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;previous&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F3&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;next&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F4&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;last&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
                         </property>
                         <property name="alignment">
                             <set>WordBreak|AlignTop</set>
@@ -160,7 +160,7 @@
         </widget>
         <widget class="QButtonGroup" row="0" column="0">
             <property name="name">
-                <cstring>buttonGroup1</cstring>
+                <cstring>buttonGroup</cstring>
             </property>
             <property name="title">
                 <string></string>
@@ -319,7 +319,7 @@
 </widget>
 <connections>
     <connection>
-        <sender>buttonGroup1</sender>
+        <sender>buttonGroup</sender>
         <signal>clicked(int)</signal>
         <receiver>widgetStack1</receiver>
         <slot>raiseWidget(int)</slot>
@@ -334,11 +334,12 @@
 </tabstops>
 <includes>
     <include location="global" impldecl="in implementation">qtooltip.h</include>
-    <include location="global" impldecl="in implementation">qmessagebox.h</include>
+    <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">sq_helpwidget.ui.h</include>
 </includes>
 <functions>
     <function access="private" specifier="non virtual">init()</function>
+    <function access="private" specifier="non virtual">destroy()</function>
     <function returnType="bool">event( QEvent * e )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>

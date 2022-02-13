@@ -7,11 +7,12 @@
 ** place of a destructor.
 *****************************************************************************/
 
+/*
+ *  SQ_PluginsInfo shows all found by SQ_LibraryListener libraries.
+ */
+
 void SQ_PluginsInfo::init()
 {
-    QPixmap pixNF = QPixmap::fromMimeSource(locate("appdata", "images/libs_notfound.png"));
-    pixmapNotFound->setPixmap(pixNF);
-
     showLibs();
 }
 
@@ -24,16 +25,12 @@ void SQ_PluginsInfo::showLibs()
 
     int cnt = SQ_LibraryHandler::instance()->count();
 
-    WST->raiseWidget(cnt ? 0 : 1);
-
     textTotal->setNum(cnt);
 
     if(!cnt) return;
 
-    QValueVector<SQ_LIBRARY>::iterator   BEGIN = SQ_LibraryHandler::instance()->begin();
-    QValueVector<SQ_LIBRARY>::iterator      END = SQ_LibraryHandler::instance()->end();
-
-    for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
+    for(QValueVector<SQ_LIBRARY>::iterator it = SQ_LibraryHandler::instance()->begin();
+            it != SQ_LibraryHandler::instance()->end();++it)
     {
         QListViewItem *item = new QListViewItem(tableLib, QString::null,
         QString((*it).quickinfo),

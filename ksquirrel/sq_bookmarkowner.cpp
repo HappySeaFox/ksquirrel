@@ -17,11 +17,11 @@
 
 #include "sq_bookmarkowner.h"
 
-SQ_BookmarkOwner * SQ_BookmarkOwner::sing = NULL;
+SQ_BookmarkOwner * SQ_BookmarkOwner::m_instance = NULL;
 
 SQ_BookmarkOwner::SQ_BookmarkOwner(QWidget *parent) : QObject(parent)
 {
-    sing = this;
+    m_instance = this;
 }
 
 SQ_BookmarkOwner::~SQ_BookmarkOwner()
@@ -51,9 +51,4 @@ QString SQ_BookmarkOwner::currentURL() const
 void SQ_BookmarkOwner::setURL(const KURL &new_url)
 {
     URL = new_url;
-}
-
-SQ_BookmarkOwner* SQ_BookmarkOwner::instance()
-{
-    return sing;
 }

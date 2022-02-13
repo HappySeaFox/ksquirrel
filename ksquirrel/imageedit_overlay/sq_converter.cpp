@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_libraryhandler.h"
@@ -24,9 +25,11 @@
 
 SQ_Converter * SQ_Converter::sing = NULL;
 
-SQ_Converter::SQ_Converter() : SQ_EditBase()
+SQ_Converter::SQ_Converter(QObject *parent) : SQ_EditBase(parent)
 {
     sing = this;
+
+    kdDebug() << "+SQ_Converter" << endl;
 
     special_action = i18n("Converting");
 
@@ -34,7 +37,9 @@ SQ_Converter::SQ_Converter() : SQ_EditBase()
 }
 
 SQ_Converter::~SQ_Converter()
-{}
+{
+    kdDebug() << "-SQ_Converter" << endl;
+}
 
 void SQ_Converter::startEditPrivate()
 {
@@ -80,4 +85,9 @@ void SQ_Converter::initWriteOptions()
 int SQ_Converter::manipDecodedImage(fmt_image *)
 {
     return SQE_OK;
+}
+
+void SQ_Converter::cycleDone()
+{
+    delete convert;
 }

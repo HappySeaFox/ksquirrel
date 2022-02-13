@@ -33,7 +33,7 @@ class SQ_Rotater : public SQ_EditBase
     Q_OBJECT
 
     public: 
-        SQ_Rotater();
+        SQ_Rotater(QObject *parent);
         ~SQ_Rotater();
 
         static SQ_Rotater* instance();
@@ -43,6 +43,7 @@ class SQ_Rotater : public SQ_EditBase
         virtual void dialogReset();
         virtual int manipDecodedImage(fmt_image *im);
         virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
+        virtual void cycleDone();
 
     private slots:
         void slotStartRotate(SQ_ImageOptions*, SQ_ImageRotateOptions*);

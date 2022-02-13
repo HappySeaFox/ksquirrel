@@ -26,7 +26,7 @@
 
 /*
  *  Class for managing application-specific data. It takes care
- *  of storing thumbnails, unpacked archives, .desktop files.
+ *  of storing thumbnails, unpacked archives.
  *
  *  All data stored in ~/.ksquirrel (called 'storage').
  *
@@ -44,9 +44,6 @@ class SQ_Dir : public QDir
 
             // SQ_ArchiveHandler cache (~/.ksquirrel/extracts).
             Extracts,
-
-            // .desktop files (~/.ksquirrel/desktop).
-            Desktops,
 
             // temporary usage (~/.ksquirrel/tmp).
             Tmp };
@@ -122,5 +119,11 @@ class SQ_Dir : public QDir
 private:
         QString m_root;
 };
+
+inline
+QString SQ_Dir::absPath(const QString &relpath)
+{
+    return m_root + "/" + relpath;
+}
 
 #endif

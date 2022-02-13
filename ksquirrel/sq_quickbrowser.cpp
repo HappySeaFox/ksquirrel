@@ -20,6 +20,8 @@
 
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kcursor.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -31,11 +33,7 @@
 #include "sq_glview.h"
 #include "sq_glwidget.h"
 
-#ifndef SQ_SECTION_LIST
-#define SQ_SECTION_LIST "Navigator List"
-#endif
-
-SQ_QuickBrowser * SQ_QuickBrowser::view = NULL;
+SQ_QuickBrowser * SQ_QuickBrowser::m_instance = NULL;
 SQ_DirOperatorBase * SQ_QuickBrowser::op = NULL;
 
 SQ_Header::SQ_Header(QWidget *parent) : KToolBar(parent), inMouse(false), p(parent)
@@ -70,7 +68,7 @@ void SQ_Header::mouseMoveEvent(QMouseEvent *e)
     int offsetX = e->globalX() - oldX;
     int offsetY = e->globalY() - oldY;
 
-    parentWidget()->move(oldParentX + offsetX, oldParentY     + offsetY);
+    parentWidget()->move(oldParentX + offsetX, oldParentY + offsetY);
 }
 
 void SQ_Header::mouseReleaseEvent(QMouseEvent *e)
@@ -101,7 +99,7 @@ void SQ_SizeGrip::mouseMoveEvent(QMouseEvent *e)
     int x = e->globalX();
     int y = e->globalY();
     int w = x - mother.x();
-    int h = y - mother.y() + 33;
+    int h = y - mother.y();
 
     if(w > 200 && h > 100)
         p->resize(w, h);
@@ -113,7 +111,7 @@ void SQ_SizeGrip::mouseMoveEvent(QMouseEvent *e)
 
 SQ_QuickStatus::SQ_QuickStatus(QWidget *parent, const char *name) : QStatusBar(parent, name)
 {
-    setCursor(Qt::ArrowCursor);
+    setCursor(KCursor::ArrowCursor);
 }
 
 SQ_QuickStatus::~SQ_QuickStatus()
@@ -126,8 +124,10 @@ void SQ_QuickStatus::mousePressEvent(QMouseEvent *e)
 
 SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(parent, name)
 {
-    view = this;
+    m_instance = this;
     hide();
+
+    kdDebug() << "+SQ_QuickBrowser" << endl;
 
     // create toolbar
     SQ_Header *t = new SQ_Header(this);
@@ -136,13 +136,15 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 
     // create and setup SQ_DirOperatorBase
     op = quick = new SQ_DirOperatorBase(SQ_WidgetStack::instance()->url(), SQ_DirOperatorBase::TypeList, this);
-    quick->readConfig(KGlobal::config(), SQ_SECTION_LIST);
-    quick->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
-    quick->setMode(KFile::Files);
-//    quick->iv->setSelectionMode(KFile::Single);
-    quick->iv->setIconSize(16);
+    quick->prepareView(SQ_DirOperatorBase::TypeList);
+    quick->setPreparedView();
+    quick->actionCollection()->action("short view")->activate();
 
-    quick->iv->setCursor(Qt::ArrowCursor);
+    iv = dynamic_cast<SQ_FileIconView *>(quick->view());
+
+    iv->actionCollection()->action("small columns")->activate();
+    iv->setSelectionMode(KFile::Single);
+    iv->setCursor(KCursor::ArrowCursor);
 
     // plug actions to toolbar
     quick->actionCollection()->action("back")->plug(t);
@@ -152,7 +154,8 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
     quick->actionCollection()->action("home")->plug(t);
     quick->actionCollection()->action("mkdir")->plug(t);
     quick->actionCollection()->action("delete")->plug(t);
-    (new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ GL THide2"))->plug(t);
+    (new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()),
+        KSquirrel::app()->actionCollection(), "SQ GL THide2"))->plug(t);
 
     setStretchFactor(quick, 1);
 
@@ -175,7 +178,9 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 }
 
 SQ_QuickBrowser::~SQ_QuickBrowser()
-{}
+{
+    kdDebug() << "-SQ_QuickBrowser" << endl;
+}
 
 void SQ_QuickBrowser::closeEvent(QCloseEvent *e)
 {
@@ -190,23 +195,18 @@ void SQ_QuickBrowser::closeEvent(QCloseEvent *e)
  */
 void SQ_QuickBrowser::slotClose()
 {
-    SQ_GLWidget::window()->pAToolQuick->animateClick();
+    SQ_GLWidget::window()->toggleQuickBrowser();
 }
 
 void SQ_QuickBrowser::showEvent(QShowEvent *)
 {
-    KFileItem *f = quick->iv->currentFileItem();
+    updateCurrentFileItem();
+}
+
+void SQ_QuickBrowser::updateCurrentFileItem()
+{
+    KFileItem *f = iv->currentFileItem();
 
     if(f)
         quick->setCurrentItem(f);
-}
-
-SQ_QuickBrowser* SQ_QuickBrowser::window()
-{
-    return view;
-}
-
-SQ_DirOperatorBase *SQ_QuickBrowser::quickOperator()
-{
-    return op;
 }

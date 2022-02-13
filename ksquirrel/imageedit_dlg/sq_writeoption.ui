@@ -8,9 +8,23 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>211</width>
+            <width>250</width>
             <height>340</height>
         </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>0</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>250</width>
+            <height>0</height>
+        </size>
     </property>
     <property name="caption">
         <string>SQ_WriteOption</string>

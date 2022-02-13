@@ -18,27 +18,47 @@
 #ifndef SQ_WIDGETSTACK_H
 #define SQ_WIDGETSTACK_H
 
-#include <qwidgetstack.h>
+#include <qvbox.h>
 #include <qstring.h>
 
 #include <kurl.h>
 #include <kfileitem.h>
 
-class    QTimer;
+#include "sq_diroperator.h"
 
-class    KAction;
-class    KToggleAction;
-class    KActionCollection;
+class QTimer;
 
-class    SQ_DirOperatorBase;
-class    SQ_DirOperator;
+class KAction;
+class KToggleAction;
+class KFileView;
 
-class SQ_WidgetStack : public QWidgetStack
+class SQ_DirOperatorBase;
+
+/*
+ *  SQ_WidgetStack is a simple wrapper for file manager (navigator).
+ *
+ *  It serves all file actions (Copy, Move, Link to...), thumbnail
+ *  updates, selecting/deselecting files with +/-  etc.
+ *
+ *  Since 0.6.0-final it creates only one SQ_DirOperator (memory and speed
+ *  improvement).
+ */
+
+class SQ_WidgetStack : public QVBox
 {
     Q_OBJECT
 
     public:
-        SQ_WidgetStack(QWidget *parent = 0);
+        /*
+         *  Create navigator.
+         *  id ::=
+         *    0 = List view
+         *    1 = Icon view
+         *    2 = Detail view
+         *    3 = Thumbnail view
+         */
+        SQ_WidgetStack(QWidget *parent, const int id);
+
         ~SQ_WidgetStack();
 
         /*
@@ -48,10 +68,12 @@ class SQ_WidgetStack : public QWidgetStack
 
         enum FileAction { Copy = 0, Cut, Paste, Unknown };
 
-        enum moveToError { moveSuccess = 0, moveFailed } ;        
+        enum moveToError { moveSuccess = 0, moveFailed } ;
+
+        SQ_DirOperator* diroperator() const;
 
         /*
-         *  Get current url of visible diroperator.
+         *  Get current url. Just calls SQ_DirOperator::url().
          */
         KURL url() const;
 
@@ -78,17 +100,12 @@ class SQ_WidgetStack : public QWidgetStack
         void configureClickPolicy();
 
         /*
-         *  Items count.
-         */
-        int count() const;
-
-        /*
          *  Set current item to 'item', select it, and synchronize with
          *  SQ_QuickBrowser.
          *
          *  TODO: remove workAround?
          */
-        void selectFile(KFileItem *item, SQ_DirOperatorBase *workAround = 0L);
+        void selectFile(KFileItem *item, SQ_DirOperatorBase *workAround = NULL);
 
         /*
          *  Update grid for thumbnail view. New grid is calcalated from item
@@ -102,22 +119,13 @@ class SQ_WidgetStack : public QWidgetStack
         void updateView();
 
         /*
-         *  Currently visible SQ_DirOperator.
+         *  Quick access to SQ_DirOperator::actionCollection::action
          */
-        SQ_DirOperator* visibleWidget() const;
+        KAction *action(const QString &name);
 
-        /*
-         *  Get approrpiate SQ_DirOperator from stack.
-         */
-        SQ_DirOperator* widget(int id) const;
-
-        static SQ_WidgetStack* instance();
+        static SQ_WidgetStack* instance() { return m_instance; }
 
     private:
-        /*
-         *  Setup KDirLister...
-         */
-        void setupDirOperator(SQ_DirOperator *op, const QString &filter);
 
         /*
          *  Save currently selected items' paths, if any.
@@ -135,17 +143,9 @@ class SQ_WidgetStack : public QWidgetStack
     public slots:
 
         /*
-         *  Wrapper for QWidgetStack::raiseWidget(). It will create
-         *  needed SQ_DirOperators on call (at startup time only one
-         *  SQ_DirOperator is created). Also set name filter and url.
+         *  Change view type. See SQ_DirOperatorBase::ViewT for more.
          */
-        void raiseWidget(int id);
-
-        /*
-         *  Raise widget for the first time. Called only once by KSquirrel,
-         *  when SQ_widgetStack is been created.
-         */
-        void raiseFirst(int id);
+        void raiseWidget(SQ_DirOperatorBase::ViewT);
 
         /*
          *  Try to unpack an archive referenced by given KFileItem.
@@ -172,11 +172,6 @@ class SQ_WidgetStack : public QWidgetStack
         void slotLastFile();
         void emitNextSelected();
         void emitPreviousSelected();
-
-        /*
-         *  Show/hide hidden files.
-         */
-        void slotShowHidden(bool);
 
         /*
          *  Set filter.
@@ -229,19 +224,6 @@ class SQ_WidgetStack : public QWidgetStack
          */
         void slotDelayedSetExtractURL();
 
-        /*
-         *  Wrappers for KDirOperator's file actions:
-         *  "up", "back", "home", etc.
-         */
-        void slotUp();
-        void slotBack();
-        void slotForward();
-        void slotReload();
-        void slotHome();
-        void slotMkDir();
-        void slotProperties();
-        void slotDelete();
-
         void slotRecreateThumbnail();
         void slotDelayedRecreateThumbnail();
 
@@ -261,20 +243,22 @@ class SQ_WidgetStack : public QWidgetStack
          */
         void slotSelectAll();
 
-    public:
-        KAction    *pABack, *pAForw, *pAUp, *pADelete, *pAHome, *pAProp, *pARefresh, *pAMkDir;
-        KToggleAction    *pAHidden;
-
     private:
-        SQ_DirOperator    *pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail, *pDirOperatorThumb;
-        QString    path;
-        int    ncount;
-        KActionCollection    *ac;
+        /*
+         *  Widget, which will manage file viewer
+         */
+        SQ_DirOperator    *dirop;
         QTimer     *timerShowProgress;
         KURL::List    files;
         FileAction    fileaction;
 
-        static SQ_WidgetStack    *sing;
+        static SQ_WidgetStack    *m_instance;
 };
+
+inline
+SQ_DirOperator* SQ_WidgetStack::diroperator() const
+{
+    return dirop;
+}
 
 #endif

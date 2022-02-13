@@ -33,9 +33,10 @@
 /*
  *  SQ_GLU is a replacement for libGLU. SQ_GLWidget uses only one method
  *  in original GLU library - gluLookAt(). It would be better to place it
- *  in standalone namespace, and remove -lGLU dependency.
+ *  in standalone namespace, and remove -lGLU dependency at all.
  *
- *  Note: Now KSquirrel doesn't use GLU, but Qt's QGLWidget depends on <GL/glu.h>
+ *  Note: Now KSquirrel doesn't use GLU, but Qt's QGLWidget still
+ *  depends on <GL/glu.h>
  */
 
 namespace SQ_GLU

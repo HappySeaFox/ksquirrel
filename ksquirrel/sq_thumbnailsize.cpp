@@ -1,6 +1,6 @@
 /*
     copyright            : (C) 2004 by Baryshev Dmitry
-    KSQuirrel - image viewer for KDE
+    KSquirrel - image viewer for KDE
 */
 
 /*
@@ -25,14 +25,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "sq_thumbnailsize.h"
 
-SQ_ThumbnailSize * SQ_ThumbnailSize::thumb = NULL;
+SQ_ThumbnailSize * SQ_ThumbnailSize::m_instance = NULL;
 
-SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value), m_extended(false), m_margin(16)
+SQ_ThumbnailSize::SQ_ThumbnailSize(QObject *parent, Size value) 
+    : QObject(parent), mValue(value), m_extended(false), m_margin(16)
 {
-    thumb = this;
+    m_instance = this;
 }
 
-SQ_ThumbnailSize::SQ_ThumbnailSize(const QString& str) : m_extended(false), m_margin(16)
+SQ_ThumbnailSize::SQ_ThumbnailSize(QObject *parent, const QString& str) 
+    : QObject(parent), m_extended(false), m_margin(16)
 {
     QString low = str.lower();
 
@@ -60,41 +62,9 @@ void SQ_ThumbnailSize::setPixelSize(const QString &size)
         mValue = Huge;
 }
 
-int SQ_ThumbnailSize::pixelSize() const
-{
-    switch (mValue)
-    {
-        case Small:
-        return 48;
-        case Medium:
-        return 64;
-        case Large:
-        return 96;
-        default:
-        return 128;
-    }
-}
-
-SQ_ThumbnailSize::operator const QString&() const
-{
-    static QString sizeStr[4] = {"small","medium","large","huge"};
-
-    return sizeStr[int(mValue)];
-}
-
 QString SQ_ThumbnailSize::stringValue() const
 {
     static QString sizeStr[4] = {"48","64","96","128"};
 
     return sizeStr[int(mValue)];
-}
-
-int SQ_ThumbnailSize::extendedPixelSize() const
-{
-    return pixelSize() + m_margin*2;
-}
-
-SQ_ThumbnailSize* SQ_ThumbnailSize::instance()
-{
-    return thumb;
 }

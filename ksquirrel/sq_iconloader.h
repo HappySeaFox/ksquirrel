@@ -20,22 +20,24 @@
 
 #include <kiconloader.h>
 
+#include <qobject.h>
+
 /*
  *  SQ_IconLoader represents an icon loader. It tries to load pixmap from
  *  installed icon theme. If icon was not found, it uses internal pixmaps
  *  instead.
  */
 
-class SQ_IconLoader : public KIconLoader
+class SQ_IconLoader : public QObject, public KIconLoader
 {
     public: 
-        SQ_IconLoader();
+        SQ_IconLoader(QObject *parent);
         ~SQ_IconLoader();
 
         QPixmap loadIcon(const QString& name, KIcon::Group group, int size) const;
 
     private:
-        static SQ_IconLoader *sing;
+        static SQ_IconLoader *m_instance;
 
         /*
          *  Internal. Load all pixmaps.
@@ -43,7 +45,7 @@ class SQ_IconLoader : public KIconLoader
         void fillPixmaps();
 
     public:
-        static SQ_IconLoader* instance();
+        static SQ_IconLoader* instance() { return m_instance; }
 
     private:
         QPixmap pixmap_up, pixmap_down,

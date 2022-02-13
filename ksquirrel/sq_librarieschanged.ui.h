@@ -7,13 +7,13 @@
 ** place of a destructor.
 *****************************************************************************/
 
+/*
+ *  SQ_LibrariesChanged shows information on found/deleted libraries.
+ */
 
-
-
-void SQ_LibrariesChanged::setLibsInfo( const QStringList &l, bool added )
+void SQ_LibrariesChanged::setLibsInfo(const QStringList &l, bool added)
 {
-    listNewLibs->clear();
-    textLabel1->setText((added)?i18n("New libraries found:"):i18n("Deleted libraries:"));
+    textLabel1->setText(added ? i18n("New libraries found:") : i18n("Deleted libraries:"));
     listNewLibs->insertStringList(l);
     listNewLibs->setCurrentItem(0);
 }

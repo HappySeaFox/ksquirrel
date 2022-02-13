@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_resizer.h"
@@ -26,9 +27,11 @@
 
 SQ_Resizer * SQ_Resizer::sing = NULL;
 
-SQ_Resizer::SQ_Resizer() : SQ_EditBase()
+SQ_Resizer::SQ_Resizer(QObject *parent) : SQ_EditBase(parent)
 {
     sing = this;
+
+    kdDebug() << "+SQ_Resizer" << endl;
 
     special_action = i18n("Resizing");
 
@@ -38,7 +41,9 @@ SQ_Resizer::SQ_Resizer() : SQ_EditBase()
 }
 
 SQ_Resizer::~SQ_Resizer()
-{}
+{
+    kdDebug() << "-SQ_Resizer" << endl;
+}
 
 void SQ_Resizer::startEditPrivate()
 {
@@ -143,4 +148,9 @@ int SQ_Resizer::manipDecodedImage(fmt_image *im)
     }
     else
         return SQE_R_NOMEMORY;
+}
+
+void SQ_Resizer::cycleDone()
+{
+    delete res;
 }

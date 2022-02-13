@@ -1,5 +1,0 @@
-[Desktop Entry]
-Exec=showimg %F
-Icon=showimg
-Name=Open with ShowImg
-ServiceTypes=*

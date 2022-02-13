@@ -40,11 +40,6 @@ SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel,
 SQ_ToolButton::~SQ_ToolButton()
 {}
 
-int SQ_ToolButton::fixedWidth()
-{
-    return 28;
-}
-
 SQ_ToolButtonPage::SQ_ToolButtonPage(QObject *receiver, const char *slot, QToolBar *parent, const char *name)
     : SQ_ToolButton(QIconSet(), QString::null, receiver, slot, parent, name), val(0)
 {

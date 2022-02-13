@@ -13,9 +13,9 @@ void SQ_Filters::init()
 
     QListViewItem *itemafter = 0L, *item;
 
-    QValueList<QString>::iterator nEND = KSquirrel::app()->sqFiltersName->end();
-    QValueList<QString>::iterator it_name = KSquirrel::app()->sqFiltersName->begin();
-    QValueList<QString>::iterator it_ext = KSquirrel::app()->sqFiltersExt->begin();
+    QValueList<QString>::iterator nEND = KSquirrel::app()->filtersNames()->end();
+    QValueList<QString>::iterator it_name = KSquirrel::app()->filtersNames()->begin();
+    QValueList<QString>::iterator it_ext = KSquirrel::app()->filtersExtensions()->begin();
 
     for(;it_name != nEND;++it_name,++it_ext)
     {
@@ -114,15 +114,15 @@ int SQ_Filters::start()
     {
         QListViewItem *cur = listFilters->firstChild();
 
-        KSquirrel::app()->sqFiltersName->clear();
-        KSquirrel::app()->sqFiltersExt->clear();
+        KSquirrel::app()->filtersNames()->clear();
+        KSquirrel::app()->filtersExtensions()->clear();
 
         for(;cur;cur = cur->itemBelow())
         {
-            KSquirrel::app()->sqFiltersName->append(cur->text(0));
-            KSquirrel::app()->sqFiltersExt->append(cur->text(1));
+            KSquirrel::app()->filtersNames()->append(cur->text(0));
+            KSquirrel::app()->filtersExtensions()->append(cur->text(1));
         }
-    
+
         SQ_Config::instance()->setGroup("Filters");
         SQ_Config::instance()->writeEntry("menuitem both", checkBoth->isChecked());
     }

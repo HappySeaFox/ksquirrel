@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_rotater.h"
@@ -25,9 +26,11 @@
 
 SQ_Rotater * SQ_Rotater::sing = NULL;
 
-SQ_Rotater::SQ_Rotater() : SQ_EditBase()
+SQ_Rotater::SQ_Rotater(QObject *parent) : SQ_EditBase(parent)
 {
     sing = this;
+
+    kdDebug() << "+SQ_Rotater" << endl;
 
     special_action = i18n("Rotating");
 
@@ -37,7 +40,9 @@ SQ_Rotater::SQ_Rotater() : SQ_EditBase()
 }
 
 SQ_Rotater::~SQ_Rotater()
-{}
+{
+    kdDebug() << "-SQ_Rotater" << endl;
+}
 
 void SQ_Rotater::slotStartRotate(SQ_ImageOptions *o, SQ_ImageRotateOptions *ropt)
 {
@@ -113,4 +118,9 @@ int SQ_Rotater::determineNextScan(const fmt_image &im, RGBA *scan, int y)
         memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
 
     return SQE_OK;
+}
+
+void SQ_Rotater::cycleDone()
+{
+    delete rotate;
 }

@@ -25,11 +25,7 @@
  *  'About' dialog
  */
 
-#ifdef PACKAGE_VERSION
-#define SQ_VERSION PACKAGE_VERSION
-#else
-#define SQ_VERSION "0.6.0-pre9"
-#endif
+#define SQ_VERSION "0.6.0"
 
 static KAboutData aboutData(
             "ksquirrel",

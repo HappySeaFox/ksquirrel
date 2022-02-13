@@ -31,7 +31,7 @@ class SQ_HLOptions : public QObject
         SQ_HLOptions();
         ~SQ_HLOptions();
 
-        static SQ_HLOptions* instance();
+        static SQ_HLOptions* instance() { return m_instance; }
 
     public:
         /*
@@ -59,7 +59,7 @@ class SQ_HLOptions : public QObject
          */
         bool        recurs;
 
-        static SQ_HLOptions *sing;
+        static SQ_HLOptions *m_instance;
 };
 
 #endif

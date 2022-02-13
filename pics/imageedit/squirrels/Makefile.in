@@ -275,7 +275,7 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-EXTRA_DIST = squirrel_resize.png 
+EXTRA_DIST = squirrel_resize.png squirrel_filter.png squirrel_colorize.png 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
@@ -463,11 +463,29 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/squirrel_resize.png $(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_resize.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/squirrel_resize.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_resize.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/squirrels/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/
+#>- 	$(INSTALL_DATA) $(srcdir)/squirrel_filter.png $(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_filter.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/squirrel_filter.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_filter.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/squirrels/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/
+#>- 	$(INSTALL_DATA) $(srcdir)/squirrel_colorize.png $(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_colorize.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/squirrel_colorize.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_colorize.png
 
 uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_resize.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_resize.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_filter.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_filter.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_colorize.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/squirrels/squirrel_colorize.png
 
 ####### kdevelop will overwrite this part!!! (end)############
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -17,6 +17,7 @@ void SQ_SlideShow::init()
     SQ_Config::instance()->setGroup("Slideshow");
 
     spinDelay->setValue(SQ_Config::instance()->readNumEntry("delay", 1000));
+    spinCycle->setValue(SQ_Config::instance()->readNumEntry("repeat", 0));
     pushCurrent->setPixmap(SQ_IconLoader::instance()->loadIcon("folder_green", KIcon::Desktop, 16));
     pushHistory->setPixmap(SQ_IconLoader::instance()->loadIcon("history", KIcon::Desktop, 16));
 
@@ -48,8 +49,10 @@ int SQ_SlideShow::exec(QString &path)
 
     if(result == QDialog::Accepted)
     {
+        // save parameters
         SQ_Config::instance()->setGroup("Slideshow");
         SQ_Config::instance()->writeEntry("delay", spinDelay->value());
+        SQ_Config::instance()->writeEntry("repeat", spinCycle->value());
         SQ_Config::instance()->writeEntry("fullscreen", checkFull->isChecked());
         SQ_Config::instance()->writeEntry("force", checkForce->isChecked());
         SQ_Config::instance()->writeEntry("history", items);

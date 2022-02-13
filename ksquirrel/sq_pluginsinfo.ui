@@ -50,153 +50,6 @@
                 </size>
             </property>
         </spacer>
-        <widget class="QWidgetStack" row="1" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>WST</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>7</hsizetype>
-                    <vsizetype>7</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>page</cstring>
-                </property>
-                <attribute name="id">
-                    <number>0</number>
-                </attribute>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <widget class="QListView" row="0" column="0">
-                        <column>
-                            <property name="text">
-                                <string>Icon</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <column>
-                            <property name="text">
-                                <string>Library</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <column>
-                            <property name="text">
-                                <string>Version</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <column>
-                            <property name="text">
-                                <string>Filter</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <column>
-                            <property name="text">
-                                <string>I/O</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <property name="name">
-                            <cstring>tableLib</cstring>
-                        </property>
-                        <property name="allColumnsShowFocus">
-                            <bool>true</bool>
-                        </property>
-                        <property name="resizeMode">
-                            <enum>LastColumn</enum>
-                        </property>
-                    </widget>
-                </grid>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>page</cstring>
-                </property>
-                <attribute name="id">
-                    <number>1</number>
-                </attribute>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <widget class="QLabel" row="0" column="0">
-                        <property name="name">
-                            <cstring>pixmapNotFound</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>1</hsizetype>
-                                <vsizetype>1</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="frameShape">
-                            <enum>StyledPanel</enum>
-                        </property>
-                        <property name="scaledContents">
-                            <bool>false</bool>
-                        </property>
-                        <property name="alignment">
-                            <set>AlignCenter</set>
-                        </property>
-                    </widget>
-                </grid>
-            </widget>
-        </widget>
-        <widget class="Line" row="2" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>line1</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-        </widget>
         <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>layout1</cstring>
@@ -249,6 +102,86 @@
                     </property>
                 </spacer>
             </hbox>
+        </widget>
+        <widget class="QListView" row="1" column="0" rowspan="1" colspan="2">
+            <column>
+                <property name="text">
+                    <string>Icon</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Library</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Version</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Filter</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>I/O</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>tableLib</cstring>
+            </property>
+            <property name="allColumnsShowFocus">
+                <bool>true</bool>
+            </property>
+            <property name="resizeMode">
+                <enum>LastColumn</enum>
+            </property>
+        </widget>
+        <widget class="Line" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
         </widget>
     </grid>
 </widget>

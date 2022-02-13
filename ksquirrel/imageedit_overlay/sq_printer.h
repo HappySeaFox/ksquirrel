@@ -33,7 +33,7 @@ class SQ_Printer : public SQ_EditBase
     Q_OBJECT
 
     public: 
-        SQ_Printer();
+        SQ_Printer(QObject *parent);
         ~SQ_Printer();
 
         static SQ_Printer* instance();

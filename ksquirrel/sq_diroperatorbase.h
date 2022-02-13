@@ -28,10 +28,6 @@ class QTimer;
 
 class KAction;
 
-class SQ_FileIconView;
-class SQ_FileDetailView;
-class SQ_FileThumbView;
-
 /*
  *  About KDirOperator (from kdelibs): 
  *  This widget works as a network transparent filebrowser. You specify a URL
@@ -49,16 +45,44 @@ class SQ_DirOperatorBase : public KDirOperator
     Q_OBJECT
 
     public:
-        enum VV {TypeList = 0, TypeIcon, TypeDetail, TypeThumbs };
+
+        /*
+         *  View type.
+         *
+         *  - list view with small icons
+         *  - icon view with large icons
+         *  - detailed view with file details
+         *  - thumbnail view with image thumbnails
+         */
+        enum ViewT {TypeList = 0, TypeIcons, TypeDetailed, TypeThumbs };
 
         /*
          *  Constructor. Creates diroperator with specified view type. SQ_DirOperatorBase
          *  reimplements createView() to create different custom views.
          *  View type is determined by 'type_'.
          */
-        SQ_DirOperatorBase(const KURL &url = KURL(), VV type_ = SQ_DirOperatorBase::TypeList,
-        QWidget *parent = 0, const char *name = 0);
+        SQ_DirOperatorBase(const KURL &url = KURL(), ViewT type_ = SQ_DirOperatorBase::TypeList,
+                                QWidget *parent = 0, const char *name = 0);
+
         virtual ~SQ_DirOperatorBase();
+
+        /*
+         *  Single click to open item ?
+         */
+        bool singleClick() const;
+
+        /*
+         *  Save new view type for future use. It means that SQ_WidgetStack
+         *  wants to change view type (for example "list view" => "thumbnail view"),
+         *  and will activate an SQ_DirOperator's action, which will change view type.
+         *
+         *  See SQ_WidgetStack::raiseWidget() for more.
+         */
+        void prepareView(ViewT);
+
+        KFileView* preparedView();
+
+        void setPreparedView();
 
         /*
          *  Deselect all items, set current item, select this item,
@@ -77,6 +101,8 @@ class SQ_DirOperatorBase : public KDirOperator
          */
         void reconnectClick(bool firstconnect = false);
 
+        int viewType() const;
+
     private:
         /*
          *  SQ_DirOperatorBase has context menu, derived from KDirOperator.
@@ -84,19 +110,19 @@ class SQ_DirOperatorBase : public KDirOperator
          */
         void setupActions();
 
+        /*
+         *  Internally used by slotExecuted().
+         */
+        void execute(KFileItem *fi);
+
     protected:
         /*
          *  Reimplement createView() to create custom views.
          */
         KFileView* createView(QWidget *parent, KFile::FileView view);
 
-    public slots:
-        /*
-         *  Invoked, when user selected some external tool in menu.
-         */
-        void slotActivateExternalTool(int index);
-
     protected slots:
+
         /*
          *  Invoked, when user pressed 'Return' on item.
          */
@@ -134,7 +160,7 @@ class SQ_DirOperatorBase : public KDirOperator
          */
         void tryUnpack(KFileItem *item);
 
-    public:
+    protected:
         /*
          *  Pointer to current view. All view types (such as icon view, list view ...)
          *  are derived from KFileView.
@@ -142,23 +168,10 @@ class SQ_DirOperatorBase : public KDirOperator
         KFileView     *fileview;
 
         /*
-         *  Views.
-         */
-        SQ_FileThumbView    *tv;
-        SQ_FileIconView    *iv;
-        SQ_FileDetailView    *dv;
-
-        /*
-         *  Single click to activate item ?
-         */
-        bool     sing;
-
-        /*
          *  Some additional menus.
          */
         KActionMenu     *pADirOperatorMenu, *pAFileActions, *pAImageActions;
 
-    protected:
         /*
          *  Action, which will run current item with default application.
          *  For eample, it can open film "f.avi" in Xine.
@@ -168,7 +181,7 @@ class SQ_DirOperatorBase : public KDirOperator
         /*
          *  View type.
          */
-        VV     type;
+        ViewT     type;
 
         /*
          *  An url of activated item.
@@ -179,6 +192,35 @@ class SQ_DirOperatorBase : public KDirOperator
          *  Delay timer.
          */
         QTimer    *timer;
+
+        /*
+         *  Single click to activate item ?
+         */
+        bool     sing;
 };
+
+inline
+bool SQ_DirOperatorBase::singleClick() const
+{
+    return sing;
+}
+
+inline
+int SQ_DirOperatorBase::viewType() const
+{
+    return static_cast<int>(type);
+}
+
+inline
+bool SQ_DirOperatorBase::isThumbView() const
+{
+    return (type == SQ_DirOperatorBase::TypeThumbs);
+}
+
+inline
+KFileView* SQ_DirOperatorBase::preparedView()
+{
+    return fileview;
+}
 
 #endif

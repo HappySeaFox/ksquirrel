@@ -53,20 +53,17 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 libimageedit_dlg_a_AR = $(AR) $(ARFLAGS)
 libimageedit_dlg_a_LIBADD =
-am_libimageedit_dlg_a_OBJECTS = sq_ruler.$(OBJEXT) \
-	sq_canvaswidget.$(OBJEXT) sq_pushbutton.$(OBJEXT) \
+am_libimageedit_dlg_a_OBJECTS = sq_pushbutton.$(OBJEXT) \
 	sq_label.$(OBJEXT) sq_printpanelbase.$(OBJEXT) \
 	sq_printpanelframe.$(OBJEXT) sq_printpanel.$(OBJEXT) \
 	sq_bcglabel.$(OBJEXT)
 #>- libimageedit_dlg_a_OBJECTS = $(am_libimageedit_dlg_a_OBJECTS)
-#>+ 9
+#>+ 7
 libimageedit_dlg_a_final_OBJECTS = libimageedit_dlg_a.all_cpp.o 
-libimageedit_dlg_a_nofinal_OBJECTS = sq_ruler.$(OBJEXT) \
-	sq_canvaswidget.$(OBJEXT) sq_pushbutton.$(OBJEXT) \
+libimageedit_dlg_a_nofinal_OBJECTS = sq_pushbutton.$(OBJEXT) \
 	sq_label.$(OBJEXT) sq_printpanelbase.$(OBJEXT) \
 	sq_printpanelframe.$(OBJEXT) sq_printpanel.$(OBJEXT) \
-	sq_bcglabel.$(OBJEXT) sq_selector.$(OBJEXT) sq_imagefilter.$(OBJEXT) sq_writeoption.$(OBJEXT) sq_imagerotate.$(OBJEXT) sq_imageresize.$(OBJEXT) sq_imageprint.$(OBJEXT) sq_imageeditsplash.$(OBJEXT) sq_imageeditoptions.$(OBJEXT) sq_imageconvert.$(OBJEXT) sq_imagebcg.$(OBJEXT)\
-sq_canvaswidget.moc.o 
+	sq_bcglabel.$(OBJEXT) sq_imagefilter.$(OBJEXT) sq_writeoption.$(OBJEXT) sq_imagerotate.$(OBJEXT) sq_imageresize.$(OBJEXT) sq_imageprint.$(OBJEXT) sq_imageeditoptions.$(OBJEXT) sq_imageconvert.$(OBJEXT) sq_imagebcg.$(OBJEXT)
 @KDE_USE_FINAL_FALSE@libimageedit_dlg_a_OBJECTS = $(libimageedit_dlg_a_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@libimageedit_dlg_a_OBJECTS = $(libimageedit_dlg_a_final_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -326,10 +323,10 @@ noinst_LIBRARIES = libimageedit_dlg.a
 ####### kdevelop will overwrite this part!!! (end)############
 INCLUDES = $(all_includes) -I.. -I../imageedit_overlay
 #>- libimageedit_dlg_a_METASOURCES = AUTO
-#>- libimageedit_dlg_a_SOURCES = sq_ruler.cpp sq_selector.ui sq_canvaswidget.cpp sq_pushbutton.cpp sq_imagefilter.ui sq_label.cpp sq_printpanelbase.cpp sq_printpanelframe.cpp sq_printpanel.cpp sq_bcglabel.cpp sq_writeoption.ui sq_imagerotate.ui sq_imageresize.ui sq_imageprint.ui sq_imageeditsplash.ui sq_imageeditoptions.ui sq_imageconvert.ui sq_imagebcg.ui 
+#>- libimageedit_dlg_a_SOURCES = sq_pushbutton.cpp sq_imagefilter.ui sq_label.cpp sq_printpanelbase.cpp sq_printpanelframe.cpp sq_printpanel.cpp sq_bcglabel.cpp sq_writeoption.ui sq_imagerotate.ui sq_imageresize.ui sq_imageprint.ui sq_imageeditoptions.ui sq_imageconvert.ui sq_imagebcg.ui 
 #>+ 1
-libimageedit_dlg_a_SOURCES=sq_ruler.cpp  sq_canvaswidget.cpp sq_pushbutton.cpp  sq_label.cpp sq_printpanelbase.cpp sq_printpanelframe.cpp sq_printpanel.cpp sq_bcglabel.cpp          sq_selector.cpp sq_imagefilter.cpp sq_writeoption.cpp sq_imagerotate.cpp sq_imageresize.cpp sq_imageprint.cpp sq_imageeditsplash.cpp sq_imageeditoptions.cpp sq_imageconvert.cpp sq_imagebcg.cpp
-EXTRA_DIST = sq_imagebcg.ui sq_imageconvert.ui sq_imageeditoptions.ui sq_imageeditsplash.ui sq_imageprint.ui sq_imageresize.ui sq_imagerotate.ui sq_writeoption.ui sq_bcglabel.cpp sq_bcglabel.h sq_printpanel.cpp sq_printpanelframe.cpp sq_printpanelframe.h sq_printpanel.h sq_printpanelbase.cpp sq_printpanelbase.h sq_label.cpp sq_label.h sq_imagefilter.ui sq_pushbutton.cpp sq_pushbutton.h sq_canvaswidget.cpp sq_canvaswidget.h sq_selector.ui sq_selector.ui.h sq_ruler.cpp sq_ruler.h 
+libimageedit_dlg_a_SOURCES=sq_pushbutton.cpp  sq_label.cpp sq_printpanelbase.cpp sq_printpanelframe.cpp sq_printpanel.cpp sq_bcglabel.cpp         sq_imagefilter.cpp sq_writeoption.cpp sq_imagerotate.cpp sq_imageresize.cpp sq_imageprint.cpp sq_imageeditoptions.cpp sq_imageconvert.cpp sq_imagebcg.cpp
+EXTRA_DIST = sq_imagebcg.ui sq_imageconvert.ui sq_imageeditoptions.ui sq_imageprint.ui sq_imageresize.ui sq_imagerotate.ui sq_writeoption.ui sq_bcglabel.cpp sq_bcglabel.h sq_printpanel.cpp sq_printpanelframe.cpp sq_printpanelframe.h sq_printpanel.h sq_printpanelbase.cpp sq_printpanelbase.h sq_label.cpp sq_label.h sq_imagefilter.ui sq_pushbutton.cpp sq_pushbutton.h 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
@@ -393,13 +390,11 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_bcglabel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_canvaswidget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_label.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_printpanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_printpanelbase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_printpanelframe.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_pushbutton.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_ruler.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -542,7 +537,7 @@ clean: kde-rpo-clean  clean-am
 #>- clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
 #>- 	mostlyclean-am
 #>+ 2
-clean-am: clean-metasources clean-ui clean-bcheck clean-final  clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-ui clean-bcheck clean-final  clean-generic clean-libtool clean-noinstLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -614,30 +609,17 @@ messages:
 .NOEXPORT:
 
 
-#>+ 3
-sq_canvaswidget.moc.cpp: $(srcdir)/sq_canvaswidget.h
-	$(MOC) $(srcdir)/sq_canvaswidget.h -o sq_canvaswidget.moc.cpp
-
 #>+ 2
-mocs: sq_canvaswidget.moc.cpp
+KDE_DIST=sq_imageresize.ui.h sq_imageconvert.h sq_imageeditoptions.ui.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imagefilter.h Makefile.in sq_imageconvert.ui.h sq_imagebcg.ui.h sq_imagerotate.ui.h sq_imageprint.ui.h sq_writeoption.h sq_imagebcg.h sq_imagefilter.ui.h sq_imagerotate.h Makefile.am 
 
-#>+ 3
-clean-metasources:
-	-rm -f  sq_canvaswidget.moc.cpp
-
-#>+ 2
-KDE_DIST=sq_imageresize.ui.h sq_imageconvert.h sq_imageeditoptions.ui.h sq_imageeditsplash.ui.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imagefilter.h sq_imageeditsplash.h Makefile.in sq_selector.h sq_imageconvert.ui.h sq_imagebcg.ui.h sq_imagerotate.ui.h sq_imageprint.ui.h sq_writeoption.h sq_imagebcg.h sq_imagefilter.ui.h sq_imagerotate.h Makefile.am 
-
-#>+ 13
+#>+ 11
 clean-ui:
 	-rm -f \
-	sq_selector.cpp sq_selector.h sq_selector.moc \
 	sq_imagefilter.cpp sq_imagefilter.h sq_imagefilter.moc \
 	sq_writeoption.cpp sq_writeoption.h sq_writeoption.moc \
 	sq_imagerotate.cpp sq_imagerotate.h sq_imagerotate.moc \
 	sq_imageresize.cpp sq_imageresize.h sq_imageresize.moc \
 	sq_imageprint.cpp sq_imageprint.h sq_imageprint.moc \
-	sq_imageeditsplash.cpp sq_imageeditsplash.h sq_imageeditsplash.moc \
 	sq_imageeditoptions.cpp sq_imageeditoptions.h sq_imageeditoptions.moc \
 	sq_imageconvert.cpp sq_imageconvert.h sq_imageconvert.moc \
 	sq_imagebcg.cpp sq_imagebcg.h sq_imagebcg.moc 
@@ -684,11 +666,11 @@ bcheck-am:
 
 
 #>+ 11
-libimageedit_dlg_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_ruler.cpp $(srcdir)/sq_canvaswidget.cpp $(srcdir)/sq_pushbutton.cpp $(srcdir)/sq_label.cpp $(srcdir)/sq_printpanelbase.cpp $(srcdir)/sq_printpanelframe.cpp $(srcdir)/sq_printpanel.cpp $(srcdir)/sq_bcglabel.cpp $(srcdir)/sq_selector.cpp $(srcdir)/sq_imagefilter.cpp $(srcdir)/sq_writeoption.cpp $(srcdir)/sq_imagerotate.cpp $(srcdir)/sq_imageresize.cpp $(srcdir)/sq_imageprint.cpp $(srcdir)/sq_imageeditsplash.cpp $(srcdir)/sq_imageeditoptions.cpp $(srcdir)/sq_imageconvert.cpp $(srcdir)/sq_imagebcg.cpp sq_canvaswidget.moc.cpp  sq_imageconvert.moc sq_imagebcg.moc sq_imageresize.moc sq_imagefilter.moc sq_imageprint.moc sq_imagerotate.moc sq_imageeditsplash.moc sq_selector.moc sq_writeoption.moc sq_imageeditoptions.moc
+libimageedit_dlg_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_pushbutton.cpp $(srcdir)/sq_label.cpp $(srcdir)/sq_printpanelbase.cpp $(srcdir)/sq_printpanelframe.cpp $(srcdir)/sq_printpanel.cpp $(srcdir)/sq_bcglabel.cpp $(srcdir)/sq_imagefilter.cpp $(srcdir)/sq_writeoption.cpp $(srcdir)/sq_imagerotate.cpp $(srcdir)/sq_imageresize.cpp $(srcdir)/sq_imageprint.cpp $(srcdir)/sq_imageeditoptions.cpp $(srcdir)/sq_imageconvert.cpp $(srcdir)/sq_imagebcg.cpp  sq_imageconvert.moc sq_imagebcg.moc sq_imageresize.moc sq_imagefilter.moc sq_imageeditoptions.moc sq_imageprint.moc sq_imagerotate.moc sq_writeoption.moc
 	@echo 'creating libimageedit_dlg_a.all_cpp.cpp ...'; \
 	rm -f libimageedit_dlg_a.all_cpp.files libimageedit_dlg_a.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> libimageedit_dlg_a.all_cpp.final; \
-	for file in sq_ruler.cpp sq_canvaswidget.cpp sq_pushbutton.cpp sq_label.cpp sq_printpanelbase.cpp sq_printpanelframe.cpp sq_printpanel.cpp sq_bcglabel.cpp sq_selector.cpp sq_imagefilter.cpp sq_writeoption.cpp sq_imagerotate.cpp sq_imageresize.cpp sq_imageprint.cpp sq_imageeditsplash.cpp sq_imageeditoptions.cpp sq_imageconvert.cpp sq_imagebcg.cpp sq_canvaswidget.moc.cpp ; do \
+	for file in sq_pushbutton.cpp sq_label.cpp sq_printpanelbase.cpp sq_printpanelframe.cpp sq_printpanel.cpp sq_bcglabel.cpp sq_imagefilter.cpp sq_writeoption.cpp sq_imagerotate.cpp sq_imageresize.cpp sq_imageprint.cpp sq_imageeditoptions.cpp sq_imageconvert.cpp sq_imagebcg.cpp ; do \
 	  echo "#include \"$$file\"" >> libimageedit_dlg_a.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> libimageedit_dlg_a.all_cpp.final; \
 	done; \
@@ -723,34 +705,17 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 11
+#>+ 9
 nmcheck: 
-$(srcdir)/sq_printpanelbase.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
-$(srcdir)/sq_printpanel.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
+$(srcdir)/sq_printpanelbase.cpp: sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
+$(srcdir)/sq_printpanel.cpp: sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
 nmcheck-am: nmcheck
-$(srcdir)/sq_printpanelframe.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
-$(srcdir)/sq_ruler.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
-$(srcdir)/sq_canvaswidget.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
-$(srcdir)/sq_pushbutton.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
-$(srcdir)/sq_label.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
-$(srcdir)/sq_bcglabel.cpp: sq_selector.h sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditsplash.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
+$(srcdir)/sq_printpanelframe.cpp: sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
+$(srcdir)/sq_pushbutton.cpp: sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
+$(srcdir)/sq_label.cpp: sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
+$(srcdir)/sq_bcglabel.cpp: sq_imagefilter.h sq_writeoption.h sq_imagerotate.h sq_imageresize.h sq_imageprint.h sq_imageeditoptions.h sq_imageconvert.h sq_imagebcg.h 
 
-#>+ 150
-sq_selector.cpp: $(srcdir)/sq_selector.ui sq_selector.h sq_selector.moc
-	rm -f sq_selector.cpp
-	echo '#include <kdialog.h>' > sq_selector.cpp
-	echo '#include <klocale.h>' >> sq_selector.cpp
-	$(UIC) -tr ${UIC_TR} -i sq_selector.h $(srcdir)/sq_selector.ui > sq_selector.cpp.temp ; ret=$$?; \
-	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" sq_selector.cpp.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_sq_selector,g" >> sq_selector.cpp ;\
-	rm -f sq_selector.cpp.temp ;\
-	if test "$$ret" = 0; then echo '#include "sq_selector.moc"' >> sq_selector.cpp; else rm -f sq_selector.cpp ; exit $$ret ; fi
-
-sq_selector.h: $(srcdir)/sq_selector.ui
-	$(UIC) -o sq_selector.h $(srcdir)/sq_selector.ui
-
-sq_selector.moc: sq_selector.h
-	$(MOC) sq_selector.h -o sq_selector.moc
-
+#>+ 120
 sq_imagebcg.cpp: $(srcdir)/sq_imagebcg.ui sq_imagebcg.h sq_imagebcg.moc
 	rm -f sq_imagebcg.cpp
 	echo '#include <kdialog.h>' > sq_imagebcg.cpp
@@ -840,21 +805,6 @@ sq_imagerotate.h: $(srcdir)/sq_imagerotate.ui
 
 sq_imagerotate.moc: sq_imagerotate.h
 	$(MOC) sq_imagerotate.h -o sq_imagerotate.moc
-
-sq_imageeditsplash.cpp: $(srcdir)/sq_imageeditsplash.ui sq_imageeditsplash.h sq_imageeditsplash.moc
-	rm -f sq_imageeditsplash.cpp
-	echo '#include <kdialog.h>' > sq_imageeditsplash.cpp
-	echo '#include <klocale.h>' >> sq_imageeditsplash.cpp
-	$(UIC) -tr ${UIC_TR} -i sq_imageeditsplash.h $(srcdir)/sq_imageeditsplash.ui > sq_imageeditsplash.cpp.temp ; ret=$$?; \
-	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" sq_imageeditsplash.cpp.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_sq_imageeditsplash,g" >> sq_imageeditsplash.cpp ;\
-	rm -f sq_imageeditsplash.cpp.temp ;\
-	if test "$$ret" = 0; then echo '#include "sq_imageeditsplash.moc"' >> sq_imageeditsplash.cpp; else rm -f sq_imageeditsplash.cpp ; exit $$ret ; fi
-
-sq_imageeditsplash.h: $(srcdir)/sq_imageeditsplash.ui
-	$(UIC) -o sq_imageeditsplash.h $(srcdir)/sq_imageeditsplash.ui
-
-sq_imageeditsplash.moc: sq_imageeditsplash.h
-	$(MOC) sq_imageeditsplash.h -o sq_imageeditsplash.moc
 
 sq_imageeditoptions.cpp: $(srcdir)/sq_imageeditoptions.ui sq_imageeditoptions.h sq_imageeditoptions.moc
 	rm -f sq_imageeditoptions.cpp

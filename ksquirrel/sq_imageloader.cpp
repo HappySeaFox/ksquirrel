@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <kdebug.h>
+
 #include "sq_imageloader.h"
 #include "sq_libraryhandler.h"
 
@@ -23,11 +25,13 @@
 #include "fmt_codec_base.h"
 #include "error.h"
 
-SQ_ImageLoader * SQ_ImageLoader::sing = NULL;
+SQ_ImageLoader * SQ_ImageLoader::m_instance = NULL;
 
-SQ_ImageLoader::SQ_ImageLoader()
+SQ_ImageLoader::SQ_ImageLoader(QObject *parent) : QObject(parent), m_errors(0)
 {
-    sing = this;
+    m_instance = this;
+
+    kdDebug() << "+SQ_ImageLoader" << endl;
 
     m_image = NULL;
     dumbscan = NULL;
@@ -36,7 +40,10 @@ SQ_ImageLoader::SQ_ImageLoader()
 
 SQ_ImageLoader::~SQ_ImageLoader()
 {
-    if(finfo) delete finfo;
+    kdDebug() << "-SQ_ImageLoader" << endl;
+
+    delete finfo;
+
     if(dumbscan) free(dumbscan);
     if(m_image) free(m_image);
 }
@@ -113,6 +120,13 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
     finfo->image.clear();
     finfo->meta.clear();
 
+#define SQ_SAVE_INF \
+    *finfo = codeK->information(); \
+    codeK->fmt_read_close();
+
+    // reset error count
+    m_errors = 0;
+
     // determine library for file
     lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath);
 
@@ -143,9 +157,14 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
     // read all pages in image...
     while(true)
     {
+        // error occured while decoding previuos page...
+        if(m_errors)
+            break;
+
         // advance to next page
         i = codeK->fmt_read_next();
 
+        // error occured while decoding first page
         if(i != SQE_OK && i != SQE_NOTOK && !current)
         {
             codeK->fmt_read_close();
@@ -176,7 +195,10 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
             dumbscan = (RGBA *)realloc(dumbscan, image->w * image->h * sizeof(RGBA));
 
             if(!dumbscan)
-                break;
+            {
+                SQ_SAVE_INF
+                return false;
+            }
         }
 
         // read all passes
@@ -190,12 +212,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
                 {
                     scan = m_image + j * image->w;
                     i = codeK->fmt_read_scanline(scan);
-
-                    if(i != SQE_OK)
-                    {
-                        codeK->fmt_read_close();
-                        return false;
-                    }
+                    m_errors += (i != SQE_OK);
                 }
             }
             else
@@ -203,7 +220,12 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
                 for(j = 0;j < image->h;j++)
                 {
                     i = codeK->fmt_read_scanline(dumbscan);
-                    if(i != SQE_OK) goto E;
+
+                    if(i != SQE_OK)
+                    {
+                        SQ_SAVE_INF
+                        return false;
+                    }
                 }
             }
         }
@@ -215,12 +237,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
         current++;
     }
 
-    E:
-
-    *finfo = codeK->information();
-
-    // close codec
-    codeK->fmt_read_close();
+    SQ_SAVE_INF
 
     // all done!
     return true;
@@ -248,9 +265,4 @@ QImage SQ_ImageLoader::image() const
         image.setAlphaBuffer(true);
 
     return image.swapRGB();
-}
-
-SQ_ImageLoader* SQ_ImageLoader::instance()
-{
-    return sing;
 }

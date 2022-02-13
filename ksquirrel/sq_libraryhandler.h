@@ -19,9 +19,11 @@
 #define SQ_LIBRARY_HANDLER_H
 
 #include <qvaluevector.h>
-#include <qstringlist.h>
+#include <qobject.h>
 
 #include "sq_library.h"
+
+class QStringList;
 
 /*
  *  SQ_LibraryHandler is a library manager. It's the main class
@@ -30,10 +32,10 @@
  *  See http://ksquirrel.sf.net/development.php for more.
  */
 
-class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
+class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
 {
     public:
-        SQ_LibraryHandler(QStringList *foundLibraries = 0);
+        SQ_LibraryHandler(QObject *parent, QStringList *foundLibraries = 0);
         ~SQ_LibraryHandler();
 
         /*
@@ -123,7 +125,7 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
          */
         fmt_codec_base *latestCodec();
 
-        static SQ_LibraryHandler* instance();
+        static SQ_LibraryHandler* instance() { return m_instance; }
 
     private:
 
@@ -138,7 +140,7 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
          */
         SQ_LIBRARY *latest;
 
-        static SQ_LibraryHandler *hand;
+        static SQ_LibraryHandler *m_instance;
 };
 
 inline
