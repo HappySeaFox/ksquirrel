@@ -7,6 +7,9 @@
 #include <qtabbar.h>
 #include <qtoolbar.h>
 #include <qtoolbutton.h>
+#include <qvaluelist.h>
+
+#include <kpopupmenu.h>
 #include <kurl.h>
 #include <kurlrequester.h>
 #include <kfile.h>
@@ -17,12 +20,16 @@
 
 typedef struct
 {
-    bool isSingleClick;
     KURL url;
     KFile::FileView View;
     int type;
 }PAGESETT;
 
+typedef struct
+{
+	QString name;
+	QString filter;
+}FILTER;
 
 class SQ_Page : public QWidget
 {
@@ -35,23 +42,23 @@ class SQ_Page : public QWidget
 	QString filter;
 	KFileFilterCombo *filterCombo;
 	KURLRequester *curPath;
-	QToolButton *togSingle, *togHidden, *tbUp, *tbBack, *tbForward;
-//	SQ_MyTabWidget *tabwidget;
+	QToolButton *togHidden, *tbUp, *tbBack, *tbForward;
+	KPopupMenu		*menuIconSize;
 	int Type;
-    
+	QValueList<FILTER> *fl;
+	QToolButton *filterButton;
     public:
     
 	SQ_Page(QWidget *parent, PAGESETT *ps);
-    	SQ_Page(QWidget *parent = 0, KURL path = KURL("/"), KFile::FileView View = KFile::Simple, int type = 1, bool single = false);
+    	SQ_Page(QWidget *parent = 0, KURL path = KURL("/"), KFile::FileView View = KFile::Simple, int type = 1);
 	~SQ_Page();
 																			
 	PAGESETT* getPageSett();
-//	void setAscTabWidget(SQ_MyTabWidget *t);
 	int getType() const;
 	
     public slots:
 	void slotDoNothing();
-	void slotSetFilter();
+	void slotSetFilter(int);
 	void setURL(const QString &newpath);
 	void setURL(const KURL &newurl);
 	void slotBack();
@@ -66,6 +73,11 @@ class SQ_Page : public QWidget
        void slotAddBookmark();
        void slotDupTab();
 	void slotCloseTab();
+	void slotSetIconSize16();
+	void slotSetIconSize22();
+	void slotSetIconSize32();
+	void slotSetIconSize48();
+	void slotSetIconSize64();
 };
 
 #endif

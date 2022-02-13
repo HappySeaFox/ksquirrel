@@ -7,6 +7,7 @@
 #include <qdockwindow.h>
 #include <qvaluelist.h>
 #include <qwhatsthis.h>
+#include <qpushbutton.h>
 
 #include <ktoolbar.h>
 #include <kstatusbar.h>
@@ -48,15 +49,13 @@ class Squirrel : public KDockMainWindow
     private:
 	       int build;
 		SQ_SystemTray	*tray;
-		QSplitter 	*left, *vert;
-		QToolButton	*tbFull, *tbExit, *tbEdit, *tbOptions, *tbRun, *tbNewPage, *tbGrab;
-		KMenuBar	*menubar;
-		KToolBar	 *fileTools;
-		KPopupMenu	 *pop_file, *pop_view, *pop_edit;
+		QToolButton		*tbExit, *tbEdit, *tbOptions, *tbRun, *tbNewPage, *tbGrab;
+		KMenuBar		*menubar;
+		KToolBar			*fileTools;
+		KPopupMenu		*pop_file, *pop_view, *pop_edit;
 		QPixmap		fullIcon, unfullIcon;
 
     public slots:
-		void slotShowFullScreen();
 		void slotEdit();
 		void slotOptions();
 		void slotExit();
@@ -71,26 +70,34 @@ class Squirrel : public KDockMainWindow
 
     protected:
 		void closeEvent(QCloseEvent *e);
-//		void resizeEvent(QResizeEvent *event);
 
     public:
 		static Squirrel *App;
 
 		KConfig *kconf;
 		KIconLoader *iconL;
-		KStatusBar	*sbar;
 		SQ_MyTabWidget	*tbmain;
 		QValueList<KURL> *bookmarks;
+
+		KStatusBar	*sbar;
+		QLabel		*dirInfo;
+		QLabel		*curFileInfo;
+		QLabel		*fileIcon;
+		QLabel		*fileName;
 };
 
-#define   sqApp        (Squirrel::App)
-#define   sqConfig    (Squirrel::App->kconf)
-#define   sqLoader   (Squirrel::App->iconL)
-#define   sqStatus    (Squirrel::App->sbar)
-#define   sqProgress  (Squirrel::App->progress)
-#define   sqTabWidget (Squirrel::App->tbmain)
-#define   sqBookmarks (Squirrel::App->bookmarks)
-#define   sqTabWidget  (Squirrel::App->tbmain)
+#define   sqApp              (Squirrel::App)
+#define   sqConfig           (Squirrel::App->kconf)
+#define   sqLoader           (Squirrel::App->iconL)
+#define   sqStatus            (Squirrel::App->sbar)
+#define   sqProgress        (Squirrel::App->progress)
+#define   sqTabWidget      (Squirrel::App->tbmain)
+#define   sqBookmarks     (Squirrel::App->bookmarks)
+#define   sqTabWidget      (Squirrel::App->tbmain)
 
+#define   sqSBdirInfo          (Squirrel::App->dirInfo)
+#define   sqSBcurFileInfo    (Squirrel::App->curFileInfo)
+#define   sqSBfileIcon         (Squirrel::App->fileIcon)
+#define   sqSBfileName       (Squirrel::App->fileName)
 
 #endif

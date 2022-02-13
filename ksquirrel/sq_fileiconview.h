@@ -9,13 +9,12 @@ class SQ_FileIconView : public KFileIconView
 {
     Q_OBJECT
 
-    public:
-	SQ_FileIconView(QWidget *parent = 0, const char *name = "");
-        ~SQ_FileIconView();
+	public:
+		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
+	        ~SQ_FileIconView();
 
-    protected slots:
-	void slotSelected(QIconViewItem *item, const QPoint &point);
-
+	protected slots:
+		void slotSelected(QIconViewItem *item, const QPoint &point);
 };
 
 

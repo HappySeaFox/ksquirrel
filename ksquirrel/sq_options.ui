@@ -159,21 +159,24 @@
                 </attribute>
                 <widget class="QCheckBox">
                     <property name="name">
-                        <cstring>checkBox3</cstring>
+                        <cstring>checkBox4</cstring>
                     </property>
                     <property name="geometry">
                         <rect>
-                            <x>10</x>
-                            <y>40</y>
-                            <width>94</width>
+                            <x>40</x>
+                            <y>170</y>
+                            <width>139</width>
                             <height>20</height>
                         </rect>
                     </property>
                     <property name="text">
-                        <string>create page</string>
+                        <string>Set last path visited</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
+                    </property>
+                    <property name="tristate">
+                        <bool>false</bool>
                     </property>
                 </widget>
                 <widget class="QButtonGroup">
@@ -183,7 +186,7 @@
                     <property name="geometry">
                         <rect>
                             <x>30</x>
-                            <y>70</y>
+                            <y>100</y>
                             <width>120</width>
                             <height>60</height>
                         </rect>
@@ -218,22 +221,6 @@
                     </widget>
                     <widget class="QRadioButton">
                         <property name="name">
-                            <cstring>radioButton2</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>20</y>
-                                <width>76</width>
-                                <height>20</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>List view</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
                             <cstring>radioButton3</cstring>
                         </property>
                         <property name="geometry">
@@ -248,28 +235,22 @@
                             <string>Detailed view</string>
                         </property>
                     </widget>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>checkBox4</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>40</x>
-                            <y>140</y>
-                            <width>139</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>Set last path visited</string>
-                    </property>
-                    <property name="checked">
-                        <bool>true</bool>
-                    </property>
-                    <property name="tristate">
-                        <bool>false</bool>
-                    </property>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>radioButton2</cstring>
+                        </property>
+                        <property name="geometry">
+                            <rect>
+                                <x>10</x>
+                                <y>20</y>
+                                <width>76</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property name="text">
+                            <string>List view</string>
+                        </property>
+                    </widget>
                 </widget>
                 <widget class="QCheckBox">
                     <property name="name">
@@ -279,12 +260,47 @@
                         <rect>
                             <x>10</x>
                             <y>10</y>
-                            <width>136</width>
+                            <width>147</width>
                             <height>20</height>
                         </rect>
                     </property>
                     <property name="text">
-                        <string>don't load tree view</string>
+                        <string>don't create tree view</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>checkBox3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>70</y>
+                            <width>94</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>create page</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>checkBox5</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>40</y>
+                            <width>141</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>don't create preview</string>
                     </property>
                 </widget>
             </widget>

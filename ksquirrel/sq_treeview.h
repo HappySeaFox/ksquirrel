@@ -10,15 +10,14 @@ class SQ_TreeView : public KFileTreeView
 
 	private:
         
-    public:
-	SQ_TreeView(QWidget *parent = 0, const char *name = 0);
-	~SQ_TreeView();
-	
-    public slots:
-	void slotDoubleClicked(QListViewItem*);
+	public:
+		SQ_TreeView(QWidget *parent = 0, const char *name = 0);
+		~SQ_TreeView();
 
-//	protected:
-//		virtual resizeEvent ( QResizeEvent *);
+	
+	public slots:
+		void slotDoubleClicked(QListViewItem*);
+		void slotSetupClick(QListViewItem*);
 };
 
 #endif

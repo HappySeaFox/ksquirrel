@@ -1,18 +1,14 @@
 #include <qsplitter.h>
 #include <qapplication.h>
 #include <qpixmap.h>
-//#include <qmainwindow.h>
 #include <qvaluelist.h>
 #include <qkeysequence.h>
 #include <qnamespace.h>
-#include <qpushbutton.h>
-//#include <qvbox.h>
+#include <qhbox.h>
 #include <qprocess.h>
 #include <qmessagebox.h>
 #include <qcolor.h>
 #include <qlabel.h>
-//#include <qmotifstyle.h>
-//#include <qprogressbar.h>
 #include <qlayout.h>
 
 #include <kapp.h>
@@ -52,9 +48,6 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 //    tray->setPixmap(sqLoader->loadIcon("kalarm", KIcon::Desktop, 22));
 //    tray->show();
 
-//    QVBoxLayout *l = new QVBoxLayout (this);
-
-
 ///////////////////////////////////
 // Insert toolbar
 
@@ -65,21 +58,13 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 
     tbEdit = new QToolButton(sqLoader->loadIcon("edit", KIcon::Desktop, 32), "Edit picture", QString::null,  this, SLOT(slotEdit()), fileTools);
     tbEdit->setUsesTextLabel(true);
-    tbEdit->setTextLabel("Edit", false);
+    tbEdit->setTextLabel(tr2i18n("Edit"), false);
     tbEdit->setTextPosition(QToolButton::Under);
 
     tbGrab = new QToolButton(sqLoader->loadIcon("ksnapshot", KIcon::Desktop, 32), "Take screenshot", QString::null, this, SLOT(slotGrab()), fileTools);
     tbGrab->setUsesTextLabel(true);
-    tbGrab->setTextLabel("Screenshot");
+    tbGrab->setTextLabel("Screeshot");
     tbGrab->setTextPosition(QToolButton::Under);
-
-    
-    fullIcon = sqLoader->loadIcon("window_fullscreen", KIcon::Desktop, 32);
-    unfullIcon = sqLoader->loadIcon("window_nofullscreen", KIcon::Desktop, 32);
-    tbFull = new QToolButton(fullIcon, "Toggle fullscreen", QString::null, this, SLOT(slotShowFullScreen()), fileTools);
-    tbFull->setUsesTextLabel(true);
-    tbFull->setTextLabel("Fullscreen", false);
-    tbFull->setTextPosition(QToolButton::Under);
 
     tbOptions = new QToolButton(sqLoader->loadIcon("penguin", KIcon::Desktop, 32), "Edit options", QString::null, this, SLOT(slotOptions()), fileTools);
     tbOptions->setUsesTextLabel(true);
@@ -170,11 +155,31 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 
     pop_edit->insertItem("Options", this, SLOT(slotOptions()), CTRL+Key_P);
     pop_file->insertItem("Quit", this, SLOT(slotExit()), ALT+Key_Q);
-    pop_view->insertItem("FullScreen", this, SLOT(slotShowFullScreen()), ALT+Key_F12);
 
     sbar = statusBar();
     sbar->setSizeGripEnabled(true);
     sbar->show();
+
+    dirInfo = new QLabel(sbar);
+    dirInfo->setFrameShape(QFrame::MenuBarPanel);
+
+    curFileInfo = new QLabel(sbar);
+    curFileInfo->setFrameShape(QFrame::MenuBarPanel);
+
+    QHBox *vb = new QHBox(sbar);
+    vb->setFrameShape(QFrame::MenuBarPanel);
+    
+	fileIcon = new QLabel(vb);
+	fileIcon->setScaledContents(true);
+
+	fileName = new QLabel(vb);
+
+	QLabel *levak = new QLabel(sbar);
+    
+	sbar->addWidget(dirInfo, 0, true);
+	sbar->addWidget(curFileInfo, 0, true);
+	sbar->addWidget(vb, 0, true);	
+	sbar->addWidget(levak, 2, true);    
 
 /////////////////////////// views
 
@@ -196,7 +201,7 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
         {
 		dockTree = createDockWidget("Tree view", 0L, 0L, "");
 		dockTree->setWidget(new SQ_TreeView);
-		dockTree->manualDock(mainDock, KDockWidget::DockLeft, 25);
+		dockTree->manualDock(mainDock, KDockWidget::DockLeft, 23);
 	}
 	
     KDockWidget* dockTabView;
@@ -211,30 +216,14 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
     QWidget *preview = new QWidget(dockPreview);
     preview->setPaletteBackgroundColor(QColor(82, 82, 82));
     dockPreview->setWidget(preview);
-    dockPreview->manualDock(dockTree, KDockWidget::DockBottom, 60);
+    dockPreview->manualDock(dockTree, KDockWidget::DockBottom, 70);
 
     
     slotNewPage(10001);
-    
+
     this->move(0,0);
     this->resize(QApplication::desktop()->width(), QApplication::desktop()->height());
     this->show();
-}
-
-void Squirrel::slotShowFullScreen()
-{
-    if(isFullScreen())
-    {
-		showNormal();
-		tbFull->setDown(false);
-		tbFull->setIconSet(fullIcon);
-    }
-    else
-    {
-		showFullScreen();
-		tbFull->setDown(true);
-		tbFull->setIconSet(unfullIcon);
-    }
 }
 
 void Squirrel::slotEdit()
@@ -250,14 +239,7 @@ void Squirrel::slotOptions()
 
 	md->exec();
 }
-/*
-void Squirrel::resizeEvent(QResizeEvent *event)
-{
-//	left->resize(width(), height()-105);
-//	left->resize(640, 480);
-	QMainWindow::resizeEvent(event);
-}
-*/
+
 void Squirrel::slotExit()
 {
     this->hide();
@@ -274,17 +256,17 @@ void Squirrel::slotNewPage(int id)
 
     if(id == 10000)
     {
-        tmpw = new SQ_Page(0, "/", KFile::Simple, 1, true);
+        tmpw = new SQ_Page(0, "/", KFile::Simple, 1);
         head = "Icon view";
     }
     else if(id == 10001)
    {    
-        tmpw = new SQ_Page(0, "/", KFile::Simple, 2, true);
+        tmpw = new SQ_Page(0, "/", KFile::Simple, 2);
         head = "List view";
    }
     else if(id == 10002)
    {
-        tmpw = new SQ_Page(0, "/", KFile::Detail, -1, true);
+        tmpw = new SQ_Page(0, "/", KFile::Detail, -1);
         head = "Detailed view";
    }
    else if(id == 10003)

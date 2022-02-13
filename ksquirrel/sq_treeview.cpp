@@ -6,30 +6,35 @@
 
 SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
-   QPixmap homePix = sqLoader->loadIcon("gohome", KIcon::Desktop, 16);
-   QPixmap rootPix = sqLoader->loadIcon("hdd_mount", KIcon::Desktop, 16);   
+	QPixmap homePix = sqLoader->loadIcon("gohome", KIcon::Desktop, 16);
+	QPixmap rootPix = sqLoader->loadIcon("hdd_mount", KIcon::Desktop, 16);   
+	QPixmap docsPix = sqLoader->loadIcon("document", KIcon::Desktop, 16);
 
-    KFileTreeBranch *root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
-    KFileTreeBranch *home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
-    addColumn("Name");
+	KFileTreeBranch *root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
+	KFileTreeBranch *docs = addBranch(KURL(KGlobalSettings::documentPath()), " Documents", docsPix);
+	KFileTreeBranch *home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
+	addColumn("Name");
     
-    setDirOnlyMode(root, true);
-    setDirOnlyMode(home, true);
+	setDirOnlyMode(root, true);
+	setDirOnlyMode(home, true);
+	setDirOnlyMode(docs, true);
     
-    setRootIsDecorated(true);
-    setShowSortIndicator(true);
+	setRootIsDecorated(true);
+	setShowSortIndicator(true);
 
-    home->setOpen(true);
+	setCurrentItem(home->root());
+	home->setOpen(true);
 
-    connect(this, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
-    connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
-    connect(this, SIGNAL(returnPressed(QListViewItem*)),  SIGNAL(doubleClicked(QListViewItem*)));
+	connect(this, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(slotSetupClick(QListViewItem*)));
+	connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
+	connect(this, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
 }
 
 SQ_TreeView::~SQ_TreeView()
 {}
 
-void SQ_TreeView::slotDoubleClicked(QListViewItem *item)
+
+void SQ_TreeView::slotSetupClick(QListViewItem *item)
 {
     KFileTreeViewItem *cur = static_cast<KFileTreeViewItem*>(item);
     KURL Curl = cur->url();
@@ -37,4 +42,10 @@ void SQ_TreeView::slotDoubleClicked(QListViewItem *item)
     if(sqTabWidget->count() > 0)
 	    if(((SQ_SpecialPage*)(sqTabWidget->currentPage()))->getType() != 0xff)
     		((SQ_Page*)(sqTabWidget->currentPage()))->setURL(Curl);
+}
+
+void SQ_TreeView::slotDoubleClicked(QListViewItem *item)
+{
+	slotSetupClick(item);
+	emit executed(item);
 }

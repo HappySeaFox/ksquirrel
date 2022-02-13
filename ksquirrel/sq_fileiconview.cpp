@@ -3,7 +3,6 @@
 SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : KFileIconView(parent, name)
 {
 	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
-	
 }
 
 SQ_FileIconView::~SQ_FileIconView()

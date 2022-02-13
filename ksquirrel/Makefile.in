@@ -239,12 +239,12 @@ x_libraries = @x_libraries@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = ksquirrel
 
-#>- ksquirrel_SOURCES = sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_history.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
+#>- ksquirrel_SOURCES = sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
 #>+ 1
-ksquirrel_SOURCES=sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp  sq_menu_proc.cpp sq_history.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp  sq_diroperator.cpp ksquirrel.cpp main.cpp  sq_options.cpp sq_editpicture.cpp
+ksquirrel_SOURCES=sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp  sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp  sq_diroperator.cpp ksquirrel.cpp main.cpp  sq_options.cpp sq_editpicture.cpp
 ksquirrel_LDADD = -lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_history.cpp sq_history.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_page.cpp sq_page.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h xdirs.h sq_specialpage.cpp sq_specialpage.h sq_version sq_version.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_page.cpp sq_page.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h xdirs.h sq_specialpage.cpp sq_specialpage.h sq_version sq_version.h 
 
 ####### kdevelop will overwrite this part!!! (end)############
 # These paths are KDE specific. Use them:
@@ -285,19 +285,17 @@ PROGRAMS = $(bin_PROGRAMS)
 
 am_ksquirrel_OBJECTS = sq_specialpage.$(OBJEXT) sq_treeview.$(OBJEXT) \
 	sq_tray.$(OBJEXT) sq_splash.$(OBJEXT) sq_page.$(OBJEXT) \
-	sq_menu_proc.$(OBJEXT) sq_history.$(OBJEXT) \
-	sq_grabwidget.$(OBJEXT) sq_fileiconview.$(OBJEXT) \
-	sq_filedetailview.$(OBJEXT) sq_diroperator.$(OBJEXT) \
-	ksquirrel.$(OBJEXT) main.$(OBJEXT)
+	sq_menu_proc.$(OBJEXT) sq_grabwidget.$(OBJEXT) \
+	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
+	sq_diroperator.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT)
 #>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
-#>+ 10
+#>+ 9
 ksquirrel_final_OBJECTS = ksquirrel.all_cpp.o 
 ksquirrel_nofinal_OBJECTS = sq_specialpage.$(OBJEXT) sq_treeview.$(OBJEXT) \
 	sq_tray.$(OBJEXT) sq_splash.$(OBJEXT) sq_page.$(OBJEXT) \
-	sq_menu_proc.$(OBJEXT) sq_history.$(OBJEXT) \
-	sq_grabwidget.$(OBJEXT) sq_fileiconview.$(OBJEXT) \
-	sq_filedetailview.$(OBJEXT) sq_diroperator.$(OBJEXT) \
-	ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_options.$(OBJEXT) sq_editpicture.$(OBJEXT)\
+	sq_menu_proc.$(OBJEXT) sq_grabwidget.$(OBJEXT) \
+	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
+	sq_diroperator.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_options.$(OBJEXT) sq_editpicture.$(OBJEXT)\
 sq_grabwidget.moc.o sq_treeview.moc.o sq_fileiconview.moc.o ksquirrel.moc.o sq_menu_proc.moc.o sq_diroperator.moc.o sq_splash.moc.o sq_page.moc.o sq_filedetailview.moc.o 
 @KDE_USE_FINAL_FALSE@ksquirrel_OBJECTS = $(ksquirrel_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@ksquirrel_OBJECTS = $(ksquirrel_final_OBJECTS)
@@ -311,18 +309,16 @@ am__depfiles_maybe = depfiles
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_filedetailview.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_fileiconview.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_grabwidget.Po \
-#>- @AMDEP_TRUE@	./$(DEPDIR)/sq_history.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_menu_proc.Po ./$(DEPDIR)/sq_page.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_specialpage.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_splash.Po ./$(DEPDIR)/sq_tray.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_treeview.Po
-#>+ 21
+#>+ 19
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/sq_options.P $(DEPDIR)/sq_editpicture.P $(DEPDIR)/sq_grabwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_menu_proc.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_page.moc.P $(DEPDIR)/sq_filedetailview.moc.P  $(DEPDIR)/ksquirrel.all_cpp.P  ./$(DEPDIR)/ksquirrel.Po ./$(DEPDIR)/main.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_diroperator.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_filedetailview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_fileiconview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_grabwidget.Po \
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_history.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_menu_proc.Po ./$(DEPDIR)/sq_page.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_specialpage.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_splash.Po ./$(DEPDIR)/sq_tray.Po \
@@ -332,7 +328,6 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_filedetailview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_fileiconview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_grabwidget.Po \
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_history.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_menu_proc.Po ./$(DEPDIR)/sq_page.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_specialpage.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_splash.Po ./$(DEPDIR)/sq_tray.Po \
@@ -420,7 +415,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_filedetailview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_fileiconview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_grabwidget.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_history.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_menu_proc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_page.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_specialpage.Po@am__quote@
@@ -526,7 +520,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=ksquirrel sq_options.ui.h squirrelrc Makefile.in sq_options.h sq_editpicture.h 
+KDE_DIST=Makefile.in 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -709,7 +703,6 @@ messages:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
-
 #>+ 27
 sq_options.cpp: $(srcdir)/sq_options.ui sq_options.h sq_options.moc
 	rm -f sq_options.cpp
@@ -795,11 +788,11 @@ force-reedit:
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_page.cpp $(srcdir)/sq_menu_proc.cpp $(srcdir)/sq_history.cpp $(srcdir)/sq_grabwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp  sq_options.moc sq_editpicture.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_page.cpp $(srcdir)/sq_menu_proc.cpp $(srcdir)/sq_grabwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp sq_options.cpp sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp  sq_options.moc sq_editpicture.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
-	for file in sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_menu_proc.cpp sq_history.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp ksquirrel.cpp main.cpp sq_options.cpp sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp ; do \
+	for file in sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp ksquirrel.cpp main.cpp sq_options.cpp sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
 	done; \
@@ -830,7 +823,7 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 14
+#>+ 13
 $(srcdir)/sq_splash.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/sq_treeview.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/sq_tray.cpp: sq_options.h sq_editpicture.h 
@@ -838,7 +831,6 @@ $(srcdir)/main.cpp: sq_options.h sq_editpicture.h
 $(srcdir)/sq_diroperator.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/sq_grabwidget.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/sq_specialpage.cpp: sq_options.h sq_editpicture.h 
-$(srcdir)/sq_history.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/sq_page.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/ksquirrel.cpp: sq_options.h sq_editpicture.h 
 $(srcdir)/sq_filedetailview.cpp: sq_options.h sq_editpicture.h 

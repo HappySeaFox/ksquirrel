@@ -3,11 +3,11 @@ bin_PROGRAMS = ksquirrel
 
 ## INCLUDES were found outside kdevelop specific part
 
-ksquirrel_SOURCES = sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_history.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
+ksquirrel_SOURCES = sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
 ksquirrel_LDADD   = -lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_history.cpp sq_history.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_page.cpp sq_page.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h xdirs.h sq_specialpage.cpp sq_specialpage.h sq_version sq_version.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_page.cpp sq_page.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h xdirs.h sq_specialpage.cpp sq_specialpage.h sq_version sq_version.h 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Applications/

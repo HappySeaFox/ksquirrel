@@ -5,27 +5,30 @@
 
 #include <qlabel.h>
 
+#include "sq_fileiconview.h"
+#include "sq_filedetailview.h"
+
 SQ_Page::SQ_Page(QWidget *parent, PAGESETT *ps)
 {
-    SQ_Page::SQ_Page(parent, ps->url, ps->View, ps->isSingleClick);
+    SQ_Page::SQ_Page(parent, ps->url, ps->View);
 }
     
-SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type, bool single) : QWidget(parent), Type(type)
+SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type) : QWidget(parent), Type(type)
 {
 	l = new QVBoxLayout (this);
 
 	sqConfig->setGroup("file browser");
-	bool showHidden = sqConfig->readBoolEntry("Show hidden files", false);
-    
-	dirop = new SQ_DirOperator(path, this, "file view", single);
+//	bool showHidden = sqConfig->readBoolEntry("Show hidden files", false);
+
+	dirop = new SQ_DirOperator(path, this, "file view");
 	dirop->readConfig(sqConfig, "file browser");
 	dirop->setViewConfig(sqConfig, "file browser");
 	dirop->setMode(KFile::Files);
 	dirop->setView(View);
 
 	if(View != KFile::Detail)
-		dirop->view()->actionCollection()->action(type)->activate();
-    
+		dirop->view()->actionCollection()->action(Type)->activate();
+
 	toolbar = new QToolBar("", 0, this, true, "tools");
 	toolbar->setVerticalStretchable(false);
 	toolbar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -34,84 +37,125 @@ SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type, boo
 	toolbar2->setVerticalStretchable(false);
 	toolbar2->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
 
-	togSingle = new QToolButton(sqLoader->loadIcon("mousecursor", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar);
-	togSingle->setToggleButton(true);
-	togHidden = new QToolButton(sqLoader->loadIcon("desktop", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar);
-	togHidden->setToggleButton(true);
-	/*KToggleAction *actionHidden = */new KToggleAction((KToggleAction*)(dirop->actionCollection()->action("show hidden")));
+	tbBack = new QToolButton(dirop->actionCollection()->action("back")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotBack()), toolbar);
+	tbForward = new QToolButton(dirop->actionCollection()->action("forward")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotForward()), toolbar);
+	tbUp = new QToolButton(dirop->actionCollection()->action("up")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotUp()), toolbar);
+	toolbar->addSeparator();
+	new QToolButton(dirop->actionCollection()->action("reload")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotReload()), toolbar);
+	new QToolButton(dirop->actionCollection()->action("home")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotHome()), toolbar);
 	toolbar->addSeparator();
 
-	new QLabel(" URL:", toolbar);
+	(new QLabel(" URL:", toolbar))->setFrameShape(QFrame::ToolBarPanel);
 	curPath = new KURLRequester(path.path(), toolbar, "current url");
-
-	tbBack = new QToolButton(dirop->actionCollection()->action("back")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotBack()), toolbar2);
-	tbForward = new QToolButton(dirop->actionCollection()->action("forward")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotForward()), toolbar2);
-	tbUp = new QToolButton(dirop->actionCollection()->action("up")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotUp()), toolbar2);
-    
-	toolbar2->addSeparator();   
-	new QToolButton(dirop->actionCollection()->action("reload")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotReload()), toolbar2);
-	new QToolButton(dirop->actionCollection()->action("home")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotHome()), toolbar2);
-	toolbar2->addSeparator();       
+	curPath->setFrameShape(QFrame::ToolBarPanel);
+	
+	
 	new QToolButton(dirop->actionCollection()->action("mkdir")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotMkdir()), toolbar2);
 	new QToolButton(sqLoader->loadIcon("penguin", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotProp()), toolbar2);
 	new QToolButton(dirop->actionCollection()->action("delete")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotDelete()), toolbar2);
 	toolbar2->addSeparator();
-	new QLabel("  Filter:", toolbar2);
 
-	filterCombo = new KFileFilterCombo(toolbar2, "filter");
-	filterCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	filter = "";    
+
+// insert button "icon size"	////////////////////////
+	KActionCollection *actcoll = dirop->actionCollection();
+	KRadioAction *i16 = new KRadioAction("16", 0, 0, this, SLOT(slotSetIconSize16()), actcoll, "ic16");
+	KRadioAction *i22 = new KRadioAction("22", 0, 0, this, SLOT(slotSetIconSize22()), actcoll, "ic22");
+	KRadioAction *i32 = new KRadioAction("32", 0, 0, this, SLOT(slotSetIconSize32()), actcoll, "ic32");
+	KRadioAction *i48 = new KRadioAction("48", 0, 0, this, SLOT(slotSetIconSize48()), actcoll, "ic48");
+	KRadioAction *i64 = new KRadioAction("64", 0, 0, this, SLOT(slotSetIconSize64()), actcoll, "ic64");
+	i16->setExclusiveGroup("set_icon_size_actions");
+	i22->setExclusiveGroup("set_icon_size_actions");
+	i32->setExclusiveGroup("set_icon_size_actions");
+	i48->setExclusiveGroup("set_icon_size_actions");
+	i64->setExclusiveGroup("set_icon_size_actions");
+	KActionMenu *actionMenu = new KActionMenu(actcoll, "icon_size_menu");
+	actionMenu->insert(i16);
+	actionMenu->insert(i22);
+	actionMenu->insert(i32);
+	actionMenu->insert(i48);
+	actionMenu->insert(i64);
+	actionMenu->plug(toolbar);
+	QToolButton *ics = new QToolButton(sqLoader->loadIcon("down", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar2);
+	ics->setPopup(actionMenu->popupMenu());
+	ics->setPopupDelay(10);
+	ics->setUsesTextLabel(true);
+	ics->setTextLabel(" Icon size", false);
+	ics->setTextPosition(QToolButton::Right);
+	toolbar2->addSeparator();
+
+/////////////////////////   insert filters   ////////////////////////////////////////////////////
+
+	filterButton = new QToolButton(sqLoader->loadIcon("down", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar2);
+	filterButton->setPopupDelay(10);
+	filterButton->setUsesTextLabel(true);
+	filterButton->setTextPosition(QToolButton::Right);
+	toolbar2->addSeparator();
+
+	QPopupMenu *actionFilterMenu = new QPopupMenu;
+	filterButton->setPopup(actionFilterMenu);
 
 	sqConfig->setGroup("Filters");
-
-	int entries = sqConfig->readNumEntry("Number", 0);
-
-	for(int i = 1;i < entries*2;i += 2)
+	fl = new QValueList<FILTER>;
+	int def = sqConfig->readNumEntry("default", 1);
+	
+	for(int i = 1;;i += 2)
 	{
 		QString ext = QString("%1").arg(i, 0, 10);
 		QString name = QString("%1").arg(i+1, 0, 10);
-		QString ext_ = sqConfig->readEntry(ext, "");
-		
-		filter += ext_ + "|"
-			+ sqConfig->readEntry(name, "")
-			+ " (";
+		QString tmp = sqConfig->readEntry(name, "");
 
-		if(ext_.length() > 15)
-		{
-			ext_.truncate(12);
-			ext_ += "...";
-		}
-                      
-		filter += ext_
-			+ ((i+1==entries*2)?")":")\n");
+		if(tmp == QString(""))
+			break;
+
+		FILTER tmp_filter = {tmp, sqConfig->readEntry(ext, "")};
+		fl->append(tmp_filter);
+		
+		if(def != i)
+			actionFilterMenu->insertItem(tmp, 7000+i/2);
+		else
+			actionFilterMenu->insertItem(sqLoader->loadIcon("ok", KIcon::Desktop, 16), tmp, 7000+i/2);
 	}
 
-	filterCombo->setFilter(filter);
-	filterCombo->setEditable(false);
-	filterCombo->setSizeLimit(12);
+	connect(actionFilterMenu, SIGNAL(activated(int)), this, SLOT(slotSetFilter(int)));
+
+//////////////////////////////////// insert Sort By //////////////////////////////////////////////////
+
+	QToolButton *sortbyButton = new QToolButton(sqLoader->loadIcon("down", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar2);
+	sortbyButton->setPopupDelay(10);
+	sortbyButton->setUsesTextLabel(true);
+	sortbyButton->setTextLabel(" Sort by", false);
+	sortbyButton->setTextPosition(QToolButton::Right);
+	sortbyButton->setPopup(((KActionMenu*)(dirop->actionCollection()->action("sorting menu")))->popupMenu());
 	toolbar2->addSeparator();
+
+//////////////////////////////////// insert View //////////////////////////////////////////////////
+
+	QToolButton *viewButton = new QToolButton(sqLoader->loadIcon("down", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar2);
+	viewButton->setPopupDelay(10);
+	viewButton->setUsesTextLabel(true);
+	viewButton->setTextLabel(" View", false);
+	viewButton->setTextPosition(QToolButton::Right);
+	viewButton->setPopup(((KActionMenu*)(dirop->actionCollection()->action("view menu")))->popupMenu());
+	toolbar2->addSeparator();
+
+////////////////////////////////////////////////////////////////////////////////////
+
+	toolbar2->setStretchableWidget(new QToolButton(QPixmap(0), QString::null, QString::null, this, 0, toolbar2));
+	
+////////////////////////////////////////////////////////////////////////////////////
+	
 	new QToolButton(sqLoader->loadIcon("bookmark_add", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotAddBookmark()), toolbar2);
 	new QToolButton(sqLoader->loadIcon("tab_duplicate", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotDupTab()), toolbar2);	
 	new QToolButton(sqLoader->loadIcon("tab_remove", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotCloseTab()), toolbar2);
-//	toolbar2->setStretchableWidget(lw);
     
-	if(single)			togSingle->toggle();
-	if(showHidden)	togHidden->toggle();
 
-	((KToggleAction*)(dirop->actionCollection()->action("show hidden")))->setChecked(showHidden);
-	
-	connect(togSingle, SIGNAL(toggled(bool)), dirop, SLOT(slotSetSingleClick(bool)));
-	connect(togHidden, SIGNAL(toggled(bool)), this, SLOT(slotShowHidden(bool)));
-//	connect(actionHidden, SIGNAL(toggled(bool)), togHidden, SIGNAL(toggled(bool)));
-    
-	l->addWidget(toolbar2);    
+	l->addWidget(toolbar2);
 	l->addWidget(toolbar);
 	l->addWidget(dirop);
     
 	connect(dirop, SIGNAL(urlEntered(const KURL&)), this, SLOT(setURL(const KURL&)));
 	connect(curPath, SIGNAL(returnPressed(const QString&)), this, SLOT(setURL(const QString&)));
-	connect(filterCombo, SIGNAL(filterChanged()), this, SLOT(slotSetFilter()));
-	slotSetFilter();
+	slotSetFilter(7000);
 }
 
 SQ_Page::~SQ_Page()
@@ -123,7 +167,6 @@ PAGESETT* SQ_Page::getPageSett()
     
     ps->url = dirop->url();
     ps->View = dirop->getViewType();
-    ps->isSingleClick = dirop->isSingleClickF();
     ps->type = getType();
     
     return ps;
@@ -133,19 +176,16 @@ int SQ_Page::getType() const
 {
 	return Type;
 }
-/*			
-void SQ_Page::setAscTabWidget(SQ_MyTabWidget *t)
-{
-    tabwidget = t;
-}
-*/
+
 void SQ_Page::slotDoNothing()
 {}
 
-void SQ_Page::slotSetFilter()
+void SQ_Page::slotSetFilter(int id)
 {
-    dirop->setNameFilter(filterCombo->currentFilter());
-    dirop->updateDir();
+	dirop->setNameFilter(((*fl)[id-7000]).filter);
+	dirop->updateDir();
+	QString t = QString(" Filter") + " (" + ((*fl)[id-7000]).name + ")";
+	filterButton->setTextLabel(t, false);
 }
 
 void SQ_Page::setURL(const QString &newpath)
@@ -216,7 +256,7 @@ void SQ_Page::slotDupTab()
 
 	ps = this->getPageSett();
 
-	SQ_Page *n = new SQ_Page (0, ps->url, ps->View, ps->type, ps->isSingleClick);
+	SQ_Page *n = new SQ_Page (0, ps->url, ps->View, ps->type);
 
 	sqTabWidget->addTab(n, (ps->View == KFile::Detail)?"Detailed view": ((ps->type == 1)?"Icon view":"List view"));
 
@@ -225,5 +265,36 @@ void SQ_Page::slotDupTab()
 
 void SQ_Page::slotAddBookmark()
 {
-	sqBookmarks->append(dirop->url());
+	if(sqBookmarks->find(dirop->url()) == sqBookmarks->end())
+		sqBookmarks->append(dirop->url());
+}
+
+void SQ_Page::slotSetIconSize16()
+{
+	if(dirop->getViewType() == KFile::Simple)
+		((SQ_FileIconView*)dirop->new_view)->setIconSize(16);
+}
+
+void SQ_Page::slotSetIconSize22()
+{
+	if(dirop->getViewType() == KFile::Simple)
+		((SQ_FileIconView*)dirop->new_view)->setIconSize(22);
+}
+
+void SQ_Page::slotSetIconSize32()
+{
+	if(dirop->getViewType() == KFile::Simple)
+		((SQ_FileIconView*)dirop->new_view)->setIconSize(32);
+}
+
+void SQ_Page::slotSetIconSize48()
+{
+	if(dirop->getViewType() == KFile::Simple)
+		((SQ_FileIconView*)dirop->new_view)->setIconSize(48);
+}
+
+void SQ_Page::slotSetIconSize64()
+{
+	if(dirop->getViewType() == KFile::Simple)
+		((SQ_FileIconView*)dirop->new_view)->setIconSize(64);
 }

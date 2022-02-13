@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	KApplication a;
 
 	char name_app[100];
-	sprintf(name_app, "%s%d (stable 100,318,368,539,1100)", APP, version);
+	sprintf(name_app, "%s%d (stable 100,318,368,539,1100,1560)", APP, version);
 
 	Squirrel *SQ = new Squirrel;
 	SQ->setCaption(name_app);

@@ -6,8 +6,12 @@
 #include "sq_fileiconview.h"
 #include "sq_filedetailview.h"
 
-SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *name, bool single) : KDirOperator(url, parent, name),isSingleClick(single)
-{}
+#include "ksquirrel.h"
+
+SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *name) : KDirOperator(url, parent, name)
+{
+	sing = KGlobalSettings::singleClick();
+}
 
 SQ_DirOperator::~SQ_DirOperator()
 {}
@@ -17,106 +21,120 @@ KFile::FileView SQ_DirOperator::getViewType()
     return View;
 }
 
-bool SQ_DirOperator::isSingleClickF()
-{
-    return isSingleClick;
-}
-
 KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 {
-    new_view = 0L;
-    View = view;
+	new_view = 0L;
+	View = view;
 
-    bool separateDirs = KFile::isSeparateDirs(view);
+	bool separateDirs = KFile::isSeparateDirs(view);
 
-    if(separateDirs)
-    {
-        KCombiView *combi = new KCombiView(parent, "combi view");
-        combi->setOnlyDoubleClickSelectsFiles(onlyDoubleClickSelectsFiles());
-        KFileView* v = 0L;
-        if((view & KFile::Simple) == KFile::Simple)
-          v = createView(combi, KFile::Simple);
-        else
-          v = createView(combi, KFile::Detail);
-        combi->setRight(v);
-        new_view = combi;
-    }
-    else if(view == KFile::Detail)
-    {
-        new_view = new SQ_FileDetailView(parent, "detail view");
-        connect((SQ_FileDetailView*)new_view, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
-	 slotSetSingleClick(isSingleClick);
-    }
-    else if(view == KFile::Simple)
-    {
-        SQ_FileIconView *tt = new SQ_FileIconView(parent, "simple view");
-        new_view = tt;
+	if(separateDirs)
+	{
+		KCombiView *combi = new KCombiView(parent, "combi view");
+		combi->setOnlyDoubleClickSelectsFiles(onlyDoubleClickSelectsFiles());
+
+		KFileView *v = 0L;
+
+		if((view & KFile::Simple) == KFile::Simple)
+			v = createView(combi, KFile::Simple);
+		else
+			v = createView(combi, KFile::Detail);
+			
+		combi->setRight(v);
+		new_view = combi;
+	}
+	else if(view == KFile::Detail)
+	{
+		new_view = new SQ_FileDetailView(parent, "detail view");
+
+		if(sing)
+		{
+			connect((SQ_FileDetailView*)new_view, SIGNAL(clicked(QListViewItem*, const QPoint&, int)), (SQ_FileDetailView*)new_view, SLOT(slotSelected(QListViewItem*, const QPoint&, int)));
+			connect((SQ_FileDetailView*)new_view, SIGNAL(clicked(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
+       	}
+		else
+			connect((SQ_FileDetailView*)new_view, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
+		
+		connect((SQ_FileDetailView*)new_view, SIGNAL(currentChanged(QListViewItem*)), this, SLOT(slotSelected(QListViewItem*)));
+	}
+	else if(view == KFile::Simple)
+	{
+		SQ_FileIconView *tt = new SQ_FileIconView(parent, "simple view");
+		new_view = tt;
 	
-        new_view->setViewName("Short View");
-        connect((SQ_FileIconView*)new_view, SIGNAL(doubleClicked(QIconViewItem*)), this, SLOT(slotDoubleClicked(QIconViewItem*)));
+		new_view->setViewName("Short View");
 
-	tt->setMaxItemTextLength(12);
-	slotSetSingleClick(isSingleClick);
-    }
-    else;
+		if(sing)
+		{
+			connect((SQ_FileIconView*)new_view, SIGNAL(clicked(QIconViewItem*, const QPoint&)), (SQ_FileIconView*)new_view, SLOT(slotSelected(QIconViewItem*, const QPoint&)));
+			connect((SQ_FileIconView*)new_view, SIGNAL(clicked(QIconViewItem*)), this, SLOT(slotDoubleClicked(QIconViewItem*)));
+		}
+		else
+			connect((SQ_FileIconView*)new_view, SIGNAL(doubleClicked(QIconViewItem*)), this, SLOT(slotDoubleClicked(QIconViewItem*)));
+		
+		connect((SQ_FileIconView*)new_view, SIGNAL(currentChanged(QIconViewItem*)), this, SLOT(slotSelected(QIconViewItem*)));
+	}
 
-    return new_view;
+	return new_view;
 }
 
 void SQ_DirOperator::slotDoubleClicked(QIconViewItem *item)
 {
-    if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
-        if(f->fileInfo()->isFile())
-	{
-	    QString newpath = url().path() + /*"/" + */item->text();
-	    QString mime(KMimeType::findByPath(/*QFileInfo(newpath).dirPath(true) + "/" + QFileInfo(newpath).fileName().lower()*/newpath)->name());
-	    KRun::runURL(KURL(newpath), mime);
-	}
+	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
+		if(f->fileInfo()->isFile())
+			f->fileInfo()->run();
 }
 
 void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 {
     if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
         if(f->fileInfo()->isFile())
+		f->fileInfo()->run();
+}
+
+void SQ_DirOperator::slotSelected(QIconViewItem *item)
+{
+	if(!item) return;
+	
+	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
 	{
-	    QString newpath = url().path() + /*"/" + */item->text(0);
-	    QString mime(KMimeType::findByPath(/*QFileInfo(newpath).dirPath(true) + "/" + QFileInfo(newpath).fileName().lower()*/newpath)->name());
-	    KRun::runURL(KURL(newpath), mime);
+		KFileItem *fi = f->fileInfo();
+		if(fi->isFile() || fi->isDir())
+		{
+			QString str;
+			str.sprintf(" Total %d (%d dirs, %d files) ", new_view->count(), new_view->numDirs(), new_view->numFiles());
+			QString str2 = " " + fi->timeString() + " ";
+			QPixmap px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, 16);
+			sqSBdirInfo->setText(str);
+			sqSBcurFileInfo->setText(str2);
+			sqSBfileIcon->setPixmap(px);
+			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
+		}
 	}
 }
 
-void SQ_DirOperator::slotSetSingleClick(bool isSingle)
+void SQ_DirOperator::slotSelected(QListViewItem *item)
 {
-    if(View == KFile::Simple)
-    {
-	if(isSingle)
-        {
-	    connect((SQ_FileIconView*)new_view, SIGNAL(clicked(QIconViewItem*, const QPoint&)), (SQ_FileIconView*)new_view, SLOT(slotSelected(QIconViewItem*, const QPoint&)));
-	    connect((SQ_FileIconView*)new_view, SIGNAL(clicked(QIconViewItem*)), this, SLOT(slotDoubleClicked(QIconViewItem*)));
-        }
-        else
-        {
-	    disconnect((SQ_FileIconView*)new_view, SIGNAL(clicked(QIconViewItem*, const QPoint&)), (SQ_FileIconView*)new_view, SLOT(slotSelected(QIconViewItem*, const QPoint&)));
-	    disconnect((SQ_FileIconView*)new_view, SIGNAL(clicked(QIconViewItem*)), this, SLOT(slotDoubleClicked(QIconViewItem*)));
-	}
-    }
-    else if(View == KFile::Detail)
-    {
-        if(isSingle)
-        {
-            connect((SQ_FileDetailView*)new_view, SIGNAL(clicked(QListViewItem*, const QPoint&, int)), (SQ_FileDetailView*)new_view, SLOT(slotSelected(QListViewItem*, const QPoint&, int)));
-	    connect((SQ_FileDetailView*)new_view, SIGNAL(clicked(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
-        }
-	else
+	if(!item) return;
+
+	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
 	{
-	    disconnect((SQ_FileDetailView*)new_view, SIGNAL(clicked(QListViewItem*, const QPoint&, int)), (SQ_FileDetailView*)new_view, SLOT(slotSelected(QListViewItem*, const QPoint&, int)));
-	    disconnect((SQ_FileDetailView*)new_view, SIGNAL(clicked(QListViewItem*)), this, SLOT(slotDoubleClicked(QListViewItem*)));
+		KFileItem *fi = f->fileInfo();
+		if(fi->isFile() || fi->isDir())
+		{
+			QString str;
+			str.sprintf(" Total %d (%d dirs, %d files) ", new_view->count(), new_view->numDirs(), new_view->numFiles());
+			QString str2 = " " + fi->timeString() + " ";
+			QPixmap px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, 16);
+			sqSBdirInfo->setText(str);
+			sqSBcurFileInfo->setText(str2);
+			sqSBfileIcon->setPixmap(px);
+			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
+		}
 	}
-    }
 }
 
 void SQ_DirOperator::setShowHiddenFilesF(bool s)
 {
     this->setShowHiddenFiles(s);
-//	    this->actionCollection()->action("showHidden")->activate();
 }

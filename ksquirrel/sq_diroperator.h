@@ -11,33 +11,30 @@ class QListViewItem;
 
 class SQ_DirOperator : public KDirOperator
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    private:
-	bool isSingleClick;
-	KFileView *new_view;
-	KFile::FileView View;
+	private:
+		KFile::FileView View;
+		bool sing;
 
-    public:
-	SQ_DirOperator(const KURL &url = KURL(), QWidget *parent = 0, const char *name = "", bool single = false);
+	public:
+		SQ_DirOperator(const KURL &url = KURL(), QWidget *parent = 0, const char *name = "");
+		virtual ~SQ_DirOperator();
 
-	virtual ~SQ_DirOperator();
+		KFile::FileView getViewType();
+		KFileView *new_view;
 
-	KFile::FileView getViewType();
+	protected:
+		KFileView* createView(QWidget *parent, KFile::FileView view);
 
-	bool isSingleClickF();
-
-
-    protected:
-	KFileView* createView(QWidget *parent, KFile::FileView view);
-
-    protected slots:
-	void slotDoubleClicked(QIconViewItem *item);
-	void slotDoubleClicked(QListViewItem *item);
-
-    public slots:
-	void slotSetSingleClick(bool isSingle);
-        void setShowHiddenFilesF(bool s);
+	protected slots:
+		void slotDoubleClicked(QIconViewItem *item);
+		void slotDoubleClicked(QListViewItem *item);
+		void slotSelected(QIconViewItem*);
+		void slotSelected(QListViewItem*);
+	
+	public slots:
+		void setShowHiddenFilesF(bool s);
 };
 
 #endif
