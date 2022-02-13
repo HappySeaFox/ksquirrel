@@ -38,6 +38,8 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
 	protected:
 		virtual void paintItem(QPainter *p, const QColorGroup &cg);
 		virtual void paintFocus(QPainter *p, const QColorGroup &cg);
+		void paintPixmap(QPainter *p, const QColorGroup &c);
+		void paintText(QPainter *p, const QColorGroup &c);
 
 	private:
 		SQ_Thumbnail info;

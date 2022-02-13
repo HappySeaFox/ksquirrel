@@ -15,10 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 #include <qcursor.h>
+#include <qapplication.h>
 
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kstandarddirs.h>
+#include <kpopupmenu.h>
 #include <kwin.h>
 
 #include "ksquirrel.h"
@@ -31,11 +33,11 @@ SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(pa
 
 	KActionSeparator *pASep = new KActionSeparator;
 
-	pAOpen = KStdAction::open(this, SLOT(slotActivate()), sqApp->actionCollection(), "Open SQ from tray");
-	pAExit = KStdAction::quit(this, SLOT(slotClose()), sqApp->actionCollection(), "SQ close from tray");
+	pAOpen = KStdAction::open(this, SLOT(slotActivate()), KSquirrel::app()->actionCollection(), "Open SQ from tray");
+	pAExit = KStdAction::quit(this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ close from tray");
 
 	pAOpen->plug(rightMenu);
-	sqApp->pAConfigure->plug(rightMenu);
+	KSquirrel::app()->pAConfigure->plug(rightMenu);
 	pASep->plug(rightMenu);
 	pAExit->plug(rightMenu);
 
@@ -62,14 +64,14 @@ void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 
 void SQ_SystemTray::slotActivate()
 {
-	if(sqGLView->isSeparate())
-		sqGLView->show();
+	if(SQ_GLView::window()->isSeparate() && !SQ_GLView::window()->isHidden())
+		SQ_GLView::window()->show();
 
-	sqApp->show();
+	KSquirrel::app()->show();
 }
 
 void SQ_SystemTray::slotClose()
 {
-	sqApp->finalActions();
-	sqApp->close();
+	KSquirrel::app()->finalActions();
+	qApp->quit();
 }

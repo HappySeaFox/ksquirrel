@@ -29,15 +29,20 @@
 #include <ktoolbar.h>
 
 //#define SQ_NEED_RGBA_OPERATOR
-#include "defs.h"
+#include "fmt_types.h"
+#include "fmt_defs.h"
+
+#include <vector>
+
+using namespace std;
 
 #define	MATRIX_C1	matrix[0]
 #define	MATRIX_S1	matrix[1]
-#define	MATRIX_X	matrix[3]
+#define	MATRIX_X		matrix[3]
 #define	MATRIX_S2	matrix[4]
 #define	MATRIX_C2	matrix[5]
-#define	MATRIX_Y	matrix[7]
-#define	MATRIX_Z	matrix[11]
+#define	MATRIX_Y		matrix[7]
+#define	MATRIX_Z		matrix[11]
 
 class KAction;
 class KActionCollection;
@@ -52,14 +57,16 @@ class QPainter;
 
 class SQ_DirOperator;
 class SQ_QuickBrowser;
-class SQ_LIBRARY;
+
+struct SQ_LIBRARY;
+class fmt_codec_base;
 
 struct Parts;
 struct Part;
-class MemoryPart256;
-class MemoryPart128;
-class MemoryPart64;
-class MemoryPart32;
+struct MemoryPart256;
+struct MemoryPart128;
+struct MemoryPart64;
+struct MemoryPart32;
 
 class SQ_ToolBar : public KToolBar
 {
@@ -114,6 +121,8 @@ class SQ_GLWidget : public QGLWidget
 		void stopAnimation();
 		bool manualBlocked();
 
+		static SQ_GLWidget* window();
+
 	protected:
 		void initializeGL();
 		void paintGL();
@@ -152,6 +161,7 @@ class SQ_GLWidget : public QGLWidget
 		void frameChanged();
 		void internalZoom(const GLfloat &z);
 		void createContextMenu(KPopupMenu *m);
+		void prioritizeTextures(const int &cur, bool newbind = false);
 
 		bool prepare();
 		bool zoomRect(const QRect &r);
@@ -198,95 +208,110 @@ class SQ_GLWidget : public QGLWidget
 		void slotShowHelp();
 
 	public:
-		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus,
-						*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
-						*pAFirst, *pALast, *pAHelp;
+		KAction					*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus,
+								*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
+								*pAFirst, *pALast, *pAHelp;
 
-		QToolButton	*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
+		QToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
 
-		SQ_QuickBrowser	*v;
-		QWidgetStack 	*s;
-		KToggleAction 	*pAFull, *pAQuick, *pAIfLess, *pAStatus;
-		KToggleAction	*pAZoomW, *pAZoomH, *pAZoomWH, *pAZoom100, *pAHideToolbars, *pAZoomLast;
-		SQ_DirOperator 	*quick;
+		SQ_QuickBrowser		*v;
+		QWidgetStack 			*s;
+		KToggleAction 			*pAFull, *pAQuick, *pAIfLess, *pAStatus;
+		KToggleAction			*pAZoomW, *pAZoomH, *pAZoomWH, *pAZoom100, *pAHideToolbars, *pAZoomLast;
+		SQ_DirOperator 		*quick;
 
 	private:
 		GLfloat 			matrix[12], saved[12];
-		GLfloat			zoomfactor, movefactor, rotatefactor;
-		GLfloat			curangle;
-		fmt_info			*finfo;
-		int				xmoveold, ymoveold, xmove, ymove, current;
-		bool			reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH;
+		GLfloat				zoomfactor, movefactor, rotatefactor;
+		GLfloat				curangle;
+		fmt_info			finfo;
+		int					xmoveold, ymoveold, xmove, ymove, current;
+		bool				reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH;
 		QString			File, m_File;
 		QCursor			cusual, cdrag, cZoomIn;
-		QFileInfo		fm;
-		QImage 		BGpixmap, BGquads;
+		QFileInfo			fm;
+		QImage 			BGpixmap, BGquads;
 		SQ_ToolBar		*toolbar, *toolbar2;
 		QTimer			*timer_show, *timer_hide, *timer_decode, *timer_prev, *timer_next, *timer_anim;
-		SQ_LIBRARY	*lib;
-		int				steps;
-		bool			m_hiding;
-		int				zoom_type, old_id;
-		KActionCollection*ac;
-		RGBA			*next;
+		SQ_LIBRARY		*lib;
+		fmt_codec_base	*codeK;
+		int					steps;
+		bool				m_hiding;
+		int					zoom_type, old_id;
+		KActionCollection	*ac;
+		RGBA				*next;
 		unsigned int		texQuads, texPixmap;
-		bool			changed, inMouse, crossDrawn, changed2;
-		QPainter		*pRect;
-		QRect			lastRect;
-		KPopupMenu 	*zoom, *images;
-		bool			marks;
+		bool				changed, inMouse, crossDrawn, changed2;
+		QPainter			*pRect;
+		QRect				lastRect;
+		KPopupMenu 		*zoom, *images;
+		bool				marks;
 		unsigned int		mark[4];
-		KPopupMenu	*menu;
+		KPopupMenu		*menu;
 
-		Parts 			*parts;
-		int 				total, errors, tileSize;
-		float			zoomFactor;
-		QImage 		mm[4];
+		std::vector<Parts>	parts;
+		int 					total, errors, tileSize;
+		float				zoomFactor;
+		QImage 			mm[4];
 
-		void 			*mem_parts;
-		MemoryPart256	*m256;
-		MemoryPart128	*m128;
-		MemoryPart64	*m64;
-		MemoryPart32	*m32;
+		std::vector<MemoryPart256>	m256;
+		std::vector<MemoryPart128>	m128;
+		std::vector<MemoryPart64>	m64;
+		std::vector<MemoryPart32>	m32;
+
+		static SQ_GLWidget	*view;
 };
 
-class MemoryPart256
+inline
+bool SQ_GLWidget::manualBlocked()
 {
-	public:
-		unsigned char part [65536 * sizeof(RGBA)];
+        return blocked_force;
+}
+
+struct MemoryPart256
+{
+	MemoryPart256() {}
+	unsigned char part [65536 * sizeof(RGBA)];
 };
 
-class MemoryPart128
+struct MemoryPart128
 {
-	public:
-		unsigned char part [16384 * sizeof(RGBA)];
+	MemoryPart128() {}
+	unsigned char part [16384 * sizeof(RGBA)];
 };
 
-class MemoryPart64
+struct MemoryPart64
 {
-	public:
-		unsigned char part [4096 * sizeof(RGBA)];
+	MemoryPart64() {}
+	unsigned char part [4096 * sizeof(RGBA)];
 };
 
-class MemoryPart32
+struct MemoryPart32
 {
-	public:
-		unsigned char part [1024 * sizeof(RGBA)];
+	MemoryPart32() {}
+	unsigned char part [1024 * sizeof(RGBA)];
 };
 
 struct Part
 {
-	float x1, y1, x2, y2;
-	unsigned int tex;
-	GLuint list;
+	Part() : x1(0), y1(0), x2(0), y2(0), tex(0), list(0), priority(0.0f)
+	{}
+
+	float 			x1, y1, x2, y2;
+	unsigned int	tex;
+	GLuint 		list;
+	GLclampf		priority;
 };
 
 struct Parts
 {
+	Parts() : tilesx(0), tilesy(0), tiles(0), tileSize(0), w(0), h(0), rw(0), rh(0), m_parts(0)
+	{}
+
 	int tilesx, tilesy, tiles, tileSize;
 	int w, h, rw, rh;
 
-	Part *m_parts;
+	std::vector<Part> m_parts;
 
 	void setRWH(const int rw2, const int rh2);
 	void setWH(const int w2, const int h2);

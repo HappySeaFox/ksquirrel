@@ -39,6 +39,8 @@ class SQ_GLView : public QVBox
 		KStatusBar* statusbar();
 		void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
 
+		static SQ_GLView* window();
+
 	protected:
 		void createContent();
 		void closeEvent(QCloseEvent *e);
@@ -47,6 +49,8 @@ class SQ_GLView : public QVBox
 	private:
 		bool separate;
 		KStatusBar *sbar;
+
+		static SQ_GLView *view;
 };
 
 #endif

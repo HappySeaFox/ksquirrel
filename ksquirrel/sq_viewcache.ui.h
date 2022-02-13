@@ -9,15 +9,15 @@
 
 void SQ_ViewCache::init()
 {
-	textTotal->setText(QString(" %1 ").arg((int)sqCache->count()));
+	textTotal->setText(QString(" %1 ").arg((int)SQ_PixmapCache::instance()->count()));
 	
-	if(sqCache->isEmpty())
+	if(SQ_PixmapCache::instance()->isEmpty())
 		return;
 
 	QPixmap pix;
 
-	SQ_PixmapCache::cache_iterator BEGIN = sqCache->begin();
-	SQ_PixmapCache::cache_iterator END = sqCache->end();
+	SQ_PixmapCache::cache_iterator BEGIN = SQ_PixmapCache::instance()->begin();
+	SQ_PixmapCache::cache_iterator END = SQ_PixmapCache::instance()->end();
     
 	listCache->setSorting(-1);
 

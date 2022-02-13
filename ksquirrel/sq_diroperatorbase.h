@@ -46,6 +46,9 @@ class SQ_DirOperatorBase : public KDirOperator
 		bool isThumbView() const;
 		void reconnectClick(bool firstconnect = false);
 
+	private:
+		void setupActions();
+
 	protected:
 		KFileView* createView(QWidget *parent, KFile::FileView view);
 
@@ -67,16 +70,16 @@ class SQ_DirOperatorBase : public KDirOperator
 
 	public:
 		KFileView 				*fileview;
-		SQ_FileThumbView	*tv;
-		SQ_FileIconView		*iv;
+		SQ_FileThumbView		*tv;
+		SQ_FileIconView			*iv;
 		SQ_FileDetailView		*dv;
 		bool 					sing;
 
 	protected:
-		KActionMenu 			*pADirOperatorMenu;
-		KAction					*pARunSeparately;
-		
-		VV 						type;
+		KActionMenu 		*pADirOperatorMenu, *pAFileActions;
+		KAction				*pARunSeparately;
+
+		VV 					type;
 		QString				tobeDecoded;
 		QTimer				*timer;
 };

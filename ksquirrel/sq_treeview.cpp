@@ -26,12 +26,15 @@
 #include "sq_config.h"
 #include "sq_treeview.h"
 
+SQ_TreeView * SQ_TreeView::tree = 0L;
+
 SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
+	tree = this;
 	vis = false;
 
-	QPixmap homePix = sqLoader->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
-	QPixmap rootPix = sqLoader->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall);   
+	QPixmap homePix = KSquirrel::loader()->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
+	QPixmap rootPix = KSquirrel::loader()->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall);   
 
 	root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
 	home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
@@ -56,10 +59,10 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 
 	itemsToClose = new KFileTreeViewItemList;
 
-	int sync_type = sqConfig->readNumEntry("Fileview", "sync type", 0);
+	int sync_type = SQ_Config::instance()->readNumEntry("Fileview", "sync type", 0);
 
 	if(sync_type == 2 || sync_type == 0)
-		emitNewURL(sqWStack->getURL());
+		emitNewURL(SQ_WidgetStack::instance()->getURL());
 }
 
 SQ_TreeView::~SQ_TreeView()
@@ -69,7 +72,7 @@ void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 {
 	if(!item) return;
 
-	int sync_type = sqConfig->readNumEntry("Fileview", "sync type", 0);
+	int sync_type = SQ_Config::instance()->readNumEntry("Fileview", "sync type", 0);
 
 	if(sync_type == 2)
 		return;
@@ -77,7 +80,7 @@ void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 	KFileTreeViewItem *cur = static_cast<KFileTreeViewItem*>(item);
 	KURL Curl = cur->url();
 
-	sqWStack->setURLForCurrent(Curl);
+	SQ_WidgetStack::instance()->setURLForCurrent(Curl);
 }
 
 void SQ_TreeView::emitNewURL(const KURL &url)
@@ -187,4 +190,9 @@ void SQ_TreeView::showEvent(QShowEvent *)
 
 		emit newURL(url);
 	}
+}
+
+SQ_TreeView* SQ_TreeView::instance()
+{
+	return tree;
 }

@@ -44,6 +44,7 @@ class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
 		void removeEntryFull(const QString &key);
 
 		static int entrySize(const SQ_Thumbnail &t);
+		static SQ_PixmapCache* instance();
 
 		typedef QMapIterator<QString, SQ_Thumbnail> cache_iterator;
 
@@ -52,6 +53,7 @@ class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
 		int last_full;
 		bool valid_full;
 		SQ_Dir *dir;
+		static SQ_PixmapCache *cache;
 };
 
 #endif

@@ -129,19 +129,20 @@ sq_filethumbviewitem.o sq_filethumbviewitem.o: sq_filethumbviewitem.cpp \
   /usr/include/c++/3.3.2/bits/stl_map.h \
   /usr/include/c++/3.3.2/bits/stl_multimap.h \
   /usr/lib/qt3/include/qmovie.h /usr/include/kicontheme.h \
-  sq_filethumbviewitem.h /usr/include/kfileiconview.h \
-  /usr/include/kiconview.h /usr/lib/qt3/include/qcursor.h \
-  /usr/lib/qt3/include/qiconview.h /usr/lib/qt3/include/qscrollview.h \
-  /usr/lib/qt3/include/qframe.h /usr/lib/qt3/include/qwidget.h \
-  /usr/lib/qt3/include/qpalette.h /usr/lib/qt3/include/qsizepolicy.h \
-  /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
-  /usr/lib/qt3/include/qdragobject.h /usr/lib/qt3/include/qimage.h \
-  /usr/lib/qt3/include/qbitmap.h /usr/lib/qt3/include/qpicture.h \
-  /usr/lib/qt3/include/qbuffer.h /usr/include/kfileview.h \
-  /usr/include/kfileitem.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/kio/global.h \
-  /usr/lib/qt3/include/qdatetime.h /usr/include/kurl.h \
-  /usr/include/kmimetype.h /usr/include/ksycocatype.h \
+  /usr/include/kpixmap.h /usr/include/kpixmapeffect.h \
+  /usr/include/kwordwrap.h sq_filethumbviewitem.h \
+  /usr/include/kfileiconview.h /usr/include/kiconview.h \
+  /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qiconview.h \
+  /usr/lib/qt3/include/qscrollview.h /usr/lib/qt3/include/qframe.h \
+  /usr/lib/qt3/include/qwidget.h /usr/lib/qt3/include/qpalette.h \
+  /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qscrollbar.h \
+  /usr/lib/qt3/include/qrangecontrol.h /usr/lib/qt3/include/qdragobject.h \
+  /usr/lib/qt3/include/qimage.h /usr/lib/qt3/include/qbitmap.h \
+  /usr/lib/qt3/include/qpicture.h /usr/lib/qt3/include/qbuffer.h \
+  /usr/include/kfileview.h /usr/include/kfileitem.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h \
+  /usr/include/kurl.h /usr/include/kmimetype.h /usr/include/ksycocatype.h \
   /usr/include/kservicetype.h /usr/include/ksycocaentry.h \
   /usr/include/ksharedptr.h /usr/include/kservice.h \
   /usr/lib/qt3/include/qvariant.h /usr/include/ksimpleconfig.h \
@@ -562,6 +563,12 @@ sq_filethumbviewitem.o sq_filethumbviewitem.o: sq_filethumbviewitem.cpp \
 /usr/lib/qt3/include/qmovie.h:
 
 /usr/include/kicontheme.h:
+
+/usr/include/kpixmap.h:
+
+/usr/include/kpixmapeffect.h:
+
+/usr/include/kwordwrap.h:
 
 sq_filethumbviewitem.h:
 

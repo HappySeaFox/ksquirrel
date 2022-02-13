@@ -15,12 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qstrlist.h>
-#include <qdragobject.h>
-
-#include <kurldrag.h>
-#include <kapplication.h>
-
 #include "ksquirrel.h"
 #include "sq_config.h"
 #include "sq_fileiconview.h"
@@ -37,36 +31,16 @@ SQ_FileIconViewItem::~SQ_FileIconViewItem()
 void SQ_FileIconViewItem::paintFocus(QPainter *, const QColorGroup &)
 {}
 
-SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : KFileIconView(parent, name)
+SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
 {
+	QString n = name;
 	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
-	setAcceptDrops(true);
 	setSorting(QDir::IgnoreCase);
+	dirPix = KSquirrel::loader()->loadIcon("folder", KIcon::Desktop, (n == "icon view") ? KIcon::SizeMedium : KIcon::SizeSmall);
 }
 
 SQ_FileIconView::~SQ_FileIconView()
 {}
-
-void SQ_FileIconView::dragEnterEvent(QDragEnterEvent *e)
-{
-	e->accept(true);
-}
-
-QDragObject* SQ_FileIconView::dragObject()
-{
-	const KFileItemList *list = KFileView::selectedItems();
-
-	if(list->isEmpty())
-		return 0;
-
-	QPtrListIterator<KFileItem> it(*list);
-	KURL::List urls;
-
-	for(; it.current(); ++it)
-		urls.append(it.current()->url());
-
-	return (new KURLDrag(urls, viewport()));
-}
 
 void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
 {
@@ -117,7 +91,7 @@ void SQ_FileIconView::initItem(SQ_FileIconViewItem *item, const KFileItem *i)
 
 void SQ_FileIconView::insertItem(KFileItem *i)
 {
-	if(i->isDir() && sqConfig->readBoolEntry("Fileview", "disable_dirs", false))
+	if(i->isDir() && SQ_Config::instance()->readBoolEntry("Fileview", "disable_dirs", false))
 		return;
 
 	SQ_FileIconViewItem *item;
@@ -129,21 +103,36 @@ void SQ_FileIconView::insertItem(KFileItem *i)
 	i->setExtraData(this, item);
 }
 
-void SQ_FileIconView::contentsMouseDoubleClickEvent(QMouseEvent *e)
+void SQ_FileIconView::insertCdUpItem(const KURL &base)
 {
-	QIconView::contentsMouseDoubleClickEvent(e);
+	KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
 
-	QIconViewItem *item = findItem(e->pos());
+	SQ_FileIconViewItem *item = new SQ_FileIconViewItem(this, QString::fromLatin1(".."), dirPix, fi);
 
-	if(item)
+	item->setSelectable(false);
+
+	fi->setExtraData(this, item);
+}
+
+void SQ_FileIconView::clearView()
+{
+	KIconView::clear();
+
+	insertCdUpItem(SQ_WidgetStack::instance()->getURL());
+}
+
+void SQ_FileIconView::listingCompleted()
+{
+/*	printf("LISTING, items: ");
+
+	KFileItem *f = firstFileItem();
+
+	while(f)
 	{
-		if(e->button() == Qt::LeftButton && !sqWStack->visibleWidget()->sing)
-			emitExecute(item, e->globalPos());
+		printf("%s, ", f->name().ascii());
 
-		emit doubleClicked(item, e->globalPos());
-	}
-	else
-	{
-		kapp->invokeBrowser(sqWStack->getURL().path());
-	}
+		f = nextItem(f);
+	}printf("\n\n");*/
+
+	arrangeItemsInGrid();
 }

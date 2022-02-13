@@ -144,54 +144,56 @@ sq_widgetstack.o sq_widgetstack.o: sq_widgetstack.cpp \
   /usr/include/kcompletion.h /usr/include/kglobalsettings.h \
   /usr/include/ksortablevaluelist.h /usr/include/kstandarddirs.h \
   /usr/lib/qt3/include/qdict.h /usr/include/kstdaccel.h \
-  /usr/include/klocale.h ksquirrel.h /usr/include/kmainwindow.h \
+  /usr/include/klocale.h /usr/include/kio/job.h \
+  /usr/include/kio/jobclasses.h /usr/include/kurl.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/include/kfiledialog.h \
+  /usr/include/kdialogbase.h /usr/include/kdialog.h \
+  /usr/lib/qt3/include/qdialog.h /usr/include/kjanuswidget.h \
+  /usr/lib/qt3/include/qsplitter.h /usr/include/klistbox.h \
+  /usr/lib/qt3/include/qlistbox.h /usr/lib/qt3/include/qscrollview.h \
+  /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
+  /usr/include/kstdguiitem.h /usr/include/kfile.h \
+  /usr/lib/qt3/include/qdir.h /usr/include/kmimetype.h \
+  /usr/include/ksycocatype.h /usr/include/kservicetype.h \
+  /usr/include/ksycocaentry.h /usr/include/ksharedptr.h \
+  /usr/include/kservice.h /usr/lib/qt3/include/qvariant.h \
+  /usr/include/ksimpleconfig.h /usr/include/kconfig.h \
+  /usr/include/kconfigbase.h /usr/include/kconfigdata.h \
+  /usr/include/kmessagebox.h ksquirrel.h /usr/include/kmainwindow.h \
   /usr/include/kxmlguifactory.h /usr/lib/qt3/include/qdom.h \
   /usr/include/kxmlguiclient.h /usr/include/kxmlguibuilder.h \
   /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qtoolbar.h \
   /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmetaobject.h \
-  /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
-  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_config.h \
-  /usr/include/kconfig.h /usr/include/ksharedptr.h \
-  /usr/include/kconfigbase.h /usr/lib/qt3/include/qvariant.h \
-  /usr/include/kconfigdata.h sq_fileiconview.h \
-  /usr/include/kfileiconview.h /usr/include/kiconview.h \
-  /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qiconview.h \
-  /usr/lib/qt3/include/qscrollview.h /usr/lib/qt3/include/qscrollbar.h \
-  /usr/lib/qt3/include/qrangecontrol.h /usr/lib/qt3/include/qdragobject.h \
+  /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h sq_config.h \
+  sq_fileiconview.h sq_fileiconviewbase.h /usr/include/kfileiconview.h \
+  /usr/include/kiconview.h /usr/lib/qt3/include/qcursor.h \
+  /usr/lib/qt3/include/qiconview.h /usr/lib/qt3/include/qdragobject.h \
   /usr/lib/qt3/include/qimage.h /usr/lib/qt3/include/qbitmap.h \
   /usr/lib/qt3/include/qpicture.h /usr/lib/qt3/include/qbuffer.h \
   /usr/include/kiconloader.h /usr/lib/qt3/include/qmovie.h \
   /usr/include/kfileview.h /usr/include/kfileitem.h \
-  /usr/include/sys/stat.h /usr/include/bits/stat.h \
-  /usr/include/kio/global.h /usr/include/kurl.h /usr/include/kmimetype.h \
-  /usr/include/ksycocatype.h /usr/include/kservicetype.h \
-  /usr/include/ksycocaentry.h /usr/include/kservice.h \
-  /usr/include/ksimpleconfig.h /usr/include/kfilemetainfo.h \
-  /usr/include/kfile.h /usr/lib/qt3/include/qdir.h \
-  /usr/include/kmimetyperesolver.h /usr/include/kdebug.h \
-  sq_filethumbview.h sq_thumbnailinfo.h sq_filedetailview.h \
-  /usr/include/kfiledetailview.h /usr/include/klistview.h \
-  /usr/lib/qt3/include/qlistview.h sq_widgetstack.h \
-  /usr/lib/qt3/include/qwidgetstack.h /usr/lib/qt3/include/qintdict.h \
-  /usr/lib/qt3/include/qptrdict.h sq_externaltool.h \
-  /usr/lib/qt3/include/qvaluevector.h /usr/include/c++/3.3.2/vector \
-  /usr/include/c++/3.3.2/bits/stl_vector.h \
-  /usr/include/c++/3.3.2/bits/stl_bvector.h \
-  /usr/include/c++/3.3.2/bits/vector.tcc sq_treeview.h \
+  /usr/include/kfilemetainfo.h /usr/include/kmimetyperesolver.h \
+  /usr/include/kdebug.h sq_filethumbview.h sq_thumbnailinfo.h \
+  sq_filedetailview.h /usr/include/kfiledetailview.h \
+  /usr/include/klistview.h /usr/lib/qt3/include/qlistview.h \
+  sq_widgetstack.h /usr/lib/qt3/include/qwidgetstack.h \
+  /usr/lib/qt3/include/qintdict.h /usr/lib/qt3/include/qptrdict.h \
+  sq_externaltool.h /usr/include/kdesktopfile.h sq_treeview.h \
   /usr/include/kfiletreeview.h /usr/lib/qt3/include/qtooltip.h \
-  /usr/include/kdirnotify.h /usr/include/kio/job.h \
-  /usr/include/kio/jobclasses.h /usr/include/kfiletreeviewitem.h \
+  /usr/include/kdirnotify.h /usr/include/dcopobject.h \
+  /usr/include/kdatastream.h /usr/include/kfiletreeviewitem.h \
   /usr/include/kdirlister.h /usr/include/kfiletreebranch.h sq_hloptions.h \
   sq_archivehandler.h sq_glview.h /usr/lib/qt3/include/qvbox.h \
   /usr/lib/qt3/include/qhbox.h sq_glwidget.h /usr/lib/qt3/include/qgl.h \
   /usr/lib/qt3/include/qglcolormap.h /usr/X11R6/include/GL/gl.h \
-  /usr/X11R6/include/GL/glext.h /usr/X11R6/include/GL/glu.h defs.h \
-  /usr/include/linux/types.h /usr/include/linux/posix_types.h \
-  /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
-  /usr/include/asm/types.h /usr/include/linux/compiler.h \
-  /usr/include/linux/compiler-gcc3.h /usr/include/linux/compiler-gcc.h \
-  sq_quickbrowser.h /usr/lib/qt3/include/qstatusbar.h \
-  /usr/lib/qt3/include/qsizegrip.h sq_libraryhandler.h \
+  /usr/X11R6/include/GL/glext.h /usr/X11R6/include/GL/glu.h fmt_types.h \
+  fmt_defs.h /usr/include/c++/3.3.2/vector \
+  /usr/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/include/c++/3.3.2/bits/vector.tcc sq_quickbrowser.h \
+  /usr/lib/qt3/include/qstatusbar.h /usr/lib/qt3/include/qsizegrip.h \
+  sq_libraryhandler.h /usr/lib/qt3/include/qvaluevector.h \
   /usr/lib/qt3/include/qregexp.h sq_diroperator.h sq_diroperatorbase.h \
   /usr/include/kdiroperator.h /usr/lib/qt3/include/qptrstack.h \
   sq_bookmarkowner.h /usr/include/kbookmarkmanager.h \
@@ -666,6 +668,70 @@ sq_widgetstack.o sq_widgetstack.o: sq_widgetstack.cpp \
 
 /usr/include/klocale.h:
 
+/usr/include/kio/job.h:
+
+/usr/include/kio/jobclasses.h:
+
+/usr/include/kurl.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/kio/global.h:
+
+/usr/include/kfiledialog.h:
+
+/usr/include/kdialogbase.h:
+
+/usr/include/kdialog.h:
+
+/usr/lib/qt3/include/qdialog.h:
+
+/usr/include/kjanuswidget.h:
+
+/usr/lib/qt3/include/qsplitter.h:
+
+/usr/include/klistbox.h:
+
+/usr/lib/qt3/include/qlistbox.h:
+
+/usr/lib/qt3/include/qscrollview.h:
+
+/usr/lib/qt3/include/qscrollbar.h:
+
+/usr/lib/qt3/include/qrangecontrol.h:
+
+/usr/include/kstdguiitem.h:
+
+/usr/include/kfile.h:
+
+/usr/lib/qt3/include/qdir.h:
+
+/usr/include/kmimetype.h:
+
+/usr/include/ksycocatype.h:
+
+/usr/include/kservicetype.h:
+
+/usr/include/ksycocaentry.h:
+
+/usr/include/ksharedptr.h:
+
+/usr/include/kservice.h:
+
+/usr/lib/qt3/include/qvariant.h:
+
+/usr/include/ksimpleconfig.h:
+
+/usr/include/kconfig.h:
+
+/usr/include/kconfigbase.h:
+
+/usr/include/kconfigdata.h:
+
+/usr/include/kmessagebox.h:
+
 ksquirrel.h:
 
 /usr/include/kmainwindow.h:
@@ -690,23 +756,11 @@ ksquirrel.h:
 
 /usr/include/ktoolbar.h:
 
-/usr/include/dcopobject.h:
-
-/usr/include/kdatastream.h:
-
 sq_config.h:
 
-/usr/include/kconfig.h:
-
-/usr/include/ksharedptr.h:
-
-/usr/include/kconfigbase.h:
-
-/usr/lib/qt3/include/qvariant.h:
-
-/usr/include/kconfigdata.h:
-
 sq_fileiconview.h:
+
+sq_fileiconviewbase.h:
 
 /usr/include/kfileiconview.h:
 
@@ -715,12 +769,6 @@ sq_fileiconview.h:
 /usr/lib/qt3/include/qcursor.h:
 
 /usr/lib/qt3/include/qiconview.h:
-
-/usr/lib/qt3/include/qscrollview.h:
-
-/usr/lib/qt3/include/qscrollbar.h:
-
-/usr/lib/qt3/include/qrangecontrol.h:
 
 /usr/lib/qt3/include/qdragobject.h:
 
@@ -740,31 +788,7 @@ sq_fileiconview.h:
 
 /usr/include/kfileitem.h:
 
-/usr/include/sys/stat.h:
-
-/usr/include/bits/stat.h:
-
-/usr/include/kio/global.h:
-
-/usr/include/kurl.h:
-
-/usr/include/kmimetype.h:
-
-/usr/include/ksycocatype.h:
-
-/usr/include/kservicetype.h:
-
-/usr/include/ksycocaentry.h:
-
-/usr/include/kservice.h:
-
-/usr/include/ksimpleconfig.h:
-
 /usr/include/kfilemetainfo.h:
-
-/usr/include/kfile.h:
-
-/usr/lib/qt3/include/qdir.h:
 
 /usr/include/kmimetyperesolver.h:
 
@@ -792,15 +816,7 @@ sq_widgetstack.h:
 
 sq_externaltool.h:
 
-/usr/lib/qt3/include/qvaluevector.h:
-
-/usr/include/c++/3.3.2/vector:
-
-/usr/include/c++/3.3.2/bits/stl_vector.h:
-
-/usr/include/c++/3.3.2/bits/stl_bvector.h:
-
-/usr/include/c++/3.3.2/bits/vector.tcc:
+/usr/include/kdesktopfile.h:
 
 sq_treeview.h:
 
@@ -810,9 +826,9 @@ sq_treeview.h:
 
 /usr/include/kdirnotify.h:
 
-/usr/include/kio/job.h:
+/usr/include/dcopobject.h:
 
-/usr/include/kio/jobclasses.h:
+/usr/include/kdatastream.h:
 
 /usr/include/kfiletreeviewitem.h:
 
@@ -842,23 +858,17 @@ sq_glwidget.h:
 
 /usr/X11R6/include/GL/glu.h:
 
-defs.h:
+fmt_types.h:
 
-/usr/include/linux/types.h:
+fmt_defs.h:
 
-/usr/include/linux/posix_types.h:
+/usr/include/c++/3.3.2/vector:
 
-/usr/include/linux/stddef.h:
+/usr/include/c++/3.3.2/bits/stl_vector.h:
 
-/usr/include/asm/posix_types.h:
+/usr/include/c++/3.3.2/bits/stl_bvector.h:
 
-/usr/include/asm/types.h:
-
-/usr/include/linux/compiler.h:
-
-/usr/include/linux/compiler-gcc3.h:
-
-/usr/include/linux/compiler-gcc.h:
+/usr/include/c++/3.3.2/bits/vector.tcc:
 
 sq_quickbrowser.h:
 
@@ -867,6 +877,8 @@ sq_quickbrowser.h:
 /usr/lib/qt3/include/qsizegrip.h:
 
 sq_libraryhandler.h:
+
+/usr/lib/qt3/include/qvaluevector.h:
 
 /usr/lib/qt3/include/qregexp.h:
 

@@ -17,8 +17,12 @@
 
 #include "sq_config.h"
 
+SQ_Config * SQ_Config::conf = 0L;
+
 SQ_Config::SQ_Config(const QString& fileName) : KConfig(fileName)
-{}
+{
+	conf = this;
+}
 
 SQ_Config::~SQ_Config()
 {}
@@ -63,4 +67,9 @@ QRect SQ_Config::readRectEntry(const QString &sgroup, const QString &key, const 
 	if(group() != sgroup) setGroup(sgroup);
 
 	return KConfig::readRectEntry(key, def);
+}
+
+SQ_Config* SQ_Config::instance()
+{
+	return conf;
 }

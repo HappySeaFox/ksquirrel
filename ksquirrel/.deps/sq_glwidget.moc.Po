@@ -135,12 +135,12 @@ sq_glwidget.moc.o sq_glwidget.moc.o: sq_glwidget.moc.cpp sq_glwidget.h \
   /usr/lib/qt3/include/qframe.h /usr/lib/qt3/include/qmainwindow.h \
   /usr/lib/qt3/include/qcombobox.h /usr/include/kglobal.h \
   /usr/include/kinstance.h /usr/lib/qt3/include/qguardedptr.h \
-  /usr/lib/qt3/include/qiconset.h defs.h /usr/include/linux/types.h \
-  /usr/include/linux/posix_types.h /usr/include/linux/stddef.h \
-  /usr/include/asm/posix_types.h /usr/include/asm/types.h \
-  /usr/include/linux/compiler.h /usr/include/linux/compiler-gcc3.h \
-  /usr/include/linux/compiler-gcc.h /usr/lib/qt3/include/qmetaobject.h \
-  /usr/lib/qt3/include/qconnection.h /usr/lib/qt3/include/qapplication.h \
+  /usr/lib/qt3/include/qiconset.h fmt_types.h fmt_defs.h \
+  /usr/include/c++/3.3.2/vector /usr/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/include/c++/3.3.2/bits/vector.tcc \
+  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
+  /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
   /usr/lib/qt3/include/private/qucomextra_p.h \
@@ -584,23 +584,17 @@ sq_glwidget.h:
 
 /usr/lib/qt3/include/qiconset.h:
 
-defs.h:
+fmt_types.h:
 
-/usr/include/linux/types.h:
+fmt_defs.h:
 
-/usr/include/linux/posix_types.h:
+/usr/include/c++/3.3.2/vector:
 
-/usr/include/linux/stddef.h:
+/usr/include/c++/3.3.2/bits/stl_vector.h:
 
-/usr/include/asm/posix_types.h:
+/usr/include/c++/3.3.2/bits/stl_bvector.h:
 
-/usr/include/asm/types.h:
-
-/usr/include/linux/compiler.h:
-
-/usr/include/linux/compiler-gcc3.h:
-
-/usr/include/linux/compiler-gcc.h:
+/usr/include/c++/3.3.2/bits/vector.tcc:
 
 /usr/lib/qt3/include/qmetaobject.h:
 

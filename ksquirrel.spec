@@ -1,14 +1,14 @@
 Name: ksquirrel 
 Summary: Ksquirrel - image viewer for KDE 
 Group: User Interface/Desktops 
-Version: 0.5.0 
-Release: pre4 
+Version: 0.6.0
+Release: pre2
 Copyright: GPL 
 Source: %{name}-%{version}-%{release}.tar.bz2 
 URL: http://ksquirrel.sf.net 
 Packager: - 
 Vendor: Baryshev Dmitry aka Krasu <ksquirrel@tut.by> 
-BuildRoot: %{_tmppath}/%{name}-%{version}-root 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root 
 BuildRequires: gcc, gcc-c++, gettext 
 BuildRequires: kdelibs-devel
 Requires: kdelibs, libpng, libjpeg 
@@ -39,6 +39,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" ./configure --prefix="`kde-con
 %{_bindir}/* 
 %{_datadir}/applnk/Applications/* 
 %lang(ru) %{_datadir}/locale/ru/LC_MESSAGES/* 
+%lang(nl) %{_datadir}/locale/nl/LC_MESSAGES/* 
 %{_datadir}/icons/hicolor/16x16/apps/* 
 %{_datadir}/icons/hicolor/32x32/apps/* 
 %dir %{_datadir}/apps/ksquirrel 

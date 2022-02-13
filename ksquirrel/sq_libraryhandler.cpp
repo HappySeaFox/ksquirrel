@@ -23,19 +23,22 @@
 #include <kdebug.h>
 
 #include "sq_libraryhandler.h"
-#include "ksquirrel.h"
 #include "sq_config.h"
 
-#define	SQ_HAVE_MIMESTRING
+#define SQ_FIO_NO_IMPLEMENT
+#include "fmt_codec_base.h"
+
+#define SQ_HAVE_MIMESTRING
 #include "sq_thumbnailjob.h"
-#undef		SQ_HAVE_MIMESTRING
 
 static const int buffer_size = 10;
 
-SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries) :
-											QValueVector<SQ_LIBRARY>(),
-											latest(0)
+SQ_LibraryHandler * SQ_LibraryHandler::hand = 0L;
+
+SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries) : QValueVector<SQ_LIBRARY>(), latest(0L)
 {
+	hand = this;
+
 	if(foundLibraries)
 		reInit(foundLibraries);
 }
@@ -166,7 +169,10 @@ void SQ_LibraryHandler::clear()
 
 	// unload libraries on clear()
 	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
+	{
+		(*it).fmt_codec_destroy((*it).codec);
 		(*it).lib->unload();
+	}
 
 	QValueVector<SQ_LIBRARY>::clear();
 }
@@ -199,44 +205,39 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 		libtmp.libpath = *it;
 		libtmp.lib->load();
 
-		libtmp.fmt_init = (int (*)(fmt_info *, const char *))(libtmp.lib)->resolve(QString::fromLatin1("fmt_init"));
-		libtmp.fmt_read_scanline = (int (*)(fmt_info *, RGBA*))(libtmp.lib)->resolve(QString::fromLatin1("fmt_read_scanline"));
-		libtmp.fmt_next = (int (*)(fmt_info *))(libtmp.lib)->resolve(QString::fromLatin1("fmt_next"));
-		libtmp.fmt_next_pass = (int (*)(fmt_info *))(libtmp.lib)->resolve(QString::fromLatin1("fmt_next_pass"));
-		libtmp.fmt_version = (const char* (*)())(libtmp.lib)->resolve(QString::fromLatin1("fmt_version"));
-		libtmp.fmt_pixmap = (const char* (*)())(libtmp.lib)->resolve(QString::fromLatin1("fmt_pixmap"));
-		libtmp.fmt_quickinfo = (const char* (*)())(libtmp.lib)->resolve(QString::fromLatin1("fmt_quickinfo"));
-		libtmp.fmt_filter = (const char* (*)())(libtmp.lib)->resolve(QString::fromLatin1("fmt_filter"));
-		libtmp.fmt_mime = (const char* (*)())(libtmp.lib)->resolve(QString::fromLatin1("fmt_mime"));
-		libtmp.fmt_readimage = (int (*)(const char*, RGBA**, char **))(libtmp.lib)->resolve(QString::fromLatin1("fmt_readimage"));
-		libtmp.fmt_close = (int (*)())(libtmp.lib)->resolve(QString::fromLatin1("fmt_close"));
+		libtmp.fmt_codec_create = (fmt_codec_base*(*)())(libtmp.lib)->resolve("fmt_codec_create");
+		libtmp.fmt_codec_destroy = (void (*)(fmt_codec_base*))(libtmp.lib)->resolve(QString::fromLatin1("fmt_codec_destroy"));
 
-		if(libtmp.fmt_init == 0 ||	libtmp.fmt_next == 0 || libtmp.fmt_next_pass == 0 ||
-			libtmp.fmt_read_scanline == 0 ||
-			libtmp.fmt_version == 0 || libtmp.fmt_pixmap == 0 ||
-			libtmp.fmt_quickinfo == 0 || libtmp.fmt_filter == 0 ||
-			libtmp.fmt_mime == 0 ||	libtmp.fmt_readimage == 0 ||
-			libtmp.fmt_close == 0)
+		if(!libtmp.fmt_codec_create || !libtmp.fmt_codec_destroy)
 		{
 			libtmp.lib->unload();
 			delete libtmp.lib;
 		}
 		else
 		{
-			QString q = QString::fromLatin1(libtmp.fmt_quickinfo());
+			fmt_codec_base *codeK = libtmp.fmt_codec_create();
+
+			QString q = codeK->fmt_quickinfo();
 
 			if(!alreadyInMap(q))
 			{
-				libtmp.mime_len = convertMimeFromBits(QString::fromLatin1(libtmp.fmt_pixmap()), mime_str);
+				libtmp.mime_len = convertMimeFromBits(codeK->fmt_pixmap(), mime_str);
 				libtmp.mime.loadFromData((unsigned char*)mime_str.ascii(), libtmp.mime_len, "PNG");
-				libtmp.filter = QString::fromLatin1(libtmp.fmt_filter());
+				libtmp.filter = codeK->fmt_filter();
 				libtmp.quickinfo = q;
-				libtmp.version = QString::fromLatin1(libtmp.fmt_version());
-				libtmp.regexp_str = QString::fromLatin1(libtmp.fmt_mime());
+				libtmp.version = codeK->fmt_version();
+				libtmp.regexp_str = codeK->fmt_mime();
 				libtmp.regexp.setPattern(libtmp.regexp_str);
 				libtmp.regexp.setCaseSensitive(true);
 //				libtmp.regexp.setWildcard(true);
 //				libtmp.regexp.setMinimal(true);
+
+				libtmp.writable = codeK->fmt_writable();
+
+				if(libtmp.writable)
+					codeK->fmt_getwriteoptions(&libtmp.opt);
+
+				libtmp.codec = codeK;
 
 				append(libtmp);
 			}
@@ -264,7 +265,6 @@ bool SQ_LibraryHandler::alreadyInMap(const QString &quick) const
 
 void SQ_LibraryHandler::remove(QStringList *foundLibraries)
 {
-
 	QValueList<QString>::iterator   BEGIN = foundLibraries->begin();
 	QValueList<QString>::iterator      END = foundLibraries->end();
 
@@ -277,6 +277,10 @@ void SQ_LibraryHandler::remove(QStringList *foundLibraries)
 		{
 			if(*it == (*vit).libpath)
 			{
+				(*vit).fmt_codec_destroy((*vit).codec);
+				(*vit).lib->unload();
+				delete (*vit).lib;
+
 				erase(vit);
 				break;
 			}
@@ -294,7 +298,7 @@ void SQ_LibraryHandler::dump() const
 	QString regexp;
 
 	printf("\n\nSQ_LibraryHandler: memory dump (total %d)\n********************************************\n\n\
-%-30s%-15s%-20s%-20s%-10s\n", count(), "Lib path", "RegExp", "Filter", "Quick info", "Version");
+%-25s%-15s%-20s%-25s%-10s\n", count(), "Library", "RegExp", "Filter", "Quick info", "Version");
 
 	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
 	{
@@ -311,11 +315,11 @@ void SQ_LibraryHandler::dump() const
 				regexp += QString::fromLatin1("\\%1").arg(l->regexp_str[i].unicode());
 		}
 
-		printf("%-30s%-15s%-20s%-20s%-10s\n",
-				KStringHandler::csqueeze(l->libpath, 27).ascii(),
+		printf("%-25s%-15s%-20s%-25s%-10s\n",
+				KStringHandler::csqueeze(QFileInfo(l->libpath).fileName(), 23).ascii(),
 				KStringHandler::rsqueeze(regexp, 13).ascii(),
 				KStringHandler::rsqueeze(l->filter, 18).ascii(),
-				KStringHandler::rsqueeze(l->quickinfo, 18).ascii(),
+				KStringHandler::rsqueeze(l->quickinfo, 23).ascii(),
 				l->version.ascii());
 	}
 
@@ -327,3 +331,69 @@ SQ_LIBRARY* SQ_LibraryHandler::latestLibrary()
 	return latest;
 }
 
+bool SQ_LibraryHandler::knownExtension(const QString &ext)
+{
+	QValueVector<SQ_LIBRARY>::const_iterator   BEGIN = begin();
+	QValueVector<SQ_LIBRARY>::const_iterator      END = end();
+	SQ_LIBRARY *l;
+
+	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
+	{
+		l = (SQ_LIBRARY *)&(*it);
+
+		if(l->filter.contains(ext, false))
+			return true;
+	}
+
+	return false;
+}
+
+SQ_LIBRARY* SQ_LibraryHandler::libraryByName(const QString &name)
+{
+	QValueVector<SQ_LIBRARY>::const_iterator   BEGIN = begin();
+	QValueVector<SQ_LIBRARY>::const_iterator      END = end();
+	SQ_LIBRARY *l;
+
+	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
+	{
+		l = (SQ_LIBRARY *)&(*it);
+
+		if(l->quickinfo == name)
+			return l;
+	}
+
+	return 0;
+}
+
+fmt_codec_base* SQ_LibraryHandler::codecForFile(const QString &file)
+{
+	SQ_LIBRARY *lib = libraryForFile(file);
+
+	if(lib && lib->codec)
+		return lib->codec;
+
+	return 0;
+}
+
+fmt_codec_base* SQ_LibraryHandler::codecByName(const QString &name)
+{
+	SQ_LIBRARY *lib = libraryByName(name);
+
+	if(lib && lib->codec)
+		return lib->codec;
+
+	return 0;
+}
+
+fmt_codec_base *SQ_LibraryHandler::latestCodec()
+{
+	if(latest && latest->codec)
+		return latest->codec;
+
+	return 0;
+}
+
+SQ_LibraryHandler* SQ_LibraryHandler::instance()
+{
+	return hand;
+}

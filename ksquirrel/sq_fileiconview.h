@@ -18,7 +18,7 @@
 #ifndef SQ_FILEICONVIEW_H
 #define SQ_FILEICONVIEW_H
 
-#include <kfileiconview.h>
+#include "sq_fileiconviewbase.h"
 
 #include <qwidget.h>
 #include <qpoint.h>
@@ -33,7 +33,7 @@ class SQ_FileIconViewItem : public KFileIconViewItem
 		virtual void paintFocus(QPainter *p, const QColorGroup &cg);
 };
 
-class SQ_FileIconView : public KFileIconView
+class SQ_FileIconView : public SQ_FileIconViewBase
 {
     Q_OBJECT
 
@@ -46,11 +46,10 @@ class SQ_FileIconView : public KFileIconView
 		virtual void updateView(const KFileItem *i);
 		virtual void updateView(bool b);
 		virtual void insertItem(KFileItem *i);
+		virtual void clearView();
+		virtual void listingCompleted();
 
-	protected:
-		QDragObject *dragObject();
-		void dragEnterEvent(QDragEnterEvent *);
-		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+		virtual void insertCdUpItem(const KURL &baseurl);
 
 	private:
 		void initItem(SQ_FileIconViewItem *item, const KFileItem *i);
@@ -58,6 +57,8 @@ class SQ_FileIconView : public KFileIconView
 	protected slots:
 		void slotSelected(QIconViewItem *item, const QPoint &point);
 
+	private:
+		QPixmap	dirPix;
 };
 
 

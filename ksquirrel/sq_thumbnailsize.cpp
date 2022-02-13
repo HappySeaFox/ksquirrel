@@ -25,10 +25,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "sq_thumbnailsize.h"
 
-SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value), extended(false), m_margin(16)
-{}
+SQ_ThumbnailSize * SQ_ThumbnailSize::thumb = 0L;
 
-SQ_ThumbnailSize::SQ_ThumbnailSize(const QString& str) : extended(false), m_margin(16)
+SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value), m_extended(false), m_margin(16)
+{
+    thumb = this;
+}
+
+SQ_ThumbnailSize::SQ_ThumbnailSize(const QString& str) : m_extended(false), m_margin(16)
 {
 	QString low = str.lower();
 
@@ -97,12 +101,12 @@ int SQ_ThumbnailSize::extendedPixelSize() const
 
 void SQ_ThumbnailSize::setExtended(bool ex)
 {
-	extended = ex;
+	m_extended = ex;
 }
 
-bool SQ_ThumbnailSize::isExtended() const
+bool SQ_ThumbnailSize::extended() const
 {
-	return extended;
+	return m_extended;
 }
 
 void SQ_ThumbnailSize::setMargin(int m)
@@ -113,4 +117,9 @@ void SQ_ThumbnailSize::setMargin(int m)
 int SQ_ThumbnailSize::margin() const
 {
 	return m_margin;
+}
+
+SQ_ThumbnailSize* SQ_ThumbnailSize::instance()
+{
+    return thumb;
 }

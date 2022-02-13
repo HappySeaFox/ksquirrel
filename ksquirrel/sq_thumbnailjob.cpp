@@ -32,21 +32,25 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
-#include "ksquirrel.h"
 #include "sq_config.h"
 #include "sq_widgetstack.h"
 #include "sq_pixmapcache.h"
 #include "sq_dir.h"
 #include "sq_thumbnailjob.h"
 #include "sq_libraryhandler.h"
-#include "defs.h"
-#include "err.h"
+#include "sq_thumbnailsize.h"
+
+#define SQ_FIO_NO_IMPLEMENT
+#include "fmt_codec_base.h"
+#include "error.h"
+
+#include <string>
 
 static const QString thumbFormat = "PNG";
 
-SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList *items, SQ_ThumbnailSize size) : KIO::Job(false), mThumbnailSize(size)
+SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList *items) : KIO::Job(false)
 {
-	mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::NoGroup, SQ_ThumbnailSize(SQ_ThumbnailSize::Small).pixelSize());
+	mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::NoGroup, SQ_ThumbnailSize::instance()->pixelSize());
 	mBrokenThumbnail.info.dimensions = mBrokenThumbnail.info.bpp = QString("0");
 	mItems = *items;
 
@@ -100,11 +104,11 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
 		if(!item)
 			break;
 
-		sqWStack->thumbnailProcess();
+		SQ_WidgetStack::instance()->thumbnailProcess();
 
 		if(item->isDir())
 			mItems.removeFirst();
-		else if(sqLibHandler->supports(item->url().path()))
+		else if(SQ_LibraryHandler::instance()->supports(item->url().path()))
 			break;
 		else
 			mItems.removeFirst();
@@ -188,7 +192,7 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 	QString origPath = mThumbURL.path();
 	origPath = QDir::cleanDirPath(origPath.replace(0, dir->root().length(), ""));
 
-	lib = sqLibHandler->libraryForFile(origPath);
+	lib = SQ_LibraryHandler::instance()->libraryForFile(origPath);
 
 	if(!lib)
 		return false;
@@ -197,7 +201,7 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 
 	kdDebug() << "STAT searching \"" << origPath  << "\" ..." << endl;
 
-	if(sqCache->contains2(origPath, th))
+	if(SQ_PixmapCache::instance()->contains2(origPath, th))
 	{
 		emitThumbnailLoaded(th);
 		determineNextIcon();
@@ -253,7 +257,7 @@ void SQ_ThumbnailLoadJob::createThumbnail(const QString& pixPath)
 	SQ_Thumbnail th;
 	bool loaded = false;
 
-	if(sqCache->contains2(pixPath, th))
+	if(SQ_PixmapCache::instance()->contains2(pixPath, th))
 	{
 		emitThumbnailLoaded(th);
 		kdDebug() << "CREATE found in cache \"" << pixPath << "\"" << endl;
@@ -273,15 +277,15 @@ void SQ_ThumbnailLoadJob::createThumbnail(const QString& pixPath)
 
 void SQ_ThumbnailLoadJob::insertOrSync(const QString &path, SQ_Thumbnail &th)
 {
-	if(!sqCache->full())
+	if(!SQ_PixmapCache::instance()->full())
 	{
-		sqCache->insert(path, th);
+		SQ_PixmapCache::instance()->insert(path, th);
 		kdDebug() << "STAT inserting \"" << path << "\"" << endl;
 	}
 	else
 	{
 		kdDebug() << "STAT SQ_PixmapCache is full! Cache is ignored!" << endl;
-		sqCache->syncEntry(path, th);
+		SQ_PixmapCache::instance()->syncEntry(path, th);
 	}
 }
 
@@ -290,15 +294,15 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 	SQ_LIBRARY 	*lib;
 	static RGBA 	*all = 0L;
 	QString 		dim;
-	char 			*dump;
+	std::string		dump;
 	int 				w, h, num;
 
-	lib = sqLibHandler->libraryForFile(pixPath);
+	lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath);
 
 	if(!lib)
 		return false;
 
-	int res = lib->fmt_readimage((const char*)pixPath.local8Bit(), &all, &dump);
+	int res = lib->codec->fmt_readimage(QString(pixPath.local8Bit()), &all, dump);
 
 	if(res != SQERR_OK)
 	{
@@ -337,7 +341,7 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 
 QImage SQ_ThumbnailLoadJob::makeBigThumb(QImage *image)
 {
-	const int SZ = SQ_ThumbnailSize::biggest().pixelSize();
+	const int SZ = SQ_ThumbnailSize::biggest();
 
 	if(image->width() > SZ || image->height() > SZ)
 		/**image = */ return image->smoothScale(QSize(SZ, SZ), QImage::ScaleMin).swapRGB();
@@ -349,16 +353,8 @@ QImage SQ_ThumbnailLoadJob::makeBigThumb(QImage *image)
 
 void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
 {
-	SQ_ThumbnailSize biggest = SQ_ThumbnailSize::biggest();
-
-	if(mThumbnailSize == biggest)
-	{
-		emit thumbnailLoaded(mCurrentItem, t);
-		return;
-	}
-
 	int biggestDimension = QMAX(t.thumbnail.width(), t.thumbnail.height());
-	int thumbPixelSize = mThumbnailSize.pixelSize();
+	int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize() - 2;
 
 	if(biggestDimension <= thumbPixelSize)
 	{
@@ -367,16 +363,8 @@ void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
 	}
 
 	double scale = double(thumbPixelSize)/double(biggestDimension);
-	QPixmap pix2(thumbPixelSize, thumbPixelSize);
 
-	QPainter painter;
-	painter.begin(&pix2);
-	painter.eraseRect(0, 0, thumbPixelSize, thumbPixelSize);
-	painter.scale(scale, scale);
-	painter.drawImage((biggestDimension - t.thumbnail.width()) / 2, (biggestDimension - t.thumbnail.height()) / 2, t.thumbnail);
-	painter.end();
-
-	t.thumbnail = pix2;
+	t.thumbnail = t.thumbnail.smoothScale(t.thumbnail.width() * scale, t.thumbnail.height() * scale);
 
 	emit thumbnailLoaded(mCurrentItem, t);
 }

@@ -1,3 +1,26 @@
+ksquirrel-0.6.0-pre1
+************************************************************
+
+* moved back to Right Click = mouse selection, Middle Click = context menu
+* added file actions in Navigator - Copy, Paste, Cut, etc.
+* added -t option: find all supported images and create thumbnails. For example
+     # ksquirrel -t /home/ckult/images/
+* "External Tools" now based on .desktop files
+* fixed crashing when command line is not empty
+* improved Drag'n'Drop support
+* image converter now available (select files and press Ctrl+K), but not all libraries support write functions
+     
+ksquirrel-libs:
+* added interface for write functions
+* added write features for PNG, JPEG, BMP
+* PNG: fixed problems with interlaced images, fixed memory leak
+* XPM: fixed problems with multiline comments
+* ICO: added support of bit depth 24 and 32
+* PSD: fixed problems with RGB images, that have 3 channels instead of 4
+* GIF: added comments support (comment extensions)
+* PNM: fixed problems with Windows-like line breaks (\r\n)
+
+
 ksquirrel-0.5.0(final)
 ******************************************************************
 

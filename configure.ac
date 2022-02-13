@@ -1,4 +1,4 @@
-AC_INIT([ksquirrel], [0.5.0], [squirrel-sf@yandex.ru])
+AC_INIT([ksquirrel], [0.6.0], [squirrel-sf@yandex.ru])
 AC_GNU_SOURCE
 #AC_CONFIG_SRCDIR([config.h.in])
 #AM_INIT_AUTOMAKE([foreign])
@@ -11,7 +11,7 @@ unset CDPATH
 AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.5.0)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0)
 
 KDE_SET_PREFIX
 
@@ -73,6 +73,7 @@ AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 AC_PATH_X
 AC_HEADER_STDC
 AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
+AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -91,6 +92,7 @@ KDE_CREATE_SUBDIRSLIST
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([ksquirrel/Makefile])
+AC_CONFIG_FILES([desktop/Makefile])
 AC_CONFIG_FILES([pics/Makefile])
 AC_CONFIG_FILES([pics/menu/Makefile])
 AC_CONFIG_FILES([po/Makefile])

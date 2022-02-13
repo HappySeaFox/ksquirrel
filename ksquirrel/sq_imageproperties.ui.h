@@ -21,8 +21,8 @@ void SQ_ImageProperties::init()
     copyentry->plug(menu);
     copyall->plug(menu);
     
-    ok = sqLoader->loadIcon("ok", KIcon::Desktop, 16);
-    error = sqLoader->loadIcon("error", KIcon::Desktop, 16);
+    ok = KSquirrel::loader()->loadIcon("ok", KIcon::Desktop, 16);
+    error = KSquirrel::loader()->loadIcon("error", KIcon::Desktop, 16);
 }
 
 void SQ_ImageProperties::setParams(QStringList &l)
@@ -91,9 +91,9 @@ void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta 
     for(QValueVector<QPair<QString,QString> >::iterator it = BEGIN;it != END;++it)
     {
 	if(after)
-	    item = new QListViewItem(listMeta, after, (*it).first, (*it).second);
+	    item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second);
 	else
-	    after = item = new QListViewItem(listMeta, (*it).first, (*it).second);
+	    after = item = new QListViewItem(listMeta, (*it).first+QString::fromLatin1("  "), (*it).second);
 	
 	listMeta->insertItem(item);
     }

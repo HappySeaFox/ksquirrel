@@ -33,8 +33,11 @@ class SQ_HLOptions : public QObject
 		~SQ_HLOptions();
 
 	public:
+		bool 		thumbs;
 		QString	path;
-		bool showLibsAndExit;
+		QString	thumbs_p;
+		bool 		showLibsAndExit;
+		bool		recurs;
 };
 
 #endif

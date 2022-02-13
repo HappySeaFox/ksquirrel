@@ -24,8 +24,11 @@
 #include "sq_librarieschanged.h"
 #include "sq_config.h"
 
+SQ_LibraryListener * SQ_LibraryListener::listener = 0L;
+
 SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {
+	listener = this;
 	operation = true;
 
 	setAutoUpdate(true);
@@ -46,18 +49,18 @@ void SQ_LibraryListener::slotCompleted()
 	if(operation)
 	{
 		if(list.count())
-			sqLibHandler->add(&list);
+			SQ_LibraryHandler::instance()->add(&list);
 
 		emit finishedInit();
 	}
 	else
 		if(list.count())
-			sqLibHandler->remove(&list);
+			SQ_LibraryHandler::instance()->remove(&list);
 
-	setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
+	setAutoUpdate(SQ_Config::instance()->readBoolEntry("Libraries", "monitor", true));
 
-	if(sqConfig->readBoolEntry("Libraries", "monitor", true))
-		if(sqConfig->readBoolEntry("Libraries", "show dialog", true))
+	if(SQ_Config::instance()->readBoolEntry("Libraries", "monitor", true))
+		if(SQ_Config::instance()->readBoolEntry("Libraries", "show dialog", true))
 			emit showInfo(list, operation);
 		else
 			list.clear();
@@ -97,7 +100,7 @@ void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 
 void SQ_LibraryListener::slotShowInfo(const QStringList &linfo, bool added)
 {
-	SQ_LibrariesChanged cd(sqApp);
+	SQ_LibrariesChanged cd(KSquirrel::app());
 	cd.setLibsInfo(linfo, added);
 	cd.exec();
 
@@ -108,10 +111,15 @@ void SQ_LibraryListener::slotOpenURL(const KURL &url, bool b1, bool b2)
 {
 	if(!QFile::exists(url.path()))
 	{
-	    sqLibHandler->clear();
+	    SQ_LibraryHandler::instance()->clear();
 	    emit finishedInit();
 	    return;
 	}
 
 	openURL(url, b1, b2);
+}
+
+SQ_LibraryListener* SQ_LibraryListener::instance()
+{
+	return listener;
 }

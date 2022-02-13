@@ -1,42 +1,21 @@
-[External tool name]
+[External tools]
 1=Run within KDE
-10=Set as tiled wallpaper on desktop
+10=View in hexadecimal mode
+11=Print file
+12=Set as wallpaper on desktop
+13=Set as tiled wallpaper on desktop
 2=Open with GIMP
-3=Open with KuickShow
-4=Open with GQview
-5=Open with KView
-6=Open with KWrite
-7=View in hexadecimal mode
-8=Print file
-9=Set as wallpaper on desktop
-
-[External tool pixmap]
-1=kfm
-10=mac
-2=gimp
-3=kuickshow
-4=gqview
-5=kview
-6=kwrite
-7=khexedit
-8=kdeprintfax
-9=mac
-
-[External tool program]
-1=kfmclient exec %s
-10=dcop kdesktop KBackgroundIface setWallpaper %s 2
-2=gimp %s
-3=kuickshow %s
-4=gqview %s
-5=kview %s
-6=kwrite %s
-7=khexedit %s
-8=kprinter %s
-9=dcop kdesktop KBackgroundIface setWallpaper %s 6
+3=Open with GQview
+4=Open with ShowImg
+5=Open with KuickShow
+6=Open with KView
+7=Open with Opera
+8=Open with Konqueror
+9=Open with KWrite
 
 [Fileview]
 archives=true
-click policy=0
+click policy=1
 custom directory=/
 disable_dirs=false
 filter_id=0
@@ -44,13 +23,13 @@ history=false
 last visited=/
 run unknown=false
 set path=0
-sync type=1
+sync type=0
 tofirst=true
 
 [Filters]
 extensions=*,*.mpg *.mpeg *.avi *.asf *.divx,*.mp3 *.ogg *.wma *.wav *.it
 items=All files,Video tapes,Audio files
-last=*.bmp *.dib  *.ico *.cur  *.gif  *.jpg *.jpeg *.jpe  *.pcx  *.pix  *.png  *.ppm *.pgm *.pbm *.pnm  *.ras  *.rgb *.rgba *.bw *.tga  *.tiff *tif  *.xbm  *.xpm  *.xwd  *.psd  *.fli \s
+last=*.bmp *.dib  *.fli  *.gif  *.ico *.cur  *.jpg *.jpeg *.jpe  *.pcx  *.pix  *.png  *.ppm *.pgm *.pbm *.pnm  *.psd  *.ras  *.rgb *.rgba *.bw *.tga  *.tiff *.tif  *.xbm  *.xpm  *.xwd \s
 menuitem both=false
 
 [GL view]
@@ -60,21 +39,16 @@ GL view custom texture=
 actions=true
 alpha_bkgr=false
 angle=90
-geometry=336,279,680,462
+geometry=299,215,720,525
 hide_sbar=true
 ignore=true
-manipulation center=0
 marks=true
 move=5
-progress=true
-quickGeometry=2,32,215,287
+quickGeometry=1,35,212,294
 quickbrowser=true
-save pos=true
-save size=true
 scroll=0
 statusbar=true
 toolbars_hidden=false
-winstate=0
 zoom=25
 zoom limit=1
 zoom pretty=false
@@ -86,11 +60,11 @@ zoom_min=1
 items=
 
 [Interface]
-geometry=4,23,1016,741
+geometry=0,0,1020,741
 gl_separate=true
 has_cdfiles=false
 has_tree=false
-has_url=true
+has_url=false
 last view=0
 posX=0
 posY=0
@@ -98,32 +72,17 @@ save pos=true
 save size=true
 sizeX=800
 sizeY=600
-splitter1=1,2
-splitter2=1,2
+splitter1=1,3
 view type=1
-
-[KFileDialog Settings]
-Automatic Preview=true
-Autoplay sounds=true
-Preview Size=60
-Recent Files=
-ShowPreviews=false
-ViewMode=SmallColumns
-
-[KFileDialog Speedbar]
-Speedbar IconSize=32
 
 [Libraries]
 monitor=true
-prefix=/usr/lib/squirrel/
 show dialog=false
 
 [Main]
-activate another=true
 check=true
 first_time=false
 minimize to tray=false
-restart=true
 sync=false
 
 [Navigator Icons]
@@ -141,15 +100,10 @@ CompletionMode=5
 History=
 
 [Thumbnails]
-cache=10240
-disable_mime=true
+cache=20000
+disable_mime=false
 dont write=false
 extended=false
-margin=2
+margin=0
 size=3
 tooltips=false
-
-[squirrel image viewer file browser]
-Preview Size=60
-ShowPreviews=false
-ViewMode=SmallColumns

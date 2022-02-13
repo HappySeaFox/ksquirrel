@@ -57,6 +57,8 @@ class SQ_ArchiveHandler : public QObject
 		bool needClean();
 		void clean(QString s);
 
+		static SQ_ArchiveHandler* instance();
+
 	private:
 		QString	extracteddir, fullextracteddir;
 		QString	fullpath;
@@ -64,6 +66,8 @@ class SQ_ArchiveHandler : public QObject
 		SQ_Dir	*dir;
 		QMap<QString, int> protocols;
 		KFileItem *item;
+
+		static SQ_ArchiveHandler *ar;
 };
 
 #endif

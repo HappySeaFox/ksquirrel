@@ -278,8 +278,8 @@ xdg_menudir = @xdg_menudir@
 ####### kdevelop will overwrite this part!!! (end)############
 #>- POFILES = AUTO
 #>+ 2
-POFILES = ru.po
-GMOFILES = ru.gmo
+POFILES = ru.po nl.po
+GMOFILES = ru.gmo nl.gmo
 #>- all: all-am
 #>+ 1
 all: all-nls docs-am  all-am
@@ -472,20 +472,23 @@ uninstall-am: uninstall-info-am
 .NOEXPORT:
 
 #>+ 2
-KDE_DIST=ru.gmo ksquirrel.pot ru.po Makefile.in Makefile.am 
+KDE_DIST=ru.po ru.gmo ksquirrel.pot nl.po nl.gmo Makefile.am Makefile.in 
 
-#>+ 4
+#>+ 7
 ru.gmo: ru.po
 	rm -f ru.gmo; $(GMSGFMT) -o ru.gmo $(srcdir)/ru.po
 	test ! -f ru.gmo || touch ru.gmo
+nl.gmo: nl.po
+	rm -f nl.gmo; $(GMSGFMT) -o nl.gmo $(srcdir)/nl.po
+	test ! -f nl.gmo || touch nl.gmo
 
 #>+ 3
 clean-nls:
-	-rm -f  ru.gmo
+	-rm -f  ru.gmo nl.gmo
 
 #>+ 10
 install-nls:
-	@for base in ru ; do \
+	@for base in ru nl ; do \
 	  echo $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
 	  $(mkinstalldirs) $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES ; \
 	  if test -f $$base.gmo; then $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
@@ -494,9 +497,10 @@ install-nls:
 	done
 
 
-#>+ 3
+#>+ 4
 uninstall-nls:
 	rm -f $(DESTDIR)$(kde_locale)/ru/LC_MESSAGES/$(PACKAGE).mo
+	rm -f $(DESTDIR)$(kde_locale)/nl/LC_MESSAGES/$(PACKAGE).mo
 
 #>+ 2
 all-nls: $(GMOFILES)

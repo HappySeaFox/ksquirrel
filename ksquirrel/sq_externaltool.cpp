@@ -14,22 +14,52 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include <qfile.h>
+
 #include <kpopupmenu.h>
 #include <kiconloader.h>
 #include <kstringhandler.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include "ksquirrel.h"
 #include "sq_widgetstack.h"
-#include "sq_diroperatorbase.h"
+#include "sq_diroperator.h"
 #include "sq_externaltool.h"
 #include "sq_config.h"
+#include "sq_dir.h"
 
-SQ_ExternalTool::SQ_ExternalTool() : QObject(), QValueVector<SQ_EXT_TOOL>()
+SQ_ExternalTool * SQ_ExternalTool::ext = 0L;
+
+SQ_ExternalTool::SQ_ExternalTool() : QObject(), QPtrList<KDesktopFile>()
 {
+	ext = this;
 	menu = new KPopupMenu(0L, "External tools");
 
+	dir = new SQ_Dir;
+	dir->setRoot("desktop");
+
 	connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
+
+	QString str, tmp;
+
+	for(int i = 1;;i++)
+	{
+		str.sprintf("%d", i);
+		tmp = SQ_Config::instance()->readEntry("External tools", str, QString::null);
+
+		if(tmp.isEmpty() || tmp.isNull())
+			break;
+
+		QString path = dir->getAbsPath(tmp + ".desktop");
+
+		if(!QFile::exists(path))
+			continue;
+
+		KDesktopFile *d = new KDesktopFile(path);
+		append(d);
+	}
 }
 
 SQ_ExternalTool::~SQ_ExternalTool()
@@ -37,29 +67,33 @@ SQ_ExternalTool::~SQ_ExternalTool()
 
 void SQ_ExternalTool::addTool(const QString &pixmap, const QString &name, const QString &command)
 {
-	SQ_EXT_TOOL tool = {pixmap, name, command};
+	QString abs = dir->getAbsPath(name + ".desktop");
 
-	append(tool);
-}
+	QFile::remove(abs);
 
-void SQ_ExternalTool::addTool(const SQ_EXT_TOOL &tool)
-{
-	append(tool);
+	KDesktopFile *d = new KDesktopFile(abs);
+	d->writeEntry("ServiceTypes", "*");
+	d->writeEntry("Exec", command);
+	d->writeEntry("Icon", pixmap);
+	d->writeEntry("Name", name);
+	d->sync();
+
+	append(d);
 }
 
 QString SQ_ExternalTool::getToolPixmap(const int i)
 {
-	return (*this)[i].pixmap;
+	return at(i)->readIcon();
 }
 
 QString SQ_ExternalTool::getToolName(const int i)
 {
-	return (*this)[i].name;
+	return at(i)->readName();
 }
 
 QString SQ_ExternalTool::getToolCommand(const int i)
 {
-	return (*this)[i].command;
+	return at(i)->readEntry("Exec");
 }
 
 KPopupMenu* SQ_ExternalTool::getNewPopupMenu()
@@ -72,7 +106,7 @@ KPopupMenu* SQ_ExternalTool::getNewPopupMenu()
 
 	for(unsigned int i = 0;i < count();i++)
 	{
-		id = menu->insertItem(sqLoader->loadIcon(getToolPixmap(i), KIcon::Desktop, 16), getToolName(i));
+		id = menu->insertItem(KSquirrel::loader()->loadIcon(getToolPixmap(i), KIcon::Desktop, 16), getToolName(i));
 		menu->setItemParameter(id, i);
 	}
 
@@ -87,27 +121,26 @@ KPopupMenu* SQ_ExternalTool::getConstPopupMenu() const
 void SQ_ExternalTool::writeEntries()
 {
 	int ncount = count(), cur = 1, i;
+
+	if(!ncount)
+		return;
+
 	QString num;
 
-	sqConfig->deleteGroup("External tool pixmap");
-	sqConfig->deleteGroup("External tool name");
-	sqConfig->deleteGroup("External tool program");
+	SQ_Config::instance()->deleteGroup("External tools");
+	SQ_Config::instance()->setGroup("External tools");
 
 	for(i = 0;i < ncount;i++,cur++)
 	{
 		num.sprintf("%d", cur);
-		sqConfig->setGroup("External tool pixmap");
-		sqConfig->writeEntry(num, getToolPixmap(i));
-		sqConfig->setGroup("External tool name");
-		sqConfig->writeEntry(num, getToolName(i));
-		sqConfig->setGroup("External tool program");
-		sqConfig->writeEntry(num, getToolCommand(i));
+		SQ_Config::instance()->writeEntry(num, getToolName(i));
 	}
 }
 
 void SQ_ExternalTool::slotAboutToShowMenu()
 {
-	KFileItem *item = ((SQ_DirOperatorBase*)sqWStack->visibleWidget())->view()->currentFileItem();
+	KFileItem *item = SQ_WidgetStack::instance()->visibleWidget()->view()->currentFileItem();
+	KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->visibleWidget()->selectedItems();
 
 	if(!item)
 	{
@@ -115,10 +148,18 @@ void SQ_ExternalTool::slotAboutToShowMenu()
 		return;
 	}
 
-	QString file = KStringHandler::rsqueeze(item->name());
+	QString file = KStringHandler::rsqueeze(item->name(), 30);
 
-	QString T = menu->title(title);
-
-	if(T != file)
+	if(items)
+	{
+		QString final = (items->count() == 1 || items->count() == 0) ? file : (file + QString::fromLatin1(" (+%1)").arg(items->count()-1));
+		menu->changeTitle(title, final);
+	}
+	else
 		menu->changeTitle(title, file);
+}
+
+SQ_ExternalTool* SQ_ExternalTool::instance()
+{
+	return ext;
 }

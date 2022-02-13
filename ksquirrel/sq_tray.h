@@ -19,9 +19,9 @@
 #define SQ_TRAY_H
 
 #include <ksystemtray.h>
-#include <kpopupmenu.h>
 
 class KAction;
+class KPopupMenu;
 
 class SQ_SystemTray : public KSystemTray
 {

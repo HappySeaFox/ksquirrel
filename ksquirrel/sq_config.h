@@ -42,6 +42,11 @@ class SQ_Config : public KConfig
 		QValueList<int> readIntListEntry(const QString &sgroup, const QString &key);
 
 		QRect readRectEntry(const QString &sgroup, const QString &key, const QRect *def = 0L);
+
+		static SQ_Config* instance();
+
+	private:
+		static SQ_Config *conf;
 };
 
 #endif

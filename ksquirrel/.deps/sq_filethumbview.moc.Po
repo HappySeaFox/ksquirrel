@@ -1,5 +1,5 @@
 sq_filethumbview.moc.o sq_filethumbview.moc.o: sq_filethumbview.moc.cpp \
-  sq_filethumbview.h /usr/include/kfileiconview.h \
+  sq_filethumbview.h sq_fileiconviewbase.h /usr/include/kfileiconview.h \
   /usr/include/kiconview.h /usr/lib/qt3/include/qcursor.h \
   /usr/lib/qt3/include/qpoint.h /usr/lib/qt3/include/qwindowdefs.h \
   /usr/lib/qt3/include/qobjectdefs.h /usr/lib/qt3/include/qglobal.h \
@@ -157,6 +157,8 @@ sq_filethumbview.moc.o sq_filethumbview.moc.o: sq_filethumbview.moc.cpp \
   /usr/lib/qt3/include/private/qucom_p.h /usr/lib/qt3/include/quuid.h
 
 sq_filethumbview.h:
+
+sq_fileiconviewbase.h:
 
 /usr/include/kfileiconview.h:
 

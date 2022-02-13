@@ -132,8 +132,11 @@ ksquirrel.moc.o ksquirrel.moc.o: ksquirrel.moc.cpp ksquirrel.h \
   /usr/lib/qt3/include/qcombobox.h /usr/include/kglobal.h \
   /usr/include/kdemacros.h /usr/include/kinstance.h \
   /usr/lib/qt3/include/qguardedptr.h /usr/lib/qt3/include/qiconset.h \
-  /usr/lib/qt3/include/qpixmap.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h /usr/lib/qt3/include/qapplication.h \
+  /usr/lib/qt3/include/qpixmap.h /usr/include/kio/job.h \
+  /usr/include/kio/jobclasses.h /usr/include/kurl.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h \
+  /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
   /usr/lib/qt3/include/private/qucomextra_p.h \
@@ -569,9 +572,19 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qpixmap.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
+
+/usr/include/kurl.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/kio/global.h:
+
+/usr/lib/qt3/include/qdatetime.h:
 
 /usr/lib/qt3/include/qapplication.h:
 

@@ -125,6 +125,9 @@ sq_diroperator.o sq_diroperator.o: sq_diroperator.cpp \
   /usr/lib/qt3/include/qptrcollection.h /usr/lib/qt3/include/qbrush.h \
   /usr/lib/qt3/include/qfont.h /usr/lib/qt3/include/qfontmetrics.h \
   /usr/lib/qt3/include/qfontinfo.h /usr/lib/qt3/include/qsizepolicy.h \
+  /usr/lib/qt3/include/qapplication.h \
+  /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
+  /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
   /usr/include/kstringhandler.h /usr/lib/qt3/include/qregexp.h \
   /usr/include/kdemacros.h /usr/include/klocale.h \
   /usr/include/kprogress.h /usr/lib/qt3/include/qprogressbar.h \
@@ -143,26 +146,27 @@ sq_diroperator.o sq_diroperator.o: sq_diroperator.cpp \
   /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmetaobject.h \
   /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
   /usr/lib/qt3/include/qcombobox.h /usr/lib/qt3/include/qguardedptr.h \
-  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_diroperator.h \
-  sq_diroperatorbase.h /usr/include/kurl.h /usr/include/kfileview.h \
-  /usr/include/kfileitem.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/kio/global.h \
-  /usr/lib/qt3/include/qdatetime.h /usr/include/kmimetype.h \
+  /usr/include/kio/job.h /usr/include/kio/jobclasses.h \
+  /usr/include/kurl.h /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h \
+  sq_diroperator.h sq_diroperatorbase.h /usr/include/kfileview.h \
+  /usr/include/kfileitem.h /usr/include/kmimetype.h \
   /usr/include/ksycocatype.h /usr/include/kservicetype.h \
   /usr/include/ksycocaentry.h /usr/include/ksharedptr.h \
   /usr/include/kservice.h /usr/lib/qt3/include/qvariant.h \
   /usr/include/ksimpleconfig.h /usr/include/kconfig.h \
   /usr/include/kconfigbase.h /usr/include/kconfigdata.h \
   /usr/include/kfilemetainfo.h /usr/lib/qt3/include/qdict.h \
-  /usr/lib/qt3/include/qgdict.h /usr/include/kfile.h \
-  /usr/lib/qt3/include/qdir.h /usr/lib/qt3/include/qfileinfo.h \
-  /usr/lib/qt3/include/qfile.h /usr/include/kdiroperator.h \
-  /usr/lib/qt3/include/qptrstack.h /usr/include/kaction.h \
-  /usr/lib/qt3/include/qkeysequence.h /usr/include/kshortcut.h \
-  /usr/include/kstdaction.h /usr/include/kactioncollection.h \
-  /usr/include/kactionclasses.h /usr/include/kcompletion.h \
-  /usr/include/kglobalsettings.h /usr/include/ksortablevaluelist.h \
-  /usr/include/kdirlister.h /usr/include/kdirnotify.h sq_fileiconview.h \
+  /usr/include/kfile.h /usr/lib/qt3/include/qdir.h \
+  /usr/lib/qt3/include/qfileinfo.h /usr/lib/qt3/include/qfile.h \
+  /usr/include/kdiroperator.h /usr/lib/qt3/include/qptrstack.h \
+  /usr/include/kaction.h /usr/lib/qt3/include/qkeysequence.h \
+  /usr/include/kshortcut.h /usr/include/kstdaction.h \
+  /usr/include/kactioncollection.h /usr/include/kactionclasses.h \
+  /usr/include/kcompletion.h /usr/include/kglobalsettings.h \
+  /usr/include/ksortablevaluelist.h /usr/include/kdirlister.h \
+  /usr/include/kdirnotify.h /usr/include/dcopobject.h \
+  /usr/include/kdatastream.h sq_fileiconview.h sq_fileiconviewbase.h \
   /usr/include/kfileiconview.h /usr/include/kiconview.h \
   /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qiconview.h \
   /usr/lib/qt3/include/qdragobject.h /usr/lib/qt3/include/qimage.h \
@@ -572,6 +576,16 @@ sq_diroperator.o sq_diroperator.o: sq_diroperator.cpp \
 
 /usr/lib/qt3/include/qsizepolicy.h:
 
+/usr/lib/qt3/include/qapplication.h:
+
+/usr/lib/qt3/include/qdesktopwidget.h:
+
+/usr/lib/qt3/include/qasciidict.h:
+
+/usr/lib/qt3/include/qgdict.h:
+
+/usr/lib/qt3/include/qtranslator.h:
+
 /usr/include/kstringhandler.h:
 
 /usr/lib/qt3/include/qregexp.h:
@@ -646,19 +660,11 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qguardedptr.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
-
-sq_diroperator.h:
-
-sq_diroperatorbase.h:
+/usr/include/kio/jobclasses.h:
 
 /usr/include/kurl.h:
-
-/usr/include/kfileview.h:
-
-/usr/include/kfileitem.h:
 
 /usr/include/sys/stat.h:
 
@@ -667,6 +673,14 @@ sq_diroperatorbase.h:
 /usr/include/kio/global.h:
 
 /usr/lib/qt3/include/qdatetime.h:
+
+sq_diroperator.h:
+
+sq_diroperatorbase.h:
+
+/usr/include/kfileview.h:
+
+/usr/include/kfileitem.h:
 
 /usr/include/kmimetype.h:
 
@@ -693,8 +707,6 @@ sq_diroperatorbase.h:
 /usr/include/kfilemetainfo.h:
 
 /usr/lib/qt3/include/qdict.h:
-
-/usr/lib/qt3/include/qgdict.h:
 
 /usr/include/kfile.h:
 
@@ -730,7 +742,13 @@ sq_diroperatorbase.h:
 
 /usr/include/kdirnotify.h:
 
+/usr/include/dcopobject.h:
+
+/usr/include/kdatastream.h:
+
 sq_fileiconview.h:
+
+sq_fileiconviewbase.h:
 
 /usr/include/kfileiconview.h:
 

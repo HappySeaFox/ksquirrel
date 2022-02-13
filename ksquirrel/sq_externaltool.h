@@ -18,20 +18,17 @@
 #ifndef SQ_EXTERNALTOOL_H
 #define SQ_EXTERNALTOOL_H
 
-#include <qvaluevector.h>
+#include <qptrlist.h>
 #include <qstring.h>
 #include <qobject.h>
 
+#include <kdesktopfile.h>
+
 class KPopupMenu;
 
-struct SQ_EXT_TOOL
-{
-	QString pixmap;
-	QString name;
-	QString command;
-};
+class SQ_Dir;
 
-class SQ_ExternalTool : public QObject, public QValueVector<SQ_EXT_TOOL>
+class SQ_ExternalTool : public QObject, public QPtrList<KDesktopFile>
 {
 	Q_OBJECT
 
@@ -40,7 +37,6 @@ class SQ_ExternalTool : public QObject, public QValueVector<SQ_EXT_TOOL>
 		~SQ_ExternalTool();
 
 		void addTool(const QString &pixmap, const QString &name, const QString &command);
-		void addTool(const SQ_EXT_TOOL &tool);
 
 		QString getToolPixmap(const int i);
 		QString getToolName(const int i);
@@ -51,12 +47,16 @@ class SQ_ExternalTool : public QObject, public QValueVector<SQ_EXT_TOOL>
 
 		void writeEntries();
 
+		static SQ_ExternalTool* instance();
+
 	private slots:
 		void slotAboutToShowMenu();
 
 	private:
 		KPopupMenu *menu;
 		int title;
+		SQ_Dir *dir;
+		static SQ_ExternalTool *ext;
 };
 
 #endif

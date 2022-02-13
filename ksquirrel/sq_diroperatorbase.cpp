@@ -14,18 +14,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <qmessagebox.h>
 #include <qlabel.h>
 #include <qtimer.h>
 
 #include <krun.h>
-#include <kstringhandler.h>
-#include <kprocess.h>
 #include <kapp.h>
 #include <kpopupmenu.h>
 #include <kaction.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kstdaccel.h>
+#include <krun.h>
+#include <kservice.h>
+#include <kdesktopfile.h>
 
 #include "ksquirrel.h"
 #include "sq_treeview.h"
@@ -40,6 +41,8 @@
 #include "sq_widgetstack.h"
 #include "sq_config.h"
 #include "sq_archivehandler.h"
+#include "sq_converter.h"
+#include "sq_resizer.h"
 
 #define SQ_MAX_WORD_LENGTH 50
 
@@ -50,23 +53,10 @@ SQ_DirOperatorBase::SQ_DirOperatorBase(const KURL &url, VV type_, QWidget *paren
 {
 	type = type_;
 
-	KActionSeparator *pASep = new KActionSeparator(actionCollection());
+	setupActions();
 
-	setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
-
-	pARunSeparately = new KAction(i18n("Run separately"), "launch", KShortcut(CTRL+Key_J), sqWStack, SLOT(slotRunSeparately()), (KActionCollection*)0, "Run separately");
-
-	pADirOperatorMenu = (KActionMenu*)actionCollection()->action("popupMenu");
-	pADirOperatorMenu->insert(pARunSeparately, 0);
-	pADirOperatorMenu->insert(pASep, 1);
-	pADirOperatorMenu->popupMenu()->insertItem(i18n("View"), sqApp->menuViews());
-	pADirOperatorMenu->insert(pASep);
-	pADirOperatorMenu->popupMenu()->insertItem(i18n("External Tools"), sqExternalTool->getConstPopupMenu());
-	pADirOperatorMenu->insert(pASep);
-	pADirOperatorMenu->popupMenu()->insertItem(i18n("Fi&lter"), sqApp->menuFilters());
-
-	if(!sqWStack->count())
-		connect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
+	if(!SQ_WidgetStack::instance()->count())
+		connect(SQ_ExternalTool::instance()->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
 
 	connect(this, SIGNAL(urlEntered(const KURL&)), this, SLOT(slotUrlEntered(const KURL&)));
 
@@ -99,7 +89,7 @@ KFileView* SQ_DirOperatorBase::createView(QWidget *parent, KFile::FileView)
 		case  SQ_DirOperatorBase::TypeList:
 		case  SQ_DirOperatorBase::TypeIcon:
 		{
-			iv = new SQ_FileIconView(parent, "icon/list view");
+			iv = new SQ_FileIconView(parent, (type == SQ_DirOperatorBase::TypeIcon) ? "icon view":"list view");
 
 			Q_CHECK_PTR(iv);
 
@@ -110,8 +100,8 @@ KFileView* SQ_DirOperatorBase::createView(QWidget *parent, KFile::FileView)
 			connect(iv, SIGNAL(returnPressed(QIconViewItem*)), SLOT(slotReturnPressed(QIconViewItem*)));
 			connect(iv, SIGNAL(currentChanged(QIconViewItem*)), SLOT(slotSelected(QIconViewItem*)));
 
-			if(type == SQ_DirOperatorBase::TypeIcon)
-				iv->setArrangement(QIconView::LeftToRight);
+//			if(type == SQ_DirOperatorBase::TypeIcon)
+//				iv->setArrangement(QIconView::LeftToRight);
 		}
 		break;
 
@@ -201,17 +191,17 @@ void SQ_DirOperatorBase::slotExecuted(QIconViewItem *item)
 	{
 		tobeDecoded = fi->url().path();
 
-		if(sqLibHandler->supports(tobeDecoded))
+		if(SQ_LibraryHandler::instance()->supports(tobeDecoded))
 			timer->start(timer_value, true);
 		else
 		{
-			sqSBDecoded->setText(i18n("Format \"")+ fm.extension(false)+i18n("\" not supported"));
+			sqSBDecoded->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
 
-			if(sqArchive->findProtocolByFile(fi) != -1)
-				if(sqConfig->readBoolEntry("Fileview", "archives", true))
+			if(SQ_ArchiveHandler::instance()->findProtocolByFile(fi) != -1)
+				if(SQ_Config::instance()->readBoolEntry("Fileview", "archives", true))
 					emit tryUnpack(fi);
 				else;
-			else if(sqConfig->readBoolEntry("Fileview", "run unknown", true))
+			else if(SQ_Config::instance()->readBoolEntry("Fileview", "run unknown", true))
 				pARunSeparately->activate();
 		}
 	}
@@ -238,17 +228,17 @@ void SQ_DirOperatorBase::slotExecuted(QListViewItem *item)
 	{
 		tobeDecoded = fi->url().path();
 
-		if(sqLibHandler->supports(tobeDecoded))
+		if(SQ_LibraryHandler::instance()->supports(tobeDecoded))
 			timer->start(timer_value, true);
 		else
 		{
-			sqSBDecoded->setText(i18n("Format \"")+ fm.extension(false)+i18n("\" not supported"));
+			sqSBDecoded->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
 
-			if(sqArchive->findProtocolByFile(fi) != -1)
-				if(sqConfig->readBoolEntry("Fileview", "archives", true))
+			if(SQ_ArchiveHandler::instance()->findProtocolByFile(fi) != -1)
+				if(SQ_Config::instance()->readBoolEntry("Fileview", "archives", true))
 					emit tryUnpack(fi);
 				else;
-			else if(sqConfig->readBoolEntry("Fileview", "run unknown", true))
+			else if(SQ_Config::instance()->readBoolEntry("Fileview", "run unknown", true))
 				pARunSeparately->activate();
 		}
 	}
@@ -256,26 +246,37 @@ void SQ_DirOperatorBase::slotExecuted(QListViewItem *item)
 
 void SQ_DirOperatorBase::slotActivateExternalTool(int id)
 {
-	KFileItem *item = ((SQ_DirOperatorBase*)sqWStack->visibleWidget())->view()->currentFileItem();
+	KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
+	KURL::List list;
 
-	if(!item) return;
+	if(!items) return;
+	if(items->isEmpty()) return;
 
-	int index = sqExternalTool->getConstPopupMenu()->itemParameter(id);
-	QString command = sqExternalTool->getToolCommand(index), final, file;
-	KShellProcess	run;
+	int index = SQ_ExternalTool::instance()->getConstPopupMenu()->itemParameter(id);
 
-	file = KShellProcess::quote(item->url().path());
-	final = command.replace(QRegExp("%s"), file);
+	KFileItem *f = items->first();
 
-	run << final;
-	run.start(KProcess::DontCare);
+	while(f != NULL)
+	{
+		list.append(f->url().path());
+		f = items->next();
+	}
+
+	KDesktopFile *kd = SQ_ExternalTool::instance()->at(index);
+	KService ks(kd);
+
+	QStringList args = (ks.allowMultipleFiles()) ?
+								KRun::processDesktopExec(ks, list, true) :
+								KRun::processDesktopExec(ks, list.first(), true);
+
+	KRun::runCommand(args.join(" "), ks.name(), ks.icon());
 }
 
 void SQ_DirOperatorBase::reconnectClick(bool firstconnect)
 {
 	bool old_sing = sing;
 
-	switch(sqConfig->readNumEntry("Fileview", "click policy", 0))
+	switch(SQ_Config::instance()->readNumEntry("Fileview", "click policy", 0))
 	{
 		case 0: sing = KGlobalSettings::singleClick(); break;
 		case 1: sing = true; break;
@@ -359,7 +360,7 @@ void SQ_DirOperatorBase::setCurrentItem(KFileItem *item)
 
 void SQ_DirOperatorBase::slotUrlEntered(const KURL &url)
 {
-	sqWStack->setURLForCurrent(url);
+	SQ_WidgetStack::instance()->setURLForCurrent(url);
 }
 
 bool SQ_DirOperatorBase::isThumbView() const
@@ -369,33 +370,75 @@ bool SQ_DirOperatorBase::isThumbView() const
 
 void SQ_DirOperatorBase::slotSelected(QIconViewItem *item)
 {
-        if(!item) return;
+	if(!item) return;
 
-        QString str;
-        KFileItem *fi;
+	QString str;
+	KFileItem *fi;
 
-        if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
-        {
-                fi = f->fileInfo();
-                sqWStack->selectFile(fi, this);
-        }
+	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
+	{
+		fi = f->fileInfo();
+		SQ_WidgetStack::instance()->selectFile(fi, this);
+	}
 }
 
 void SQ_DirOperatorBase::slotSelected(QListViewItem *item)
 {
-        if(!item) return;
+	if(!item) return;
 
-        QString str;
-        KFileItem *fi;
+	QString str;
+	KFileItem *fi;
 
-        if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
-        {
-                fi = f->fileInfo();
-                sqWStack->selectFile(fi, this);
-        }
+	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
+	{
+		fi = f->fileInfo();
+		SQ_WidgetStack::instance()->selectFile(fi, this);
+	}
 }
 
 void SQ_DirOperatorBase::slotDelayedDecode()
 {
-	sqGLWidget->slotStartDecoding(tobeDecoded, true);
+	SQ_GLWidget::window()->slotStartDecoding(tobeDecoded, true);
+}
+
+void SQ_DirOperatorBase::setupActions()
+{
+	KActionSeparator *pASep = new KActionSeparator(actionCollection());
+
+	setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
+
+	pARunSeparately = new KAction(i18n("Run separately"), "launch", KShortcut(CTRL+Key_J), SQ_WidgetStack::instance(), SLOT(slotRunSeparately()), (KActionCollection*)0, "Run separately");
+
+	pADirOperatorMenu = (KActionMenu*)actionCollection()->action("popupMenu");
+
+	pAFileActions = new KActionMenu(i18n("File actions"), "edit");
+
+	pAFileActions->insert(new KAction(i18n("Copy"), "editcopy", KStdAccel::copy(), SQ_WidgetStack::instance(), SLOT(slotFileCopy()), actionCollection(), "SQ Menu File Copy"));
+	pAFileActions->insert(new KAction(i18n("Cut"), "editcut", KStdAccel::cut(), SQ_WidgetStack::instance(), SLOT(slotFileCut()), actionCollection(), "SQ Menu File Cut"));
+	pAFileActions->insert(new KAction(i18n("Paste"), "editpaste", KStdAccel::paste(), SQ_WidgetStack::instance(), SLOT(slotFilePaste()), actionCollection(), "SQ Menu File Paste"));
+	pAFileActions->insert(pASep);
+	pAFileActions->insert(new KAction(i18n("Copy to ..."), "editcopy", 0, SQ_WidgetStack::instance(), SLOT(slotFileCopyTo()), actionCollection(), "SQ Menu File Copy To"));
+	pAFileActions->insert(new KAction(i18n("Move to ..."), "editcut", 0, SQ_WidgetStack::instance(), SLOT(slotFileMoveTo()), actionCollection(), "SQ Menu File Move To	"));
+	pAFileActions->insert(new KAction(i18n("Link to ..."), "www", 0, SQ_WidgetStack::instance(), SLOT(slotFileLinkTo()), actionCollection(), "SQ Menu File Link To "));
+	pAFileActions->insert(pASep);
+	pAFileActions->insert(pARunSeparately);
+
+	KActionMenu *pAImageActions = new KActionMenu(i18n("Image actions"), "images");
+	pAImageActions->insert(new KAction(i18n("Convert images"), QString::null, CTRL+Key_K, SQ_Converter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Menu Image Convert"));
+//	pAImageActions->insert(new KAction(i18n("Resize images"), QString::null, CTRL+Key_R, SQ_Resizer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Menu Image Resize"));
+
+	if(type == SQ_DirOperatorBase::TypeThumbs)
+	{
+		KAction *pARecreate = new KAction(i18n("Recreate selected thumbnails"), "reload", KShortcut(Key_F5), SQ_WidgetStack::instance(), SLOT(slotRecreateThumbnail()), actionCollection(), "SQ recreate thumbnail");
+		pAImageActions->insert(pARecreate);
+	}
+
+	pADirOperatorMenu->insert(pAFileActions);
+	pADirOperatorMenu->insert(pAImageActions);
+	pADirOperatorMenu->insert(pASep);
+	pADirOperatorMenu->popupMenu()->insertItem(i18n("View"), KSquirrel::app()->menuViews());
+	pADirOperatorMenu->insert(pASep);
+	pADirOperatorMenu->popupMenu()->insertItem(i18n("External Tools"), SQ_ExternalTool::instance()->getConstPopupMenu());
+	pADirOperatorMenu->insert(pASep);
+	pADirOperatorMenu->popupMenu()->insertItem(i18n("Fi&lter"), KSquirrel::app()->menuFilters());
 }

@@ -138,25 +138,25 @@ sq_treeview.o sq_treeview.o: sq_treeview.cpp /usr/lib/qt3/include/qdir.h \
   /usr/lib/qt3/include/qframe.h /usr/lib/qt3/include/qmetaobject.h \
   /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
   /usr/lib/qt3/include/qcombobox.h /usr/lib/qt3/include/qguardedptr.h \
-  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_widgetstack.h \
+  /usr/include/kio/job.h /usr/include/kio/jobclasses.h \
+  /usr/include/kurl.h /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h sq_widgetstack.h \
   /usr/lib/qt3/include/qwidgetstack.h /usr/lib/qt3/include/qintdict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qptrdict.h \
-  /usr/include/kurl.h /usr/include/kfileitem.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/kio/global.h \
-  /usr/include/kmimetype.h /usr/include/ksycocatype.h \
-  /usr/include/kservicetype.h /usr/include/ksycocaentry.h \
-  /usr/include/ksharedptr.h /usr/include/kservice.h \
-  /usr/lib/qt3/include/qvariant.h /usr/include/ksimpleconfig.h \
-  /usr/include/kconfig.h /usr/include/kconfigbase.h \
-  /usr/include/kconfigdata.h /usr/include/kfilemetainfo.h \
-  /usr/lib/qt3/include/qdict.h sq_config.h sq_treeview.h \
-  /usr/include/kfiletreeview.h /usr/lib/qt3/include/qtooltip.h \
-  /usr/include/klistview.h /usr/lib/qt3/include/qlistview.h \
-  /usr/lib/qt3/include/qscrollview.h /usr/lib/qt3/include/qscrollbar.h \
-  /usr/lib/qt3/include/qrangecontrol.h /usr/include/kdirnotify.h \
-  /usr/include/kio/job.h /usr/include/kio/jobclasses.h \
-  /usr/include/kfiletreeviewitem.h /usr/include/kdirlister.h \
-  /usr/include/kfiletreebranch.h
+  /usr/include/kfileitem.h /usr/include/kmimetype.h \
+  /usr/include/ksycocatype.h /usr/include/kservicetype.h \
+  /usr/include/ksycocaentry.h /usr/include/ksharedptr.h \
+  /usr/include/kservice.h /usr/lib/qt3/include/qvariant.h \
+  /usr/include/ksimpleconfig.h /usr/include/kconfig.h \
+  /usr/include/kconfigbase.h /usr/include/kconfigdata.h \
+  /usr/include/kfilemetainfo.h /usr/lib/qt3/include/qdict.h sq_config.h \
+  sq_treeview.h /usr/include/kfiletreeview.h \
+  /usr/lib/qt3/include/qtooltip.h /usr/include/klistview.h \
+  /usr/lib/qt3/include/qlistview.h /usr/lib/qt3/include/qscrollview.h \
+  /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
+  /usr/include/kdirnotify.h /usr/include/dcopobject.h \
+  /usr/include/kdatastream.h /usr/include/kfiletreeviewitem.h \
+  /usr/include/kdirlister.h /usr/include/kfiletreebranch.h
 
 /usr/lib/qt3/include/qdir.h:
 
@@ -606,9 +606,17 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qguardedptr.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
+
+/usr/include/kurl.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/kio/global.h:
 
 sq_widgetstack.h:
 
@@ -620,15 +628,7 @@ sq_widgetstack.h:
 
 /usr/lib/qt3/include/qptrdict.h:
 
-/usr/include/kurl.h:
-
 /usr/include/kfileitem.h:
-
-/usr/include/sys/stat.h:
-
-/usr/include/bits/stat.h:
-
-/usr/include/kio/global.h:
 
 /usr/include/kmimetype.h:
 
@@ -676,9 +676,9 @@ sq_treeview.h:
 
 /usr/include/kdirnotify.h:
 
-/usr/include/kio/job.h:
+/usr/include/dcopobject.h:
 
-/usr/include/kio/jobclasses.h:
+/usr/include/kdatastream.h:
 
 /usr/include/kfiletreeviewitem.h:
 

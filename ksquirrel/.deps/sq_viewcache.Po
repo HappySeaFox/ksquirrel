@@ -134,17 +134,9 @@ sq_viewcache.o sq_viewcache.o: sq_viewcache.cpp /usr/include/kdialog.h \
   /usr/lib/qt3/include/qrangecontrol.h /usr/lib/qt3/include/qlabel.h \
   /usr/lib/qt3/include/qlayout.h /usr/lib/qt3/include/qtooltip.h \
   /usr/lib/qt3/include/qwhatsthis.h /usr/lib/qt3/include/qcursor.h \
-  ksquirrel.h /usr/include/kmainwindow.h /usr/include/kxmlguifactory.h \
-  /usr/lib/qt3/include/qdom.h /usr/include/kxmlguiclient.h \
-  /usr/include/kxmlguibuilder.h /usr/lib/qt3/include/qmainwindow.h \
-  /usr/lib/qt3/include/qtoolbar.h /usr/lib/qt3/include/qdockwindow.h \
-  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
-  /usr/include/ktoolbar.h /usr/lib/qt3/include/qcombobox.h \
-  /usr/include/kglobal.h /usr/include/kinstance.h \
-  /usr/lib/qt3/include/qguardedptr.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h sq_pixmapcache.h sq_thumbnailinfo.h \
-  /usr/lib/qt3/include/qimage.h sq_viewcache.ui.h sq_viewcache.moc \
-  /usr/lib/qt3/include/qapplication.h \
+  sq_pixmapcache.h sq_thumbnailinfo.h /usr/lib/qt3/include/qimage.h \
+  sq_viewcache.ui.h sq_viewcache.moc /usr/lib/qt3/include/qmetaobject.h \
+  /usr/lib/qt3/include/qconnection.h /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
   /usr/lib/qt3/include/private/qucomextra_p.h \
@@ -584,42 +576,6 @@ sq_viewcache.h:
 
 /usr/lib/qt3/include/qcursor.h:
 
-ksquirrel.h:
-
-/usr/include/kmainwindow.h:
-
-/usr/include/kxmlguifactory.h:
-
-/usr/lib/qt3/include/qdom.h:
-
-/usr/include/kxmlguiclient.h:
-
-/usr/include/kxmlguibuilder.h:
-
-/usr/lib/qt3/include/qmainwindow.h:
-
-/usr/lib/qt3/include/qtoolbar.h:
-
-/usr/lib/qt3/include/qdockwindow.h:
-
-/usr/lib/qt3/include/qmetaobject.h:
-
-/usr/lib/qt3/include/qconnection.h:
-
-/usr/include/ktoolbar.h:
-
-/usr/lib/qt3/include/qcombobox.h:
-
-/usr/include/kglobal.h:
-
-/usr/include/kinstance.h:
-
-/usr/lib/qt3/include/qguardedptr.h:
-
-/usr/include/dcopobject.h:
-
-/usr/include/kdatastream.h:
-
 sq_pixmapcache.h:
 
 sq_thumbnailinfo.h:
@@ -629,6 +585,10 @@ sq_thumbnailinfo.h:
 sq_viewcache.ui.h:
 
 sq_viewcache.moc:
+
+/usr/lib/qt3/include/qmetaobject.h:
+
+/usr/lib/qt3/include/qconnection.h:
 
 /usr/lib/qt3/include/qapplication.h:
 

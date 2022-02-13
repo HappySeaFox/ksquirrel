@@ -21,6 +21,9 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kpixmap.h>
+#include <kpixmapeffect.h>
+#include <kwordwrap.h>
 
 #include "sq_filethumbviewitem.h"
 
@@ -52,74 +55,71 @@ void SQ_FileThumbViewItem::setInfo(const SQ_Thumbnail &t)
 
 void SQ_FileThumbViewItem::paintItem(QPainter *p, const QColorGroup &cg)
 {
-	QIconView *view = iconView();
-	QPixmap *unknown_icon = new QPixmap(KGlobal::iconLoader()->loadIcon("unkonwn", KIcon::Desktop, 32));
-	QColor highlight = cg.highlight();
+	QIconView* view = iconView();
 
-	if(!view)
+	Q_ASSERT(view);
+
+	if(!view) return;
+
+	if(!wordWrap())
+	{
+		kdWarning() << "KIconViewItem::paintItem called but wordwrap not ready - calcRect not called, or aborted!" << endl;
 		return;
+	}
 
-	p->save();
+    p->save();
+
+    paintPixmap(p, cg);
+    paintText(p, cg);
+
+    p->restore();
+}
+
+void SQ_FileThumbViewItem::paintPixmap(QPainter *p, const QColorGroup &cg)
+{
+	int iconX = pixmapRect(false).x();
+	int iconY = pixmapRect(false).y();
+
+	QPixmap *pix = pixmap();
 
 	if(isSelected())
-		p->setPen(cg.highlightedText());
+	{
+		if(pix && !pix->isNull())
+		{
+			QPixmap selectedPix = KPixmapEffect::selectedPixmap(KPixmap(*pix), cg.highlight());
+			p->drawPixmap(iconX, iconY, selectedPix);
+//			p->setPen(QPen(cg.highlight(), 3));
+//			p->drawRect(pixmapRect(false));
+		}
+	}
 	else
-		p->setPen(cg.text());
+	{
+		p->drawPixmap(iconX, iconY, *pix);
+	}
+}
 
+void SQ_FileThumbViewItem::paintText(QPainter *p, const QColorGroup &cg)
+{
 	calcTmpText();
 
-	bool textOnBottom = view->itemTextPos() == QIconView::Bottom;
-
-	int dim;
-
-	QPixmap *pix = pixmap() ? pixmap() : unknown_icon;
-
-	QRect opr = pix->rect();
-
-	if(textOnBottom)
-		dim = pix->width();
-	else
-		dim = pix->height();
+	int textX = textRect(false).x();
+	int textY = textRect(false).y();
 
 	if(isSelected())
 	{
-		if(textOnBottom)
-			p->drawPixmap(x() + (width() - dim) / 2, y(), *pix, 0, 0, opr.width(), opr.height());
-		else
-			p->drawPixmap(x() , y() + (height() - dim) / 2, *pix, 0, 0, opr.width(), opr.height());
-
-//		p->fillRect(pixmapRect(false), QBrush(highlight, QBrush::Dense4Pattern));
-		p->setPen(QPen(highlight, 3));
-		p->drawRect(pixmapRect(false));
-	}
-	else
-	{
-		if(textOnBottom)
-			p->drawPixmap(x() + (width() - dim) / 2, y(), *pix);
-		else
-			p->drawPixmap(x() , y() + (height() - dim) / 2, *pix);
-	}
-
-	p->save();
-
-	if(isSelected())
-	{
-		p->fillRect(textRect(false), highlight);
+		p->fillRect(textRect(false), cg.highlight());
 		p->setPen(QPen(cg.highlightedText()));
 	}
 	else
-		if(view->itemTextBackground() != NoBrush)
-					p->fillRect(textRect(false), view->itemTextBackground());
+	{
+		if(iconView()->itemTextBackground() != NoBrush)
+			p->fillRect(textRect(false), iconView()->itemTextBackground());
 
-	int align = AlignHCenter;
+		p->setPen(cg.text());
+	}
 
-	if(view->wordWrapIconText())
-		align |= WordBreak | BreakAnywhere;
-
-	p->drawText(textRect(false), align, (view->wordWrapIconText() ? text() : tempText()));
-
-	p->restore();
-	p->restore();
+	int align = (iconView()->itemTextPos() == QIconView::Bottom) ? AlignHCenter : AlignAuto;
+	wordWrap()->drawText(p, textX, textY, align);
 }
 
 void SQ_FileThumbViewItem::paintFocus(QPainter *, const QColorGroup &)

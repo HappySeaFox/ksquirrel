@@ -151,7 +151,6 @@
     </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
     <include location="local" impldecl="in implementation">sq_viewcache.ui.h</include>
 </includes>

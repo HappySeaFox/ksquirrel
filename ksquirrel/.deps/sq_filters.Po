@@ -134,18 +134,20 @@ sq_filters.o sq_filters.o: sq_filters.cpp /usr/include/kdialog.h \
   /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
   /usr/lib/qt3/include/qcheckbox.h /usr/lib/qt3/include/qlayout.h \
   /usr/lib/qt3/include/qtooltip.h /usr/lib/qt3/include/qwhatsthis.h \
-  /usr/lib/qt3/include/qcursor.h ksquirrel.h /usr/include/kmainwindow.h \
-  /usr/include/kxmlguifactory.h /usr/lib/qt3/include/qdom.h \
-  /usr/include/kxmlguiclient.h /usr/include/kxmlguibuilder.h \
-  /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qtoolbar.h \
-  /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmetaobject.h \
-  /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
-  /usr/lib/qt3/include/qcombobox.h /usr/include/kglobal.h \
-  /usr/include/kinstance.h /usr/lib/qt3/include/qguardedptr.h \
-  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_config.h \
-  /usr/include/kconfig.h /usr/include/ksharedptr.h \
-  /usr/include/kconfigbase.h /usr/lib/qt3/include/qdatetime.h \
-  /usr/include/kconfigdata.h sq_filters.ui.h /usr/include/kiconloader.h \
+  /usr/lib/qt3/include/qcursor.h sq_config.h /usr/include/kconfig.h \
+  /usr/include/ksharedptr.h /usr/include/kconfigbase.h \
+  /usr/lib/qt3/include/qdatetime.h /usr/include/kconfigdata.h ksquirrel.h \
+  /usr/include/kmainwindow.h /usr/include/kxmlguifactory.h \
+  /usr/lib/qt3/include/qdom.h /usr/include/kxmlguiclient.h \
+  /usr/include/kxmlguibuilder.h /usr/lib/qt3/include/qmainwindow.h \
+  /usr/lib/qt3/include/qtoolbar.h /usr/lib/qt3/include/qdockwindow.h \
+  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
+  /usr/include/ktoolbar.h /usr/lib/qt3/include/qcombobox.h \
+  /usr/include/kglobal.h /usr/include/kinstance.h \
+  /usr/lib/qt3/include/qguardedptr.h /usr/include/kio/job.h \
+  /usr/include/kio/jobclasses.h /usr/include/kurl.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h sq_filters.ui.h /usr/include/kiconloader.h \
   /usr/lib/qt3/include/qmovie.h /usr/include/kicontheme.h sq_filters.moc \
   /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
@@ -589,6 +591,18 @@ sq_filters.h:
 
 /usr/lib/qt3/include/qcursor.h:
 
+sq_config.h:
+
+/usr/include/kconfig.h:
+
+/usr/include/ksharedptr.h:
+
+/usr/include/kconfigbase.h:
+
+/usr/lib/qt3/include/qdatetime.h:
+
+/usr/include/kconfigdata.h:
+
 ksquirrel.h:
 
 /usr/include/kmainwindow.h:
@@ -621,21 +635,17 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qguardedptr.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
 
-sq_config.h:
+/usr/include/kurl.h:
 
-/usr/include/kconfig.h:
+/usr/include/sys/stat.h:
 
-/usr/include/ksharedptr.h:
+/usr/include/bits/stat.h:
 
-/usr/include/kconfigbase.h:
-
-/usr/lib/qt3/include/qdatetime.h:
-
-/usr/include/kconfigdata.h:
+/usr/include/kio/global.h:
 
 sq_filters.ui.h:
 

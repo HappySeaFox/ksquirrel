@@ -16,18 +16,24 @@
  ***************************************************************************/
 
 #include <qheader.h>
+#include <qcursor.h>
 
-#include <kurldrag.h>
 #include <kapplication.h>
+#include <kpopupmenu.h>
+#include <kiconloader.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
 #include "sq_filedetailview.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
+#include "sq_navigatordropmenu.h"
 
-SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, KFileItem *fi)
-													: KFileListViewItem(parent, fi)
+SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, KFileItem *fi) : KFileListViewItem(parent, fi)
+{}
+
+SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi)
+		: KFileListViewItem(parent, text, icon, fi)
 {}
 
 SQ_FileListViewItem::~SQ_FileListViewItem()
@@ -36,34 +42,20 @@ SQ_FileListViewItem::~SQ_FileListViewItem()
 void SQ_FileListViewItem::paintFocus(QPainter *, const QColorGroup &, const QRect &)
 {}
 
-SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name) : KFileDetailView(parent, name)
+SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
+		: KFileDetailView(parent, name)
 {
-//	disconnect(this, SIGNAL(clicked(QListViewItem *, const QPoint&, int)), 0, 0);
-//	disconnect(this, SIGNAL(doubleClicked(QListViewItem *, const QPoint&, int)), 0, 0);
+	setAcceptDrops(true);
+	connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
+	dirPix = KSquirrel::loader()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
 {}
 
-QDragObject* SQ_FileDetailView::dragObject()
-{
-	const KFileItemList *list = KFileView::selectedItems();
-
-	if(list->isEmpty())
-		return 0;
-
-	QPtrListIterator<KFileItem> it(*list);
-	KURL::List urls;
-
-	for(; it.current(); ++it)
-		urls.append(it.current()->url());
-
-	return (new KURLDrag(urls, viewport()));
-}
-
 void SQ_FileDetailView::insertItem(KFileItem *i)
 {
-	if(i->isDir() && sqConfig->readBoolEntry("Fileview", "disable_dirs", false))
+	if(i->isDir() && SQ_Config::instance()->readBoolEntry("Fileview", "disable_dirs", false))
 		return;
 
 	SQ_FileListViewItem *item = new SQ_FileListViewItem(this, i);
@@ -78,7 +70,7 @@ void SQ_FileDetailView::initItem(SQ_FileListViewItem *item, const KFileItem *i)
 	QDir::SortSpec spec = KFileView::sorting();
 
 	if(spec & QDir::Time)
-		item->setKey(sortingKey(i->time( KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
+		item->setKey(sortingKey(i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
 	else if(spec & QDir::Size)
 		item->setKey(sortingKey(i->size(), i->isDir(), spec));
 	else
@@ -88,7 +80,7 @@ void SQ_FileDetailView::initItem(SQ_FileListViewItem *item, const KFileItem *i)
 void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
 	QPoint vp = contentsToViewport(e->pos());
-	
+
 	QListViewItem *item = itemAt(vp);
 
 	emit QListView::doubleClicked(item);
@@ -97,13 +89,48 @@ void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
 	if(item)
 	{
-		if(e->button() == Qt::LeftButton && !sqWStack->visibleWidget()->sing)
+		if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
 			emitExecute(item, e->globalPos(), col);
 
 		emit doubleClicked(item, e->globalPos(), col);
 	}
 	else
 	{
-		kapp->invokeBrowser(sqWStack->getURL().path());
+		kapp->invokeBrowser(SQ_WidgetStack::instance()->getURL().path());
 	}
 }
+
+void SQ_FileDetailView::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
+{
+	KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->getURL() : _url;
+
+	SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
+	SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
+}
+
+void SQ_FileDetailView::dragEnterEvent(QDragEnterEvent *e)
+{
+	e->accept(true);
+}
+
+void SQ_FileDetailView::insertCdUpItem(const KURL &base)
+{
+	KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+
+	SQ_FileListViewItem *item = new SQ_FileListViewItem(this, QString::fromLatin1(".."), dirPix, fi);
+
+	item->setSelectable(false);
+	item->setKey(sortingKey("..", true, QDir::Name|QDir::DirsFirst));
+
+	fi->setExtraData(this, item);
+}
+
+void SQ_FileDetailView::clearView()
+{
+	KListView::clear();
+
+	insertCdUpItem(SQ_WidgetStack::instance()->getURL());
+}
+
+void SQ_FileDetailView::listingCompleted()
+{}

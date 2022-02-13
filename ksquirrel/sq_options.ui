@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>523</width>
-            <height>461</height>
+            <height>469</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -571,7 +571,15 @@
                                                 <string>Jump to first image</string>
                                             </property>
                                         </widget>
-                                        <spacer row="6" column="0">
+                                        <widget class="QCheckBox" row="5" column="0">
+                                            <property name="name">
+                                                <cstring>checkDisableDirs</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Don't show directories</string>
+                                            </property>
+                                        </widget>
+                                        <spacer row="7" column="0">
                                             <property name="name">
                                                 <cstring>spacer16</cstring>
                                             </property>
@@ -584,18 +592,10 @@
                                             <property name="sizeHint">
                                                 <size>
                                                     <width>20</width>
-                                                    <height>20</height>
+                                                    <height>10</height>
                                                 </size>
                                             </property>
                                         </spacer>
-                                        <widget class="QCheckBox" row="5" column="0">
-                                            <property name="name">
-                                                <cstring>checkDisableDirs</cstring>
-                                            </property>
-                                            <property name="text">
-                                                <string>Don't show directories</string>
-                                            </property>
-                                        </widget>
                                     </grid>
                                 </widget>
                                 <widget class="QWidget">
@@ -1859,22 +1859,6 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QLabel" row="0" column="0">
-                                <property name="name">
-                                    <cstring>textLabel1</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>0</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                                <property name="text">
-                                    <string>Libraries:</string>
-                                </property>
-                            </widget>
                             <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
                                 <property name="name">
                                     <cstring>checkMonitor</cstring>
@@ -1898,11 +1882,6 @@
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string>Show dialog with information about new or deleted libraries</string>
-                                </property>
-                            </widget>
-                            <widget class="KURLRequester" row="0" column="1">
-                                <property name="name">
-                                    <cstring>kURLReqLibs</cstring>
                                 </property>
                             </widget>
                             <widget class="QWidgetStack" row="3" column="0" rowspan="1" colspan="2">
@@ -2242,7 +2221,6 @@
     <include location="global" impldecl="in implementation">kstandarddirs.h</include>
     <include location="global" impldecl="in implementation">kfiledialog.h</include>
     <include location="global" impldecl="in implementation">qfileinfo.h</include>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">sq_libraryhandler.h</include>
     <include location="global" impldecl="in implementation">kiconloader.h</include>
@@ -2258,14 +2236,14 @@
     <include location="local" impldecl="in implementation">sq_viewcache.h</include>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
     <include location="global" impldecl="in implementation">GL/gl.h</include>
+    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_options.ui.h</include>
 </includes>
 <variables>
-    <variable>QString custpixmap;</variable>
-    <variable>QString libPrefix;</variable>
-    <variable>typedef struct { QListViewItem *item; int id;} ListViewItemID;</variable>
-    <variable>bool showlinks;</variable>
     <variable>QString favpixmap;</variable>
+    <variable>bool showlinks;</variable>
+    <variable>typedef struct { QListViewItem *item; int id;} ListViewItemID;</variable>
+    <variable>QString custpixmap;</variable>
 </variables>
 <slots>
     <slot>slotShowLibs()</slot>
@@ -2298,9 +2276,6 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
-    <includehint>kurlrequester.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
     <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
     <includehint>kpushbutton.h</includehint>

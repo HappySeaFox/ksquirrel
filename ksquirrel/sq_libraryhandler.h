@@ -23,37 +23,36 @@
 #include <qregexp.h>
 #include <qstringlist.h>
 
-#include "defs.h"
+#include "fmt_types.h"
+#include "fmt_defs.h"
 
 class QLibrary;
 
-class SQ_LIBRARY
+class fmt_codec_base;
+
+struct SQ_LIBRARY
 {
-	public:
-		SQ_LIBRARY() {}
-		~SQ_LIBRARY() {}
+	SQ_LIBRARY() : lib(0), codec(0)
+	{}
 
-		QLibrary	*lib;
-		QString	libpath;
-		QRegExp	regexp;
-		QString	filter, regexp_str;
-		QString	quickinfo, version;
+	QLibrary	*lib;
+	QString	libpath;
+	QRegExp	regexp;
+	QString	filter;
+	QString	regexp_str;
+	QString	quickinfo;
+	QString	version;
 
-		int 		(*fmt_init)(fmt_info *, const char *);
-		int 		(*fmt_read_scanline)(fmt_info *, RGBA *);
-		int		(*fmt_readimage)(const char*, RGBA **, char **);
-		int	 	(*fmt_close)();
-		int		(*fmt_next)(fmt_info *);
-		int		(*fmt_next_pass)(fmt_info *);
+	fmt_codec_base	*codec;
 
-		const char* 	(*fmt_version)();
-		const char* 	(*fmt_quickinfo)();
-		const char*	(*fmt_pixmap)();
-		const char* 	(*fmt_mime)();
-		const char* 	(*fmt_filter)();
+	fmt_codec_base* 	(*fmt_codec_create)();
+	void				(*fmt_codec_destroy)(fmt_codec_base*);
 
-		QImage 	mime;
-		int			mime_len;
+	QImage 	mime;
+	int			mime_len;
+
+	fmt_writeoptionsabs	opt;
+	bool		writable;
 };
 
 class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
@@ -63,7 +62,13 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 		~SQ_LibraryHandler();
 
 		SQ_LIBRARY* libraryForFile(const QString &);
+		SQ_LIBRARY* libraryByName(const QString &);
+
+		fmt_codec_base* codecForFile(const QString &);
+		fmt_codec_base* codecByName(const QString &);
+
 		bool supports(const QString &);
+		bool knownExtension(const QString &ext);
 		void allFilters(QStringList &filters, QStringList &quick) const;
 		QString allFiltersString() const;
 
@@ -75,12 +80,17 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 		void remove(QStringList *foundLibraries);
 
 		SQ_LIBRARY *latestLibrary();
+		fmt_codec_base *latestCodec();
+
+		static SQ_LibraryHandler* instance();
 
 	private:
 		bool alreadyInMap(const QString &quick) const;
 
 	private:
 		SQ_LIBRARY *latest;
+
+		static SQ_LibraryHandler *hand;
 };
 
 #endif

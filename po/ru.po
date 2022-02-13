@@ -1,20 +1,21 @@
 # translation of ru.po to Russian
 # , 2005.
 # Baryshev Dmitry <ksquirrel@tut.by>, 2004, 2005.
-# Baryshev Dmitry <squirrel-sf@yandex.ru>, 2005.
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-18 16:00+0200\n"
-"PO-Revision-Date: 2005-02-18 16:11+0200\n"
-"Last-Translator: Baryshev Dmitry <squirrel-sf@yandex.ru>\n"
+"POT-Creation-Date: 2005-02-23 20:25+0200\n"
+"PO-Revision-Date: 2005-03-17 18:54+0200\n"
+"Last-Translator: Baryshev Dmitry <ksquirrel@tut.by>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.3\n"
 "Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
@@ -36,27 +37,51 @@ msgstr ""
 "Количество страниц: %6\n"
 "Неупакованный размер: %7"
 
-#: sq_diroperatorbase.cpp:57
+#: sq_diroperatorbase.cpp:200 sq_diroperatorbase.cpp:237
+msgid "Format \"%1\" not supported"
+msgstr "Тип файла \"%1\" не поддерживается"
+
+#: sq_diroperatorbase.cpp:412
 msgid "Run separately"
 msgstr "Запустить отдельно"
 
-#: sq_diroperatorbase.cpp:64
+#: sq_diroperatorbase.cpp:416
+msgid "File actions"
+msgstr "Действия над файлами"
+
+#: sq_diroperatorbase.cpp:417
+msgid "Image actions"
+msgstr "Действия над изображениями"
+
+#: sq_diroperatorbase.cpp:423
+msgid "Copy to ..."
+msgstr "Копировать в ..."
+
+#: sq_diroperatorbase.cpp:424
+msgid "Move to ..."
+msgstr "Переместить в ..."
+
+#: sq_diroperatorbase.cpp:425
+msgid "Link to ..."
+msgstr "Создать ссылку в ..."
+
+#: sq_diroperatorbase.cpp:429
+msgid "Convert images"
+msgstr "Преобразовать изображения"
+
+#: sq_diroperatorbase.cpp:436
 msgid "External Tools"
 msgstr "Внешние программы"
 
-#: sq_diroperatorbase.cpp:66 ksquirrel.cpp:446
+#: sq_diroperatorbase.cpp:438 ksquirrel.cpp:458
 msgid "Fi&lter"
 msgstr "Фи&льтр"
 
-#: sq_diroperatorbase.cpp:208 sq_diroperatorbase.cpp:245
-msgid "Format \""
-msgstr "Тип файла \""
+#: sq_diroperatorbase.cpp:448
+msgid "Select files to edit"
+msgstr "Выберите файлы для редактирования"
 
-#: sq_diroperatorbase.cpp:208 sq_diroperatorbase.cpp:245
-msgid "\" not supported"
-msgstr "\" не поддерживается"
-
-#: sq_filethumbview.cpp:387
+#: sq_filethumbview.cpp:358
 msgid ""
 "File: %1\n"
 "Size: %2\n"
@@ -70,7 +95,7 @@ msgstr ""
 "\n"
 "%4"
 
-#: sq_filethumbview.cpp:395
+#: sq_filethumbview.cpp:366
 msgid ""
 "File: %1\n"
 "Size: %2\n"
@@ -82,21 +107,25 @@ msgstr ""
 "\n"
 "%3"
 
-#: sq_widgetstack.cpp:72
+#: sq_widgetstack.cpp:75
 msgid "New directory ..."
 msgstr "Новый каталог ..."
 
-#: sq_widgetstack.cpp:73
+#: sq_widgetstack.cpp:76
 msgid "Properties ..."
 msgstr "Свойства ..."
 
-#: sq_widgetstack.cpp:75
+#: sq_widgetstack.cpp:78
 msgid "Show hidden files"
 msgstr "Показать скрытые файлы"
 
-#: sq_widgetstack.cpp:323
+#: sq_widgetstack.cpp:327
 msgid "Recreate selected thumbnails"
 msgstr "Пересоздать выбранные эскизы"
+
+#: sq_widgetstack.cpp:734 sq_widgetstack.cpp:763
+msgid "No files to copy or move"
+msgstr "Нет файлов для копирования или перемещения"
 
 #: sq_quickbrowser.cpp:146 sq_glwidget.cpp:303
 msgid "Hide"
@@ -114,7 +143,7 @@ msgstr "Заполнить высоту"
 msgid "Fit image"
 msgstr "Заполнить изображение"
 
-#: sq_glwidget.cpp:186 sq_glwidget.cpp:2392
+#: sq_glwidget.cpp:186
 msgid "Zoom 100%"
 msgstr "Увеличить до 100%"
 
@@ -150,27 +179,27 @@ msgstr "Следующий файл"
 msgid "Go to last file"
 msgstr "Перейти на последний файл"
 
-#: sq_glwidget.cpp:282 sq_glwidget.cpp:2388
+#: sq_glwidget.cpp:282 sq_glwidget.cpp:2389
 msgid "Zoom +"
 msgstr "Увеличить"
 
-#: sq_glwidget.cpp:284 sq_glwidget.cpp:2389
+#: sq_glwidget.cpp:284 sq_glwidget.cpp:2390
 msgid "Zoom -"
 msgstr "Уменьшить"
 
-#: sq_glwidget.cpp:287 sq_glwidget.cpp:2381
+#: sq_glwidget.cpp:287 sq_glwidget.cpp:2383
 msgid "Rotate left"
 msgstr "Повернуть влево"
 
-#: sq_glwidget.cpp:289 sq_glwidget.cpp:2382
+#: sq_glwidget.cpp:289 sq_glwidget.cpp:2384
 msgid "Rotate right"
 msgstr "Повернуть вправо"
 
-#: sq_glwidget.cpp:291 sq_glwidget.cpp:2402
+#: sq_glwidget.cpp:291 sq_glwidget.cpp:2409
 msgid "Flip vertically"
 msgstr "Отобразить по вертикали"
 
-#: sq_glwidget.cpp:293 sq_glwidget.cpp:2403
+#: sq_glwidget.cpp:293 sq_glwidget.cpp:2410
 msgid "Flip horizontally"
 msgstr "Отобразить по горизонтали"
 
@@ -182,7 +211,7 @@ msgstr "Восстановить"
 msgid "Image Properties"
 msgstr "Свойства изображения"
 
-#: sq_glwidget.cpp:297 sq_glwidget.cpp:2409
+#: sq_glwidget.cpp:297 sq_glwidget.cpp:2416
 msgid "Fullscreen"
 msgstr "На весь экран"
 
@@ -265,115 +294,111 @@ msgstr "Загружено за %1'%2 мсек."
 msgid "Loaded in %1 msec."
 msgstr "Загружено за %1 мсек."
 
-#: sq_glwidget.cpp:2364
+#: sq_glwidget.cpp:2366
 msgid "Rotate"
 msgstr "Поворот"
 
-#: sq_glwidget.cpp:2367 sq_options.cpp:874
+#: sq_glwidget.cpp:2369 sq_options.cpp:874
 msgid "Window"
 msgstr "Окно"
 
-#: sq_glwidget.cpp:2368 sq_options.cpp:883
+#: sq_glwidget.cpp:2370 sq_options.cpp:883
 msgid "Image"
 msgstr "Изображение"
 
-#: sq_glwidget.cpp:2375
+#: sq_glwidget.cpp:2377
 msgid "Next"
 msgstr "Следующий"
 
-#: sq_glwidget.cpp:2376
+#: sq_glwidget.cpp:2378
 msgid "Previous"
 msgstr "Предыдущий"
 
-#: sq_glwidget.cpp:2377
+#: sq_glwidget.cpp:2379
 msgid "First"
 msgstr "Первый"
 
-#: sq_glwidget.cpp:2378
+#: sq_glwidget.cpp:2380
 msgid "Last"
 msgstr "Последний"
 
-#: sq_glwidget.cpp:2383
-msgid "Rotate 180' left"
-msgstr "Повернуть влево на 180'"
-
-#: sq_glwidget.cpp:2384
-msgid "Rotate 180' right"
-msgstr "Повернуть вправо на 180'"
-
 #: sq_glwidget.cpp:2385
+msgid "Rotate 180'"
+msgstr "Повернуть на 180'"
+
+#: sq_glwidget.cpp:2386
 msgid "Rotate 1' left"
 msgstr "Повернуть влево на 1'"
 
-#: sq_glwidget.cpp:2386
+#: sq_glwidget.cpp:2387
 msgid "Rotate 1' right"
 msgstr "Повернуть вправо на 1'"
 
-#: sq_glwidget.cpp:2390
+#: sq_glwidget.cpp:2391
 msgid "Zoom 2x"
 msgstr "Увеличить 2х"
 
-#: sq_glwidget.cpp:2391
+#: sq_glwidget.cpp:2392
 msgid "Zoom 1/2x"
 msgstr "Увеличить 1/2x"
 
-#: sq_glwidget.cpp:2394
+#: sq_glwidget.cpp:2401
 msgid "Move left"
 msgstr "Сдвинуть влево"
 
-#: sq_glwidget.cpp:2395
+#: sq_glwidget.cpp:2402
 msgid "Move right"
 msgstr "Сдвинуть вправо"
 
-#: sq_glwidget.cpp:2396
+#: sq_glwidget.cpp:2403
 msgid "Move up"
 msgstr "Переместить выше"
 
-#: sq_glwidget.cpp:2397
+#: sq_glwidget.cpp:2404
 msgid "Move down"
 msgstr "Переместить ниже"
 
-#: sq_glwidget.cpp:2399
+#: sq_glwidget.cpp:2406
 msgid "Start/stop animation"
 msgstr "Старт/стоп анимации"
 
-#: sq_glwidget.cpp:2400
+#: sq_glwidget.cpp:2407
 msgid "Hide/show background"
 msgstr "Спрятать/показать фон"
 
-#: sq_glwidget.cpp:2401
+#: sq_glwidget.cpp:2408
 msgid "Hide/show tickmarks"
 msgstr "Спрятать/показать уголки"
 
-#: sq_glwidget.cpp:2404
+#: sq_glwidget.cpp:2411
 msgid "First page"
 msgstr "Первая страница"
 
-#: sq_glwidget.cpp:2405
-msgid "Previuos page"
+#: sq_glwidget.cpp:2412
+msgid "Previous page"
 msgstr "Предыдущая страница"
 
-#: sq_glwidget.cpp:2406
+#: sq_glwidget.cpp:2413
 msgid "Next page"
 msgstr "Следующая страница"
 
-#: sq_glwidget.cpp:2407
+#: sq_glwidget.cpp:2414
 msgid "Last page"
 msgstr "Последняя страница"
 
-#: sq_glwidget.cpp:2410
+#: sq_glwidget.cpp:2417
 msgid "Quick Browser"
 msgstr "Панель быстрого просмотра"
 
-#: sq_glwidget.cpp:2411
+#: sq_glwidget.cpp:2418
 msgid "Hide/show toolbar"
 msgstr "Спрятать/показать панель"
 
-#: sq_glwidget.cpp:2412
+#: sq_glwidget.cpp:2419
 msgid "Hide/show statusbar"
 msgstr "Спрятать/показать строку статуса"
 
-#: sq_externaltool.cpp:71 sq_externaltool.cpp:114
+#: sq_externaltool.cpp:111 sq_externaltool.cpp:153
 msgid "No file selected"
 msgstr "Не выбрано файла"
 
@@ -405,121 +430,121 @@ msgstr "Подтвердить"
 msgid "Unable to open the archive '<b>%1</b>'."
 msgstr "Невозможно открыть архив '<b>%1</b>'."
 
-#: ksquirrel.cpp:192
+#: ksquirrel.cpp:199
 msgid "Clear history"
 msgstr "Очистить историю"
 
-#: ksquirrel.cpp:193
+#: ksquirrel.cpp:200
 msgid "Clear adress"
 msgstr "Очистить адрес"
 
-#: ksquirrel.cpp:198
+#: ksquirrel.cpp:205
 msgid "Go!"
 msgstr "Перейти!"
 
-#: ksquirrel.cpp:235
+#: ksquirrel.cpp:242
 msgid "Libraries' filters"
 msgstr "Библиотечные фильтры"
 
-#: ksquirrel.cpp:254
+#: ksquirrel.cpp:261
 msgid "All supported formats"
 msgstr "Все поддерживаемые форматы"
 
-#: ksquirrel.cpp:264
+#: ksquirrel.cpp:271
 msgid "User's filters"
 msgstr "Пользовательские фильтры"
 
-#: ksquirrel.cpp:516 sq_options.ui.h:84
+#: ksquirrel.cpp:526
+msgid "Thumbnail size"
+msgstr "Размер эскизов"
+
+#: ksquirrel.cpp:529 sq_options.ui.h:84
 msgid "Image window"
 msgstr "Окно с изображением"
 
-#: ksquirrel.cpp:518
+#: ksquirrel.cpp:531
 msgid "Rescan libraries"
 msgstr "Перепроверить библиотеки"
 
-#: ksquirrel.cpp:519
+#: ksquirrel.cpp:532
 msgid "Configure external tools ..."
 msgstr "Настроить внешние программы ..."
 
-#: ksquirrel.cpp:520
+#: ksquirrel.cpp:533
 msgid "Configure filters ..."
 msgstr "Настроить фильтры ..."
 
-#: ksquirrel.cpp:521
+#: ksquirrel.cpp:534
 msgid "Goto tray"
 msgstr "Спрятаться в трей"
 
-#: ksquirrel.cpp:522 ksquirrel.cpp:523
+#: ksquirrel.cpp:535 ksquirrel.cpp:536
 msgid "Open file"
 msgstr "Открыть файл"
 
-#: ksquirrel.cpp:525
+#: ksquirrel.cpp:538
 msgid "List"
 msgstr "Список"
 
-#: ksquirrel.cpp:526
+#: ksquirrel.cpp:539
 msgid "Icons"
 msgstr "Иконки"
 
-#: ksquirrel.cpp:527
-msgid "Detailes"
+#: ksquirrel.cpp:540
+msgid "Details"
 msgstr "Детали"
 
-#: ksquirrel.cpp:528 sq_options.ui.h:83
+#: ksquirrel.cpp:541 sq_options.ui.h:83
 msgid "Thumbnails"
 msgstr "Эскизы"
 
-#: ksquirrel.cpp:530
+#: ksquirrel.cpp:543
 msgid "Toggle tree"
 msgstr "Переключить дерево"
 
-#: ksquirrel.cpp:531
+#: ksquirrel.cpp:544
 msgid "Toggle URL box"
 msgstr "Переключить строку адреса"
 
-#: ksquirrel.cpp:532
+#: ksquirrel.cpp:545
 msgid "Make image window separate/built-in"
 msgstr "Сделать окно с изображением отдельным/встроенным"
 
-#: ksquirrel.cpp:534
+#: ksquirrel.cpp:547
 msgid "Small thumbnails"
 msgstr "Маленькие эскизы"
 
-#: ksquirrel.cpp:535
+#: ksquirrel.cpp:548
 msgid "Medium thumbnails"
 msgstr "Средние эскизы"
 
-#: ksquirrel.cpp:536
+#: ksquirrel.cpp:549
 msgid "Large thumbnails"
 msgstr "Большие эскизы"
 
-#: ksquirrel.cpp:537
+#: ksquirrel.cpp:550
 msgid "Huge thumbnails"
 msgstr "Огромные эскизы"
 
-#: ksquirrel.cpp:686
+#: ksquirrel.cpp:682
 msgid "User depended config file couldn't be opened for writing!"
 msgstr "Пользовательский конфигурационный файл не может быть открыт для записи!"
 
-#: ksquirrel.cpp:691
+#: ksquirrel.cpp:687
 msgid "Default (installed) config file couldn't be opened for reading!"
 msgstr ""
 "Конфигурационный файл по умолчанию (установленный) не может быть открыт для "
 "чтения!"
 
-#: ksquirrel.cpp:844
+#: ksquirrel.cpp:839
 msgid " writing settings and thumbnails ...  "
 msgstr " запись настроек и эскизов ...  "
 
-#: ksquirrel.cpp:906
-msgid "Thumbnail size"
-msgstr "Размер эскизов"
-
-#: ksquirrel.cpp:1048
+#: ksquirrel.cpp:1094
 msgid "New version is available"
 msgstr "Доступна новая версия"
 
-#: ksquirrel.cpp:1055
+#: ksquirrel.cpp:1101
 msgid ""
 "<pre>Current version is <b>%1</b>\n"
 "New version <b>%2</b> is available at <font color=\"#FF0000\">http://"
@@ -530,10 +555,6 @@ msgstr ""
 "sourceforge.net/download</font> </pre>"
 
 #: main.cpp:32
-msgid "+[file or folder to open]"
-msgstr "+[файл или каталог для открытия]"
-
-#: main.cpp:32
 msgid "File or folder to be opened at startup."
 msgstr "Файл или каталог, который будет открыт при запуске."
 
@@ -541,19 +562,23 @@ msgstr "Файл или каталог, который будет открыт �
 msgid "Print found libraries and exit."
 msgstr "Вывести найденные библиотеки и выйти."
 
-#: main.cpp:43
+#: main.cpp:34
+msgid "Find all supported images on disk and create thumbnails."
+msgstr "Найти все поддерживаемые изображения на диске и создать эскизы."
+
+#: main.cpp:44
 msgid "Translation help"
 msgstr "Помощь в переводе"
 
-#: main.cpp:44
+#: main.cpp:45
 msgid "OpenGL forum at"
 msgstr "OpenGL форум на"
 
-#: main.cpp:45
+#: main.cpp:46
 msgid "GameDev forum at"
 msgstr "GameDev форум на"
 
-#: main.cpp:46
+#: main.cpp:47
 msgid "A great description of various file formats at"
 msgstr "Большое описание различных форматов файлов на"
 
@@ -563,7 +588,7 @@ msgstr "KSquirrel - просмотрщик изображений для KDE"
 
 #: sq_filters.ui.h:56 sq_filters.ui.h:58 sq_viewcache.cpp:47
 #: sq_viewcache.cpp:101 sq_filters.cpp:122 sq_filters.cpp:185
-#: sq_externaltools.cpp:73 sq_externaltools.cpp:178
+#: sq_externaltools.cpp:122 sq_externaltools.cpp:178
 msgid "Name"
 msgstr "Имя"
 
@@ -1028,10 +1053,6 @@ msgstr "Нет предела"
 msgid "OpenGL information"
 msgstr "OpenGL информация"
 
-#: sq_options.cpp:910
-msgid "Libraries:"
-msgstr "Библиотеки:"
-
 #: sq_options.cpp:911
 msgid "Monitor directory with libraries"
 msgstr "Следить за каталогом с библиотеками"
@@ -1061,10 +1082,6 @@ msgstr "Группа"
 #: sq_imageproperties.cpp:324 sq_imageproperties.cpp:405
 msgid "Value"
 msgstr "Значение"
-
-#: sq_imageproperties.cpp:357
-msgid "    OK    "
-msgstr "    OK    "
 
 #: sq_imageproperties.cpp:358
 msgid "Atributes"
@@ -1174,7 +1191,7 @@ msgstr "Метаданные"
 msgid "Adjust Filters"
 msgstr "Настроить Фильтры"
 
-#: sq_filters.cpp:171 sq_externaltools.cpp:175
+#: sq_filters.cpp:171 sq_externaltools.cpp:164
 msgid " OK "
 msgstr " OK "
 
@@ -1194,53 +1211,160 @@ msgstr "Переместить фильтр ниже"
 msgid "Menuitem contains both name and extension"
 msgstr "Элемент меню содержит имя и расширения фильтра"
 
-#: sq_externaltools.cpp:72 sq_externaltools.cpp:177
+#: sq_externaltools.cpp:121 sq_externaltools.cpp:177
 msgid "Pixmap"
 msgstr "Иконка"
 
-#: sq_externaltools.cpp:74 sq_externaltools.cpp:179
+#: sq_externaltools.cpp:123 sq_externaltools.cpp:179
 msgid "Command"
 msgstr "Команда"
 
-#: sq_externaltools.cpp:173
+#: sq_externaltools.cpp:162
 msgid "Adjust External Tools"
 msgstr "Настроить Внешние программы"
 
-#: sq_externaltools.cpp:176
-#, c-format
-msgid "Hint: %s expands to file name"
-msgstr "Совет: %s превращается в имя файла"
-
-#: sq_externaltools.cpp:182
+#: sq_externaltools.cpp:167
 msgid "New tool"
 msgstr "Новая программа"
 
-#: sq_externaltools.cpp:189
+#: sq_externaltools.cpp:174
 msgid "Move tool up"
 msgstr "Переместить программу выше"
 
-#: sq_externaltools.cpp:191
+#: sq_externaltools.cpp:176
 msgid "Move tool down"
 msgstr "Переместить программу ниже"
 
-msgid "_n: 1 error\n"
+#: sq_navigatordropmenu.cpp:35
+msgid "Copy here"
+msgstr "Копировать сюда"
+
+#: sq_navigatordropmenu.cpp:36
+msgid "Move here"
+msgstr "Переместить сюда"
+
+#: sq_navigatordropmenu.cpp:37
+msgid "Link here"
+msgstr "Создать ссылку"
+
+#: sq_convertfiles.cpp:131
+msgid "Convert!"
+msgstr "Преобразовать!"
+
+#: sq_convertfiles.cpp:163
+msgid "Put converted files here"
+msgstr "Положить преобразованные файлы сюда"
+
+#: sq_convertfiles.cpp:160
+msgid "Replace original files"
+msgstr "Заменить оригинальные файлы"
+
+#: sq_convertfiles.cpp:135
+msgid "Convert options"
+msgstr "Настройки преобразования"
+
+#: sq_writeoption.cpp:72
+msgid "SQ_WriteOption"
+msgstr ""
+
+#: sq_writeoption.cpp:74
+msgid "Interlaced"
+msgstr "Черезстрочность"
+
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr "Барышев Дмитрий"
+
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr "ksquirrel@tut.by"
+
+msgid "+[file or folder to open]"
+msgstr "+[файл или каталог для открытия]"
+
+msgid ""
+"_n: 1 error\n"
 "%n errors"
 msgstr ""
 "%n ошибка\n"
 "%n ошибки\n"
 "%n ошибок"
 
-msgid "_n: 1 directory\n"
+msgid ""
+"_n: 1 directory\n"
 "%n dirs"
 msgstr ""
 "%n каталог\n"
 "%n каталога\n"
 "%n каталогов"
 
-msgid "_n: 1 file\n"
+msgid ""
+"_n: 1 file\n"
 "%n files"
 msgstr ""
 "%n файл\n"
 "%n файла\n"
 "%n файлов"
+
+msgid ""
+"_n: Convert 1 file\n"
+"Convert %n files"
+msgstr ""
+"Преобразовать %n файл\n"
+"Преобразовать %n файла\n"
+"Преобразовать %n файлов"
+
+#: sq_writeoption.cpp:140
+msgid "Compression level"
+msgstr "Степень сжатия"
+
+#: sq_writeoption.cpp:147
+msgid "<i>No special options available for this format</i>"
+msgstr "<i>Специальные настройки для данного формата недоступны</i>"
+
+#: sq_converter.cpp:44
+msgid "no memory\n"
+msgstr "нет памяти\n"
+
+#: sq_converter.cpp:46
+msgid "can't open file for writing\n"
+msgstr "невозможно открыть файл для записи\n"
+
+#: sq_converter.cpp:47
+msgid "file corrupted\n"
+msgstr "файл повреждён\n"
+
+#: sq_converter.cpp:48
+msgid "not supported\n"
+msgstr "не поддерживается\n"
+
+#: sq_converter.cpp:49
+msgid "internal error\n"
+msgstr "внутренняя ошибка\n"
+
+#: sq_converter.cpp:50
+msgid "failed\n"
+msgstr "ошибка\n"
+
+#: sq_converter.cpp:123
+msgid "Converting "
+msgstr "Преобразование "
+
+#: sq_converter.cpp:187
+msgid "Removing "
+msgstr "Удаление "
+
+#: main.cpp:35
+msgid "Recursively scan (with -t option)."
+msgstr "Сканировать рекурсивно (с параметром -t)."
+
+#: sq_options.ui.h:263
+msgid "Wrong dimensions: %1x%2."
+msgstr "Неподходящие размеры: %1x%2."
+
+#: sq_externaltools.cpp:180 sq_externaltools.cpp:181
+msgid "<b>Command</b> can contain <ul><li>%f: one file<li>%F: multiple files</ul>"
+msgstr "<b>Команда</b> может содержать <ul><li>%f: один файл<li>%F: множество файлов</ul>"
 

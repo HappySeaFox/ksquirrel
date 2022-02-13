@@ -34,6 +34,9 @@
 #define SQ_SECTION_LIST "Navigator List"
 #endif
 
+SQ_QuickBrowser * SQ_QuickBrowser::view = 0L;
+SQ_DirOperatorBase * SQ_QuickBrowser::op = 0L;
+
 SQ_Header::SQ_Header(QWidget *parent) : KToolBar(parent), inMouse(false), p(parent)
 {}
 
@@ -121,17 +124,18 @@ void SQ_QuickStatus::mousePressEvent(QMouseEvent *e)
 
 SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(parent, name)
 {
+	view = this;
 	hide();
 	SQ_Header *t = new SQ_Header(this);
 
 	t->setIconSize(16);
 	t->setPalette(QPalette(QColor(255,255,255), QColor(255,255,255)));
 
-	quick = new SQ_DirOperatorBase(sqWStack->getURL(), SQ_DirOperatorBase::TypeList, this);
+	op = quick = new SQ_DirOperatorBase(SQ_WidgetStack::instance()->getURL(), SQ_DirOperatorBase::TypeList, this);
 	quick->readConfig(KGlobal::config(), SQ_SECTION_LIST);
 	quick->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
 	quick->setMode(KFile::Files);
-	quick->iv->setSelectionMode(KFile::Single);
+//	quick->iv->setSelectionMode(KFile::Single);
 	quick->iv->setIconSize(16);
 
 	quick->iv->setCursor(Qt::ArrowCursor);
@@ -143,7 +147,7 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 	quick->actionCollection()->action("home")->plug(t);
 	quick->actionCollection()->action("mkdir")->plug(t);
 	quick->actionCollection()->action("delete")->plug(t);
-	(new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()), sqApp->actionCollection(), "SQ GL THide2"))->plug(t);
+	(new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ GL THide2"))->plug(t);
 
 	setStretchFactor(quick, 1);
 
@@ -155,7 +159,7 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 	status->addWidget(fix, 1, true);
 	status->addWidget(grip, 0, true);
 
-	QRect r = sqConfig->readRectEntry("GL view", "quickGeometry");
+	QRect r = SQ_Config::instance()->readRectEntry("GL view", "quickGeometry");
 
 	if(r.isNull())
 		r = QRect(0, 34, 250, 200);
@@ -174,7 +178,7 @@ void SQ_QuickBrowser::closeEvent(QCloseEvent *e)
 
 void SQ_QuickBrowser::slotClose()
 {
-	sqGLWidget->pAToolQuick->animateClick();
+	SQ_GLWidget::window()->pAToolQuick->animateClick();
 }
 
 void SQ_QuickBrowser::showEvent(QShowEvent *)
@@ -184,3 +188,14 @@ void SQ_QuickBrowser::showEvent(QShowEvent *)
 	if(f)
 		quick->setCurrentItem(f);
 }
+
+SQ_QuickBrowser* SQ_QuickBrowser::window()
+{
+	return view;
+}
+
+SQ_DirOperatorBase *SQ_QuickBrowser::quickOperator()
+{
+	return op;
+}
+

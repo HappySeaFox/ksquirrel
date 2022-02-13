@@ -16,6 +16,7 @@
  ***************************************************************************/
 #include <qtimer.h>
 #include <qlabel.h>
+#include <qapplication.h>
 
 #include <kstringhandler.h>
 #include <klocale.h>
@@ -45,7 +46,28 @@ SQ_DirOperator::~SQ_DirOperator()
 
 void SQ_DirOperator::slotFinishedLoading()
 {
-	QTimer::singleShot(0, this, SLOT(slotDelayedFinishedLoading()));
+	int dirs = numDirs(), files = numFiles(), total = dirs+files;
+
+	slotUpdateInformation(files, dirs);
+
+	if(!total)
+	{
+		sqSBfileIcon->clear();
+		sqSBfileName->clear();
+		return;
+	}
+
+	QTimer::singleShot(10, this, SLOT(slotDelayedFinishedLoading()));
+
+	if(type == SQ_DirOperator::TypeThumbs)
+	{
+		if(tv->isVisible())
+			tv->startThumbnailUpdate();
+		else
+			tv->waitForShowEvent();
+	}
+
+	qApp->processEvents();
 }
 
 void SQ_DirOperator::slotUpdateInformation(int files, int dirs)
@@ -61,32 +83,18 @@ void SQ_DirOperator::slotUpdateInformation(int files, int dirs)
 
 void SQ_DirOperator::slotDelayedFinishedLoading()
 {
-	QString str;
-	int dirs = numDirs(), files = numFiles(), total = dirs+files;
-
-	str = QString(i18n(" Total %1 (%2, %3) "))
-			.arg(total)
-			.arg(i18n("1 directory", "%n dirs", dirs))
-			.arg(i18n("1 file", "%n files", files));
-
-	sqSBdirInfo->setText(str);
-
-	if(!total)
+	if(SQ_WidgetStack::instance()->count() && SQ_WidgetStack::instance()->visibleWidget() == this)
 	{
-		sqSBfileIcon->clear();
-		sqSBfileName->clear();
-	}
+		KFileItemList list = dirLister()->items();
+		KFileItem *first = list.first();
 
-	if(sqWStack->count() == 1)
-	{
-		KFileItemList *list = (KFileItemList *)fileview->items();
-		KFileItem *first = list->first();
+		if(!first) return;
 
-		if(sqConfig->readBoolEntry("Fileview", "tofirst", true) && first)
-			sqWStack->moveTo(SQ_WidgetStack::Next, first);
+		if(SQ_Config::instance()->readBoolEntry("Fileview", "tofirst", true))
+			SQ_WidgetStack::instance()->moveTo(SQ_WidgetStack::Next, first);
 		else
 			setCurrentItem(first);
-
+/*
 		switch(type)
 		{
 			case SQ_DirOperator::TypeDetail:
@@ -101,15 +109,7 @@ void SQ_DirOperator::slotDelayedFinishedLoading()
 			case SQ_DirOperator::TypeThumbs:
 				slotSelected(tv->currentItem());
 			break;
-		} // switch
-	} // if
-
-	if(type == SQ_DirOperator::TypeThumbs)
-	{
-		if(tv->isVisible())
-			tv->startThumbnailUpdate();
-		else
-			tv->waitForShowEvent();
+		}*/
 	}
 }
 
@@ -118,17 +118,17 @@ void SQ_DirOperator::slotDeletedItem(KFileItem *item)
 	if(!item)
 		return;
 
-	sqCache->remove(item->url().path());
+	SQ_PixmapCache::instance()->remove(item->url().path());
 }
 
 void SQ_DirOperator::slotSetThumbSize(const QString &size)
 {
-	sqThumbSize->setPixelSize(size);
+	SQ_ThumbnailSize::instance()->setPixelSize(size);
 
-	int pixelSize = (sqThumbSize->isExtended())?
-			sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize();
+	int pixelSize = (SQ_ThumbnailSize::instance()->extended())?
+			SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
 
-	int newgrid = pixelSize + sqConfig->readNumEntry("Thumbnails", "margin", 2) + 2;
+	int newgrid = pixelSize + SQ_Config::instance()->readNumEntry("Thumbnails", "margin", 2) + 2;
 
 	tv->setGridX(newgrid);
 
@@ -137,45 +137,42 @@ void SQ_DirOperator::slotSetThumbSize(const QString &size)
 
 void SQ_DirOperator::slotSelected(QIconViewItem *item)
 {
-        if(!item) return;
+	if(!item) return;
 
-        QString str;
-        QPixmap px;
-        KFileItem *fi;
+	QString str;
+	QPixmap px;
+	KFileItem *fi;
 
-        if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
-        {
-                fi = f->fileInfo();
-                px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
-                sqSBfileIcon->setPixmap(px);
-                str = QString("  %1 %2").arg(fi->text()).arg((fi->isDir())?"":QString(" (" + KIO::convertSize(fi->size()) + ")"));
-                sqSBfileName->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
-                sqWStack->selectFile(fi, this);
-        }
+	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
+	{
+		fi = f->fileInfo();
+		statusFile(fi);
+	}
 }
 
 void SQ_DirOperator::slotSelected(QListViewItem *item)
 {
-        if(!item) return;
+	if(!item) return;
 
-        QString str;
-        QPixmap px;
-        KFileItem *fi;
+	KFileItem *fi;
 
-        if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
-        {
-                fi = f->fileInfo();
-                px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
-                sqSBfileIcon->setPixmap(px);
-                str = QString("  %1 %2").arg(fi->text()).arg((fi->isDir())?"":QString(" (" + KIO::convertSize(fi->size()) + ")"));
-                sqSBfileName->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
-                sqWStack->selectFile(fi, this);
-        }
+	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
+	{
+		fi = f->fileInfo();
+		statusFile(fi);
+	}
 }
 
-void SQ_DirOperator::slotUrlEntered(const KURL &url)
+void SQ_DirOperator::statusFile(KFileItem *fi)
 {
-	sqWStack->setURL(url, true);
+	QString str;
+	QPixmap px;
+
+	px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
+	sqSBfileIcon->setPixmap(px);
+	str = QString("  %1 %2").arg(fi->text()).arg((fi->isDir())?"":QString(" (" + KIO::convertSize(fi->size()) + ")"));
+	sqSBfileName->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
+	SQ_WidgetStack::instance()->selectFile(fi, this);
 }
 
 void SQ_DirOperator::setDirLister(KDirLister *lister)

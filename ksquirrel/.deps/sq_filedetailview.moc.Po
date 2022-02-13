@@ -1,13 +1,15 @@
 sq_filedetailview.moc.o sq_filedetailview.moc.o:  \
  sq_filedetailview.moc.cpp sq_filedetailview.h \
-  /usr/lib/qt3/include/qwidget.h /usr/lib/qt3/include/qwindowdefs.h \
-  /usr/lib/qt3/include/qobjectdefs.h /usr/lib/qt3/include/qglobal.h \
-  /usr/lib/qt3/include/qconfig.h /usr/lib/qt3/include/qmodules.h \
-  /usr/lib/qt3/include/qfeatures.h /usr/lib/qt3/include/qstring.h \
-  /usr/lib/qt3/include/qcstring.h /usr/lib/qt3/include/qmemarray.h \
-  /usr/lib/qt3/include/qgarray.h /usr/lib/qt3/include/qshared.h \
-  /usr/lib/qt3/include/qwinexport.h /usr/include/string.h \
-  /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/kfiledetailview.h /usr/include/klistview.h \
+  /usr/lib/qt3/include/qlistview.h /usr/lib/qt3/include/qscrollview.h \
+  /usr/lib/qt3/include/qframe.h /usr/lib/qt3/include/qwidget.h \
+  /usr/lib/qt3/include/qwindowdefs.h /usr/lib/qt3/include/qobjectdefs.h \
+  /usr/lib/qt3/include/qglobal.h /usr/lib/qt3/include/qconfig.h \
+  /usr/lib/qt3/include/qmodules.h /usr/lib/qt3/include/qfeatures.h \
+  /usr/lib/qt3/include/qstring.h /usr/lib/qt3/include/qcstring.h \
+  /usr/lib/qt3/include/qmemarray.h /usr/lib/qt3/include/qgarray.h \
+  /usr/lib/qt3/include/qshared.h /usr/lib/qt3/include/qwinexport.h \
+  /usr/include/string.h /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/gnu/stubs.h \
   /usr/lib/gcc-lib/i586-mandrake-linux-gnu/3.3.2/include/stddef.h \
   /usr/include/xlocale.h \
@@ -125,13 +127,10 @@ sq_filedetailview.moc.o sq_filedetailview.moc.o:  \
   /usr/lib/qt3/include/qglist.h /usr/lib/qt3/include/qptrcollection.h \
   /usr/lib/qt3/include/qbrush.h /usr/lib/qt3/include/qfont.h \
   /usr/lib/qt3/include/qfontmetrics.h /usr/lib/qt3/include/qfontinfo.h \
-  /usr/lib/qt3/include/qsizepolicy.h /usr/include/kfiledetailview.h \
-  /usr/include/klistview.h /usr/lib/qt3/include/qlistview.h \
-  /usr/lib/qt3/include/qscrollview.h /usr/lib/qt3/include/qframe.h \
-  /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
-  /usr/include/kdemacros.h /usr/include/kmimetyperesolver.h \
-  /usr/lib/qt3/include/qtimer.h /usr/include/kdebug.h \
-  /usr/include/kfileview.h /usr/include/kfileitem.h \
+  /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qscrollbar.h \
+  /usr/lib/qt3/include/qrangecontrol.h /usr/include/kdemacros.h \
+  /usr/include/kmimetyperesolver.h /usr/lib/qt3/include/qtimer.h \
+  /usr/include/kdebug.h /usr/include/kfileview.h /usr/include/kfileitem.h \
   /usr/include/sys/stat.h /usr/include/bits/stat.h \
   /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h \
   /usr/include/kurl.h /usr/include/kmimetype.h \
@@ -152,6 +151,16 @@ sq_filedetailview.moc.o sq_filedetailview.moc.o:  \
   /usr/lib/qt3/include/private/qucom_p.h /usr/lib/qt3/include/quuid.h
 
 sq_filedetailview.h:
+
+/usr/include/kfiledetailview.h:
+
+/usr/include/klistview.h:
+
+/usr/lib/qt3/include/qlistview.h:
+
+/usr/lib/qt3/include/qscrollview.h:
+
+/usr/lib/qt3/include/qframe.h:
 
 /usr/lib/qt3/include/qwidget.h:
 
@@ -542,16 +551,6 @@ sq_filedetailview.h:
 /usr/lib/qt3/include/qfontinfo.h:
 
 /usr/lib/qt3/include/qsizepolicy.h:
-
-/usr/include/kfiledetailview.h:
-
-/usr/include/klistview.h:
-
-/usr/lib/qt3/include/qlistview.h:
-
-/usr/lib/qt3/include/qscrollview.h:
-
-/usr/lib/qt3/include/qframe.h:
 
 /usr/lib/qt3/include/qscrollbar.h:
 

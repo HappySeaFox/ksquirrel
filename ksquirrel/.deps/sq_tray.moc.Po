@@ -126,12 +126,7 @@ sq_tray.moc.o sq_tray.moc.o: sq_tray.moc.cpp sq_tray.h \
   /usr/lib/qt3/include/qglist.h /usr/lib/qt3/include/qptrcollection.h \
   /usr/lib/qt3/include/qbrush.h /usr/lib/qt3/include/qfont.h \
   /usr/lib/qt3/include/qfontmetrics.h /usr/lib/qt3/include/qfontinfo.h \
-  /usr/lib/qt3/include/qsizepolicy.h /usr/include/kpopupmenu.h \
-  /usr/lib/qt3/include/qpopupmenu.h /usr/lib/qt3/include/qmenudata.h \
-  /usr/lib/qt3/include/qiconset.h /usr/lib/qt3/include/qpixmap.h \
-  /usr/lib/qt3/include/qkeysequence.h /usr/lib/qt3/include/qsignal.h \
-  /usr/lib/qt3/include/qvariant.h /usr/include/kpixmapeffect.h \
-  /usr/include/kpixmap.h /usr/lib/qt3/include/qmetaobject.h \
+  /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qmetaobject.h \
   /usr/lib/qt3/include/qconnection.h /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
@@ -541,26 +536,6 @@ sq_tray.h:
 /usr/lib/qt3/include/qfontinfo.h:
 
 /usr/lib/qt3/include/qsizepolicy.h:
-
-/usr/include/kpopupmenu.h:
-
-/usr/lib/qt3/include/qpopupmenu.h:
-
-/usr/lib/qt3/include/qmenudata.h:
-
-/usr/lib/qt3/include/qiconset.h:
-
-/usr/lib/qt3/include/qpixmap.h:
-
-/usr/lib/qt3/include/qkeysequence.h:
-
-/usr/lib/qt3/include/qsignal.h:
-
-/usr/lib/qt3/include/qvariant.h:
-
-/usr/include/kpixmapeffect.h:
-
-/usr/include/kpixmap.h:
 
 /usr/lib/qt3/include/qmetaobject.h:
 

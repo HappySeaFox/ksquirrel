@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>584</width>
-            <height>398</height>
+            <height>400</height>
         </rect>
     </property>
     <property name="caption">
@@ -382,8 +382,8 @@
     </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
+    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_filters.ui.h</include>
 </includes>
 <slots>

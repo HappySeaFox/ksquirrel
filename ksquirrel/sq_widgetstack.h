@@ -42,6 +42,8 @@ class SQ_WidgetStack : public QWidgetStack
 		~SQ_WidgetStack();
 
 		enum Direction { Next = 0, Previous = 1 };
+		enum FileAction { Copy = 0, Cut, Paste, Unknown };
+		enum moveToError { moveSuccess = 0, moveFailed } ;
 
 		KURL getURL() const;
 		void setURL(const QString &, bool, bool = true);
@@ -58,8 +60,11 @@ class SQ_WidgetStack : public QWidgetStack
 		SQ_DirOperator* visibleWidget() const;
 		SQ_DirOperator* widget(int id) const;
 
+		static SQ_WidgetStack* instance();
+
 	private:
 		void setupDirOperator(SQ_DirOperator *op, const QString &filter);
+		bool copyOrCut();
 
 	public slots:
 		void raiseWidget(int id);
@@ -68,7 +73,6 @@ class SQ_WidgetStack : public QWidgetStack
 		void setURLfromtree(const KURL&);
 		void slotFirstFile();
 		void slotLastFile();
-		bool moveTo(Direction direction, KFileItem *it = 0L);
 		void emitNextSelected();
 		void emitPreviousSelected();
 		void slotShowHidden(bool);
@@ -81,7 +85,16 @@ class SQ_WidgetStack : public QWidgetStack
 		void slotRunSeparately();
 		void slotDelayedShowProgress();
 
+		int moveTo(Direction direction, KFileItem *it = 0L);
+
 		const QString getNameFilter() const;
+
+		void slotFileCopy();
+		void slotFileCut();
+		void slotFilePaste();
+		void slotFileCopyTo();
+		void slotFileMoveTo();
+		void slotFileLinkTo();
 
 	private slots:
 		void slotDelayedSetExtractURL();
@@ -97,15 +110,19 @@ class SQ_WidgetStack : public QWidgetStack
 		void slotDelayedRecreateThumbnail();
 
 	public:
-		KAction				*pABack, *pAForw, *pAUp, *pADelete, *pAHome, *pAProp, *pARefresh, *pAMkDir, *pARecreate;
+		KAction				*pABack, *pAForw, *pAUp, *pADelete, *pAHome, *pAProp, *pARefresh, *pAMkDir;
 		KToggleAction		*pAHidden;
 
 	private:
-		SQ_DirOperator	*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail, *pDirOperatorThumb;
-		QString			*path;
+		SQ_DirOperator		*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail, *pDirOperatorThumb;
+		QString				*path;
 		int					ncount;
 		KActionCollection	*ac;
-		QTimer 			*timerShowProgress;
+		QTimer 				*timerShowProgress;
+		KURL::List			files;
+		FileAction			fileaction;
+
+		static SQ_WidgetStack	*inst;
 };
 
 #endif

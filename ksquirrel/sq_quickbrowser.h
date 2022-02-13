@@ -78,12 +78,19 @@ class SQ_QuickBrowser : public QVBox
 
 		SQ_DirOperatorBase *quick;
 
+		static SQ_QuickBrowser* window();
+		static SQ_DirOperatorBase *quickOperator();
+
 	public slots:
 		void slotClose();
 
 	protected:
 		void closeEvent(QCloseEvent *);
 		void showEvent(QShowEvent *);
+
+	private:
+		static SQ_QuickBrowser *view;
+		static SQ_DirOperatorBase *op;
 };
 
 #endif

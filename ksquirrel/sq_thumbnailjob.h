@@ -28,7 +28,6 @@
 
 #include <kio/job.h>
 
-#include "sq_thumbnailsize.h"
 #include "sq_thumbnailinfo.h"
 
 class KFileItem;
@@ -41,7 +40,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 	Q_OBJECT
 
 	public:
-		SQ_ThumbnailLoadJob(const KFileItemList* itemList, SQ_ThumbnailSize);
+		SQ_ThumbnailLoadJob(const KFileItemList* itemList);
 		virtual ~SQ_ThumbnailLoadJob();
 
 		void start();
@@ -76,7 +75,6 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 		KURL mThumbURL;
 		KURL mTempURL;
 		QString mCacheDir, mime;
-		SQ_ThumbnailSize mThumbnailSize;
 		SQ_Dir *dir;
 		SQ_Thumbnail mBrokenThumbnail;
 };

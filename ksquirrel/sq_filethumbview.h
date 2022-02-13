@@ -18,7 +18,7 @@
 #ifndef SQ_FILETHUMBVIEW_H
 #define SQ_FILETHUMBVIEW_H
 
-#include <kfileiconview.h>
+#include "sq_fileiconviewbase.h"
 
 #include <qguardedptr.h>
 #include <qmap.h>
@@ -33,7 +33,7 @@ class SQ_Progress;
 class SQ_ThumbnailLoadJob;
 class SQ_FileThumbViewItem;
 
-class SQ_FileThumbView : public KFileIconView
+class SQ_FileThumbView : public SQ_FileIconViewBase
 {
 	Q_OBJECT
 
@@ -48,19 +48,17 @@ class SQ_FileThumbView : public KFileIconView
 		virtual void updateView(const KFileItem *i);
 		virtual void updateView(bool b);
 		virtual void clearView();
+		virtual void listingCompleted();
 
 		void doStartThumbnailUpdate(const KFileItemList* list);
 		void waitForShowEvent();
 		bool updateRunning() const;
+		virtual void insertCdUpItem(const KURL &base);
 
 	protected:
-		QDragObject *dragObject();
-		void dragEnterEvent(QDragEnterEvent *);
-		void dropEvent(QDropEvent *);
 		virtual bool eventFilter(QObject *o, QEvent *e);
 		virtual void hideEvent(QHideEvent *);
 		virtual void showEvent(QShowEvent *);
-		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
 	private:
 		void initItem(KFileIconViewItem *item, const KFileItem *i);
@@ -91,6 +89,8 @@ class SQ_FileThumbView : public KFileIconView
 		SQ_FileThumbViewItem	*tooltipFor;
 		QTimer 					*timer;
 		bool						isPending;
+		QPixmap					dirPix;
+		int							pixelSize;
 };
 
 

@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qstrlist.h>
-#include <qdragobject.h>
 #include <qpainter.h>
 #include <qhbox.h>
 #include <qtoolbar.h>
@@ -39,17 +37,17 @@
 #include "sq_filethumbview.h"
 #include "sq_libraryhandler.h"
 #include "sq_thumbnailjob.h"
+#include "sq_thumbnailsize.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
 #include "sq_pixmapcache.h"
 #include "sq_progress.h"
 #include "sq_filethumbviewitem.h"
 
-SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : KFileIconView(parent, name), isPending(false)
+SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name), isPending(false)
 {
 	toolTip = 0L;
 	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
-	setAcceptDrops(true);
 
 	progressBox = new QHBox(this);
 	QToolBar *progressBoxBar = new QToolBar(QString::null, 0L, progressBox);
@@ -62,13 +60,13 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : KFileIco
 	progressBox->setStretchFactor(progressBoxBar, 0);
 	progressBox->setGeometry(5, 5, 235, 24);
 
-	thumbJob = new SQ_ThumbnailLoadJob(new KFileItemList(), SQ_ThumbnailSize());
+	thumbJob = new SQ_ThumbnailLoadJob(new KFileItemList());
 	delete (SQ_ThumbnailLoadJob*)thumbJob;
 
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(slotTooltipDelay()));
 
-	sqCache->setCacheLimit(sqConfig->readNumEntry("Thumbnails", "cache", 1024*10));
+	SQ_PixmapCache::instance()->setCacheLimit(SQ_Config::instance()->readNumEntry("Thumbnails", "cache", 1024*10));
 
 	setResizeMode(QIconView::Adjust);
 
@@ -81,37 +79,14 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : KFileIco
 	disconnect(this, SIGNAL(onItem(QIconViewItem *)), this, 0);
 	connect(this, SIGNAL(onItem(QIconViewItem *)), this, SLOT(slotShowToolTip(QIconViewItem *)));
 	connect(this, SIGNAL(onViewport()), this, SLOT(slotRemoveToolTip()));
+
+	dirPix = KSquirrel::loader()->loadIcon("folder", KIcon::Desktop, 48);
+	pixelSize = (SQ_ThumbnailSize::instance()->extended())? SQ_ThumbnailSize::instance()->extendedPixelSize() : SQ_ThumbnailSize::instance()->pixelSize();
 }
 
 SQ_FileThumbView::~SQ_FileThumbView()
 {
 	slotRemoveToolTip();
-}
-
-void SQ_FileThumbView::dragEnterEvent(QDragEnterEvent *e)
-{
-	e->accept(true);
-}
-
-void SQ_FileThumbView::dropEvent(QDropEvent *e)
-{
-	e->accept(true);
-}
-
-QDragObject* SQ_FileThumbView::dragObject()
-{
-	const KFileItemList *list = KFileView::selectedItems();
-
-	if(list->isEmpty())
-		return 0;
-
-	QPtrListIterator<KFileItem> it(*list);
-	KURL::List urls;
-
-	for(; it.current(); ++it)
-		urls.append(it.current()->url());
-
-	return new KURLDrag(urls, viewport());
 }
 
 void SQ_FileThumbView::slotSelected(QIconViewItem *item, const QPoint &point)
@@ -126,20 +101,19 @@ KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
 
 void SQ_FileThumbView::insertItem(KFileItem *i)
 {
-	if(i->isDir() && sqConfig->readBoolEntry("Fileview", "disable_dirs", false))
+	int pixelSize = (SQ_ThumbnailSize::instance()->extended())?
+			SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
+
+	if(i->isDir() && SQ_Config::instance()->readBoolEntry("Fileview", "disable_dirs", false))
 		return;
 
-	static QPixmap dirPix = sqLoader->loadIcon("folder", KIcon::Desktop, 48);
-
-	bool disable_mime = sqConfig->readBoolEntry("Thumbnails", "disable_mime", true);
-	const QPixmap mimeall = sqLoader->loadIcon("unknown", KIcon::Desktop, (sqThumbSize->isExtended())?
-			sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize());
+	bool disable_mime = SQ_Config::instance()->readBoolEntry("Thumbnails", "disable_mime", true);
+	const QPixmap mimeall = KSquirrel::loader()->loadIcon("unknown", KIcon::Desktop, (SQ_ThumbnailSize::instance()->extended())?
+			SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize());
 
 	SQ_FileThumbViewItem *item;
 
-//	int pixelSize = sqThumbSize->pixelSize();
-	int pixelSize = (sqThumbSize->isExtended())?
-			sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize();
+//	int pixelSize = SQ_ThumbnailSize::instance()->pixelSize();
 
 	QPixmap thumbnail(pixelSize, pixelSize);
 	QPainter painter(&thumbnail);
@@ -157,7 +131,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 		painter.drawPixmap((pixelSize-mimeall.width())/2, (pixelSize-mimeall.height())/2, ((disable_mime)?mimeall:i->pixmap(pixelSize)));
 	}
 
-	QPixmap p = pending[QString(sqThumbSize->stringValue())];
+	QPixmap p = pending[QString(SQ_ThumbnailSize::instance()->stringValue())];
 	QPixmap p2(pixelSize, pixelSize);
 
 	if(!p.isNull())
@@ -172,7 +146,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 
 	if(i->isDir())
 		item = new SQ_FileThumbViewItem(this, i->text(), thumbnail, i);
-	else if(sqLibHandler->supports(i->url().path()) && !p2.isNull())
+	else if(SQ_LibraryHandler::instance()->supports(i->url().path()) && !p2.isNull())
 		item = new SQ_FileThumbViewItem(this, i->text(), p2, i);
 	else if(disable_mime)
 		item = new SQ_FileThumbViewItem(this, i->text(), mimeall, i);
@@ -206,8 +180,8 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 
 	if(!item) return;
 
-	int pixelSize = (sqThumbSize->isExtended())?
-			sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize();
+	int pixelSize = (SQ_ThumbnailSize::instance()->extended())?
+			SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
 
 	QPainter painter(item->pixmap());
 	painter.eraseRect(0, 0, pixelSize, pixelSize);
@@ -216,16 +190,16 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 	painter.drawRect(0, 0, pixelSize, pixelSize);
 	painter.drawImage((pixelSize - t.thumbnail.width())/2, (pixelSize - t.thumbnail.height())/2, t.thumbnail);
 
-	if(sqThumbSize->isExtended())
+	if(SQ_ThumbnailSize::instance()->extended())
 	{
-		if(!t.info.mime.isNull() && sqThumbSize->isExtended())
+		if(!t.info.mime.isNull() && SQ_ThumbnailSize::instance()->extended())
 			painter.drawImage(QPoint(pixelSize - t.info.mime.width() - 1, 1), t.info.mime);
 
 		QFont font = painter.font();
 		font.setPixelSize(12);
 		painter.setFont(font);
 		painter.setPen(colorGroup().highlightedText());
-		painter.drawText(0, pixelSize - sqThumbSize->margin(), pixelSize, sqThumbSize->margin(),
+		painter.drawText(0, pixelSize - SQ_ThumbnailSize::instance()->margin(), pixelSize, SQ_ThumbnailSize::instance()->margin(),
 								Qt::AlignCenter, QString::fromLatin1("%1x%2").arg(t.info.dimensions).arg(t.info.bpp));
 	}
 
@@ -241,14 +215,14 @@ void SQ_FileThumbView::startThumbnailUpdate()
 
 void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList* list)
 {
-	thumbJob = new SQ_ThumbnailLoadJob(list, *sqThumbSize);
+	thumbJob = new SQ_ThumbnailLoadJob(list);
 
 	connect(thumbJob, SIGNAL(thumbnailLoaded(const KFileItem*, const SQ_Thumbnail &)),
 		this, SLOT(setThumbnailPixmap(const KFileItem*, const SQ_Thumbnail&)));
 
-	connect(thumbJob, SIGNAL(result(KIO::Job*)), sqWStack, SLOT(thumbnailsUpdateEnded()));
+	connect(thumbJob, SIGNAL(result(KIO::Job*)), SQ_WidgetStack::instance(), SLOT(thumbnailsUpdateEnded()));
 
-	sqWStack->thumbnailUpdateStart(list->count());
+	SQ_WidgetStack::instance()->thumbnailUpdateStart(list->count());
 	thumbJob->start();
 }
 
@@ -257,7 +231,7 @@ void SQ_FileThumbView::stopThumbnailUpdate()
 	if(!thumbJob.isNull())
 	{
 		thumbJob->kill();
-		sqWStack->thumbnailsUpdateEnded();
+		SQ_WidgetStack::instance()->thumbnailsUpdateEnded();
 	}
 }
 
@@ -288,7 +262,7 @@ void SQ_FileThumbView::updateView(bool b)
 	{
 		do
 		{
-			item->setPixmap((item->fileInfo())->pixmap(sqThumbSize->pixelSize()));
+			item->setPixmap((item->fileInfo())->pixmap(SQ_ThumbnailSize::instance()->pixelSize()));
 			item = static_cast<KFileIconViewItem*>(item->nextItem());
 		}while(item != 0L);
 	}
@@ -304,7 +278,7 @@ void SQ_FileThumbView::updateView(const KFileItem *i)
 
 void SQ_FileThumbView::slotShowToolTip(QIconViewItem *item)
 {
-	if(!sqConfig->readBoolEntry("Thumbnails", "tooltips", false))
+	if(!SQ_Config::instance()->readBoolEntry("Thumbnails", "tooltips", false))
 		return;
 
 	slotRemoveToolTip();
@@ -317,7 +291,7 @@ void SQ_FileThumbView::slotShowToolTip(QIconViewItem *item)
 	if(!fitem)
 		return;
 
-	if(!sqLibHandler->supports(fitem->fileInfo()->url().path()))
+	if(!SQ_LibraryHandler::instance()->supports(fitem->fileInfo()->url().path()))
 		return;
 
 	tooltipFor = fitem;
@@ -425,29 +399,39 @@ void SQ_FileThumbView::clearView()
 {
 	stopThumbnailUpdate();
 
-	QIconView::clear();
-}
+	pixelSize = (SQ_ThumbnailSize::instance()->extended()) ? SQ_ThumbnailSize::instance()->extendedPixelSize():SQ_ThumbnailSize::instance()->pixelSize();
 
-void SQ_FileThumbView::contentsMouseDoubleClickEvent(QMouseEvent *e)
-{
-	QIconView::contentsMouseDoubleClickEvent(e);
+	KIconView::clear();
 
-	QIconViewItem *item = findItem(e->pos());
-
-	if(item)
-	{
-		if(e->button() == Qt::LeftButton && !sqWStack->visibleWidget()->sing)
-			emitExecute(item, e->globalPos());
-
-		emit doubleClicked(item, e->globalPos());
-	}
-	else
-	{
-		kapp->invokeBrowser(sqWStack->getURL().path());
-	}
+	insertCdUpItem(SQ_WidgetStack::instance()->getURL());
 }
 
 bool SQ_FileThumbView::updateRunning() const
 {
 	return !thumbJob.isNull();
+}
+
+void SQ_FileThumbView::insertCdUpItem(const KURL &base)
+{
+	QPixmap thumbnail(pixelSize, pixelSize);
+	QPainter painter(&thumbnail);
+	painter.eraseRect(0, 0, pixelSize, pixelSize);
+	painter.setBrush(white);
+	painter.setPen(colorGroup().highlight());
+	painter.drawRect(0, 0, pixelSize, pixelSize);
+
+	painter.drawPixmap((pixelSize-dirPix.width())/2, (pixelSize-dirPix.height())/2, dirPix);
+
+	KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+
+	SQ_FileThumbViewItem *item = new SQ_FileThumbViewItem(this, QString::fromLatin1(".."), thumbnail, fi);
+
+	item->setSelectable(false);
+
+	fi->setExtraData(this, item);
+}
+
+void SQ_FileThumbView::listingCompleted()
+{
+	arrangeItemsInGrid();
 }

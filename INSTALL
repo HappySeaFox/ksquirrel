@@ -1,25 +1,25 @@
 1. First install 'ksquirrel-libs' package:
 
    a) from sources
-   # tar zxfv ksquirrel-libs-0.5.0-pre4.tar.gz
-   # cd ksquirrel-libs-0.5.0/
-   # ./configure --libdir=/usr/lib/squirrel ** remember, that /usr/lib/squirrel is a strictly defined path!
+   # tar zxfv ksquirrel-libs-0.6.0.tar.gz
+   # cd ksquirrel-libs-0.6.0/
+   # ./configure.gnu
    # make
    # su -c 'make install'
    
    b) from binary packages
-RPM  # rpm -ihv ksquirrel-libs-0.5.0-pre4.rpm
-TGZ  # installpkg ksquirrel-libs-0.5.0-pre4.tgz
+RPM  # rpm -ihv ksquirrel-libs-0.6.0.rpm
+TGZ  # installpkg ksquirrel-libs-0.6.0.tgz
 
 2. Now install Ksquirrel:
 
    a) from sources
-   # tar zxfv ksquirrel-0.5.0-pre4.tar.gz
-   # cd ksquirrel-0.5.0/
-   # ./configure --prefix="`kde-config --prefix`"
+   # tar zxfv ksquirrel-0.6.0.tar.gz
+   # cd ksquirrel-0.6.0/
+   # ./configure.gnu
    # make
    # su -c 'make install'
    
    b) from binary packages
-RPM  # rpm -ihv ksquirrel-0.5.0-pre4.rpm
-TGZ  # installpkg ksquirrel-0.5.0-pre4.tgz
+RPM  # rpm -ihv ksquirrel-0.6.0.rpm
+TGZ  # installpkg ksquirrel-0.6.0.tgz

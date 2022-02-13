@@ -1,6 +1,6 @@
 <!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>SQ_Options</class>
-<author>CKulT</author>
+<author>Krasu</author>
 <widget class="QDialog">
     <property name="name">
         <cstring>SQ_Options</cstring>
@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>523</width>
-            <height>459</height>
+            <height>467</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -544,7 +544,7 @@
                                                 <string>Run unknown file formats separately (with default application)</string>
                                             </property>
                                             <property name="toolTip" stdset="0">
-                                                <string>For example, run unsupported "png" format in kuickshow</string>
+                                                <string></string>
                                             </property>
                                         </widget>
                                         <widget class="QCheckBox" row="2" column="0">
@@ -571,7 +571,15 @@
                                                 <string>Jump to first image</string>
                                             </property>
                                         </widget>
-                                        <spacer row="6" column="0">
+                                        <widget class="QCheckBox" row="5" column="0">
+                                            <property name="name">
+                                                <cstring>checkDisableDirs</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Don't show directories</string>
+                                            </property>
+                                        </widget>
+                                        <spacer row="7" column="0">
                                             <property name="name">
                                                 <cstring>spacer16</cstring>
                                             </property>
@@ -584,18 +592,10 @@
                                             <property name="sizeHint">
                                                 <size>
                                                     <width>20</width>
-                                                    <height>20</height>
+                                                    <height>10</height>
                                                 </size>
                                             </property>
                                         </spacer>
-                                        <widget class="QCheckBox" row="5" column="0">
-                                            <property name="name">
-                                                <cstring>checkDisableDirs</cstring>
-                                            </property>
-                                            <property name="text">
-                                                <string>Don't show directories</string>
-                                            </property>
-                                        </widget>
                                     </grid>
                                 </widget>
                                 <widget class="QWidget">
@@ -2242,7 +2242,6 @@
     <include location="global" impldecl="in implementation">kstandarddirs.h</include>
     <include location="global" impldecl="in implementation">kfiledialog.h</include>
     <include location="global" impldecl="in implementation">qfileinfo.h</include>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">sq_libraryhandler.h</include>
     <include location="global" impldecl="in implementation">kiconloader.h</include>
@@ -2258,6 +2257,7 @@
     <include location="local" impldecl="in implementation">sq_viewcache.h</include>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
     <include location="global" impldecl="in implementation">GL/gl.h</include>
+    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_options.ui.h</include>
 </includes>
 <variables>

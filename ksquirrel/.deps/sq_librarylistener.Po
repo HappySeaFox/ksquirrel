@@ -133,12 +133,12 @@ sq_librarylistener.o sq_librarylistener.o: sq_librarylistener.cpp \
   /usr/lib/qt3/include/qcombobox.h /usr/include/kglobal.h \
   /usr/include/kdemacros.h /usr/include/kinstance.h \
   /usr/lib/qt3/include/qguardedptr.h /usr/lib/qt3/include/qiconset.h \
-  /usr/lib/qt3/include/qpixmap.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h sq_librarylistener.h \
-  /usr/include/kdirlister.h /usr/include/kfileitem.h \
+  /usr/lib/qt3/include/qpixmap.h /usr/include/kio/job.h \
+  /usr/include/kio/jobclasses.h /usr/include/kurl.h \
   /usr/include/sys/stat.h /usr/include/bits/stat.h \
   /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h \
-  /usr/include/kurl.h /usr/include/kmimetype.h /usr/include/kicontheme.h \
+  sq_librarylistener.h /usr/include/kdirlister.h /usr/include/kfileitem.h \
+  /usr/include/kmimetype.h /usr/include/kicontheme.h \
   /usr/include/ksycocatype.h /usr/include/kservicetype.h \
   /usr/include/ksycocaentry.h /usr/include/ksharedptr.h \
   /usr/include/kservice.h /usr/lib/qt3/include/qvariant.h \
@@ -146,16 +146,13 @@ sq_librarylistener.o sq_librarylistener.o: sq_librarylistener.cpp \
   /usr/include/kconfigbase.h /usr/include/kconfigdata.h \
   /usr/include/kfilemetainfo.h /usr/lib/qt3/include/qdict.h \
   /usr/lib/qt3/include/qgdict.h /usr/include/kdirnotify.h \
+  /usr/include/dcopobject.h /usr/include/kdatastream.h \
   sq_libraryhandler.h /usr/lib/qt3/include/qvaluevector.h \
   /usr/include/c++/3.3.2/vector /usr/include/c++/3.3.2/bits/stl_vector.h \
   /usr/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/include/c++/3.3.2/bits/vector.tcc /usr/lib/qt3/include/qimage.h \
-  /usr/lib/qt3/include/qregexp.h defs.h /usr/include/linux/types.h \
-  /usr/include/linux/posix_types.h /usr/include/linux/stddef.h \
-  /usr/include/asm/posix_types.h /usr/include/asm/types.h \
-  /usr/include/linux/compiler.h /usr/include/linux/compiler-gcc3.h \
-  /usr/include/linux/compiler-gcc.h sq_librarieschanged.h \
-  /usr/lib/qt3/include/qdialog.h sq_config.h
+  /usr/lib/qt3/include/qregexp.h fmt_types.h fmt_defs.h \
+  sq_librarieschanged.h /usr/lib/qt3/include/qdialog.h sq_config.h
 
 /usr/lib/qt3/include/qstring.h:
 
@@ -589,15 +586,11 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qpixmap.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
 
-sq_librarylistener.h:
-
-/usr/include/kdirlister.h:
-
-/usr/include/kfileitem.h:
+/usr/include/kurl.h:
 
 /usr/include/sys/stat.h:
 
@@ -607,7 +600,11 @@ sq_librarylistener.h:
 
 /usr/lib/qt3/include/qdatetime.h:
 
-/usr/include/kurl.h:
+sq_librarylistener.h:
+
+/usr/include/kdirlister.h:
+
+/usr/include/kfileitem.h:
 
 /usr/include/kmimetype.h:
 
@@ -641,6 +638,10 @@ sq_librarylistener.h:
 
 /usr/include/kdirnotify.h:
 
+/usr/include/dcopobject.h:
+
+/usr/include/kdatastream.h:
+
 sq_libraryhandler.h:
 
 /usr/lib/qt3/include/qvaluevector.h:
@@ -657,23 +658,9 @@ sq_libraryhandler.h:
 
 /usr/lib/qt3/include/qregexp.h:
 
-defs.h:
+fmt_types.h:
 
-/usr/include/linux/types.h:
-
-/usr/include/linux/posix_types.h:
-
-/usr/include/linux/stddef.h:
-
-/usr/include/asm/posix_types.h:
-
-/usr/include/asm/types.h:
-
-/usr/include/linux/compiler.h:
-
-/usr/include/linux/compiler-gcc3.h:
-
-/usr/include/linux/compiler-gcc.h:
+fmt_defs.h:
 
 sq_librarieschanged.h:
 

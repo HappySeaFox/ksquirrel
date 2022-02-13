@@ -30,6 +30,9 @@ class SQ_DirOperator : public SQ_DirOperatorBase
 
 		void setDirLister(KDirLister *lister);
 
+	private:
+		void statusFile(KFileItem *);
+
 	public slots:
 		void slotFinishedLoading();
 		void slotDelayedFinishedLoading();
@@ -40,7 +43,6 @@ class SQ_DirOperator : public SQ_DirOperatorBase
 		void slotUpdateInformation(int,int);
 		void slotSelected(QIconViewItem*);
 		void slotSelected(QListViewItem*);
-		void slotUrlEntered(const KURL&);
 };
 
 #endif

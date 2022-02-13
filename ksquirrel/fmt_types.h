@@ -1,6 +1,6 @@
-/*  This file is part of ksquirrel-libs (http://ksquirrel.sf.net) libraries
+/*  This file is part of ksquirrel-libs (http://ksquirrel.sf.net)
 
-    Copyright (c) 2004 Dmitry Baryshev <ksquirrel@tut.by>
+    Copyright (c) 2005 Dmitry Baryshev <ksquirrel@tut.by>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,15 +19,18 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef KSQUIRREL_LIBS_ERROR_CODES_H
-#define KSQUIRREL_LIBS_ERROR_CODES_H
+#ifndef KSQUIRREL_LIBS_TYPES_H
+#define KSQUIRREL_LIBS_TYPES_H
 
-#define		SQERR_NOTOK	0
-#define		SQERR_OK	1
+typedef char     	s8;
+typedef unsigned char   u8;
 
-#define		SQERR_NOFILE		1024
-#define		SQERR_BADFILE		1025
-#define		SQERR_NOMEMORY		1026
-#define		SQERR_NOTSUPPORTED	1027
+typedef short    	s16;
+typedef unsigned short  u16;
+
+typedef int      	s32;
+typedef unsigned int    u32;
+
+#define PACKED __attribute__ ((packed))
 
 #endif

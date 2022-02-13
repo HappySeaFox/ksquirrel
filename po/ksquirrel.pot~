@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-18 16:00+0200\n"
+"POT-Creation-Date: 2005-02-21 22:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,24 +27,40 @@ msgid ""
 "Uncompressed size: %7"
 msgstr ""
 
-#: sq_diroperatorbase.cpp:57
-msgid "Run separately"
-msgstr ""
-
-#: sq_diroperatorbase.cpp:64
-msgid "External Tools"
-msgstr ""
-
-#: sq_diroperatorbase.cpp:66 ksquirrel.cpp:446
-msgid "Fi&lter"
-msgstr ""
-
-#: sq_diroperatorbase.cpp:208 sq_diroperatorbase.cpp:245
+#: sq_diroperatorbase.cpp:196 sq_diroperatorbase.cpp:233
 msgid "Format \""
 msgstr ""
 
-#: sq_diroperatorbase.cpp:208 sq_diroperatorbase.cpp:245
+#: sq_diroperatorbase.cpp:196 sq_diroperatorbase.cpp:233
 msgid "\" not supported"
+msgstr ""
+
+#: sq_diroperatorbase.cpp:397
+msgid "Run separately"
+msgstr ""
+
+#: sq_diroperatorbase.cpp:401
+msgid "File actions"
+msgstr ""
+
+#: sq_diroperatorbase.cpp:407
+msgid "Copy to ..."
+msgstr ""
+
+#: sq_diroperatorbase.cpp:408
+msgid "Move to ..."
+msgstr ""
+
+#: sq_diroperatorbase.cpp:410
+msgid "Link to ..."
+msgstr ""
+
+#: sq_diroperatorbase.cpp:418
+msgid "External Tools"
+msgstr ""
+
+#: sq_diroperatorbase.cpp:420 ksquirrel.cpp:451
+msgid "Fi&lter"
 msgstr ""
 
 #: sq_filethumbview.cpp:387
@@ -64,24 +80,28 @@ msgid ""
 "%3"
 msgstr ""
 
-#: sq_widgetstack.cpp:71
+#: sq_widgetstack.cpp:74
 msgid "Home"
 msgstr ""
 
-#: sq_widgetstack.cpp:72
+#: sq_widgetstack.cpp:75
 msgid "New directory ..."
 msgstr ""
 
-#: sq_widgetstack.cpp:73
+#: sq_widgetstack.cpp:76
 msgid "Properties ..."
 msgstr ""
 
-#: sq_widgetstack.cpp:75
+#: sq_widgetstack.cpp:78
 msgid "Show hidden files"
 msgstr ""
 
-#: sq_widgetstack.cpp:323
+#: sq_widgetstack.cpp:327
 msgid "Recreate selected thumbnails"
+msgstr ""
+
+#: sq_widgetstack.cpp:728 sq_widgetstack.cpp:757
+msgid "No files to copy or move"
 msgstr ""
 
 #: sq_quickbrowser.cpp:146 sq_glwidget.cpp:303
@@ -100,7 +120,7 @@ msgstr ""
 msgid "Fit image"
 msgstr ""
 
-#: sq_glwidget.cpp:186 sq_glwidget.cpp:2392
+#: sq_glwidget.cpp:186
 msgid "Zoom 100%"
 msgstr ""
 
@@ -136,27 +156,27 @@ msgstr ""
 msgid "Go to last file"
 msgstr ""
 
-#: sq_glwidget.cpp:282 sq_glwidget.cpp:2388
+#: sq_glwidget.cpp:282 sq_glwidget.cpp:2389
 msgid "Zoom +"
 msgstr ""
 
-#: sq_glwidget.cpp:284 sq_glwidget.cpp:2389
+#: sq_glwidget.cpp:284 sq_glwidget.cpp:2390
 msgid "Zoom -"
 msgstr ""
 
-#: sq_glwidget.cpp:287 sq_glwidget.cpp:2381
+#: sq_glwidget.cpp:287 sq_glwidget.cpp:2383
 msgid "Rotate left"
 msgstr ""
 
-#: sq_glwidget.cpp:289 sq_glwidget.cpp:2382
+#: sq_glwidget.cpp:289 sq_glwidget.cpp:2384
 msgid "Rotate right"
 msgstr ""
 
-#: sq_glwidget.cpp:291 sq_glwidget.cpp:2402
+#: sq_glwidget.cpp:291 sq_glwidget.cpp:2409
 msgid "Flip vertically"
 msgstr ""
 
-#: sq_glwidget.cpp:293 sq_glwidget.cpp:2403
+#: sq_glwidget.cpp:293 sq_glwidget.cpp:2410
 msgid "Flip horizontally"
 msgstr ""
 
@@ -168,7 +188,7 @@ msgstr ""
 msgid "Image Properties"
 msgstr ""
 
-#: sq_glwidget.cpp:297 sq_glwidget.cpp:2409
+#: sq_glwidget.cpp:297 sq_glwidget.cpp:2416
 msgid "Fullscreen"
 msgstr ""
 
@@ -240,111 +260,107 @@ msgstr ""
 msgid "Loaded in %1 msec."
 msgstr ""
 
-#: sq_glwidget.cpp:2364
+#: sq_glwidget.cpp:2366
 msgid "Rotate"
 msgstr ""
 
-#: sq_glwidget.cpp:2367 sq_options.cpp:874
+#: sq_glwidget.cpp:2369 sq_options.cpp:874
 msgid "Window"
 msgstr ""
 
-#: sq_glwidget.cpp:2368 sq_options.cpp:883
+#: sq_glwidget.cpp:2370 sq_options.cpp:883
 msgid "Image"
 msgstr ""
 
-#: sq_glwidget.cpp:2375
+#: sq_glwidget.cpp:2377
 msgid "Next"
 msgstr ""
 
-#: sq_glwidget.cpp:2376
+#: sq_glwidget.cpp:2378
 msgid "Previous"
 msgstr ""
 
-#: sq_glwidget.cpp:2377
+#: sq_glwidget.cpp:2379
 msgid "First"
 msgstr ""
 
-#: sq_glwidget.cpp:2378
+#: sq_glwidget.cpp:2380
 msgid "Last"
 msgstr ""
 
-#: sq_glwidget.cpp:2383
-msgid "Rotate 180' left"
-msgstr ""
-
-#: sq_glwidget.cpp:2384
-msgid "Rotate 180' right"
-msgstr ""
-
 #: sq_glwidget.cpp:2385
-msgid "Rotate 1' left"
+msgid "Rotate 180'"
 msgstr ""
 
 #: sq_glwidget.cpp:2386
+msgid "Rotate 1' left"
+msgstr ""
+
+#: sq_glwidget.cpp:2387
 msgid "Rotate 1' right"
 msgstr ""
 
-#: sq_glwidget.cpp:2390
+#: sq_glwidget.cpp:2391
 msgid "Zoom 2x"
 msgstr ""
 
-#: sq_glwidget.cpp:2391
+#: sq_glwidget.cpp:2392
 msgid "Zoom 1/2x"
 msgstr ""
 
-#: sq_glwidget.cpp:2394
+#: sq_glwidget.cpp:2401
 msgid "Move left"
 msgstr ""
 
-#: sq_glwidget.cpp:2395
+#: sq_glwidget.cpp:2402
 msgid "Move right"
 msgstr ""
 
-#: sq_glwidget.cpp:2396
+#: sq_glwidget.cpp:2403
 msgid "Move up"
 msgstr ""
 
-#: sq_glwidget.cpp:2397
+#: sq_glwidget.cpp:2404
 msgid "Move down"
 msgstr ""
 
-#: sq_glwidget.cpp:2399
+#: sq_glwidget.cpp:2406
 msgid "Start/stop animation"
 msgstr ""
 
-#: sq_glwidget.cpp:2400
+#: sq_glwidget.cpp:2407
 msgid "Hide/show background"
 msgstr ""
 
-#: sq_glwidget.cpp:2401
+#: sq_glwidget.cpp:2408
 msgid "Hide/show tickmarks"
 msgstr ""
 
-#: sq_glwidget.cpp:2404
+#: sq_glwidget.cpp:2411
 msgid "First page"
 msgstr ""
 
-#: sq_glwidget.cpp:2405
+#: sq_glwidget.cpp:2412
 msgid "Previuos page"
 msgstr ""
 
-#: sq_glwidget.cpp:2406
+#: sq_glwidget.cpp:2413
 msgid "Next page"
 msgstr ""
 
-#: sq_glwidget.cpp:2407
+#: sq_glwidget.cpp:2414
 msgid "Last page"
 msgstr ""
 
-#: sq_glwidget.cpp:2410
+#: sq_glwidget.cpp:2417
 msgid "Quick Browser"
 msgstr ""
 
-#: sq_glwidget.cpp:2411
+#: sq_glwidget.cpp:2418
 msgid "Hide/show toolbar"
 msgstr ""
 
-#: sq_glwidget.cpp:2412
+#: sq_glwidget.cpp:2419
 msgid "Hide/show statusbar"
 msgstr ""
 
@@ -378,119 +394,119 @@ msgstr ""
 msgid "Unable to open the archive '<b>%1</b>'."
 msgstr ""
 
-#: ksquirrel.cpp:192
+#: ksquirrel.cpp:194
 msgid "Clear history"
 msgstr ""
 
-#: ksquirrel.cpp:193
+#: ksquirrel.cpp:195
 msgid "Clear adress"
 msgstr ""
 
-#: ksquirrel.cpp:198
+#: ksquirrel.cpp:200
 msgid "Go!"
 msgstr ""
 
-#: ksquirrel.cpp:235
+#: ksquirrel.cpp:237
 msgid "Libraries' filters"
 msgstr ""
 
-#: ksquirrel.cpp:254
+#: ksquirrel.cpp:256
 msgid "All supported formats"
 msgstr ""
 
-#: ksquirrel.cpp:264
+#: ksquirrel.cpp:266
 msgid "User's filters"
 msgstr ""
 
-#: ksquirrel.cpp:516 sq_options.ui.h:84
+#: ksquirrel.cpp:521 sq_options.ui.h:84
 msgid "Image window"
 msgstr ""
 
-#: ksquirrel.cpp:518
+#: ksquirrel.cpp:523
 msgid "Rescan libraries"
 msgstr ""
 
-#: ksquirrel.cpp:519
+#: ksquirrel.cpp:524
 msgid "Configure external tools ..."
 msgstr ""
 
-#: ksquirrel.cpp:520
+#: ksquirrel.cpp:525
 msgid "Configure filters ..."
 msgstr ""
 
-#: ksquirrel.cpp:521
+#: ksquirrel.cpp:526
 msgid "Goto tray"
 msgstr ""
 
-#: ksquirrel.cpp:522 ksquirrel.cpp:523
+#: ksquirrel.cpp:527 ksquirrel.cpp:528
 msgid "Open file"
 msgstr ""
 
-#: ksquirrel.cpp:525
+#: ksquirrel.cpp:530
 msgid "List"
 msgstr ""
 
-#: ksquirrel.cpp:526
+#: ksquirrel.cpp:531
 msgid "Icons"
 msgstr ""
 
-#: ksquirrel.cpp:527
+#: ksquirrel.cpp:532
 msgid "Detailes"
 msgstr ""
 
-#: ksquirrel.cpp:528 sq_options.ui.h:83
+#: ksquirrel.cpp:533 sq_options.ui.h:83
 msgid "Thumbnails"
 msgstr ""
 
-#: ksquirrel.cpp:530
+#: ksquirrel.cpp:535
 msgid "Toggle tree"
 msgstr ""
 
-#: ksquirrel.cpp:531
+#: ksquirrel.cpp:536
 msgid "Toggle URL box"
 msgstr ""
 
-#: ksquirrel.cpp:532
+#: ksquirrel.cpp:537
 msgid "Make image window separate/built-in"
 msgstr ""
 
-#: ksquirrel.cpp:534
+#: ksquirrel.cpp:539
 msgid "Small thumbnails"
 msgstr ""
 
-#: ksquirrel.cpp:535
+#: ksquirrel.cpp:540
 msgid "Medium thumbnails"
 msgstr ""
 
-#: ksquirrel.cpp:536
+#: ksquirrel.cpp:541
 msgid "Large thumbnails"
 msgstr ""
 
-#: ksquirrel.cpp:537
+#: ksquirrel.cpp:542
 msgid "Huge thumbnails"
 msgstr ""
 
-#: ksquirrel.cpp:686
+#: ksquirrel.cpp:691
 msgid "User depended config file couldn't be opened for writing!"
 msgstr ""
 
-#: ksquirrel.cpp:691
+#: ksquirrel.cpp:696
 msgid "Default (installed) config file couldn't be opened for reading!"
 msgstr ""
 
-#: ksquirrel.cpp:844
+#: ksquirrel.cpp:848
 msgid " writing settings and thumbnails ...  "
 msgstr ""
 
-#: ksquirrel.cpp:906
+#: ksquirrel.cpp:910
 msgid "Thumbnail size"
 msgstr ""
 
-#: ksquirrel.cpp:1048
+#: ksquirrel.cpp:1052
 msgid "New version is available"
 msgstr ""
 
-#: ksquirrel.cpp:1055
+#: ksquirrel.cpp:1059
 msgid ""
 "<pre>Current version is <b>%1</b>\n"
 "New version <b>%2</b> is available at <font color=\"#FF0000\">http://"
@@ -565,74 +581,6 @@ msgstr ""
 
 #: sq_options.ui.h:85 sq_librarieschanged.cpp:88
 msgid "Libraries"
-msgstr ""
-
-#: sq_glwidget.moc.cpp:34 sq_glwidget.moc.cpp:42
-msgid "SQ_GLWidget"
-msgstr ""
-
-#: sq_fileiconview.moc.cpp:34 sq_fileiconview.moc.cpp:42
-msgid "SQ_FileIconView"
-msgstr ""
-
-#: sq_externaltool.moc.cpp:34 sq_externaltool.moc.cpp:42
-msgid "SQ_ExternalTool"
-msgstr ""
-
-#: ksquirrel.moc.cpp:34 ksquirrel.moc.cpp:42
-msgid "KSquirrel"
-msgstr ""
-
-#: sq_filedetailview.moc.cpp:34 sq_filedetailview.moc.cpp:42
-msgid "SQ_FileDetailView"
-msgstr ""
-
-#: sq_updateksquirrelthread.moc.cpp:34 sq_updateksquirrelthread.moc.cpp:42
-msgid "SQ_UpdateKsquirrelThread"
-msgstr ""
-
-#: sq_filethumbview.moc.cpp:34 sq_filethumbview.moc.cpp:42
-msgid "SQ_FileThumbView"
-msgstr ""
-
-#: sq_thumbnailjob.moc.cpp:34 sq_thumbnailjob.moc.cpp:42
-msgid "SQ_ThumbnailLoadJob"
-msgstr ""
-
-#: sq_bookmarkowner.moc.cpp:34 sq_bookmarkowner.moc.cpp:42
-msgid "SQ_BookmarkOwner"
-msgstr ""
-
-#: sq_diroperator.moc.cpp:34 sq_diroperator.moc.cpp:42
-msgid "SQ_DirOperator"
-msgstr ""
-
-#: sq_quickbrowser.moc.cpp:34 sq_quickbrowser.moc.cpp:42
-msgid "SQ_QuickBrowser"
-msgstr ""
-
-#: sq_diroperatorbase.moc.cpp:34 sq_diroperatorbase.moc.cpp:42
-msgid "SQ_DirOperatorBase"
-msgstr ""
-
-#: sq_tray.moc.cpp:34 sq_tray.moc.cpp:42
-msgid "SQ_SystemTray"
-msgstr ""
-
-#: sq_locationtoolbar.moc.cpp:34 sq_locationtoolbar.moc.cpp:42
-msgid "SQ_LocationToolbar"
-msgstr ""
-
-#: sq_treeview.moc.cpp:34 sq_treeview.moc.cpp:42
-msgid "SQ_TreeView"
-msgstr ""
-
-#: sq_librarylistener.moc.cpp:34 sq_librarylistener.moc.cpp:42
-msgid "SQ_LibraryListener"
-msgstr ""
-
-#: sq_widgetstack.moc.cpp:34 sq_widgetstack.moc.cpp:42
-msgid "SQ_WidgetStack"
 msgstr ""
 
 #: sq_helpwidget.cpp:109
@@ -1227,3 +1175,10 @@ msgstr ""
 #: sq_externaltools.cpp:191
 msgid "Move tool down"
 msgstr ""
+
+msgid ""
+"_n: 1 error\n"
+"%n errors"
+msgstr ""
+\n"
+"%n :;"%n :;

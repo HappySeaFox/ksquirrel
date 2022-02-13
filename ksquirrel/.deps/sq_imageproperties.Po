@@ -161,7 +161,8 @@ sq_imageproperties.o sq_imageproperties.o: sq_imageproperties.cpp \
   /usr/lib/qt3/include/qtoolbar.h /usr/lib/qt3/include/qdockwindow.h \
   /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
   /usr/include/ktoolbar.h /usr/lib/qt3/include/qcombobox.h \
-  /usr/include/dcopobject.h /usr/include/kdatastream.h \
+  /usr/include/kio/job.h /usr/include/kio/jobclasses.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
   sq_imageproperties.ui.h sq_imageproperties.moc \
   /usr/lib/qt3/include/private/qucomextra_p.h \
   /usr/lib/qt3/include/private/qucom_p.h /usr/lib/qt3/include/quuid.h
@@ -700,9 +701,13 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qcombobox.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
 
 sq_imageproperties.ui.h:
 

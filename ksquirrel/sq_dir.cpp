@@ -24,7 +24,7 @@
 #include "sq_dir.h"
 
 static const QString thumbFormat = "PNG";
-static const int thumbQuality = 80;
+static const int thumbQuality = 85;
 
 SQ_Dir::SQ_Dir() : QDir()
 {}
@@ -130,7 +130,10 @@ QString SQ_Dir::getAbsPath(const QString relpath)
 
 bool SQ_Dir::updateNeeded(const QString &file)
 {
-	QFileInfo fpath(file), ffullpath(m_root + file);
+	if(!QFile::exists(getAbsPath(file)))
+		return true;
+
+	QFileInfo fpath(file), ffullpath(getAbsPath(file));
 
 	return fpath.lastModified() > ffullpath.lastModified();
 }

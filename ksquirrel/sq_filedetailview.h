@@ -18,13 +18,13 @@
 #ifndef SQ_FILEDETAILVIEW_H
 #define SQ_FILEDETAILVIEW_H
 
-#include <qwidget.h>
 #include <kfiledetailview.h>
 
 class SQ_FileListViewItem : public KFileListViewItem
 {
 	public:
 		SQ_FileListViewItem(QListView *parent, KFileItem *fi);
+		SQ_FileListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi);
 		~SQ_FileListViewItem();
 
 	protected:
@@ -40,11 +40,21 @@ class SQ_FileDetailView : public KFileDetailView
 		~SQ_FileDetailView();
 
 		virtual void insertItem(KFileItem *i);
+		virtual void clearView();
+		virtual void listingCompleted();
+
+		void insertCdUpItem(const KURL &baseurl);
 
 	protected:
-		QDragObject *dragObject();
 		void initItem(SQ_FileListViewItem *item, const KFileItem *i);
 		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+		virtual void dragEnterEvent(QDragEnterEvent *);
+
+	protected slots:
+		void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
+
+	private:
+		QPixmap	dirPix;
 };
 
 #endif

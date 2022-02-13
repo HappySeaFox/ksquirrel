@@ -31,8 +31,12 @@
 #include "sq_config.h"
 #include "sq_widgetstack.h"
 
+SQ_GLView * SQ_GLView::view = 0L;
+
 SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 {
+	view = this;
+
 	separate = ((parent == 0L)?true:false);
 
 	createContent();
@@ -60,13 +64,13 @@ void SQ_GLView::createContent()
 	sbar->addWidget(sqSBGLCoord, 0, true);
 	sbar->addWidget(sqSBFile, 1, true);
 
-	sbar->setShown(sqConfig->readBoolEntry("GL view", "statusbar", true));
+	sbar->setShown(SQ_Config::instance()->readBoolEntry("GL view", "statusbar", true));
 
 	if(!separate)
 		return;
 
 	QRect rect(0,0,320,200);
-	QRect geom = sqConfig->readRectEntry("GL view", "geometry", &rect);
+	QRect geom = SQ_Config::instance()->readRectEntry("GL view", "geometry", &rect);
 
 	setGeometry(geom);
 }
@@ -84,7 +88,7 @@ KStatusBar* SQ_GLView::statusbar()
 void SQ_GLView::closeEvent(QCloseEvent *e)
 {
 	e->ignore();
-	lower();
+	KSquirrel::app()->slotCloseGLWidget();
 }
 
 void SQ_GLView::reparent(QWidget *parent, const QPoint &p, bool showIt)
@@ -95,19 +99,29 @@ void SQ_GLView::reparent(QWidget *parent, const QPoint &p, bool showIt)
 }
 
 bool SQ_GLView::eventFilter(QObject *watched, QEvent *e)
-{/*
-	if(e->type() == QEvent::WindowDeactivate || e->type() == QEvent::Hide)
+{
+	if(watched == this)
 	{
-		gl->stopAnimation();
-		return true;
-	}
-	else if(e->type() == QEvent::WindowActivate || e->type() == QEvent::Show)
-	{
-		if(!gl->manualBlocked())
-			gl->startAnimation();
+		if(/*e->type() == QEvent::WindowDeactivate || */e->type() == QEvent::Hide)
+		{
+			gl->stopAnimation();
+			return true;
+		}
+		else if(/*e->type() == QEvent::WindowActivate || */e->type() == QEvent::Show)
+		{
+			if(!gl->manualBlocked())
+				gl->startAnimation();
 
-		return true;
+			return true;
+		}
+		else
+			return QVBox::eventFilter(watched, e);
 	}
-	else*/
+	else
 		return QVBox::eventFilter(watched, e);
+}
+
+SQ_GLView* SQ_GLView::window()
+{
+	return view;
 }

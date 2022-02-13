@@ -141,25 +141,23 @@ sq_externaltools.o sq_externaltools.o: sq_externaltools.cpp \
   /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qiconview.h \
   /usr/lib/qt3/include/qdragobject.h /usr/lib/qt3/include/qimage.h \
   /usr/lib/qt3/include/qbitmap.h /usr/lib/qt3/include/qpicture.h \
-  /usr/lib/qt3/include/qbuffer.h /usr/lib/qt3/include/qlabel.h \
+  /usr/lib/qt3/include/qbuffer.h /usr/lib/qt3/include/qwhatsthis.h \
   /usr/lib/qt3/include/qheader.h /usr/lib/qt3/include/qlistview.h \
   /usr/lib/qt3/include/qgroupbox.h /usr/lib/qt3/include/qlayout.h \
-  /usr/lib/qt3/include/qtooltip.h /usr/lib/qt3/include/qwhatsthis.h \
+  /usr/lib/qt3/include/qtooltip.h sq_externaltool.h \
+  /usr/include/kdesktopfile.h /usr/include/kconfig.h \
+  /usr/include/ksharedptr.h /usr/include/kconfigbase.h \
+  /usr/lib/qt3/include/qdatetime.h /usr/include/kconfigdata.h sq_config.h \
   ksquirrel.h /usr/include/kmainwindow.h /usr/include/kxmlguifactory.h \
   /usr/lib/qt3/include/qdom.h /usr/include/kxmlguiclient.h \
   /usr/include/kxmlguibuilder.h /usr/lib/qt3/include/qmainwindow.h \
   /usr/lib/qt3/include/qtoolbar.h /usr/lib/qt3/include/qdockwindow.h \
   /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
   /usr/include/ktoolbar.h /usr/lib/qt3/include/qcombobox.h \
-  /usr/lib/qt3/include/qguardedptr.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h sq_externaltool.h \
-  /usr/lib/qt3/include/qvaluevector.h /usr/include/c++/3.3.2/vector \
-  /usr/include/c++/3.3.2/bits/stl_vector.h \
-  /usr/include/c++/3.3.2/bits/stl_bvector.h \
-  /usr/include/c++/3.3.2/bits/vector.tcc sq_config.h \
-  /usr/include/kconfig.h /usr/include/ksharedptr.h \
-  /usr/include/kconfigbase.h /usr/lib/qt3/include/qdatetime.h \
-  /usr/include/kconfigdata.h sq_externaltools.ui.h \
+  /usr/lib/qt3/include/qguardedptr.h /usr/include/kio/job.h \
+  /usr/include/kio/jobclasses.h /usr/include/kurl.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h sq_externaltools.ui.h \
   /usr/include/kiconloader.h /usr/lib/qt3/include/qmovie.h \
   sq_externaltools.moc /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
@@ -625,7 +623,7 @@ sq_externaltools.h:
 
 /usr/lib/qt3/include/qbuffer.h:
 
-/usr/lib/qt3/include/qlabel.h:
+/usr/lib/qt3/include/qwhatsthis.h:
 
 /usr/lib/qt3/include/qheader.h:
 
@@ -637,7 +635,21 @@ sq_externaltools.h:
 
 /usr/lib/qt3/include/qtooltip.h:
 
-/usr/lib/qt3/include/qwhatsthis.h:
+sq_externaltool.h:
+
+/usr/include/kdesktopfile.h:
+
+/usr/include/kconfig.h:
+
+/usr/include/ksharedptr.h:
+
+/usr/include/kconfigbase.h:
+
+/usr/lib/qt3/include/qdatetime.h:
+
+/usr/include/kconfigdata.h:
+
+sq_config.h:
 
 ksquirrel.h:
 
@@ -667,33 +679,17 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qguardedptr.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
 
-sq_externaltool.h:
+/usr/include/kurl.h:
 
-/usr/lib/qt3/include/qvaluevector.h:
+/usr/include/sys/stat.h:
 
-/usr/include/c++/3.3.2/vector:
+/usr/include/bits/stat.h:
 
-/usr/include/c++/3.3.2/bits/stl_vector.h:
-
-/usr/include/c++/3.3.2/bits/stl_bvector.h:
-
-/usr/include/c++/3.3.2/bits/vector.tcc:
-
-sq_config.h:
-
-/usr/include/kconfig.h:
-
-/usr/include/ksharedptr.h:
-
-/usr/include/kconfigbase.h:
-
-/usr/lib/qt3/include/qdatetime.h:
-
-/usr/include/kconfigdata.h:
+/usr/include/kio/global.h:
 
 sq_externaltools.ui.h:
 

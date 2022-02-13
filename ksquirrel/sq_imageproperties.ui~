@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>509</width>
-            <height>355</height>
+            <width>511</width>
+            <height>379</height>
         </rect>
     </property>
     <property name="caption">
@@ -27,7 +27,7 @@
                 <cstring>pushButton1</cstring>
             </property>
             <property name="text">
-                <string>    OK    </string>
+                <string>OK</string>
             </property>
             <property name="toggleButton">
                 <bool>false</bool>
@@ -907,9 +907,6 @@
                         <property name="allColumnsShowFocus">
                             <bool>true</bool>
                         </property>
-                        <property name="resizeMode">
-                            <enum>AllColumns</enum>
-                        </property>
                     </widget>
                 </grid>
             </widget>
@@ -939,7 +936,6 @@
     <include location="global" impldecl="in implementation">kaction.h</include>
     <include location="global" impldecl="in implementation">qapplication.h</include>
     <include location="global" impldecl="in implementation">qclipboard.h</include>
-    <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="global" impldecl="in implementation">kiconloader.h</include>
     <include location="global" impldecl="in declaration">qvaluevector.h</include>
     <include location="global" impldecl="in declaration">qvariant.h</include>

@@ -1,11 +1,12 @@
 sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
-  /usr/lib/qt3/include/qstrlist.h /usr/lib/qt3/include/qstring.h \
-  /usr/lib/qt3/include/qcstring.h /usr/lib/qt3/include/qmemarray.h \
-  /usr/lib/qt3/include/qgarray.h /usr/lib/qt3/include/qshared.h \
+  /usr/lib/qt3/include/qpainter.h /usr/lib/qt3/include/qcolor.h \
+  /usr/lib/qt3/include/qwindowdefs.h /usr/lib/qt3/include/qobjectdefs.h \
   /usr/lib/qt3/include/qglobal.h /usr/lib/qt3/include/qconfig.h \
   /usr/lib/qt3/include/qmodules.h /usr/lib/qt3/include/qfeatures.h \
-  /usr/lib/qt3/include/qwinexport.h /usr/include/string.h \
-  /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/lib/qt3/include/qstring.h /usr/lib/qt3/include/qcstring.h \
+  /usr/lib/qt3/include/qmemarray.h /usr/lib/qt3/include/qgarray.h \
+  /usr/lib/qt3/include/qshared.h /usr/lib/qt3/include/qwinexport.h \
+  /usr/include/string.h /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/gnu/stubs.h \
   /usr/lib/gcc-lib/i586-mandrake-linux-gnu/3.3.2/include/stddef.h \
   /usr/include/xlocale.h \
@@ -74,19 +75,12 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
   /usr/include/c++/3.3.2/bits/stl_heap.h \
   /usr/include/c++/3.3.2/bits/stl_tempbuf.h \
   /usr/include/c++/3.3.2/bits/basic_string.tcc \
-  /usr/lib/qt3/include/qptrlist.h /usr/lib/qt3/include/qglist.h \
-  /usr/lib/qt3/include/qptrcollection.h \
-  /usr/lib/qt3/include/qdatastream.h /usr/lib/qt3/include/qiodevice.h \
-  /usr/lib/qt3/include/qdragobject.h /usr/lib/qt3/include/qobject.h \
-  /usr/lib/qt3/include/qobjectdefs.h /usr/lib/qt3/include/qwindowdefs.h \
-  /usr/lib/qt3/include/qnamespace.h /usr/lib/qt3/include/qevent.h \
-  /usr/lib/qt3/include/qregion.h /usr/lib/qt3/include/qrect.h \
-  /usr/lib/qt3/include/qsize.h /usr/lib/qt3/include/qpoint.h \
-  /usr/lib/qt3/include/qmime.h /usr/lib/qt3/include/qmap.h \
-  /usr/lib/qt3/include/qpair.h /usr/lib/qt3/include/qvaluelist.h \
-  /usr/lib/qt3/include/qtl.h /usr/lib/qt3/include/qtextstream.h \
-  /usr/include/c++/3.3.2/iterator /usr/include/c++/3.3.2/ostream \
-  /usr/include/c++/3.3.2/ios /usr/include/c++/3.3.2/bits/localefwd.h \
+  /usr/lib/qt3/include/qnamespace.h /usr/lib/qt3/include/qstringlist.h \
+  /usr/lib/qt3/include/qvaluelist.h /usr/lib/qt3/include/qtl.h \
+  /usr/lib/qt3/include/qtextstream.h /usr/lib/qt3/include/qiodevice.h \
+  /usr/lib/qt3/include/qdatastream.h /usr/include/c++/3.3.2/iterator \
+  /usr/include/c++/3.3.2/ostream /usr/include/c++/3.3.2/ios \
+  /usr/include/c++/3.3.2/bits/localefwd.h \
   /usr/include/c++/3.3.2/bits/ios_base.h \
   /usr/include/c++/3.3.2/bits/locale_classes.h \
   /usr/include/c++/3.3.2/streambuf \
@@ -116,52 +110,59 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
   /usr/include/c++/3.3.2/bits/istream.tcc \
   /usr/include/c++/3.3.2/bits/stream_iterator.h \
   /usr/include/c++/3.3.2/list /usr/include/c++/3.3.2/bits/stl_list.h \
-  /usr/include/c++/3.3.2/bits/list.tcc /usr/include/c++/3.3.2/map \
-  /usr/include/c++/3.3.2/bits/stl_tree.h \
-  /usr/include/c++/3.3.2/bits/stl_map.h \
-  /usr/include/c++/3.3.2/bits/stl_multimap.h \
-  /usr/lib/qt3/include/qimage.h /usr/lib/qt3/include/qpixmap.h \
-  /usr/lib/qt3/include/qpaintdevice.h /usr/lib/qt3/include/qcolor.h \
-  /usr/lib/qt3/include/qstringlist.h /usr/lib/qt3/include/qpainter.h \
+  /usr/include/c++/3.3.2/bits/list.tcc /usr/lib/qt3/include/qstrlist.h \
+  /usr/lib/qt3/include/qptrlist.h /usr/lib/qt3/include/qglist.h \
+  /usr/lib/qt3/include/qptrcollection.h \
   /usr/lib/qt3/include/qfontmetrics.h /usr/lib/qt3/include/qfont.h \
-  /usr/lib/qt3/include/qfontinfo.h /usr/lib/qt3/include/qpen.h \
+  /usr/lib/qt3/include/qrect.h /usr/lib/qt3/include/qsize.h \
+  /usr/lib/qt3/include/qpoint.h /usr/lib/qt3/include/qfontinfo.h \
+  /usr/lib/qt3/include/qregion.h /usr/lib/qt3/include/qpen.h \
   /usr/lib/qt3/include/qbrush.h /usr/lib/qt3/include/qpointarray.h \
   /usr/lib/qt3/include/qwmatrix.h /usr/lib/qt3/include/qhbox.h \
-  /usr/lib/qt3/include/qwidget.h /usr/lib/qt3/include/qpalette.h \
+  /usr/lib/qt3/include/qwidget.h /usr/lib/qt3/include/qobject.h \
+  /usr/lib/qt3/include/qevent.h /usr/lib/qt3/include/qmime.h \
+  /usr/lib/qt3/include/qmap.h /usr/lib/qt3/include/qpair.h \
+  /usr/include/c++/3.3.2/map /usr/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/include/c++/3.3.2/bits/stl_map.h \
+  /usr/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/lib/qt3/include/qpaintdevice.h /usr/lib/qt3/include/qpalette.h \
   /usr/lib/qt3/include/qsizepolicy.h /usr/lib/qt3/include/qframe.h \
   /usr/lib/qt3/include/qtoolbar.h /usr/lib/qt3/include/qdockwindow.h \
   /usr/lib/qt3/include/qtoolbutton.h /usr/lib/qt3/include/qbutton.h \
-  /usr/lib/qt3/include/qkeysequence.h /usr/lib/qt3/include/qiconset.h \
-  /usr/lib/qt3/include/qlabel.h /usr/lib/qt3/include/qapplication.h \
+  /usr/lib/qt3/include/qkeysequence.h /usr/lib/qt3/include/qpixmap.h \
+  /usr/lib/qt3/include/qiconset.h /usr/lib/qt3/include/qlabel.h \
+  /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qasciidict.h \
   /usr/lib/qt3/include/qgdict.h /usr/lib/qt3/include/qtranslator.h \
   /usr/lib/qt3/include/qtooltip.h /usr/lib/qt3/include/qtimer.h \
-  /usr/include/kurldrag.h /usr/include/kurl.h /usr/include/kdemacros.h \
-  /usr/include/kiconloader.h /usr/lib/qt3/include/qmovie.h \
-  /usr/include/kglobal.h /usr/include/kinstance.h \
-  /usr/include/kicontheme.h /usr/include/kstandarddirs.h \
-  /usr/lib/qt3/include/qdict.h /usr/include/kstringhandler.h \
-  /usr/lib/qt3/include/qregexp.h /usr/include/klocale.h \
-  /usr/include/kapplication.h /usr/include/kdeversion.h ksquirrel.h \
-  /usr/include/kmainwindow.h /usr/include/kxmlguifactory.h \
-  /usr/lib/qt3/include/qdom.h /usr/include/kxmlguiclient.h \
-  /usr/include/kxmlguibuilder.h /usr/lib/qt3/include/qmainwindow.h \
-  /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
-  /usr/include/ktoolbar.h /usr/lib/qt3/include/qcombobox.h \
-  /usr/lib/qt3/include/qguardedptr.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h sq_config.h /usr/include/kconfig.h \
-  /usr/include/ksharedptr.h /usr/include/kconfigbase.h \
-  /usr/lib/qt3/include/qdatetime.h /usr/lib/qt3/include/qvariant.h \
+  /usr/include/kurldrag.h /usr/lib/qt3/include/qdragobject.h \
+  /usr/lib/qt3/include/qimage.h /usr/include/kurl.h \
+  /usr/include/kdemacros.h /usr/include/kiconloader.h \
+  /usr/lib/qt3/include/qmovie.h /usr/include/kglobal.h \
+  /usr/include/kinstance.h /usr/include/kicontheme.h \
+  /usr/include/kstandarddirs.h /usr/lib/qt3/include/qdict.h \
+  /usr/include/kstringhandler.h /usr/lib/qt3/include/qregexp.h \
+  /usr/include/klocale.h /usr/include/kapplication.h \
+  /usr/include/kdeversion.h ksquirrel.h /usr/include/kmainwindow.h \
+  /usr/include/kxmlguifactory.h /usr/lib/qt3/include/qdom.h \
+  /usr/include/kxmlguiclient.h /usr/include/kxmlguibuilder.h \
+  /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qmetaobject.h \
+  /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
+  /usr/lib/qt3/include/qcombobox.h /usr/lib/qt3/include/qguardedptr.h \
+  /usr/include/kio/job.h /usr/include/kio/jobclasses.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h sq_config.h \
+  /usr/include/kconfig.h /usr/include/ksharedptr.h \
+  /usr/include/kconfigbase.h /usr/lib/qt3/include/qvariant.h \
   /usr/include/kconfigdata.h sq_dir.h /usr/lib/qt3/include/qdir.h \
   /usr/lib/qt3/include/qfileinfo.h /usr/lib/qt3/include/qfile.h \
-  sq_thumbnailinfo.h sq_filethumbview.h /usr/include/kfileiconview.h \
-  /usr/include/kiconview.h /usr/lib/qt3/include/qcursor.h \
-  /usr/lib/qt3/include/qiconview.h /usr/lib/qt3/include/qscrollview.h \
-  /usr/lib/qt3/include/qscrollbar.h /usr/lib/qt3/include/qrangecontrol.h \
-  /usr/lib/qt3/include/qbitmap.h /usr/lib/qt3/include/qpicture.h \
-  /usr/lib/qt3/include/qbuffer.h /usr/include/kfileview.h \
-  /usr/include/kfileitem.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/kio/global.h \
+  sq_thumbnailinfo.h sq_filethumbview.h sq_fileiconviewbase.h \
+  /usr/include/kfileiconview.h /usr/include/kiconview.h \
+  /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qiconview.h \
+  /usr/lib/qt3/include/qscrollview.h /usr/lib/qt3/include/qscrollbar.h \
+  /usr/lib/qt3/include/qrangecontrol.h /usr/lib/qt3/include/qbitmap.h \
+  /usr/lib/qt3/include/qpicture.h /usr/lib/qt3/include/qbuffer.h \
+  /usr/include/kfileview.h /usr/include/kfileitem.h \
   /usr/include/kmimetype.h /usr/include/ksycocatype.h \
   /usr/include/kservicetype.h /usr/include/ksycocaentry.h \
   /usr/include/kservice.h /usr/include/ksimpleconfig.h \
@@ -170,24 +171,34 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
   sq_libraryhandler.h /usr/lib/qt3/include/qvaluevector.h \
   /usr/include/c++/3.3.2/vector /usr/include/c++/3.3.2/bits/stl_vector.h \
   /usr/include/c++/3.3.2/bits/stl_bvector.h \
-  /usr/include/c++/3.3.2/bits/vector.tcc defs.h \
-  /usr/include/linux/types.h /usr/include/linux/posix_types.h \
-  /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
-  /usr/include/asm/types.h /usr/include/linux/compiler.h \
-  /usr/include/linux/compiler-gcc3.h /usr/include/linux/compiler-gcc.h \
-  sq_thumbnailjob.h /usr/include/kio/job.h /usr/include/kio/jobclasses.h \
-  sq_thumbnailsize.h sq_widgetstack.h /usr/lib/qt3/include/qwidgetstack.h \
-  /usr/lib/qt3/include/qintdict.h /usr/lib/qt3/include/qptrdict.h \
-  sq_diroperator.h sq_diroperatorbase.h /usr/include/kdiroperator.h \
-  /usr/lib/qt3/include/qptrstack.h /usr/include/kaction.h \
-  /usr/include/kguiitem.h /usr/include/kshortcut.h \
+  /usr/include/c++/3.3.2/bits/vector.tcc fmt_types.h fmt_defs.h \
+  sq_thumbnailjob.h sq_thumbnailsize.h sq_widgetstack.h \
+  /usr/lib/qt3/include/qwidgetstack.h /usr/lib/qt3/include/qintdict.h \
+  /usr/lib/qt3/include/qptrdict.h sq_diroperator.h sq_diroperatorbase.h \
+  /usr/include/kdiroperator.h /usr/lib/qt3/include/qptrstack.h \
+  /usr/include/kaction.h /usr/include/kguiitem.h /usr/include/kshortcut.h \
   /usr/include/kstdaction.h /usr/include/kactioncollection.h \
   /usr/include/kactionclasses.h /usr/include/kcompletion.h \
   /usr/include/kglobalsettings.h /usr/include/ksortablevaluelist.h \
-  /usr/include/kdirlister.h /usr/include/kdirnotify.h sq_pixmapcache.h \
+  /usr/include/kdirlister.h /usr/include/kdirnotify.h \
+  /usr/include/dcopobject.h /usr/include/kdatastream.h sq_pixmapcache.h \
   sq_progress.h sq_filethumbviewitem.h
 
-/usr/lib/qt3/include/qstrlist.h:
+/usr/lib/qt3/include/qpainter.h:
+
+/usr/lib/qt3/include/qcolor.h:
+
+/usr/lib/qt3/include/qwindowdefs.h:
+
+/usr/lib/qt3/include/qobjectdefs.h:
+
+/usr/lib/qt3/include/qglobal.h:
+
+/usr/lib/qt3/include/qconfig.h:
+
+/usr/lib/qt3/include/qmodules.h:
+
+/usr/lib/qt3/include/qfeatures.h:
 
 /usr/lib/qt3/include/qstring.h:
 
@@ -198,14 +209,6 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
 /usr/lib/qt3/include/qgarray.h:
 
 /usr/lib/qt3/include/qshared.h:
-
-/usr/lib/qt3/include/qglobal.h:
-
-/usr/lib/qt3/include/qconfig.h:
-
-/usr/lib/qt3/include/qmodules.h:
-
-/usr/lib/qt3/include/qfeatures.h:
 
 /usr/lib/qt3/include/qwinexport.h:
 
@@ -417,47 +420,19 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
 
 /usr/include/c++/3.3.2/bits/basic_string.tcc:
 
-/usr/lib/qt3/include/qptrlist.h:
-
-/usr/lib/qt3/include/qglist.h:
-
-/usr/lib/qt3/include/qptrcollection.h:
-
-/usr/lib/qt3/include/qdatastream.h:
-
-/usr/lib/qt3/include/qiodevice.h:
-
-/usr/lib/qt3/include/qdragobject.h:
-
-/usr/lib/qt3/include/qobject.h:
-
-/usr/lib/qt3/include/qobjectdefs.h:
-
-/usr/lib/qt3/include/qwindowdefs.h:
-
 /usr/lib/qt3/include/qnamespace.h:
 
-/usr/lib/qt3/include/qevent.h:
-
-/usr/lib/qt3/include/qregion.h:
-
-/usr/lib/qt3/include/qrect.h:
-
-/usr/lib/qt3/include/qsize.h:
-
-/usr/lib/qt3/include/qpoint.h:
-
-/usr/lib/qt3/include/qmime.h:
-
-/usr/lib/qt3/include/qmap.h:
-
-/usr/lib/qt3/include/qpair.h:
+/usr/lib/qt3/include/qstringlist.h:
 
 /usr/lib/qt3/include/qvaluelist.h:
 
 /usr/lib/qt3/include/qtl.h:
 
 /usr/lib/qt3/include/qtextstream.h:
+
+/usr/lib/qt3/include/qiodevice.h:
+
+/usr/lib/qt3/include/qdatastream.h:
 
 /usr/include/c++/3.3.2/iterator:
 
@@ -551,31 +526,27 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
 
 /usr/include/c++/3.3.2/bits/list.tcc:
 
-/usr/include/c++/3.3.2/map:
+/usr/lib/qt3/include/qstrlist.h:
 
-/usr/include/c++/3.3.2/bits/stl_tree.h:
+/usr/lib/qt3/include/qptrlist.h:
 
-/usr/include/c++/3.3.2/bits/stl_map.h:
+/usr/lib/qt3/include/qglist.h:
 
-/usr/include/c++/3.3.2/bits/stl_multimap.h:
-
-/usr/lib/qt3/include/qimage.h:
-
-/usr/lib/qt3/include/qpixmap.h:
-
-/usr/lib/qt3/include/qpaintdevice.h:
-
-/usr/lib/qt3/include/qcolor.h:
-
-/usr/lib/qt3/include/qstringlist.h:
-
-/usr/lib/qt3/include/qpainter.h:
+/usr/lib/qt3/include/qptrcollection.h:
 
 /usr/lib/qt3/include/qfontmetrics.h:
 
 /usr/lib/qt3/include/qfont.h:
 
+/usr/lib/qt3/include/qrect.h:
+
+/usr/lib/qt3/include/qsize.h:
+
+/usr/lib/qt3/include/qpoint.h:
+
 /usr/lib/qt3/include/qfontinfo.h:
+
+/usr/lib/qt3/include/qregion.h:
 
 /usr/lib/qt3/include/qpen.h:
 
@@ -588,6 +559,26 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
 /usr/lib/qt3/include/qhbox.h:
 
 /usr/lib/qt3/include/qwidget.h:
+
+/usr/lib/qt3/include/qobject.h:
+
+/usr/lib/qt3/include/qevent.h:
+
+/usr/lib/qt3/include/qmime.h:
+
+/usr/lib/qt3/include/qmap.h:
+
+/usr/lib/qt3/include/qpair.h:
+
+/usr/include/c++/3.3.2/map:
+
+/usr/include/c++/3.3.2/bits/stl_tree.h:
+
+/usr/include/c++/3.3.2/bits/stl_map.h:
+
+/usr/include/c++/3.3.2/bits/stl_multimap.h:
+
+/usr/lib/qt3/include/qpaintdevice.h:
 
 /usr/lib/qt3/include/qpalette.h:
 
@@ -604,6 +595,8 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
 /usr/lib/qt3/include/qbutton.h:
 
 /usr/lib/qt3/include/qkeysequence.h:
+
+/usr/lib/qt3/include/qpixmap.h:
 
 /usr/lib/qt3/include/qiconset.h:
 
@@ -624,6 +617,10 @@ sq_filethumbview.o sq_filethumbview.o: sq_filethumbview.cpp \
 /usr/lib/qt3/include/qtimer.h:
 
 /usr/include/kurldrag.h:
+
+/usr/lib/qt3/include/qdragobject.h:
+
+/usr/lib/qt3/include/qimage.h:
 
 /usr/include/kurl.h:
 
@@ -677,9 +674,17 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qguardedptr.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/kio/global.h:
+
+/usr/lib/qt3/include/qdatetime.h:
 
 sq_config.h:
 
@@ -688,8 +693,6 @@ sq_config.h:
 /usr/include/ksharedptr.h:
 
 /usr/include/kconfigbase.h:
-
-/usr/lib/qt3/include/qdatetime.h:
 
 /usr/lib/qt3/include/qvariant.h:
 
@@ -706,6 +709,8 @@ sq_dir.h:
 sq_thumbnailinfo.h:
 
 sq_filethumbview.h:
+
+sq_fileiconviewbase.h:
 
 /usr/include/kfileiconview.h:
 
@@ -730,12 +735,6 @@ sq_filethumbview.h:
 /usr/include/kfileview.h:
 
 /usr/include/kfileitem.h:
-
-/usr/include/sys/stat.h:
-
-/usr/include/bits/stat.h:
-
-/usr/include/kio/global.h:
 
 /usr/include/kmimetype.h:
 
@@ -769,29 +768,11 @@ sq_libraryhandler.h:
 
 /usr/include/c++/3.3.2/bits/vector.tcc:
 
-defs.h:
+fmt_types.h:
 
-/usr/include/linux/types.h:
-
-/usr/include/linux/posix_types.h:
-
-/usr/include/linux/stddef.h:
-
-/usr/include/asm/posix_types.h:
-
-/usr/include/asm/types.h:
-
-/usr/include/linux/compiler.h:
-
-/usr/include/linux/compiler-gcc3.h:
-
-/usr/include/linux/compiler-gcc.h:
+fmt_defs.h:
 
 sq_thumbnailjob.h:
-
-/usr/include/kio/job.h:
-
-/usr/include/kio/jobclasses.h:
 
 sq_thumbnailsize.h:
 
@@ -832,6 +813,10 @@ sq_diroperatorbase.h:
 /usr/include/kdirlister.h:
 
 /usr/include/kdirnotify.h:
+
+/usr/include/dcopobject.h:
+
+/usr/include/kdatastream.h:
 
 sq_pixmapcache.h:
 

@@ -306,7 +306,7 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-SUBDIRS = ksquirrel po pics 
+SUBDIRS = ksquirrel po pics desktop 
 EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO ksquirrel.lsm ksquirrel.spec 
 
 ####### kdevelop will overwrite this part!!! (end)############
@@ -780,7 +780,7 @@ dist-hook:
 .NOEXPORT:
 
 #>+ 2
-KDE_DIST=stamp-h.in autoscan.log subdirs Makefile.in config.h.in aclocal.m4 Makefile.dist ksquirrel.kdevses ksquirrel-0.5.0.tar.gz Makefile.am acinclude.m4 start 
+KDE_DIST=stamp-h.in autoscan.log subdirs ksquirrel-0.6.0.tar.gz Makefile.in config.h.in reconfigure configure.gnu aclocal.m4 Makefile.dist ksquirrel.kdevses Makefile.am acinclude.m4 start 
 
 #>+ 2
 docs-am:

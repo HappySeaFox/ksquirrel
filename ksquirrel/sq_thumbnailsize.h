@@ -40,7 +40,7 @@ class SQ_ThumbnailSize
 		SQ_ThumbnailSize(const QString& str);
 
 		void setExtended(bool);
-		bool isExtended() const;
+		bool extended() const;
 
 		void setMargin(int);
 		int margin() const;
@@ -57,12 +57,16 @@ class SQ_ThumbnailSize
 		int value() const;
 		QString stringValue() const;
 
-		static SQ_ThumbnailSize biggest() { return SQ_ThumbnailSize(Huge); }
+		static int biggest() { return 128; }
+
+		static SQ_ThumbnailSize* instance();
 
 	private:
 		Size mValue;
-		bool extended;
+		bool m_extended;
 		int m_margin;
+
+		static SQ_ThumbnailSize *thumb;
 };
 
 #endif

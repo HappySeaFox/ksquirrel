@@ -142,28 +142,27 @@ sq_glview.o sq_glview.o: sq_glview.cpp /usr/lib/qt3/include/qlayout.h \
   /usr/lib/qt3/include/qmainwindow.h /usr/lib/qt3/include/qtoolbar.h \
   /usr/lib/qt3/include/qdockwindow.h /usr/lib/qt3/include/qmetaobject.h \
   /usr/lib/qt3/include/qconnection.h /usr/include/ktoolbar.h \
-  /usr/lib/qt3/include/qcombobox.h /usr/include/dcopobject.h \
-  /usr/include/kdatastream.h sq_glview.h /usr/lib/qt3/include/qvbox.h \
-  /usr/lib/qt3/include/qhbox.h sq_glwidget.h /usr/lib/qt3/include/qgl.h \
-  /usr/lib/qt3/include/qglcolormap.h /usr/X11R6/include/GL/gl.h \
-  /usr/X11R6/include/GL/glext.h /usr/X11R6/include/GL/glu.h \
-  /usr/lib/qt3/include/qcursor.h /usr/lib/qt3/include/qfileinfo.h \
-  /usr/lib/qt3/include/qfile.h /usr/lib/qt3/include/qdatetime.h \
-  /usr/lib/qt3/include/qimage.h /usr/include/kurl.h defs.h \
-  /usr/include/linux/types.h /usr/include/linux/posix_types.h \
-  /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
-  /usr/include/asm/types.h /usr/include/linux/compiler.h \
-  /usr/include/linux/compiler-gcc3.h /usr/include/linux/compiler-gcc.h \
-  sq_config.h /usr/include/kconfig.h /usr/include/ksharedptr.h \
+  /usr/lib/qt3/include/qcombobox.h /usr/include/kio/job.h \
+  /usr/include/kio/jobclasses.h /usr/include/kurl.h \
+  /usr/include/sys/stat.h /usr/include/bits/stat.h \
+  /usr/include/kio/global.h /usr/lib/qt3/include/qdatetime.h sq_glview.h \
+  /usr/lib/qt3/include/qvbox.h /usr/lib/qt3/include/qhbox.h sq_glwidget.h \
+  /usr/lib/qt3/include/qgl.h /usr/lib/qt3/include/qglcolormap.h \
+  /usr/X11R6/include/GL/gl.h /usr/X11R6/include/GL/glext.h \
+  /usr/X11R6/include/GL/glu.h /usr/lib/qt3/include/qcursor.h \
+  /usr/lib/qt3/include/qfileinfo.h /usr/lib/qt3/include/qfile.h \
+  /usr/lib/qt3/include/qimage.h fmt_types.h fmt_defs.h \
+  /usr/include/c++/3.3.2/vector /usr/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/include/c++/3.3.2/bits/vector.tcc sq_config.h \
+  /usr/include/kconfig.h /usr/include/ksharedptr.h \
   /usr/include/kconfigbase.h /usr/lib/qt3/include/qvariant.h \
   /usr/include/kconfigdata.h sq_widgetstack.h \
   /usr/lib/qt3/include/qwidgetstack.h /usr/lib/qt3/include/qptrdict.h \
-  /usr/include/kfileitem.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/kio/global.h \
-  /usr/include/kmimetype.h /usr/include/ksycocatype.h \
-  /usr/include/kservicetype.h /usr/include/ksycocaentry.h \
-  /usr/include/kservice.h /usr/include/ksimpleconfig.h \
-  /usr/include/kfilemetainfo.h
+  /usr/include/kfileitem.h /usr/include/kmimetype.h \
+  /usr/include/ksycocatype.h /usr/include/kservicetype.h \
+  /usr/include/ksycocaentry.h /usr/include/kservice.h \
+  /usr/include/ksimpleconfig.h /usr/include/kfilemetainfo.h
 
 /usr/lib/qt3/include/qlayout.h:
 
@@ -633,9 +632,19 @@ ksquirrel.h:
 
 /usr/lib/qt3/include/qcombobox.h:
 
-/usr/include/dcopobject.h:
+/usr/include/kio/job.h:
 
-/usr/include/kdatastream.h:
+/usr/include/kio/jobclasses.h:
+
+/usr/include/kurl.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/kio/global.h:
+
+/usr/lib/qt3/include/qdatetime.h:
 
 sq_glview.h:
 
@@ -661,29 +670,19 @@ sq_glwidget.h:
 
 /usr/lib/qt3/include/qfile.h:
 
-/usr/lib/qt3/include/qdatetime.h:
-
 /usr/lib/qt3/include/qimage.h:
 
-/usr/include/kurl.h:
+fmt_types.h:
 
-defs.h:
+fmt_defs.h:
 
-/usr/include/linux/types.h:
+/usr/include/c++/3.3.2/vector:
 
-/usr/include/linux/posix_types.h:
+/usr/include/c++/3.3.2/bits/stl_vector.h:
 
-/usr/include/linux/stddef.h:
+/usr/include/c++/3.3.2/bits/stl_bvector.h:
 
-/usr/include/asm/posix_types.h:
-
-/usr/include/asm/types.h:
-
-/usr/include/linux/compiler.h:
-
-/usr/include/linux/compiler-gcc3.h:
-
-/usr/include/linux/compiler-gcc.h:
+/usr/include/c++/3.3.2/bits/vector.tcc:
 
 sq_config.h:
 
@@ -704,12 +703,6 @@ sq_widgetstack.h:
 /usr/lib/qt3/include/qptrdict.h:
 
 /usr/include/kfileitem.h:
-
-/usr/include/sys/stat.h:
-
-/usr/include/bits/stat.h:
-
-/usr/include/kio/global.h:
 
 /usr/include/kmimetype.h:
 

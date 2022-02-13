@@ -41,8 +41,11 @@
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
 
+SQ_ArchiveHandler * SQ_ArchiveHandler::ar = 0L;
+
 SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObject(parent, name)
 {
+	ar = this;
 	dir = new SQ_Dir;
 	dir->setRoot(QString::fromLatin1("extracts"));
 
@@ -184,4 +187,9 @@ void SQ_ArchiveHandler::clean(QString s)
 	bool removed = del.start(KProcess::Block);
 
 	kdDebug() << ((removed)?"OK":"error") << endl;
+}
+
+SQ_ArchiveHandler* SQ_ArchiveHandler::instance()
+{
+	return ar;
 }

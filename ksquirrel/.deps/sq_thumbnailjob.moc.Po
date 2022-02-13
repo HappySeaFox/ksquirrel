@@ -126,7 +126,7 @@ sq_thumbnailjob.moc.o sq_thumbnailjob.moc.o: sq_thumbnailjob.moc.cpp \
   /usr/include/c++/3.3.2/bits/stl_multimap.h \
   /usr/lib/qt3/include/qguardedptr.h /usr/include/sys/stat.h \
   /usr/include/bits/stat.h /usr/include/kio/global.h \
-  /usr/lib/qt3/include/qdatetime.h sq_thumbnailsize.h sq_thumbnailinfo.h \
+  /usr/lib/qt3/include/qdatetime.h sq_thumbnailinfo.h \
   /usr/lib/qt3/include/qmetaobject.h /usr/lib/qt3/include/qconnection.h \
   /usr/lib/qt3/include/qapplication.h \
   /usr/lib/qt3/include/qdesktopwidget.h /usr/lib/qt3/include/qwidget.h \
@@ -539,8 +539,6 @@ sq_thumbnailjob.h:
 /usr/include/kio/global.h:
 
 /usr/lib/qt3/include/qdatetime.h:
-
-sq_thumbnailsize.h:
 
 sq_thumbnailinfo.h:
 

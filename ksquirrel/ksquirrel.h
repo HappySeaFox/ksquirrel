@@ -21,7 +21,7 @@
 #include <qstringlist.h>
 
 #include <kmainwindow.h>
-#include <dcopobject.h>
+#include <kio/job.h>
 
 class KMenuBar;
 class KIconLoader;
@@ -58,8 +58,11 @@ class SQ_GLView;
 class SQ_GLWidget;
 class SQ_ArchiveHandler;
 class SQ_UpdateKsquirrelThread;
+class SQ_Dir;
+class SQ_Converter;
+class SQ_Resizer;
 
-class KSquirrel : public KMainWindow, public DCOPObject
+class KSquirrel : public KMainWindow
 {
 	Q_OBJECT
 
@@ -90,6 +93,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		void initFilterMenu();
 		void initExternalTools();
 		void initBookmarks();
+		void tryCopyDesktops();
 
 		void createWidgets(int);
 		void handlePositionSize();
@@ -102,6 +106,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
 	signals:
 		void thumbSizeChanged(const QString&);
+		void continueLoading();
 
 	public slots:
 		void slotOptions();
@@ -122,7 +127,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		void slotThumbsHuge();
 		void slotContinueLoading();
 		void raiseGLWidget();
-		QString slotRescan();
 		void slotSetTreeShown(bool shown);
 		void slotSeparateGL(bool);
 		void slotOpenFile();
@@ -130,31 +134,42 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		void slotNeedUpdate(const QString &ver);
 		void slotShowUpdate();
 		void slotAnimatedClicked();
+		QString slotRescan();
+
+	private slots:
+		void slotUDSEntries(KIO::Job*, const KIO::UDSEntryList&);
+		void listResult(KIO::Job*);
+		void slotContinueLoading2();
 
 	public:
-		static KSquirrel *App;
+		static KSquirrel 		*m_app;
+		static KIconLoader		*iconL;
+
+		static KIconLoader* loader();
+		static KSquirrel* app();
 
 		SQ_Config				*kconf;
-		KIconLoader			*iconL;
-		SQ_WidgetStack			*pWidgetStack;
-		KHistoryCombo			*pCurrentURL;
-		SQ_LibraryHandler		*sqLibHandlerReal;
+		SQ_WidgetStack		*pWidgetStack;
+		KHistoryCombo		*pCurrentURL;
+		SQ_LibraryHandler		*libhandler;
 		KStatusBar				*sbar;
-		SQ_LibraryListener		*libl;
-		SQ_SystemTray			*tray;
+		SQ_LibraryListener	*libl;
+		SQ_SystemTray		*tray;
 		QLabel					*dirInfo, *fileIcon, *fileName, *decodedStatus, *decodedIcon, *GLzoom, *GLangle, *GLcoord, *GLloaded, *GLcurrentFrame, *GLcurrentFile;
 		QHBox					*decodedBox;
-		SQ_ExternalTool			*extool;
+		SQ_ExternalTool		*extool;
 		SQ_TreeView			*ptree;
 		SQ_BookmarkOwner 	*bookmarkOwner;
 		SQ_HLOptions			*highlevel;
 		QStringList				*filters_name, *filters_ext;
-		SQ_ThumbnailSize		*thumbSize;
+		SQ_ThumbnailSize	*thumbSize;
 		SQ_PixmapCache		*cache;
 		KAction					*pAGLView, *pAConfigure, *pAExit, *pARescan, *pAExtTools, *pAFilters, *pAGotoTray;
-		SQ_GLView				*gl_view;
-		SQ_ArchiveHandler		*ar;
-		QString					new_version;
+		SQ_GLView			*gl_view;
+		SQ_ArchiveHandler	*ar;
+		QString				new_version;
+		SQ_Converter			*conv;
+		SQ_Resizer			*rsz;
 
 	private:
 		KToolBar				*tools;
@@ -178,46 +193,30 @@ class KSquirrel : public KMainWindow, public DCOPObject
 		QStringList				libFilters;
 		KAction					*pAOpen, *pAOpenAndSet;
 		SQ_UpdateKsquirrelThread	*updater;
+		KIO::ListJob			*job;
+		SQ_Dir					*dir;
+		KActionMenu 			*pAImageActions;
 };
 
-#define	sqApp				(KSquirrel::App)
-#define	sqConfig			(KSquirrel::App->kconf)
-#define	sqLibUpdater		(KSquirrel::App->libl)
-#define	sqLoader			(KSquirrel::App->iconL)
-#define	sqBookmarks		(KSquirrel::App->bookmarkOwner)
-#define	sqHighLevel			(KSquirrel::App->highlevel)
-#define	sqTray				(KSquirrel::App->tray)
+#define	sqBookmarks		(KSquirrel::m_app->bookmarkOwner)
+#define	sqHighLevel		(KSquirrel::m_app->highlevel)
 
-#define	sqStatus			(KSquirrel::App->sbar)
-#define	sqWStack			(KSquirrel::App->pWidgetStack)
-#define	sqCurrentURL		(KSquirrel::App->pCurrentURL)
-#define	sqExternalTool		(KSquirrel::App->extool)
-#define	sqTree				(KSquirrel::App->ptree)
+#define	sqCurrentURL		(KSquirrel::m_app->pCurrentURL)
 
-#define	sqSBdirInfo			(KSquirrel::App->dirInfo)
-#define	sqSBfileIcon			(KSquirrel::App->fileIcon)
-#define	sqSBfileName		(KSquirrel::App->fileName)
-#define	sqSBDecoded		(KSquirrel::App->decodedStatus)
-#define	sqSBDecodedI		(KSquirrel::App->decodedIcon)
-#define	sqSBDecodedBox	(KSquirrel::App->decodedBox)
-#define	sqSBGLZoom		(KSquirrel::App->GLzoom)
-#define	sqSBGLAngle		(KSquirrel::App->GLangle)
-#define	sqSBGLCoord		(KSquirrel::App->GLcoord)
-#define	sqSBLoaded			(KSquirrel::App->GLloaded)
-#define	sqSBFrame			(KSquirrel::App->GLcurrentFrame)
-#define	sqSBFile				(KSquirrel::App->GLcurrentFile)
+#define	sqSBdirInfo		(KSquirrel::m_app->dirInfo)
+#define	sqSBfileIcon		(KSquirrel::m_app->fileIcon)
+#define	sqSBfileName		(KSquirrel::m_app->fileName)
+#define	sqSBDecoded		(KSquirrel::m_app->decodedStatus)
+#define	sqSBDecodedI		(KSquirrel::m_app->decodedIcon)
+#define	sqSBDecodedBox	(KSquirrel::m_app->decodedBox)
+#define	sqSBGLZoom		(KSquirrel::m_app->GLzoom)
+#define	sqSBGLAngle		(KSquirrel::m_app->GLangle)
+#define	sqSBGLCoord		(KSquirrel::m_app->GLcoord)
+#define	sqSBLoaded		(KSquirrel::m_app->GLloaded)
+#define	sqSBFrame			(KSquirrel::m_app->GLcurrentFrame)
+#define	sqSBFile			(KSquirrel::m_app->GLcurrentFile)
 
-#define	sqGLView			(KSquirrel::App->gl_view)
-#define	sqGLWidget			(KSquirrel::App->gl_view->gl)
-#define	sqQuickBrowser		(sqGLWidget->v)
-#define	sqQuickOperator	(sqQuickBrowser->quick)
-#define	sqLibHandler		(KSquirrel::App->sqLibHandlerReal)
-
-#define	sqFiltersName		(KSquirrel::App->filters_name)
-#define	sqFiltersExt			(KSquirrel::App->filters_ext)
-
-#define	sqThumbSize		(KSquirrel::App->thumbSize)
-#define	sqCache			(KSquirrel::App->cache)
-#define	sqArchive			(KSquirrel::App->ar)
+#define	sqFiltersName		(KSquirrel::m_app->filters_name)
+#define	sqFiltersExt		(KSquirrel::m_app->filters_ext)
 
 #endif

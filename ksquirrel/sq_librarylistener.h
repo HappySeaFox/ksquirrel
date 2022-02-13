@@ -33,6 +33,8 @@ class SQ_LibraryListener : public KDirLister
 		SQ_LibraryListener(bool = false);
 		~SQ_LibraryListener();
 
+		static SQ_LibraryListener* instance();
+
 	public slots:
 		void slotOpenURL(const KURL&, bool, bool);
 
@@ -49,7 +51,7 @@ class SQ_LibraryListener : public KDirLister
 	private:
 		QStringList	list;
 		bool 		operation;
-
+		static SQ_LibraryListener *listener;
 };
 
 #endif

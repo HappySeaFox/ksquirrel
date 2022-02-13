@@ -13,16 +13,16 @@ void SQ_ExternalTools::init()
 {
      listTools->setSorting(-1);
 
-    	int count = sqExternalTool->count();
+    	int count = SQ_ExternalTool::instance()->count();
 	QListViewItem *itemafter = 0L, *item;
 
 	for(int i = 0;i < count;i++)
 	{
 		if(itemafter)
-		    item = new QListViewItem(listTools, itemafter, "", sqExternalTool->getToolName(i), sqExternalTool->getToolCommand(i), sqExternalTool->getToolPixmap(i));
+		    item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->getToolName(i), SQ_ExternalTool::instance()->getToolCommand(i), SQ_ExternalTool::instance()->getToolPixmap(i));
 		else
-		item = new QListViewItem(listTools, "", sqExternalTool->getToolName(i), sqExternalTool->getToolCommand(i), sqExternalTool->getToolPixmap(i));
-		item->setPixmap(0, sqLoader->loadIcon(item->text(3), KIcon::Desktop, 16));
+		item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->getToolName(i), SQ_ExternalTool::instance()->getToolCommand(i), SQ_ExternalTool::instance()->getToolPixmap(i));
+		item->setPixmap(0, KSquirrel::loader()->loadIcon(item->text(3), KIcon::Desktop, 16));
 	itemafter = item;
 
 	    item->setRenameEnabled(1, true);
@@ -32,11 +32,12 @@ void SQ_ExternalTools::init()
 	    listTools->insertItem(item);
 	}
 
-	pushToolUp->setPixmap(sqLoader->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
-	pushToolDown->setPixmap(sqLoader->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
-	pushNew->setPixmap(sqLoader->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
-	pushDelete->setPixmap(sqLoader->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
-	pushClearAll->setPixmap(sqLoader->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
+	pushToolUp->setPixmap(KSquirrel::loader()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
+	pushToolDown->setPixmap(KSquirrel::loader()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
+	pushNew->setPixmap(KSquirrel::loader()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
+	pushDelete->setPixmap(KSquirrel::loader()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
+	pushClearAll->setPixmap(KSquirrel::loader()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
+	pushHelp->setPixmap(KSquirrel::loader()->loadIcon("help", KIcon::Desktop, KIcon::SizeSmall));
 
 	listTools->setCurrentItem(listTools->firstChild());
 	listTools->clearSelection();
@@ -48,9 +49,9 @@ void SQ_ExternalTools::slotNewTool()
 	QListViewItem *itemafter = listTools->lastItem(), *item;
 
 	if(itemafter)
-		item = new QListViewItem(listTools, itemafter, "", "Tool name", "tool_executable %s", "");
+		item = new QListViewItem(listTools, itemafter, "", "Tool name", "tool_executable %f", "");
 	else
-		item = new QListViewItem(listTools,  "", "Tool name", "tool_executable %s", "");
+		item = new QListViewItem(listTools,  "", "Tool name", "tool_executable %f", "");
 
 	item->setRenameEnabled(1, true);
 	item->setRenameEnabled(2, true);
@@ -108,18 +109,17 @@ int SQ_ExternalTools::start()
     if(result == QDialog::Accepted)
     {
 	QListViewItem *cur = listTools->firstChild();
-	sqExternalTool->clear();
+	
+	SQ_ExternalTool::instance()->clear();
 
 	for(;cur;cur = cur->itemBelow())
 	{
-		SQ_EXT_TOOL tf = {cur->text(3), cur->text(1), cur->text(2)};
-		sqExternalTool->addTool(tf);
+		SQ_ExternalTool::instance()->addTool(cur->text(3), cur->text(1), cur->text(2));
 	}
     }
     
     return result;
 }
-
 
 void SQ_ExternalTools::slotToolRenameRequest( QListViewItem *item, const QPoint &, int pos )
 {
@@ -130,13 +130,19 @@ void SQ_ExternalTools::slotToolRenameRequest( QListViewItem *item, const QPoint 
 	item->startRename(pos);
     else
     {
-	KIconDialog dialog(sqLoader);
+	KIconDialog dialog(KSquirrel::loader());
 	dialog.setup(KIcon::Desktop, KIcon::Application, true, 16);
 	QString result = dialog.openDialog();
+	
 	if(result != QString::null)
 	{
-	    item->setPixmap(0, sqLoader->loadIcon(result, KIcon::Desktop, 16));
+	    item->setPixmap(0, KSquirrel::loader()->loadIcon(result, KIcon::Desktop, 16));
 	    item->setText(3, result);
 	}
     }
  }
+
+void SQ_ExternalTools::slotHelp()
+{
+    QWhatsThis::display(tr2i18n("<b>Command</b> can contain <ul><li>%f: one file<li>%F: multiple files</ul>"));
+}

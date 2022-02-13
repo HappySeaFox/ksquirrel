@@ -30,6 +30,8 @@ SQ_Progress::SQ_Progress(QWidget * parent, const char * name, WFlags f) : QLabel
 
 	setAutoResize(true);
 	setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/progress.png")));
+
+	percentage = -1;
 }
 
 SQ_Progress::~SQ_Progress()

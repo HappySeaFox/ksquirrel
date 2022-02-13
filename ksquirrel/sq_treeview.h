@@ -34,6 +34,8 @@ class SQ_TreeView : public KFileTreeView
 		void emitNewURL(const KURL &url);
 		bool configVisible() const;
 
+		static SQ_TreeView* instance();
+
 	protected:
 		void showEvent(QShowEvent *);
 
@@ -57,6 +59,7 @@ class SQ_TreeView : public KFileTreeView
 		KFileTreeViewItemList *itemsToClose;
 		bool vis;
 		KURL pendingURL;
+		static SQ_TreeView *tree;
 };
 
 #endif

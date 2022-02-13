@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qgl.h>
+
 #include <kapp.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -29,10 +31,12 @@
 
 static KCmdLineOptions options[] =
 {
-	{I18N_NOOP("+[file or folder to open]"), I18N_NOOP("File or folder to be opened at startup."), 0},
+	{"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
 	{"l", I18N_NOOP("Print found libraries and exit."), 0},
+	{"t <starting folder>", I18N_NOOP("Find all supported images on disk and create thumbnails."), "/"},
+	{"r", I18N_NOOP("Recursively scan (with -t option)."), "/"},
 	KCmdLineLastOption
-};         
+};
 
 int main(int argc, char *argv[])
 {
@@ -44,23 +48,31 @@ int main(int argc, char *argv[])
 	aboutData.addCredit(I18N_NOOP("OpenGL forum at"), 0, 0, "http://opengl.org");
 	aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
 	aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
-
+	
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
 
 	KApplication	a;
 
+	if(!QGLFormat::hasOpenGL())
+        {
+	    qWarning( "This system has no OpenGL support. Exiting." );
+	    return -1;
+	}
+
 	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
 	high = new SQ_HLOptions;
 
-	if(!sq_args->isSet("l"))
-	{
-		if(sq_args->count() > 0)
-			high->path = sq_args->url(0).path();
-	}
-	else
-		high->showLibsAndExit = true;
+	if(sq_args->count())
+		high->path = sq_args->url(0).path();
+
+	high->showLibsAndExit = sq_args->isSet("l");
+	high->thumbs = sq_args->isSet("t");
+	high->recurs = (high->thumbs) ? sq_args->isSet("r") : false;
+
+	if(high->thumbs)
+		high->thumbs_p = sq_args->getOption("t");
 
 	SQ = new KSquirrel(high, 0, "KMainWindow");
 
