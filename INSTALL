@@ -11,23 +11,23 @@ Then follow the installation instructions:
 1. First install 'ksquirrel-libs' package:
 
    a) from sources
-   # tar zxfv ksquirrel-libs-0.6.0.tar.gz
-   # cd ksquirrel-libs-0.6.0/
+   # tar jxfv ksquirrel-libs-0.8.0.tar.bz2
+   # cd ksquirrel-libs-0.8.0/
  * # su -c './required-etch'
    # ./configure.gnu
    # make
    # su -c 'make install'
    
    b) from binary packages
-RPM  # rpm -ihv ksquirrel-libs-0.6.0.rpm
-TGZ  # installpkg ksquirrel-libs-0.6.0.tgz
-DEB  # dpkg -i ksquirrel-libs-0.6.0.deb
+RPM  # rpm -ihv ksquirrel-libs-0.8.0.rpm
+TGZ  # installpkg ksquirrel-libs-0.8.0.tgz
+DEB  # dpkg -i ksquirrel-libs-0.8.0.deb
 
 2. Now install KSquirrel:
 
    a) from sources
-   # tar zxfv ksquirrel-0.6.0.tar.gz
-   # cd ksquirrel-0.6.0/
+   # tar jxfv ksquirrel-0.8.0.tar.bz2
+   # cd ksquirrel-0.8.0/
  * # su -c './required-etch'
    # ./configure.gnu
    # make
@@ -37,9 +37,9 @@ DEB  # dpkg -i ksquirrel-libs-0.6.0.deb
   This will install all required packages with aptitude.
 
    b) from binary packages
-RPM  # rpm -ihv ksquirrel-0.6.0.rpm
-TGZ  # installpkg ksquirrel-0.6.0.tgz
-DEB  # dpkg -i ksquirrel-0.6.0.deb
+RPM  # rpm -ihv ksquirrel-0.8.0.rpm
+TGZ  # installpkg ksquirrel-0.8.0.tgz
+DEB  # dpkg -i ksquirrel-0.8.0.deb
 
 ------------------------------------------------------------
 

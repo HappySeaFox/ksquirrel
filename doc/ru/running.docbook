@@ -24,17 +24,37 @@
 
 <cmdsynopsis>
 <command>ksquirrel</command>
-<group choice="opt"><option>-d 'каталог'</option></group>
+<group choice="opt"><option>-d</option></group>
 <group choice="opt"><option>-l</option></group>
+<group choice="opt"><option>--nodirectorybasket</option></group>
+<group choice="opt"><option>--noimagebasket</option></group>
+<group choice="opt"><option>--nocategories</option></group>
+<group choice="opt"><option>--nomountview</option></group>
 <arg><replaceable>файл</replaceable></arg>
 </cmdsynopsis>
 
 <para>
-Параметр <command>-d 'каталог'</command> заставляет &kappname; открыть указанный каталог при запуске.
+Параметр <command>-d</command> заставляет &kappname; отобразить в консоли доступные параметры DCOP.
 </para>
 
 <para>
 Параметр <command>-l</command> указывает &kappname; вывести на экран список найденных кодеков и выйти. Этот параметр чисто информационный.
+</para>
+
+<para>
+<command>--nodirectorybasket</command> не создавать корзину папок.
+</para>
+
+<para>
+<command>--noimagebasket</command> не создавать корзину изображений.
+</para>
+
+<para>
+<command>--nocategories</command> не создавать категории.
+</para>
+
+<para>
+<command>--nomountview</command> не создавать просмотр точек монтирования.
 </para>
 
 <para>
@@ -52,16 +72,16 @@
 Открыть при запуске изображение <filename><replaceable>/home/me/images/foto00054.jpg</replaceable></filename>
 
 <cmdsynopsis>
-<command>ksquirrel /home/me/images/foto00054.jpg</command>
+<command>$ ksquirrel /home/me/images/foto00054.jpg</command>
 </cmdsynopsis>
 
 </para></listitem>
 
 <listitem><para>
-Перейти при запуске в каталог <filename><replaceable>/home/me/images</replaceable></filename>
+Отобразить при запуске доступные параметры DCOP
 
 <cmdsynopsis>
-<command>ksquirrel -d /home/me/images</command>
+<command>$ ksquirrel -d</command>
 </cmdsynopsis>
 
 </para></listitem>

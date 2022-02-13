@@ -1103,7 +1103,7 @@ msgstr "Выделение"
 
 #: sq_glwidget.cpp:348 sq_glwidget.cpp:2717 sq_codecsettingsskeleton.cpp:128
 msgid "Codec settings"
-msgstr "Настройки кодеков"
+msgstr "Настройки кодека"
 
 #: sq_glwidget.cpp:351
 msgid "Show navigator"
@@ -2195,3 +2195,15 @@ msgstr "Загрузка..."
 
 msgid "Close all tabs"
 msgstr "Закрыть все вкладки"
+
+msgid "Close all opened images when closing window"
+msgstr "Закрывать все открытые изображения, когда закрывается окно"
+
+msgid "Codec manager..."
+msgstr "Менеджер кодеков..."
+
+msgid "<b>Select codecs to disable:</b>"
+msgstr "<b>Выберите кодеки для запрещения:</b>"
+
+msgid "<b>Select codecs to enable:</b>"
+msgstr "<b>Выберите кодеки для разрешения:</b>"

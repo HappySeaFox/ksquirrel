@@ -443,6 +443,8 @@
     <include location="global" impldecl="in implementation">kicondialog.h</include>
     <include location="local" impldecl="in implementation">sq_iconloader.h</include>
     <include location="global" impldecl="in implementation">qwhatsthis.h</include>
+    <include location="global" impldecl="in implementation">kglobal.h</include>
+    <include location="global" impldecl="in implementation">kiconloader.h</include>
     <include location="local" impldecl="in implementation">sq_externaltools.ui.h</include>
 </includes>
 <slots>

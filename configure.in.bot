@@ -2,14 +2,17 @@ echo
 echo "Results:"
 echo "--------"
 echo 
-echo "Version:        ${VERSION}"
+echo "Version:                         ${VERSION}"
+echo "KPart object:                    $have_kpart"
+echo "ksquirrel-libs configurator:     $have_klconf"
+echo
+echo "C   compiler:     ${CC}"
+echo "C++ compiler:     ${CXX}"
+echo "CXXFLAGS:         ${CXXFLAGS}"
 echo 
-echo "Compiler:       ${CC}"
-echo "CXXFLAGS:       ${CXXFLAGS}"
+echo "Prefix:           ${prefix}"
+echo "KDE prefix:       ${kde_libs_prefix}"
 echo 
-echo "Prefix:         ${prefix}"
-echo "KDE prefix:     ${kde_libs_prefix}"
-echo 
-echo "KIPI  support:  ${have_kipi}"
-echo "KEXIF support:  ${have_kexif}"
-echo "ASM flags:      ${KSQUIRREL_ASM_DEFS}"
+echo "KIPI  support:    ${have_kipi}"
+echo "KEXIF support:    ${have_kexif}"
+echo "ASM flags:        ${KSQUIRREL_ASM_DEFS}"

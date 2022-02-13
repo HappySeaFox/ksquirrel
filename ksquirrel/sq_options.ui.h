@@ -60,7 +60,7 @@ void SQ_Options::init()
     checkSupportAr->setChecked(kconf->readBoolEntry("archives", true));
     checkJumpFirst->setChecked(kconf->readBoolEntry("tofirst", true));
     checkDisableDirs->setChecked(kconf->readBoolEntry("disable_dirs", false));
-    checkCalc->setChecked(kconf->readBoolEntry("calculate", false));
+    checkCalc->setChecked(kconf->readBoolEntry("calculate", true));
     checkDrag->setChecked(kconf->readBoolEntry("drag", true));
 
 // Init GLView page
@@ -75,6 +75,7 @@ void SQ_Options::init()
     checkTabs->setChecked(kconf->readBoolEntry("tabs", false));    
     checkTabAsk->setChecked(kconf->readBoolEntry("tabs_ask", false));    
     checkTabClose->setChecked(kconf->readBoolEntry("tabs_close", true));    
+    checkCloseAll->setChecked(kconf->readBoolEntry("closeall", false));    
 
     tp = kconf->readNumEntry("double_click", 0);
     buttonGroupDC->setButton(tp);
@@ -147,7 +148,7 @@ void SQ_Options::init()
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, KIcon::SizeMedium), i18n("General"));    
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeMedium), i18n("Filing"));
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, KIcon::SizeMedium), i18n("Thumbnails"));
-    new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
+    new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("data", "images/listbox/image_win.png")), i18n("Image window"));
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("penguin", KIcon::Desktop, KIcon::SizeMedium), i18n("Sidebar"));
 
 #ifdef SQ_HAVE_KIPI
@@ -173,6 +174,9 @@ void SQ_Options::init()
     tabNav->setCurrentPage(kconf->readNumEntry("options_last_tabNav", 0));
     tabGL->setCurrentPage(kconf->readNumEntry("options_last_tabGL", 0));
     tabSidebar->setCurrentPage(kconf->readNumEntry("options_last_tabSidebar", 0));
+
+    if(!SQ_HLOptions::instance()->have_mountview)
+        tabSidebar->setTabEnabled(tabSidebar->page(1), false);
 }
 
 int SQ_Options::start()
@@ -245,6 +249,7 @@ int SQ_Options::start()
         kconf->writeEntry("tabs", checkTabs->isChecked());
         kconf->writeEntry("tabs_ask", checkTabAsk->isChecked());
         kconf->writeEntry("tabs_close", checkTabClose->isChecked());
+        kconf->writeEntry("closeall", checkCloseAll->isChecked());    
 
         kconf->setGroup("Sidebar");
         kconf->writeEntry("recursion_type", buttonGroupRecurs->selectedId());

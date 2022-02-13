@@ -2631,6 +2631,7 @@ CFLAGS="$CFLAGS $all_includes $USER_INCLUDES"
 AC_TRY_LINK(dnl
 [
 #include<zlib.h>
+#include<string.h>
 ],
 [
   char buf[42];
@@ -2638,7 +2639,7 @@ AC_TRY_LINK(dnl
   /* this would segfault.. but we only link, don't run */
   (void) gzgets(f, buf, sizeof(buf));
 
-  return (zlibVersion() == ZLIB_VERSION); 
+  return (strcmp(zlibVersion(), ZLIB_VERSION) == 0);
 ],
             eval "ac_cv_lib_z='-lz'",
             eval "ac_cv_lib_z=no")

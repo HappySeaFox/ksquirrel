@@ -23,7 +23,12 @@
 
 SQ_HLOptions * SQ_HLOptions::m_instance = 0;
 
-SQ_HLOptions::SQ_HLOptions() : showLibsAndExit(false)
+SQ_HLOptions::SQ_HLOptions() 
+    : showLibsAndExit(false),
+    have_directorybasket(true),
+    have_categories(true),
+    have_imagebasket(true),
+    have_mountview(true)
 {
     m_instance = this;
 }

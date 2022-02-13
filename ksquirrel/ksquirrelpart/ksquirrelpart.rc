@@ -1,0 +1,20 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="KSquirrelPart">
+<ToolBar name="mainToolBar"><text>Main Toolbar</text>
+ <Separator/>
+
+ <Action name="ksquirrelpart zoom in"/>
+ <Action name="ksquirrelpart zoom out"/>
+ <Action name="ksquirrelpart rotateleft"/>
+ <Action name="ksquirrelpart rotateright"/>
+
+ <Separator/>
+
+ <Action name="ksquirrelpart normalize"/>
+ <Action name="ksquirrelpart properties"/>
+
+ <Action name="ksquirrelpart saveas"/>
+ <Action name="ksquirrelpart zoom"/>
+
+</ToolBar>
+</kpartgui>

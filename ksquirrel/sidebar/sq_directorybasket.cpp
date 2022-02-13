@@ -28,6 +28,7 @@
 #include <kfiledialog.h>
 #include <kinputdialog.h>
 #include <kicondialog.h>
+#include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <kio/job.h>
 #include <kprogress.h>
@@ -41,7 +42,6 @@
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
 #include "sq_navigatordropmenu.h"
-#include "sq_iconloader.h"
 #include "sq_dir.h"
 
 SQ_DirectoryBasket * SQ_DirectoryBasket::m_inst = 0;
@@ -59,7 +59,7 @@ SQ_DBMenu::~SQ_DBMenu()
 
 void SQ_DBMenu::slotChangeIcon()
 {
-    KIconDialog dialog(SQ_IconLoader::instance());
+    KIconDialog dialog(KGlobal::iconLoader());
     dialog.setup(KIcon::Desktop, KIcon::MimeType, true, KIcon::SizeSmall);
     QString result = dialog.openDialog();
 

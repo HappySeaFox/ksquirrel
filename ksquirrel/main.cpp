@@ -24,8 +24,9 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <kapplication.h>
 #include <dcopclient.h>
+#include <kglobal.h>
+#include <kstandarddirs.h>
 
 #include <cstdlib>
 
@@ -46,6 +47,10 @@ static KCmdLineOptions options[] =
     {"l", I18N_NOOP("Print found libraries and exit."), 0},
     {"d", 0, 0},
     {"print-dcop", I18N_NOOP("Print available DCOP parameters"), 0},
+    {"nodirectorybasket", I18N_NOOP("Folder basket"), 0},
+    {"noimagebasket", I18N_NOOP("Image basket"), 0},
+    {"nocategories", I18N_NOOP("Categories"), 0},
+    {"nomountview", I18N_NOOP("Mount view"), 0},
 
     KCmdLineLastOption
 };
@@ -91,6 +96,11 @@ int main(int argc, char *argv[])
 
     high->showLibsAndExit = sq_args->isSet("l");
     bool printDCOP = sq_args->isSet("d");
+
+    high->have_directorybasket = sq_args->isSet("directorybasket");
+    high->have_imagebasket     = sq_args->isSet("imagebasket");
+    high->have_categories      = sq_args->isSet("categories");
+    high->have_mountview       = sq_args->isSet("mountview");
 
     KApplication    a;
 
@@ -139,6 +149,8 @@ int main(int argc, char *argv[])
             exit(0);
         }
     }
+
+    KGlobal::dirs()->addResourceType("data", KStandardDirs::kde_default("data") + QString::fromLatin1("ksquirrel"));
 
     SQ_SplashScreen *splash = 0;
 

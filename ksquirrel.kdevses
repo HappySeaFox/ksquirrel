@@ -4,14 +4,14 @@
  <LastCompileConfig>(Default)</LastCompileConfig>
  <Mainframe MaximizeMode="1" />
  <DocsAndViews NumberOfDocuments="3" >
-  <Doc0 CursorPosLine="510" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/ckult/MyProjects/ksquirrel-0.7.5/ksquirrel/sidebar/sq_directorybasket.cpp" >
-   <View0 Top="0" Width="951" Attach="1" Height="614" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
+  <Doc0 CursorPosLine="1130" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="19" FileName="/home/ckult/MyProjects/ksquirrel-0.8.0/ksquirrel/ksquirrel.cpp" >
+   <View0 Top="0" Width="1002" Attach="1" Height="615" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc0>
-  <Doc1 CursorPosLine="187" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="9" FileName="/home/ckult/MyProjects/ksquirrel-0.7.5/ksquirrel/sidebar/sq_directorybasket.h" >
-   <View0 Top="0" Width="951" Attach="1" Height="614" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  <Doc1 CursorPosLine="1777" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="54" FileName="/home/ckult/MyProjects/ksquirrel-0.8.0/ksquirrel/sq_glwidget_stuff.cpp" >
+   <View0 Top="0" Width="96" Attach="1" Height="26" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc1>
-  <Doc2 CursorPosLine="59" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/ckult/MyProjects/ksquirrel-0.7.5/ksquirrel/ksquirrel.cpp" >
-   <View0 Top="0" Width="951" Attach="1" Height="614" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  <Doc2 CursorPosLine="269" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="23" FileName="/home/ckult/MyProjects/ksquirrel-0.8.0/ksquirrel/sq_glwidget.h" >
+   <View0 Top="0" Width="1002" Attach="1" Height="615" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
   </Doc2>
  </DocsAndViews>
 </KDevPrjSession>

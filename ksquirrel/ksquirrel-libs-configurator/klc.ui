@@ -1,0 +1,190 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>KLC</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>KLC</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>586</width>
+            <height>425</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Codec manager</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>371</width>
+                            <height>26</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushApply</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Apply</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushClose</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Close</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QListView" row="1" column="1">
+            <column>
+                <property name="text">
+                    <string>...</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>listDisabled</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="allColumnsShowFocus">
+                <bool>true</bool>
+            </property>
+            <property name="resizeMode">
+                <enum>AllColumns</enum>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="1">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="text">
+                <string>&lt;b&gt;Select codecs to enable:&lt;/b&gt;</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>&lt;b&gt;Select codecs to disable:&lt;/b&gt;</string>
+            </property>
+        </widget>
+        <widget class="QListView" row="1" column="0">
+            <column>
+                <property name="text">
+                    <string>...</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>listEnabled</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="allColumnsShowFocus">
+                <bool>true</bool>
+            </property>
+            <property name="resizeMode">
+                <enum>AllColumns</enum>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushApply</sender>
+        <signal>clicked()</signal>
+        <receiver>KLC</receiver>
+        <slot>slotApply()</slot>
+    </connection>
+    <connection>
+        <sender>pushClose</sender>
+        <signal>clicked()</signal>
+        <receiver>KLC</receiver>
+        <slot>close()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>listEnabled</tabstop>
+    <tabstop>listDisabled</tabstop>
+    <tabstop>pushApply</tabstop>
+    <tabstop>pushClose</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in declaration">kfileitem.h</include>
+    <include location="global" impldecl="in declaration">kurl.h</include>
+    <include location="global" impldecl="in implementation">kdirlister.h</include>
+    <include location="global" impldecl="in implementation">kio/job.h</include>
+    <include location="global" impldecl="in implementation">qheader.h</include>
+    <include location="global" impldecl="in implementation">qtimer.h</include>
+    <include location="global" impldecl="in implementation">kio/netaccess.h</include>
+    <include location="global" impldecl="in implementation">kapplication.h</include>
+    <include location="global" impldecl="in implementation">dcopclient.h</include>
+    <include location="local" impldecl="in implementation">klc.ui.h</include>
+</includes>
+<forwards>
+    <forward>class KDirLister;</forward>
+    <forward>namespace KIO { class Job; }</forward>
+</forwards>
+<variables>
+    <variable access="private">KURL base, backup;</variable>
+    <variable access="private">KDirLister *lister;</variable>
+    <variable access="private">QString backupDir;</variable>
+    <variable access="private">bool changed;</variable>
+</variables>
+<slots>
+    <slot access="private">slotLoad()</slot>
+    <slot access="private">slotApply()</slot>
+    <slot access="private">slotCompleted( const KURL &amp; u )</slot>
+    <slot access="private">slotNewItems( const KFileItemList &amp; list )</slot>
+    <slot access="private">slotDeleteItem( KFileItem * fi )</slot>
+    <slot access="private">slotDelResult( KIO::Job * job )</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function access="private" specifier="non virtual">destroy()</function>
+    <function access="private" specifier="non virtual">moveCodecs( bool e2d )</function>
+    <function access="protected">closeEvent( QCloseEvent * ev )</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -33,6 +33,7 @@
 #include <klocale.h>
 #include <ksqueezedtextlabel.h>
 #include <ktabbar.h>
+#include <kiconloader.h>
 
 #include "sq_glview.h"
 #include "sq_glwidget.h"

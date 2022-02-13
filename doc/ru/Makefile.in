@@ -500,10 +500,10 @@ uninstall-am:
 
 
 #>+ 2
-KDE_DIST=plugins_info.png sidebar.png intro.docbook sidebar_mounts.png index.docbook imagewindow.docbook Makefile.in credits.docbook sidebar_categories.png sidebar_basket.png imagewindow_builtin.png imagewindow_separate.png interface.docbook imagewindow_button.png view_thumbnails.png Makefile.am internals.docbook index.cache.bz2 running.docbook 
+KDE_DIST=plugins_info.png license.html sidebar.png intro.docbook index.html intro.html sidebar_mounts.png index.docbook interface-menu.html interface-sidebar.html running.html imagewindow.html imagewindow.docbook Makefile.in credits.docbook sidebar_categories.png internals.html install-binary.html sidebar_basket.png internals-libs.html installation.html interface.docbook interface.html view_thumbnails.png Makefile.am internals.docbook running.docbook 
 
 #>+ 24
-index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) imagewindow_separate.png plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png credits.docbook imagewindow.docbook internals.docbook imagewindow_button.png index.docbook running.docbook sidebar_mounts.png sidebar_basket.png intro.docbook interface.docbook imagewindow_builtin.png 
+index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) index.html plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png intro.html internals.html credits.docbook interface.html imagewindow.docbook internals.docbook internals-libs.html index.docbook interface-sidebar.html running.docbook sidebar_mounts.png interface-menu.html sidebar_basket.png imagewindow.html intro.docbook running.html interface.docbook license.html installation.html install-binary.html 
 	@if test -n "$(MEINPROC)"; then echo $(MEINPROC) --check --cache index.cache.bz2 $(srcdir)/index.docbook; $(MEINPROC) --check --cache index.cache.bz2 $(srcdir)/index.docbook; fi
 
 docs-am: index.cache.bz2
@@ -530,20 +530,20 @@ clean-docs:
 #>+ 13
 install-nls:
 	$(mkinstalldirs) $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel
-	@for base in imagewindow_separate.png plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png credits.docbook imagewindow.docbook internals.docbook imagewindow_button.png index.docbook running.docbook sidebar_mounts.png sidebar_basket.png intro.docbook interface.docbook imagewindow_builtin.png ; do \
+	@for base in index.html plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png intro.html internals.html credits.docbook interface.html imagewindow.docbook internals.docbook internals-libs.html index.docbook interface-sidebar.html running.docbook sidebar_mounts.png interface-menu.html sidebar_basket.png imagewindow.html intro.docbook running.html interface.docbook license.html installation.html install-binary.html ; do \
 	  echo $(INSTALL_DATA) $$base $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel/$$base ;\
 	  $(INSTALL_DATA) $(srcdir)/$$base $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel/$$base ;\
 	done
 
 uninstall-nls:
-	for base in imagewindow_separate.png plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png credits.docbook imagewindow.docbook internals.docbook imagewindow_button.png index.docbook running.docbook sidebar_mounts.png sidebar_basket.png intro.docbook interface.docbook imagewindow_builtin.png ; do \
+	for base in index.html plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png intro.html internals.html credits.docbook interface.html imagewindow.docbook internals.docbook internals-libs.html index.docbook interface-sidebar.html running.docbook sidebar_mounts.png interface-menu.html sidebar_basket.png imagewindow.html intro.docbook running.html interface.docbook license.html installation.html install-binary.html ; do \
 	  rm -f $(DESTDIR)$(kde_htmldir)/$(KDE_LANG)/ksquirrel/$$base ;\
 	done
 
 
 #>+ 5
 distdir-nls:
-	for file in imagewindow_separate.png plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png credits.docbook imagewindow.docbook internals.docbook imagewindow_button.png index.docbook running.docbook sidebar_mounts.png sidebar_basket.png intro.docbook interface.docbook imagewindow_builtin.png ; do \
+	for file in index.html plugins_info.png view_thumbnails.png sidebar_categories.png sidebar.png intro.html internals.html credits.docbook interface.html imagewindow.docbook internals.docbook internals-libs.html index.docbook interface-sidebar.html running.docbook sidebar_mounts.png interface-menu.html sidebar_basket.png imagewindow.html intro.docbook running.html interface.docbook license.html installation.html install-binary.html ; do \
 	  cp $(srcdir)/$$file $(distdir); \
 	done
 

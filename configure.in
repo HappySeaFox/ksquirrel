@@ -40,7 +40,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(ksquirrel, 0.7.5) dnl searches for some needed programs
+AM_INIT_AUTOMAKE(ksquirrel, 0.8.0) dnl searches for some needed programs
 
 KDE_SET_PREFIX
 
@@ -87,6 +87,31 @@ AC_ARG_ENABLE(kexif,
                     esac]
              )
 
+have_kpart="yes"
+AC_ARG_ENABLE(kpart,
+              [AS_HELP_STRING([--disable-kpart], [don't compile Konqueror integration (KPart object) [default=no]])],
+              [     case "${enableval}" in
+                       yes) ;;
+                       no)  have_kpart="no" ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for this parameter]) ;;
+                    esac]
+             )
+
+AM_CONDITIONAL(SQ_HAVE_KPART,  test x$have_kpart  = xyes)
+
+have_klconf="yes"
+AC_ARG_ENABLE(ksquirrel-libs-configurator,
+              [AS_HELP_STRING([--disable-ksquirrel-libs-configurator], [don't compile ksquirrel-libs configurator [default=no]])],
+              [     case "${enableval}" in
+                       yes) ;;
+                       no)  have_klconf="no" ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for this parameter]) ;;
+                    esac]
+             )
+
+AM_CONDITIONAL(SQ_HAVE_KLCONF,  test x$have_klconf  = xyes)
+
+# utime.h
 AC_CHECK_HEADER([utime.h], AC_DEFINE([HAVE_UTIME_H], [], [utime.h support]), [])
 
 PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
@@ -111,7 +136,7 @@ PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
                 [AC_MSG_ERROR([Ksquirrel-libs development file (.pc) is not installed. Please install ksquirrel-libs first.])]
 )
 
-KDE_CHECK_HEADER(konq_operations.h, [], AC_MSG_ERROR("Header file konq_operations.h is missing. Please install kdebase-devel package."))
+KDE_CHECK_HEADER(konq_operations.h, [], AC_MSG_ERROR("Header file konq_operations.h is missing. Please install libkonq-devel package."))
 KDE_CHECK_HEADER(kregexpeditorinterface.h, [AC_DEFINE([SQ_HAVE_KREGEXP], [], [kregexpeditorinterface.h support])], [])
 
 # Checks for OpenGL.
@@ -246,6 +271,8 @@ AC_CONFIG_FILES([ doc/Makefile ])
 AC_CONFIG_FILES([ doc/ru/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/imageedit/Makefile ])
+AC_CONFIG_FILES([ ksquirrel/ksquirrel-libs-configurator/Makefile ])
+AC_CONFIG_FILES([ ksquirrel/ksquirrelpart/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/mime/Makefile ])
 AC_CONFIG_FILES([ ksquirrel/sidebar/Makefile ])
 AC_CONFIG_FILES([ pics/Makefile ])
@@ -258,17 +285,20 @@ echo
 echo "Results:"
 echo "--------"
 echo 
-echo "Version:        ${VERSION}"
+echo "Version:                         ${VERSION}"
+echo "KPart object:                    $have_kpart"
+echo "ksquirrel-libs configurator:     $have_klconf"
+echo
+echo "C   compiler:     ${CC}"
+echo "C++ compiler:     ${CXX}"
+echo "CXXFLAGS:         ${CXXFLAGS}"
 echo 
-echo "Compiler:       ${CC}"
-echo "CXXFLAGS:       ${CXXFLAGS}"
+echo "Prefix:           ${prefix}"
+echo "KDE prefix:       ${kde_libs_prefix}"
 echo 
-echo "Prefix:         ${prefix}"
-echo "KDE prefix:     ${kde_libs_prefix}"
-echo 
-echo "KIPI  support:  ${have_kipi}"
-echo "KEXIF support:  ${have_kexif}"
-echo "ASM flags:      ${KSQUIRREL_ASM_DEFS}"
+echo "KIPI  support:    ${have_kipi}"
+echo "KEXIF support:    ${have_kexif}"
+echo "ASM flags:        ${KSQUIRREL_ASM_DEFS}"
 # Check if KDE_SET_PREFIX was called, and --prefix was passed to configure
 if test -n "$kde_libs_prefix" -a -n "$given_prefix"; then
   # And if so, warn when they don't match

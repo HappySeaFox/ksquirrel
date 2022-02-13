@@ -1,3 +1,23 @@
+ksquirrel-0.8.0 and ksquirrel-libs-0.8.0
+****************************************
+* new runtime options:
+    --nodirectorybasket
+    --noimagebasket
+    --nocategories
+    --nomountview
+* added Konqueror intergation module
+* added printing feature in image window
+* added codec manager, which will allow to
+  enable/disable image codecs (requires root password)
+* fixed licensing issues in source code
+* fixed MIME types in .desktop files
+* time counting in image window is more fair
+
+ksquirrel-libs:
+* added EPS, PSP
+* bugfix in PNM decoder on P3 PNMs
+* bugfix in CAMERA codec, when KSquirrel couldn't open raw fotos
+
 ksquirrel-0.7.5
 ****************
 * more bugfixes in tabs

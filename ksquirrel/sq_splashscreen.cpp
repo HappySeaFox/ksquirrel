@@ -60,7 +60,7 @@ SQ_SplashScreen::SQ_SplashScreen(QWidget * parent, const char *name)
 
     m_inst = this;
 
-    QPixmap pix = QPixmap(locate("appdata", "images/splash.png"));
+    QPixmap pix = QPixmap(locate("data", "images/splash.png"));
 
     setPaletteBackgroundPixmap(pix);
 

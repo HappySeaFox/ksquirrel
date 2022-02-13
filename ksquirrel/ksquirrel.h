@@ -525,6 +525,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Creates a dialog with information on all found libraries
          */
         void slotPluginsInfo();
+        void slotPluginsDel();
 
         /*
          *  Invoked, when user clicked "OpenGL information" button.
@@ -602,7 +603,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
         *pAGLInfo,
 
         // Plugins information
-        *pAPluginsInfo;
+        *pAPluginsInfo,
+        *pAPluginsDel;
 
         // Main statusbar
         KStatusBar    *sbar;
@@ -740,9 +742,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // not interesting ;)
         KURL renameSrcURL, renameDestURL;
         int     old_id;
-        bool   old_disable, old_ext,
-                 m_urlbox, old_marks, m_intray,
-                 waitForShow;
+        bool   old_disable, m_urlbox, old_marks, old_calc, m_intray, waitForShow;
         SQ_Downloader *down;
         QVBox    *mainPage;
         bool     statStage;

@@ -1,7 +1,7 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = x-avs.desktop x-cut.desktop x-dxf.desktop x-iff.desktop x-jbig.desktop x-koala.desktop x-leaf.desktop x-lif.desktop x-mac.desktop x-msp.desktop x-mtv.desktop x-neo.desktop x-pi1.desktop x-pict.desktop x-pix.desktop x-pxr.desktop x-ras.desktop x-ras.magic x-rawrgb.desktop x-sct.desktop x-sun.desktop x-sun.magic x-utah.desktop x-utah.magic x-wal.desktop x-wbmp.desktop x-xim.desktop x-xwd.desktop x-pi3.desktop ljpeg.desktop x-dicom.desktop x-mdl.desktop 
+EXTRA_DIST = x-avs.desktop x-cut.desktop x-dxf.desktop x-iff.desktop x-jbig.desktop x-koala.desktop x-leaf.desktop x-lif.desktop x-mac.desktop x-msp.desktop x-mtv.desktop x-neo.desktop x-pi1.desktop x-pict.desktop x-pix.desktop x-pxr.desktop x-ras.desktop x-ras.magic x-rawrgb.desktop x-sct.desktop x-sun.desktop x-sun.magic x-utah.desktop x-utah.magic x-wal.desktop x-wbmp.desktop x-xim.desktop x-xwd.desktop x-pi3.desktop ljpeg.desktop x-dicom.desktop x-mdl.desktop x-psp.desktop 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_mimedir)/image/
@@ -68,6 +68,8 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/x-dicom.desktop $(kde_mimedir)/image/x-dicom.desktop
 	$(mkinstalldirs) $(kde_mimedir)/image/
 	$(INSTALL_DATA) $(srcdir)/x-mdl.desktop $(kde_mimedir)/image/x-mdl.desktop
+	$(mkinstalldirs) $(kde_mimedir)/image/
+	$(INSTALL_DATA) $(srcdir)/x-psp.desktop $(kde_mimedir)/image/x-psp.desktop
 
 uninstall-local:
 	-rm -f $(kde_mimedir)/image/x-avs.desktop
@@ -102,5 +104,6 @@ uninstall-local:
 	-rm -f $(kde_mimedir)/image/ljpeg.desktop
 	-rm -f $(kde_mimedir)/image/x-dicom.desktop
 	-rm -f $(kde_mimedir)/image/x-mdl.desktop
+	-rm -f $(kde_mimedir)/image/x-psp.desktop
 
 ####### kdevelop will overwrite this part!!! (end)############

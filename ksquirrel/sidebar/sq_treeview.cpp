@@ -39,6 +39,8 @@
 #include "sq_threaddirlister.h"
 #include "sq_navigatordropmenu.h"
 #include "sq_treeviewmenu.h"
+#include "sq_hloptions.h"
+
 #include "sq_directorybasket.h"
 
 SQ_TreeView * SQ_TreeView::m_instance = 0;
@@ -145,8 +147,12 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
             this, SLOT(slotContextMenu(KListView *, QListViewItem *, const QPoint &)));
 
     menu = new SQ_TreeViewMenu(this);
-    menu->insertSeparator();
-    menu->insertItem(i18n("Add to Folder Basket"), this, SLOT(slotAddToFolderBasket()));
+
+    if(SQ_HLOptions::instance()->have_directorybasket)
+    {
+        menu->insertSeparator();
+        menu->insertItem(i18n("Add to Folder Basket"), this, SLOT(slotAddToFolderBasket()));
+    }
 }
 
 SQ_TreeView::~SQ_TreeView()

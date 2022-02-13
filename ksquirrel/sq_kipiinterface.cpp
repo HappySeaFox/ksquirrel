@@ -19,10 +19,6 @@
 
 #ifdef SQ_HAVE_KIPI
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <kfileitem.h>
 #include <klocale.h>
 #include <kurl.h>
@@ -36,6 +32,7 @@
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
 #include "sq_imagebasket.h"
+#include "sq_hloptions.h"
 
 class SQ_KIPIImageCollection : public KIPI::ImageCollectionShared
 {
@@ -179,7 +176,10 @@ QValueList<KIPI::ImageCollection> SQ_KIPIInterface::allAlbums()
 {
     QValueList<KIPI::ImageCollection> list;
 
-    list << currentAlbum() << currentSelection() << currentBasket();
+    list << currentAlbum() << currentSelection();
+
+    if(SQ_HLOptions::instance()->have_imagebasket)
+        list << currentBasket();
 
     return list;
 }

@@ -19,7 +19,7 @@
 #define SQ_KIPIINTERFACE_H	
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #ifdef SQ_HAVE_KIPI

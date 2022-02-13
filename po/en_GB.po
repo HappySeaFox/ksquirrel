@@ -2158,3 +2158,17 @@ msgstr "Do nothing"
 msgid "Print available DCOP parameters"
 msgstr "Print available DCOP parameters"
 
+msgid "Close all opened images when closing window"
+msgstr "Close all opened images when closing window"
+
+msgid "<b>Select codecs to delete:</b>"
+msgstr "<b>Select codecs to delete:</b>"
+
+msgid "Codec manager..."
+msgstr "Codec manager..."
+
+msgid "<b>Select codecs to disable:</b>"
+msgstr "<b>Select codecs to disable:</b>"
+
+msgid "<b>Select codecs to enable:</b>"
+msgstr "<b>Select codecs to enable:</b>"

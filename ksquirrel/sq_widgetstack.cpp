@@ -356,6 +356,7 @@ void SQ_WidgetStack::moveToFirstLast(Direction direct, bool exec)
         if(item)
         {
             dirop->setCurrentItem(item);
+            SQ_GLWidget::window()->setExpectedURL(item->url());
             if(exec) dirop->execute(item);
         }
     }

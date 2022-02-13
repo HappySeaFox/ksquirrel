@@ -303,7 +303,7 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png glselection_ellipse.png glselection_rect.png glselection.png shownav.png 
+EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png glselection_ellipse.png glselection_rect.png glselection.png shownav.png configure.png print.png 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
@@ -636,6 +636,18 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/shownav.png $(kde_datadir)/ksquirrel/images/actions/shownav.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/shownav.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/shownav.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/
+#>- 	$(INSTALL_DATA) $(srcdir)/configure.png $(kde_datadir)/ksquirrel/images/actions/configure.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/configure.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/configure.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/
+#>- 	$(INSTALL_DATA) $(srcdir)/print.png $(kde_datadir)/ksquirrel/images/actions/print.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/print.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/print.png
 
 uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_first.png
@@ -710,6 +722,12 @@ uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/actions/shownav.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/shownav.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/actions/configure.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/configure.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/actions/print.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/actions/print.png
 
 ####### kdevelop will overwrite this part!!! (end)############
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

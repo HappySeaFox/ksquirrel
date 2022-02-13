@@ -127,7 +127,7 @@ void SQ_ExternalTools::slotToolRenameRequest( QListViewItem *item, const QPoint 
         item->startRename(pos);
     else
     {
-        KIconDialog dialog(SQ_IconLoader::instance());
+        KIconDialog dialog(KGlobal::iconLoader());
         dialog.setup(KIcon::Desktop, KIcon::Application, true, 16);
         QString result = dialog.openDialog();
     

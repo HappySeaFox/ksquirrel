@@ -35,52 +35,6 @@
 
 </sect1>
 
-<sect1 id="interface-iw">
-<title>Смена внешнего вида</title>
-
-<para>
-Окно просмотра изображения может быть встроенным и отдельным. При просмотре изображения встроенное окно заменяет собой навиатор, а отдельное - существует как отдельное окно, не перекрывая собой другие части интерфейса. Отличия этих двух режимов можно рассмотреть подробнее на скриншотах ниже.
-
-<screenshot>
-<screeninfo>Встроенное окно просмотра</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="imagewindow_builtin.png" format="PNG" />
-</imageobject>
-<textobject><phrase>Внешний вид программы если окно просмотра - встроенное</phrase></textobject>
-</mediaobject>
-</screenshot>
-
-<screenshot>
-<screeninfo>Отдельное окно просмотра</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="imagewindow_separate.png" format="PNG" />
-</imageobject>
-<textobject><phrase>Внешний вид программы если окно просмотра - отдельное</phrase></textobject>
-</mediaobject>
-</screenshot>
-
-</para>
-
-<para>
-
-Сменить внешний вид можно с помощью кнопки на панели инструментов.
-
-<screenshot>
-<screeninfo>Настроить внешний вид</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="imagewindow_button.png" format="PNG" />
-</imageobject>
-<textobject><phrase>Кнопка настройки внешнего вида</phrase></textobject>
-</mediaobject>
-</screenshot>
-
-</para>
-
-</sect1>
-
 <sect1 id="interface-sidebar">
 <title>Боковая панель</title>
 

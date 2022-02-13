@@ -1,0 +1,217 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>SQ_CodecSettingsSkeleton</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_CodecSettingsSkeleton</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>283</width>
+            <height>335</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Codec settings</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>codecIcon</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>16</width>
+                    <height>16</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+        </widget>
+        <widget class="Line" row="1" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>line2</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="1">
+            <property name="name">
+                <cstring>codecName</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <bold>1</bold>
+                </font>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>groupBox</cstring>
+            </property>
+            <property name="title">
+                <string></string>
+            </property>
+        </widget>
+        <widget class="Line" row="3" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="4" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>layout2</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushApply</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Apply</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushOK</cstring>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushOK</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_CodecSettingsSkeleton</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>pushCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_CodecSettingsSkeleton</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>pushApply</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_CodecSettingsSkeleton</receiver>
+        <slot>slotApply()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>pushOK</tabstop>
+    <tabstop>pushApply</tabstop>
+    <tabstop>pushCancel</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in declaration">ksquirrel-libs/settings.h</include>
+    <include location="global" impldecl="in implementation">qcheckbox.h</include>
+    <include location="global" impldecl="in implementation">qmessagebox.h</include>
+    <include location="global" impldecl="in implementation">qobjectlist.h</include>
+    <include location="global" impldecl="in implementation">qbuttongroup.h</include>
+    <include location="global" impldecl="in implementation">qslider.h</include>
+    <include location="global" impldecl="in implementation">kurlrequester.h</include>
+    <include location="global" impldecl="in implementation">knuminput.h</include>
+    <include location="global" impldecl="in implementation">qwidgetfactory.h</include>
+    <include location="global" impldecl="in implementation">qspinbox.h</include>
+    <include location="global" impldecl="in implementation">qtextedit.h</include>
+    <include location="global" impldecl="in implementation">kurl.h</include>
+    <include location="global" impldecl="in implementation">kcolorbutton.h</include>
+    <include location="local" impldecl="in implementation">sq_codecsettingsskeleton.ui.h</include>
+</includes>
+<variables>
+    <variable access="private">QWidget *w;</variable>
+    <variable access="private">fmt_settings *sett;</variable>
+</variables>
+<signals>
+    <signal>apply();</signal>
+</signals>
+<slots>
+    <slot access="private" specifier="non virtual">slotApply()</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function specifier="non virtual">addSettingsWidget( const QString &amp; path )</function>
+    <function access="private" specifier="non virtual">recursivelyReadWrite( fmt_settings &amp; settings, bool r )</function>
+    <function returnType="int">exec( fmt_settings &amp; settings )</function>
+    <function specifier="non virtual">setCodecInfo( const QPixmap &amp; pixmap, const QString &amp; text )</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

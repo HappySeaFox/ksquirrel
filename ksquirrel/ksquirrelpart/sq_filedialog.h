@@ -1,8 +1,8 @@
 /***************************************************************************
-                          sq_bcglabel.cpp  -  description
+                          sq_filedialog.h  -  description
                              -------------------
-    begin                : Sun Sep 25 2005
-    copyright            : (C) 2005 by Baryshev Dmitry
+    begin                : Mon Mar 5 2007
+    copyright            : (C) 2007 by Baryshev Dmitry
     email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
@@ -15,32 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sq_pushbutton.h"
+#ifndef SQ_FILEDIALOG_H
+#define SQ_FILEDIALOG_H
 
-SQ_PushButton::SQ_PushButton(QWidget *parent, const char *name) : QPushButton(parent, name)
+#include <kfiledialog.h>
+
+/**
+  *@author Baryshev Dmitry
+  */
+
+class SQ_FileDialog : public KFileDialog
 {
-    init();
-}
+    public:
+        SQ_FileDialog(const QString &path, QWidget *parent);
+        ~SQ_FileDialog();
 
-SQ_PushButton::SQ_PushButton(const QString &text, QWidget *parent, const char *name) : QPushButton(text, parent, name)
-{
-    init();
-}
+        QString nameFilter() const;
+        void updateCombo(bool enable);
 
-SQ_PushButton::~SQ_PushButton()
-{}
+        void setCurrentFilter(const QString &);
+};
 
-void SQ_PushButton::init()
-{
-    setFixedWidth(24);
-    setFixedHeight(24);
-}
-
-void SQ_PushButton::setPopup(QPopupMenu *popup)
-{
-    if(popup)
-    {
-        setFixedWidth(36);
-        QPushButton::setPopup(popup);
-    }
-}
+#endif

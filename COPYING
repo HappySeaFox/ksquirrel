@@ -1,8 +1,11 @@
 * KSuirrel is under GNU GENERAL PUBLIC LICENSE (see LICENSE)
 * KSquirrel statically links against fmt_filters. See fmt_filters_README for more.
-- some functions in SQ_GLWidget (see source code for more) are based on
+* some functions in SQ_GLWidget (see source code for more) are based on
    original code by (C) Guillaume Chazarain <guichaz@yahoo.fr> in his great GLiv
    project (under GPL).
-- "broken" pixmap was taken from the "Nuvola" icon theme for KDE.
+* "broken" pixmap was taken from the "Nuvola" icon theme for KDE.
 * SQ_CategoryMenuBrowser is based on PanelBrowserMenu by (C) Matthias Elter
    from kde-3.2.3. See ksquirrel/sidebar/sq_categorybrowsermenu.h for more.
+* documenation for KSquirrel is under GFDL, see LICENSE.GFDL
+* some files in admin/ are under LGPL, see LICENSE.LGPL
+* SQ_GLU namespace is under LGPL, see LICENSE.LGPL

@@ -15,7 +15,7 @@ void SQ_ImageConvert::init()
     
     initLibs();
 
-    pushWriteOptions->setPixmap(QPixmap(locate("appdata", "images/imageedit/resize_toolbutton2.png")));
+    pushWriteOptions->setPixmap(QPixmap(locate("data", "images/imageedit/resize_toolbutton2.png")));
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
 
     SQ_Config::instance()->setGroup("Image edit options");

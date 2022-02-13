@@ -1,8 +1,8 @@
 /***************************************************************************
-                          sq_pushbutton.h  -  description
+                          sq_diroperator.h  -  description
                              -------------------
-    begin                : Sun Sep 25 2005
-    copyright            : (C) 2005 by Baryshev Dmitry
+    begin                : Thu Nov 29 2007
+    copyright            : (C) 2007 by Baryshev Dmitry
     email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
@@ -15,26 +15,43 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_PUSHBUTTON_H
-#define SQ_PUSHBUTTON_H
+#ifndef SQ_DIROPERATOR_H
+#define SQ_DIROPERATOR_H
 
-#include <qpushbutton.h>
+#include <kfileitem.h>
 
-/*
- *  SQ_PushButton is a simple subclass of QPushButton.
- */
+#include <qobject.h>
 
-class SQ_PushButton : public QPushButton
+class SQ_Downloader;
+
+class KURL;
+
+class SQ_DirOperator : public QObject
 {
-    public: 
-        SQ_PushButton(QWidget *parent, const char *name = 0);
-        SQ_PushButton(const QString &text, QWidget *parent, const char *name = 0);
-        ~SQ_PushButton();
+    Q_OBJECT
 
-        void setPopup(QPopupMenu *popup);
+    public:
+        SQ_DirOperator(QObject *parent = 0);
+        ~SQ_DirOperator();
+
+        static SQ_DirOperator* instance() { return m_inst; }
+
+        void execute(KFileItem *item);
+
+        void del(const KURL &u, QWidget *parent = 0);
 
     private:
-        void init();
+        void executePrivate(KFileItem *);
+
+    private slots:
+
+        void slotDownloadPercents(int);
+        void slotDownloaderResult(const KURL &);
+
+    private:
+        SQ_Downloader *down;
+
+        static SQ_DirOperator *m_inst;
 };
 
 #endif

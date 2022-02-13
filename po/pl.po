@@ -2160,3 +2160,15 @@ msgstr ""
 
 msgid "Close all tabs"
 msgstr ""
+
+msgid "Close all opened images when closing window"
+msgstr ""
+
+msgid "Codec manager..."
+msgstr ""
+
+msgid "<b>Select codecs to disable:</b>"
+msgstr ""
+
+msgid "<b>Select codecs to enable:</b>"
+msgstr ""

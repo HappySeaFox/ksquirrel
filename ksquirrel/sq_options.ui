@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>438</width>
-            <height>442</height>
+            <width>437</width>
+            <height>468</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -1089,23 +1089,6 @@
                                         </widget>
                                     </hbox>
                                 </widget>
-                                <spacer row="4" column="0">
-                                    <property name="name">
-                                        <cstring>spacer16_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>20</width>
-                                            <height>10</height>
-                                        </size>
-                                    </property>
-                                </spacer>
                                 <widget class="QButtonGroup" row="1" column="0">
                                     <property name="name">
                                         <cstring>buttonGroupDC</cstring>
@@ -1157,6 +1140,31 @@
                                             </property>
                                         </widget>
                                     </grid>
+                                </widget>
+                                <spacer row="5" column="0">
+                                    <property name="name">
+                                        <cstring>spacer16_2</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>20</width>
+                                            <height>2</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QCheckBox" row="4" column="0">
+                                    <property name="name">
+                                        <cstring>checkCloseAll</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Close all opened images when closing window</string>
+                                    </property>
                                 </widget>
                             </grid>
                         </widget>
@@ -2070,6 +2078,7 @@
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
     <include location="local" impldecl="in implementation">sq_iconloader.h</include>
     <include location="local" impldecl="in implementation">sq_codecsettings.h</include>
+    <include location="local" impldecl="in implementation">sq_hloptions.h</include>
     <include location="local" impldecl="in implementation">sq_options.ui.h</include>
 </includes>
 <variables>

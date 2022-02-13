@@ -1,0 +1,3 @@
+#!/bin/sh
+
+kdesu --nonewdcop -c ksquirrel-libs-configurator-real

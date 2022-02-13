@@ -24,24 +24,24 @@
  *  SQ_HLOptions stores command line options.
  */
 
-class SQ_HLOptions
+struct SQ_HLOptions
 {
-    public: 
-        SQ_HLOptions();
-        ~SQ_HLOptions();
+    SQ_HLOptions();
+    ~SQ_HLOptions();
 
-        static SQ_HLOptions* instance() { return m_instance; }
+    static SQ_HLOptions* instance() { return m_instance; }
 
-    public:
-        QString     param;
-        KURL        file, dir;
+    QString     param;
+    KURL        file, dir;
 
-        /*
-         *  Just show found libraries and exit ?
-         */
-        bool         showLibsAndExit;
+    /*
+     *  Just show found libraries and exit ?
+     */
+    bool         showLibsAndExit;
 
-        static SQ_HLOptions *m_instance;
+    bool         have_directorybasket, have_categories, have_imagebasket, have_mountview;
+
+    static SQ_HLOptions *m_instance;
 };
 
 #endif

@@ -3,12 +3,17 @@
 Encoding=UTF-8
 Type=Application
 Exec=ksquirrel %i %u
-Icon=ksquirrel.png
+Icon=ksquirrel
 DocPath=ksquirrel/index.html
 Terminal=false
 Name=KSquirrel
-MimeType=image/x-dds;image/x-mdl;image/ljpeg;image/x-dicom;image/x-xfig;image/svg+xml;image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/bmp;image/png;image/x-png;image/tiff;image/x-bmp;image/x-psd;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-anymap;image/x-portable-graymap;image/x-portable-greymap;image/jp2;image/x-jng;image/x-wmf;video/x-mng;video/x-flic;image/x-targa;image/x-pcx;image/x-photo-cd;image/x-rgb;image/x-xcursor;image/x-ico;image/psd;image/x-djvu;image/x-xcf-gimp;image/x-avs;image/x-cut;image/x-dxf;image/x-iff;image/x-jbig;image/x-koala;image/x-leaf;image/x-lif;image/x-mac;image/x-msp;image/x-mtv;image/x-neo;image/x-pi1;image/x-pi3;image/x-pict;image/x-pix;image/x-pxr;image/x-ras;image/x-raw;image/x-rawrgb;image/x-sct;image/x-sun;image/x-utah;image/x-wal;image/x-wbmp;image/x-xim;image/x-xwd;application/x-font-ttf;application/x-font-ttc;application/x-font-otf;application/x-font-type1
+MimeType=image/x-vnd.adobe.photoshop;image/x-hdr;image/x-exr;image/x-eps;image/x-psp;image/x-dds;image/x-mdl;image/ljpeg;image/x-dicom;image/x-xfig;image/svg+xml;image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/x-bmp;image/png;image/tiff;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-anymap;image/x-portable-greymap;image/jp2;image/x-jng;image/x-wmf;video/x-mng;video/x-flic;image/x-targa;image/x-pcx;image/x-photo-cd;image/x-rgb;image/x-xcursor;image/x-ico;image/psd;image/x-djvu;image/x-xcf-gimp;image/x-avs;image/x-cut;image/x-dxf;image/x-iff;image/x-jbig;image/x-koala;image/x-leaf;image/x-lif;image/x-mac;image/x-msp;image/x-mtv;image/x-neo;image/x-pi1;image/x-pi3;image/x-pict;image/x-pix;image/x-pxr;image/x-ras;image/x-raw;image/x-rawrgb;image/x-sct;image/x-sun;image/x-utah;image/x-wal;image/x-wbmp;image/x-xim;image/x-xwd;application/x-font-ttf;application/x-font-ttc;application/x-font-otf;application/x-font-type1
+Categories=Qt;KDE;Application;Graphics;Viewer;
 
-Comment=Image viewer
+Comment=Image Viewer
 Comment[ru]=Просмотр изображений
 Comment[de]=Bildbetrachter
+
+GenericName=Image Viewer
+GenericName[ru]=Просмотр изображений
+GenericName[de]=Bildbetrachter

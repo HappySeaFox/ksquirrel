@@ -52,15 +52,17 @@
 #include "sq_libraryhandler.h"
 #include "sq_externaltool.h"
 #include "sq_popupmenu.h"
-#include "sq_imagebasket.h"
-#include "sq_categoriesview.h"
-#include "sq_categorybrowsermenu.h"
 #include "sq_navigatordropmenu.h"
 #include "sq_previewwidget.h"
-#include "sq_converter.h"
 #include "sq_treeview.h"
 #include "sq_progress.h"
 #include "sq_downloader.h"
+#include "sq_hloptions.h"
+
+#include "sq_categoriesview.h"
+#include "sq_categorybrowsermenu.h"
+#include "sq_imagebasket.h"
+#include "sq_converter.h"
 #include "sq_directorybasket.h"
 
 static const int  SQ_MAX_WORD_LENGTH = 50;
@@ -348,8 +350,12 @@ void SQ_DirOperator::slotDropped(const KFileItem *i, QDropEvent*, const KURL::Li
 void SQ_DirOperator::setupActionsMy()
 {
     new KAction(i18n("Edit file type"), 0, 0, this, SLOT(slotEditMime()), actionCollection(), "dirop_edit_mime");
-    new KAction(i18n("Add to Basket"), "folder_image", CTRL+Qt::Key_B, this, SLOT(slotAddToBasket()), actionCollection(), "dirop_tobasket");
-    new KAction(i18n("Add to Folder Basket"), "folder_image", CTRL+Qt::Key_D, this, SLOT(slotAddToDirectoryBasket()), actionCollection(), "dirop_todirbasket");
+
+    if(SQ_HLOptions::instance()->have_imagebasket)
+        new KAction(i18n("Add to Basket"), "folder_image", CTRL+Qt::Key_B, this, SLOT(slotAddToBasket()), actionCollection(), "dirop_tobasket");
+
+    if(SQ_HLOptions::instance()->have_directorybasket)
+        new KAction(i18n("Add to Folder Basket"), "folder_image", CTRL+Qt::Key_D, this, SLOT(slotAddToDirectoryBasket()), actionCollection(), "dirop_todirbasket");
 
     KActionMenu *file = new KActionMenu(i18n("File actions"), actionCollection(), "dirop_file_menu");
     KAction *prop = actionCollection()->action("properties");
@@ -373,6 +379,7 @@ void SQ_DirOperator::setupActionsMy()
     file->insert(new KAction(i18n("Run"), "launch", CTRL+Key_J, SQ_WidgetStack::instance(), SLOT(slotRunSeparately()), actionCollection(), "dirop_runsepar"));
     file->insert(new KAction(i18n("Repeat (nothing to repeat)"), "down", Qt::Key_F10, KSquirrel::app(), SLOT(slotRepeat()), actionCollection(), "dirop_repeat"));
     file->insert(new KAction(i18n("Convert..."), 0, CTRL+Qt::Key_K, SQ_Converter::instance(), SLOT(slotStartEdit()), actionCollection(), "dirop_convert"));
+
     file->insert(sep);
     file->insert(new KAction(i18n("Recreate selected thumbnails"), "reload", CTRL+Qt::Key_R, SQ_WidgetStack::instance(),
         SLOT(slotRecreateThumbnail()), actionCollection(), "dirop_recreate_thumbnails"));
@@ -402,7 +409,9 @@ void SQ_DirOperator::slotEnableFileActions(bool e)
 
     actionCollection()->action("dirop_recreate_thumbnails")->setEnabled(type == SQ_DirOperator::TypeThumbs && e);
     SQ_ExternalTool::instance()->constPopupMenu()->setEnabled(e);
-    SQ_CategoriesBox::instance()->popupMenu()->setEnabled(e);
+
+    if(SQ_HLOptions::instance()->have_categories)
+        SQ_CategoriesBox::instance()->popupMenu()->setEnabled(e);
 }
 
 void SQ_DirOperator::slotCopyPath()
@@ -761,7 +770,7 @@ void SQ_DirOperator::urlRemoved(const KURL &url)
     }
 
     SQ_Config::instance()->setGroup("Fileview");
-    bool c = SQ_Config::instance()->readBoolEntry("calculate", false);
+    bool c = SQ_Config::instance()->readBoolEntry("calculate", true);
 
     for(KFileItem *itit_tvoyu_mats = list.first();itit_tvoyu_mats;itit_tvoyu_mats = list.next())
     {
@@ -834,7 +843,7 @@ void SQ_DirOperator::slotNewItems(const KFileItemList &list)
 {
     SQ_Config::instance()->setGroup("Fileview");
 
-    if(SQ_Config::instance()->readBoolEntry("calculate", false))
+    if(SQ_Config::instance()->readBoolEntry("calculate", true))
     {
         KFileItemListIterator it(list);
         KFileItem *fi;
@@ -924,7 +933,7 @@ void SQ_DirOperator::itemKill(KFileItem *item)
     if(!item) return;
 
     SQ_Config::instance()->setGroup("Fileview");
-    if(SQ_Config::instance()->readBoolEntry("calculate", false))
+    if(SQ_Config::instance()->readBoolEntry("calculate", true))
         totalSize -= item->size();
 
     slotUpdateInformation(numFiles(), numDirs());
@@ -954,9 +963,15 @@ void SQ_DirOperator::activatedMenu(const KFileItem *, const QPoint &pos)
 
     pADirOperatorMenu->insert(actionCollection()->action("dirop_edit_mime"));
     pADirOperatorMenu->insert(actionCollection()->action("separator"));
-    pADirOperatorMenu->popupMenu()->insertItem(i18n("Add to &Category"), SQ_CategoriesBox::instance()->popupMenu());
-    pADirOperatorMenu->insert(actionCollection()->action("dirop_tobasket"));
-    pADirOperatorMenu->insert(actionCollection()->action("dirop_todirbasket"));
+
+    if(SQ_HLOptions::instance()->have_categories)
+        pADirOperatorMenu->popupMenu()->insertItem(i18n("Add to &Category"), SQ_CategoriesBox::instance()->popupMenu());
+
+    if(SQ_HLOptions::instance()->have_imagebasket)
+        pADirOperatorMenu->insert(actionCollection()->action("dirop_tobasket"));
+
+    if(SQ_HLOptions::instance()->have_directorybasket)
+        pADirOperatorMenu->insert(actionCollection()->action("dirop_todirbasket"));
 
     pADirOperatorMenu->popupMenu()->insertItem(i18n("File actions"), dynamic_cast<KActionMenu *>(actionCollection()->action("dirop_file_menu"))->popupMenu(), -1, 0);
     pADirOperatorMenu->popupMenu()->insertItem(i18n("&External tools"), SQ_ExternalTool::instance()->constPopupMenu(), -1, 1);

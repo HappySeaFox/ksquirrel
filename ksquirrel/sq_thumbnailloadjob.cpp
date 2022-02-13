@@ -49,6 +49,7 @@
 #include "sq_utils.h"
 #include "sq_filethumbview.h"
 #include "sq_filethumbviewitem.h"
+#include "sq_imageloader.h"
 
 #include <ksquirrel-libs/fmt_defs.h>
 
@@ -362,10 +363,14 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail()
     if(!th.thumbnail.load(mThumbURL.path(), sqdirThumbFormat))
         return false;
 
+    SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->libraryForFile(mCurrentURL);
+
     th.w = th.thumbnail.text("Thumb::Image::Width").toInt();
     th.h = th.thumbnail.text("Thumb::Image::Height").toInt();
 
-    SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->libraryForFile(mCurrentURL);
+    if((!th.w || !th.h) && mCurrentURL.isLocalFile())
+        SQ_ImageLoader::instance()->tasteImage(mCurrentURL.path(), &th.w, &th.h, lib);
+
     th.mime = lib->mime;
     th.originalTime = mOriginalTime;
     th.mime.load(dir->absPath(mCurrentURL), sqdirMimeFormat);
