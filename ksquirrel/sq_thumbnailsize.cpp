@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "sq_thumbnailsize.h"
 
-SQ_ThumbnailSize * SQ_ThumbnailSize::thumb = 0L;
+SQ_ThumbnailSize * SQ_ThumbnailSize::thumb = NULL;
 
 SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value), m_extended(false), m_margin(16)
 {

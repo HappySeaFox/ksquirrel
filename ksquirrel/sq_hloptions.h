@@ -21,16 +21,13 @@
 #include <qobject.h>
 #include <qstring.h>
 
-
-/**
-  *@author CKulT
-  */
-
 class SQ_HLOptions : public QObject
 {
 	public: 
 		SQ_HLOptions();
 		~SQ_HLOptions();
+
+		static SQ_HLOptions* instance();
 
 	public:
 		bool 		thumbs;
@@ -38,6 +35,8 @@ class SQ_HLOptions : public QObject
 		QString	thumbs_p;
 		bool 		showLibsAndExit;
 		bool		recurs;
+
+		static SQ_HLOptions *sing;
 };
 
 #endif

@@ -26,8 +26,24 @@
 static const QString thumbFormat = "PNG";
 static const int thumbQuality = 85;
 
-SQ_Dir::SQ_Dir() : QDir()
-{}
+SQ_Dir::SQ_Dir(Prefix p) : QDir()
+{
+	switch(p)
+	{
+		case SQ_Dir::Thumbnails:
+			setRoot("thumbnails");
+		break;
+		case SQ_Dir::Extracts:
+			setRoot("extracts");
+		break;
+		case SQ_Dir::Desktops:
+			setRoot("desktop");
+		break;
+		case SQ_Dir::Tmp:
+			setRoot("tmp");
+		break;
+	}
+}
 
 SQ_Dir::~SQ_Dir()
 {}

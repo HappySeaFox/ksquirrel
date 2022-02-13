@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_glviewspec.cpp  -  description
+                          sq_glview.cpp  -  description
                              -------------------
     begin                : ??? ??? 5 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,6 +18,7 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qtoolbutton.h>
+#include <qhbox.h>
 
 #include <kaction.h>
 #include <kstatusbar.h>
@@ -31,13 +32,13 @@
 #include "sq_config.h"
 #include "sq_widgetstack.h"
 
-SQ_GLView * SQ_GLView::view = 0L;
+SQ_GLView * SQ_GLView::sing = NULL;
 
 SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 {
-	view = this;
+	sing = this;
 
-	separate = ((parent == 0L)?true:false);
+	separate = (parent) ? false : true;
 
 	createContent();
 
@@ -56,7 +57,35 @@ void SQ_GLView::createContent()
 
 	sbar = new KStatusBar(this);
 
+	QString fourlines = QString::fromLatin1("----");
+	QHBox *sqSBDecodedBox = new QHBox;
+	sqSBDecodedBox->setSpacing(2);
+	QLabel *sqSBDecodedI = new QLabel(QString::fromLatin1("--"), sqSBDecodedBox, "SBDecodedI");
+	names["SBDecodedI"] = sqSBDecodedI;
+	QLabel *sqSBDecoded = new QLabel(fourlines, sqSBDecodedBox, "SBDecoded");
+	names["SBDecoded"] = sqSBDecoded;
+
+	QLabel *sqSBGLZoom = new QLabel(fourlines, 0, "SBGLZoom");
+	names["SBGLZoom"] = sqSBGLZoom;
+	QLabel *sqSBGLAngle = new QLabel(fourlines, 0, "SBGLAngle");
+	names["SBGLAngle"] = sqSBGLAngle;
+	QLabel *sqSBGLCoord = new QLabel(fourlines, 0, "SBGLCoord");
+	names["SBGLCoord"] = sqSBGLCoord;
+	QLabel *sqSBLoaded = new QLabel(fourlines, 0, "SBLoaded");
+	names["SBLoaded"] = sqSBLoaded;
+	QLabel *sqSBFrame = new QLabel(QString::fromLatin1("0/0"), 0, "SBFrame");
+	names["SBFrame"] = sqSBFrame;
+	QLabel *sqSBFile = new QLabel(QString::null, NULL, "SBFile");
+	names["SBFile"] = sqSBFile;
+
+	sqSBFrame->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs);
+	sqSBFile->setAlignment(Qt::AlignRight | Qt::AlignTop);
+	QFont font = sqSBFile->font();
+	font.setBold(true);
+	sqSBFile->setFont(font);
+
 	sbar->addWidget(sqSBDecodedBox, 0, true);
+//	sbar->addWidget(sqSBDecoded, 0, true);
 	sbar->addWidget(sqSBFrame, 0, true);
 	sbar->addWidget(sqSBLoaded, 0, true);
 	sbar->addWidget(sqSBGLZoom, 0, true);
@@ -73,6 +102,8 @@ void SQ_GLView::createContent()
 	QRect geom = SQ_Config::instance()->readRectEntry("GL view", "geometry", &rect);
 
 	setGeometry(geom);
+
+	gl->matrixChanged();
 }
 
 bool SQ_GLView::isSeparate() const
@@ -121,7 +152,12 @@ bool SQ_GLView::eventFilter(QObject *watched, QEvent *e)
 		return QVBox::eventFilter(watched, e);
 }
 
+QLabel* SQ_GLView::sbarWidget(const QString &name) const
+{
+	return names[name];
+}
+
 SQ_GLView* SQ_GLView::window()
 {
-	return view;
+	return sing;
 }

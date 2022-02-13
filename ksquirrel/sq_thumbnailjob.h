@@ -1,6 +1,6 @@
 /*
 	copyright            : (C) 2004 by Baryshev Dmitry
-	KSQuirrel - image viewer for KDE
+	KSquirrel - image viewer for KDE
 */
 
 /*  This file is part of the KDE project

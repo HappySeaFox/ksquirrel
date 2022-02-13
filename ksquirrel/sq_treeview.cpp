@@ -26,7 +26,7 @@
 #include "sq_config.h"
 #include "sq_treeview.h"
 
-SQ_TreeView * SQ_TreeView::tree = 0L;
+SQ_TreeView * SQ_TreeView::tree = NULL;
 
 SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
@@ -110,7 +110,7 @@ void SQ_TreeView::collapseOpened()
 
 	KFileTreeViewItem *item;
 
-	while((item = itemsToClose->getFirst()) != 0L)
+	while((item = itemsToClose->getFirst()) != NULL)
 	{
 		item->setOpen(false);
 		itemsToClose->removeFirst();

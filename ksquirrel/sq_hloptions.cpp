@@ -17,8 +17,17 @@
 
 #include "sq_hloptions.h"
 
+SQ_HLOptions * SQ_HLOptions::sing = NULL;
+
 SQ_HLOptions::SQ_HLOptions() : QObject(), showLibsAndExit(false)
-{}
+{
+    sing = this;
+}
 
 SQ_HLOptions::~SQ_HLOptions()
 {}
+
+SQ_HLOptions* SQ_HLOptions::instance()
+{
+    return sing;
+}

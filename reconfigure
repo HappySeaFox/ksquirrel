@@ -1,6 +1,4 @@
 #!/bin/sh
 
-par='--prefix=/usr'
-
 make -f Makefile.dist &&
-./configure $par
+./configure.gnu

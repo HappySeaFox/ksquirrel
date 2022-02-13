@@ -122,7 +122,7 @@ class SQ_WidgetStack : public QWidgetStack
 		KURL::List			files;
 		FileAction			fileaction;
 
-		static SQ_WidgetStack	*inst;
+		static SQ_WidgetStack	*sing;
 };
 
 #endif

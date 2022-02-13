@@ -7,17 +7,15 @@
 ** place of a destructor.
 *****************************************************************************/
 
-#include <kiconloader.h>
-
 void SQ_Filters::init()
 {
 	listFilters->setSorting(-1);
 
 	QListViewItem *itemafter = 0L, *item;
-	
-	QValueList<QString>::iterator nEND = sqFiltersName->end();
-	QValueList<QString>::iterator it_name = sqFiltersName->begin();
-	QValueList<QString>::iterator it_ext = sqFiltersExt->begin();
+
+	QValueList<QString>::iterator nEND = KSquirrel::app()->sqFiltersName->end();
+	QValueList<QString>::iterator it_name = KSquirrel::app()->sqFiltersName->begin();
+	QValueList<QString>::iterator it_ext = KSquirrel::app()->sqFiltersExt->begin();
 
 	for(;it_name != nEND;it_name++,it_ext++)
 	{
@@ -115,13 +113,13 @@ int SQ_Filters::start()
     {
 	QListViewItem *cur = listFilters->firstChild();
 
-	sqFiltersName->clear();
-	sqFiltersExt->clear();
+	KSquirrel::app()->sqFiltersName->clear();
+	KSquirrel::app()->sqFiltersExt->clear();
 
 	for(;cur;cur = cur->itemBelow())
 	{
-		sqFiltersName->append(cur->text(0));
-		sqFiltersExt->append(cur->text(1));
+		KSquirrel::app()->sqFiltersName->append(cur->text(0));
+		KSquirrel::app()->sqFiltersExt->append(cur->text(1));
 	}
 	
 	SQ_Config::instance()->setGroup("Filters");

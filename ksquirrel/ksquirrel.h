@@ -18,7 +18,12 @@
 #ifndef KSQUIRREL_H
 #define KSQUIRREL_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qstringlist.h>
+#include <qmap.h>
 
 #include <kmainwindow.h>
 #include <kio/job.h>
@@ -49,8 +54,6 @@ class SQ_LibraryHandler;
 class SQ_Config;
 class SQ_ExternalTool;
 class SQ_TreeView;
-class SQ_BookmarkOwner;
-class SQ_HLOptions;
 class SQ_ThumbnailSize;
 class SQ_PixmapCache;
 class SQ_LocationToolbar;
@@ -59,15 +62,13 @@ class SQ_GLWidget;
 class SQ_ArchiveHandler;
 class SQ_UpdateKsquirrelThread;
 class SQ_Dir;
-class SQ_Converter;
-class SQ_Resizer;
 
 class KSquirrel : public KMainWindow
 {
 	Q_OBJECT
 
 	public:
-		KSquirrel(SQ_HLOptions *, QWidget *parent = 0, const char *name = 0);
+		KSquirrel(QWidget *parent = 0, const char *name = 0);
 		~KSquirrel();
 
 		void finalActions();
@@ -76,6 +77,7 @@ class KSquirrel : public KMainWindow
 
 		KPopupMenu* menuFilters();
 		KPopupMenu* menuViews();
+		QLabel*		sbarWidget(const QString &name);
 
 	protected:
 		void closeEvent(QCloseEvent *e);
@@ -109,6 +111,10 @@ class KSquirrel : public KMainWindow
 		void continueLoading();
 
 	public slots:
+		void slotCloseGLWidget();
+		void raiseGLWidget();
+
+	private slots:
 		void slotOptions();
 		void slotFilters();
 		void slotExtTools();
@@ -119,14 +125,12 @@ class KSquirrel : public KMainWindow
 		void slotGo();
 		void slotSetFilter(int);
 		void slotGotoTray();
-		void slotCloseGLWidget();
 		void slotFullScreen(bool full);
 		void slotThumbsSmall();
 		void slotThumbsMedium();
 		void slotThumbsLarge();
 		void slotThumbsHuge();
 		void slotContinueLoading();
-		void raiseGLWidget();
 		void slotSetTreeShown(bool shown);
 		void slotSeparateGL(bool);
 		void slotOpenFile();
@@ -134,89 +138,69 @@ class KSquirrel : public KMainWindow
 		void slotNeedUpdate(const QString &ver);
 		void slotShowUpdate();
 		void slotAnimatedClicked();
+		void slotUDSEntries(KIO::Job*, const KIO::UDSEntryList&);
+		void listResult(KIO::Job *);
+		void slotContinueLoading2();
+		void slotShowImageEditActions();
+		void slotTCMaster();
 		QString slotRescan();
 
-	private slots:
-		void slotUDSEntries(KIO::Job*, const KIO::UDSEntryList&);
-		void listResult(KIO::Job*);
-		void slotContinueLoading2();
-
 	public:
-		static KSquirrel 		*m_app;
+		static KSquirrel 			*sing;
 		static KIconLoader		*iconL;
 
-		static KIconLoader* loader();
-		static KSquirrel* app();
+		static KIconLoader* 		loader();
+		static KSquirrel* 		app();
 
-		SQ_Config				*kconf;
-		SQ_WidgetStack		*pWidgetStack;
-		KHistoryCombo		*pCurrentURL;
-		SQ_LibraryHandler		*libhandler;
-		KStatusBar				*sbar;
-		SQ_LibraryListener	*libl;
-		SQ_SystemTray		*tray;
-		QLabel					*dirInfo, *fileIcon, *fileName, *decodedStatus, *decodedIcon, *GLzoom, *GLangle, *GLcoord, *GLloaded, *GLcurrentFrame, *GLcurrentFile;
-		QHBox					*decodedBox;
-		SQ_ExternalTool		*extool;
-		SQ_TreeView			*ptree;
-		SQ_BookmarkOwner 	*bookmarkOwner;
-		SQ_HLOptions			*highlevel;
-		QStringList				*filters_name, *filters_ext;
-		SQ_ThumbnailSize	*thumbSize;
-		SQ_PixmapCache		*cache;
-		KAction					*pAGLView, *pAConfigure, *pAExit, *pARescan, *pAExtTools, *pAFilters, *pAGotoTray;
-		SQ_GLView			*gl_view;
-		SQ_ArchiveHandler	*ar;
-		QString				new_version;
-		SQ_Converter			*conv;
-		SQ_Resizer			*rsz;
+		KHistoryCombo			*pCurrentURL;
+		QStringList				*sqFiltersName, *sqFiltersExt;
+		KAction					*pAImageConvert, *pAImageResize, *pAImageBCG, *pAImageRotate,
+								*pAImageToolbar, *pAImageFilter, *pAPrintImages, *pAConfigure;
 
 	private:
 		KToolBar				*tools;
-		SQ_LocationToolbar	*pTLocation;
 		KMenuBar				*menubar;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView, *pARaiseThumbView;
 		KActionMenu			*pAThumbs;
 		KRadioAction			*pAThumb0, *pAThumb1, *pAThumb2, *pAThumb3;
 		KToggleAction			*pATree, *pAURL, *pASeparateGL;
-		QSplitter				*mainSplitter;
 		KPopupMenu			*pop_file, *pop_view, *pop_edit;
 		KPopupMenu			*actionFilterMenu, *actionViews;
 		KActionMenu 			*bookmarks;
+		KBookmarkMenu			*bookmarkMenu;
+		KIO::ListJob				*job;
+		KAction					*pAOpen, *pAOpenAndSet, *pATCMaster, *pAGLView,
+								*pAExit, *pARescan, *pAExtTools, *pAFilters, *pAGotoTray;
+		KStatusBar				*sbar;
+
+		QSplitter				*mainSplitter;
 		QStringList				strlibFound;
-		int						old_id;
 		QWidgetStack			*viewBrowser;
-		bool 					first_time, hastree, old_disable, old_ext, m_urlbox, m_sep, old_marks;
 		QVBox					*mainBox, *b2;
-		KBookmarkMenu		*bookmarkMenu;
-		QValueList<int>		mainSizes;
+		QValueList<int>			mainSizes;
 		QStringList				libFilters;
-		KAction					*pAOpen, *pAOpenAndSet;
+		QMap<QString, QLabel*>sbarwidgets;
+		QLabel					*dirInfo, *fileIcon, *fileName;
+		QString					new_version;
+
+		SQ_LocationToolbar		*pTLocation;
 		SQ_UpdateKsquirrelThread	*updater;
-		KIO::ListJob			*job;
 		SQ_Dir					*dir;
-		KActionMenu 			*pAImageActions;
+		SQ_Config				*kconf;
+		SQ_WidgetStack			*pWidgetStack;
+		SQ_LibraryHandler		*libhandler;
+		SQ_LibraryListener		*libl;
+		SQ_SystemTray			*tray;
+		SQ_ExternalTool			*extool;
+		SQ_TreeView			*ptree;
+		SQ_GLView				*gl_view;
+		SQ_ArchiveHandler		*ar;
+		SQ_ThumbnailSize		*thumbSize;
+		SQ_PixmapCache		*cache;
+
+		int						old_id;
+		bool 					first_time, hastree, old_disable, old_ext,
+								m_urlbox, m_sep, old_marks;
 };
-
-#define	sqBookmarks		(KSquirrel::m_app->bookmarkOwner)
-#define	sqHighLevel		(KSquirrel::m_app->highlevel)
-
-#define	sqCurrentURL		(KSquirrel::m_app->pCurrentURL)
-
-#define	sqSBdirInfo		(KSquirrel::m_app->dirInfo)
-#define	sqSBfileIcon		(KSquirrel::m_app->fileIcon)
-#define	sqSBfileName		(KSquirrel::m_app->fileName)
-#define	sqSBDecoded		(KSquirrel::m_app->decodedStatus)
-#define	sqSBDecodedI		(KSquirrel::m_app->decodedIcon)
-#define	sqSBDecodedBox	(KSquirrel::m_app->decodedBox)
-#define	sqSBGLZoom		(KSquirrel::m_app->GLzoom)
-#define	sqSBGLAngle		(KSquirrel::m_app->GLangle)
-#define	sqSBGLCoord		(KSquirrel::m_app->GLcoord)
-#define	sqSBLoaded		(KSquirrel::m_app->GLloaded)
-#define	sqSBFrame			(KSquirrel::m_app->GLcurrentFrame)
-#define	sqSBFile			(KSquirrel::m_app->GLcurrentFile)
-
-#define	sqFiltersName		(KSquirrel::m_app->filters_name)
-#define	sqFiltersExt		(KSquirrel::m_app->filters_ext)
 
 #endif

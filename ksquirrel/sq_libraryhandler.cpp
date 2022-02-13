@@ -25,7 +25,9 @@
 #include "sq_libraryhandler.h"
 #include "sq_config.h"
 
-#define SQ_FIO_NO_IMPLEMENT
+#include <csetjmp>
+
+#include "fileio.h"
 #include "fmt_codec_base.h"
 
 #define SQ_HAVE_MIMESTRING
@@ -33,9 +35,9 @@
 
 static const int buffer_size = 10;
 
-SQ_LibraryHandler * SQ_LibraryHandler::hand = 0L;
+SQ_LibraryHandler * SQ_LibraryHandler::hand = NULL;
 
-SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries) : QValueVector<SQ_LIBRARY>(), latest(0L)
+SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries) : QValueVector<SQ_LIBRARY>(), latest(NULL)
 {
 	hand = this;
 
@@ -84,7 +86,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 	{
 		l = (SQ_LIBRARY *)&(*it);
 
-		if(!l->regexp_str.isEmpty() && !l->regexp_str.isNull())
+		if(!l->regexp_str.isEmpty())
 			if(read.find(l->regexp) == 0)
 			{
 				found = l;
@@ -95,10 +97,16 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 
 	if(found)
 	{
-		printf("1. SQ_LibraryHandler::libraryForFile: \"%s\" => \"%s\"\n", 
-			KStringHandler::csqueeze(full_path, 22).ascii(),
-			found->quickinfo.ascii());
-		return found;
+		if(found->codec->fmt_readable())
+		{
+			printf("1. SQ_LibraryHandler::libraryForFile: \"%s\" => \"%s\"\n", 
+				KStringHandler::csqueeze(full_path, 22).ascii(),
+				found->quickinfo.ascii());
+
+			return found;
+		}
+
+		return NULL;
 	}
 
 	QFileInfo f(full_path);
@@ -110,7 +118,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 	{
 		l = (SQ_LIBRARY *)&(*it);
 
-		if(l->filter.find(ext, 0, false) != -1 && (l->regexp_str.isEmpty() || l->regexp_str.isNull()))
+		if(l->filter.find(ext, 0, false) != -1 && l->regexp_str.isEmpty())
 		{
 			printf("2. SQ_LibraryHandler::libraryForFile: \"%s\" => \"%s\"\n",
 			    KStringHandler::csqueeze(full_path, 22).ascii(),
@@ -118,7 +126,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 
 			latest = l;
 
-			return l;
+			return ((l && l->codec->fmt_readable()) ? l : NULL);
 		}
 	}
 
@@ -127,7 +135,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 
 bool SQ_LibraryHandler::supports(const QString &f)
 {
-	return libraryForFile(f) != 0;
+	return libraryForFile(f) != NULL;
 }
 
 QString SQ_LibraryHandler::allFiltersString() const
@@ -139,7 +147,7 @@ QString SQ_LibraryHandler::allFiltersString() const
 
 	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
 	{
-		if(!(*it).filter.isEmpty() && !(*it).filter.isNull())
+		if(!(*it).filter.isEmpty())
 			ret = ret + (*it).filter + " ";
 	}
 
@@ -151,11 +159,14 @@ void SQ_LibraryHandler::allFilters(QStringList &filters, QStringList &quick) con
 	filters.clear();
 	quick.clear();
 
+	if(empty())
+		return;
+
 	QValueVector<SQ_LIBRARY>::const_iterator   BEGIN = begin();
 	QValueVector<SQ_LIBRARY>::const_iterator   END = end();
 
 	for(QValueVector<SQ_LIBRARY>::const_iterator it = BEGIN;it != END;++it)
-		if(!(*it).filter.isEmpty() && !(*it).filter.isNull())
+		if(!(*it).filter.isEmpty())
 		{
 			filters.append((*it).filter);
 			quick.append((*it).quickinfo);
@@ -324,11 +335,6 @@ void SQ_LibraryHandler::dump() const
 	}
 
 	printf("\n\n");
-}
-
-SQ_LIBRARY* SQ_LibraryHandler::latestLibrary()
-{
-	return latest;
 }
 
 bool SQ_LibraryHandler::knownExtension(const QString &ext)

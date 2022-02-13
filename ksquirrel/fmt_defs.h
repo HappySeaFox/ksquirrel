@@ -27,10 +27,6 @@
 
 using namespace std;
 
-#ifndef PACKED
-#define PACKED __attribute__ ((packed))
-#endif
-
 /* Metainfo support */
 
 struct fmt_metaentry
@@ -38,7 +34,7 @@ struct fmt_metaentry
     std::string	group;
     std::string	data;
 
-}PACKED;
+};
 
 /* RGBA and RGB pixels */
 
@@ -90,21 +86,27 @@ struct fmt_image
     // need to be flipped ?
     bool		needflip;
     
-    // some useful information
-    std::string		dump;
-    
-    // if it's a frame from animated sequence,
+    // if it's a frame in animated sequence,
     // 'delay' will define a delay time
     s32			delay;
     
-    // interlaced ?
+    // interlaced or normal ?
     bool		interlaced;
     
     // if interlaced, 'passes' stores the number
     // of passes. if no, passes should be 1
     s32			passes;
+    
+    // some useful info about image.
+    // this is a replacement for 'dump' in older versions of ksquirrel-libs
+    // --------------------------------------------------------------------
 
-}PACKED;
+    // color space (RGB, RGBA, CMYK, LAB ...)
+    std::string colorspace;
+
+    // compression type (RLE, JPEG, Deflate ...)
+    std::string compression;
+};
 
 /* General description */
 struct fmt_info
@@ -124,10 +126,10 @@ struct fmt_info
     // animated or static
     bool			animated;
 
-}PACKED;
+};
 
 /*                                                                Internal cmpression.
-								  E.g. compression_level is
+								  E.g. compression_level will be
 								  passed to internal routines,
                        No compression       RLE compression       for ex. in libjpeg, libpng.
 */
@@ -143,6 +145,12 @@ struct fmt_writeoptionsabs
 {
     // can be interlaced ?
     bool interlaced;
+    
+    // if interlaced, this value should store preferred number of passes.
+    s32 passes;
+
+    // if the image should be flipped before writing
+    bool needflip;
     
     // with which compression it can be encoded ?
     //    for example: CompressionNo | CompressionRLE.

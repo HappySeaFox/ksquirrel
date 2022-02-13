@@ -24,14 +24,12 @@
 
 #include "sq_thumbnailinfo.h"
 
-/**
-  *@author CKulT
-  */
-
 class SQ_Dir : public QDir
 {
 	public: 
-		SQ_Dir();
+		enum Prefix { Thumbnails, Extracts, Desktops, Tmp };
+
+		SQ_Dir(Prefix);
 		~SQ_Dir();
 
 		bool mkdir(const QString &relpath);

@@ -1,3 +1,38 @@
+ksquirrel-0.6.0-pre3
+************************************************************
+
+ksquirrel:
+* small fix in tootips for thumbnails
+* small fix in toolbar in image window
+* resize, rotate, colorize and print tools are available in preview mode
+  (will read, but won't write images)
+* added thumbnail cache manipulator
+
+ksquirrel-libs:
+* some changes in API. pre2 and pre3 are not compatible.
+* added SVG (reading, requires libxml2, freetype)
+* TGA: small fix (in v0.7.1 flipping was ON by default, in v0.7.2 flipping is determined by image header)
+* XPM: small fix in decoding mechanism
+* new mime icons
+
+
+ksquirrel-0.6.0-pre2
+************************************************************
+
+* please, remove old config file ~/.kde/share/config/ksquirrelrc and old libraries before installation
+* some changes in thumbnail view
+
+ksquirrel-libs:
+* changed library path /usr/lib/squirrel =>/usr/lib/ksquirrel-libs
+* fully migrated to C++ (stdc++)
+* added WMF (reading)
+* added SUN Icon (reading)
+* added WBMP (reading)
+* added TIFF (writing)
+* added photos from different cameras (CRW, ...)
+* added some examples (QT, QT+OpenGL)
+
+
 ksquirrel-0.6.0-pre1
 ************************************************************
 

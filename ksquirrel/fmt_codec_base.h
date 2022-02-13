@@ -22,10 +22,7 @@
 #ifndef KSQUIRREL_LIBS_CLASS_DEFINITION_H
 #define KSQUIRREL_LIBS_CLASS_DEFINITION_H
 
-#include "fio.h"
-
 #include "fmt_defs.h"
-
 
 //////////////////////////////////
 //                              //
@@ -64,28 +61,28 @@ class fmt_codec_base
 	/*
 	 *             read methods
 	 */
-	
-	// fmt_init: do what you need before decoding
-	virtual s32	fmt_init(std::string file) = 0;
 
-	// fmt_next: seek to correct file offset, do other initialization stuff.
+	// readable ?
+	virtual bool	fmt_readable() const = 0;
+
+	// fmt_read_init: do what you need before decoding
+	virtual s32	fmt_read_init(std::string file) = 0;
+
+	// fmt_read_next: seek to correct file offset, do other initialization stuff.
 	// this method should be (and will be) called before image is about to
 	// be decoded.
-	virtual s32	fmt_next() = 0;
+	virtual s32	fmt_read_next() = 0;
 
-	// fmt_next_pass: do somethimg important before the next pass
+	// fmt_read_next_pass: do somethimg important before the next pass
 	// will be decoded (usually do nothing, if the image has only 1 pass (like BMP, PCX ...),
 	// or adjust variables if the image is interlaced, with passes > 1 (like GIF, PNG))
-	virtual s32	fmt_next_pass() = 0;
+	virtual s32	fmt_read_next_pass() = 0;
 
 	// fmt_readscanline: read one scanline from file
 	virtual s32	fmt_read_scanline(RGBA *scan) = 0;
 
-	// fmt_readimage: read entire image. usually thumbnail generator or image converter calls this method
-	virtual s32	fmt_readimage(std::string file, RGBA **image, std::string &dump) = 0;
-
-	// fmt_close: close all handles, free memory, etc.
-	virtual void	fmt_close() = 0;
+	// fmt_read_close: close all handles, free memory, etc.
+	virtual void	fmt_read_close() = 0;
 
 	/*
 	 *             write methods
@@ -97,8 +94,18 @@ class fmt_codec_base
 	// fmt_getwriteoptions: return write options for this image format
 	virtual void    fmt_getwriteoptions(fmt_writeoptionsabs *) = 0;
 
-	// fmt_writeimage: write image on disk
-	virtual s32	fmt_writeimage(std::string file, RGBA *image, s32 w, s32 h, const fmt_writeoptions &opt) = 0;
+	// fmt_write_init: init writing
+	virtual s32     fmt_write_init(std::string file, const fmt_image &image, const fmt_writeoptions &opt) = 0;
+	
+	virtual s32	fmt_write_next() = 0;
+
+	virtual s32	fmt_write_next_pass() = 0;
+
+	// fmt_write_scanline: write scanline
+	virtual s32	fmt_write_scanline(RGBA *scan) = 0;
+
+	// fmt_write_close: close writing(close descriptors, free memory, etc.)
+	virtual void	fmt_write_close() = 0;
 
 	fmt_info information() const
 	{
@@ -106,11 +113,15 @@ class fmt_codec_base
 	}
 
     protected:
-	s32 	 	currentImage;
-	fmt_info 	finfo;
-	ifstreamK	frs;
-	bool		globalerror;
-	s32		line;
+	s32               currentImage;
+	fmt_info          finfo;
+	ifstreamK         frs;
+	ofstreamK         fws;
+	bool              read_error, write_error;
+	s32               line;
+	s32               write_error_code;
+	fmt_writeoptions  writeopt;
+	fmt_image         writeimage;
 };
 
 #endif

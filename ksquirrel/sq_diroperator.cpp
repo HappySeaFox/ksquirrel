@@ -52,8 +52,8 @@ void SQ_DirOperator::slotFinishedLoading()
 
 	if(!total)
 	{
-		sqSBfileIcon->clear();
-		sqSBfileName->clear();
+		KSquirrel::app()->sbarWidget("fileIcon")->clear();
+		KSquirrel::app()->sbarWidget("fileName")->clear();
 		return;
 	}
 
@@ -78,7 +78,7 @@ void SQ_DirOperator::slotUpdateInformation(int files, int dirs)
 			.arg(total)
 			.arg(i18n("1 directory", "%n dirs", dirs))
 			.arg(i18n("1 file", "%n files", files));
-	sqSBdirInfo->setText(str);
+	KSquirrel::app()->sbarWidget("dirInfo")->setText(str);
 }
 
 void SQ_DirOperator::slotDelayedFinishedLoading()
@@ -141,11 +141,12 @@ void SQ_DirOperator::slotSelected(QIconViewItem *item)
 
 	QString str;
 	QPixmap px;
-	KFileItem *fi;
+	
+	KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item);
 
-	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
+	if(f)
 	{
-		fi = f->fileInfo();
+		KFileItem *fi = f->fileInfo();
 		statusFile(fi);
 	}
 }
@@ -154,11 +155,11 @@ void SQ_DirOperator::slotSelected(QListViewItem *item)
 {
 	if(!item) return;
 
-	KFileItem *fi;
+	KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item);
 
-	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
+	if(f)
 	{
-		fi = f->fileInfo();
+		KFileItem *fi = f->fileInfo();
 		statusFile(fi);
 	}
 }
@@ -169,9 +170,9 @@ void SQ_DirOperator::statusFile(KFileItem *fi)
 	QPixmap px;
 
 	px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
-	sqSBfileIcon->setPixmap(px);
+	KSquirrel::app()->sbarWidget("fileIcon")->setPixmap(px);
 	str = QString("  %1 %2").arg(fi->text()).arg((fi->isDir())?"":QString(" (" + KIO::convertSize(fi->size()) + ")"));
-	sqSBfileName->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
+	KSquirrel::app()->sbarWidget("fileName")->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
 	SQ_WidgetStack::instance()->selectFile(fi, this);
 }
 

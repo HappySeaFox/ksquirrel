@@ -54,17 +54,17 @@
 #define SQ_SECTION_ICONS "Navigator Icons"
 #define SQ_SECTION_LIST "Navigator List"
 
-SQ_WidgetStack * SQ_WidgetStack::inst = 0L;
+SQ_WidgetStack * SQ_WidgetStack::sing = NULL;
 
 SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0)
 {
-	inst = this;
+	sing = this;
 
-	pDirOperatorList = 0L;
-	pDirOperatorIcon = 0L;
-	pDirOperatorDetail = 0L;
-	pDirOperatorThumb = 0L;
-	path = 0L;
+	pDirOperatorList = NULL;
+	pDirOperatorIcon = NULL;
+	pDirOperatorDetail = NULL;
+	pDirOperatorThumb = NULL;
+	path = NULL;
 
 	ac = new KActionCollection(this);
 
@@ -108,12 +108,12 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool cl, bool parseTree)
 	KURL url = newurl;
 	url.adjustPath(1);
 
-	if(sqBookmarks) sqBookmarks->setURL(url);
+	if(SQ_BookmarkOwner::instance()) SQ_BookmarkOwner::instance()->setURL(url);
 
-	if(sqCurrentURL)
+	if(KSquirrel::app()->pCurrentURL)
 	{
-		sqCurrentURL->addToHistory(url.prettyURL());
-		sqCurrentURL->setEditURL(url);
+		KSquirrel::app()->pCurrentURL->addToHistory(url.prettyURL());
+		KSquirrel::app()->pCurrentURL->setEditURL(url);
 	}
 
 	if(SQ_GLWidget::window())
@@ -207,11 +207,11 @@ const QString SQ_WidgetStack::getNameFilter() const
 
 void SQ_WidgetStack::raiseWidget(int id)
 {
-	KFileView *local = 0L;
-	KFileItem *item = 0L;
+	KFileView *local = NULL;
+	KFileItem *item = NULL;
 	QString	filter = "*";
 	SQ_DirOperator *local_operator = visibleWidget();
-	SQ_DirOperator *shown = 0L;
+	SQ_DirOperator *shown = NULL;
 
 	if(ncount)
 	{
@@ -221,7 +221,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 	}
 
 	// load views only on call.
-	if(id == 0 && pDirOperatorList == 0L)
+	if(!id && !pDirOperatorList)
 	{
 		KURL _url;
 		if(path)
@@ -248,7 +248,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		addWidget(pDirOperatorList, 0);
 		ncount++;
 	}
-	if(id == 1 && pDirOperatorIcon == 0L)
+	if(id == 1 && !pDirOperatorIcon)
 	{
 		KURL _url;
 		if(path)
@@ -275,7 +275,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		addWidget(pDirOperatorIcon, 1);
 		ncount++;
 	}
-	else if(id == 2 &&  pDirOperatorDetail == 0L)
+	else if(id == 2 &&  !pDirOperatorDetail)
 	{
 		KURL _url;
 		if(path)
@@ -299,7 +299,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		addWidget(pDirOperatorDetail, 2);
 		ncount++;
 	}
-	else if(id == 3 &&  pDirOperatorThumb == 0L)
+	else if(id == 3 && !pDirOperatorThumb)
 	{
 		KURL _url;
 		if(path)
@@ -332,7 +332,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 //		KSquirrel::app()->insertRecreateAction();
 	}
 
-	if(shown == 0L && ncount > 1)
+	if(!shown && ncount > 1)
 		widget(id)->setURL(visibleWidget()->url(), true);
 
 	if(shown)
@@ -376,7 +376,7 @@ void SQ_WidgetStack::raiseFirst(int id)
 {
 	path = new QString;
 
-	if(sqHighLevel->path.isEmpty())
+	if(SQ_HLOptions::instance()->path.isEmpty())
 		switch(SQ_Config::instance()->readNumEntry("Fileview", "set path", 1))
 		{
 			case 2: *path = SQ_Config::instance()->readEntry("Fileview", "custom directory", "/"); break;
@@ -386,17 +386,17 @@ void SQ_WidgetStack::raiseFirst(int id)
 		}
 	else
 	{
-		QFileInfo fm(sqHighLevel->path);
-		*path = (fm.isDir()) ? sqHighLevel->path : fm.dirPath(true);
+		QFileInfo fm(SQ_HLOptions::instance()->path);
+		*path = (fm.isDir()) ? SQ_HLOptions::instance()->path : fm.dirPath(true);
 	}
 
 	raiseWidget(id);
 
-	if(sqCurrentURL)
-		sqCurrentURL->setEditURL(getURL());
+	if(KSquirrel::app()->pCurrentURL)
+		KSquirrel::app()->pCurrentURL->setEditURL(getURL());
 
         delete path;
-        path = 0L;
+        path = NULL;
 }
 
 void SQ_WidgetStack::emitNextSelected()
@@ -783,7 +783,7 @@ void SQ_WidgetStack::slotFileLinkTo()
 
 	QString s = KFileDialog::getExistingDirectory(QString::null, this);
 
-	if(s.isEmpty() || s.isNull())
+	if(s.isEmpty())
 		return;
 
 	KURL url = s;
@@ -800,7 +800,7 @@ void SQ_WidgetStack::slotFileCopyTo()
 
 	QString s = KFileDialog::getExistingDirectory(QString::null, this);
 
-	if(s.isEmpty() || s.isNull())
+	if(s.isEmpty())
 		return;
 
 	KURL url = s;
@@ -817,7 +817,7 @@ void SQ_WidgetStack::slotFileMoveTo()
 
 	QString s = KFileDialog::getExistingDirectory(QString::null, this);
 
-	if(s.isEmpty() || s.isNull())
+	if(s.isEmpty())
 		return;
 
 	KURL url = s;
@@ -827,5 +827,5 @@ void SQ_WidgetStack::slotFileMoveTo()
 
 SQ_WidgetStack* SQ_WidgetStack::instance()
 {
-	return inst;
+	return sing;
 }

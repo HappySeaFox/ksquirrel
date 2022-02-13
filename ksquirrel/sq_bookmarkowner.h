@@ -24,10 +24,6 @@
 #include <qobject.h>
 #include <qwidget.h>
 
-/**
-  *@author CKulT
-  */
-
 class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 {
 	Q_OBJECT
@@ -38,6 +34,8 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 
 		virtual void openBookmarkURL(const QString &);
 		virtual QString currentURL() const;
+		
+		static SQ_BookmarkOwner* instance();
 
 	public slots:
 		void setURL(const KURL &);
@@ -47,6 +45,7 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 
 	private:
 		KURL URL;
+		static SQ_BookmarkOwner *sing;
 };
 
 #endif

@@ -34,8 +34,8 @@
 #define SQ_SECTION_LIST "Navigator List"
 #endif
 
-SQ_QuickBrowser * SQ_QuickBrowser::view = 0L;
-SQ_DirOperatorBase * SQ_QuickBrowser::op = 0L;
+SQ_QuickBrowser * SQ_QuickBrowser::view = NULL;
+SQ_DirOperatorBase * SQ_QuickBrowser::op = NULL;
 
 SQ_Header::SQ_Header(QWidget *parent) : KToolBar(parent), inMouse(false), p(parent)
 {}

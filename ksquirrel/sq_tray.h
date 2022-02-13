@@ -28,7 +28,7 @@ class SQ_SystemTray : public KSystemTray
        Q_OBJECT
 
 	public:
-		SQ_SystemTray(QWidget *_parent = 0, const char *name = "");
+		SQ_SystemTray(QWidget *_parent = 0, const char *name = 0);
 
 	protected:
 		void mousePressEvent(QMouseEvent *);

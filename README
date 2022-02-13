@@ -2,7 +2,7 @@ KSquirrel is a new image viewer, simple and convenient in circulation.
 
 While all others use another's decoders, in KSquirrel image decoding is based on own decoders
 (ksquirrel-libs) which format is very simple. If support of certain format FMT is necessary
-for you, you can write the decoder for KSquirrel, compile and copy in /usr/lib/squirrel.
+for you, you can write the decoder for KSquirrel, compile and copy in /usr/lib/ksquirrel-libs.
 At desire you can use ksquirrel-libs in other image viewer. Since 0.6.0 ksquireel-libs package has
 documentation and simple examples.
 

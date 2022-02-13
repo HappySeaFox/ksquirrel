@@ -28,10 +28,6 @@
 #ifndef SQ_GLU_H
 #define SQ_GLU_H
 
-/**
-  *@author CKulT
-  */
-
 #include <GL/gl.h>
 
 #define GLU_INVALID_ENUM                   100900

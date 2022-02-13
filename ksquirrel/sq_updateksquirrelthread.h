@@ -43,6 +43,9 @@ class SQ_UpdateKsquirrelThread : public QObject, public QThread
 
 	signals:
 		void needUpdate(const QString &ver);
+
+	private:
+		QString file;
 };
 
 #endif

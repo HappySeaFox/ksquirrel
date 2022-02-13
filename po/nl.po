@@ -16,24 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 
-#: sq_filethumbviewitem.cpp:36
-msgid ""
-"Type: %1\n"
-"Dimensions: %2\n"
-"Bits per pixel: %3\n"
-"Color model: %4\n"
-"Compression: %5\n"
-"Number of frames: %6\n"
-"Uncompressed size: %7"
-msgstr ""
-"Type: %1\n"
-"Dimensies: %2\n"
-"Bits per pixel: %3\n"
-"Kleurmodel: %4\n"
-"Compressie: %5\n"
-"Aantal frames: %6\n"
-"Ongecomprimeerde grootte: %7"
-
 #: sq_diroperatorbase.cpp:200 sq_diroperatorbase.cpp:237
 msgid "Format \"%1\" not supported"
 msgstr "Formaat \"%1\" wordt niet ondersteund"
@@ -852,8 +834,8 @@ msgid "Last visited directory"
 msgstr "Laatstbezochte map"
 
 #: sq_options.cpp:823
-msgid "Current directory, where SQuirrel starts"
-msgstr "De map waarin SQuirrel gestart wordt"
+msgid "Current directory, where KSquirrel starts"
+msgstr "De map waarin KSquirrel gestart wordt"
 
 #: sq_options.cpp:824
 msgid "Run unknown file formats separately (with default application)"
@@ -1177,10 +1159,6 @@ msgstr "Afmetingen:"
 #: sq_imageproperties.cpp:383
 msgid "Bits per pixel:"
 msgstr "Bits per pixel:"
-
-#: sq_imageproperties.cpp:384
-msgid "Color model:"
-msgstr "Kleurmodel:"
 
 #: sq_imageproperties.cpp:385
 msgid "Compression:"

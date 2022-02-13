@@ -69,7 +69,7 @@ SQ_DirOperatorBase::~SQ_DirOperatorBase()
 
 KFileView* SQ_DirOperatorBase::createView(QWidget *parent, KFile::FileView)
 {
-	fileview = 0L;
+	fileview = NULL;
 
 	switch(type)
 	{
@@ -195,7 +195,7 @@ void SQ_DirOperatorBase::slotExecuted(QIconViewItem *item)
 			timer->start(timer_value, true);
 		else
 		{
-			sqSBDecoded->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
+			SQ_GLView::window()->sbarWidget("SBDecoded")->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
 
 			if(SQ_ArchiveHandler::instance()->findProtocolByFile(fi) != -1)
 				if(SQ_Config::instance()->readBoolEntry("Fileview", "archives", true))
@@ -232,7 +232,7 @@ void SQ_DirOperatorBase::slotExecuted(QListViewItem *item)
 			timer->start(timer_value, true);
 		else
 		{
-			sqSBDecoded->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
+			SQ_GLView::window()->sbarWidget("SBDecoded")->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
 
 			if(SQ_ArchiveHandler::instance()->findProtocolByFile(fi) != -1)
 				if(SQ_Config::instance()->readBoolEntry("Fileview", "archives", true))
@@ -405,6 +405,8 @@ void SQ_DirOperatorBase::setupActions()
 {
 	KActionSeparator *pASep = new KActionSeparator(actionCollection());
 
+	actionCollection()->action("mkdir")->setShortcut(KShortcut(CTRL+Qt::Key_N));
+
 	setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
 
 	pARunSeparately = new KAction(i18n("Run separately"), "launch", KShortcut(CTRL+Key_J), SQ_WidgetStack::instance(), SLOT(slotRunSeparately()), (KActionCollection*)0, "Run separately");
@@ -423,9 +425,15 @@ void SQ_DirOperatorBase::setupActions()
 	pAFileActions->insert(pASep);
 	pAFileActions->insert(pARunSeparately);
 
-	KActionMenu *pAImageActions = new KActionMenu(i18n("Image actions"), "images");
-	pAImageActions->insert(new KAction(i18n("Convert images"), QString::null, CTRL+Key_K, SQ_Converter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Menu Image Convert"));
-//	pAImageActions->insert(new KAction(i18n("Resize images"), QString::null, CTRL+Key_R, SQ_Resizer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Menu Image Resize"));
+	pAImageActions = new KActionMenu(i18n("Image actions"), "images");
+	pAImageActions->insert(KSquirrel::app()->pAImageToolbar);
+	pAImageActions->insert(pASep);
+	pAImageActions->insert(KSquirrel::app()->pAImageConvert);
+	pAImageActions->insert(KSquirrel::app()->pAImageResize);
+	pAImageActions->insert(KSquirrel::app()->pAImageRotate);
+	pAImageActions->insert(KSquirrel::app()->pAImageBCG);
+	pAImageActions->insert(KSquirrel::app()->pAImageFilter);
+	pAImageActions->insert(KSquirrel::app()->pAPrintImages);
 
 	if(type == SQ_DirOperatorBase::TypeThumbs)
 	{

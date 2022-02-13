@@ -41,13 +41,12 @@
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
 
-SQ_ArchiveHandler * SQ_ArchiveHandler::ar = 0L;
+SQ_ArchiveHandler * SQ_ArchiveHandler::ar = NULL;
 
 SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObject(parent, name)
 {
 	ar = this;
-	dir = new SQ_Dir;
-	dir->setRoot(QString::fromLatin1("extracts"));
+	dir = new SQ_Dir(SQ_Dir::Extracts);
 
 	protocols["application/x-bzip"] = 0;
 	protocols["application/x-bzip2"] = 1;
@@ -123,7 +122,7 @@ bool SQ_ArchiveHandler::unpack()
 			return false;
 	}
 
-	KArchive *arc = 0L;
+	KArchive *arc = NULL;
 	
 	switch(findProtocolByFile(item))
 	{
@@ -140,7 +139,7 @@ bool SQ_ArchiveHandler::unpack()
 		break;
 
 		default:
-			arc = 0L;
+			arc = NULL;
 	}
 
 	if(arc)

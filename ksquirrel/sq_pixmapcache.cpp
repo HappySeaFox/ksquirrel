@@ -20,31 +20,20 @@
 #include "sq_pixmapcache.h"
 #include "sq_dir.h"
 
-SQ_PixmapCache * SQ_PixmapCache::cache = 0L;
+SQ_PixmapCache * SQ_PixmapCache::cache = NULL;
 
 SQ_PixmapCache::SQ_PixmapCache(int limit) : QMap<QString, SQ_Thumbnail>()
 {
 	cache = this;
 	cache_limit = limit << 10;
 
-	dir = new SQ_Dir;
-	dir->setRoot("thumbnails");
+	dir = new SQ_Dir(SQ_Dir::Thumbnails);
 
 	valid_full = false;
 }
 
 SQ_PixmapCache::~SQ_PixmapCache()
 {}
-
-int SQ_PixmapCache::cacheLimit()
-{
-	return cache_limit;
-}
-
-void SQ_PixmapCache::setCacheLimit(int n)
-{
-	cache_limit = n << 10;
-}
 
 void SQ_PixmapCache::sync()
 {

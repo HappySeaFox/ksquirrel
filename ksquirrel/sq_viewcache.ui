@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>333</height>
+            <height>335</height>
         </rect>
     </property>
     <property name="caption">
@@ -110,9 +110,6 @@
                 <widget class="QLabel">
                     <property name="name">
                         <cstring>textTotal</cstring>
-                    </property>
-                    <property name="frameShape">
-                        <enum>LineEditPanel</enum>
                     </property>
                     <property name="text">
                         <string></string>

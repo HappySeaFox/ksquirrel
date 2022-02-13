@@ -26,12 +26,10 @@
 
 SQ_Progress::SQ_Progress(QWidget * parent, const char * name, WFlags f) : QLabel(parent, name, f)
 {
-	painter = 0L;
+	painter = NULL;
 
 	setAutoResize(true);
 	setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/progress.png")));
-
-	percentage = -1;
 }
 
 SQ_Progress::~SQ_Progress()
@@ -41,6 +39,7 @@ void SQ_Progress::setTotalSteps(int totalSteps)
 {
 	total_steps = totalSteps;
 	step = 0;
+	percentage = 0;
 
 	QColor c(104,120,247);
 

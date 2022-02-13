@@ -19,11 +19,16 @@
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qgl.h>
 #include <qcursor.h>
 #include <qfileinfo.h>
 #include <qimage.h>
 #include <qrect.h>
+#include <qtoolbutton.h>
 
 #include <kurl.h>
 #include <ktoolbar.h>
@@ -52,7 +57,6 @@ class KRadioAction;
 
 class QTimer;
 class QWidgetStack;
-class QToolButton;
 class QPainter;
 
 class SQ_DirOperator;
@@ -68,10 +72,20 @@ struct MemoryPart128;
 struct MemoryPart64;
 struct MemoryPart32;
 
+class SQ_ToolButton : public QToolButton
+{
+	public:
+		SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel, const QString &grouptext,
+						QObject *receiver, const char *slot, QToolBar *parent, const char *name = 0);
+		~SQ_ToolButton();
+
+		static int fixedWidth();
+};
+
 class SQ_ToolBar : public KToolBar
 {
 	public:
-		SQ_ToolBar(QWidget *parent = 0);
+		SQ_ToolBar(QWidget *parent, const int members);
 		~SQ_ToolBar();
 
 	protected:
@@ -120,6 +134,7 @@ class SQ_GLWidget : public QGLWidget
 		void startAnimation();
 		void stopAnimation();
 		bool manualBlocked();
+		void matrixChanged();
 
 		static SQ_GLWidget* window();
 
@@ -143,7 +158,6 @@ class SQ_GLWidget : public QGLWidget
 		void createToolbar();
 		void draw_background(void *bits, unsigned int *tex, int dim, GLfloat w, GLfloat h, bool &bind, bool deleteOld);
 		void coordChanged();
-		void matrixChanged();
 		void setupBits(Parts *p, RGBA *b, int y);
 		void adjustTimeFromMsecs(int &msecs, int &secs);
 		void showFrames(int);
@@ -212,7 +226,7 @@ class SQ_GLWidget : public QGLWidget
 								*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
 								*pAFirst, *pALast, *pAHelp;
 
-		QToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
+		SQ_ToolButton			*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
 
 		SQ_QuickBrowser		*v;
 		QWidgetStack 			*s;
@@ -248,6 +262,7 @@ class SQ_GLWidget : public QGLWidget
 		bool				marks;
 		unsigned int		mark[4];
 		KPopupMenu		*menu;
+		QString				quickImageInfo;
 
 		std::vector<Parts>	parts;
 		int 					total, errors, tileSize;
@@ -259,13 +274,13 @@ class SQ_GLWidget : public QGLWidget
 		std::vector<MemoryPart64>	m64;
 		std::vector<MemoryPart32>	m32;
 
-		static SQ_GLWidget	*view;
+		static SQ_GLWidget	*sing;
 };
 
 inline
 bool SQ_GLWidget::manualBlocked()
 {
-        return blocked_force;
+	return blocked_force;
 }
 
 struct MemoryPart256

@@ -2,6 +2,6 @@
 
 par="--prefix=`kde-config --prefix`"
 
-echo "Doing configure $par ..."
+echo "Doing configure $* $par ..."
 
 ./configure $* $par

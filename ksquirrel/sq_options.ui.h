@@ -96,13 +96,6 @@ void SQ_Options::init()
     
 	kURLReqOpenCustom->setMode(mode);
 	
-	pushCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_disk.png")));
-	pushCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem.png")));
-	pushClearCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_disk_clear.png")));
-	pushClearCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem_clear.png")));
-	pushShowCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem_view.png")));
-	pushSyncCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache_mem_sync.png")));
-	
 	listGL->header()->hide();
 	listGL->setSorting(-1);
 	QListViewItem *item;
@@ -130,24 +123,23 @@ void SQ_Options::init()
 void SQ_Options::slotShowLibs()
 {
 	QString path;
-    
+	QPixmap pix;
+
 	WST->raiseWidget((SQ_LibraryHandler::instance()->count())?0:1);
 
 	tableLib->clear();
-	
+
 	// return anyway
 	if(!SQ_LibraryHandler::instance()->count())
 	    return;
 
 	QValueVector<SQ_LIBRARY>::iterator   BEGIN = SQ_LibraryHandler::instance()->begin();
 	QValueVector<SQ_LIBRARY>::iterator      END = SQ_LibraryHandler::instance()->end();
-	
-	QPixmap pix;
-	
+
 	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;++it)
 	{
 		QFileInfo libfileinfo((*it).libpath);
-		QListViewItem *item = new QListViewItem(tableLib, QString::null, libfileinfo.fileName(), QString((*it).quickinfo), QString((*it).version), QString((*it).filter));
+		QListViewItem *item = new QListViewItem(tableLib, QString::null, libfileinfo.fileName(), QString((*it).quickinfo), QString((*it).version));
 
 		if(pix.convertFromImage((*it).mime))
 		    item->setPixmap(0, pix);
@@ -266,68 +258,6 @@ void SQ_Options::slotShowPage()
     
 	widgetStack1->raiseWidget(id);
 	widgetStackLines->raiseWidget(id);
-}
-
-void SQ_Options::slotCalcCache()
-{
-    KURL url;
-    url.setPath(QDir::homeDirPath() + "/.ksquirrel/thumbnails");
-    
-    int size = KDirSize::dirSize(url);
-    
-    QString s = KIO::convertSize(size);
-    
-    textThumbSize->setText(s);
-}
-
-void SQ_Options::slotClearCache()
-{
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    KURL url = QDir::homeDirPath() + QString::fromLatin1("/.ksquirrel/thumbnails");
-
-    KIO::DeleteJob *job = KIO::del(url);
-    connect(job, SIGNAL(result(KIO::Job*)), this, SLOT(slotClearFinished(KIO::Job*)));
-}
-
-void SQ_Options::slotClearFinished(KIO::Job*)
-{
-    QApplication::restoreOverrideCursor();
-    slotCalcCache();
-}
-
-void SQ_Options::slotClearMemoryCache()
-{
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    SQ_PixmapCache::instance()->clear();
-    slotCalcCacheMemory();
-    QApplication::restoreOverrideCursor();
-}
-
-void SQ_Options::slotCalcCacheMemory()
-{
-    int size = SQ_PixmapCache::instance()->totalSize();
-
-    QString s = KIO::convertSize(size);
-    
-    textCacheMemSize->setText(s);
-}
-
-void SQ_Options::slotShowDiskCache()
-{
-    SQ_ViewCache m_view(this);
-    m_view.exec();
-}
-
-void SQ_Options::slotSyncCache()
-{
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    
-    SQ_PixmapCache::instance()->sync();
-    
-    slotCalcCacheMemory();
-    slotCalcCache();
-    
-    QApplication::restoreOverrideCursor();
 }
 
 void SQ_Options::slotCustomTextureToggled( bool en)

@@ -20,10 +20,6 @@
 
 #include <klistbox.h>
 
-/**
-  *@author CKulT
-  */
-
 class SQ_IconListBox : public KListBox
 {
 	public:

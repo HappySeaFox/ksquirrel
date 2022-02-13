@@ -21,7 +21,7 @@ msgid ""
 "Type: %1\n"
 "Dimensions: %2\n"
 "Bits per pixel: %3\n"
-"Color model: %4\n"
+"Color space: %4\n"
 "Compression: %5\n"
 "Number of frames: %6\n"
 "Uncompressed size: %7"
@@ -779,7 +779,7 @@ msgid "Last visited directory"
 msgstr ""
 
 #: sq_options.cpp:823
-msgid "Current directory, where SQuirrel starts"
+msgid "Current directory, where KSquirrel starts"
 msgstr ""
 
 #: sq_options.cpp:824
@@ -1104,7 +1104,7 @@ msgid "Bits per pixel:"
 msgstr ""
 
 #: sq_imageproperties.cpp:384
-msgid "Color model:"
+msgid "Color space:"
 msgstr ""
 
 #: sq_imageproperties.cpp:385

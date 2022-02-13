@@ -28,9 +28,9 @@ SQ_NavigatorDropMenu::SQ_NavigatorDropMenu() : QObject()
 {
 	app = this;
 
-	KActionCollection *ac = new KActionCollection(0L, this, "SQ_NavigatorDropMenu");
+	KActionCollection *ac = new KActionCollection(NULL, this, "SQ_NavigatorDropMenu");
 
-	dropmenu = new KPopupMenu(0L);
+	dropmenu = new KPopupMenu(NULL);
 
 	KAction *pACopy = new KAction(i18n("Copy here"), "editpaste", 0, this, SLOT(slotCopy()), ac, "sq_copy");
 	KAction *pAMove = new KAction(i18n("Move here"), "editpaste", 0, this, SLOT(slotMove()), ac, "sq_move");

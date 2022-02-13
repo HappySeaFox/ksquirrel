@@ -46,11 +46,11 @@
 
 SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name), isPending(false)
 {
-	toolTip = 0L;
+	toolTip = NULL;
 	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
 
 	progressBox = new QHBox(this);
-	QToolBar *progressBoxBar = new QToolBar(QString::null, 0L, progressBox);
+	QToolBar *progressBoxBar = new QToolBar(QString::null, NULL, progressBox);
 	buttonStop = new QToolButton(QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumb_resume.png")), QString::null, QString::null, this, SLOT(slotThumbnailUpdateToggle()), progressBoxBar);
 	progress = new SQ_Progress(progressBox);
 	progressBox->setPalette(QPalette(QColor(255,255,255), QColor(255,255,255)));
@@ -96,7 +96,7 @@ void SQ_FileThumbView::slotSelected(QIconViewItem *item, const QPoint &point)
 
 KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
 {
-	return (item)?((KFileIconViewItem*)item->extraData(this)):(0L);
+	return item ? ((KFileIconViewItem*)item->extraData(this)) : NULL;
 }
 
 void SQ_FileThumbView::insertItem(KFileItem *i)
@@ -264,7 +264,7 @@ void SQ_FileThumbView::updateView(bool b)
 		{
 			item->setPixmap((item->fileInfo())->pixmap(SQ_ThumbnailSize::instance()->pixelSize()));
 			item = static_cast<KFileIconViewItem*>(item->nextItem());
-		}while(item != 0L);
+		}while(item);
 	}
 }
 
@@ -306,7 +306,7 @@ void SQ_FileThumbView::slotRemoveToolTip()
 	if(toolTip)
 	{
 		delete toolTip;
-		toolTip = 0L;
+		toolTip = NULL;
 	}
 }
 

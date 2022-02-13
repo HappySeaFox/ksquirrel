@@ -5,6 +5,9 @@ SUBDIRS = ksquirrel po pics desktop
 EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO ksquirrel.lsm ksquirrel.spec 
 
 ####### kdevelop will overwrite this part!!! (end)############
+
+SUBDIRS += doc
+
 # not a GNU package. You can remove this line, if 
 # have all needed files, that a GNU package needs
 AUTOMAKE_OPTIONS = foreign 

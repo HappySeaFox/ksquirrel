@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_glviewspec.h  -  description
+                          sq_glview.h  -  description
                              -------------------
     begin                : ??? ??? 5 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,15 +18,14 @@
 #ifndef SQ_GLVIEW_H
 #define SQ_GLVIEW_H
 
-#include "qvbox.h"
+#include <qvbox.h>
+#include <qmap.h>
 
 class SQ_GLWidget;
 
 class KStatusBar;
 
-/**
-  *@author CKulT
-  */
+class QLabel;
 
 class SQ_GLView : public QVBox
 {
@@ -41,6 +40,8 @@ class SQ_GLView : public QVBox
 
 		static SQ_GLView* window();
 
+		QLabel* sbarWidget(const QString &name) const;
+
 	protected:
 		void createContent();
 		void closeEvent(QCloseEvent *e);
@@ -49,8 +50,9 @@ class SQ_GLView : public QVBox
 	private:
 		bool separate;
 		KStatusBar *sbar;
+		QMap<QString, QLabel*> names;
 
-		static SQ_GLView *view;
+		static SQ_GLView *sing;
 };
 
 #endif

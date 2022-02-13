@@ -546,7 +546,7 @@
                                             <cstring>textLabel9_2_2_2</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>Color model:</string>
+                                            <string>Color space:</string>
                                         </property>
                                         <property name="alignment">
                                             <set>AlignTop|AlignRight</set>

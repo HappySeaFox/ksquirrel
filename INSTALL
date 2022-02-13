@@ -23,3 +23,6 @@ TGZ  # installpkg ksquirrel-libs-0.6.0.tgz
    b) from binary packages
 RPM  # rpm -ihv ksquirrel-0.6.0.rpm
 TGZ  # installpkg ksquirrel-0.6.0.tgz
+
+Note: You can pass all regular 'configure' parameters to configure.gnu.
+      You needn't specify --prefix, it's already done in configure.gnu.

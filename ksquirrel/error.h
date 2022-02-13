@@ -30,12 +30,20 @@
 ///////////////////////////////////
 
 
-#define		SQERR_NOTOK	0
-#define		SQERR_OK	1
+#define		SQE_NOTOK	0
+#define		SQE_OK		1
 
-#define		SQERR_NOFILE		1024
-#define		SQERR_BADFILE		1025
-#define		SQERR_NOMEMORY		1026
-#define		SQERR_NOTSUPPORTED	1027
+#define		SQE_R_NOFILE		1024
+#define		SQE_R_BADFILE		1025
+#define		SQE_R_NOMEMORY		1026
+#define		SQE_R_NOTSUPPORTED	1027
+#define		SQE_R_WRONGDIM		1028
+
+#define		SQE_W_NOFILE		1029
+#define		SQE_W_NOMEMORY		SQE_R_NOMEMORY
+#define		SQE_W_NOTSUPPORTED	1032
+#define		SQE_W_ERROR		1033
+#define		SQE_W_WRONGPARAMS	1034
+#define		SQE_W_WRONGDIM		SQE_R_WRONGDIM
 
 #endif

@@ -18,6 +18,8 @@
 #include <qurloperator.h>
 #include <qdir.h>
 
+#include <stdlib.h>
+
 #include "sq_updateksquirrelthread.h"
 #include "sq_about.h"
 
@@ -33,15 +35,15 @@ void SQ_UpdateKsquirrelThread::run()
 
 	connect(op, SIGNAL(finished(QNetworkOperation*)), this, SLOT(slotFinished(QNetworkOperation*)));
 
-	op->copy(QString::fromLatin1("http://ksquirrel.sourceforge.net/sq_version"), QString::fromLatin1("file:/%1").arg(QDir::homeDirPath()));
+	file = QString::fromLatin1("%1/sq_version.%2").arg(QDir::homeDirPath()).arg(random());
+
+	op->copy(QString::fromLatin1("http://ksquirrel.sourceforge.net/sq_version"), file, false, false);
 }
 
 void SQ_UpdateKsquirrelThread::slotFinished(QNetworkOperation *netop)
 {
 	if(netop->state() == QNetworkProtocol::StDone)
 	{
-		QString file = QString::fromLatin1("%1/sq_version").arg(QDir::homeDirPath());
-
 		QFile f(file);
 
 		if(f.open(IO_ReadOnly))
@@ -49,10 +51,12 @@ void SQ_UpdateKsquirrelThread::slotFinished(QNetworkOperation *netop)
 			QString ver;
 			f.readLine(ver, 100);
 
-			if(ver != QString(SQ_VERSION))
+			f.close();
+
+			if(ver.startsWith(SQ_VERSION))
 				emit needUpdate(ver);
 
-			f.close();
+			QFile::remove(file);
 		}
 	}
 }

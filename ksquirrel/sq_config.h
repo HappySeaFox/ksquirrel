@@ -22,7 +22,7 @@
 #include <qstring.h>
 
 /**
-  *@author CKulT
+  *@author Krasu
   */
 
 class SQ_Config : public KConfig
@@ -46,7 +46,7 @@ class SQ_Config : public KConfig
 		static SQ_Config* instance();
 
 	private:
-		static SQ_Config *conf;
+		static SQ_Config *sing;
 };
 
 #endif

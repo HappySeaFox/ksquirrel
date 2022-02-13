@@ -1,21 +1,31 @@
-AC_INIT([ksquirrel], [0.6.0], [squirrel-sf@yandex.ru])
+AC_INIT([ksquirrel], [0.6.0-pre3], [ksquirrel@tut.by])
+AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
-#AC_CONFIG_SRCDIR([config.h.in])
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
-
 AC_CONFIG_AUX_DIR([admin])
+
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre3)
+AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
 
-AC_CANONICAL_SYSTEM
-AC_ARG_PROGRAM
-
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0)
+#AC_CANONICAL_SYSTEM
+#AC_ARG_PROGRAM
 
 KDE_SET_PREFIX
 
-AM_CONFIG_HEADER(config.h)
+sq_ogl="yes"
+
+AC_ARG_ENABLE(opengl,
+              [AS_HELP_STRING([--disable-opengl], [don't use OpenGL  [default=no]])],
+              [     case "${enableval}" in
+                       yes) sq_ogl="yes" ;;
+                       no)  sq_ogl="no"; AC_DEFINE([SQ_DISABLE_OPENGL], [], [Disable OpenGL support])  ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for opengl param]) ;;
+                    esac]
+             )
+
 
 AC_ENABLE_SHARED(yes)
 AC_ENABLE_STATIC(no)
@@ -38,10 +48,13 @@ AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 AC_PATH_PROG([PERL], [perl])
 
-AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h) and GLU (GL/glu.h) headers to be installed."))
 AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
 
 #AC_CHECK_LIB([kio], [KFileIconView], [], AC_MSG_ERROR("KIO library is corrupted!"))
+
+if test "x$sq_ogl" = "xyes"; then
+
+AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h) and GLU (GL/glu.h) headers to be installed."))
 
 AC_CHECK_LIB([GL], [glBegin], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 
@@ -69,6 +82,8 @@ AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
 
+fi
+
 # Checks for header files.
 AC_PATH_X
 AC_HEADER_STDC
@@ -92,10 +107,15 @@ KDE_CREATE_SUBDIRSLIST
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([ksquirrel/Makefile])
+AC_CONFIG_FILES([ksquirrel/imageedit_dlg/Makefile])
+AC_CONFIG_FILES([ksquirrel/imageedit_overlay/Makefile])
 AC_CONFIG_FILES([desktop/Makefile])
 AC_CONFIG_FILES([pics/Makefile])
 AC_CONFIG_FILES([pics/menu/Makefile])
+AC_CONFIG_FILES([pics/imageedit/Makefile])
 AC_CONFIG_FILES([po/Makefile])
+AC_CONFIG_FILES([doc/Makefile])
+AC_CONFIG_FILES([doc/en/Makefile])
 
 AC_OUTPUT
 
@@ -112,6 +132,6 @@ KSquirrel configuration:
 Installation options:
 ----------------------
   prefix:               ${prefix}
-  Install path:         ${prefix}/bin
   KSquirrel binary:     ${prefix}/bin/${PACKAGE}
+  Enable OpenGL:        $sq_ogl
 "

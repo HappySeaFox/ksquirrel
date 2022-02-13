@@ -1,7 +1,7 @@
 /***************************************************************************
                           main.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
+    begin                : Dec 10 2003
     copyright            : (C) 2004 by Baryshev Dmitry
     email                : ksquirrel@tut.by
  ***************************************************************************/
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	if(high->thumbs)
 		high->thumbs_p = sq_args->getOption("t");
 
-	SQ = new KSquirrel(high, 0, "KMainWindow");
+	SQ = new KSquirrel;
 
 	a.setMainWidget(SQ);
 

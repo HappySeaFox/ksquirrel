@@ -56,4 +56,16 @@ class SQ_PixmapCache : public QMap<QString, SQ_Thumbnail>
 		static SQ_PixmapCache *cache;
 };
 
+inline
+int SQ_PixmapCache::cacheLimit()
+{
+    return cache_limit;
+}
+
+inline
+void SQ_PixmapCache::setCacheLimit(int n)
+{
+    cache_limit = n << 10;
+}
+
 #endif

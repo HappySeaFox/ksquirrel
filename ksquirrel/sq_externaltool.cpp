@@ -30,15 +30,14 @@
 #include "sq_config.h"
 #include "sq_dir.h"
 
-SQ_ExternalTool * SQ_ExternalTool::ext = 0L;
+SQ_ExternalTool * SQ_ExternalTool::ext = NULL;
 
 SQ_ExternalTool::SQ_ExternalTool() : QObject(), QPtrList<KDesktopFile>()
 {
 	ext = this;
-	menu = new KPopupMenu(0L, "External tools");
+	menu = new KPopupMenu(NULL, "External tools");
 
-	dir = new SQ_Dir;
-	dir->setRoot("desktop");
+	dir = new SQ_Dir(SQ_Dir::Desktops);
 
 	connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
 
@@ -49,7 +48,7 @@ SQ_ExternalTool::SQ_ExternalTool() : QObject(), QPtrList<KDesktopFile>()
 		str.sprintf("%d", i);
 		tmp = SQ_Config::instance()->readEntry("External tools", str, QString::null);
 
-		if(tmp.isEmpty() || tmp.isNull())
+		if(tmp.isEmpty())
 			break;
 
 		QString path = dir->getAbsPath(tmp + ".desktop");

@@ -1,6 +1,6 @@
 /*
 	copyright            : (C) 2004 by Baryshev Dmitry
-	KSQuirrel - image viewer for KDE
+	KSquirrel - image viewer for KDE
 */
 
 /*  This file is part of the KDE project
@@ -40,11 +40,23 @@
 #include "sq_libraryhandler.h"
 #include "sq_thumbnailsize.h"
 
-#define SQ_FIO_NO_IMPLEMENT
+#include <csetjmp>
+
+#include "fileio.h"
+#include "fmt_utils.h"
 #include "fmt_codec_base.h"
 #include "error.h"
 
 #include <string>
+
+using namespace fmt_utils;
+
+#define SQ_FAIL_CLOSE(a) \
+		if((a))                    \
+		{                            \
+			codeK->fmt_read_close();     \
+			return false;                           \
+		}
 
 static const QString thumbFormat = "PNG";
 
@@ -57,8 +69,7 @@ SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList *items) : KIO::Job(
 	if(mItems.isEmpty())
 		return;
 
-	dir = new SQ_Dir;
-	dir->setRoot(QString::fromLatin1("thumbnails"));
+	dir = new SQ_Dir(SQ_Dir::Thumbnails);
 }
 
 SQ_ThumbnailLoadJob::~SQ_ThumbnailLoadJob()
@@ -292,41 +303,105 @@ void SQ_ThumbnailLoadJob::insertOrSync(const QString &path, SQ_Thumbnail &th)
 bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t, bool processImage)
 {
 	SQ_LIBRARY 	*lib;
-	static RGBA 	*all = 0L;
-	QString 		dim;
-	std::string		dump;
-	int 				w, h, num;
+	static RGBA 		*all = NULL, *dumbscan = NULL;
+	int 				w = 0, h = 0, res, current = 0, i, j;
+	RGBA			*scan;
+	fmt_info			finfo;
+	fmt_codec_base	 *codeK;
+	bool			b;
 
 	lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath);
 
-	if(!lib)
+	if(!lib || !lib->codec)
 		return false;
 
-	int res = lib->codec->fmt_readimage(QString(pixPath.local8Bit()), &all, dump);
+	codeK = lib->codec;
 
-	if(res != SQERR_OK)
+	res = codeK->fmt_read_init(QString(pixPath.local8Bit()));
+
+	if(res != SQE_OK)
+		return false;
+
+	while(true)
 	{
-		return false;
+		i = codeK->fmt_read_next();
+
+		finfo = codeK->information();
+
+		if(i != SQE_OK && i != SQE_NOTOK && !current)
+		{
+			codeK->fmt_read_close();
+			return false;
+		}
+		else if((i != SQE_OK && i != SQE_NOTOK && current) || (i == SQE_NOTOK && current))
+			break;
+
+//		fprintf(stderr, "%dx%d@%d ...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
+
+		if(!current)
+		{
+			w = finfo.image[current].w;
+			h = finfo.image[current].h;
+			const int S = w * h * sizeof(RGBA);
+
+			all = (RGBA *)realloc(all, S);
+
+			b = !all;
+			SQ_FAIL_CLOSE(b)
+
+			memset(all, 255, S);
+
+			t.info.type = lib->quickinfo;
+			t.info.dimensions = QString::fromLatin1("%1x%2").arg(w).arg(h);
+			t.info.bpp = QString::fromLatin1("%1").arg(finfo.image[current].bpp);
+			t.info.color = finfo.image[current].colorspace;
+			t.info.compression = finfo.image[current].compression;
+			t.info.frames = QString::fromLatin1("0");
+			t.info.mime = lib->mime;
+			t.info.uncompressed = KIO::convertSize(S);
+		}
+		else
+		{
+			dumbscan = (RGBA *)realloc(dumbscan, finfo.image[current].w * finfo.image[current].h * sizeof(RGBA));
+
+			if(!dumbscan)
+				break;
+		}
+
+		for(int pass = 0;pass < finfo.image[current].passes;pass++)
+		{
+			codeK->fmt_read_next_pass();
+
+			if(!current)
+			{
+				for(j = 0;j < finfo.image[current].h;j++)
+				{
+					scan = all + j * finfo.image[current].w;
+					i = codeK->fmt_read_scanline(scan);
+					b = (i != SQE_OK);
+					SQ_FAIL_CLOSE(b);
+				}
+			}
+			else
+			{
+				for(j = 0;j < finfo.image[current].h;j++)
+				{
+					i = codeK->fmt_read_scanline(dumbscan);
+					if(i != SQE_OK) goto E;
+				}
+			}
+		}
+
+		if(finfo.image[current].needflip && !current)
+			fmt_utils::flipv((char *)all, finfo.image[current].w * sizeof(RGBA), finfo.image[current].h);
+
+		current++;
 	}
 
-	QStringList list = QStringList::split('\n', dump);
+	E:
 
-	QStringList::Iterator it = list.begin();
-	t.info.type = *it; ++it;
-	dim = *it; ++it;
-	w = dim.toInt();
-	dim = *it; ++it;
-	h = dim.toInt();
-	t.info.dimensions = QString("%1x%2").arg(w).arg(h);
-	t.info.bpp = *it; ++it;
-	t.info.color = *it; ++it;
-	t.info.compression = *it; ++it;
-	t.info.frames = *it; ++it;
-	t.info.uncompressed = *it; ++it;
-	t.info.mime = lib->mime;
-
-	num = t.info.uncompressed.toInt();
-	t.info.uncompressed = KIO::convertSize(num);
+	t.info.frames = QString::fromLatin1("%1").arg(current);
+	codeK->fmt_read_close();
 
 	QImage image((unsigned char *)all, w, h, 32, 0, 0, QImage::LittleEndian);
 	image.setAlphaBuffer(true);

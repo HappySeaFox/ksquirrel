@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>523</width>
-            <height>469</height>
+            <width>515</width>
+            <height>438</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -98,7 +98,7 @@
                 <bool>false</bool>
             </property>
             <property name="default">
-                <bool>false</bool>
+                <bool>true</bool>
             </property>
             <property name="flat">
                 <bool>false</bool>
@@ -520,7 +520,7 @@
                                                         <cstring>radioSetCurrent</cstring>
                                                     </property>
                                                     <property name="text">
-                                                        <string>Current directory, where SQuirrel starts</string>
+                                                        <string>Current directory, where KSquirrel starts</string>
                                                     </property>
                                                     <property name="buttonGroupId">
                                                         <number>1</number>
@@ -762,7 +762,7 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="6">
+                            <widget class="QCheckBox" row="0" column="0">
                                 <property name="name">
                                     <cstring>checkMime</cstring>
                                 </property>
@@ -770,7 +770,7 @@
                                     <string>Disable mimetype icons</string>
                                 </property>
                             </widget>
-                            <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="6">
+                            <widget class="QCheckBox" row="1" column="0">
                                 <property name="name">
                                     <cstring>checkNoWriteThumbs</cstring>
                                 </property>
@@ -778,7 +778,7 @@
                                     <string>Do not write thumbnails on disk</string>
                                 </property>
                             </widget>
-                            <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="6">
+                            <widget class="QCheckBox" row="2" column="0">
                                 <property name="name">
                                     <cstring>checkExtended</cstring>
                                 </property>
@@ -786,21 +786,7 @@
                                     <string>Extended thumbnails</string>
                                 </property>
                             </widget>
-                            <widget class="Line" row="6" column="0" rowspan="1" colspan="6">
-                                <property name="name">
-                                    <cstring>line8</cstring>
-                                </property>
-                                <property name="frameShape">
-                                    <enum>HLine</enum>
-                                </property>
-                                <property name="frameShadow">
-                                    <enum>Sunken</enum>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                            </widget>
-                            <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="6">
+                            <widget class="QLayoutWidget" row="5" column="0">
                                 <property name="name">
                                     <cstring>layout9</cstring>
                                 </property>
@@ -855,7 +841,7 @@
                                     </spacer>
                                 </hbox>
                             </widget>
-                            <widget class="QLayoutWidget" row="4" column="0" rowspan="1" colspan="6">
+                            <widget class="QLayoutWidget" row="4" column="0">
                                 <property name="name">
                                     <cstring>layout8</cstring>
                                 </property>
@@ -895,7 +881,7 @@
                                     </spacer>
                                 </hbox>
                             </widget>
-                            <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="6">
+                            <widget class="QCheckBox" row="3" column="0">
                                 <property name="name">
                                     <cstring>checkTooltips</cstring>
                                 </property>
@@ -903,95 +889,7 @@
                                     <string>Show tooltips with thumbnail info</string>
                                 </property>
                             </widget>
-                            <widget class="QPushButton" row="7" column="0">
-                                <property name="name">
-                                    <cstring>pushCache</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Calculate cache size on disk</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="7" column="1">
-                                <property name="name">
-                                    <cstring>pushClearCache</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Clear cache on disk</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="7" column="2">
-                                <property name="name">
-                                    <cstring>pushCacheMemory</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Calculate cache size in memory</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="7" column="3">
-                                <property name="name">
-                                    <cstring>pushClearCacheMemory</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Clear cache in memory</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="7" column="4">
-                                <property name="name">
-                                    <cstring>pushShowCache</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>View memory cache</string>
-                                </property>
-                            </widget>
-                            <widget class="QPushButton" row="7" column="5">
-                                <property name="name">
-                                    <cstring>pushSyncCache</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Sync cache to disk</string>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="8" column="2">
-                                <property name="name">
-                                    <cstring>textCacheMemSize</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="alignment">
-                                    <set>AlignCenter</set>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="8" column="0">
-                                <property name="name">
-                                    <cstring>textThumbSize</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="alignment">
-                                    <set>AlignCenter</set>
-                                </property>
-                            </widget>
-                            <spacer row="9" column="0">
+                            <spacer row="6" column="0">
                                 <property name="name">
                                     <cstring>spacer17_3</cstring>
                                 </property>
@@ -1004,7 +902,7 @@
                                 <property name="sizeHint">
                                     <size>
                                         <width>20</width>
-                                        <height>135</height>
+                                        <height>115</height>
                                     </size>
                                 </property>
                             </spacer>
@@ -1958,17 +1856,6 @@
                                                     <bool>true</bool>
                                                 </property>
                                             </column>
-                                            <column>
-                                                <property name="text">
-                                                    <string>Extensions</string>
-                                                </property>
-                                                <property name="clickable">
-                                                    <bool>true</bool>
-                                                </property>
-                                                <property name="resizable">
-                                                    <bool>true</bool>
-                                                </property>
-                                            </column>
                                             <property name="name">
                                                 <cstring>tableLib</cstring>
                                             </property>
@@ -2119,42 +2006,6 @@
         <slot>slotNewCustomTexture(const QString&amp;)</slot>
     </connection>
     <connection>
-        <sender>pushCache</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Options</receiver>
-        <slot>slotCalcCache()</slot>
-    </connection>
-    <connection>
-        <sender>pushCacheMemory</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Options</receiver>
-        <slot>slotCalcCacheMemory()</slot>
-    </connection>
-    <connection>
-        <sender>pushClearCache</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Options</receiver>
-        <slot>slotClearCache()</slot>
-    </connection>
-    <connection>
-        <sender>pushClearCacheMemory</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Options</receiver>
-        <slot>slotClearMemoryCache()</slot>
-    </connection>
-    <connection>
-        <sender>pushShowCache</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Options</receiver>
-        <slot>slotShowDiskCache()</slot>
-    </connection>
-    <connection>
-        <sender>pushSyncCache</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Options</receiver>
-        <slot>slotSyncCache()</slot>
-    </connection>
-    <connection>
         <sender>radioButton28</sender>
         <signal>toggled(bool)</signal>
         <receiver>groupBox1</receiver>
@@ -2216,8 +2067,6 @@
     </connection>
 </connections>
 <includes>
-    <include location="global" impldecl="in declaration">qpixmap.h</include>
-    <include location="global" impldecl="in declaration">kio/job.h</include>
     <include location="global" impldecl="in implementation">kstandarddirs.h</include>
     <include location="global" impldecl="in implementation">kfiledialog.h</include>
     <include location="global" impldecl="in implementation">qfileinfo.h</include>
@@ -2231,12 +2080,11 @@
     <include location="global" impldecl="in implementation">kurlrequester.h</include>
     <include location="global" impldecl="in implementation">kcolorbutton.h</include>
     <include location="local" impldecl="in implementation">sq_iconlistitem.h</include>
-    <include location="global" impldecl="in implementation">kdirsize.h</include>
-    <include location="global" impldecl="in implementation">qapplication.h</include>
     <include location="local" impldecl="in implementation">sq_viewcache.h</include>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
     <include location="global" impldecl="in implementation">GL/gl.h</include>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
+    <include location="global" impldecl="in declaration">qpixmap.h</include>
     <include location="local" impldecl="in implementation">sq_options.ui.h</include>
 </includes>
 <variables>
@@ -2249,13 +2097,6 @@
     <slot>slotShowLibs()</slot>
     <slot>slotNewCustomTexture( const QString &amp; path )</slot>
     <slot>slotShowPage()</slot>
-    <slot>slotCalcCache()</slot>
-    <slot>slotClearCache()</slot>
-    <slot>slotClearFinished( KIO::Job * )</slot>
-    <slot>slotClearMemoryCache()</slot>
-    <slot>slotCalcCacheMemory()</slot>
-    <slot>slotShowDiskCache()</slot>
-    <slot>slotSyncCache()</slot>
     <slot>slotCustomTextureToggled( bool en )</slot>
     <slot>slotValidateCustomTexture()</slot>
     <slot>paletteChange( const QPalette &amp; oldPalette )</slot>

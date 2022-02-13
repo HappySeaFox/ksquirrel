@@ -22,10 +22,6 @@
 
 #include "sq_thumbnailinfo.h"
 
-/**
-  *@author CKulT
-  */
-
 class SQ_FileThumbViewItem : public KFileIconViewItem
 {
 	public: 

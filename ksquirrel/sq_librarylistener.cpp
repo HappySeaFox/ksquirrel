@@ -24,7 +24,7 @@
 #include "sq_librarieschanged.h"
 #include "sq_config.h"
 
-SQ_LibraryListener * SQ_LibraryListener::listener = 0L;
+SQ_LibraryListener * SQ_LibraryListener::listener = NULL;
 
 SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {

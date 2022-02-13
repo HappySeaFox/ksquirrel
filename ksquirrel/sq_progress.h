@@ -20,10 +20,6 @@
 
 #include <qlabel.h>
 
-/**
-  *@author CKulT
-  */
-
 class SQ_Progress : public QLabel
 {
 	public:

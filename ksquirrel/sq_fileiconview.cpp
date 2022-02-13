@@ -49,7 +49,7 @@ void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
 
 SQ_FileIconViewItem* SQ_FileIconView::viewItem(const KFileItem *item)
 {
-	return (item)?((SQ_FileIconViewItem*)item->extraData(this)):(0L);
+	return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : NULL;
 }
 
 void SQ_FileIconView::updateView(bool b)
@@ -65,7 +65,7 @@ void SQ_FileIconView::updateView(bool b)
 		{
 			item->setPixmap((item->fileInfo())->pixmap(iconSize()));
 			item = static_cast<SQ_FileIconViewItem*>(item->nextItem());
-		}while(item != 0L);
+		}while(item);
 	}
 }
 

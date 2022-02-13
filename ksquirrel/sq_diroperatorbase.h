@@ -74,9 +74,9 @@ class SQ_DirOperatorBase : public KDirOperator
 		SQ_FileIconView			*iv;
 		SQ_FileDetailView		*dv;
 		bool 					sing;
+		KActionMenu 			*pADirOperatorMenu, *pAFileActions, *pAImageActions;
 
 	protected:
-		KActionMenu 		*pADirOperatorMenu, *pAFileActions;
 		KAction				*pARunSeparately;
 
 		VV 					type;

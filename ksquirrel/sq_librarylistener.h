@@ -21,10 +21,6 @@
 #include <qobject.h>
 #include <kdirlister.h>
 
-/**
-  *@author ckult
-  */
-
 class SQ_LibraryListener : public KDirLister
 {
 	Q_OBJECT

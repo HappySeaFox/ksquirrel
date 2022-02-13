@@ -93,4 +93,10 @@ class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 		static SQ_LibraryHandler *hand;
 };
 
+inline
+SQ_LIBRARY* SQ_LibraryHandler::latestLibrary()
+{
+    return latest;
+}
+
 #endif
