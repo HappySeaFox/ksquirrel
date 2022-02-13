@@ -14,38 +14,45 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <qapplication.h>
 #include <qcursor.h>
 
-#include <kwin.h>
 #include <kaction.h>
-#include <kiconloader.h>
+#include <kstdaction.h>
+#include <kstandarddirs.h>
+#include <kdeversion.h>
+#include <kwin.h>
 
 #include "ksquirrel.h"
 #include "sq_tray.h"
 
-SQ_SystemTray::SQ_SystemTray(QWidget *_parent, const char *name) : KSystemTray(_parent,name), parent(_parent)
+#if KDE_IS_VERSION(3,2,0)
+	#define SQ_ACTIVATE_WINDOW(id) KWin::activateWindow(id)
+#else
+	#define SQ_ACTIVATE_WINDOW(id) KWin::setActiveWindow(id)
+#endif
+
+
+SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 {
 	rightMenu = new KPopupMenu;
 
 	KActionSeparator *pASep = new KActionSeparator;
 
-	pAOpen = new KAction("Open SQ", sqLoader->loadIcon("ok", KIcon::Desktop, KIcon::SizeSmall), 0, this, SLOT(slotActivate()), sqApp->actionCollection(), "Open SQ");
-	pAQuit = new KAction("Quit SQ", sqLoader->loadIcon("exit", KIcon::Desktop, KIcon::SizeSmall), 0, qApp, SLOT(quit()), sqApp->actionCollection(), "Quit SQ");
-	pAOptions = new KAction("Options SQ", sqLoader->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall), 0, sqApp, SLOT(slotOptions()), sqApp->actionCollection(), "Options SQ");
+	pAOpen = KStdAction::open(this, SLOT(slotActivate()), sqApp->actionCollection(), "Open SQ from tray");
 
 	pAOpen->plug(rightMenu);
-	pAOptions->plug(rightMenu);
+	sqApp->pAConfigure->plug(rightMenu);
 	pASep->plug(rightMenu);
-	pAQuit->plug(rightMenu);
+	sqApp->pAExit->plug(rightMenu);
+
+	setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/tray.png")));
 }
 
 void SQ_SystemTray::mousePressEvent(QMouseEvent *ev)
 {
 	if(ev->button() == Qt::LeftButton)
 	{
-		sqApp->show();
-		KWin::setActiveWindow(sqApp->winId());
+		slotActivate();
 	}
 	else if(ev->button() == Qt::RightButton)
 	{
@@ -62,5 +69,5 @@ void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 void SQ_SystemTray::slotActivate()
 {
 	sqApp->show();
-	KWin::setActiveWindow(sqApp->winId());
+	SQ_ACTIVATE_WINDOW(sqApp->winId());
 }

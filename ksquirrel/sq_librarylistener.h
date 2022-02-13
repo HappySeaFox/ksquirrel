@@ -29,26 +29,27 @@ class SQ_LibraryListener : public KDirLister
 {
 	Q_OBJECT
 
-	private:
-		KURL		url;
-		QStringList	list;
-		bool 			operation;
-
 	public: 
 		SQ_LibraryListener(bool = false);
 		~SQ_LibraryListener();
-
-	signals:
-		void showInfo(const QStringList &linfo, bool added);
-		void finishedInit();
 
 	public slots:
 		void slotStarted(const KURL &);
 		void slotCompleted();
 		void slotNewItems(const KFileItemList &);
 		void slotDeleteItem(KFileItem *);
-
+		void slotOpenURL(const KURL&, bool, bool);
 		void slotShowInfo(const QStringList &linfo, bool added);
+
+	signals:
+		void showInfo(const QStringList &linfo, bool added);
+		void finishedInit();
+
+	private:
+		KURL			url;
+		QStringList	list;
+		bool 			operation;
+
 };
 
 #endif

@@ -29,22 +29,21 @@ class QPopupMenu;
 
 typedef struct
 {
+	QString pixmap;
 	QString name;
 	QString command;
 }SQ_EXT_TOOL;
 
 class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
 {
-	private:
-		QPopupMenu *menu;
-
 	public: 
 		SQ_ExternalTool();
 		~SQ_ExternalTool();
 
-		void addTool(const QString &name, const QString &command);
+		void addTool(const QString &pixmap, const QString &name, const QString &command);
 		void addTool(const SQ_EXT_TOOL &tool);
 
+		QString getToolPixmap(const int i);
 		QString getToolName(const int i);
 		QString getToolCommand(const int i);
 
@@ -52,6 +51,9 @@ class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
 		QPopupMenu* getConstPopupMenu() const;
 
 		void writeEntries();
+
+	private:
+		QPopupMenu *menu;
 };
 
 #endif

@@ -25,7 +25,7 @@ SQ_DirLister::~SQ_DirLister()
 
 bool SQ_DirLister::openURL(const KURL &url, bool _keep, bool _reload)
 {
-	_reload = true; // I want KDirLister to reload directory every time.
+//	_reload = true; // I want KDirLister to reload directory every time.
 
 	KDirLister::openURL(url, _keep, _reload);
 }

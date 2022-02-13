@@ -33,13 +33,11 @@ class SQ_Config : public KConfig
 
 		// Our specific 'read' methods
 		QString readEntry(const QString &sgroup, const QString &key, const QString& aDefault = QString::null);
-		QString readEntry(const char *sgroup, const QString &key, const QString& aDefault = QString::null);
-
 		int readNumEntry(const QString &sgroup, const QString &key, int nDefault = 0);
-		int readNumEntry(const char *sgroup, const QString &key, int nDefault = 0);
-
 		bool readBoolEntry(const QString &sgroup, const QString &pKey, const bool bDefault = false);
-		bool readBoolEntry(const char *sgroup, const QString &pKey, const bool bDefault = false);
+		QStringList readListEntry(const QString &sgroup, const QString &key, char sep = ',');
+		QValueList<int> readIntListEntry(const QString &sgroup, const QString &key);
+		QRect readRectEntry(const QString &sgroup, const QString &key, const QRect *def = 0L);
 };
 
 #endif

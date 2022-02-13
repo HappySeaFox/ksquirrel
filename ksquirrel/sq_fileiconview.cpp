@@ -16,9 +16,9 @@
  ***************************************************************************/
 
 #include <qstrlist.h>
+#include <qdragobject.h>
 
 #include <kurldrag.h>
-#include <qdragobject.h>
 
 #include "sq_fileiconview.h"
 
@@ -61,4 +61,9 @@ QDragObject* SQ_FileIconView::dragObject()
 void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
 {
 	emit doubleClicked(item, point);
+}
+
+KFileIconViewItem* SQ_FileIconView::viewItem(KFileItem *item)
+{
+	return (item)?((KFileIconViewItem*)item->extraData(this)):(0L);
 }

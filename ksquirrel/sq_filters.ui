@@ -22,7 +22,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QPushButton" row="1" column="2">
+        <widget class="QPushButton" row="1" column="1">
             <property name="name">
                 <cstring>pushOK</cstring>
             </property>
@@ -41,7 +41,7 @@
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="QPushButton" row="1" column="3">
+        <widget class="QPushButton" row="1" column="2">
             <property name="name">
                 <cstring>pushCancel</cstring>
             </property>
@@ -57,7 +57,7 @@
                 <string>Cancel</string>
             </property>
         </widget>
-        <spacer row="1" column="1">
+        <spacer row="1" column="0">
             <property name="name">
                 <cstring>spacer5</cstring>
             </property>
@@ -74,24 +74,7 @@
                 </size>
             </property>
         </spacer>
-        <spacer row="1" column="0">
-            <property name="name">
-                <cstring>spacer24</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Fixed</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>185</width>
-                    <height>35</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QFrame" row="0" column="0" rowspan="1" colspan="4">
+        <widget class="QFrame" row="0" column="0" rowspan="1" colspan="3">
             <property name="name">
                 <cstring>frame3</cstring>
             </property>
@@ -154,6 +137,9 @@
                     </column>
                     <property name="name">
                         <cstring>listFilters</cstring>
+                    </property>
+                    <property name="acceptDrops">
+                        <bool>true</bool>
                     </property>
                     <property name="resizePolicy">
                         <enum>Manual</enum>
@@ -308,7 +294,6 @@
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
-    <include location="local" impldecl="in implementation">sq_fileviewfilter.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">sq_filters.ui.h</include>
 </includes>

@@ -29,11 +29,11 @@ class SQ_FileDetailView : public KFileDetailView
 		SQ_FileDetailView(QWidget* parent, const char* name);
 		~SQ_FileDetailView();
 
-	protected slots:
-		void slotSelected(QListViewItem* item, const QPoint &, int c);
-
 	protected:
 		QDragObject *dragObject();
+
+	protected slots:
+		void slotSelected(QListViewItem* item, const QPoint &, int c);
 };
 
 #endif

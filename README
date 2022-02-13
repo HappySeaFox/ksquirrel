@@ -1,1 +1,39 @@
+Due to a lot of error reports related to autoconf/automake that
+I've received, the configuration script is now to be run as
+'scripts/configure' instead of './configure'.
 
+P.S. You can pass all './configure' options to 'scripts/configure', for example:
+
+[ckult@localhost ksquirrel]$ scripts/configure --prefix=/usr
+
+********************************************************************************
+
+Shortcuts for GL widget
+-----------------------
+
+Left Arrow - move image for N pixels right
+Right Arrow - move image for N pixels left
+Up Arrow  - move image for N pixels down
+Down Arrow  - move image for N pixels up
+Plus/Minus - zoom Nx
+Ctrl + Plus/Minus - zoom 2x or 0.5x
+V - flip vertically
+H - flip horizontally
+Ctrl + Left Arrow - rotate left for N degrees
+Ctrl + Right Arrow - rotate right for N degrees
+Ctrl + Up/Down Arrow - rotate for 180' degrees up/down
+Shift + Up/Down Arrow - rotate for 1' degree up/down
+R - Reset
+Ctrl + R - Render into file
+Space - next image
+Backspace - previous image
+Home - first image
+End - last image
+Esc,X - Close
+P - image properties
+Q - Quick Browser
+F - Fullscreen
+
+******************
+
+N - can be set throw 'Options'

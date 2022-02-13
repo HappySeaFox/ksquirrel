@@ -16,86 +16,64 @@
  ***************************************************************************/
 
 #include <qmessagebox.h>
-#include <qvaluevector.h>
 #include <qregexp.h>
+#include <qstringlist.h>
+#include <qlibrary.h>
 
 #include "sq_libraryhandler.h"
 #include "ksquirrel.h"
 #include "sq_config.h"
 
-/* @todo: inherit SQ_LibraryHandler <- QObject, QValueVector (get rid of 'libs' member) */
 SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries, QObject *parent, const char *name) : QObject(parent, name), currentlib(0)
 {
-	libs = new QValueVector<SQ_LIBRARY>;
-
 	if(foundLibraries)
 		reInit(foundLibraries);
 }
 
 SQ_LibraryHandler::~SQ_LibraryHandler()
-{
-	for(unsigned int i = 0;i < libs->count();i++)
-		(*libs)[i].lib->unload();
-}
+{}
 
-void SQ_LibraryHandler::setCurrentLibrary(const QString &name)
+SQ_LIBRARY* SQ_LibraryHandler::setCurrentLibrary(const QString &name)
 {
-	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
-	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
+	if(name.isEmpty())
+		return 0L;
 
-	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
-		if(((*it).sinfo).find(name, 0, false) > 0)
-		{
-			currentlib = &(*it);
-			break;
-		}
-}
+	currentlib = &map[name.lower()];
 
-SQ_LIBRARY* SQ_LibraryHandler::getCurrentLibrary()
-{
+	if(currentlib->libpath.isEmpty())
+		return 0L;
+
 	return currentlib;
-}
-
-SQ_LIBRARY SQ_LibraryHandler::getLibByIndex(const int &i)
-{
-	return ((*libs)[i]);
 }
 
 bool SQ_LibraryHandler::supports(const QString &format) const
 {
-	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
-	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
+	if(format.isEmpty() || !count()) return false;
 
-	QString f = "*." + format;
-	
-	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
-		if(((*it).sinfo).find(f, 0, false) != -1)
-			return true;
-
-	return false;
+	return !(map[format.lower()]).filter.isEmpty();
 }
 
 QString SQ_LibraryHandler::allSupportedForFilter() const
 {
 	QString ret = "";
 
-	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
-	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
+	QMapConstIterator<QString, SQ_LIBRARY>   BEGIN = map.begin();
+	QMapConstIterator<QString, SQ_LIBRARY>   END = map.end();
 
-	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
-		ret = ret + (*it).sinfo + " ";
+	for(QMapConstIterator<QString, SQ_LIBRARY> it = BEGIN;it != END;it++)
+		ret = ret + (*it).filter;
 
 	return ret;
 }
 
 void SQ_LibraryHandler::clear()
 {
-	libs->clear();
+	map.clear();
 }
 
 void SQ_LibraryHandler::reInit(QStringList *foundLibraries)
 {
-	libs->clear();
+	map.clear();
 	add(foundLibraries);
 }
 
@@ -109,6 +87,7 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 	for(QValueList<QString>::iterator it = BEGIN;it != END;it++)
 	{
 		SQ_LIBRARY libtmp;
+		QStringList formats;
 
 		libtmp.lib = new QLibrary(*it);
 		libtmp.libpath = *it;
@@ -120,33 +99,90 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 		libtmp.fmt_version = (char* (*)())(libtmp.lib)->resolve("fmt_version");
 		libtmp.fmt_quickinfo = (char* (*)())(libtmp.lib)->resolve("fmt_quickinfo");
 		libtmp.fmt_extension = (char* (*)())(libtmp.lib)->resolve("fmt_extension");
+		libtmp.fmt_readimage = (void (*)(fmt_info *, RGBA*))(libtmp.lib)->resolve("fmt_readimage");
 		libtmp.fmt_close = (int* (*)(fmt_info*))(libtmp.lib)->resolve("fmt_close");
 
-		if(libtmp.fmt_init == 0 || libtmp.fmt_read_info == 0 || libtmp.fmt_read_scanline == 0 || libtmp.fmt_version == 0 || libtmp.fmt_quickinfo == 0 || libtmp.fmt_extension == 0 || libtmp.fmt_close == 0)
-			if(sqConfig->readBoolEntry("Libraries", "continue", true))
-				;
-			else break;
+		if(libtmp.fmt_init == 0 ||
+			libtmp.fmt_read_info == 0 ||
+			libtmp.fmt_read_scanline == 0 ||
+			libtmp.fmt_version == 0 ||
+			libtmp.fmt_quickinfo == 0 ||
+			libtmp.fmt_extension == 0 ||
+			libtmp.fmt_readimage == 0 ||
+			libtmp.fmt_close == 0)
+		{
+			libtmp.lib->unload();
+			delete libtmp.lib;
+		}
 		else
-        	{
-	 		libtmp.sinfo = QString(libtmp.fmt_extension());
-			libs->append(libtmp);
+        		{
+			formats = QStringList::split(" ", QString(libtmp.fmt_extension()));
+			libtmp.filter = "";
+
+			QValueList<QString>::iterator   f1 = formats.begin();
+			QValueList<QString>::iterator   f2 = formats.end();
+
+			for(QValueList<QString>::iterator f3 = f1;f3 != f2;f3++)
+				libtmp.filter = libtmp.filter + "*." + *f3 + " ";
+
+			for(QValueList<QString>::iterator f3 = f1;f3 != f2;f3++)
+			{
+				libtmp.sinfo = *f3;
+				libtmp.quickinfo = libtmp.fmt_quickinfo();
+				libtmp.version = libtmp.fmt_version();
+				map[*f3] = libtmp;
+			}
 		}
 	}
 }
 
 void SQ_LibraryHandler::remove(QStringList *foundLibraries)
 {
-/*
+
 	QValueList<QString>::iterator   BEGIN = foundLibraries->begin();
 	QValueList<QString>::iterator      END = foundLibraries->end();
 
-	QValueVector<SQ_LIBRARY>::iterator   vBEGIN = libs->begin();
-	QValueVector<SQ_LIBRARY>::iterator      vEND = libs->end();
+	QMap<QString, SQ_LIBRARY>::iterator   vBEGIN = map.begin();
+	QMap<QString, SQ_LIBRARY>::iterator      vEND = map.end();
 
-*/
+	for(QValueList<QString>::iterator it = BEGIN;it != END;it++)
+	{
+		for(QMap<QString, SQ_LIBRARY>::iterator vit = vBEGIN;vit != vEND;vit++)
+		{
+			if(*it == (*vit).libpath)
+			{
+				map.erase(vit);
+				break;
+			}
+		}
+	}
 }
 
 int SQ_LibraryHandler::count() const
 {
-	return libs->count();
+	return map.count();
+}
+
+QValueVector<SQ_LIBRARY> SQ_LibraryHandler::getLibs()
+{
+	QValueVector<SQ_LIBRARY> vect;
+
+	QMap<QString, SQ_LIBRARY>::iterator   BEGIN = map.begin();
+	QMap<QString, SQ_LIBRARY>::iterator      END = map.end();
+	SQ_LIBRARY last;
+	QString fix;
+
+	for(QMap<QString, SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
+	{
+		if(fix.find((*it).quickinfo) != -1)
+			continue;
+
+		fix.append((*it).quickinfo);
+
+		last = *it;
+
+		vect.append(*it);
+	}
+
+	return vect;
 }

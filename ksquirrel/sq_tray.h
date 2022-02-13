@@ -25,13 +25,8 @@ class KAction;
 
 class SQ_SystemTray : public KSystemTray
 {
-	Q_OBJECT
+       Q_OBJECT
 
-	 private:
-		QWidget 		*parent;
-		KPopupMenu	*rightMenu;
-		KAction *pAOpen, *pAQuit, *pAOptions;
-	
 	public:
 		SQ_SystemTray(QWidget *_parent = 0, const char *name = "");
 
@@ -39,8 +34,13 @@ class SQ_SystemTray : public KSystemTray
 		void mousePressEvent(QMouseEvent *);
 		void mouseReleaseEvent(QMouseEvent *);
 
-	public slots:
+	private slots:
 		void slotActivate();
+
+	 private:
+		KPopupMenu	*rightMenu;
+		KAction 		*pAOpen;
+
 };
 
 

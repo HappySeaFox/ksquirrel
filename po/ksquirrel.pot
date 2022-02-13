@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-04-03 15:29+0300\n"
+"POT-Creation-Date: 2004-08-04 20:07+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,18 +15,969 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.cpp:25 main.cpp:38
-msgid "Ksquirrel"
+#: ksquirrel.cpp:821
+msgid "GL window"
 msgstr ""
 
-#: _translatorinfo.cpp:1
-msgid ""
-"_: NAME OF TRANSLATORS\n"
-"Your names"
+#: ksquirrel.cpp:822
+msgid "Next file"
 msgstr ""
 
-#: _translatorinfo.cpp:3
+#: ksquirrel.cpp:823
+msgid "Previous file"
+msgstr ""
+
+#: ksquirrel.cpp:824
+msgid "Rescan libraries"
+msgstr ""
+
+#: ksquirrel.cpp:825
+msgid "Configure external tools ..."
+msgstr ""
+
+#: ksquirrel.cpp:826
+msgid "Configure filters ..."
+msgstr ""
+
+#: ksquirrel.cpp:827
+msgid "Goto tray"
+msgstr ""
+
+#: ksquirrel.cpp:829
+msgid "List"
+msgstr ""
+
+#: ksquirrel.cpp:830
+msgid "Icons"
+msgstr ""
+
+#: ksquirrel.cpp:831
+msgid "Detailes"
+msgstr ""
+
+msgid "Run separately"
+msgstr ""
+
+#: sq_diroperator.cpp:74
+msgid "Show 'External tools' menu"
+msgstr ""
+
+#: sq_diroperator.cpp:91 sq_diroperator.cpp:95 sq_diroperator.cpp:425
+msgid "External Tools"
+msgstr ""
+
+#: sq_diroperator.cpp:184 sq_diroperator.cpp:212
+msgid "Format \""
+msgstr ""
+
+#: sq_diroperator.cpp:184 sq_diroperator.cpp:212
+msgid "\" not supported"
+msgstr ""
+
+#: sq_diroperator.cpp:303
+#, c-format
+msgid " Total %1 (%2 dirs, %3 files) "
+msgstr ""
+
+#: sq_glviewwidget.cpp:83
+msgid "Rotate left"
+msgstr ""
+
+#: sq_glviewwidget.cpp:84
+msgid "Rotate right"
+msgstr ""
+
+#: sq_glviewwidget.cpp:85
+msgid "Zoom +"
+msgstr ""
+
+#: sq_glviewwidget.cpp:86
+msgid "Zoom -"
+msgstr ""
+
+#: sq_glviewwidget.cpp:87
+msgid "Flip vertically"
+msgstr ""
+
+#: sq_glviewwidget.cpp:88
+msgid "Flip horizontally"
+msgstr ""
+
+#: sq_glviewwidget.cpp:89
+msgid "Normalize"
+msgstr ""
+
+#: sq_glviewwidget.cpp:90
+msgid "Some help"
+msgstr ""
+
+#: sq_glviewwidget.cpp:92
+msgid "Image Properties"
+msgstr ""
+
+#: sq_glviewwidget.cpp:97
+msgid "Render into file"
+msgstr ""
+
+#: sq_glviewwidget.cpp:750
+msgid "Save file as ..."
+msgstr ""
+
+#: sq_glviewwidget.cpp:818
 msgid ""
-"_: EMAIL OF TRANSLATORS\n"
-"Your emails"
+"File corrupted !\n"
+"\n"
+"Library: "
+msgstr ""
+
+#: sq_glviewwidget.cpp:818
+msgid ""
+"\n"
+"Handled extensions: "
+msgstr ""
+
+#: sq_glviewwidget.cpp:819
+msgid "Library couldn't alloc memory for internal usage !"
+msgstr ""
+
+#: sq_glviewwidget.cpp:820
+msgid "This format type is not supported."
+msgstr ""
+
+#: sq_glviewwidget.cpp:822
+msgid "Library returned unknown error code."
+msgstr ""
+
+#: sq_glviewwidget.cpp:825 sq_glviewwidget.cpp:842
+msgid "Decoding"
+msgstr ""
+
+#: sq_glviewwidget.cpp:840
+#, c-format
+msgid ""
+"Oops! Memory realloc failed.\n"
+"\n"
+"I tried to realloc memory for image:\n"
+"\n"
+"width: %ld\n"
+"height: %ld\n"
+"bpp: %d\n"
+"Total needed: "
+msgstr ""
+
+#: sq_glviewwidget.cpp:841
+msgid " of memory."
+msgstr ""
+
+#: sq_librarieschanged.ui.h:16
+msgid "New libraries found:"
+msgstr ""
+
+#: sq_librarieschanged.ui.h:16
+msgid "Deleted libraries:"
+msgstr ""
+
+#: sq_options.ui.h:126
+msgid "Main"
+msgstr ""
+
+#: sq_options.ui.h:127
+msgid "Interface"
+msgstr ""
+
+#: sq_options.ui.h:128
+msgid "Filing"
+msgstr ""
+
+#: sq_options.ui.h:129
+msgid "GL viewer"
+msgstr ""
+
+#: sq_options.ui.h:130 sq_librarieschanged.cpp:79
+msgid "Libraries"
+msgstr ""
+
+#: sq_options.ui.h:131
+msgid "Caching"
+msgstr ""
+
+#: sq_runprocess.cpp:80
+msgid "Process \""
+msgstr ""
+
+#: sq_runprocess.cpp:80
+msgid ""
+"\"could not be started.\n"
+"Try \"whereis "
+msgstr ""
+
+#: sq_runprocess.cpp:80
+msgid "\" to find it."
+msgstr ""
+
+#: sq_tray.cpp:34
+msgid "Open"
+msgstr ""
+
+#: sq_tray.cpp:35
+msgid "Quit"
+msgstr ""
+
+#: sq_tray.cpp:36
+msgid "Options"
+msgstr ""
+
+#: sq_bookmarkowner.moc.cpp:34 sq_bookmarkowner.moc.cpp:42
+msgid "SQ_BookmarkOwner"
+msgstr ""
+
+#: sq_fileiconview.moc.cpp:34 sq_fileiconview.moc.cpp:42
+msgid "SQ_FileIconView"
+msgstr ""
+
+#: sq_runprocess.moc.cpp:34 sq_runprocess.moc.cpp:42
+msgid "SQ_RunProcess"
+msgstr ""
+
+#: sq_diroperator.moc.cpp:34 sq_diroperator.moc.cpp:42
+msgid "SQ_DirOperator"
+msgstr ""
+
+#: sq_glviewwidget.moc.cpp:34 sq_glviewwidget.moc.cpp:42
+msgid "SQ_GLViewWidget"
+msgstr ""
+
+#: sq_tray.moc.cpp:34 sq_tray.moc.cpp:42
+msgid "SQ_SystemTray"
+msgstr ""
+
+#: sq_treeview.moc.cpp:34 sq_treeview.moc.cpp:42
+msgid "SQ_TreeView"
+msgstr ""
+
+#: sq_librarylistener.moc.cpp:34 sq_librarylistener.moc.cpp:42
+msgid "SQ_LibraryListener"
+msgstr ""
+
+#: sq_widgetstack.moc.cpp:34 sq_widgetstack.moc.cpp:42
+msgid "SQ_WidgetStack"
+msgstr ""
+
+#: ksquirrel.moc.cpp:34 ksquirrel.moc.cpp:42
+msgid "Squirrel"
+msgstr ""
+
+#: sq_glbase.moc.cpp:34 sq_glbase.moc.cpp:42
+msgid "SQ_GLBase"
+msgstr ""
+
+#: sq_filedetailview.moc.cpp:34 sq_filedetailview.moc.cpp:42
+msgid "SQ_FileDetailView"
+msgstr ""
+
+#: sq_imageproperties.cpp:315
+msgid "File properties"
+msgstr ""
+
+#: sq_imageproperties.cpp:318
+msgid "<b>Owner:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:320
+msgid "<b>Permissions:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:321
+msgid "<b>Group:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:322
+msgid "<i><u>Atributes</u></i>"
+msgstr ""
+
+#: sq_imageproperties.cpp:324
+msgid "<b>Last read:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:325
+msgid "<i><u>Time</u></i>"
+msgstr ""
+
+#: sq_imageproperties.cpp:328
+msgid "<b>Created:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:329
+msgid "<b>Last modified:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:330
+msgid "<b>FIle:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:331
+msgid "<b>Size:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:333
+msgid "<b>Directory:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:334
+msgid "<i><u>General</u></i>"
+msgstr ""
+
+#: sq_imageproperties.cpp:335
+msgid "Image properties"
+msgstr ""
+
+#: sq_imageproperties.cpp:336
+msgid "<b>Compression:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:338
+msgid "<b>Color model:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:339
+msgid "<b>Dimensions:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:340
+msgid "<b>Uncompressed size:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:342
+msgid "<b>Bits per pixel:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:346
+msgid "<b>Compress ratio:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:348
+msgid "<b>Number of frames:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:350
+msgid "<b>Type:</b>"
+msgstr ""
+
+#: sq_imageproperties.cpp:352
+msgid "    OK    "
+msgstr ""
+
+#: sq_filters.cpp:76 sq_filters.cpp:144 sq_externaltools.cpp:85
+#: sq_externaltools.cpp:145 sq_filters.ui.h:50 sq_filters.ui.h:52
+msgid "Name"
+msgstr ""
+
+#: sq_filters.cpp:77 sq_filters.cpp:145 sq_options.cpp:817 sq_options.cpp:1132
+msgid "Extensions"
+msgstr ""
+
+#: sq_filters.cpp:138
+msgid "Adjust Filters"
+msgstr ""
+
+#: sq_filters.cpp:139 sq_externaltools.cpp:148
+msgid " OK "
+msgstr ""
+
+#: sq_filters.cpp:141
+msgid "New filter"
+msgstr ""
+
+#: sq_filters.cpp:142
+msgid "Delete filter"
+msgstr ""
+
+#: sq_filters.cpp:148
+msgid "Menuitem contains both name and extension"
+msgstr ""
+
+#: sq_externaltools.cpp:86 sq_externaltools.cpp:146
+msgid "Command"
+msgstr ""
+
+#: sq_externaltools.cpp:138
+msgid "Adjust External Tools"
+msgstr ""
+
+#: sq_externaltools.cpp:139
+msgid "New tool"
+msgstr ""
+
+#: sq_externaltools.cpp:140
+msgid "Delete tool"
+msgstr ""
+
+#: sq_externaltools.cpp:142
+#, c-format
+msgid "Hint: %s expands to file name"
+msgstr ""
+
+#: sq_options.cpp:814 sq_options.cpp:1129
+msgid "Library"
+msgstr ""
+
+#: sq_options.cpp:815 sq_options.cpp:1130
+msgid "Info"
+msgstr ""
+
+#: sq_options.cpp:816 sq_options.cpp:1131
+msgid "Version"
+msgstr ""
+
+#: sq_options.cpp:1016
+msgid "Minimize to tray when close()"
+msgstr ""
+
+#: sq_options.cpp:1017
+msgid "Allow only one instanse (useful with tray support)"
+msgstr ""
+
+#: sq_options.cpp:1018
+msgid "Write configuration file to disk, when I press \"OK\""
+msgstr ""
+
+#: sq_options.cpp:1019
+msgid "Create first ..."
+msgstr ""
+
+#: sq_options.cpp:1020
+msgid "Detailed View"
+msgstr ""
+
+#: sq_options.cpp:1021
+msgid "Icon View"
+msgstr ""
+
+#: sq_options.cpp:1022
+msgid "List View"
+msgstr ""
+
+#: sq_options.cpp:1023
+msgid "Main window"
+msgstr ""
+
+#: sq_options.cpp:1024
+msgid "Save last position"
+msgstr ""
+
+#: sq_options.cpp:1025
+msgid "Save last size"
+msgstr ""
+
+#: sq_options.cpp:1026
+msgid "Look like ..."
+msgstr ""
+
+#: sq_options.cpp:1027
+msgid "SQuirrel"
+msgstr ""
+
+#: sq_options.cpp:1029
+msgid "GQview"
+msgstr ""
+
+#: sq_options.cpp:1031
+msgid "KuickShow"
+msgstr ""
+
+#: sq_options.cpp:1033
+msgid "ShowImg"
+msgstr ""
+
+#: sq_options.cpp:1035
+msgid "No components"
+msgstr ""
+
+#: sq_options.cpp:1037
+msgid "XnView"
+msgstr ""
+
+#: sq_options.cpp:1039
+msgid "Konqueror"
+msgstr ""
+
+#: sq_options.cpp:1041
+msgid "On starting open ..."
+msgstr ""
+
+#: sq_options.cpp:1043
+msgid "Custom directory:"
+msgstr ""
+
+#: sq_options.cpp:1044
+msgid "Last visited directory"
+msgstr ""
+
+#: sq_options.cpp:1045
+msgid "Current directory, where SQuirrel starts"
+msgstr ""
+
+#: sq_options.cpp:1046
+msgid "Run unknown file formats separately (with default application)"
+msgstr ""
+
+#: sq_options.cpp:1047
+msgid "For example, run unsupported \"png\" format in kuickshow"
+msgstr ""
+
+#: sq_options.cpp:1052
+msgid "Save history"
+msgstr ""
+
+#: sq_options.cpp:1053
+msgid "Jump into archives"
+msgstr ""
+
+#: sq_options.cpp:1054
+msgid "Clicking policy"
+msgstr ""
+
+#: sq_options.cpp:1055
+msgid "Use system settings"
+msgstr ""
+
+#: sq_options.cpp:1056
+msgid "Use double click to open item"
+msgstr ""
+
+#: sq_options.cpp:1057
+msgid "Use single click to open item"
+msgstr ""
+
+#: sq_options.cpp:1058
+msgid "If windowed"
+msgstr ""
+
+#: sq_options.cpp:1059
+msgid "Save size"
+msgstr ""
+
+#: sq_options.cpp:1060
+msgid "Save position"
+msgstr ""
+
+#: sq_options.cpp:1061
+msgid "Enable drop files into viewport"
+msgstr ""
+
+#: sq_options.cpp:1064
+msgid "General"
+msgstr ""
+
+#: sq_options.cpp:1066
+msgid "System color"
+msgstr ""
+
+#: sq_options.cpp:1067
+msgid "Custom color"
+msgstr ""
+
+#: sq_options.cpp:1068
+msgid "Favourite textures"
+msgstr ""
+
+#: sq_options.cpp:1070
+msgid "GLView will have such background color"
+msgstr ""
+
+#: sq_options.cpp:1072
+msgid "Current texture:"
+msgstr ""
+
+#: sq_options.cpp:1073
+msgid "Custom texture"
+msgstr ""
+
+#: sq_options.cpp:1074
+msgid "Browse"
+msgstr ""
+
+#: sq_options.cpp:1075
+msgid ""
+"Hint: only textures with dimensions less than 256x256 accepted, each "
+"dimension should be a power of two (e.g. 32x32, 48x48 etc.)"
+msgstr ""
+
+#: sq_options.cpp:1076
+msgid "Background"
+msgstr ""
+
+#: sq_options.cpp:1077
+msgid "Background for transparent images"
+msgstr ""
+
+#: sq_options.cpp:1078
+msgid "Draw a border"
+msgstr ""
+
+#: sq_options.cpp:1081
+msgid " pixels"
+msgstr ""
+
+#: sq_options.cpp:1083
+msgid "Flipping and rotating"
+msgstr ""
+
+#: sq_options.cpp:1084
+msgid "Relative to image center"
+msgstr ""
+
+#: sq_options.cpp:1085
+msgid "Relative to axes"
+msgstr ""
+
+#: sq_options.cpp:1086
+msgid "Image"
+msgstr ""
+
+#: sq_options.cpp:1088
+msgid "pix"
+msgstr ""
+
+#: sq_options.cpp:1089
+msgid "Rotating:"
+msgstr ""
+
+#: sq_options.cpp:1090
+msgid "Moving:"
+msgstr ""
+
+#: sq_options.cpp:1092
+msgid "deg"
+msgstr ""
+
+#: sq_options.cpp:1093
+msgid "On scroll event"
+msgstr ""
+
+#: sq_options.cpp:1094
+msgid "Zoom the scene"
+msgstr ""
+
+#: sq_options.cpp:1095
+msgid "Load next/previos file"
+msgstr ""
+
+#: sq_options.cpp:1096
+msgid "OpenGL"
+msgstr ""
+
+#: sq_options.cpp:1097
+msgid "Apply linear filter"
+msgstr ""
+
+#: sq_options.cpp:1098
+msgid "<NI>Zoom type"
+msgstr ""
+
+#: sq_options.cpp:1099
+msgid "Zoom to original"
+msgstr ""
+
+#: sq_options.cpp:1100
+msgid "Fit width"
+msgstr ""
+
+#: sq_options.cpp:1101
+msgid "Leave previous zoom"
+msgstr ""
+
+#: sq_options.cpp:1102
+msgid "Fit image"
+msgstr ""
+
+#: sq_options.cpp:1103
+msgid "Fit height"
+msgstr ""
+
+#: sq_options.cpp:1104
+msgid "Zoom koefficient"
+msgstr ""
+
+#: sq_options.cpp:1105
+msgid " %"
+msgstr ""
+
+#: sq_options.cpp:1106
+msgid "None"
+msgstr ""
+
+#: sq_options.cpp:1108
+msgid "Rendering into file"
+msgstr ""
+
+#: sq_options.cpp:1109
+msgid "Format:"
+msgstr ""
+
+#: sq_options.cpp:1110
+msgid ""
+"<u>Special values in file name:</u><br>\n"
+"<table width=\"100%\" border=\"0\">\n"
+"  <tr>\n"
+"    <td><b>%dy: </b> current year <br><b>%dmn: </b> current month  <br><b>%"
+"dw: </b> current day of week <br><b>%dd: </b> current day </td>\n"
+"    <td><b>%dh: </b> current hour<br><b>%dm: </b> current minute<br><b>%ds: "
+"</b> current second<br><b>%dms: </b> current millisecond</td>\n"
+"  </tr>\n"
+"</table>"
+msgstr ""
+
+#: sq_options.cpp:1117
+#, c-format
+msgid "Example: \"%dh:%dm:%ds\" expands to \"10:59:11\""
+msgstr ""
+
+#: sq_options.cpp:1118
+msgid "Directory:"
+msgstr ""
+
+#: sq_options.cpp:1119
+msgid "File name"
+msgstr ""
+
+#: sq_options.cpp:1121
+#, c-format
+msgid "Example: \"ksquirrel GL pixmap (%dd, %dh:%dm:%ds)\""
+msgstr ""
+
+#: sq_options.cpp:1122
+msgid "Ask for file name"
+msgstr ""
+
+#: sq_options.cpp:1123
+msgid "Custom name"
+msgstr ""
+
+#: sq_options.cpp:1124
+msgid "Other"
+msgstr ""
+
+#: sq_options.cpp:1125
+msgid "Libraries:"
+msgstr ""
+
+#: sq_options.cpp:1126
+msgid "Where SQuirrel should search libraries"
+msgstr ""
+
+#: sq_options.cpp:1127
+msgid "Continue after errors"
+msgstr ""
+
+#: sq_options.cpp:1128
+msgid ""
+"Resolving functions will continue after errors, if checked. Normally library "
+"with any error will NOT be handled, and format won't be supported"
+msgstr ""
+
+#: sq_options.cpp:1133
+msgid "Contains information about all found libraries"
+msgstr ""
+
+#: sq_options.cpp:1134
+msgid "Monitor directory with libraries"
+msgstr ""
+
+#: sq_options.cpp:1135
+msgid ""
+"Monitor directory with libraries, so new .so files can be dynamically added"
+msgstr ""
+
+#: sq_options.cpp:1136
+msgid "Show message, if directory changed"
+msgstr ""
+
+#: sq_options.cpp:1137
+msgid "Show dialog with information about new or deleted libraries"
+msgstr ""
+
+#: sq_glviewspec.cpp:71
+msgid "Previous"
+msgstr ""
+
+#: sq_glviewspec.cpp:73
+msgid "Next"
+msgstr ""
+
+#: sq_glbase.cpp:24
+msgid "KSQuirrel: OpenGL viewer"
+msgstr ""
+
+#: sq_archivehandler.cpp:75 sq_archivehandler.cpp:84
+msgid "Unable to create directory: %1"
+msgstr ""
+
+#: sq_archivehandler.cpp:75 sq_archivehandler.cpp:84 sq_archivehandler.cpp:120
+msgid "Archive problem"
+msgstr ""
+
+#: sq_archivehandler.cpp:93
+msgid ""
+"The size of selected archive seems to be too big;\n"
+"continue? (size: %1MB)"
+msgstr ""
+
+#: sq_archivehandler.cpp:95
+msgid "Confirm"
+msgstr ""
+
+#: sq_archivehandler.cpp:120
+msgid "Unable to open the archive '<b>%1</b>'."
+msgstr ""
+
+#: ksquirrel.cpp:730
+msgid "No files decoded"
+msgstr ""
+
+#: sq_options.ui.h:305
+msgid "Wrong dimensions: %1x%2."
+msgstr ""
+
+#: sq_options.ui.h:305
+msgid "Error"
+msgstr ""
+
+#: ksquirrel.cpp:752
+msgid "&File"
+msgstr ""
+
+#: ksquirrel.cpp:753
+msgid "&Edit"
+msgstr ""
+
+#: ksquirrel.cpp:754
+msgid "&View"
+msgstr ""
+
+#: ksquirrel.cpp:757
+msgid "Fi&lter"
+msgstr ""
+
+#: ksquirrel.cpp:758
+msgid "&Help"
+msgstr ""
+
+#: ksquirrel.cpp:1028
+msgid "&Bookmarks"
+msgstr ""
+
+#: sq_options.cpp
+msgid "Zoom"
+msgstr ""
+
+msgid "Zoom 100%"
+msgstr ""
+
+msgid "Lock zoom"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Library for %1 format not found"
+msgstr ""
+
+msgid "Enable \"Quick Browser\" on fullscreen mode"
+msgstr ""
+
+msgid "Quick Browser"
+msgstr ""
+
+msgid "Ignore if little image"
+msgstr ""
+
+msgid "Go!"
+msgstr ""
+
+msgid "Clear adress"
+msgstr ""
+
+msgid "Clear history"
+msgstr ""
+
+msgid "Show loading indicator"
+msgstr ""
+
+msgid "Pixmap"
+msgstr ""
+
+msgid "Fullscreen"
+msgstr ""
+
+msgid "Go to first file"
+msgstr ""
+
+msgid "Go to last file"
+msgstr ""
+
+msgid "<b>The main options</b>"
+msgstr ""
+
+msgid "<b>Customize appearance</b>"
+msgstr ""
+
+msgid "<b>Navigator's options</b>"
+msgstr ""
+
+msgid "<b>Customize OpenGL widget</b>"
+msgstr ""
+
+msgid "<b>Libraries (ksquirrel-libs)</b>"
+msgstr ""
+
+msgid "<u><b>ksquirrel</b></u>: writing settings and thumbnails ...  "
+msgstr ""
+
+msgid "<b>Thumbnails</b>"
+msgstr ""
+
+msgid "Thumbnails"
+msgstr ""
+
+msgid "Disable mimetype icons"
+msgstr ""
+
+msgid "Do not write thumbails on disk"
+msgstr ""
+
+msgid "margin between thumbnails:"
+msgstr ""
+
+msgid "maximum cache size (in memory):"
+msgstr ""
+
+msgid "Calculate cache size on disk"
+msgstr ""
+
+msgid "Small thumbnails"
+msgstr ""
+
+msgid "Medium thumbnails"
+msgstr ""
+
+msgid "Large thumbnails"
+msgstr ""
+
+msgid "Huge thumbnails"
+msgstr ""
+
+msgid "Thumbnail size"
+msgstr ""
+
+msgid "Synchronization"
+msgstr ""
+
+msgid "Clicking"
+msgstr ""
+
+msgid "Jump to first image"
 msgstr ""

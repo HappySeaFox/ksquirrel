@@ -18,9 +18,10 @@
 #ifndef SQ_FILEICONVIEW_H
 #define SQ_FILEICONVIEW_H
 
+#include <kfileiconview.h>
+
 #include <qwidget.h>
 #include <qpoint.h>
-#include <kfileiconview.h>
 
 class SQ_FileIconView : public KFileIconView
 {
@@ -29,6 +30,8 @@ class SQ_FileIconView : public KFileIconView
 	public:
 		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
 		~SQ_FileIconView();
+
+		KFileIconViewItem* viewItem(KFileItem *item);
 
 	protected:
 		QDragObject *dragObject();

@@ -16,28 +16,35 @@
  ***************************************************************************/
 #include <qpopupmenu.h>
 
-#include "sq_externaltool.h"
+#include <kiconloader.h>
+
 #include "ksquirrel.h"
+#include "sq_externaltool.h"
 #include "sq_config.h"
 
 SQ_ExternalTool::SQ_ExternalTool() : QValueVector<SQ_EXT_TOOL>()
 {
-	menu = 0L;
+	menu = new QPopupMenu;
 }
 
 SQ_ExternalTool::~SQ_ExternalTool()
 {}
 
-void SQ_ExternalTool::addTool(const QString &name, const QString &command)
+void SQ_ExternalTool::addTool(const QString &pixmap, const QString &name, const QString &command)
 {
-	 SQ_EXT_TOOL tool = {name, command};
+	SQ_EXT_TOOL tool = {pixmap, name, command};
 
-	 append(tool);
+	append(tool);
 }
 
 void SQ_ExternalTool::addTool(const SQ_EXT_TOOL &tool)
 {
 	append(tool);
+}
+
+QString SQ_ExternalTool::getToolPixmap(const int i)
+{
+	return (*this)[i].pixmap;
 }
 
 QString SQ_ExternalTool::getToolName(const int i)
@@ -52,19 +59,13 @@ QString SQ_ExternalTool::getToolCommand(const int i)
 
 QPopupMenu* SQ_ExternalTool::getNewPopupMenu()
 {
-	if(menu)
-	{
-		menu->clear();
-		delete menu;
-	}
-
 	int id;
 
-	menu = new QPopupMenu;
+	menu->clear();
 
 	for(unsigned int i = 0;i < count();i++)
 	{
-		id = menu->insertItem(getToolName(i));
+		id = menu->insertItem(sqLoader->loadIcon(getToolPixmap(i), KIcon::Desktop, 16), getToolName(i));
 		menu->setItemParameter(id, i);
 	}
 
@@ -78,13 +79,15 @@ QPopupMenu* SQ_ExternalTool::getConstPopupMenu() const
 
 void SQ_ExternalTool::writeEntries()
 {
-	int ncount = count(), cur = 1;
+	int ncount = count(), cur = 1, i;
 	QString num;
 
-	for(int i = 0;i < ncount;i++,cur++)
+	for(i = 0;i < ncount;i++,cur++)
 	{
-		sqConfig->setGroup("External tool name");
 		num.sprintf("%d", cur);
+		sqConfig->setGroup("External tool pixmap");
+		sqConfig->writeEntry(num, getToolPixmap(i));
+		sqConfig->setGroup("External tool name");
 		sqConfig->writeEntry(num, getToolName(i));
 		sqConfig->setGroup("External tool program");
 		sqConfig->writeEntry(num, getToolCommand(i));

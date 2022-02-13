@@ -138,6 +138,23 @@
                         <string></string>
                     </property>
                 </widget>
+                <spacer row="3" column="3" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>spacer20</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>30</width>
+                            <height>190</height>
+                        </size>
+                    </property>
+                </spacer>
                 <widget class="QPushButton" row="2" column="3">
                     <property name="name">
                         <cstring>pushToolDown</cstring>
@@ -157,24 +174,18 @@
                         <string></string>
                     </property>
                 </widget>
-                <spacer row="3" column="3" rowspan="2" colspan="1">
-                    <property name="name">
-                        <cstring>spacer20</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>30</width>
-                            <height>190</height>
-                        </size>
-                    </property>
-                </spacer>
                 <widget class="QListView" row="1" column="0" rowspan="3" colspan="3">
+                    <column>
+                        <property name="text">
+                            <string>Pixmap</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
                     <column>
                         <property name="text">
                             <string>Name</string>
@@ -210,13 +221,13 @@
                         <bool>true</bool>
                     </property>
                     <property name="showSortIndicator">
-                        <bool>false</bool>
+                        <bool>true</bool>
                     </property>
                     <property name="itemMargin">
                         <number>1</number>
                     </property>
                     <property name="resizeMode">
-                        <enum>AllColumns</enum>
+                        <enum>LastColumn</enum>
                     </property>
                     <property name="defaultRenameAction">
                         <enum>Reject</enum>
@@ -275,12 +286,6 @@
         <slot>slotToolClear()</slot>
     </connection>
     <connection>
-        <sender>pushToolClearAll</sender>
-        <signal>clicked()</signal>
-        <receiver>listTools</receiver>
-        <slot>clear()</slot>
-    </connection>
-    <connection>
         <sender>pushToolUp</sender>
         <signal>clicked()</signal>
         <receiver>SQ_ExternalTools</receiver>
@@ -291,12 +296,6 @@
         <signal>clicked()</signal>
         <receiver>SQ_ExternalTools</receiver>
         <slot>slotToolDown()</slot>
-    </connection>
-    <connection>
-        <sender>listTools</sender>
-        <signal>rightButtonClicked(QListViewItem*,const QPoint&amp;,int)</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolRenameRequest(QListViewItem*,const QPoint&amp;,int)</slot>
     </connection>
     <connection>
         <sender>pushOK</sender>
@@ -310,11 +309,24 @@
         <receiver>SQ_ExternalTools</receiver>
         <slot>reject()</slot>
     </connection>
+    <connection>
+        <sender>pushToolClearAll</sender>
+        <signal>clicked()</signal>
+        <receiver>listTools</receiver>
+        <slot>clear()</slot>
+    </connection>
+    <connection>
+        <sender>listTools</sender>
+        <signal>rightButtonClicked(QListViewItem*,const QPoint&amp;,int)</signal>
+        <receiver>SQ_ExternalTools</receiver>
+        <slot>slotToolRenameRequest(QListViewItem*,const QPoint&amp;,int)</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="local" impldecl="in implementation">sq_externaltool.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
+    <include location="global" impldecl="in implementation">kicondialog.h</include>
     <include location="local" impldecl="in implementation">sq_externaltools.ui.h</include>
 </includes>
 <slots>

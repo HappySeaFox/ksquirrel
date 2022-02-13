@@ -11,17 +11,20 @@
 
 void SQ_Filters::init()
 {
-     listFilters->setSorting(-1);
+	listFilters->setSorting(-1);
 
-    	int count = sqFilters->count();
 	QListViewItem *itemafter = 0L, *item;
+	
+	QValueList<QString>::iterator nEND = sqFiltersName->end();
+	QValueList<QString>::iterator it_name = sqFiltersName->begin();
+	QValueList<QString>::iterator it_ext = sqFiltersExt->begin();
 
-	for(int i = 0;i < count;i++)
+	for(;it_name != nEND;it_name++,it_ext++)
 	{
 		if(itemafter)
-		    item = new QListViewItem(listFilters, itemafter, sqFilters->getFilterName(i), sqFilters->getFilterExt(i));
+		    item = new QListViewItem(listFilters, itemafter, *it_name, *it_ext);
 		else
-		item = new QListViewItem(listFilters, sqFilters->getFilterName(i), sqFilters->getFilterExt(i));
+		    item = new QListViewItem(listFilters, *it_name, *it_ext);
 
 		itemafter = item;
 
@@ -47,9 +50,9 @@ void SQ_Filters::slotNewFilter()
 	QListViewItem *itemafter = listFilters->lastItem(), *item;
 
 	if(itemafter)
-		item = new QListViewItem(listFilters, itemafter, "Name", "*.");
+		item = new QListViewItem(listFilters, itemafter, i18n("Name"), "*.");
 	else
-		item = new QListViewItem(listFilters,  "Name", "*.");
+		item = new QListViewItem(listFilters,  i18n("Name"), "*.");
 
 	item->setRenameEnabled(0, true);
 	item->setRenameEnabled(1, true);
@@ -62,7 +65,7 @@ void SQ_Filters::slotNewFilter()
 void SQ_Filters::slotFilterClear()
 {
 	QListViewItem *item = listFilters->currentItem();
-    
+
 	if(!item) return;
     
 	listFilters->takeItem(item);
@@ -103,24 +106,25 @@ int SQ_Filters::start()
     if(result == QDialog::Accepted)
     {
 	QListViewItem *cur = listFilters->firstChild();
-	sqFilters->clear();
+
+	sqFiltersName->clear();
+	sqFiltersExt->clear();
 
 	for(;cur;cur = cur->itemBelow())
 	{
-		FILTER tf = {cur->text(0), cur->text(1)};
-		sqFilters->addFilter(tf);
+		sqFiltersName->append(cur->text(0));
+		sqFiltersExt->append(cur->text(1));
 	}
 	
 	sqConfig->setGroup("Filters");
 	sqConfig->writeEntry("menuitem both", checkBoth->isChecked());
-	sqFilters->setShowBoth(checkBoth->isChecked());
     }
     
     return result;
 }
 
 
-void SQ_Filters::slotFilterRenameRequest( QListViewItem *item, const QPoint &point, int pos )
+void SQ_Filters::slotFilterRenameRequest( QListViewItem *item, const QPoint &, int pos )
 {
     if(item)
 	item->startRename(((pos>=0)?pos:0));

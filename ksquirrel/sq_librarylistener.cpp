@@ -101,3 +101,8 @@ void SQ_LibraryListener::slotShowInfo(const QStringList &linfo, bool added)
 
 	list.clear();
 }
+
+void SQ_LibraryListener::slotOpenURL(const KURL &url__, bool b1, bool b2)
+{
+	openURL(url__, b1, b2);
+}

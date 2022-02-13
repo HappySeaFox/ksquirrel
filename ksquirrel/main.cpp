@@ -20,12 +20,13 @@
 #include <kaboutdata.h>
 #include <kconfig.h>
 #include <dcopclient.h>
+#include <klocale.h>
+#include <kapplication.h>
 
 #include <qvariant.h>
 
 #include "ksquirrel.h"
 #include "sq_about.h"
-#include "sq_application.h"
 #include "sq_hloptions.h"
 
 #include <X11/Xlib.h>
@@ -34,7 +35,7 @@
 
 static KCmdLineOptions options[] =
 {
-	{"f <url_file_or_directory>", I18N_NOOP(""), 0},
+	{"f <url_file_or_directory>", 0, 0},
 	{ 0, 0, 0 }
 };         
 
@@ -63,12 +64,13 @@ int main(int argc, char *argv[])
 	high->HL_url = QVariant(sq_args->getOption("f")).toString();
 
 	// create app after KCmdLineArgs::init(...) !
-	SQ_Application	a;
+	KApplication	a;
 
 	KConfig *tmpConfig = new KConfig(QString("ksquirrelrc"));
 
 	// check for another SQuirrel, if exists - send SQ_ACTIVATE message
 	tmpConfig->setGroup("Main");
+
 	if(a.dcopClient()->isApplicationRegistered(App) && tmpConfig->readBoolEntry("activate another", true))
 	{
 		QCString replyType;

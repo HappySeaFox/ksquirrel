@@ -25,21 +25,29 @@ class SQ_TreeView : public KFileTreeView
 {
     Q_OBJECT
 
-	private:
-		KFileTreeBranch *root, *home;
-                
 	public:
 		SQ_TreeView(QWidget *parent = 0, const char *name = 0);
 		~SQ_TreeView();
 
 		void emitNewURL(const KURL &url);
+		KFileTreeViewItem* findViewItem(KFileTreeViewItem* parent,const QString& text);
 
-	signals:
-		void newURL(const KURL &url);
+	private:
+		void populateItem(KFileTreeViewItem *);
 
 	public slots:
 		void slotItemExecuted(QListViewItem*);
 		void slotNewURL(const KURL &url);
+
+	protected slots:
+		void slotNewTreeViewItems(KFileTreeBranch *branch, const KFileTreeViewItemList &itemList);
+
+	signals:
+		void newURL(const KURL &url);
+
+	private:
+		KFileTreeBranch *root, *home;
+
 };
 
 #endif

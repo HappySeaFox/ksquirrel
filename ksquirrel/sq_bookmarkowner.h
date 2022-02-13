@@ -32,9 +32,6 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 {
 	Q_OBJECT
 
-	private:
-		KURL URL;
-
 	public: 
 		SQ_BookmarkOwner(QWidget *parent = 0);
 		~SQ_BookmarkOwner();
@@ -42,11 +39,14 @@ class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 		virtual void openBookmarkURL(const QString &);
 		virtual QString currentURL() const;
 
+	public slots:
+		void setURL(const KURL &);
+
 	signals:
 		void openURL(const KURL &);
 
-	public slots:
-		void setURL(const KURL &);
+	private:
+		KURL URL;
 };
 
 #endif

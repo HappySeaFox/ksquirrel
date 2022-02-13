@@ -27,24 +27,10 @@ QString SQ_Config::readEntry(const QString &sgroup, const QString &key, const QS
 {
 	if(group() != sgroup) setGroup(sgroup);
 
-	return readEntry(key, aDefault);
-}
-
-QString SQ_Config::readEntry(const char *sgroup, const QString &key, const QString& aDefault)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
 	return KConfig::readEntry(key, aDefault);
 }
 
 int SQ_Config::readNumEntry(const QString &sgroup, const QString &key, int nDefault)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readNumEntry(key, nDefault);
-}
-
-int SQ_Config::readNumEntry(const char *sgroup, const QString &key, int nDefault)
 {
 	if(group() != sgroup) setGroup(sgroup);
 
@@ -58,9 +44,23 @@ bool SQ_Config::readBoolEntry(const QString &sgroup, const QString &pKey, const 
 	return KConfig::readBoolEntry(pKey, bDefault);
 }
 
-bool SQ_Config::readBoolEntry(const char *sgroup, const QString &pKey, const bool bDefault)
+QStringList SQ_Config::readListEntry(const QString &sgroup, const QString &key, char sep)
 {
 	if(group() != sgroup) setGroup(sgroup);
 
-	return KConfig::readBoolEntry(pKey, bDefault);
+	return KConfig::readListEntry(key, sep);
+}
+
+QValueList<int> SQ_Config::readIntListEntry(const QString &sgroup, const QString &key)
+{
+	if(group() != sgroup) setGroup(sgroup);
+
+	return KConfig::readIntListEntry(key);
+}
+
+QRect SQ_Config::readRectEntry(const QString &sgroup, const QString &key, const QRect *def)
+{
+	if(group() != sgroup) setGroup(sgroup);
+
+	return KConfig::readRectEntry(key, def);
 }

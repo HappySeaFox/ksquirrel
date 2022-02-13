@@ -19,16 +19,13 @@
 #define SQ_LIBRARY_HANDLER_H
 
 #include <qobject.h>
-#include <qlibrary.h>
-#include <qstringlist.h>
-
-/**
-  *@author CKulT
-  */
+#include <qmap.h>
+#include <qvaluevector.h>
 
 #include "defs.h"
 
-template <class T> class QValueVector;
+class QStringList;
+class QLibrary;
 
 class SQ_LIBRARY
 {
@@ -39,30 +36,28 @@ class SQ_LIBRARY
 		QLibrary *lib;
 		QString libpath;
 		QString sinfo;
+		QString filter;
+		QString quickinfo, version;
 
-		int (*fmt_init)(fmt_info **, const char *);
-		int (*fmt_read_info)(fmt_info *);
-		int (*fmt_read_scanline)(fmt_info *, RGBA *);
-		char* (*fmt_version)();
-		char* (*fmt_quickinfo)();
-		char* (*fmt_extension)();
-		int* (*fmt_close)(fmt_info *);
+		int 		(*fmt_init)(fmt_info **, const char *);
+		int 		(*fmt_read_info)(fmt_info *);
+		int 		(*fmt_read_scanline)(fmt_info *, RGBA *);
+		char* 	(*fmt_version)();
+		char* 	(*fmt_quickinfo)();
+		char* 	(*fmt_extension)();
+		void		(*fmt_readimage)(fmt_info *, RGBA *);
+		int* 		(*fmt_close)(fmt_info *);
 };
-  
+
 class SQ_LibraryHandler : public QObject
 {
-	private:
-		QValueVector<SQ_LIBRARY>*libs;
-		SQ_LIBRARY				*currentlib;
-
 	public:
 		SQ_LibraryHandler(QStringList *foundLibraries = 0, QObject *parent = 0, const char *name = 0);
 		~SQ_LibraryHandler();
 
-		void setCurrentLibrary(const QString &name);
-		SQ_LIBRARY* getCurrentLibrary();
+		SQ_LIBRARY* setCurrentLibrary(const QString &name);
+		QValueVector<SQ_LIBRARY> getLibs();
 
-		SQ_LIBRARY getLibByIndex(const int &i);
 		int count() const;
 
 		bool supports(const QString &format) const;
@@ -73,6 +68,10 @@ class SQ_LibraryHandler : public QObject
 
 		void add(QStringList *foundLibraries);
 		void remove(QStringList *foundLibraries);
+
+	private:
+		QMap<QString, SQ_LIBRARY>	map;
+		SQ_LIBRARY				*currentlib;
 };
 
 #endif
