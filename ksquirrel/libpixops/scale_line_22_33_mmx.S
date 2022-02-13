@@ -51,7 +51,7 @@ pixops_scale_line_22_33_mmx:
  */	
 	
 /* Load initial values into %mm1, %mm3 */
-	leal (%edx,%edx,2),%edx  # Multiply by 3
+	leal (%edx,%edx,2),%edx  /* Multiply by 3 */
 
 	movl 16(%ebp),%edi
 	pxor %mm4, %mm4
@@ -102,7 +102,7 @@ pixops_scale_line_22_33_mmx:
 /* %mm7	holds the accumulated sum. Compute (C + 0x80) / 256
  */
 	pxor %mm4, %mm4
-	movl $8421504, %eax  # 0x00808080
+	movl $8421504, %eax  /* 0x00808080 */
 	movd %eax, %mm6  
 	punpcklbw %mm4, %mm6
 	paddw %mm6, %mm7
@@ -138,7 +138,7 @@ pixops_scale_line_22_33_mmx:
 	movq %mm1, %mm0
 	movq %mm3, %mm2
 	
-	leal (%edx,%edx,2),%edx  # Multiply by 3
+	leal (%edx,%edx,2),%edx  /* Multiply by 3 */
 
 	movl 16(%ebp),%edi
 	movzbl 2(%edi,%edx),%ecx

@@ -866,29 +866,7 @@
                                     <string>Show tooltips with thumbnail info</string>
                                 </property>
                             </widget>
-                            <widget class="KIntNumInput" row="4" column="0">
-                                <property name="name">
-                                    <cstring>spinMargin</cstring>
-                                </property>
-                                <property name="label">
-                                    <string>Margin between thumbnails</string>
-                                </property>
-                                <property name="suffix">
-                                    <string> pixels</string>
-                                </property>
-                            </widget>
-                            <widget class="KIntNumInput" row="5" column="0">
-                                <property name="name">
-                                    <cstring>spinCacheSize</cstring>
-                                </property>
-                                <property name="label">
-                                    <string>Maximum cache size (in memory)</string>
-                                </property>
-                                <property name="suffix">
-                                    <string> Kb</string>
-                                </property>
-                            </widget>
-                            <spacer row="6" column="0">
+                            <spacer row="7" column="0">
                                 <property name="name">
                                     <cstring>spacer17_3</cstring>
                                 </property>
@@ -901,10 +879,43 @@
                                 <property name="sizeHint">
                                     <size>
                                         <width>20</width>
-                                        <height>16</height>
+                                        <height>30</height>
                                     </size>
                                 </property>
                             </spacer>
+                            <widget class="KIntNumInput" row="6" column="0">
+                                <property name="name">
+                                    <cstring>spinCacheSize</cstring>
+                                </property>
+                                <property name="label">
+                                    <string>Maximum cache size (in memory)</string>
+                                </property>
+                                <property name="suffix">
+                                    <string> Kb</string>
+                                </property>
+                            </widget>
+                            <widget class="KIntNumInput" row="5" column="0">
+                                <property name="name">
+                                    <cstring>spinMargin</cstring>
+                                </property>
+                                <property name="label">
+                                    <string>Margin between thumbnails</string>
+                                </property>
+                                <property name="suffix">
+                                    <string> pixels</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="4" column="0">
+                                <property name="name">
+                                    <cstring>checkInactive</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Don't show tooltips when the main window is inactive</string>
+                                </property>
+                            </widget>
                         </grid>
                     </widget>
                 </grid>
@@ -2005,6 +2016,12 @@
         <sender>checkPreview</sender>
         <signal>toggled(bool)</signal>
         <receiver>groupBoxPreview</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkTooltips</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkInactive</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>

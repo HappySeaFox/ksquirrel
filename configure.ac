@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.1], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.2], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.1)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.2)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -59,8 +59,6 @@ PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
         CXXFLAGS="$ksquirrellibs_CFLAGS $CXXFLAGS"
         CPPFLAGS="$ksquirrellibs_CFLAGS $CPPFLAGS"
 
-        # hell, conftests will fail with error "gcc: unknown option -rpath"
-        # we will use $ksquirrellibs_LIBS later in Makefile.am...
         AC_SUBST(ksquirrellibs_LIBS)
 
         AC_LANG_SAVE
@@ -192,7 +190,7 @@ if test x$enable_mmx = xauto ; then
   if test $use_x86_asm = yes; then
     save_ac_ext=$ac_ext
     ac_ext=S
-    
+
     cp $srcdir/ksquirrel/libpixops/scale_line_22_33_mmx.S conftest.S
     if AC_TRY_EVAL(ac_compile); then
         use_mmx_asm=yes
@@ -248,6 +246,8 @@ KSquirrel configuration:
   C Compiler flags:         ${CFLAGS}
   C++ Compiler:             ${CXX}
   C++ Compiler flags:       ${CXXFLAGS}
+  ksquirrel-libs CFLAGS:    $ksquirrellibs_CFLAGS
+  ksquirrel-libs LIBS:      $ksquirrellibs_LIBS
   Compile ksquirrel-small:  $sq_ksmall
 
 Installation options:

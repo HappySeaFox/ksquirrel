@@ -86,9 +86,9 @@ SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 
     connect(libl, SIGNAL(finishedInit()), this, SLOT(slotContinueLoading()));
 
-    const QString libPrefix = "/usr/lib/ksquirrel-libs/";
-
-    KURL url = libPrefix;
+    // SQ_KLIBS must be known constant from
+    // ksquirrellibs.pc
+    KURL url = SQ_KLIBS;
 
     createContent();
 

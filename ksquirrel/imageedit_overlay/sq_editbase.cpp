@@ -508,7 +508,7 @@ QImage SQ_EditBase::generatePreview() const
 
     SQ_Config::instance()->setGroup("Edit tools");
 
-    bool generate_preview = SQ_Config::instance()->readBoolEntry("preview", false);
+    bool generate_preview = SQ_Config::instance()->readBoolEntry("preview", true);
 
     QImage kisa;
 

@@ -1035,7 +1035,13 @@ void SQ_GLWidget::keyPressEvent(QKeyEvent *e)
                 case Qt::Key_Comma:     slotZoomW();      break;
                 case Qt::Key_Period:    slotZoomH();      break;
                 case Qt::Key_Asterisk:  slotZoomWH();     break;
-                case Qt::Key_L:         slotZoomIfLess(); break;
+                case Qt::Key_L:         
+                {
+                    bool b = pAIfLess->isChecked();
+                    pAIfLess->setChecked(!b);
+                    slotZoomIfLess();
+                }
+                break;
             }
         }
     }

@@ -35,8 +35,4 @@ void SQ_GLInfo::init()
             }   
         }
     }
-
-    listGL->setCurrentItem(listGL->firstChild());
-    listGL->clearSelection();
-    listGL->setSelected(listGL->currentItem(), true);
 }

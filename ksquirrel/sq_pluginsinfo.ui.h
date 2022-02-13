@@ -25,7 +25,8 @@ void SQ_PluginsInfo::showLibs()
 
     int cnt = SQ_LibraryHandler::instance()->count();
 
-    textTotal->setNum(cnt);
+    textLibs->setText(SQ_KLIBS);
+    textCount->setNum(cnt);
 
     if(!cnt) return;
 

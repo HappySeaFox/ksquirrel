@@ -1,3 +1,7 @@
+ksquirrel-0.6.2: Debian-policy-release.
+********************************************
+ksquirrel and ksquirrel-libs now should correspond Debian policy.
+
 ksquirrel-0.6.1: bugfix release, minor changes
 *****************************************************
 

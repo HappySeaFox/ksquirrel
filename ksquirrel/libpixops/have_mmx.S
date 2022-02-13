@@ -9,8 +9,6 @@ gcc2_compiled.:
 pixops_have_mmx:
 	push	%ebx
 
-# Check if bit 21 in flags word is writeable
-
 	pushfl	
 	popl	%eax
 	movl	%eax,%ebx
@@ -23,8 +21,6 @@ pixops_have_mmx:
 	cmpl	%eax, %ebx
 
 	je .notfound
-
-# OK, we have CPUID
 
 	movl	$1, %eax
 	cpuid

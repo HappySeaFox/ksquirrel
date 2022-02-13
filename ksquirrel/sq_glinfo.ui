@@ -149,6 +149,10 @@
         <slot>reject()</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>pushClose</tabstop>
+    <tabstop>listGL</tabstop>
+</tabstops>
 <includes>
     <include location="global" impldecl="in implementation">GL/gl.h</include>
     <include location="global" impldecl="in implementation">qmap.h</include>

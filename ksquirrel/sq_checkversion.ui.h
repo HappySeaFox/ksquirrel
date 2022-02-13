@@ -11,7 +11,7 @@
  *  Version checker. It will try to connect to http://ksquirrel.sf.net
  *  and retrieve versions of KSquirrel and ksquirrel-libs. Version of KSquirrel
  *  is defined by SQ_VERSION macro in sq_about.h, and ksquirrel-libs  version
- *  is determined from /usr/lib/ksquirrel-libs/version.
+ *  is determined from $SQ_KL_VER.
  */
 
 void SQ_CheckVersion::init()
@@ -123,7 +123,6 @@ void SQ_CheckVersion::slotFinished(QNetworkOperation *netop)
 void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
 {
     QString klresult;
-    QString KL_VER;
 
     if(netop->operation() == QNetworkProtocol::OpGet)
     {
@@ -141,29 +140,19 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
         kl = true;
 
         QFile f(f2->name());
-        QFile l("/usr/lib/ksquirrel-libs/version");
 
         // read version of ksquirrel-libs.
-        if(l.open(IO_ReadOnly))
+        if(f.open(IO_ReadOnly))
         {
-            l.readLine(KL_VER, 100);
-            l.close();
+            QString ver;
+            f.readLine(ver, 100);
+            f.close();
 
-            if(f.open(IO_ReadOnly))
-            {
-                QString ver;
-                f.readLine(ver, 100);
-                f.close();
+            ver = ver.stripWhiteSpace();
 
-                ver = ver.stripWhiteSpace();
-                KL_VER = KL_VER.stripWhiteSpace();
-
-                // version changed!
-                if(ver != KL_VER)
-                    klv = ver;
-            }
-            else
-                kl = false;
+            // version changed!
+            if(ver != SQ_KL_VER)
+                klv = ver;
         }
         else
             kl = false;

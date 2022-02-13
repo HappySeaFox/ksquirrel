@@ -65,7 +65,8 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     // setup progress bar
     progressBox->setPalette(QPalette(QColor(255,255,255), QColor(255,255,255)));
     progressBox->setFrameShape(QFrame::Box);
-    progressBox->setSpacing(3);
+    progressBox->setSpacing(1);
+    progressBox->setMargin(0);
     progressBox->setStretchFactor(progress, 1);
     progressBox->setStretchFactor(progressBoxBar, 0);
     progressBox->setGeometry(5, 5, 235, 24);
@@ -341,7 +342,8 @@ void SQ_FileThumbView::slotShowToolTip(QIconViewItem *item)
 {
     SQ_Config::instance()->setGroup("Thumbnails");
 
-    if(!SQ_Config::instance()->readBoolEntry("tooltips", false))
+    if(!SQ_Config::instance()->readBoolEntry("tooltips", false) ||
+        (!KSquirrel::app()->isActiveWindow() && SQ_Config::instance()->readBoolEntry("tooltips_inactive", true)))
         return;
 
     // remove previous tootip and stop timer
@@ -388,14 +390,6 @@ bool SQ_FileThumbView::eventFilter(QObject *o, QEvent *e)
     }
 
     return KFileIconView::eventFilter(o, e);
-}
-
-/*
- *  Don't start thumbnail job until thumbnail view is hidden.
- */
-void SQ_FileThumbView::waitForShowEvent()
-{
-    isPending = true;
 }
 
 /*

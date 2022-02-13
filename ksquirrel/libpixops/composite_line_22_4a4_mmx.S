@@ -155,10 +155,10 @@ pixops_composite_line_22_4a4_mmx:
 	movq %mm3, %mm2
 
 	shll $2, %edx
-
-#	%mm4 will always be already clear here	
-#	pxor %mm4, %mm4
-
+/*
+        %mm4 will always be already clear here	
+        pxor %mm4, %mm4
+*/
 	movl 16(%ebp),%edi
 	movl (%edi, %edx), %eax
 	movd (%edi, %edx), %mm5

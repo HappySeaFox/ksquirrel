@@ -197,5 +197,10 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         int    pixelSize;
 };
 
+inline
+void SQ_FileThumbView::waitForShowEvent()
+{
+    isPending = true;
+}
 
 #endif

@@ -51,8 +51,8 @@ void SQ_Options::init()
 
 // Init GLView page
     QPixmap p1;
-    checkStatus->setChecked(kconf->readBoolEntry("hide_sbar", true));
-    checkToolbar->setChecked(kconf->readBoolEntry("hide_toolbar", true));
+    checkStatus->setChecked(kconf->readBoolEntry("hide_sbar", true));    
+    checkToolbar->setChecked(kconf->readBoolEntry("hide_toolbar", true));    
     checkProgress->setChecked(kconf->readBoolEntry("progressiv", true));
     checkDrawQuads->setChecked(kconf->readBoolEntry("alpha_bkgr", true));
     checkMarks->setChecked(kconf->readBoolEntry("marks", true));    
@@ -99,10 +99,15 @@ void SQ_Options::init()
     spinMargin->setRange(0, 20, 1, true);
     spinMargin->setValue(kconf->readNumEntry("margin", 2));
     spinCacheSize->setValue(kconf->readNumEntry("cache", 1024*5));
-    if(kconf->readBoolEntry("disable_mime", false)) checkMime->toggle();
-    if(kconf->readBoolEntry("dont write", false)) checkNoWriteThumbs->toggle();
-    if(kconf->readBoolEntry("extended", false)) checkExtended->toggle();
-    if(kconf->readBoolEntry("tooltips", false)) checkTooltips->toggle();
+    checkMime->setChecked(kconf->readBoolEntry("disable_mime", false));
+    checkNoWriteThumbs->setChecked(kconf->readBoolEntry("dont write", false));
+    checkExtended->setChecked(kconf->readBoolEntry("extended", false));
+    if(kconf->readBoolEntry("tooltips", false))
+    {
+	checkTooltips->toggle();
+	checkInactive->setEnabled(true);
+    }
+    checkInactive->setChecked(kconf->readBoolEntry("tooltips_inactive", true));
 
     SQ_Config::instance()->setGroup("Edit tools");
 
@@ -112,8 +117,8 @@ void SQ_Options::init()
     tp = kconf->readNumEntry("load_pages_number", 1);
     pagesNumberET->setValue(tp);
 
-    if(kconf->readBoolEntry("preview", false)) checkPreview->toggle();
-    if(kconf->readBoolEntry("preview_dont", true)) checkDontGenerate->toggle();
+    checkPreview->setChecked(kconf->readBoolEntry("preview", true));
+    checkDontGenerate->setChecked(kconf->readBoolEntry("preview_dont", true));
     spinLargerW->setValue(kconf->readNumEntry("preview_larger_w", 1024));
     spinLargerH->setValue(kconf->readNumEntry("preview_larger_h", 768));
 
@@ -172,6 +177,7 @@ int SQ_Options::start()
         kconf->writeEntry("dont write", checkNoWriteThumbs->isChecked());
         kconf->writeEntry("extended", checkExtended->isChecked());
         kconf->writeEntry("tooltips", checkTooltips->isChecked());
+        kconf->writeEntry("tooltips_inactive", checkInactive->isChecked());
     
         kconf->setGroup("GL view");
         kconf->writeEntry("load_pages", buttonGroupPages->selectedId());

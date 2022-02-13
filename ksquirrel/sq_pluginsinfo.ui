@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>570</width>
-            <height>441</height>
+            <height>473</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,6 +22,20 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
+        <widget class="Line" row="2" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
         <widget class="QPushButton" row="3" column="1">
             <property name="name">
                 <cstring>pushClose</cstring>
@@ -45,64 +59,11 @@
             </property>
             <property name="sizeHint">
                 <size>
-                    <width>381</width>
+                    <width>500</width>
                     <height>21</height>
                 </size>
             </property>
         </spacer>
-        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>layout1</cstring>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>textLabel1</cstring>
-                    </property>
-                    <property name="font">
-                        <font>
-                            <bold>1</bold>
-                        </font>
-                    </property>
-                    <property name="text">
-                        <string>Directory: /usr/lib/ksquirrel-libs, total found:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>textTotal</cstring>
-                    </property>
-                    <property name="font">
-                        <font>
-                            <bold>1</bold>
-                        </font>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>316</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
-            </hbox>
-        </widget>
         <widget class="QListView" row="1" column="0" rowspan="1" colspan="2">
             <column>
                 <property name="text">
@@ -169,19 +130,74 @@
                 <enum>LastColumn</enum>
             </property>
         </widget>
-        <widget class="Line" row="2" column="0" rowspan="1" colspan="2">
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>line1</cstring>
+                <cstring>layout1</cstring>
             </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="1" column="1">
+                    <property name="name">
+                        <cstring>textCount</cstring>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <bold>1</bold>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLibs1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Directory:</string>
+                    </property>
+                </widget>
+                <spacer row="1" column="2">
+                    <property name="name">
+                        <cstring>spacer2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>70</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Total found:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="1">
+                    <property name="name">
+                        <cstring>textLibs</cstring>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <bold>1</bold>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+            </grid>
         </widget>
     </grid>
 </widget>

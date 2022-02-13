@@ -329,6 +329,8 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
             if(!alreadyInMap(q))
             {
 
+                // get all information on codec: filter, mime icon, mime regexp,
+                // version, etc.
 #ifndef QT_NO_STL
                 mime_len = convertMimeFromBits(codeK->fmt_pixmap(), mime_str);
 #else
@@ -372,10 +374,7 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
                 // unload library
                 libtmp.lib->unload();
 
-                // delete object
                 delete libtmp.lib;
-
-                kdDebug() << "Library \"" << q << "\" is already in map" << endl;
             }
         }
     }
