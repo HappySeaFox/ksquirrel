@@ -2,8 +2,8 @@
                           sq_treeview.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,6 +18,8 @@
 #ifndef SQ_TREEVIEW_H
 #define SQ_TREEVIEW_H
 
+#include <qstringlist.h>
+
 #include <kfiletreeview.h>
 #include <kurl.h>
 
@@ -30,24 +32,31 @@ class SQ_TreeView : public KFileTreeView
 		~SQ_TreeView();
 
 		void emitNewURL(const KURL &url);
-		KFileTreeViewItem* findViewItem(KFileTreeViewItem* parent,const QString& text);
+		bool configVisible() const;
+
+	protected:
+		void showEvent(QShowEvent *);
 
 	private:
 		void populateItem(KFileTreeViewItem *);
+		bool doSearch(KFileTreeBranch *);
+		void collapseOpened();
 
 	public slots:
 		void slotItemExecuted(QListViewItem*);
 		void slotNewURL(const KURL &url);
-
-	protected slots:
-		void slotNewTreeViewItems(KFileTreeBranch *branch, const KFileTreeViewItemList &itemList);
+		void slotOpened(KFileTreeViewItem *);
+		void setShown(bool shown);
 
 	signals:
 		void newURL(const KURL &url);
 
 	private:
 		KFileTreeBranch *root, *home;
-
+		QStringList paths;
+		KFileTreeViewItemList *itemsToClose;
+		bool vis;
+		KURL pendingURL;
 };
 
 #endif

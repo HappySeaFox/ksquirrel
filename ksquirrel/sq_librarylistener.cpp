@@ -2,8 +2,8 @@
                           sq_librarylistener.cpp  -  description
                              -------------------
     begin                : Fri Mar 26 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -24,41 +24,41 @@
 
 SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {
+	operation = true;
+
 	setAutoUpdate(true); // we have to init libraries anyway, even if "Monitor" options disabled
 	setDirOnlyMode(false);
 	setShowingDotFiles(false);
 
-	connect(this, SIGNAL(started(const KURL &)), SLOT(slotStarted(const KURL &)));
-	connect(this, SIGNAL(completed()), SLOT(slotCompleted()));
-	connect(this, SIGNAL(newItems(const KFileItemList &)), SLOT(slotNewItems(const KFileItemList &)));
-	connect(this, SIGNAL(deleteItem(KFileItem *)), SLOT(slotDeleteItem(KFileItem *)));
-	connect(this, SIGNAL(showInfo(const QStringList &,bool)), SLOT(slotShowInfo(const QStringList &,bool)));
+	connect(this, SIGNAL(completed()), this, SLOT(slotCompleted()));
+	connect(this, SIGNAL(newItems(const KFileItemList &)), this, SLOT(slotNewItems(const KFileItemList &)));
+	connect(this, SIGNAL(deleteItem(KFileItem *)), this, SLOT(slotDeleteItem(KFileItem *)));
+	connect(this, SIGNAL(showInfo(const QStringList &,bool)), this, SLOT(slotShowInfo(const QStringList &,bool)));
 }
 
 SQ_LibraryListener::~SQ_LibraryListener()
 {}
 
-void SQ_LibraryListener::slotStarted(const KURL &_url)
-{
-	url = _url;
-}
-
 void SQ_LibraryListener::slotCompleted()
 {
-        if(operation)
-        {
-		sqLibHandler->add(&list);
+	if(operation)
+	{
+		if(list.count())
+			sqLibHandler->add(&list);
+
 		emit finishedInit();
 	}
 	else
-		sqLibHandler->remove(&list);
+		if(list.count())
+			sqLibHandler->remove(&list);
 
 	setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
 
-	if(sqConfig->readBoolEntry("Libraries", "show dialog", true))
-		emit showInfo(list, operation);
-	else
-		list.clear();
+	if(sqConfig->readBoolEntry("Libraries", "monitor", true))
+		if(sqConfig->readBoolEntry("Libraries", "show dialog", true))
+			emit showInfo(list, operation);
+		else
+			list.clear();
 }
 
 void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
@@ -66,13 +66,13 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 	KFileItemListIterator	it(items);
 
 	KFileItem 		*item;
-	QString		stritems("");
+	QString		stritems;
 	
 	while((item = it.current()) != 0)
 	{
 		++it;
 		if(item->isFile() && item)
-			stritems = stritems + url.path() + "/" + item->name() + "\n";
+			stritems = stritems + url().path() + "/" + item->name() + "\n";
 	}
 
 	list = list + QStringList::split("\n", stritems);
@@ -86,7 +86,7 @@ void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 
 	if(item->isFile() && item)
 	{
-		stritems = stritems + url.path() + "/" + item->name() + "\n";
+		stritems = stritems + url().path() + "/" + item->name() + "\n";
 		list = list + QStringList::split("\n", stritems);
 	}
 

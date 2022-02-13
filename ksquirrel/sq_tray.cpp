@@ -2,8 +2,8 @@
                           sq_tray.cpp  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -19,18 +19,11 @@
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kstandarddirs.h>
-#include <kdeversion.h>
 #include <kwin.h>
 
 #include "ksquirrel.h"
 #include "sq_tray.h"
-
-#if KDE_IS_VERSION(3,2,0)
-	#define SQ_ACTIVATE_WINDOW(id) KWin::activateWindow(id)
-#else
-	#define SQ_ACTIVATE_WINDOW(id) KWin::setActiveWindow(id)
-#endif
-
+#include "sq_glview.h"
 
 SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 {
@@ -39,11 +32,12 @@ SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(pa
 	KActionSeparator *pASep = new KActionSeparator;
 
 	pAOpen = KStdAction::open(this, SLOT(slotActivate()), sqApp->actionCollection(), "Open SQ from tray");
+	pAExit = KStdAction::quit(this, SLOT(slotClose()), sqApp->actionCollection(), "SQ close from tray");
 
 	pAOpen->plug(rightMenu);
 	sqApp->pAConfigure->plug(rightMenu);
 	pASep->plug(rightMenu);
-	sqApp->pAExit->plug(rightMenu);
+	pAExit->plug(rightMenu);
 
 	setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/tray.png")));
 }
@@ -68,6 +62,14 @@ void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 
 void SQ_SystemTray::slotActivate()
 {
+	if(sqGLView->isSeparate())
+		sqGLView->show();
+
 	sqApp->show();
-	SQ_ACTIVATE_WINDOW(sqApp->winId());
+}
+
+void SQ_SystemTray::slotClose()
+{
+	sqApp->finalActions();
+	sqApp->close();
 }

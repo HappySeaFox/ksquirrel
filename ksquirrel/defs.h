@@ -1,6 +1,6 @@
-/*  This file is part of SQuirrel (http://ksquirrel.sf.net) libraries
+/*  This file is part of ksquirrel-libs (http://ksquirrel.sf.net)
 
-    Copyright (c) 2004 Dmitry Baryshev <ckult@yandex.ru>
+    Copyright (c) 2004 Dmitry Baryshev <ksquirrel@tut.by>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,81 +19,86 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef __SQUIRREL_LIBS_DEFS__
-#define __SQUIRREL_LIBS_DEFS__
+#ifndef KSQUIRREL_LIBS_DEFS_H
+#define KSQUIRREL_LIBS_DEFS_H
 
 #include <stdio.h>
-
+#include <linux/types.h>
 
 #define ATTR_ __attribute__ ((packed))
 
+/* Metainfo support */
 
-#if !defined TRUE
-    #define TRUE  (1==1)
-#endif
+struct fmt_meta_entry
+{
+    char group[80];
+    int datalen;
+    char *data;
+}ATTR_;
 
-#if !defined FALSE
-    #define FALSE (1==0)
-#endif
+struct fmt_metainfo
+{
+    int entries;
+    fmt_meta_entry *m;
+}ATTR_;
 
-#if !defined BOOL
-    #define BOOL  char
-#endif
-
-
-typedef struct
+struct RGBA
 {
     unsigned char r;
     unsigned char g;
     unsigned char b;
     unsigned char a;
+}ATTR_;
 
-}ATTR_ RGBA;
-
-
-typedef struct
+struct RGB
 {
     unsigned char r;
     unsigned char g;
     unsigned char b;
+}ATTR_;
 
-}ATTR_ RGB;
-
-typedef struct
+struct fmt_image
 {
-    unsigned long	w;        /*  width  */
-    unsigned long	h;        /*  height */
-    unsigned char	bpp;
-    
-    BOOL		hasalpha; /* has alpha channel ?  */
-    BOOL		needflip;
-    
-    ushort		images;   /*  how many images  (normally 1) */
-    BOOL		animated;
+    int			w;
+    int			h;
+    int			bpp;
+    bool		hasalpha;
+    bool		needflip;
+    char		*dump;
+    fmt_metainfo	*meta;
+    int			delay;
+}ATTR_;
 
-    RGB			*pal;     /*  palette  */
-    short		pal_entr; /*  how many elements contains *pal (usually 1<<bpp elements)  */
+struct fmt_info
+{
+    fmt_image		*image;
+    unsigned short	images;
+    bool		animated;
+    bool		interlaced;
+    int			passes;
+}ATTR_;
 
-				  /* currently is not used  */
-    char		*dump;	  /*  dump: "Width: 1024\nHeight: 768\nBPP: 24\n.... + some more interesting information"  */
+#define trace(a) printf("%s\n", a)
 
-    FILE		*fptr;
+#if defined SQ_NEED_OPERATOR_RGBA_RGBA
+static int operator== (const RGBA &rgba1, const RGBA &rgba2)
+{
+    return (rgba1.r == rgba2.r && rgba1.g == rgba2.g && rgba1.b == rgba2.b && rgba1.a == rgba2.a);
+}
+#endif
 
-}ATTR_ fmt_info;
+#if defined SQ_NEED_OPERATOR_RGB_RGBA
+static int operator== (const RGB &rgb, const RGBA &rgba)
+{
+    return (rgb.r == rgba.r && rgb.g == rgba.g && rgb.b == rgba.b);
+}
+#endif
 
-
-typedef unsigned char	byte;
-typedef unsigned char	BYTE;
-typedef unsigned char	uchar;
-
-typedef unsigned short	word;
-typedef unsigned short	WORD;
-
-typedef long		LONG;
-typedef unsigned long	ULONG;
-
-typedef unsigned long	dword;
-typedef unsigned long	DWORD;
-
+#if defined SQ_NEED_OPERATOR_RGBA_RGB
+static int operator== (const RGBA &rgba, const RGB &rgb)
+{
+    return (rgba.r == rgb.r && rgba.g == rgb.g && rgba.b == rgb.b);
+}
+#endif
 
 #endif

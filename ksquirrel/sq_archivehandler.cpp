@@ -2,18 +2,21 @@
                           sq_archivehandler.cpp  -  description
                              -------------------
     begin                : ??? ??? 26 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
+
+/* Originally taken from ShowImg */
+
 /***************************************************************************
                           extract.cpp  -  description
                              -------------------
     begin                : Sat Dec 1 2001
     copyright            : (C) 2001 by Richard Groult, 2003 OGINO Tomonori
     email                : rgroult@jalix.org ogino@nn.iij4u.or.jp
- ***************************************************************************/
+***************************************************************************
 
-/***************************************************************************
+ ***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,14 +27,16 @@
 
 #include <qapplication.h>
 #include <qcursor.h>
+#include <qfile.h>
 
-#include <kprocess.h>
 #include <kzip.h>
 #include <kar.h>
 #include <ktar.h>
-#include <kurl.h>
 #include <kmessagebox.h>
+#include <kfileitem.h>
 #include <klocale.h>
+#include <kprocess.h>
+#include <kdebug.h>
 
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
@@ -39,26 +44,36 @@
 SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObject(parent, name)
 {
 	dir = new SQ_Dir;
-	dir->setRoot("extracts");
+	dir->setRoot(QString::fromLatin1("extracts"));
+
+	protocols["application/x-bzip"] = 0;
+	protocols["application/x-bzip2"] = 1;
+	protocols["application/x-gzip"] = 2;
+	protocols["application/x-tar"] = 3;
+	protocols["application/x-tbz"] = 4;
+	protocols["application/x-tgz"] = 5;
+	protocols["application/x-zip"] = 6;
 }
 
 SQ_ArchiveHandler::~SQ_ArchiveHandler()
 {}
 
-bool SQ_ArchiveHandler::supported(const QString filename)
+int SQ_ArchiveHandler::findProtocolByName(const QString &prot)
 {
-	return 	filename.lower().endsWith(".zip") ||
-			filename.lower().endsWith(".tar") ||
-			filename.lower().endsWith(".tar.gz") ||
-			filename.lower().endsWith(".gz") ||
-			filename.lower().endsWith(".bz2") ||
-			filename.lower().endsWith(".tar.bz2") ||
-			filename.lower().endsWith(".tgz") ||
-			filename.lower().endsWith(".ar");
+	return (protocols.contains(prot))?protocols[prot]:(-1);
 }
 
-void SQ_ArchiveHandler::setPath(const QString _path)
+int SQ_ArchiveHandler::findProtocolByFile(KFileItem *item)
 {
+	QString m = item->mimetype();
+
+	return (protocols.contains(m))?protocols[m]:(-1);
+}
+
+void SQ_ArchiveHandler::setFile(KFileItem *_item)
+{
+	item = _item;
+	QString _path = item->url().path();
 	QFileInfo f(_path);
 	
 	fullpath = _path;
@@ -90,7 +105,7 @@ bool SQ_ArchiveHandler::unpack()
 
 	if(dir->mkdir(extracteddir) == false)
 	{
-		KMessageBox::error(0, "<qt>" + i18n("Unable to create directory: %1").arg(extracteddir)+"</qt>", i18n("Archive problem"));
+		KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to create directory: %1").arg(extracteddir)+("</qt>"), i18n("Archive problem"));
 		return false;
 	}
 
@@ -106,13 +121,24 @@ bool SQ_ArchiveHandler::unpack()
 	}
 
 	KArchive *arc = 0L;
+	
+	switch(findProtocolByFile(item))
+	{
+		case 6:
+			arc = new KZip(fullpath);
+		break;
 
-	if (file.lower().endsWith("zip"))
-		arc = new KZip(fullpath);
-	else if(file.lower().endsWith("tar") || file.lower().endsWith("tar.gz") || file.lower().endsWith("tar.bz2") || file.lower().endsWith("tgz") || file.lower().endsWith("gz") || file.lower().endsWith("bz2"))
-		arc = new KTar(fullpath);
-	else if(file.lower().endsWith("ar"))
-		arc = new KAr(fullpath);
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			arc = new KTar(fullpath);
+		break;
+
+		default:
+			arc = 0L;
+	}
 
 	if(arc)
 	{
@@ -128,9 +154,7 @@ bool SQ_ArchiveHandler::unpack()
 				adir->copyTo(fullextracteddir);
 			}
 			catch(...)
-			{
-				fprintf(stderr, "SIGNAL WAS CAUGHT: \n");
-			}
+			{}
 
 			QApplication::restoreOverrideCursor();
 		}
@@ -141,7 +165,7 @@ bool SQ_ArchiveHandler::unpack()
 	}
 	else
 	{
-		KMessageBox::error(0, "<qt>" + i18n("Unable to open the archive '<b>%1</b>'.").arg(fullpath)+"</qt>", i18n("Archive problem"));
+		KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to open the archive '<b>%1</b>'.").arg(fullpath)+QString::fromLatin1("</qt>"), i18n("Archive problem"));
 		return false;
 	}
 
@@ -150,16 +174,18 @@ bool SQ_ArchiveHandler::unpack()
 
 bool SQ_ArchiveHandler::needClean()
 {
-	return dir->exists(dir->getRoot());
+	return dir->exists(dir->root());
 }
 
 void SQ_ArchiveHandler::clean(QString s)
 {
-	QString sssssssss = QString("rm -rf %1").arg((s==QString::null)?dir->getRoot():s);
-	KShellProcess p;
+	KShellProcess   del;
 
-	printf("cleaning \"%s\" ...\n", sssssssss.ascii());
+	del << "rm -rf " << KShellProcess::quote(s) << "/*";
 
-	p << sssssssss;
-//	p.start(KProcess::Block);
+	kdDebug() << "cleaning archive ... ";
+
+	bool removed = del.start(KProcess::Block);
+
+	kdDebug() << ((removed)?"OK":"error") << endl;
 }

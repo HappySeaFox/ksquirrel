@@ -1,0 +1,58 @@
+ksquirrel-0.5.0-preview4
+******************************************************************
+
+critical/important:
+* fixed crushing on item execution (SIGALRM signal, or "Alarm clock")
+* fixed awful lines (http://ksquirrel.sf.net/IMG/errors.png)
+* support of multipaged images (GIF, ICO, etc.)
+* Now my e-mail is ksquirrel at tut.by
+* moved back to PNG thumbnails. Please, rm -rf ~/.ksquirrel/thumbnails/
+
+ksquirrel-libs:
+* GIF (beta, including animated)
+* interlaced PNG's
+* fixed random crushing on some PNGs
+* about 15 formats are done.
+* visit http://ksquirrel.sf.net/development.php
+
+other:
+* some interface improvements
+* improvements in 'Image Properties'
+* new 'fullscreen' method (KDE-related)
+* "Quick Browser" now can be moved and resized
+* other small fixes
+* decoding is now a little bit faster
+
+>>> ksquirrel-libs-0.5.0-pre3 and pre4 ARE NOT compatible!
+
+ksquirrel-0.5.0-preview3 for KDE 3.2 and JPEG library for preview3
+******************************************************************
+
+Please be patient - preview3 contains only one library, anyway, it's just a preview.
+
+>> critical or important:
+* fixed wrong displaying of huge images (more than 2048x2048); now doesn't depend on GL_MAX_TEXTURE_SIZE =)
+* fixed crashing on thumbnail view
+* fixed awful memory leak, shame on myself !! =)
+* moved to JPEG thumbnails (remove old ones from ~/.ksquirrel/thumbnails !)
+* detecting images by content (like Trolltech's QImage)
+* removed "Look like ..." - unusable stuff
+* please check README for new keyboard shortcuts.
+
+>> other:
+* now "make -f Makefile.dist" to recreate configure and other scripts
+* configure was generated with autoconf 2.59, Makefiles - with automake 1.8.5
+* fixed wrong url selection in treeview
+* fixed wrong gridX value selection in SQ_FileThumbView
+* fixed wrong filter selection on startup
+* added library's filters support
+* added pending thumbnails (sand-glass)
+* added extended thumbnails
+* added configurable zoom limit
+* added tooltips with thumbnail info
+* double click in Navigator opens current url in default browser
+* image displaying is now faster
+* determining archives by MIME, not by extension (._zip wasn't been handled :-(( )
+* some changes in 'Options' dialog
+* removed GL_LINEAR filter due to new displaying alghoritm
+* other small fixes.

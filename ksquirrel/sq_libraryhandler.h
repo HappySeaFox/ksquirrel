@@ -2,8 +2,8 @@
                           sq_libraryhandler.h  -  description
                              -------------------
     begin                :  Mar 5 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,14 +18,16 @@
 #ifndef SQ_LIBRARY_HANDLER_H
 #define SQ_LIBRARY_HANDLER_H
 
-#include <qobject.h>
-#include <qmap.h>
 #include <qvaluevector.h>
+#include <qimage.h>
+#include <qregexp.h>
+#include <qstringlist.h>
 
 #include "defs.h"
 
-class QStringList;
 class QLibrary;
+
+const int buffer_size = 14;
 
 class SQ_LIBRARY
 {
@@ -33,45 +35,49 @@ class SQ_LIBRARY
 		SQ_LIBRARY() {}
 		~SQ_LIBRARY() {}
 
-		QLibrary *lib;
-		QString libpath;
-		QString sinfo;
-		QString filter;
-		QString quickinfo, version;
+		QLibrary	*lib;
+		QString	libpath;
+		QRegExp	regexp;
+		QString	filter, regexp_str;
+		QString	quickinfo, version;
 
-		int 		(*fmt_init)(fmt_info **, const char *);
-		int 		(*fmt_read_info)(fmt_info *);
+		int 		(*fmt_init)(fmt_info *, const char *);
 		int 		(*fmt_read_scanline)(fmt_info *, RGBA *);
-		char* 	(*fmt_version)();
-		char* 	(*fmt_quickinfo)();
-		char* 	(*fmt_extension)();
-		void		(*fmt_readimage)(fmt_info *, RGBA *);
-		int* 		(*fmt_close)(fmt_info *);
+		int		(*fmt_readimage)(const char*, RGBA **, char **);
+		int	 	(*fmt_close)();
+		int		(*fmt_next)(fmt_info *);
+		int		(*fmt_next_pass)(fmt_info *);
+
+		const char* 	(*fmt_version)();
+		const char* 	(*fmt_quickinfo)();
+		const char*	(*fmt_pixmap)();
+		const char* 	(*fmt_mime)();
+		const char* 	(*fmt_filter)();
+
+		QImage 	mime;
+		int			mime_len;
 };
 
-class SQ_LibraryHandler : public QObject
+class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 {
 	public:
-		SQ_LibraryHandler(QStringList *foundLibraries = 0, QObject *parent = 0, const char *name = 0);
+		SQ_LibraryHandler(QStringList *foundLibraries = 0);
 		~SQ_LibraryHandler();
 
-		SQ_LIBRARY* setCurrentLibrary(const QString &name);
-		QValueVector<SQ_LIBRARY> getLibs();
-
-		int count() const;
-
-		bool supports(const QString &format) const;
-		QString allSupportedForFilter() const;
+		SQ_LIBRARY* libraryForFile(const QString &) const;
+		bool supports(const QString &) const;
+		QStringList allFilters() const;
+		QString allFiltersString() const;
 
 		void clear();
+		void dump() const;
 		void reInit(QStringList *foundLibraries);
 
 		void add(QStringList *foundLibraries);
 		void remove(QStringList *foundLibraries);
 
 	private:
-		QMap<QString, SQ_LIBRARY>	map;
-		SQ_LIBRARY				*currentlib;
+		bool alreadyInMap(const QString &quick) const;
 };
 
 #endif

@@ -2,8 +2,8 @@
                           sq_iconlistbox.cpp  -  description
                              -------------------
     begin                : ??? ??? 19 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************

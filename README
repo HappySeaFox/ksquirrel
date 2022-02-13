@@ -1,35 +1,56 @@
-Due to a lot of error reports related to autoconf/automake that
-I've received, the configuration script is now to be run as
-'scripts/configure' instead of './configure'.
-
 ********************************************************************************
 
-Shortcuts for GL widget
+Shortcuts for Image window
 -----------------------
 
-Left Arrow - move image for N pixels right
-Right Arrow - move image for N pixels left
-Up Arrow  - move image for N pixels down
-Down Arrow  - move image for N pixels up
+Left Arrow - move image to the right
+Right Arrow - move image to the left
+Up Arrow  - move image to the bottom
+Down Arrow  - move image to the top
 Plus/Minus - zoom Nx
 Ctrl + Plus/Minus - zoom 2x or 0.5x
 V - flip vertically
 H - flip horizontally
 Ctrl + Left Arrow - rotate left for N degrees
 Ctrl + Right Arrow - rotate right for N degrees
-Ctrl + Up/Down Arrow - rotate for 180' degrees up/down
-Shift + Up/Down Arrow - rotate for 1' degree up/down
+Ctrl + Up/Down Arrow - rotate for 180 degrees up/down
+Shift + Up/Down Arrow - rotate for 1 degree up/down
 R - Reset
-Ctrl + R - Render into file
 Space - next image
 Backspace - previous image
 Home - first image
 End - last image
-Esc,X - Close
-P - image properties
+Esc,X,Return  - Close
+P - Image properties
 Q - Quick Browser
 F - Fullscreen
+T - Show/Hide toolbar with actions
+[ - Hide toolbar with actions
+] - Show toolbar with actions
+Z - Show 'Zoom' menu
+S - Show/Hide statusbar
+1..9 - Zoom 1..9x
+comma - Fit width
+period - Fit height
+*  - Fit image
+slash - show help menu
+L - "Ignore, if the image is less than window"
+I - menu with images
+A - stop/start animation (if animated, like GIF)
+B - toggle drawing background for transparent images
+E - show menu with external tools
+
+F1 - First image from sequense
+F2 - Previous
+F3 - Next
+F4 - Last
+
+Use right mouse button to select zoom area!
+
+Scroll - load next/prev file OR Zoom+/Zoom-
+Shift + Scroll - Zoom+/Zoom-
+Ctrl + Scroll - Zoom+ 2x/Zoom- 2x
 
 ******************
 
-N - can be set throw 'Options'
+N - can be set through 'Options'

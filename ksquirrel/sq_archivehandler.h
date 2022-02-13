@@ -2,9 +2,12 @@
                           sq_archivehandler.h  -  description
                              -------------------
     begin                : ??? ??? 26 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
- ***************************************************************************/
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
+  ***************************************************************************/
+
+/* Originally taken from ShowImg */
+
 /***************************************************************************
                           extract.h  -  description
                              -------------------
@@ -27,9 +30,13 @@
 
 #include <qobject.h>
 #include <qstring.h>
+#include <qmap.h>
+
+class KFileItem;
 
 class SQ_Dir;
 
+#undef SQ_AH
 #define SQ_AH SQ_ArchiveHandler
 
 /**
@@ -42,22 +49,25 @@ class SQ_ArchiveHandler : public QObject
 		SQ_ArchiveHandler(QObject * parent = 0, const char *name = 0);
 		~SQ_ArchiveHandler();
 
-		static bool supported(const QString filename);
+		int findProtocolByName(const QString &prot);
+		int findProtocolByFile(KFileItem *item);
 
-		void setPath(const QString);
+		void setFile(KFileItem *);
 		QString getPath() const;
 
 		QString getExtractedPath() const;
 
 		bool unpack();
 		bool needClean();
-		void clean(QString s = QString::null);
+		void clean(QString s);
 
 	private:
 		QString	extracteddir, fullextracteddir;
 		QString	fullpath;
 		QString	file;
 		SQ_Dir	*dir;
+		QMap<QString, int> protocols;
+		KFileItem *item;
 };
 
 #endif

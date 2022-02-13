@@ -2,8 +2,8 @@
                           sq_progress.cpp  -  description
                              -------------------
     begin                : ??? ??? 29 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -26,27 +26,25 @@
 
 SQ_Progress::SQ_Progress(QWidget * parent, const char * name, WFlags f) : QLabel(parent, name, f)
 {
-	painter = new QPainter(this);
+	painter = 0L;
 
-	p = parent;
-
-       setAutoResize(true);
+	setAutoResize(true);
 	setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/progress.png")));
-
-	QColor c(104,120,247);
-	painter->setBrush(c);
-	painter->setPen(c);
 }
 
 SQ_Progress::~SQ_Progress()
-{
-	delete painter;
-}
+{}
 
 void SQ_Progress::setTotalSteps(int totalSteps)
 {
 	total_steps = totalSteps;
 	step = 0;
+
+	QColor c(104,120,247);
+
+	painter = new QPainter(this);
+	painter->setBrush(c);
+	painter->setPen(c);
 }
 
 void SQ_Progress::setIndicator(int progress)
@@ -78,5 +76,7 @@ void SQ_Progress::advance(int step_new)
 void SQ_Progress::flush()
 {
 	update();
-}
 
+	if(painter)
+		delete painter;
+}

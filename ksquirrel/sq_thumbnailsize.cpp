@@ -1,6 +1,8 @@
 /*
-	KSQuirrel - image viewer for KDE with OpenGL support
+	copyright            : (C) 2004 by Baryshev Dmitry
+	KSQuirrel - image viewer for KDE
 */
+
 /*
 Gwenview - A simple image viewer for KDE
 Copyright 2000-2003 Aur?lien G?teau
@@ -23,10 +25,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "sq_thumbnailsize.h"
 
-SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value)
+SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value), extended(false), m_margin(16)
 {}
 
-SQ_ThumbnailSize::SQ_ThumbnailSize(const QString& str)
+SQ_ThumbnailSize::SQ_ThumbnailSize(const QString& str) : extended(false), m_margin(16)
 {
 	QString low = str.lower();
 
@@ -79,4 +81,36 @@ SQ_ThumbnailSize::operator const QString&() const
 int SQ_ThumbnailSize::value() const
 {
 	return (int)mValue;
+}
+
+QString SQ_ThumbnailSize::stringValue() const
+{
+	static QString sizeStr[4] = {"48","64","96","128"};
+
+	return sizeStr[int(mValue)];
+}
+
+int SQ_ThumbnailSize::extendedPixelSize() const
+{
+	return pixelSize() + m_margin*2;
+}
+
+void SQ_ThumbnailSize::setExtended(bool ex)
+{
+	extended = ex;
+}
+
+bool SQ_ThumbnailSize::isExtended() const
+{
+	return extended;
+}
+
+void SQ_ThumbnailSize::setMargin(int m)
+{
+	m_margin = m;
+}
+
+int SQ_ThumbnailSize::margin() const
+{
+	return m_margin;
 }

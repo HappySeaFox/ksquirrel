@@ -2,8 +2,8 @@
                           sq_hloptions.h  -  description
                              -------------------
     begin                : ??? ??? 30 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,9 +18,8 @@
 #ifndef SQ_HLOPTIONS_H
 #define SQ_HLOPTIONS_H
 
-#include <kurl.h>
-
 #include <qobject.h>
+#include <qstring.h>
 
 
 /**
@@ -34,7 +33,8 @@ class SQ_HLOptions : public QObject
 		~SQ_HLOptions();
 
 	public:
-		KURL	HL_url;
+		QString	path;
+		bool showLibsAndExit;
 };
 
 #endif

@@ -35,8 +35,11 @@ void SQ_Filters::init()
 	    listFilters->insertItem(item);
 	}
 
-	pushFilterUp->setPixmap(sqLoader->loadIcon("up", KIcon::Desktop, KIcon::SizeSmall));
-	pushFilterDown->setPixmap(sqLoader->loadIcon("down", KIcon::Desktop, KIcon::SizeSmall));
+	pushFilterUp->setPixmap(sqLoader->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
+	pushFilterDown->setPixmap(sqLoader->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
+	pushNew->setPixmap(sqLoader->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
+	pushDelete->setPixmap(sqLoader->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
+	pushClearAll->setPixmap(sqLoader->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
 	
 	listFilters->setCurrentItem(listFilters->firstChild());
 	listFilters->clearSelection();
@@ -69,6 +72,11 @@ void SQ_Filters::slotFilterClear()
 	if(!item) return;
     
 	listFilters->takeItem(item);
+
+	item = listFilters->currentItem();
+	
+	if(item)
+	    listFilters->setSelected(item, true);
 }
 
 void SQ_Filters::slotFilterUp()

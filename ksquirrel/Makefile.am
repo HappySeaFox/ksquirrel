@@ -3,24 +3,27 @@ bin_PROGRAMS = ksquirrel
 
 ## INCLUDES were found outside kdevelop specific part
 
-ksquirrel_SOURCES = sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_server.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glview.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_dirlister.cpp sq_decodingthread.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
-ksquirrel_LDADD   = -lkio -lGL $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
+ksquirrel_SOURCES = sq_helpwidget.ui sq_updateksquirrelthread.cpp sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
+ksquirrel_LDADD   = -lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png defs.h err.h sq_about.h sq_archivehandler.cpp sq_archivehandler.h sq_bookmarkowner.cpp sq_bookmarkowner.h sq_config.cpp sq_config.h sq_decodingthread.cpp sq_decodingthread.h sq_dirlister.cpp sq_dirlister.h sq_diroperator.cpp sq_diroperator.h sq_externaltool.cpp sq_externaltool.h sq_externaltools.ui sq_externaltools.ui.h sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_filters.ui sq_filters.ui.h sq_glu.cpp sq_glu.h sq_glview.cpp sq_glview.h sq_glwidget.cpp sq_glwidget.h sq_hloptions.cpp sq_hloptions.h sq_imageproperties.ui sq_imageproperties.ui.h sq_librarieschanged.ui sq_librarieschanged.ui.h sq_libraryhandler.cpp sq_libraryhandler.h sq_librarylistener.cpp sq_librarylistener.h sq_options.ui sq_options.ui.h sq_quickbrowser.cpp sq_quickbrowser.h sq_server.cpp sq_server.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h sq_widgetstack.cpp sq_widgetstack.h sq_iconlistitem.cpp sq_iconlistitem.h sq_iconlistbox.cpp sq_iconlistbox.h sq_dir.cpp sq_dir.h sq_filethumbview.cpp sq_filethumbview.h sq_pixmapcache.cpp sq_pixmapcache.h sq_thumbnailjob.cpp sq_thumbnailjob.h sq_thumbnailsize.cpp sq_thumbnailsize.h sq_progress.cpp sq_progress.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop hi32-app-ksquirrel.png hi16-app-ksquirrel.png defs.h err.h sq_about.h sq_archivehandler.cpp sq_archivehandler.h sq_bookmarkowner.cpp sq_bookmarkowner.h sq_config.cpp sq_config.h sq_diroperator.cpp sq_diroperator.h sq_externaltool.cpp sq_externaltool.h sq_externaltools.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_filters.ui sq_filters.ui.h sq_glu.cpp sq_glu.h sq_glwidget.cpp sq_glwidget.h sq_hloptions.cpp sq_hloptions.h sq_imageproperties.ui sq_imageproperties.ui.h sq_librarieschanged.ui sq_libraryhandler.cpp sq_libraryhandler.h sq_librarylistener.cpp sq_librarylistener.h sq_options.ui sq_quickbrowser.cpp sq_quickbrowser.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h sq_widgetstack.cpp sq_widgetstack.h sq_iconlistitem.cpp sq_iconlistitem.h sq_iconlistbox.cpp sq_iconlistbox.h sq_dir.cpp sq_dir.h sq_filethumbview.cpp sq_filethumbview.h sq_pixmapcache.cpp sq_pixmapcache.h sq_thumbnailjob.cpp sq_thumbnailjob.h sq_thumbnailsize.cpp sq_thumbnailsize.h sq_progress.cpp sq_progress.h sq_diroperatorbase.cpp sq_diroperatorbase.h sq_thumbnailinfo.h sq_filethumbviewitem.cpp sq_filethumbviewitem.h sq_viewcache.ui sq_locationtoolbar.cpp sq_locationtoolbar.h ksquirrelrc sq_glview.cpp sq_glview.h sq_updateksquirrelthread.cpp sq_updateksquirrelthread.h sq_helpwidget.ui 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Applications/
 	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(kde_appsdir)/Applications/ksquirrel.desktop
-	$(mkinstalldirs) $(kde_icondir)/locolor/32x32/apps/
-	$(INSTALL_DATA) $(srcdir)/lo32-app-ksquirrel.png $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-	$(mkinstalldirs) $(kde_icondir)/locolor/16x16/apps/
-	$(INSTALL_DATA) $(srcdir)/lo16-app-ksquirrel.png $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
+	$(mkinstalldirs) $(kde_icondir)/hicolor/32x32/apps/
+	$(INSTALL_DATA) $(srcdir)/hi32-app-ksquirrel.png $(kde_icondir)/hicolor/32x32/apps/ksquirrel.png
+	$(mkinstalldirs) $(kde_icondir)/hicolor/16x16/apps/
+	$(INSTALL_DATA) $(srcdir)/hi16-app-ksquirrel.png $(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/
+	$(INSTALL_DATA) $(srcdir)/ksquirrelrc $(kde_datadir)/ksquirrel/ksquirrelrc
 
 uninstall-local:
 	-rm -f $(kde_appsdir)/Applications/ksquirrel.desktop
-	-rm -f $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-	-rm -f $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
+	-rm -f $(kde_icondir)/hicolor/32x32/apps/ksquirrel.png
+	-rm -f $(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
+	-rm -f $(kde_datadir)/ksquirrel/ksquirrelrc
 
 ####### kdevelop will overwrite this part!!! (end)############
 # These paths are KDE specific. Use them:

@@ -2,8 +2,8 @@
                           sq_glu.h  -  description
                              -------------------
     begin                : ??? ??? 29 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 /*
  * Mesa 3-D graphics library

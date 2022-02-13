@@ -1,48 +1,47 @@
-# This spec file was generated using Kpp
-# If you find any problems with this spec file please report
-# the error to ian geiser <geiseri@msoe.edu>
-Summary:   Ksquirrel - image viewer for KDE
-Name:      ksquirrel
-Version:   0.5.0
-Release:   
-Copyright: GPL
-Vendor:    CKulT <squirrel-sf@yandex.ru>
-Url:       http://ksquirrel.sf.net
+Name: ksquirrel 
+Summary: Ksquirrel - image viewer for KDE 
+Group: User Interface/Desktops 
+Version: 0.5.0 
+Release: pre4 
+Copyright: GPL 
+Source: %{name}-%{version}-%{release}.tar.bz2 
+URL: http://ksquirrel.sf.net 
+Packager: - 
+Vendor: Baryshev Dmitry aka Krasu <ksquirrel@tut.by> 
+BuildRoot: %{_tmppath}/%{name}-%{version}-root 
+BuildRequires: gcc, gcc-c++, gettext 
+BuildRequires: kdelibs-devel
+Requires: kdelibs, libpng, libjpeg 
 
-Packager:  CKulT <squirrel-sf@yandex.ru>
-Group:     Graphic
-Source:    ksquirrel-0.5.0.tar.gz
-BuildRoot: /usr
+%description 
+Ksquirrel is an image viewer for KDE implemented using OpenGL. 
+You should have your videocard specific drivers been installed. 
 
-%description
+%prep 
 
+%setup -q
 
-%prep
-%setup
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" ./configure \
-                 \
-                $LOCALFLAGS
-%build
-# Setup for parallel builds
-numprocs=`egrep -c ^cpu[0-9]+ /proc/stat || :`
-if [ "$numprocs" = "0" ]; then
-  numprocs=1
-fi
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" ./configure --prefix="`kde-config --prefix`"
 
-make -j$numprocs
+%build 
+%__make %{?_smp_mflags} 
 
-%install
-make install-strip DESTDIR=$RPM_BUILD_ROOT
+%install 
+[ "$RPM_BUILD_ROOT" != "" ] && rm -rf $RPM_BUILD_ROOT 
+%makeinstall 
 
-cd $RPM_BUILD_ROOT
-find . -type d | sed '1,2d;s,^\.,\%attr(-\,root\,root) \%dir ,' > $RPM_BUILD_DIR/file.list.ksquirrel
-find . -type f | sed 's,^\.,\%attr(-\,root\,root) ,' >> $RPM_BUILD_DIR/file.list.ksquirrel
-find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> $RPM_BUILD_DIR/file.list.ksquirrel
+%clean 
+[ "$RPM_BUILD_ROOT" != "" ] && rm -rf $RPM_BUILD_ROOT 
 
-%clean
-rm -rf $RPM_BUILD_ROOT/*
-rm -rf $RPM_BUILD_DIR/ksquirrel
-rm -rf ../file.list.ksquirrel
+%files 
+%defattr(-,root,root) 
+%doc README AUTHORS COPYING INSTALL
+%{_bindir}/* 
+%{_datadir}/applnk/Applications/* 
+%lang(ru) %{_datadir}/locale/ru/LC_MESSAGES/* 
+%{_datadir}/icons/hicolor/16x16/apps/* 
+%{_datadir}/icons/hicolor/32x32/apps/* 
+%dir %{_datadir}/apps/ksquirrel 
+%{_datadir}/apps/ksquirrel 
 
-
-%files -f ../file.list.ksquirrel
+%changelog 

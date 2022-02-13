@@ -1,3 +1,8 @@
+/*
+	copyright            : (C) 2004 by Baryshev Dmitry
+	KSQuirrel - image viewer for KDE
+*/
+
 /*  This file is part of the KDE project
     Copyright (C) 2000 David Faure <faure@kde.org>
                   2000 Carsten Pfeiffer <pfeiffer@kde.org>
@@ -18,15 +23,14 @@
 */
 
 #include <qdir.h>
-#include <qfile.h>
 #include <qimage.h>
 #include <qpainter.h>
-#include <qpixmap.h>
 #include <qlabel.h>
 
 #include <kfileitem.h>
 #include <kiconloader.h>
 #include <kstandarddirs.h>
+#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -38,29 +42,23 @@
 #include "defs.h"
 #include "err.h"
 
-void flip(unsigned char *, unsigned int, unsigned int);
+static const QString thumbFormat = "PNG";
 
 SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList *items, SQ_ThumbnailSize size) : KIO::Job(false), mThumbnailSize(size)
 {
-	mBrokenPixmap = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::NoGroup, SQ_ThumbnailSize(SQ_ThumbnailSize::Small).pixelSize());
-
+	mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::NoGroup, SQ_ThumbnailSize(SQ_ThumbnailSize::Small).pixelSize());
+	mBrokenThumbnail.info.dimensions = mBrokenThumbnail.info.bpp = QString("0");
 	mItems = *items;
 
 	if(mItems.isEmpty())
 		return;
 
 	dir = new SQ_Dir;
-	dir->setRoot("thumbnails");
+	dir->setRoot(QString::fromLatin1("thumbnails"));
 }
 
 SQ_ThumbnailLoadJob::~SQ_ThumbnailLoadJob()
 {}
-
-void SQ_ThumbnailLoadJob::deleteImageThumbnail(const KURL& url)
-{
-//	QDir dir();
-//	dir.remove(url.fileName());
-}
 
 void SQ_ThumbnailLoadJob::start()
 {
@@ -83,7 +81,7 @@ void SQ_ThumbnailLoadJob::itemRemoved(const KFileItem* item)
 {
 	mItems.removeRef(item);
 
-	if (item == mCurrentItem)
+	if(item == mCurrentItem)
 	{
 		subjobs.first()->kill();
 		subjobs.removeFirst();
@@ -102,13 +100,11 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
 		if(!item)
 			break;
 
-		QFileInfo fitem(item->name());
-
 		sqWStack->thumbnailProcess();
 
 		if(item->isDir())
 			mItems.removeFirst();
-		else if(sqLibHandler->supports(fitem.extension(false)))
+		else if(sqLibHandler->supports(item->url().path()))
 			break;
 		else
 			mItems.removeFirst();
@@ -158,7 +154,7 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job * job)
 				}
 			}
 
-			mThumbURL.setPath(QDir::cleanDirPath(dir->getRoot() + "/" + mCurrentURL.path()));
+			mThumbURL.setPath(QDir::cleanDirPath(dir->root() + "/" + mCurrentURL.path()));
 			mState = STATE_STATTHUMB;
 			addSubjob(KIO::stat(mThumbURL, false));
 			return;
@@ -180,24 +176,32 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job * job)
 
 bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 {
+	SQ_LIBRARY 	*lib;
+
 	if(job->error())
 	{
-		printf("STAT ******************** JOB ERROR! ***********************\n");
 		return false;
 	}
 
-	QPixmap pix;
+	SQ_Thumbnail th;
 
 	QString origPath = mThumbURL.path();
-	origPath = QDir::cleanDirPath(origPath.replace(0, dir->getRoot().length(), ""));
+	origPath = QDir::cleanDirPath(origPath.replace(0, dir->root().length(), ""));
 
-	printf("STAT searching \"%s\" ...\n", origPath.ascii());
+	lib = sqLibHandler->libraryForFile(origPath);
 
-	if(sqCache->contains2(origPath, pix))
+	if(!lib)
+		return false;
+
+	th.info.mime = lib->mime;
+
+	kdDebug() << "STAT searching \"" << origPath  << "\" ..." << endl;
+
+	if(sqCache->contains2(origPath, th))
 	{
-		emitThumbnailLoaded(pix);
+		emitThumbnailLoaded(th);
 		determineNextIcon();
-		printf("STAT found in cache \"%s\"\n", origPath.ascii());
+		kdDebug() << "STAT found in cache \"" << origPath << "\"" << endl;
 		return true;
 	}
 
@@ -205,30 +209,40 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 	KIO::UDSEntry::ConstIterator it = entry.begin();
 	time_t thumbnailTime = 0;
 
-	for (; it != entry.end(); it++)
+	for(; it != entry.end(); it++)
 	{
-		if ((*it).m_uds == KIO::UDS_MODIFICATION_TIME)
+		if((*it).m_uds == KIO::UDS_MODIFICATION_TIME)
 		{
-			thumbnailTime = (time_t) ((*it).m_long);
+			thumbnailTime = (time_t)((*it).m_long);
 			break;
 		}
 	}
 
 	if(thumbnailTime < mOriginalTime)
 	{
-		printf("STAT **** thumbnailTime < mOriginalTime ****\n");
+		kdDebug() << "STAT **** thumbnailTime < mOriginalTime ****" << endl;
 		return false;
 	}
 
-	if(!pix.load(mThumbURL.path()))
+	if(!th.thumbnail.load(mThumbURL.path(), thumbFormat))
 	{
 		return false;
 	}
 
-	sqCache->insert(origPath, pix);
-	printf("STAT inserting \"%s\"\n", origPath.ascii());
+	kdDebug() << "Loaded thumbnail " << mThumbURL.path() << endl;
 
-	emitThumbnailLoaded(pix);
+	th.info.type = th.thumbnail.text("sq_type");
+	th.info.dimensions = th.thumbnail.text("sq_dimensions");
+	th.info.bpp = th.thumbnail.text("sq_bpp");
+	th.info.color = th.thumbnail.text("sq_color");
+	th.info.compression = th.thumbnail.text("sq_compression");
+	th.info.frames = th.thumbnail.text("sq_frames");
+	th.info.uncompressed = th.thumbnail.text("sq_uncompressed");
+	th.info.uncompressed = QString::fromUtf8(th.info.uncompressed.ascii());
+
+	insertOrSync(origPath, th);
+
+	emitThumbnailLoaded(th);
 	determineNextIcon();
 
 	return true;
@@ -236,56 +250,89 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 
 void SQ_ThumbnailLoadJob::createThumbnail(const QString& pixPath)
 {
-	QPixmap pix;
+	SQ_Thumbnail th;
 	bool loaded = false;
 
-	if(sqCache->contains2(pixPath, pix))
+	if(sqCache->contains2(pixPath, th))
 	{
-		emitThumbnailLoaded(pix);
-		printf("CREATE found in cache \"%s\"\n", pixPath.ascii());
+		emitThumbnailLoaded(th);
+		kdDebug() << "CREATE found in cache \"" << pixPath << "\"" << endl;
 		return;
 	}
 
-	loaded = loadThumbnail(pixPath, pix);
+	loaded = SQ_ThumbnailLoadJob::loadThumbnail(pixPath, th);
 
 	if(loaded)
 	{
-		sqCache->insert(pixPath, pix);
-		emitThumbnailLoaded(pix);
-		printf("CREATE inserting \"%s\"\n", pixPath.ascii());
+		insertOrSync(pixPath, th);
+		emitThumbnailLoaded(th);
 	}
 	else
 		emitThumbnailLoadingFailed();
 }
 
-bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, QPixmap &pix)
+void SQ_ThumbnailLoadJob::insertOrSync(const QString &path, SQ_Thumbnail &th)
 {
-	fmt_info *finfo;
-	SQ_LIBRARY *lib;
-	static RGBA *all = 0L;
-	QFileInfo info(pixPath);
-
-	lib = sqLibHandler->setCurrentLibrary(info.extension(false));
-	lib->fmt_init(&finfo, (const char*)pixPath.local8Bit());
-
-	if(lib->fmt_read_info(finfo) != SQERR_OK)
+	if(!sqCache->full())
 	{
-		free(finfo);
+		sqCache->insert(path, th);
+		kdDebug() << "STAT inserting \"" << path << "\"" << endl;
+	}
+	else
+	{
+		kdDebug() << "STAT SQ_PixmapCache is full! Cache is ignored!" << endl;
+		sqCache->syncEntry(path, th);
+	}
+}
+
+bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t, bool processImage)
+{
+	SQ_LIBRARY 	*lib;
+	static RGBA 	*all = 0L;
+	QString 		dim;
+	char 			*dump;
+	int 				w, h, num;
+
+	lib = sqLibHandler->libraryForFile(pixPath);
+
+	if(!lib)
+		return false;
+
+	printf("SQ_ThumbnailLoadJob: using %s\n", lib->quickinfo.ascii());
+
+	int res = lib->fmt_readimage((const char*)pixPath.local8Bit(), &all, &dump);
+
+	if(res != SQERR_OK)
+	{
 		return false;
 	}
 
-	all = (RGBA*)realloc(all, finfo->w * finfo->h * 4);
+	QStringList list = QStringList::split('\n', dump);
 
-	lib->fmt_readimage(finfo, all);
-	lib->fmt_close(finfo);
+	QStringList::Iterator it = list.begin();
+	t.info.type = *it; ++it;
+	dim = *it; ++it;
+	w = dim.toInt();
+	dim = *it; ++it;
+	h = dim.toInt();
+	t.info.dimensions = QString("%1x%2").arg(w).arg(h);
+	t.info.bpp = *it; ++it;
+	t.info.color = *it; ++it;
+	t.info.compression = *it; ++it;
+	t.info.frames = *it; ++it;
+	t.info.uncompressed = *it; ++it;
+	t.info.mime = lib->mime;
 
-	if(finfo->needflip)
-		flip((unsigned char*)all, finfo->w * 4, finfo->h);
+	num = t.info.uncompressed.toInt();
+	t.info.uncompressed = KIO::convertSize(num);
 
-	QImage image((unsigned char *)all, finfo->w, finfo->h, 32, 0, 0, QImage::LittleEndian);
+	QImage image((unsigned char *)all, w, h, 32, 0, 0, QImage::LittleEndian);
 	image.setAlphaBuffer(true);
 
-	pix = QPixmap(makeBigThumb(&image));
+	if(processImage)
+		t.thumbnail = SQ_ThumbnailLoadJob::makeBigThumb(&image);
+	else
+		t.thumbnail = image;
 
 	return true;
 }
@@ -295,49 +342,29 @@ QImage SQ_ThumbnailLoadJob::makeBigThumb(QImage *image)
 	const int SZ = SQ_ThumbnailSize::biggest().pixelSize();
 
 	if(image->width() > SZ || image->height() > SZ)
-		*image = image->scale(QSize(SZ, SZ), QImage::ScaleMin).swapRGB();
+		/**image = */ return image->smoothScale(QSize(SZ, SZ), QImage::ScaleMin).swapRGB();
 	else
-		*image = image->swapRGB();
+		/**image =*/ return  image->swapRGB();
 
-	int im_w = image->width(), im_h = image->height();
-
-	if(im_w == im_h == SZ)
-		return *image;
-
-	static RGBA thumb[128*128];
-	memset(thumb, 0, 4 * 128 * 128);
-
-	RGBA *thumb_next = thumb + ((SZ - im_w) / 2) + ((SZ - im_h) / 2)*SZ;
-
-	for(int i = 0;i < im_h;i++)
-	{
-		memcpy(thumb_next + i*SZ, image->scanLine(i), im_w * 4);
-	}
-
-	QImage image2((unsigned char *)thumb, SZ, SZ, 32, 0, 0, QImage::LittleEndian);
-	image2.setAlphaBuffer(true);
-
-	*image = image2;
-
-	return *image;
+//	return *image;
 }
 
-void SQ_ThumbnailLoadJob::emitThumbnailLoaded(const QPixmap& pix)
+void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
 {
 	SQ_ThumbnailSize biggest = SQ_ThumbnailSize::biggest();
 
 	if(mThumbnailSize == biggest)
 	{
-		emit thumbnailLoaded(mCurrentItem, pix);
+		emit thumbnailLoaded(mCurrentItem, t);
 		return;
 	}
 
-	int biggestDimension = QMAX(pix.width(), pix.height());
+	int biggestDimension = QMAX(t.thumbnail.width(), t.thumbnail.height());
 	int thumbPixelSize = mThumbnailSize.pixelSize();
 
 	if(biggestDimension <= thumbPixelSize)
 	{
-		emit thumbnailLoaded(mCurrentItem, pix);
+		emit thumbnailLoaded(mCurrentItem, t);
 		return;
 	}
 
@@ -348,34 +375,17 @@ void SQ_ThumbnailLoadJob::emitThumbnailLoaded(const QPixmap& pix)
 	painter.begin(&pix2);
 	painter.eraseRect(0, 0, thumbPixelSize, thumbPixelSize);
 	painter.scale(scale, scale);
-	painter.drawPixmap((biggestDimension-pix.width()) / 2, (biggestDimension-pix.height()) / 2, pix);
+	painter.drawImage((biggestDimension - t.thumbnail.width()) / 2, (biggestDimension - t.thumbnail.height()) / 2, t.thumbnail);
 	painter.end();
 
-	emit thumbnailLoaded(mCurrentItem, pix2);
+	t.thumbnail = pix2;
+
+	emit thumbnailLoaded(mCurrentItem, t);
 }
 
 void SQ_ThumbnailLoadJob::emitThumbnailLoadingFailed()
 {
-	emit thumbnailLoaded(mCurrentItem, mBrokenPixmap);
-}
-
-/*  utility  */
-void flip(unsigned char * image, unsigned int w, unsigned int h)
-{
-	unsigned int i;
-	unsigned char *hptr;
-
-	if((hptr = (unsigned char *)malloc(w)) == 0)
-		return;
-
-	for (i = 0; i < h/2; i++)
-	{
-		memcpy(hptr, image + i * w, w);
-		memcpy(image + i * w, image + (h - i - 1) * w, w);
-		memcpy(image + (h - i - 1) * w, hptr, w);
-	}
-
-	free(hptr);
+	emit thumbnailLoaded(mCurrentItem, mBrokenThumbnail);
 }
 
 void SQ_ThumbnailLoadJob::appendItems(const KFileItemList &items)

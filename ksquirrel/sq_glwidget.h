@@ -2,8 +2,8 @@
                           sq_glviewwidget.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,9 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-/**
-	@author ckult
-*/
 
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
@@ -28,7 +25,9 @@
 #include <qcursor.h>
 #include <qfileinfo.h>
 #include <qimage.h>
+#include <qrect.h>
 
+//#define SQ_NEED_RGBA_OPERATOR
 #include "defs.h"
 
 #define	MATRIX_C1	matrix[0]
@@ -40,19 +39,27 @@
 #define	MATRIX_Z	matrix[11]
 
 class KAction;
+class KActionCollection;
 class KToggleAction;
+class KPopupMenu;
 class KRadioAction;
 class KToolBar;
 
 class QTimer;
 class QWidgetStack;
-class QPopupMenu;
+class QToolButton;
+class QPainter;
 
 class SQ_DirOperator;
 class SQ_QuickBrowser;
-class SQ_DecodingThread;
 class SQ_LIBRARY;
-class SQ_Server;
+
+struct Parts;
+struct Part;
+class MemoryPart256;
+class MemoryPart128;
+class MemoryPart64;
+class MemoryPart32;
 
 class SQ_GLWidget : public QGLWidget
 {
@@ -63,26 +70,17 @@ class SQ_GLWidget : public QGLWidget
 		~SQ_GLWidget();
 
 		void setZoomFactor(const GLfloat &newfactor);
-		const GLfloat getZoomFactor() const;
-
 		void setMoveFactor(const GLfloat &newfactor);
-		const GLfloat getMoveFactor() const;
-
 		void setRotateFactor(const GLfloat &newfactor);
-		const GLfloat getRotateFactor() const;
-
-		void emitShowImage(const QString &file);
-		void emitShowImage(const KURL &url);
 
 		void setClearColor();
-		void setTextureParams();
 
 		void matrix_move(GLfloat x, GLfloat y);
 		void matrix_move_z(GLfloat z);
-		void matrix_zoom(GLfloat ratio);
+		bool matrix_zoom(GLfloat ratio);
 		void matrix_reset();
 		void matrix_pure_reset();
-		void matrix_pure_reset_noxy();
+		void matrix_pure_reset_notflip();
 		void matrix_push();
 		void matrix_pop();
 		void write_gl_matrix();
@@ -92,16 +90,19 @@ class SQ_GLWidget : public QGLWidget
 		void flip_v();
 
 		GLfloat get_zoom() const;
+		GLfloat get_zoom_pc() const;
 		GLfloat get_angle() const;
 
-		void update() { updateGL(); }
-		void draw_background(void *bits, int dim, GLfloat w, GLfloat h);
+		void updateGLA() { updateGL(); }
 
-		bool actions();
+		bool actions() const;
+		bool actionsHidden() const;
 		int zoomType();
-		void createDecodingThread();
 		void createQuickBrowser();
-		void glInit() { QGLWidget::glInit(); }
+		void glInitA() { QGLWidget::glInit(); }
+		void startAnimation();
+		void stopAnimation();
+		bool manualBlocked();
 
 	protected:
 		void initializeGL();
@@ -109,6 +110,7 @@ class SQ_GLWidget : public QGLWidget
 		void resizeGL(int,int);
 		void wheelEvent(QWheelEvent *);
 		void keyPressEvent(QKeyEvent *);
+		void paletteChange(const QPalette &oldPalette);
 
 		void dragEnterEvent(QDragEnterEvent *);
 		void dropEvent(QDropEvent *);
@@ -117,24 +119,39 @@ class SQ_GLWidget : public QGLWidget
 		void mousePressEvent(QMouseEvent *);
 		void mouseReleaseEvent(QMouseEvent *);
 		void mouseMoveEvent(QMouseEvent *);
-		void mouseDoubleClickEvent(QMouseEvent *);
 
 	private:
 		void createActions();
 		void createToolbar();
-		void createMenu();
-		bool prepare();
-		unsigned long findCloserPower2(unsigned long num);
-
-	signals:
+		void draw_background(void *bits, unsigned int *tex, int dim, GLfloat w, GLfloat h, bool &bind, bool deleteOld);
+		void coordChanged();
 		void matrixChanged();
+		void setupBits(Parts *p, RGBA *b, int y);
+		void adjustTimeFromMsecs(int &msecs, int &secs);
+		void showFrames(int);
+		void jumpToImage(bool);
+		void nextImage();
+		void prevImage();
+		void showHelp();
+		void toggleDrawingBackground();
+		void showExternalTools();
+
+		bool prepare();
+		bool zoomRect(const QRect &r);
+
+		void findCloserTiles(int w, int h, int &tile1, int &tile2);
 
 	public slots:
+		void slotStartDecoding(const QString &file, bool = false);
+		void slotStartDecoding(const KURL &url);
+
+	private slots:
 		void slotZoomW();
 		void slotZoomH();
 		void slotZoomWH();
 		void slotZoomPlus();
 		void slotZoom100();
+		void slotZoomLast();
 		void slotZoomMinus();
 		void slotZoomIfLess(bool);
 		void slotRotateLeft();
@@ -142,50 +159,118 @@ class SQ_GLWidget : public QGLWidget
 		void slotFlipV();
 		void slotFlipH();
 		void slotMatrixReset();
-		void slotSetMatrixParamsString();
-		void slotShowImage();
-		void slotRenderPixmapIntoFile();
 		void slotProperties();
 		void slotShowToolbar();
 		void slotHideToolbar();
 		void slotStepToolbarMove();
+		void slotShowQuick(bool);
+		void slotDecode();
+		void slotHideToolbars(bool);
+		void slotToggleStatus(bool);
+		void slotFirst();
+		void slotLast();
+		void slotNext();
+		void slotPrev();
+		void slotZoomMenu();
+		void slotAnimateNext();
+		void slotToggleAnimate();
+		void slotSetCurrentImage(int);
+		void slotShowImages();
+		void slotImagedHidden();
 
 	public:
 		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus,
-						*pAFlipV, *pAFlipH, *pAReset, *pARender, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
+						*pAFlipV, *pAFlipH, *pAReset, *pAClose, *pAProperties, *pANext, *pAPrev, *pAHide, *pAShow,
 						*pAFirst, *pALast;
+
+		QToolButton	*pAToolClose, 	*pAToolFull, *pAToolQuick, *pAToolZoom, *pAToolImages;
+
 		SQ_QuickBrowser	*v;
 		QWidgetStack 	*s;
-		KToggleAction 	*pAFull, *pAQuick, *pAIfLess;
-		KToggleAction	*pAZoomW, *pAZoomH, *pAZoomWH, *pAZoom100;
+		KToggleAction 	*pAFull, *pAQuick, *pAIfLess, *pAStatus;
+		KToggleAction	*pAZoomW, *pAZoomH, *pAZoomWH, *pAZoom100, *pAHideToolbars, *pAZoomLast;
 		SQ_DirOperator 	*quick;
-		bool 			dec;
-		SQ_Server		*server;
 
 	private:
-		unsigned long		pict_size, realW, realH;
 		GLfloat 			matrix[12], saved[12];
-		GLuint			texture[1];
 		GLfloat			zoomfactor, movefactor, rotatefactor;
 		GLfloat			curangle;
-		GLint 			ZoomModel;
-		RGBA			*rgba, *rgba_next;
 		fmt_info			*finfo;
-		int				xmoveold, ymoveold, xmove, ymove;
-		unsigned			isflippedV, isflippedH;
-		bool				reset_mode, decoded;
-		QString			File;
-		QCursor			cusual, cdrag;
-		QFileInfo			fm;
-		QImage 			BGpixmap, BGquads;
-		KToolBar			*toolbar, *toolbar2;
-		QTimer			*timer_show, *timer_hide;
-		SQ_DecodingThread	*thread;
-		SQ_LIBRARY		*lib;
+		int				xmoveold, ymoveold, xmove, ymove, current;
+		bool			reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH;
+		QString			File, m_File;
+		QCursor			cusual, cdrag, cZoomIn;
+		QFileInfo		fm;
+		QImage 		BGpixmap, BGquads;
+		KToolBar		*toolbar, *toolbar2;
+		QTimer			*timer_show, *timer_hide, *timer_decode, *timer_prev, *timer_next, *timer_anim;
+		SQ_LIBRARY	*lib;
 		int				steps;
-		bool				m_hiding;
-		int				zoom_type;
-		QPopupMenu 		*menu;
+		bool			m_hiding;
+		int				zoom_type, old_id;
+		KActionCollection*ac;
+		RGBA			*next;
+		unsigned int		texQuads, texPixmap;
+		bool			changed, inMouse, crossDrawn;
+		QPainter		*pRect;
+		QRect			lastRect;
+		KPopupMenu 	*zoom, *images;
+
+		Parts 			*parts;
+		int 				total, errors, tileSize;
+		float			zoomFactor;
+
+		void 			*mem_parts;
+		MemoryPart256	*m256;
+		MemoryPart128	*m128;
+		MemoryPart64	*m64;
+		MemoryPart32	*m32;
+};
+
+class MemoryPart256
+{
+	public:
+		unsigned char part [65536 * sizeof(RGBA)];
+};
+
+class MemoryPart128
+{
+	public:
+		unsigned char part [16384 * sizeof(RGBA)];
+};
+
+class MemoryPart64
+{
+	public:
+		unsigned char part [4096 * sizeof(RGBA)];
+};
+
+class MemoryPart32
+{
+	public:
+		unsigned char part [1024 * sizeof(RGBA)];
+};
+
+struct Part
+{
+	int x1, y1, x2, y2;
+	unsigned int tex;
+	GLuint list;
+};
+
+struct Parts
+{
+	int tilesx, tilesy, tiles, tileSize;
+	int w, h, rw, rh;
+
+	Part *m_parts;
+
+	void setRWH(const int rw2, const int rh2);
+	void setWH(const int w2, const int h2);
+	void setTileSize(const int t);
+	bool makeParts();
+	void removeParts();
+	void computeCoords();
 };
 
 #endif

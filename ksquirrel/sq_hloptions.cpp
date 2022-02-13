@@ -2,8 +2,8 @@
                           sq_hloptions.cpp  -  description
                              -------------------
     begin                : ??? ??? 30 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -17,7 +17,7 @@
 
 #include "sq_hloptions.h"
 
-SQ_HLOptions::SQ_HLOptions() : QObject()
+SQ_HLOptions::SQ_HLOptions() : QObject(), showLibsAndExit(false)
 {}
 
 SQ_HLOptions::~SQ_HLOptions()

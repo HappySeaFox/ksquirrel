@@ -35,55 +35,79 @@ SQ_GLView::SQ_GLView(QWidget *parent, const char *name) : QVBox(parent, name)
 {
 	separate = ((parent == 0L)?true:false);
 
-	create();
+	createContent();
+
+	installEventFilter(this);
 }
 
 SQ_GLView::~SQ_GLView()
 {}
 
-void SQ_GLView::create()
+void SQ_GLView::createContent()
 {
-	int posX, posY, sizeX, sizeY;
-
 	gl = new SQ_GLWidget(this);
-	gl->glInit();
-	gl->createDecodingThread();
+	gl->glInitA();
 
 	setStretchFactor(gl, 1);
 
-	if(separate)
-	{
-		KStatusBar *sbar = new KStatusBar(this);
-		sqSBDecoded->reparent(sbar, QPoint(), true);
-		sqSBGLreport->reparent(sbar, QPoint(), true);
-		sbar->addWidget(sqSBDecoded, 0, true);
-		sbar->addWidget(sqSBGLreport, 0, true);
-		QLabel *levak = new QLabel(sbar);
-		sbar->addWidget(levak, 1, true);
-	}
+	sbar = new KStatusBar(this);
+
+	sbar->addWidget(sqSBDecodedBox, 0, true);
+	sbar->addWidget(sqSBLoaded, 0, true);
+	sbar->addWidget(sqSBGLZoom, 0, true);
+	sbar->addWidget(sqSBGLAngle, 0, true);
+	sbar->addWidget(sqSBGLCoord, 0, true);
+	QLabel *levak = new QLabel(sbar);
+	sbar->addWidget(levak, 1, true);
+
+	sbar->setShown(sqConfig->readBoolEntry("GL view", "statusbar", true));
 
 	if(!separate)
 		return;
 
-	if(sqConfig->readBoolEntry("GL view", "save pos", true))
-	{
-		posX = sqConfig->readNumEntry("GL view", "posX", 0);
-		posY = sqConfig->readNumEntry("GL view", "posY", 0);
-	}
-	else
-		posX = posY = 40;
+	QRect rect(0,0,320,200);
+	QRect geom = sqConfig->readRectEntry("GL view", "geometry", &rect);
 
-	if(sqConfig->readBoolEntry("GL view", "save size", true))
-	{
-		sizeX = sqConfig->readNumEntry("GL view", "sizeX", 320);
-		sizeY = sqConfig->readNumEntry("GL view", "sizeY", 200);
-	}
-	else
-	{
-		sizeX = 320;
-		sizeY = 200;
-	}
+	setGeometry(geom);
+}
 
-	move(posX, posY);
-	resize(sizeX, sizeY);
+bool SQ_GLView::isSeparate() const
+{
+	return separate;
+}
+
+KStatusBar* SQ_GLView::statusbar()
+{
+	return sbar;
+}
+
+void SQ_GLView::closeEvent(QCloseEvent *e)
+{
+	e->ignore();
+	lower();
+}
+
+void SQ_GLView::reparent(QWidget *parent, const QPoint &p, bool showIt)
+{
+	QVBox::reparent(parent, p, showIt);
+
+	separate = (parent) ? false : true;
+}
+
+bool SQ_GLView::eventFilter(QObject *watched, QEvent *e)
+{/*
+	if(e->type() == QEvent::WindowDeactivate || e->type() == QEvent::Hide)
+	{
+		gl->stopAnimation();
+		return true;
+	}
+	else if(e->type() == QEvent::WindowActivate || e->type() == QEvent::Show)
+	{
+		if(!gl->manualBlocked())
+			gl->startAnimation();
+
+		return true;
+	}
+	else*/
+		return QVBox::eventFilter(watched, e);
 }

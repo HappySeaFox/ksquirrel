@@ -32,9 +32,12 @@ void SQ_ExternalTools::init()
 	    listTools->insertItem(item);
 	}
 
-	pushToolUp->setPixmap(sqLoader->loadIcon("up", KIcon::Desktop, KIcon::SizeSmall));
-	pushToolDown->setPixmap(sqLoader->loadIcon("down", KIcon::Desktop, KIcon::SizeSmall));
-	
+	pushToolUp->setPixmap(sqLoader->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
+	pushToolDown->setPixmap(sqLoader->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
+	pushNew->setPixmap(sqLoader->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
+	pushDelete->setPixmap(sqLoader->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
+	pushClearAll->setPixmap(sqLoader->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
+
 	listTools->setCurrentItem(listTools->firstChild());
 	listTools->clearSelection();
 	listTools->setSelected(listTools->currentItem(), true);
@@ -63,6 +66,11 @@ void SQ_ExternalTools::slotToolClear()
 	if(!item) return;
     
 	listTools->takeItem(item);
+	
+	item = listTools->currentItem();
+
+	if(item)
+	    listTools->setSelected(item, true);
 }
 
 void SQ_ExternalTools::slotToolUp()

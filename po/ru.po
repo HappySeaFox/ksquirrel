@@ -1,43 +1,21 @@
-# translation of ru.po to 
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# translation of ru.po to
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
-# , 2004
+# translation of ru.po to Russian
+# , 2004.
+# Baryshev Dmitry <squirrel-sf@yandex.ru>, 2004, 2005.
 msgid ""
 msgstr ""
-"Last-Translator: \n"
-"PO-Revision-Date: 2004-10-01 12:55+0300\n"
+"Last-Translator: Baryshev Dmitry <squirrel-sf@yandex.ru>\n"
+"PO-Revision-Date: 2005-01-31 02:29+0200\n"
 "Project-Id-Version: ru\n"
-"Language-Team:  <ru@li.org>\n"
+"Language-Team: Russian\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.1\n"
+"X-Generator: KBabel 1.3\n"
+"MIME-Version: 1.0\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ksquirrel.cpp:821
-msgid "GL window"
-msgstr "GL окно"
+msgid "Image window"
+msgstr "Окно с изображением"
 
 #: ksquirrel.cpp:822
 msgid "Next file"
@@ -94,10 +72,6 @@ msgstr "Тип файла \""
 #: sq_diroperator.cpp:184 sq_diroperator.cpp:212
 msgid "\" not supported"
 msgstr "\" не поддерживается"
-
-#: sq_diroperator.cpp:303
-msgid " Total %1 (%2 dirs, %3 files) "
-msgstr " Всего %1 (%2 каталогов, %3 файлов) "
 
 #: sq_glviewwidget.cpp:83
 msgid "Rotate left"
@@ -163,15 +137,15 @@ msgstr ""
 
 #: sq_glviewwidget.cpp:819
 msgid "Library couldn't alloc memory for internal usage !"
-msgstr "Библиотека не смогла выделить память для внутреннего использования ! "
+msgstr "Библиотека не смогла выделить память для внутреннего использования !"
 
 #: sq_glviewwidget.cpp:820
 msgid "This format type is not supported."
-msgstr "Этот тип файла не поддерживается"
+msgstr "Этот тип файла не поддерживается."
 
 #: sq_glviewwidget.cpp:822
 msgid "Library returned unknown error code."
-msgstr "Библиотека вернула неизвестный код ошибки"
+msgstr "Библиотека вернула неизвестный код ошибки."
 
 #: sq_glviewwidget.cpp:825 sq_glviewwidget.cpp:842
 msgid "Decoding"
@@ -200,31 +174,15 @@ msgstr ""
 
 #: sq_glviewwidget.cpp:841
 msgid " of memory."
-msgstr "памяти"
+msgstr "памяти."
 
 #: sq_librarieschanged.ui.h:16
 msgid "New libraries found:"
-msgstr "Найдены новые библиотеки"
+msgstr "Найдены новые библиотеки:"
 
 #: sq_librarieschanged.ui.h:16
 msgid "Deleted libraries:"
-msgstr "Удалённые библиотеки"
-
-#: sq_runprocess.cpp:80
-msgid "Process \""
-msgstr "Процесс \""
-
-#: sq_runprocess.cpp:80
-msgid ""
-"\"could not be started.\n"
-"Try \"whereis "
-msgstr ""
-"\"не может быть запущен.\n"
-"Попробуйте \"whereis "
-
-#: sq_runprocess.cpp:80
-msgid "\" to find it."
-msgstr "\" чтобы найти его вручную."
+msgstr "Удалённые библиотеки:"
 
 #: sq_tray.cpp:34
 msgid "Open"
@@ -238,141 +196,93 @@ msgstr "Выход"
 msgid "Options"
 msgstr "Настройки"
 
-#: sq_bookmarkowner.moc.cpp:34 sq_bookmarkowner.moc.cpp:42
-msgid "SQ_BookmarkOwner"
-msgstr ""
-
-#: sq_fileiconview.moc.cpp:34 sq_fileiconview.moc.cpp:42
-msgid "SQ_FileIconView"
-msgstr ""
-
-#: sq_runprocess.moc.cpp:34 sq_runprocess.moc.cpp:42
-msgid "SQ_RunProcess"
-msgstr ""
-
-#: sq_diroperator.moc.cpp:34 sq_diroperator.moc.cpp:42
-msgid "SQ_DirOperator"
-msgstr ""
-
-#: sq_glviewwidget.moc.cpp:34 sq_glviewwidget.moc.cpp:42
-msgid "SQ_GLViewWidget"
-msgstr ""
-
-#: sq_tray.moc.cpp:34 sq_tray.moc.cpp:42
-msgid "SQ_SystemTray"
-msgstr ""
-
-#: sq_treeview.moc.cpp:34 sq_treeview.moc.cpp:42
-msgid "SQ_TreeView"
-msgstr ""
-
-#: sq_librarylistener.moc.cpp:34 sq_librarylistener.moc.cpp:42
-msgid "SQ_LibraryListener"
-msgstr ""
-
-#: sq_widgetstack.moc.cpp:34 sq_widgetstack.moc.cpp:42
-msgid "SQ_WidgetStack"
-msgstr ""
-
-#: ksquirrel.moc.cpp:34 ksquirrel.moc.cpp:42
-msgid "Squirrel"
-msgstr ""
-
-#: sq_glbase.moc.cpp:34 sq_glbase.moc.cpp:42
-msgid "SQ_GLBase"
-msgstr ""
-
-#: sq_filedetailview.moc.cpp:34 sq_filedetailview.moc.cpp:42
-msgid "SQ_FileDetailView"
-msgstr ""
-
 #: sq_imageproperties.cpp:315
 msgid "File properties"
 msgstr "Свойства файла"
 
 #: sq_imageproperties.cpp:318
-msgid "<b>Owner:</b>"
-msgstr "<b>Владелец:</b>"
+msgid "Owner:"
+msgstr "Владелец:"
 
 #: sq_imageproperties.cpp:320
-msgid "<b>Permissions:</b>"
-msgstr "<b>Права:</b>"
+msgid "Permissions:"
+msgstr "Права:"
 
 #: sq_imageproperties.cpp:321
-msgid "<b>Group:</b>"
-msgstr "<b>Группа:</b>"
+msgid "Group:"
+msgstr "Группа:"
 
 #: sq_imageproperties.cpp:322
-msgid "<i><u>Atributes</u></i>"
-msgstr "<i><u>Атрибуты</u></i>"
+msgid "Atributes"
+msgstr "Атрибуты"
 
 #: sq_imageproperties.cpp:324
-msgid "<b>Last read:</b>"
-msgstr "<b>Последнее чтение:</b>"
+msgid "Last read:"
+msgstr "Последнее чтение:"
 
 #: sq_imageproperties.cpp:325
-msgid "<i><u>Time</u></i>"
-msgstr "<i><u>Время</u></i>"
+msgid "Time"
+msgstr "Время"
 
 #: sq_imageproperties.cpp:328
-msgid "<b>Created:</b>"
-msgstr "<b>Создан:</b>"
+msgid "Created:"
+msgstr "Создан:"
 
 #: sq_imageproperties.cpp:329
-msgid "<b>Last modified:</b>"
-msgstr "<b>Последнее изменение:</b>"
+msgid "Last modified:"
+msgstr "Последнее изменение:"
 
 #: sq_imageproperties.cpp:330
-msgid "<b>FIle:</b>"
-msgstr "<b>Файл:</b>"
+msgid "File:"
+msgstr "Файл:"
 
 #: sq_imageproperties.cpp:331
-msgid "<b>Size:</b>"
-msgstr "<b>Размер:</b>"
+msgid "Size:"
+msgstr "Размер:"
 
 #: sq_imageproperties.cpp:333
-msgid "<b>Directory:</b>"
-msgstr "<b>Каталог:</b>"
+msgid "Directory:"
+msgstr "Каталог:"
 
 #: sq_imageproperties.cpp:334
-msgid "<i><u>General</u></i>"
-msgstr "<i><u>Общие</u></i>"
+msgid "General"
+msgstr "Общие"
 
 #: sq_imageproperties.cpp:335
 msgid "Image properties"
 msgstr "Свойства изображения"
 
 #: sq_imageproperties.cpp:336
-msgid "<b>Compression:</b>"
-msgstr "<b>Сжатие:</b>"
+msgid "Compression:"
+msgstr "Сжатие:"
 
 #: sq_imageproperties.cpp:338
-msgid "<b>Color model:</b>"
-msgstr "<b>Система цвета:</b>"
+msgid "Color model:"
+msgstr "Система цвета:"
 
 #: sq_imageproperties.cpp:339
-msgid "<b>Dimensions:</b>"
-msgstr "<b>Размеры:</b>"
+msgid "Dimensions:"
+msgstr "Размеры:"
 
 #: sq_imageproperties.cpp:340
-msgid "<b>Uncompressed size:</b>"
-msgstr "<b>Неупакованный размер:</b>"
+msgid "Uncompressed size:"
+msgstr "Неупакованный размер:"
 
 #: sq_imageproperties.cpp:342
-msgid "<b>Bits per pixel:</b>"
-msgstr "<b>Бит на точку:</b>"
+msgid "Bits per pixel:"
+msgstr "Бит на точку:"
 
 #: sq_imageproperties.cpp:346
-msgid "<b>Compress ratio:</b>"
-msgstr "<b>Коэффициент сжатия:</b>"
+msgid "Compress ratio:"
+msgstr "Коэффициент сжатия:"
 
 #: sq_imageproperties.cpp:348
-msgid "<b>Number of frames:</b>"
-msgstr "<b>Количество фреймов:</b>"
+msgid "Number of frames:"
+msgstr "Количество фреймов:"
 
 #: sq_imageproperties.cpp:350
-msgid "<b>Type:</b>"
-msgstr "<b>Тип:</b>"
+msgid "Type:"
+msgstr "Тип:"
 
 #: sq_imageproperties.cpp:352
 msgid "    OK    "
@@ -396,16 +306,16 @@ msgid " OK "
 msgstr " OK "
 
 #: sq_filters.cpp:141
-msgid "New filter"
-msgstr "Новый фильтр"
+msgid "New"
+msgstr "Новая"
 
 #: sq_filters.cpp:142
-msgid "Delete filter"
-msgstr "Удалить фильтр"
+msgid "Delete"
+msgstr "Удалить"
 
 #: sq_filters.cpp:148
 msgid "Menuitem contains both name and extension"
-msgstr "Меню содержит имя и расширения фильтра"
+msgstr "Элемент меню содержит имя и расширения фильтра"
 
 #: sq_externaltools.cpp:86 sq_externaltools.cpp:146
 msgid "Command"
@@ -414,14 +324,6 @@ msgstr "Команда"
 #: sq_externaltools.cpp:138
 msgid "Adjust External Tools"
 msgstr "Настроить Внешние программы"
-
-#: sq_externaltools.cpp:139
-msgid "New tool"
-msgstr "Новая программа"
-
-#: sq_externaltools.cpp:140
-msgid "Delete tool"
-msgstr "Удалить программу"
 
 #: sq_externaltools.cpp:142
 #, c-format
@@ -444,10 +346,6 @@ msgstr "Версия"
 msgid "Minimize to tray when close()"
 msgstr "Прятаться в трей при выходе"
 
-#: sq_options.cpp:1024
-msgid "Allow only one instanse (useful with tray support)"
-msgstr "Разрешить только один запуск (полезно при разрешённом трее)"
-
 #: sq_options.cpp:1025
 msgid "Write configuration file to disk, when I press \"OK\""
 msgstr "Записать настройки на диск, когда я нажму \"OK\""
@@ -467,50 +365,6 @@ msgstr "В виде иконок"
 #: sq_options.cpp:1029
 msgid "List View"
 msgstr "В виде списка"
-
-#: sq_options.cpp:1030
-msgid "Main window"
-msgstr "Главное окно"
-
-#: sq_options.cpp:1031
-msgid "Save last position"
-msgstr "Сохранить позицию"
-
-#: sq_options.cpp:1032
-msgid "Save last size"
-msgstr "Сохранить размер"
-
-#: sq_options.cpp:1033
-msgid "Look like ..."
-msgstr "Выглядеть как ..."
-
-#: sq_options.cpp:1034
-msgid "SQuirrel"
-msgstr ""
-
-#: sq_options.cpp:1036
-msgid "GQview"
-msgstr ""
-
-#: sq_options.cpp:1038
-msgid "KuickShow"
-msgstr ""
-
-#: sq_options.cpp:1040
-msgid "ShowImg"
-msgstr ""
-
-#: sq_options.cpp:1042
-msgid "No components"
-msgstr "Без компонентов"
-
-#: sq_options.cpp:1044
-msgid "XnView"
-msgstr ""
-
-#: sq_options.cpp:1046
-msgid "Konqueror"
-msgstr ""
 
 #: sq_options.cpp:1048
 msgid "On starting open ..."
@@ -576,10 +430,6 @@ msgstr "Сохранить позицию"
 msgid "Enable drop files into viewport"
 msgstr "Разрешить перетаскивать файлы в окно изображения"
 
-#: sq_options.cpp:1071
-msgid "General"
-msgstr "Общие"
-
 #: sq_options.cpp:1073
 msgid "System color"
 msgstr "Системный цвет"
@@ -587,14 +437,6 @@ msgstr "Системный цвет"
 #: sq_options.cpp:1074
 msgid "Custom color"
 msgstr "Пользовательский цвет"
-
-#: sq_options.cpp:1075
-msgid "Favourite textures"
-msgstr "Любимые текстуры"
-
-#: sq_options.cpp:1077
-msgid "GLView will have such background color"
-msgstr ""
 
 #: sq_options.cpp:1079
 msgid "Current texture:"
@@ -607,12 +449,6 @@ msgstr "Пользовательское изображение"
 #: sq_options.cpp:1081
 msgid "Browse"
 msgstr "Найти"
-
-#: sq_options.cpp:1082
-msgid ""
-"Hint: only textures with dimensions less than 256x256 accepted, each "
-"dimension should be a power of two (e.g. 32x32, 48x48 etc.)"
-msgstr "Совет: принимаются только изображения с рамерами,<br>меньшими 256х256 и кратными двойке (например 32х32, 48х48 и т.д.)"
 
 #: sq_options.cpp:1083
 msgid "Background"
@@ -647,7 +483,7 @@ msgid "Image"
 msgstr "Изображение"
 
 #: sq_options.cpp:1095
-msgid "pix"
+msgid "pixels"
 msgstr "точек"
 
 #: sq_options.cpp:1096
@@ -659,7 +495,7 @@ msgid "Moving:"
 msgstr "Движение:"
 
 #: sq_options.cpp:1099
-msgid "deg"
+msgid "degrees"
 msgstr "градусов"
 
 #: sq_options.cpp:1100
@@ -675,20 +511,12 @@ msgid "Load next/previos file"
 msgstr "Загрузить след/предыдущий файл"
 
 #: sq_options.cpp:1103
-msgid "OpenGL"
-msgstr ""
+msgid "Window"
+msgstr "Окно"
 
 #: sq_options.cpp:1104
 msgid "Apply linear filter"
 msgstr "Применять линейный фильтр"
-
-#: sq_options.cpp:1105
-msgid "<NI>Zoom type"
-msgstr "<NI>Тип масштабирования"
-
-#: sq_options.cpp:1106
-msgid "Zoom to original"
-msgstr "К оригиналу"
 
 #: sq_options.cpp:1107
 msgid "Fit width"
@@ -718,62 +546,6 @@ msgstr " %"
 msgid "None"
 msgstr "Нет"
 
-#: sq_options.cpp:1115
-msgid "Rendering into file"
-msgstr "Сохранение в файл"
-
-#: sq_options.cpp:1116
-msgid "Format:"
-msgstr "Формат:"
-
-#: sq_options.cpp:1117
-msgid ""
-"<u>Special values in file name:</u><br>\n"
-"<table width=\"100%\" border=\"0\">\n"
-"  <tr>\n"
-"    <td><b>%dy: </b> current year <br><b>%dmn: </b> current month  <br><b>%"
-"dw: </b> current day of week <br><b>%dd: </b> current day </td>\n"
-"    <td><b>%dh: </b> current hour<br><b>%dm: </b> current minute<br><b>%ds: "
-"</b> current second<br><b>%dms: </b> current millisecond</td>\n"
-"  </tr>\n"
-"</table>"
-msgstr ""
-"<u>Специальные символы в имени файла:</u><br>\n"
-"<table width=\"100%\" border=\"0\">\n"
-"  <tr>\n"
-"    <td><b>%dy: </b> текущий год <br><b>%dmn: </b> текущий месяц  <br><b>%"
-"dw: </b> текущий день недели <br><b>%dd: </b> текущий день </td>\n"
-"    <td><b>%dh: </b> текущий час <br><b>%dm: </b> текущие минуты <br><b>%ds: "
-"</b> текущие секунды <br><b>%dms: </b> текущие миллисекунды </td>\n"
-"  </tr>\n"
-"</table>"
-
-#: sq_options.cpp:1124
-#, c-format
-msgid "Example: \"%dh:%dm:%ds\" expands to \"10:59:11\""
-msgstr "Пример: \"%dh:%dm:%ds\" заменяется на  \"10:59:11\""
-
-#: sq_options.cpp:1125
-msgid "Directory:"
-msgstr "Каталог:"
-
-#: sq_options.cpp:1126
-msgid "File name"
-msgstr "Имя файла"
-
-#: sq_options.cpp:1128
-#, c-format
-msgid "Example: \"ksquirrel GL pixmap (%dd, %dh:%dm:%ds)\""
-msgstr "Пример: \"ksquirrel GL pixmap (%dd, %dh:%dm:%ds)\""
-
-#: sq_options.cpp:1129
-msgid "Ask for file name"
-msgstr "Запросить имя файла"
-
-#: sq_options.cpp:1130
-msgid "Custom name"
-msgstr "Пользовательское имя"
-
 #: sq_options.cpp:1131
 msgid "Other"
 msgstr "Другие"
@@ -795,7 +567,7 @@ msgid "Monitor directory with libraries, so new .so files can be dynamically add
 msgstr "Следить за каталогом с библиотеками, чтобы новые библиотеки могли быть загружены автоматически"
 
 #: sq_options.cpp:1145
-msgid "Show message, if directory changed"
+msgid "Show the message, if the directory has changed"
 msgstr "Показывать сообщение, если каталог изменился"
 
 #: sq_options.cpp:1146
@@ -813,10 +585,6 @@ msgstr "Предыдущий"
 #: sq_glviewspec.cpp:73
 msgid "Next"
 msgstr "Следующий"
-
-#: sq_glbase.cpp:24
-msgid "KSQuirrel: OpenGL viewer"
-msgstr "KSQuirrel: OpenGL просмотрищик"
 
 #: sq_archivehandler.cpp:75 sq_archivehandler.cpp:84
 msgid "Unable to create directory: %1"
@@ -853,18 +621,6 @@ msgstr "Интерфейс"
 #: sq_options.ui.h:128
 msgid "Filing"
 msgstr "Навигатор"
-
-#: sq_options.ui.h:129
-msgid "GL viewer"
-msgstr "GL окно"
-
-#: sq_options.ui.h:131
-msgid "Caching"
-msgstr ""
-
-#: ksquirrel.cpp:730
-msgid "No files decoded"
-msgstr "Не показано изображений"
 
 #: sq_options.ui.h:305
 msgid "Wrong dimensions: %1x%2."
@@ -916,13 +672,10 @@ msgstr "Показать"
 msgid "Library for %1 format not found"
 msgstr "Библиотека для формата %1 не найдена"
 
-msgid "Enable \"Quick Browser\" on fullscreen mode"
-msgstr "Показать панель \"Быстрый Просмотр\", когда на весь экран"
-
 msgid "\"Quick Browser\""
 msgstr "\"Быстрый Просмотр\""
 
-msgid "Ignore if little image"
+msgid "Ignore, if the image is less than window"
 msgstr "Игнорировать, если изображение меньше окна"
 
 msgid "Go!"
@@ -933,9 +686,6 @@ msgstr "Очистить адрес"
 
 msgid "Clear history"
 msgstr "Очистить историю"
-
-msgid "Show loading indicator"
-msgstr "Показать прогресс загрузки"
 
 msgid "Pixmap"
 msgstr "Иконка"
@@ -964,44 +714,44 @@ msgstr "<b>Настроить OpenGL окно</b>"
 msgid "<b>Libraries (ksquirrel-libs)</b>"
 msgstr "<b>Библиотеки (ksquirrel-libs)</b>"
 
-msgid "<u><b>ksquirrel</b></u>: writing settings and thumbnails ...  "
-msgstr "<u><b>ksquirrel</b></u>: запись настроек и иконок ...  "
+msgid " writing settings and thumbnails ...  "
+msgstr " запись настроек и эскизов ...  "
 
 msgid "<b>Thumbnails</b>"
-msgstr "<b>Thumbnails</b>"
+msgstr "<b>Эскизы</b>"
 
 msgid "Thumbnails"
-msgstr "Thumbnails"
+msgstr "Эскизы"
 
 msgid "Disable mimetype icons"
 msgstr "Запретить иконки MIME"
 
-msgid "Do not write thumbails on disk"
-msgstr "Не записывать иконки на диск"
+msgid "Do not write thumbnails on disk"
+msgstr "Не записывать эскизы на диск"
 
 msgid "margin between thumbnails:"
-msgstr "расстояние между иконками"
+msgstr "расстояние между эскизами:"
 
 msgid "maximum cache size (in memory):"
-msgstr "максимальный размер кэша (в памяти)"
+msgstr "максимальный размер кэша (в памяти):"
 
 msgid "Calculate cache size on disk"
 msgstr "Подсчитать размер кэша на диске"
 
 msgid "Small thumbnails"
-msgstr "Маленькие иконки"
+msgstr "Маленькие эскизы"
 
 msgid "Medium thumbnails"
-msgstr "Средние иконки"
+msgstr "Средние эскизы"
 
 msgid "Large thumbnails"
-msgstr "Большие иконки"
+msgstr "Большие эскизы"
 
 msgid "Huge thumbnails"
-msgstr "Огромные иконки"
+msgstr "Огромные эскизы"
 
 msgid "Thumbnail size"
-msgstr "Размер иконок"
+msgstr "Размер эскизов"
 
 msgid "Clicking"
 msgstr "Клики"
@@ -1011,4 +761,238 @@ msgstr "Синхронизация"
 
 msgid "Jump to first image"
 msgstr "Перейти на первое изображение"
+
+msgid "Hide statusbar in fullscreen"
+msgstr "Спрятать строку статуса в полноэкранном режиме"
+
+msgid "Draw background for transparent images (quads)"
+msgstr "Рисовать фон для прозрачных картинок (квадраты)"
+
+msgid "Rebuilding interface ..."
+msgstr "Перестройка внешнего вида ..."
+
+msgid "Type: %1\nDimensions: %2\nBits per pixel: %3\nColor model: %4\nCompression: %5\nNumber of frames: %6\nUncompressed size: %7"
+msgstr "Тип: %1\nРазмеры: %2\nБит на точку: %3\nСистема цвета: %4\nСжатие: %5\nКоличество страниц: %6\nНеупакованный размер: %7"
+
+msgid "Extended thumbnails"
+msgstr "Расширенные эскизы"
+
+msgid "Clear all"
+msgstr "Очистить всё"
+
+msgid "New entry"
+msgstr "Новая запись"
+
+msgid "Delete current entry"
+msgstr "Удалить текущую запись"
+
+msgid "Move filter up"
+msgstr "Переместить фильтр выше"
+
+msgid "Move filter down"
+msgstr "Переместить фильтр ниже"
+
+msgid "Move tool up"
+msgstr "Переместить программу выше"
+
+msgid "Move tool down"
+msgstr "Переместить программу ниже"
+
+msgid "Zoom limit"
+msgstr "Предел масштабирования"
+
+msgid "No limit"
+msgstr "Нет предела"
+
+msgid "Minimum: 1%, maximum: 10'000%"
+msgstr "Минимум 1%, максимум 10'000%"
+
+msgid "Custom"
+msgstr "Другой"
+
+msgid "mimimum"
+msgstr "минимум"
+
+msgid "maximum"
+msgstr "максимум"
+
+msgid "Clear cache on disk"
+msgstr "Очистить кэш на диске"
+
+msgid " Total %1 (%2, %3) "
+msgstr " Всего %1 (%2, %3) "
+
+msgid "Tree -> Navigator"
+msgstr "Дерево -> Навигатор"
+
+msgid "Navigator -> Tree"
+msgstr "Навигатор -> Дерево"
+
+msgid "Both"
+msgstr "Оба типа"
+
+msgid "Don't show directories"
+msgstr "Не показывать каталоги"
+
+msgid "File: %1\nSize: %2\nLink to: %3\n\n%4"
+msgstr "Файл: %1\nРазмер: %2\nСсылка на: %3\n\n%4"
+
+msgid "File: %1\nSize: %2\n\n%3"
+msgstr "Файл: %1\nРазмер: %2\n\n%3"
+
+msgid "Clear cache in memory"
+msgstr "Очистить кэш в памяти"
+
+msgid "Calculate cache size in memory"
+msgstr "Подсчитать размер кэша в памяти"
+
+msgid "Thumbnail cache"
+msgstr "Кэш эскизов"
+
+msgid "Parameters"
+msgstr "Параметры"
+
+msgid "View memory cache"
+msgstr "Просмотреть кэш в памяти"
+
+msgid "Sync cache to disk"
+msgstr "Сбросить кэш на диск"
+
+msgid "Show tooltips with thumbnail info"
+msgstr "Показывать подсказки с информацией об эскизах "
+
+msgid "New filter"
+msgstr "Новый фильтр"
+
+msgid "New tool"
+msgstr "Новая программа"
+
+msgid "Toggle tree"
+msgstr "Переключить дерево"
+
+msgid "Toggle URL box"
+msgstr "Переключить строку адреса"
+
+msgid "Total:"
+msgstr "Всего:"
+
+msgid "Library's filters"
+msgstr "Библиотечные фильтры"
+
+msgid "User's filters"
+msgstr "Пользовательские фильтры"
+
+msgid "Validate"
+msgstr "Проверить"
+
+msgid "Metadata"
+msgstr "Метаданные"
+
+msgid "Save as:"
+msgstr "Сохранить как:"
+
+msgid "User depended config file couldn't be opened for writing!"
+msgstr "Пользовательский конфигурационный файл не может быть открыт для записи!"
+
+msgid "Default (installed) config file couldn't be opened for reading!"
+msgstr "Конфигурационный файл по умолчанию (установленный) не может быть открыт для чтения!"
+
+msgid "Make image window separate/built-in"
+msgstr "Сделать окно с изображением отдельным/встроенным"
+
+msgid "Copy all entries"
+msgstr "Копировать все записи"
+
+msgid "Copy entry"
+msgstr "Копировать запись"
+
+msgid "Loaded in %1 msec."
+msgstr "Загружено за %1 мсек."
+
+msgid "Loaded in %1'%2 msec."
+msgstr "Загружено за %1'%2 мсек."
+
+msgid "Interlaced:"
+msgstr "Чередование строк:"
+
+msgid "yes"
+msgstr "да"
+
+msgid "no"
+msgstr "нет"
+
+msgid "Status:"
+msgstr "Статус:"
+
+msgid ""
+"_n: 1 error\n"
+"%n errors"
+msgstr ""
+"%n ошибка\n"
+"%n ошибки\n"
+"%n ошибок"
+
+msgid ""
+"_n: 1 directory\n"
+"%n dirs"
+msgstr ""
+"%n каталог\n"
+"%n каталога\n"
+"%n каталогов"
+
+msgid ""
+"_n: 1 file\n"
+"%n files"
+msgstr ""
+"%n файл\n"
+"%n файла\n"
+"%n файлов"
+
+msgid "All supported formats"
+msgstr "Все поддерживаемые форматы"
+
+msgid "OpenGL information"
+msgstr "OpenGL информация"
+
+msgid "Memory allocation failed"
+msgstr "Ошибка выделения памяти"
+
+msgid "Current frame"
+msgstr "Текущий кадр"
+
+msgid "Metadata (no)"
+msgstr "Метаданные (нет)"
+
+msgid "Select image"
+msgstr "Выбрать изображение"
+
+msgid "New version is available"
+msgstr "Доступна новая версия"
+
+msgid "Current image"
+msgstr "Текущее изображение"
+
+msgid "<p align=center><table><tr><td><b><p align=right>Esc,X,Return</p></b></td><td>close</td></tr><tr><td><b><p align=right>Q</p></b></td><td>Quick Browser</td></tr><tr><td><b><p align=right>F</p></b></td><td>fullscreen</td></tr><tr><td><b><p align=right>T</p></b></td><td>show/hide toolbar with actions</td></tr><tr><td><b><p align=right>[</p></b></td><td>hide toolbar with actions</td></tr><tr><td><b><p align=right>]</p></b></td><td>show toolbar with actions</td></tr><tr><td><b><p align=right>Z</p></b></td><td>show 'Zoom' menu</td></tr><tr><td><b><p align=right>S</p></b></td><td>show/hide statusbar</td></tr><tr><td><b><p align=right>/</p></b></td><td>show this help</td></tr></table></p>"
+msgstr "<p align=center><table><tr><td><b><p align=right>Esc,X,Return</p></b></td><td>закрыть</td></tr><tr><td><b><p align=right>Q</p></b></td><td>Quick Browser</td></tr><tr><td><b><p align=right>F</p></b></td><td>на весь экран</td></tr><tr><td><b><p align=right>T</p></b></td><td>показать/спрятать панель с действиями</td></tr><tr><td><b><p align=right>[</p></b></td><td>спрятать панель с действиями</td></tr><tr><td><b><p align=right>]</p></b></td><td>показать панель с действиями</td></tr><tr><td><b><p align=right>Z</p></b></td><td>показать меню 'Увеличение'</td></tr><tr><td><b><p align=right>S</p></b></td><td>показать/спрятать строку статуса</td></tr><tr><td><b><p align=right>/</p></b></td><td>показать эту помощь</td></tr></table></p>"
+
+msgid "<p align=center><table><tr><td><b><p align=right>Space</p></b></td><td>next image</td></tr><tr><td><b><p align=right>Backspace</p></b></td><td>previous image</td></tr><tr><td><b><p align=right>Home</p></b></td><td>first image</td></tr><tr><td><b><p align=right>End</p></b></td><td>last image</td></tr></table></p>"
+msgstr "<p align=center><table><tr><td><b><p align=right>Space</p></b></td><td>следующее изображение</td></tr><tr><td><b><p align=right>Backspace</p></b></td><td>предыдущее изображение</td></tr><tr><td><b><p align=right>Home</p></b></td><td>первое изображение</td></tr><tr><td><b><p align=right>End</p></b></td><td>последнее изображение</td></tr></table></p>"
+
+msgid "<p align=center><table><tr><td><b><p align=right>Left Arrow, Right Arrow,<br>Up Arrow, Down Arrow</p></b></td><td>move the image</td></tr><tr><td><b><p align=right>Ctrl + Left Arrow</p></b></td><td>rotate left</td></tr><tr><td><b><p align=right>Ctrl + Right Arrow</p></b></td><td>rotate right</td></tr><tr><td><b><p align=right>Ctrl + Up/Down Arrow</p></b></td><td>rotate for 180 degrees up/down</td></tr><tr><td><b><p align=right>Shift + Up/Down Arrow</p></b></td><td>rotate for 1 degree up/down</td></tr></table</p>"
+msgstr "<p align=center><table><tr><td><b><p align=right>Left Arrow, Right Arrow,<br>Up Arrow, Down Arrow</p></b></td><td>сдвинуть изображение</td></tr><tr><td><b><p align=right>Ctrl + Left Arrow</p></b></td><td>повернуть влево</td></tr><tr><td><b><p align=right>Ctrl + Right Arrow</p></b></td><td>повернуть вправо</td></tr><tr><td><b><p align=right>Ctrl + Up/Down Arrow</p></b></td><td>повернуть на 180 градусов вверх/вниз</td></tr><tr><td><b><p align=right>Shift + Up/Down Arrow</p></b></td><td>повернуть на 1 градус вверх/вниз</td></tr></table</p>"
+
+msgid "<p align=center><table><tr><td><b><p align=right>+/-</p></b></td><td>zoom Nx</td></tr><tr><td><b><p align=right>Ctrl + +/-</p></b></td><td>zoom 2x/0.5x</td></tr><tr><td><b><p align=right>Scroll</p></b></td><td>load next/prev file OR zoom+/zoom-</td></tr><tr><td><b><p align=right>Shift + Scroll</p></b></td><td>zoom+/zoom-</td></tr><tr><td><b><p align=right>Ctrl + Scroll</p></b></td><td>zoom+ 2x/zoom- 2x</td></tr><tr><td><b><p align=right>1..9</p></b></td><td>zoom 1..9x</td></tr><tr><td><b><p align=right>0</p></b></td><td>zoom 10x</td></tr><tr><td><b><p align=right>comma</p></b></td><td>fit width</td></tr><tr><td><b><p align=right>period</p></b></td><td>fit height</td></tr><tr><td><b><p align=right>*</p></b></td><td>fit image</td></tr></table</p>"
+msgstr "<p align=center><table><tr><td><b><p align=right>+/-</p></b></td><td>увеличить Nx</td></tr><tr><td><b><p align=right>Ctrl + +/-</p></b></td><td>увеличить 2x/0.5x</td></tr><tr><td><b><p align=right>Scroll</p></b></td><td>загрузить файл ИЛИ увеличить/уменьшить</td></tr><tr><td><b><p align=right>Shift + Scroll</p></b></td><td>увеличить/уменьшить</td></tr><tr><td><b><p align=right>Ctrl + Scroll</p></b></td><td>увеличить 2x/уменьшить 2x</td></tr><tr><td><b><p align=right>1..9</p></b></td><td>увеличить 1..9x</td></tr><tr><td><b><p align=right>0</p></b></td><td>увеличить 10x</td></tr><tr><td><b><p align=right>comma</p></b></td><td>заполнить ширину</td></tr><tr><td><b><p align=right>period</p></b></td><td>заполнить высоту</td></tr><tr><td><b><p align=right>*</p></b></td><td>заполнить изображение</td></tr></table</p>"
+
+msgid "<p align=center><table><tr><td><p align=right><b>V</b></p></td><td>flip vertically</td></tr><tr><td><p align=right><b>H</b></p></td><td>flip horizontally</td></tr><tr><td><p align=right><b>R</b></p></td><td>reset</td></tr><tr><td><p align=right><b>P</b></p></td><td>image properties</td></tr><tr><td><p align=right><b>L</b></p></td><td>\"Ignore, if the image is less than window\"</td></tr><tr><td><p align=right><b>I</b></p></td><td>menu with images</td></tr><tr><td><p align=right><b>A</b></p></td><td>stop/start animation</td></tr><tr><td><p align=right><b>B</b></p></td><td>toggle drawing background for transparent images</td></tr><tr><td><p align=right><b>E</b></p></td><td>show menu with external tools</td></tr><tr><td><p align=right><b>F1</b></p></td><td>first image from the miltipaged image</td></tr><tr><td><p align=right><b>F2</b></p></td><td>previous</td></tr><tr><td><p align=right><b>F3</b></p></td><td>next</td></tr><tr><td><p align=right><b>F4</b></p></td><td>last</td></tr></table></p>"
+msgstr "<p align=center><table><tr><td><p align=right><b>V</b></p></td><td>отразить по вертикали</td></tr><tr><td><p align=right><b>H</b></p></td><td>отразить по горизонтали</td></tr><tr><td><p align=right><b>R</b></p></td><td>нормализовать</td></tr><tr><td><p align=right><b>P</b></p></td><td>свойства изображения</td></tr><tr><td><p align=right><b>L</b></p></td><td>\"Игнорировать, если изображение меньше окна\"</td></tr><tr><td><p align=right><b>I</b></p></td><td>меню с изображениями</td></tr><tr><td><p align=right><b>A</b></p></td><td>стоп/старт анимации</td></tr><tr><td><p align=right><b>B</b></p></td><td>переключить рисование фона для прозрачных изображений</td></tr><tr><td><p align=right><b>E</b></p></td><td>показать меню с внешними программами</td></tr><tr><td><p align=right><b>F1</b></p></td><td>первое изображение из многостраничного изображения</td></tr><tr><td><p align=right><b>F2</b></p></td><td>предыдущее</td></tr><tr><td><p align=right><b>F3</b></p></td><td>следующее</td></tr><tr><td><p align=right><b>F4</b></p></td><td>последнее</td></tr></table></p>"
+
+msgid "Hotkeys"
+msgstr "Горячие клавиши"
+
+msgid "Recreate selected thumbnails"
+msgstr "Пересоздать выбранные эскизы"
+
+msgid "Recreate all thumbnails"
+msgstr "Пересоздать все эскизы"
 

@@ -2,8 +2,8 @@
                           sq_librarylistener.h  -  description
                              -------------------
     begin                : Fri Mar 26 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -34,11 +34,12 @@ class SQ_LibraryListener : public KDirLister
 		~SQ_LibraryListener();
 
 	public slots:
-		void slotStarted(const KURL &);
+		void slotOpenURL(const KURL&, bool, bool);
+
+	private slots:
 		void slotCompleted();
 		void slotNewItems(const KFileItemList &);
 		void slotDeleteItem(KFileItem *);
-		void slotOpenURL(const KURL&, bool, bool);
 		void slotShowInfo(const QStringList &linfo, bool added);
 
 	signals:
@@ -46,9 +47,8 @@ class SQ_LibraryListener : public KDirLister
 		void finishedInit();
 
 	private:
-		KURL			url;
 		QStringList	list;
-		bool 			operation;
+		bool 		operation;
 
 };
 

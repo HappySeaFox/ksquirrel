@@ -2,8 +2,8 @@
                           sq_quickbrowser.h  -  description
                              -------------------
     begin                : ??? ??? 4 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -19,12 +19,43 @@
 #define SQ_QUICKBROWSER_H
 
 #include <qvbox.h>
+#include <qsizegrip.h>
 
-class SQ_DirOperator;
+#include <ktoolbar.h>
 
-/**
-  *@author CKulT
-  */
+class SQ_DirOperatorBase;
+
+class SQ_Header : public KToolBar
+{
+	public:
+		SQ_Header(QWidget *parent = 0);
+		~SQ_Header();
+
+	protected:
+		void mousePressEvent(QMouseEvent *e);
+		void mouseMoveEvent(QMouseEvent *e);
+		void mouseReleaseEvent(QMouseEvent *e);
+
+	private:
+		int oldX, oldY, oldParentX, oldParentY;
+		bool inMouse;
+		QWidget *p;
+};
+
+class SQ_SizeGrip : public QSizeGrip
+{
+	public:
+		SQ_SizeGrip(QWidget *parent = 0, const char *name = 0);
+		~SQ_SizeGrip();
+
+	protected:
+		virtual void mousePressEvent(QMouseEvent *e);
+		virtual void mouseMoveEvent(QMouseEvent *e);
+
+	private:
+		QWidget *p;
+		QPoint mother;
+};
 
 class SQ_QuickBrowser : public QVBox
 {
@@ -34,13 +65,14 @@ class SQ_QuickBrowser : public QVBox
 		SQ_QuickBrowser(QWidget *parent = 0, const char *name = 0);
 		~SQ_QuickBrowser();
 
-		SQ_DirOperator 	*quick;
+		SQ_DirOperatorBase *quick;
 
 	public slots:
 		void slotClose();
 
 	protected:
 		void closeEvent(QCloseEvent *);
+		void showEvent(QShowEvent *);
 };
 
 #endif

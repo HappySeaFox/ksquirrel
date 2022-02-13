@@ -1,3 +1,8 @@
+/*
+	copyright            : (C) 2004 by Baryshev Dmitry
+	KSQuirrel - image viewer for KDE
+*/
+
 /*  This file is part of the KDE project
     Copyright (C) 2000 David Faure <faure@kde.org>
 
@@ -19,11 +24,12 @@
 #ifndef SQ_THUMBNAILLOADJOB_H
 #define SQ_THUMBNAILLOADJOB_H
 
-#include <qpixmap.h>
+#include <qimage.h>
 
 #include <kio/job.h>
 
 #include "sq_thumbnailsize.h"
+#include "sq_thumbnailinfo.h"
 
 class KFileItem;
 class SQ_Dir;
@@ -42,11 +48,20 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 		void itemRemoved(const KFileItem* item);
 		void appendItem(const KFileItem* item);
 		void appendItems(const KFileItemList &items);
-		static void deleteImageThumbnail(const KURL& url);
-		QImage makeBigThumb(QImage *image);
+
+		static QImage makeBigThumb(QImage *image);
+		static bool loadThumbnail(const QString& pixPath, SQ_Thumbnail&, bool = true);
+
+	private:
+		void determineNextIcon();
+		bool statResultThumbnail(KIO::StatJob *);
+		void createThumbnail(const QString& path);
+		void emitThumbnailLoaded(SQ_Thumbnail &);
+		void emitThumbnailLoadingFailed();
+		void insertOrSync(const QString &path, SQ_Thumbnail &th);
 
 	signals:
-		void thumbnailLoaded(const KFileItem* item,const QPixmap&);
+		void thumbnailLoaded(const KFileItem* item, const SQ_Thumbnail &t);
 
 	private slots:
 		void slotResult(KIO::Job *job);
@@ -60,19 +75,10 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 		time_t mOriginalTime;
 		KURL mThumbURL;
 		KURL mTempURL;
-		QString mCacheDir;
-		QPixmap mBrokenPixmap;
+		QString mCacheDir, mime;
 		SQ_ThumbnailSize mThumbnailSize;
 		SQ_Dir *dir;
-		
-	private:
-		void determineNextIcon();
-		bool statResultThumbnail( KIO::StatJob * );
-		void createThumbnail(const QString& path);
-
-		bool loadThumbnail(const QString& pixPath, QPixmap&);
-		void emitThumbnailLoaded(const QPixmap &pix);
-		void emitThumbnailLoadingFailed();
+		SQ_Thumbnail mBrokenThumbnail;
 };
 
 #endif

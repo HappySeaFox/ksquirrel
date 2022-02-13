@@ -2,8 +2,8 @@
                           sq_dir.h  -  description
                              -------------------
     begin                : ??? ??? 20 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -22,6 +22,8 @@
 #include <qpixmap.h>
 #include <qfileinfo.h>
 
+#include "sq_thumbnailinfo.h"
+
 /**
   *@author CKulT
   */
@@ -35,14 +37,15 @@ class SQ_Dir : public QDir
 		bool mkdir(const QString &relpath);
 		void setRoot(const QString &name);
 		void rewind();
-		QString getRoot();
+		QString root() const;
 		QString getAbsPath(const QString relpath);
-		void savePixmap(const QString &path, const QPixmap &pixmap);
+		void saveThumbnail(const QString &path, SQ_Thumbnail &thumb);
 		bool fileExists(const QString &file, QString &file);
 		bool updateNeeded(const QString &file);
 
 	private:
-		QString root;
+		QString m_root;
+		QString def_prot;
 };
 
 #endif

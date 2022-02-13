@@ -22,6 +22,8 @@
 
 class SQ_GLWidget;
 
+class KStatusBar;
+
 /**
   *@author CKulT
   */
@@ -33,12 +35,18 @@ class SQ_GLView : public QVBox
 		~SQ_GLView();
 
 		SQ_GLWidget *gl;
+		bool isSeparate() const;
+		KStatusBar* statusbar();
+		void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
 
 	protected:
-		void create();
+		void createContent();
+		void closeEvent(QCloseEvent *e);
+		virtual bool eventFilter(QObject *watched, QEvent *e);
 
 	private:
 		bool separate;
+		KStatusBar *sbar;
 };
 
 #endif

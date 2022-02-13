@@ -1,6 +1,8 @@
 /*
-	KSQuirrel - image viewer for KDE with OpenGL support
+	copyright : (C) 2004 by Baryshev Dmitry
+	KSQuirrel - image viewer for KDE
 */
+
 /*
 Gwenview - A simple image viewer for KDE
 Copyright (c) 2000-2003 Aur?lien G?teau
@@ -37,19 +39,30 @@ class SQ_ThumbnailSize
 		SQ_ThumbnailSize(Size value = Huge);
 		SQ_ThumbnailSize(const QString& str);
 
+		void setExtended(bool);
+		bool isExtended() const;
+
+		void setMargin(int);
+		int margin() const;
+
 		void setPixelSize(const QString &size);
 
 		int pixelSize() const;
+		int extendedPixelSize() const;
+
 		bool operator== (const SQ_ThumbnailSize& size) const { return mValue == size.mValue; }
 		operator const QString&() const;
 		operator Size() const { return mValue; }
 
 		int value() const;
+		QString stringValue() const;
 
 		static SQ_ThumbnailSize biggest() { return SQ_ThumbnailSize(Huge); }
 
 	private:
 		Size mValue;
+		bool extended;
+		int m_margin;
 };
 
 #endif

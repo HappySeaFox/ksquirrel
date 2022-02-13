@@ -2,8 +2,8 @@
                           sq_treeview.cpp  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -26,14 +26,10 @@
 #include "sq_config.h"
 #include "sq_treeview.h"
 
-#if KDE_VERSION < 306
-	#define SAME_URL(u1,u2,slash) u1.cmp(u2,slash)
-#else
-	#define SAME_URL(u1,u2,slash) u1.equals(u2,slash)
-#endif
-
 SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
+	vis = false;
+
 	QPixmap homePix = sqLoader->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
 	QPixmap rootPix = sqLoader->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall);   
 
@@ -41,6 +37,7 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
 
 	addColumn("Name");
+	header()->hide();
 
 	setDirOnlyMode(root, true);
 	setDirOnlyMode(home, true);
@@ -50,14 +47,19 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 
 	setCurrentItem(root->root());
 	root->setOpen(true);
-	root->root()->setExpandable(true);
 
 	connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 	connect(this, SIGNAL(returnPressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 	connect(this, SIGNAL(executed(QListViewItem*)), SLOT(slotItemExecuted(QListViewItem*)));
 	connect(this, SIGNAL(newURL(const KURL&)), SLOT(slotNewURL(const KURL&)));
-		
-	header()->hide();
+	connect(root, SIGNAL(populateFinished(KFileTreeViewItem *)), SLOT(slotOpened(KFileTreeViewItem *)));
+
+	itemsToClose = new KFileTreeViewItemList;
+
+	int sync_type = sqConfig->readNumEntry("Fileview", "sync type", 0);
+
+	if(sync_type == 2 || sync_type == 0)
+		emitNewURL(sqWStack->getURL());
 }
 
 SQ_TreeView::~SQ_TreeView()
@@ -72,126 +74,117 @@ void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 	if(sync_type == 2)
 		return;
 
-	KFileTreeViewItem *cur = (KFileTreeViewItem*)item;
+	KFileTreeViewItem *cur = static_cast<KFileTreeViewItem*>(item);
 	KURL Curl = cur->url();
 
-	sqWStack->setURLfromtree(Curl);
+	sqWStack->setURLForCurrent(Curl);
 }
 
 void SQ_TreeView::emitNewURL(const KURL &url)
 {
+	if(!vis)
+	{
+		pendingURL = url;
+		pendingURL.adjustPath(1);
+		return;
+	}
+	else
+		pendingURL = KURL();
+
 	emit newURL(url);
 }
 
 void SQ_TreeView::populateItem(KFileTreeViewItem *item)
 {
-	blockSignals(true);
 	setCurrentItem(item);
-	blockSignals(false);
 	ensureItemVisible(item);
 	item->setOpen(true);
 }
 
+void SQ_TreeView::collapseOpened()
+{
+	paths.clear();
+
+	KFileTreeViewItem *item;
+
+	while((item = itemsToClose->getFirst()) != 0L)
+	{
+		item->setOpen(false);
+		itemsToClose->removeFirst();
+	}
+}
+
 void SQ_TreeView::slotNewURL(const KURL &url)
 {
-	QStringList folderParts;
-	QStringList::Iterator folderIter,endFolderIter;
-	KFileTreeViewItem* viewItem;
-	KFileTreeViewItem* nextViewItem;
+	collapseOpened();
 
-	QString path = url.path();
-	viewItem = static_cast<KFileTreeViewItem*>(root->root());
-	folderParts = QStringList::split('/', path);
+	KURL k(url);
+	k.adjustPath(1);
 
-	folderIter = folderParts.begin();
-	endFolderIter = folderParts.end();
-	for(;folderIter != endFolderIter;++folderIter)
-	{
-		nextViewItem = findViewItem(viewItem,*folderIter);
-		
-		if (nextViewItem)
-		    viewItem = nextViewItem;
-		else
-		    break;
-	}
+	KURL last = k;
 
-	populateItem(viewItem);
-
-	if(SAME_URL(viewItem->url(), url, true))
-	{
-//		setCurrentItem(viewItem);
-//		ensureItemVisible(viewItem);
-//		populateItem(viewItem);
-	}
-	else
-	    slotSetNextUrlToSelect(url);
-}
-
-KFileTreeViewItem* SQ_TreeView::findViewItem(KFileTreeViewItem* parent,const QString& text)
-{
-	QListViewItem* item;
-
-	for (item=parent->firstChild();item;item=item->nextSibling())
-	{
-		if (item->text(0) == text)
-			return static_cast<KFileTreeViewItem*>(item);
-	}
-
-	return 0L;
-}
-
-void SQ_TreeView::slotNewTreeViewItems(KFileTreeBranch *branch, const KFileTreeViewItemList &)
-{
-	if(!branch)
-		return;
-
-//	printf("NEW url to select: %s\n", m_nextUrlToSelect.url().ascii());
-
-	if(m_nextUrlToSelect.isEmpty())
-		return;
-
-//	KFileTreeViewItemListIterator it(itemList);
-
-	QStringList paths;
-	KURL k = m_nextUrlToSelect;
-	
 	while(true)
 	{
 		paths.prepend(k.path());
 		k = k.upURL();
 
-		if(k.path() == "/")
-		{
-		    paths.prepend("/");
-		    break;
-		}
+		if(k.equals(last, true))
+			break;
+
+		last = k;
 	}
 
-	const unsigned int count = paths.count();
+	while(doSearch(root))
+	{}
+}
 
-	// ugly hack: I don't know make it works without it :(
-	for(unsigned int i = 0;i < count;i++)
-	    slotNewURL(m_nextUrlToSelect);
-	    
-	return;
-/*	
-	for(;it.current(); ++it)
+void SQ_TreeView::slotOpened(KFileTreeViewItem *item)
+{
+	if(!item) return;
+
+	doSearch(root);
+}
+
+bool SQ_TreeView::doSearch(KFileTreeBranch *branch)
+{
+	if(paths.empty())
+		return false;
+
+	QValueList<QString>::iterator it = paths.begin();
+
+	KFileTreeViewItem *found = findItem(branch, *it);
+
+	if(!found)
+		return false;
+
+	paths.erase(it);
+	populateItem(found);
+
+	itemsToClose->prepend(found);
+
+	return true;
+}
+
+bool SQ_TreeView::configVisible() const
+{
+	return vis;
+}
+
+void SQ_TreeView::setShown(bool shown)
+{
+	vis = shown;
+
+	KFileTreeView::setShown(shown);
+}
+
+void SQ_TreeView::showEvent(QShowEvent *)
+{
+	if(!pendingURL.isEmpty())
 	{
-		KURL url = (*it)->url();
+		KURL url = pendingURL;
 
-		printf("NEW grepping %s <=> %s\n", m_nextUrlToSelect.path().ascii(), (*it)->url().path().ascii());
+		pendingURL = KURL();
 
-		if(SAME_URL(m_nextUrlToSelect,url,true))
-		{
-			printf("NEW url to select: %s, it: %s\n", m_nextUrlToSelect.url().ascii(), (*it)->url().path().ascii());
-			blockSignals(true);
-			setCurrentItem(*it);
-			blockSignals(false);
-			ensureItemVisible(*it);
-			(*it)->setOpen(true);
-			m_nextUrlToSelect = KURL();
-			return;
-		}
+		emit newURL(url);
 	}
-*/
 }

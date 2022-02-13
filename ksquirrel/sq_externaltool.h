@@ -2,8 +2,8 @@
                           sq_externaltool.h  -  description
                              -------------------
     begin                : ??? ??? 12 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -20,22 +20,21 @@
 
 #include <qvaluevector.h>
 #include <qstring.h>
+#include <qobject.h>
 
-class QPopupMenu;
+class KPopupMenu;
 
-/**
-  *@author CKulT
-  */
-
-typedef struct
+struct SQ_EXT_TOOL
 {
 	QString pixmap;
 	QString name;
 	QString command;
-}SQ_EXT_TOOL;
+};
 
-class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
+class SQ_ExternalTool : public QObject, public QValueVector<SQ_EXT_TOOL>
 {
+	Q_OBJECT
+
 	public: 
 		SQ_ExternalTool();
 		~SQ_ExternalTool();
@@ -47,13 +46,17 @@ class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
 		QString getToolName(const int i);
 		QString getToolCommand(const int i);
 
-		QPopupMenu* getNewPopupMenu();
-		QPopupMenu* getConstPopupMenu() const;
+		KPopupMenu* getNewPopupMenu();
+		KPopupMenu* getConstPopupMenu() const;
 
 		void writeEntries();
 
+	private slots:
+		void slotAboutToShowMenu();
+
 	private:
-		QPopupMenu *menu;
+		KPopupMenu *menu;
+		int title;
 };
 
 #endif

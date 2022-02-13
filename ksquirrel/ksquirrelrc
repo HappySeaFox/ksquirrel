@@ -1,0 +1,140 @@
+[External tool name]
+1=Run within KDE
+10=Set as tiled wallpaper on desktop
+2=Open with GIMP
+3=Open with KuickShow
+4=Open with GQview
+5=Open with ShowImg
+6=Open with KView
+7=Open with KWrite
+8=Print file
+9=Set as wallpaper on desktop
+
+[External tool pixmap]
+1=kfm
+10=mac
+2=gimp
+3=kuickshow
+4=gqview
+5=mathematica
+6=kview
+7=kwrite
+8=kdeprintfax
+9=mac
+
+[External tool program]
+1=kfmclient exec %s
+10=dcop kdesktop KBackgroundIface setWallpaper %s 2
+2=gimp %s
+3=kuickshow %s
+4=gqview %s
+5=showimg %s
+6=kview %s
+7=kwrite %s
+8=kprinter %s
+9=dcop kdesktop KBackgroundIface setWallpaper %s 6
+
+[Fileview]
+archives=true
+click policy=1
+custom directory=/
+disable_dirs=false
+history=true
+last visited=/
+run unknown=false
+set path=0
+sync type=0
+tofirst=true
+
+[Filters]
+extensions=*,*.mpg *.mpeg *.avi *.asf *.divx,*.mp3 *.ogg *.wma *.wav *.it
+items=All files,Video tapes,Audio files
+last=*.jpg *.jpeg *.jpe  *.png  *.bmp *.dib  *.gif  *.pix  *.xwd  *.xpm  *.xbm  *.tiff *tif  *.tga  *.rgb *.rgba \s
+menuitem both=false
+
+[GL view]
+GL view background=#757575
+GL view background type=1
+GL view custom texture=
+actions=true
+alpha_bkgr=true
+angle=90
+geometry=298,207,706,534
+hide_sbar=true
+ignore=true
+manipulation center=1
+move=5
+progress=true
+quickGeometry=0,34,217,312
+scroll=0
+statusbar=true
+toolbars_hidden=false
+winstate=0
+zoom=25
+zoom limit=1
+zoom type=2
+zoom_max=10000
+zoom_min=1
+
+[History]
+items=
+
+[Interface]
+geometry=4,23,1016,741
+gl_separate=true
+has_cdfiles=false
+has_tree=false
+has_url=true
+last view=0
+posX=4
+posY=23
+sizeX=800
+sizeY=600
+splitter1=290,720
+splitter2=341,669
+
+[KFileDialog Settings]
+Automatic Preview=false
+Autoplay sounds=true
+Preview Size=60
+Recent Files=$HOME/1.gif,$HOME/11.jpeg,$HOME/7300.png,$HOME/bg/gl_bk.jpg
+ShowPreviews=false
+ViewMode=SmallColumns
+
+[KFileDialog Speedbar]
+Speedbar IconSize=32
+
+[Libraries]
+monitor=true
+prefix=/usr/lib/squirrel/
+show dialog=false
+
+[Main]
+activate another=false
+check=true
+minimize to tray=false
+sync=false
+
+[Navigator Icons]
+Preview Size=60
+ShowPreviews=false
+ViewMode=LargeRows
+
+[Navigator List]
+Preview Size=60
+ShowPreviews=false
+ViewMode=SmallColumns
+
+[Thumbnails]
+cache=20000
+disable_mime=false
+dont write=false
+extended=false
+margin=0
+size=3
+tooltips=false
+
+[squirrel image viewer file browser]
+Preview Size=60
+ShowPreviews=false
+ViewMode=SmallColumns

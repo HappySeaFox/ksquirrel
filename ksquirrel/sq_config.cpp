@@ -2,8 +2,8 @@
                           sq_config.cpp  -  description
                              -------------------
     begin                : ??? ??? 14 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************

@@ -2,8 +2,8 @@
                           main.cpp  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,87 +18,53 @@
 #include <kapp.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
-#include <kconfig.h>
-#include <dcopclient.h>
 #include <klocale.h>
 #include <kapplication.h>
-
-#include <qvariant.h>
 
 #include "ksquirrel.h"
 #include "sq_about.h"
 #include "sq_hloptions.h"
 
-#include <X11/Xlib.h>
-
 /////////////////////////////////////////////////////////////////////////////////////
 
 static KCmdLineOptions options[] =
 {
-	{"f <url_file_or_directory>", 0, 0},
-	{ 0, 0, 0 }
+	{"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
+	{"l", I18N_NOOP("Print found libraries and exit."), 0},
+	KCmdLineLastOption
 };         
 
 int main(int argc, char *argv[])
 {
-	const QCString App = "ksquirrel";
-
-	XInitThreads();
-
-	Squirrel 			*SQ;
+	KSquirrel 			*SQ;
 	SQ_HLOptions		*high;
 
-	aboutData.addAuthor("Dmitry Baryshev aka CKulT", "Author, first programming, code cleanups, fisrt GL viewer.", "squirrel-sf@yandex.ru", "http://ckult.narod.ru");
+	aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
+	aboutData.addCredit("NightGoblin", "Translation help", 0, "http://nightgoblin.info");
 	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org");
-	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org.ru");
+	aboutData.addCredit("GameDev forum at", 0, 0, "http://gamedev.ru");
 	aboutData.addCredit("A great description of various file formats at", 0, 0, "http://www.wotsit.org");
 
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
-	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
-	// create "high level options" instance, and parse cmdline args
-	// we need "high level options", because we have to ignore some options, that were set through "Options" dialog, but now set through cmdline.
-	// as an example - SQ_WidgetStack sets initial path to SQ_DirOperator to "high->HL_url", if it is not empty, and reads general options otherwise (from sqConfig)
-	high = new SQ_HLOptions;
-	high->HL_url = QVariant(sq_args->getOption("f")).toString();
-
-	// create app after KCmdLineArgs::init(...) !
 	KApplication	a;
 
-	KConfig *tmpConfig = new KConfig(QString("ksquirrelrc"));
+	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
-	// check for another SQuirrel, if exists - send SQ_ACTIVATE message
-	tmpConfig->setGroup("Main");
+	high = new SQ_HLOptions;
 
-	if(a.dcopClient()->isApplicationRegistered(App) && tmpConfig->readBoolEntry("activate another", true))
+	if(!sq_args->isSet("l"))
 	{
-		QCString replyType;
-		QByteArray data, replyData;
-		QDataStream dataStream(data, IO_WriteOnly);
-
-		if(!high->HL_url.isEmpty())
-			dataStream << (QString("SQ_ACTIVATE_WITH_FILE") + high->HL_url.path());
-		else
-			dataStream << QString("SQ_ACTIVATE");
-
-		if(a.dcopClient()->call(App, "KMainWindow", "control(QString)", data, replyType, replyData) == false)
-			printf("\nUnable to send data to old instance of SQuirrel: exiting anyway.\n");
-
-		sq_args->clear();
-		delete tmpConfig;
-		return 0;
+		if(sq_args->count() > 0)
+			high->path = sq_args->url(0).path();
 	}
+	else
+		high->showLibsAndExit = true;
 
-	delete tmpConfig;
-
-	// create instance
-	SQ = new Squirrel(high, 0, "KMainWindow");
+	SQ = new KSquirrel(high, 0, "KMainWindow");
 
 	a.setMainWidget(SQ);
-
-	if(a.dcopClient()->attach())
-		a.dcopClient()->registerAs(App, false);
 
 	sq_args->clear();
 

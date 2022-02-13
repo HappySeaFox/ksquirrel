@@ -2,8 +2,8 @@
                           sq_pixmapcache.cpp  -  description
                              -------------------
     begin                :  Sep 28 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,13 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <kdebug.h>
+
 #include "sq_pixmapcache.h"
 #include "sq_dir.h"
 
-SQ_PixmapCache::SQ_PixmapCache(int limit) : QMap<QString, QPixmap>()
+SQ_PixmapCache::SQ_PixmapCache(int limit) : QMap<QString, SQ_Thumbnail>()
 {
 	cache_limit = limit << 10;
-	current = 0;
+
+	dir = new SQ_Dir;
+	dir->setRoot("thumbnails");
+
+	valid_full = false;
 }
 
 SQ_PixmapCache::~SQ_PixmapCache()
@@ -42,75 +48,107 @@ void SQ_PixmapCache::sync()
 	if(empty())
 		return;
 
-	SQ_Dir *dir = new SQ_Dir();
-	dir->setRoot("thumbnails");
+	QMapIterator<QString, SQ_Thumbnail> BEGIN = begin();
+	QMapIterator<QString, SQ_Thumbnail>    END = end();
 
-	QMapIterator<QString, QPixmap> BEGIN = begin();
-	QMapIterator<QString, QPixmap>    END = end();
+	kdDebug() << "Syncing " << size() << " entries ..." << endl;
 
-	printf("Syncing %d entries ...\n", size());
-
-	for(QMapIterator<QString, QPixmap> it = BEGIN;it != END;it++)
+	for(QMapIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;it++)
 	{
-		printf("syncing \"%s\" ...\n", it.key().ascii());
-		dir->savePixmap(it.key(), it.data());
+		syncEntry(it.key(), it.data());
 	}
 
 	clear();
-
-	delete dir;
 }
 
-// LIFO method is mush better, than FIFO
-// so we'll remove _last_ element in cache
-bool SQ_PixmapCache::removeLast(int bytes)
+void SQ_PixmapCache::syncEntry(const QString &key, SQ_Thumbnail &thumb)
 {
-	if(current + bytes <= cache_limit)
-		return false;
-
-	QMapIterator<QString, QPixmap> it = end();
-
-	QPixmap *pixmap;
-
-	pixmap = &it.data();
-
-	if(pixmap->isNull())
-		return false;
-
-	int size2 = (pixmap->width() * pixmap->height() * pixmap->depth()) >> 3;
-
-	erase(it);
-
-	current -= size2;
-
-	if(!size())
-	{
-		current = 0;
-		return false;
-	}
-
-	return (current + bytes) > cache_limit;
+	kdDebug() << "syncing single entry \"" << key << "\" ..." << endl;
+	dir->saveThumbnail(key, thumb);
 }
 
-void SQ_PixmapCache::insert(const QString &key, const QPixmap &pixmap)
+void SQ_PixmapCache::insert(const QString &key, const SQ_Thumbnail &thumb)
 {
-	int size = (pixmap.width() * pixmap.height() * pixmap.depth()) >> 3;
+	if(thumb.thumbnail.isNull())
+		return;
 
-	while(removeLast(size))
-	{}
+	last_full += SQ_PixmapCache::entrySize(thumb);
 
-	current += size;
-
-	(*this)[key] = pixmap;
+	(*this)[key] = thumb;
 }
 
-bool SQ_PixmapCache::contains2(const QString &key, QPixmap &pixmap)
+void SQ_PixmapCache::removeEntry(const QString &key)
+{
+	SQ_Thumbnail thumb = (*this)[key];
+
+	last_full -= SQ_PixmapCache::entrySize(thumb);
+
+	QMap<QString, SQ_Thumbnail>::remove(key);
+}
+
+bool SQ_PixmapCache::contains2(const QString &key, SQ_Thumbnail &th)
 {
 	if(this->contains(key))
 	{
-		pixmap = (*this)[key];
+		th = (*this)[key];
 		return true;
 	}
 
 	return false;
+}
+
+int SQ_PixmapCache::totalSize()
+{
+	if(valid_full)
+		return last_full;
+
+	QMapConstIterator<QString, SQ_Thumbnail> BEGIN = constBegin();
+	QMapConstIterator<QString, SQ_Thumbnail>    END = constEnd();
+
+	SQ_Thumbnail t;
+	int total = 0;
+
+	for(QMapConstIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;it++)
+	{
+		t = it.data();
+
+		total += SQ_PixmapCache::entrySize(t);
+	}
+
+	last_full = total;
+	valid_full = true;
+
+	return total;
+}
+
+int SQ_PixmapCache::entrySize(const SQ_Thumbnail &t)
+{
+	int  total = (((t.thumbnail.width() * t.thumbnail.height() * t.thumbnail.depth()) >> 3)
+					+ t.info.bpp.length()
+					+ t.info.color.length()
+					+ t.info.compression.length()
+					+ t.info.dimensions.length()
+					+ t.info.frames.length()
+					+ t.info.type.length()
+					+ t.info.uncompressed.length()
+					+ ((t.info.mime.width() * t.info.mime.height() * t.info.mime.depth()) >> 3));
+
+	return total;
+}
+
+bool SQ_PixmapCache::full()
+{
+	return cache_limit <= totalSize();
+}
+
+void SQ_PixmapCache::clear()
+{
+	valid_full = false;
+
+	QMap<QString, SQ_Thumbnail>::clear();
+}
+
+QString SQ_PixmapCache::root() const
+{
+	return dir->root();
 }

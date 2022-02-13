@@ -2,8 +2,8 @@
                           sq_filedetailview.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,6 +21,16 @@
 #include <qwidget.h>
 #include <kfiledetailview.h>
 
+class SQ_FileListViewItem : public KFileListViewItem
+{
+	public:
+		SQ_FileListViewItem(QListView *parent, KFileItem *fi);
+		~SQ_FileListViewItem();
+
+	protected:
+		virtual void paintFocus(QPainter *, const QColorGroup &, const QRect &r);
+};
+
 class SQ_FileDetailView : public KFileDetailView
 {
     Q_OBJECT
@@ -29,11 +39,12 @@ class SQ_FileDetailView : public KFileDetailView
 		SQ_FileDetailView(QWidget* parent, const char* name);
 		~SQ_FileDetailView();
 
+		virtual void insertItem(KFileItem *i);
+
 	protected:
 		QDragObject *dragObject();
-
-	protected slots:
-		void slotSelected(QListViewItem* item, const QPoint &, int c);
+		void initItem(SQ_FileListViewItem *item, const KFileItem *i);
+		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 };
 
 #endif

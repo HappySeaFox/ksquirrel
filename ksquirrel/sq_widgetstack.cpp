@@ -2,8 +2,8 @@
                           sq_widgetstack.cpp  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -17,14 +17,15 @@
 #include <qlabel.h>
 #include <qbuttongroup.h>
 #include <qtoolbutton.h>
-#include <qvaluevector.h>
 #include <qtimer.h>
+#include <qfileinfo.h>
+#include <qapplication.h>
 
 #include <kaction.h>
 #include <kcombobox.h>
 #include <kstandarddirs.h>
-#include <klocale.h>
 #include <kstdaccel.h>
+#include <klocale.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -44,8 +45,11 @@
 #include "sq_bookmarkowner.h"
 #include "sq_thumbnailsize.h"
 #include "sq_progress.h"
+#include "sq_thumbnailjob.h"
+#include "sq_pixmapcache.h"
 
-#define SQ_SECTION_NAME ("squirrel image viewer file browser")
+#define SQ_SECTION_ICONS "Navigator Icons"
+#define SQ_SECTION_LIST "Navigator List"
 
 SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0)
 {
@@ -55,27 +59,30 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0
 	pDirOperatorThumb = 0L;
 	path = 0L;
 
-	ar = new SQ_ArchiveHandler;
+	ac = new KActionCollection(this);
 
 	KDirOperator *w = new KDirOperator(KURL("/"), 0);
 	w->hide();
 	KAction *abstract;
 
-	pABack = KStdAction::back(this, SLOT(slotBack()), sqApp->actionCollection(), "SQ back wrapper");
-	pAForw = KStdAction::forward(this, SLOT(slotForward()), sqApp->actionCollection(), "SQ forward wrapper");
-	pAUp = KStdAction::up(this, SLOT(slotUp()), sqApp->actionCollection(), "SQ up wrapper");
-	pARefresh = KStdAction::redisplay(this, SLOT(slotReload()), sqApp->actionCollection(), "SQ reload wrapper");
+	pABack = KStdAction::back(this, SLOT(slotBack()), ac, "SQ back wrapper");
+	pAForw = KStdAction::forward(this, SLOT(slotForward()), ac, "SQ forward wrapper");
+	pAUp = KStdAction::up(this, SLOT(slotUp()), ac, "SQ up wrapper");
+	pARefresh = KStdAction::redisplay(this, SLOT(slotReload()), ac, "SQ reload wrapper");
 	pARefresh->setText(i18n("Reload"));
 	pARefresh->setShortcut(KStdAccel::shortcut(KStdAccel::Reload));
-	pAHome = KStdAction::home(this, SLOT(slotHome()), sqApp->actionCollection(), "SQ h0me wrapper");
+	pAHome = KStdAction::home(this, SLOT(slotHome()), ac, "SQ h0me wrapper");
 	pAHome->setText(i18n("Home"));
 	abstract = w->actionCollection()->action("mkdir");
-	pAMkDir = new KAction(abstract->text(), abstract->icon(), abstract->shortcut(), this, SLOT(slotMkDir()), sqApp->actionCollection(), "SQ mkdir wrapper");
+	pAMkDir = new KAction(abstract->text(), abstract->icon(), abstract->shortcut(), this, SLOT(slotMkDir()), ac, "SQ mkdir wrapper");
 	abstract = w->actionCollection()->action("properties");
-	pAProp = new KAction(abstract->text(), abstract->icon(), abstract->shortcut(), this, SLOT(slotProperties()), sqApp->actionCollection(), "SQ prop wrapper");
+	pAProp = new KAction(abstract->text(), abstract->icon(), abstract->shortcut(), this, SLOT(slotProperties()), ac, "SQ prop wrapper");
 	abstract = w->actionCollection()->action("delete");
-	pADelete = new KAction(i18n("Delete"), "editdelete", Qt::Key_Delete, this, SLOT(slotDelete()), sqApp->actionCollection(), "SQ delete wrapper");
+	pADelete = new KAction(i18n("Delete"), "editdelete", Qt::Key_Delete, this, SLOT(slotDelete()), ac, "SQ delete wrapper");
 	delete w;
+
+	timerShowProgress = new QTimer(this);
+	connect(timerShowProgress, SIGNAL(timeout()), this, SLOT(slotDelayedShowProgress()));
 }
 
 SQ_WidgetStack::~SQ_WidgetStack()
@@ -83,66 +90,68 @@ SQ_WidgetStack::~SQ_WidgetStack()
 
 KURL SQ_WidgetStack::getURL() const
 {
-	SQ_DirOperator* dirop = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *dirop = visibleWidget();
 
-	return (dirop)?dirop->url():"";
+	return (dirop)?dirop->url():KURL();
 }
 
-void SQ_WidgetStack::setURL(const QString &newpath, bool cl)
+void SQ_WidgetStack::setURL(const QString &newpath, bool cl, bool parseTree)
 {
-	KURL url;
-	url.setPath(newpath);
+	KURL url = newpath;
 
-	setURL(url, cl);
+	setURL(url, cl, parseTree);
 }
 
-void SQ_WidgetStack::setURL(const KURL &newurl, bool cl)
+void SQ_WidgetStack::setURL(const KURL &newurl, bool cl, bool parseTree)
 {
-	if(sqBookmarks) sqBookmarks->setURL(newurl);
+	KURL url = newurl;
+	url.adjustPath(1);
+
+	if(sqBookmarks) sqBookmarks->setURL(url);
 
 	if(sqCurrentURL)
 	{
-		sqCurrentURL->setEditText(newurl.path());
-		sqCurrentURL->addToHistory(newurl.path());
+		sqCurrentURL->addToHistory(url.prettyURL());
+		sqCurrentURL->setEditURL(url);
 	}
 
-	if(!sqTree) return;
+	if(sqGLWidget)
+	{
+		sqQuickOperator->blockSignals(true);
+		sqQuickOperator->setURL(url, cl);
+		sqQuickOperator->blockSignals(false);
+	}
 
-	int sync_type = sqConfig->readNumEntry("Fileview", "sync type", 0);
+	if(sqTree && parseTree)
+	{
+		int sync_type = sqConfig->readNumEntry("Fileview", "sync type", 0);
 
-	if(sync_type == 2 || sync_type == 0)
-		sqTree->emitNewURL(newurl);
-
-	if(sqGLView) sqQuickOperator->setURL(newurl, cl);
-}
-
-void SQ_WidgetStack::setURL(const QString &newpath)
-{
-	setURL(newpath, true);
-}
-
-void SQ_WidgetStack::setURL(const KURL &newurl)
-{
-	setURL(newurl, true);
+		if(sync_type == 2 || sync_type == 0)
+			sqTree->emitNewURL(url);
+	}
 }
 
 void SQ_WidgetStack::setURLfromtree(const KURL &newurl)
 {
 	bool cl = true;
-	((SQ_DirOperator*)visibleWidget())->setURL(newurl, cl);
-	sqQuickOperator->setURL(newurl, cl);
+
+	setURL(newurl, cl, false);
+
+	visibleWidget()->setURL(newurl, cl);
 }
 
-bool SQ_WidgetStack::slotPrevious(KFileItem *it)
+bool SQ_WidgetStack::moveTo(Direction direction, KFileItem *it)
 {
 	KFileView *local;
 	KFileItem *item;
 
-	local = ((SQ_DirOperator*)visibleWidget())->fileview;
+	local = visibleWidget()->fileview;
 	if(it)
 		item = it;
 	else
-		item = local->prevItem(local->currentFileItem());
+		item = (direction == SQ_WidgetStack::Next)?
+				(local->nextItem(local->currentFileItem())):
+				(local->prevItem(local->currentFileItem()));
 
 	if(!item)
 		return false;
@@ -150,47 +159,13 @@ bool SQ_WidgetStack::slotPrevious(KFileItem *it)
 	while(1)
 	{
 		if(item->isFile())
-		{
-			QFileInfo fm(item->url().path());
-
-			if(sqLibHandler->supports(fm.extension(false)))
+			if(sqLibHandler->supports(item->url().path()))
 				break;
-		}
 
-		item = local->prevItem(item);
-		if(!item)
-			return false;
-	}
+		item = (direction == SQ_WidgetStack::Next)?
+				(local->nextItem(item)):
+				(local->prevItem(item));
 
-	selectFile(item);
-	return true;
-}
-
-bool SQ_WidgetStack::slotNext(KFileItem *it)
-{
-	KFileView *local;
-	KFileItem *item;
-
-	local = ((SQ_DirOperator*)visibleWidget())->fileview;
-	if(it)
-		item = it;
-	else
-		item = local->nextItem(local->currentFileItem());
-
-	if(!item)
-		return false;
-
-	while(1)
-	{
-		if(item->isFile())
-		{
-			QFileInfo fm(item->url().path());
-
-			if(sqLibHandler->supports(fm.extension(false)))
-				break;
-		}
-
-		item = local->nextItem(item);
 		if(!item)
 			return false;
 	}
@@ -201,7 +176,7 @@ bool SQ_WidgetStack::slotNext(KFileItem *it)
 
 void SQ_WidgetStack::slotShowHidden(bool)
 {
-	((SQ_DirOperator*)visibleWidget())->actionCollection()->action("show hidden")->activate();
+	visibleWidget()->actionCollection()->action("show hidden")->activate();
 }
 
 void SQ_WidgetStack::setNameFilter(const QString &f)
@@ -210,18 +185,18 @@ void SQ_WidgetStack::setNameFilter(const QString &f)
 	if(pDirOperatorIcon) pDirOperatorIcon->setNameFilter(f);
 	if(pDirOperatorDetail) pDirOperatorDetail->setNameFilter(f);
 	if(pDirOperatorThumb) pDirOperatorThumb->setNameFilter(f);
-	if(sqGLView) sqQuickOperator->setNameFilter(f);
+	if(sqGLWidget) sqQuickOperator->setNameFilter(f);
 
 	if(pDirOperatorList) pDirOperatorList->actionCollection()->action("reload")->activate();
 	if(pDirOperatorIcon) pDirOperatorIcon->actionCollection()->action("reload")->activate();
 	if(pDirOperatorDetail) pDirOperatorDetail->actionCollection()->action("reload")->activate();
 	if(pDirOperatorThumb) pDirOperatorThumb->actionCollection()->action("reload")->activate();
-	if(sqGLView) sqQuickOperator->actionCollection()->action("reload")->activate();
+	if(sqGLWidget) sqQuickOperator->actionCollection()->action("reload")->activate();
 }
 
 const QString SQ_WidgetStack::getNameFilter() const
 {
-	return ((SQ_DirOperator*)visibleWidget())->nameFilter();
+	return visibleWidget()->nameFilter();
 }
 
 void SQ_WidgetStack::raiseWidget(int id)
@@ -229,8 +204,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	KFileView *local = 0L;
 	KFileItem *item = 0L;
 	QString	filter = "*";
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
-	bool created = false;
+	SQ_DirOperator *local_operator = visibleWidget();
+	SQ_DirOperator *shown = 0L;
 
 	if(ncount)
 	{
@@ -242,110 +217,153 @@ void SQ_WidgetStack::raiseWidget(int id)
 	// load views only on call.
 	if(id == 0 && pDirOperatorList == 0L)
 	{
-		pDirOperatorList = new SQ_DirOperator(KURL(((path)?*path:"/")),  SQ_DirOperator::TypeList);
-//		pDirOperatorList->readConfig(KGlobal::config(), SQ_SECTION_NAME);
-		pDirOperatorList->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
+		KURL _url;
+		if(path)
+			_url.setPath(*path);
+		else
+			_url = getURL();
+
+		pDirOperatorList = new SQ_DirOperator(_url,  SQ_DirOperator::TypeList, this);
+
+		Q_CHECK_PTR(pDirOperatorList);
+
+		setupDirOperator(pDirOperatorList, filter);
+		
+		pDirOperatorList->readConfig(KGlobal::config(), SQ_SECTION_LIST);
+		pDirOperatorList->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
 		pDirOperatorList->setMode(KFile::Files);
-//		pDirOperatorList->setView(KFile::Simple);
-//		pDirOperatorList->view()->actionCollection()->action(2)->activate();
-		if(!path) pDirOperatorList->setURL(getURL(), true);
-		pDirOperatorList->setIconSize(16);
+//		pDirOperatorList->iv->setSelectionMode(KFile::Single);
+		pDirOperatorList->iv->setIconSize(KIcon::SizeSmall);
+		shown = pDirOperatorList;
 
-              connect(pDirOperatorList, SIGNAL(tryUnpack(const QString&)), SLOT(tryUnpack(const QString&)));
-
-		if(ncount)
-			pDirOperatorList->setNameFilter(filter);
+		connect(pDirOperatorList, SIGNAL(tryUnpack(KFileItem *)), SLOT(tryUnpack(KFileItem *)));
 
 		addWidget(pDirOperatorList, 0);
-		created = true;
 		ncount++;
 	}
 	if(id == 1 && pDirOperatorIcon == 0L)
 	{
-		pDirOperatorIcon = new SQ_DirOperator(KURL(((path)?*path:"/")),  SQ_DirOperator::TypeIcon);
-//		pDirOperatorIcon->readConfig(KGlobal::config(), SQ_SECTION_NAME);
-		pDirOperatorIcon->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
+		KURL _url;
+		if(path)
+			_url.setPath(*path);
+		else
+			_url = getURL();
+
+		pDirOperatorIcon = new SQ_DirOperator(_url,  SQ_DirOperator::TypeIcon, this);
+
+		Q_CHECK_PTR(pDirOperatorIcon);
+
+		setupDirOperator(pDirOperatorIcon, filter);
+
+		pDirOperatorIcon->readConfig(KGlobal::config(), SQ_SECTION_ICONS);
+		pDirOperatorIcon->setViewConfig(KGlobal::config(), SQ_SECTION_ICONS);
 		pDirOperatorIcon->setMode(KFile::Files);
-//		pDirOperatorIcon->setView(KFile::Simple);
-		if(!path) pDirOperatorIcon->setURL(getURL(), true);
-		pDirOperatorIcon->setIconSize(32);
+//		pDirOperatorIcon->iv->setSelectionMode(KFile::Single);
+		pDirOperatorIcon->iv->setIconSize(KIcon::SizeMedium);
+		shown = pDirOperatorIcon;
 
-              connect(pDirOperatorIcon, SIGNAL(tryUnpack(const QString&)), SLOT(tryUnpack(const QString&)));
-
-		if(ncount)
-			pDirOperatorIcon->setNameFilter(filter);
+		connect(pDirOperatorIcon, SIGNAL(tryUnpack(KFileItem *)), SLOT(tryUnpack(KFileItem *)));
 
 		addWidget(pDirOperatorIcon, 1);
-		created = true;
 		ncount++;
 	}
 	else if(id == 2 &&  pDirOperatorDetail == 0L)
 	{
-		pDirOperatorDetail = new SQ_DirOperator(KURL(((path)?*path:"/")),  SQ_DirOperator::TypeDetail);
-//		pDirOperatorDetail->readConfig(KGlobal::config(), SQ_SECTION_NAME);
-		pDirOperatorDetail->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
+		KURL _url;
+		if(path)
+			_url.setPath(*path);
+		else
+			_url = getURL();
+
+		pDirOperatorDetail = new SQ_DirOperator(_url,  SQ_DirOperator::TypeDetail, this);
+
+		Q_CHECK_PTR(pDirOperatorDetail);
+
+		setupDirOperator(pDirOperatorDetail, filter);
+		
+		pDirOperatorDetail->readConfig(KGlobal::config(), SQ_SECTION_LIST);
 		pDirOperatorDetail->setMode(KFile::Files);
-//		pDirOperatorDetail->setView(KFile::Detail);
-		if(!path) pDirOperatorDetail->setURL(getURL(), true);
+//		pDirOperatorDetail->dv->setSelectionMode(KFile::Single);
+		shown = pDirOperatorDetail;
 
-              connect(pDirOperatorDetail, SIGNAL(tryUnpack(const QString&)), SLOT(tryUnpack(const QString&)));
-
-		if(ncount)
-			pDirOperatorDetail->setNameFilter(filter);
+		connect(pDirOperatorDetail, SIGNAL(tryUnpack(KFileItem *)), SLOT(tryUnpack(KFileItem *)));
 
 		addWidget(pDirOperatorDetail, 2);
-		created = true;
 		ncount++;
 	}
 	else if(id == 3 &&  pDirOperatorThumb == 0L)
 	{
-		pDirOperatorThumb = new SQ_DirOperator(KURL(((path)?*path:"/")),  SQ_DirOperator::TypeThumbs);
-//		pDirOperatorThumb->readConfig(KGlobal::config(), SQ_SECTION_NAME);
-//		pDirOperatorThumb->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
+		KURL _url;
+		if(path)
+			_url = *path;
+		else
+			_url = getURL();
+
+		pDirOperatorThumb = new SQ_DirOperator(_url,  SQ_DirOperator::TypeThumbs, this);
+
+		Q_CHECK_PTR(pDirOperatorThumb);
+
+		setupDirOperator(pDirOperatorThumb, filter);
+
+		pDirOperatorThumb->readConfig(KGlobal::config(), SQ_SECTION_ICONS);
 		pDirOperatorThumb->setMode(KFile::Files);
-//		pDirOperatorThumb->setView(KFile::Simple);
-		pDirOperatorThumb->setIconSize(sqThumbSize->pixelSize());
-		pDirOperatorThumb->tv->setGridX(sqThumbSize->pixelSize() + sqConfig->readNumEntry("Thumbnails", "margin", 2));
-		pDirOperatorThumb->tv->setItemTextPos(QIconView::Bottom);
-		if(!path) pDirOperatorThumb->setURL(getURL(), true);
+//		pDirOperatorThumb->tv->setSelectionMode(KFile::Single);
+
+		int pixelSize = (sqThumbSize->isExtended())?
+				sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize();
+		pDirOperatorThumb->tv->setGridX(pixelSize + sqConfig->readNumEntry("Thumbnails", "margin", 2) + 2);
+		shown = pDirOperatorThumb;
 
 		connect(sqApp, SIGNAL(thumbSizeChanged(const QString&)), pDirOperatorThumb, SLOT(slotSetThumbSize(const QString&)));
-              connect(pDirOperatorThumb, SIGNAL(tryUnpack(const QString&)), SLOT(tryUnpack(const QString&)));
-
-		if(ncount)
-			pDirOperatorThumb->setNameFilter(filter);
+		connect(pDirOperatorThumb, SIGNAL(tryUnpack(KFileItem *)), SLOT(tryUnpack(KFileItem *)));
 
 		addWidget(pDirOperatorThumb, 3);
-		created = true;
 		ncount++;
+
+		pARecreate = new KAction(i18n("Recreate selected thumbnails"), "reload", KShortcut(Key_F5), this, SLOT(slotRecreateThumbnail()), pDirOperatorThumb->actionCollection(), "SQ recreate thumbnail");
+//		sqApp->insertRecreateAction();
 	}
 
-	if(!created && ncount > 1)
-		((SQ_DirOperator*)widget(id))->setURL(((SQ_DirOperator*)visibleWidget())->url(), true);
+	if(shown == 0L && ncount > 1)
+		widget(id)->setURL(visibleWidget()->url(), true);
+
+	if(shown)
+		shown->show();
 
 	QWidgetStack::raiseWidget(id);
 
 	if(ncount > 1)
 	{
-		local_operator = (SQ_DirOperator*)visibleWidget();
+		local_operator = visibleWidget();
 		local_operator->setCurrentItem(item);
 	}
+
+	sqApp->enableThumbsMenu(id == 3);
 }
 
 const KFileItemList* SQ_WidgetStack::selectedItems() const
 {
 	KFileView *local;
 
-	local = ((SQ_DirOperator*)visibleWidget())->fileview;
+	local = visibleWidget()->fileview;
 
 	return local->selectedItems();	
+}
+
+const KFileItemList* SQ_WidgetStack::items() const
+{
+	KFileView *local;
+
+	local = visibleWidget()->fileview;
+
+	return local->items();
 }
 
 void SQ_WidgetStack::raiseFirst(int id)
 {
 	path = new QString;
 
-	if(sqHighLevel->HL_url.isEmpty())
+	if(sqHighLevel->path.isEmpty())
 		switch(sqConfig->readNumEntry("Fileview", "set path", 1))
 		{
 			case 2: *path = sqConfig->readEntry("Fileview", "custom directory", "/"); break;
@@ -354,16 +372,15 @@ void SQ_WidgetStack::raiseFirst(int id)
 			default: *path = "/";
 		}
 	else
-		*path = (!sqHighLevel->HL_url.fileName(false).isEmpty()) ? (sqHighLevel->HL_url.directory()) : (sqHighLevel->HL_url.path());
+	{
+		QFileInfo fm(sqHighLevel->path);
+		*path = (fm.isDir()) ? sqHighLevel->path : fm.dirPath(true);
+	}
 
 	raiseWidget(id);
 
-	QString url = getURL().path();
 	if(sqCurrentURL)
-	{
-		sqCurrentURL->setEditText(url);
-		sqCurrentURL->addToHistory(url);
-	}
+		sqCurrentURL->setEditURL(getURL());
 
         delete path;
         path = 0L;
@@ -371,20 +388,20 @@ void SQ_WidgetStack::raiseFirst(int id)
 
 void SQ_WidgetStack::emitNextSelected()
 {
-	KFileView *local = ((SQ_DirOperator*)visibleWidget())->fileview;
+	if(!moveTo(SQ_WidgetStack::Next)) return;
 
-	if(!slotNext()) return;
+	KFileView *local = visibleWidget()->fileview;
 
-	sqGLWidget->emitShowImage(local->currentFileItem()->url());
+	sqGLWidget->slotStartDecoding(local->currentFileItem()->url());
 }
 
 void SQ_WidgetStack::emitPreviousSelected()
 {
-	KFileView *local = ((SQ_DirOperator*)visibleWidget())->fileview;
+	if(!moveTo(SQ_WidgetStack::Previous)) return;
 
-	if(!slotPrevious()) return;
+	KFileView *local = visibleWidget()->fileview;
 
-	sqGLWidget->emitShowImage(local->currentFileItem()->url());
+	sqGLWidget->slotStartDecoding(local->currentFileItem()->url());
 }
 
 int SQ_WidgetStack::count() const
@@ -392,20 +409,13 @@ int SQ_WidgetStack::count() const
 	return ncount;
 }
 
-void SQ_WidgetStack::emitSelected(const QString &file)
+void SQ_WidgetStack::tryUnpack(KFileItem *item)
 {
-	SQ_DirOperator *local = (SQ_DirOperator*)visibleWidget();
-
-	local->emitSelected(file);
-}
-
-void SQ_WidgetStack::tryUnpack(const QString &fullpath)
-{
-	if(ar->supported(fullpath))
+	if(sqArchive->findProtocolByFile(item) != -1)
 	{
-		ar->setPath(fullpath);
+		sqArchive->setFile(item);
 
-		if(ar->unpack())
+		if(sqArchive->unpack())
 		{
 			QTimer::singleShot(0, this, SLOT(slotDelayedSetExtractURL()));
 		}
@@ -414,16 +424,12 @@ void SQ_WidgetStack::tryUnpack(const QString &fullpath)
 
 void SQ_WidgetStack::slotDelayedSetExtractURL()
 {
-	SQ_DirOperator *local = (SQ_DirOperator*)visibleWidget();
-	local->setURL(KURL(ar->getExtractedPath()), true);
-}
+	SQ_DirOperator *local = visibleWidget();
 
-void SQ_WidgetStack::cleanUnpacked()
-{
-	if(!ar->needClean())
-		return;
+	KURL _url;
+	_url.setPath(sqArchive->getExtractedPath());
 
-	ar->clean();
+	local->setURL(_url, true);
 }
 
 void SQ_WidgetStack::configureClickPolicy()
@@ -436,9 +442,9 @@ void SQ_WidgetStack::configureClickPolicy()
 	sqQuickOperator->reconnectClick();
 }
 
-void SQ_WidgetStack::selectFile(KFileItem *item, SQ_DirOperator *workAround)
+void SQ_WidgetStack::selectFile(KFileItem *item, SQ_DirOperatorBase *workAround)
 {
-	SQ_DirOperator *local = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperatorBase *local = (SQ_DirOperatorBase*)visibleWidget();
 
 	if(local != workAround) local->setCurrentItem(item);
 	if(sqQuickOperator != workAround) sqQuickOperator->setCurrentItem(item);
@@ -446,7 +452,7 @@ void SQ_WidgetStack::selectFile(KFileItem *item, SQ_DirOperator *workAround)
 
 void SQ_WidgetStack::slotFirstFile()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	KFileView *local_view = local_operator->fileview;
 	KFileItemList *list = (KFileItemList*)local_view->items();
 	KFileItem *item = list->first();
@@ -454,17 +460,17 @@ void SQ_WidgetStack::slotFirstFile()
 	if(!item)
 		return;
 
-	if(!slotNext(item))
+	if(!moveTo(SQ_WidgetStack::Next, item))
 		return;
 
 	item = local_view->currentFileItem();
 	local_operator->setCurrentItem(item);
-	sqGLWidget->emitShowImage(item->url());
+	sqGLWidget->slotStartDecoding(item->url());
 }
 
 void SQ_WidgetStack::slotLastFile()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	KFileView *local_view = local_operator->fileview;
 	KFileItemList *list = (KFileItemList*)local_view->items();
 	KFileItem *item = list->last();
@@ -472,30 +478,40 @@ void SQ_WidgetStack::slotLastFile()
 	if(!item)
 		return;
 
-	if(!slotPrevious(item))
+	if(!moveTo(SQ_WidgetStack::Previous, item))
 		return;
 
 	item = local_view->currentFileItem();
 	local_operator->setCurrentItem(item);
-	sqGLWidget->emitShowImage(item->url());
+	sqGLWidget->slotStartDecoding(item->url());
 }
 
-void SQ_WidgetStack::updateGrid()
+void SQ_WidgetStack::updateGrid(bool arrange)
 {
 	if(!pDirOperatorThumb)
 		return;
 
-	pDirOperatorThumb->tv->setGridX(sqThumbSize->pixelSize() + sqConfig->readNumEntry("Thumbnails", "margin", 2));
-	pDirOperatorThumb->actionCollection()->action("reload")->activate();
-	pDirOperatorThumb->tv->arrangeItemsInGrid();
+	int pixelSize = (sqThumbSize->isExtended())?
+			sqThumbSize->extendedPixelSize():sqThumbSize->pixelSize();
+
+	int newgrid = pixelSize + sqConfig->readNumEntry("Thumbnails", "margin", 2) + 2;
+
+	if(pDirOperatorThumb->tv->gridX() != newgrid)
+	{
+		pDirOperatorThumb->tv->setGridX(newgrid);
+
+		if(arrange)
+			pDirOperatorThumb->tv->arrangeItemsInGrid();
+	}
 }
 
 void SQ_WidgetStack::thumbnailsUpdateEnded()
 {
 	static QPixmap play_pixmap = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumb_resume.png"));
 
+	timerShowProgress->stop();
 	pDirOperatorThumb->tv->progressBox->hide();
-	pDirOperatorThumb->tv->sqProgress->flush();
+	pDirOperatorThumb->tv->progress->flush();
 	pDirOperatorThumb->tv->buttonStop->setPixmap(play_pixmap);
 }
 
@@ -503,67 +519,72 @@ void SQ_WidgetStack::thumbnailUpdateStart(int count)
 {
 	static QPixmap stop_pixmap = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumb_stop.png"));
 
-	pDirOperatorThumb->tv->progressBox->show();
-	pDirOperatorThumb->tv->sqProgress->setTotalSteps(count);
+	pDirOperatorThumb->tv->progress->setTotalSteps(count);
 	pDirOperatorThumb->tv->buttonStop->setPixmap(stop_pixmap);
+
+	timerShowProgress->start(1000, true);
+}
+
+void SQ_WidgetStack::slotDelayedShowProgress()
+{
+	pDirOperatorThumb->tv->progressBox->show();
 }
 
 void SQ_WidgetStack::thumbnailProcess()
 {
-	pDirOperatorThumb->tv->sqProgress->advance(1);
+	pDirOperatorThumb->tv->progress->advance(1);
 }
 
 void SQ_WidgetStack::slotUp()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("up")->activate();
 }
 
 void SQ_WidgetStack::slotBack()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("back")->activate();
 }
 
 void SQ_WidgetStack::slotForward()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("forward")->activate();
 }
 
 void SQ_WidgetStack::slotReload()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("reload")->activate();
 }
 
 void SQ_WidgetStack::slotHome()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("home")->activate();
 }
 
 void SQ_WidgetStack::slotMkDir()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
-	local_operator->actionCollection()->action("up")->activate();
+	SQ_DirOperator *local_operator = visibleWidget();
+	local_operator->actionCollection()->action("mkdir")->activate();
 }
 void SQ_WidgetStack::slotProperties()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("properties")->activate();
 }
 
 void SQ_WidgetStack::slotDelete()
 {
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->actionCollection()->action("delete")->activate();
 }
 
 void SQ_WidgetStack::setURLForCurrent(const QString &path)
 {
-	KURL url;
-	url.setPath(path);
+	KURL url = path;
 
 	setURLForCurrent(url);
 }
@@ -572,6 +593,111 @@ void SQ_WidgetStack::setURLForCurrent(const KURL &url)
 {
 	setURL(url, true);
 
-	SQ_DirOperator *local_operator = (SQ_DirOperator*)visibleWidget();
+	SQ_DirOperator *local_operator = visibleWidget();
 	local_operator->setURL(url, true);
+}
+
+void SQ_WidgetStack::updateView()
+{
+	if(pDirOperatorList) pDirOperatorList->rereadDir();
+	if(pDirOperatorIcon) pDirOperatorIcon->rereadDir();
+	if(pDirOperatorDetail) pDirOperatorDetail->rereadDir();
+	if(pDirOperatorThumb) pDirOperatorThumb->rereadDir();
+}
+
+void SQ_WidgetStack::slotRunSeparately()
+{
+	SQ_DirOperator *local_operator = visibleWidget();
+
+	const KFileItemList *selected = local_operator->selectedItems();
+	KFileItemListIterator it(*selected);
+
+	KFileItem *item;
+
+	while((item = it.current()) != 0)
+	{
+		if(item)
+			item->run();
+
+		++it;
+	}
+}
+
+SQ_DirOperator* SQ_WidgetStack::visibleWidget() const
+{
+	SQ_DirOperator *local = (SQ_DirOperator*)QWidgetStack::visibleWidget();
+
+	return local;
+}
+
+SQ_DirOperator* SQ_WidgetStack::widget(int id) const
+{
+	SQ_DirOperator *local = (SQ_DirOperator*)QWidgetStack::widget(id);
+
+	return local;
+}
+
+void SQ_WidgetStack::setupDirOperator(SQ_DirOperator *op, const QString &filter)
+{
+	if(ncount)
+	{
+		KDirLister *d = new KDirLister;
+		d->setNameFilter(filter);
+		op->setDirLister(d);
+	}
+}
+
+
+void SQ_WidgetStack::slotRecreateThumbnail()
+{
+	if(visibleWidget() != pDirOperatorThumb || !pDirOperatorThumb)
+		return;
+
+	if(pDirOperatorThumb->tv->updateRunning())
+		return;
+
+	pDirOperatorThumb->tv->progressBox->show();
+
+	QTimer::singleShot(50, this, SLOT(slotDelayedRecreateThumbnail()));
+
+	qApp->processEvents();
+}
+
+void SQ_WidgetStack::slotDelayedRecreateThumbnail()
+{
+	SQ_Thumbnail thumb;
+
+	KFileItemList *list = (KFileItemList *)selectedItems();
+
+	if(!list)
+		return;
+
+	KFileItem *item;
+
+	thumbnailUpdateStart(list->count());
+
+	qApp->processEvents();
+
+	while((item = list->take()) != 0)
+	{
+		if(!item)
+			continue;
+
+		QString path = item->url().path();
+
+		printf("SQ_ThumbnailLoadJob: recreating %s\n", item->name().ascii());
+
+		if(!SQ_ThumbnailLoadJob::loadThumbnail(path, thumb, true))
+			continue;
+
+		sqCache->removeEntry(path);
+
+		sqCache->insert(path, thumb);
+
+		thumbnailProcess();
+
+		pDirOperatorThumb->tv->setThumbnailPixmap(item, thumb);
+	}
+
+	thumbnailsUpdateEnded();
 }

@@ -2,8 +2,8 @@
                           sq_progress.h  -  description
                              -------------------
     begin                : ??? ??? 29 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -27,7 +27,7 @@
 class SQ_Progress : public QLabel
 {
 	public:
-		SQ_Progress(QWidget * parent, const char * name = 0, WFlags f = 0);
+		SQ_Progress(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
 		~SQ_Progress();
 
 		void setTotalSteps(int totalSteps);
@@ -41,8 +41,6 @@ class SQ_Progress : public QLabel
 		int step;
 
 		QPainter *painter;
-		QWidget *p;
 };
-
 
 #endif

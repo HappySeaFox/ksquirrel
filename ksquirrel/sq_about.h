@@ -2,8 +2,8 @@
                           sq_about.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -16,20 +16,22 @@
  ***************************************************************************/
 
 
-#ifndef _ABOUT_SQUIRREL_H
-#define _ABOUT_SQUIRREL_H
+#ifndef SQ_ABOUT_KSQUIRREL_H
+#define SQ_ABOUT_KSQUIRREL_H
 
 #include <kaboutdata.h>
 
 static const char *description = "KSquirrel - image viewer for KDE";
 
+#define SQ_VERSION "0.5.0-pre4"
+
 static KAboutData aboutData(
 			"ksquirrel", 
 			"KSquirrel",
-			"0.5.0", 
+			SQ_VERSION, 
 			description,
 			KAboutData::License_GPL,
-			"(c) 2004, CKulT", 
+			"(c) 2004, Baryshev Dmitry", 
 			QString::null,
 			"http://ksquirrel.sourceforge.net",
 			QString::null);

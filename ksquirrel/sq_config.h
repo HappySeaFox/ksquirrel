@@ -2,8 +2,8 @@
                           sq_config.h  -  description
                              -------------------
     begin                : ??? ??? 14 2004
-    copyright            : (C) 2004 by CKulT
-    email                : squirrel-sf@uandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -31,12 +31,16 @@ class SQ_Config : public KConfig
 		SQ_Config(const QString& fileName = QString::null);
 		~SQ_Config();
 
-		// Our specific 'read' methods
 		QString readEntry(const QString &sgroup, const QString &key, const QString& aDefault = QString::null);
+
 		int readNumEntry(const QString &sgroup, const QString &key, int nDefault = 0);
+
 		bool readBoolEntry(const QString &sgroup, const QString &pKey, const bool bDefault = false);
+
 		QStringList readListEntry(const QString &sgroup, const QString &key, char sep = ',');
+
 		QValueList<int> readIntListEntry(const QString &sgroup, const QString &key);
+
 		QRect readRectEntry(const QString &sgroup, const QString &key, const QRect *def = 0L);
 };
 

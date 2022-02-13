@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>SQ_ExternalTools</class>
 <widget class="QDialog">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>563</width>
-            <height>412</height>
+            <width>583</width>
+            <height>401</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,7 +22,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <spacer row="1" column="1">
+        <spacer row="3" column="0">
             <property name="name">
                 <cstring>spacer5</cstring>
             </property>
@@ -39,79 +39,64 @@
                 </size>
             </property>
         </spacer>
-        <spacer row="1" column="0">
+        <widget class="QPushButton" row="3" column="2" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>spacer24</cstring>
+                <cstring>pushCancel</cstring>
             </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>1</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
-            <property name="sizeType">
-                <enum>Fixed</enum>
+            <property name="text">
+                <string>Cancel</string>
             </property>
-            <property name="sizeHint">
-                <size>
-                    <width>185</width>
-                    <height>35</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QFrame" row="0" column="0" rowspan="1" colspan="4">
+        </widget>
+        <widget class="QPushButton" row="3" column="1">
             <property name="name">
-                <cstring>frame3</cstring>
+                <cstring>pushOK</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>1</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string> OK </string>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="Line" row="2" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>line1</cstring>
             </property>
             <property name="frameShape">
-                <enum>StyledPanel</enum>
+                <enum>HLine</enum>
             </property>
             <property name="frameShadow">
-                <enum>Raised</enum>
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="3">
+            <property name="name">
+                <cstring>layout4</cstring>
             </property>
             <grid>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <spacer row="0" column="3">
-                    <property name="name">
-                        <cstring>spacer21</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Fixed</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton" row="4" column="0">
-                    <property name="name">
-                        <cstring>pushNewTool</cstring>
-                    </property>
-                    <property name="text">
-                        <string>New tool</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" row="4" column="1">
-                    <property name="name">
-                        <cstring>pushToolClear</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Delete tool</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" row="4" column="2">
-                    <property name="name">
-                        <cstring>pushToolClearAll</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Clear All</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="0" column="0">
+                <widget class="QLabel" row="2" column="0" rowspan="1" colspan="3">
                     <property name="name">
                         <cstring>textLabel1</cstring>
                     </property>
@@ -119,62 +104,7 @@
                         <string>Hint: %s expands to file name</string>
                     </property>
                 </widget>
-                <widget class="QPushButton" row="1" column="3">
-                    <property name="name">
-                        <cstring>pushToolUp</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>true</bool>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>0</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <spacer row="3" column="3" rowspan="2" colspan="1">
-                    <property name="name">
-                        <cstring>spacer20</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>30</width>
-                            <height>190</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton" row="2" column="3">
-                    <property name="name">
-                        <cstring>pushToolDown</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>true</bool>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>0</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QListView" row="1" column="0" rowspan="3" colspan="3">
+                <widget class="QListView" row="0" column="0" rowspan="1" colspan="3">
                     <column>
                         <property name="text">
                             <string>Pixmap</string>
@@ -211,6 +141,14 @@
                     <property name="name">
                         <cstring>listTools</cstring>
                     </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>7</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
                     <property name="resizePolicy">
                         <enum>Manual</enum>
                     </property>
@@ -235,55 +173,198 @@
                 </widget>
             </grid>
         </widget>
-        <widget class="QPushButton" row="1" column="3">
+        <spacer row="1" column="3">
             <property name="name">
-                <cstring>pushCancel</cstring>
+                <cstring>spacer7</cstring>
             </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
+            <property name="orientation">
+                <enum>Vertical</enum>
             </property>
-            <property name="text">
-                <string>Cancel</string>
+            <property name="sizeType">
+                <enum>Expanding</enum>
             </property>
-        </widget>
-        <widget class="QPushButton" row="1" column="2">
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>135</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="0" column="3">
             <property name="name">
-                <cstring>pushOK</cstring>
+                <cstring>layout8</cstring>
             </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="text">
-                <string> OK </string>
-            </property>
-            <property name="default">
-                <bool>true</bool>
-            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupBox3</cstring>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>5</number>
+                        </property>
+                        <widget class="QPushButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>pushNew</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>New tool</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="1" column="0">
+                            <property name="name">
+                                <cstring>pushDelete</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="autoRepeat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Delete</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="2" column="0">
+                            <property name="name">
+                                <cstring>pushClearAll</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Clear All</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupBox4</cstring>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>5</number>
+                        </property>
+                        <widget class="QPushButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>pushToolUp</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>22</width>
+                                    <height>22</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="autoRepeat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Move tool up</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="1" column="0">
+                            <property name="name">
+                                <cstring>pushToolDown</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>22</width>
+                                    <height>22</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="autoRepeat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Move tool down</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </vbox>
         </widget>
     </grid>
 </widget>
 <connections>
     <connection>
-        <sender>pushNewTool</sender>
+        <sender>pushOK</sender>
         <signal>clicked()</signal>
         <receiver>SQ_ExternalTools</receiver>
-        <slot>slotNewTool()</slot>
+        <slot>accept()</slot>
     </connection>
     <connection>
-        <sender>pushToolClear</sender>
+        <sender>pushCancel</sender>
         <signal>clicked()</signal>
         <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolClear()</slot>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>listTools</sender>
+        <signal>rightButtonClicked(QListViewItem*,const QPoint&amp;,int)</signal>
+        <receiver>SQ_ExternalTools</receiver>
+        <slot>slotToolRenameRequest(QListViewItem*,const QPoint&amp;,int)</slot>
     </connection>
     <connection>
         <sender>pushToolUp</sender>
@@ -298,28 +379,22 @@
         <slot>slotToolDown()</slot>
     </connection>
     <connection>
-        <sender>pushOK</sender>
+        <sender>pushNew</sender>
         <signal>clicked()</signal>
         <receiver>SQ_ExternalTools</receiver>
-        <slot>accept()</slot>
+        <slot>slotNewTool()</slot>
     </connection>
     <connection>
-        <sender>pushCancel</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>reject()</slot>
-    </connection>
-    <connection>
-        <sender>pushToolClearAll</sender>
+        <sender>pushClearAll</sender>
         <signal>clicked()</signal>
         <receiver>listTools</receiver>
         <slot>clear()</slot>
     </connection>
     <connection>
-        <sender>listTools</sender>
-        <signal>rightButtonClicked(QListViewItem*,const QPoint&amp;,int)</signal>
+        <sender>pushDelete</sender>
+        <signal>clicked()</signal>
         <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolRenameRequest(QListViewItem*,const QPoint&amp;,int)</slot>
+        <slot>slotToolClear()</slot>
     </connection>
 </connections>
 <includes>
@@ -335,7 +410,7 @@
     <slot>slotToolUp()</slot>
     <slot>slotToolDown()</slot>
     <slot returnType="int">start()</slot>
-    <slot>slotToolRenameRequest( QListViewItem * item, const QPoint &amp; point, int pos )</slot>
+    <slot>slotToolRenameRequest( QListViewItem * item, const QPoint &amp;, int pos )</slot>
 </slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>

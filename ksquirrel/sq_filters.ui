@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>SQ_Filters</class>
 <widget class="QDialog">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>536</width>
-            <height>428</height>
+            <width>584</width>
+            <height>398</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,7 +22,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QPushButton" row="1" column="1">
+        <widget class="QPushButton" row="3" column="1">
             <property name="name">
                 <cstring>pushOK</cstring>
             </property>
@@ -41,7 +41,7 @@
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="QPushButton" row="1" column="2">
+        <widget class="QPushButton" row="3" column="2" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>pushCancel</cstring>
             </property>
@@ -57,7 +57,7 @@
                 <string>Cancel</string>
             </property>
         </widget>
-        <spacer row="1" column="0">
+        <spacer row="3" column="0">
             <property name="name">
                 <cstring>spacer5</cstring>
             </property>
@@ -69,50 +69,206 @@
             </property>
             <property name="sizeHint">
                 <size>
-                    <width>155</width>
+                    <width>411</width>
                     <height>20</height>
                 </size>
             </property>
         </spacer>
-        <widget class="QFrame" row="0" column="0" rowspan="1" colspan="3">
+        <widget class="Line" row="2" column="0" rowspan="1" colspan="4">
             <property name="name">
-                <cstring>frame3</cstring>
+                <cstring>line2</cstring>
             </property>
             <property name="frameShape">
-                <enum>StyledPanel</enum>
+                <enum>HLine</enum>
             </property>
             <property name="frameShadow">
-                <enum>Raised</enum>
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="3">
+            <property name="name">
+                <cstring>layout7</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupBox2</cstring>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>5</number>
+                        </property>
+                        <widget class="QPushButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>pushNew</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>New filter</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="1" column="0">
+                            <property name="name">
+                                <cstring>pushDelete</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="autoRepeat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Delete</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="2" column="0">
+                            <property name="name">
+                                <cstring>pushClearAll</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Clear All</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupBox1</cstring>
+                    </property>
+                    <property name="title">
+                        <string></string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>5</number>
+                        </property>
+                        <widget class="QPushButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>pushFilterUp</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>22</width>
+                                    <height>22</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="autoRepeat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Move filter up</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="1" column="0">
+                            <property name="name">
+                                <cstring>pushFilterDown</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>22</width>
+                                    <height>22</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="autoRepeat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="flat">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Move filter down</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer row="1" column="3">
+            <property name="name">
+                <cstring>spacer12</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>145</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="3">
+            <property name="name">
+                <cstring>layout7</cstring>
             </property>
             <grid>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QPushButton" row="3" column="0">
-                    <property name="name">
-                        <cstring>pushNewFilter</cstring>
-                    </property>
-                    <property name="text">
-                        <string>New filter</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" row="3" column="1">
-                    <property name="name">
-                        <cstring>pushFilterClear</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Delete filter</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" row="3" column="2">
-                    <property name="name">
-                        <cstring>pushFilterClearAll</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Clear All</string>
-                    </property>
-                </widget>
-                <widget class="QListView" row="0" column="0" rowspan="3" colspan="3">
+                <widget class="QListView" row="0" column="0" rowspan="1" colspan="3">
                     <column>
                         <property name="text">
                             <string>Name</string>
@@ -163,74 +319,7 @@
                         <enum>Reject</enum>
                     </property>
                 </widget>
-                <widget class="QPushButton" row="1" column="3">
-                    <property name="name">
-                        <cstring>pushFilterDown</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>true</bool>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>0</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>22</width>
-                            <height>22</height>
-                        </size>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" row="0" column="3">
-                    <property name="name">
-                        <cstring>pushFilterUp</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>true</bool>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>0</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>22</width>
-                            <height>22</height>
-                        </size>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <spacer row="2" column="3" rowspan="2" colspan="1">
-                    <property name="name">
-                        <cstring>spacer20</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>30</width>
-                            <height>180</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="2">
+                <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
                     <property name="name">
                         <cstring>checkBoth</cstring>
                     </property>
@@ -243,24 +332,6 @@
     </grid>
 </widget>
 <connections>
-    <connection>
-        <sender>pushNewFilter</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Filters</receiver>
-        <slot>slotNewFilter()</slot>
-    </connection>
-    <connection>
-        <sender>pushFilterClear</sender>
-        <signal>clicked()</signal>
-        <receiver>SQ_Filters</receiver>
-        <slot>slotFilterClear()</slot>
-    </connection>
-    <connection>
-        <sender>pushFilterClearAll</sender>
-        <signal>clicked()</signal>
-        <receiver>listFilters</receiver>
-        <slot>clear()</slot>
-    </connection>
     <connection>
         <sender>pushFilterUp</sender>
         <signal>clicked()</signal>
@@ -291,6 +362,24 @@
         <receiver>SQ_Filters</receiver>
         <slot>reject()</slot>
     </connection>
+    <connection>
+        <sender>pushNew</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotNewFilter()</slot>
+    </connection>
+    <connection>
+        <sender>pushClearAll</sender>
+        <signal>clicked()</signal>
+        <receiver>listFilters</receiver>
+        <slot>clear()</slot>
+    </connection>
+    <connection>
+        <sender>pushDelete</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotFilterClear()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
@@ -303,7 +392,7 @@
     <slot>slotFilterUp()</slot>
     <slot>slotFilterDown()</slot>
     <slot returnType="int">start()</slot>
-    <slot>slotFilterRenameRequest( QListViewItem * item, const QPoint &amp; point, int pos )</slot>
+    <slot>slotFilterRenameRequest( QListViewItem * item, const QPoint &amp;, int pos )</slot>
 </slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>

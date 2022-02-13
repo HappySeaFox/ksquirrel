@@ -2,8 +2,8 @@
                           sq_fileiconview.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -23,6 +23,16 @@
 #include <qwidget.h>
 #include <qpoint.h>
 
+class SQ_FileIconViewItem : public KFileIconViewItem
+{
+	public:
+		SQ_FileIconViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi);
+		~SQ_FileIconViewItem();
+
+	protected:
+		virtual void paintFocus(QPainter *p, const QColorGroup &cg);
+};
+
 class SQ_FileIconView : public KFileIconView
 {
     Q_OBJECT
@@ -31,12 +41,19 @@ class SQ_FileIconView : public KFileIconView
 		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
 		~SQ_FileIconView();
 
-		KFileIconViewItem* viewItem(KFileItem *item);
+		SQ_FileIconViewItem* viewItem(const KFileItem *item);
+
+		virtual void updateView(const KFileItem *i);
+		virtual void updateView(bool b);
+		virtual void insertItem(KFileItem *i);
 
 	protected:
 		QDragObject *dragObject();
 		void dragEnterEvent(QDragEnterEvent *);
-		void dropEvent(QDropEvent *);
+		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+
+	private:
+		void initItem(SQ_FileIconViewItem *item, const KFileItem *i);
 
 	protected slots:
 		void slotSelected(QIconViewItem *item, const QPoint &point);

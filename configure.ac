@@ -1,0 +1,112 @@
+AC_INIT([ksquirrel], [0.5.0-pre4], [squirrel-sf@yandex.ru])
+AC_GNU_SOURCE
+#AC_CONFIG_SRCDIR([config.h.in])
+#AM_INIT_AUTOMAKE([foreign])
+#AC_CONFIG_HEADER([config.h])
+
+AC_CONFIG_AUX_DIR([admin])
+
+unset CDPATH
+
+AC_CANONICAL_SYSTEM
+AC_ARG_PROGRAM
+
+AM_INIT_AUTOMAKE(ksquirrel, 0.5.0-pre4)
+
+KDE_SET_PREFIX
+
+AM_CONFIG_HEADER(config.h)
+
+AC_ENABLE_SHARED(yes)
+AC_ENABLE_STATIC(no)
+
+dnl for NLS support. Call them in this order!
+dnl WITH_NLS is for the po files
+AM_KDE_WITH_NLS
+
+KDE_USE_QT(3)
+AC_PATH_KDE
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+KDE_PROG_LIBTOOL
+AC_PATH_PROG([PERL], [perl])
+
+AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h) and GLU (GL/glu.h) headers to be installed."))
+AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
+
+#AC_CHECK_LIB([kio], [KFileIconView], [], AC_MSG_ERROR("KIO library is corrupted!"))
+
+AC_CHECK_LIB([GL], [glBegin], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+
+AC_CHECK_FUNC([glEnd], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glGenTextures], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glBindTexture], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glTexImage2D], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glColor3f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glClearColor], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glClearDepth], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glClear], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glEnable], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glDisable], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glBlendFunc], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glShadeModel], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glMatrixMode], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glViewport], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glLoadIdentity], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glOrtho], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glTexParameteri], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glTexCoord2f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glVertex2f], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glLoadMatrixf], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR("OpenGL library is corrupted!"))
+
+# Checks for header files.
+AC_PATH_X
+AC_HEADER_STDC
+AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_FUNC_ERROR_AT_LINE
+AC_FUNC_REALLOC
+AC_FUNC_STAT
+#AC_CHECK_FUNCS([mkdir socket sqrt])
+
+AC_CHECK_FUNCS([memcpy memset], [], AC_MSG_ERROR("ksquirrel needs memcpy() and memset() functions!"))
+
+KDE_CREATE_SUBDIRSLIST
+
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([ksquirrel/Makefile])
+AC_CONFIG_FILES([pics/Makefile])
+AC_CONFIG_FILES([po/Makefile])
+
+AC_OUTPUT
+
+echo "
+KSquirrel configuration:
+-------------------------
+  Source code location: ${srcdir}
+  KSquirrel version:    ${VERSION}
+  C Compiler:           ${CC}
+  C Compiler flags:     ${CFLAGS}
+  C++ Compiler:         ${CXX}
+  C++ Compiler flags:   ${CXXFLAGS}
+  
+Installation options:
+----------------------
+  prefix:               ${prefix}
+  Install path:         ${prefix}/bin
+  KSquirrel binary:     ${prefix}/bin/${PACKAGE}
+"

@@ -2,8 +2,8 @@
                           sq_tray.h  -  description
                              -------------------
     begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    copyright            : (C) 2004 by Baryshev Dmitry
+    email                : ksquirrel@tut.by
  ***************************************************************************/
 
 /***************************************************************************
@@ -36,10 +36,11 @@ class SQ_SystemTray : public KSystemTray
 
 	private slots:
 		void slotActivate();
+		void slotClose();
 
 	 private:
 		KPopupMenu	*rightMenu;
-		KAction 		*pAOpen;
+		KAction 		*pAOpen, *pAExit;
 
 };
 
