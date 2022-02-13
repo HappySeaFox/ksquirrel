@@ -129,9 +129,11 @@ void SQ_FileDetailView::insertItem(KFileItem *i)
         return;
 
     // add new item
+    setUpdatesEnabled(false);
     SQ_FileListViewItem *item = new SQ_FileListViewItem(this, i);
 
     initItem(item, i);
+    setUpdatesEnabled(true);
 
     i->setExtraData(this, item);
 }

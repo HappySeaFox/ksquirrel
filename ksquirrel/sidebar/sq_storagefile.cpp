@@ -23,14 +23,22 @@
 
 #include "sq_storagefile.h"
 
-void SQ_StorageFile::writeStorageFile(const QString &path, const KURL &inpath)
+void SQ_StorageFile::writeStorageFile(const QString &path, const KURL &inpath, KURL w)
 {
+    SQ_StorageFile::writeStorageFileAsString(path, inpath, w.prettyURL());
+}
+
+void SQ_StorageFile::writeStorageFileAsString(const QString &path, const KURL &inpath, QString content)
+{
+    if(content.isEmpty())
+        content = inpath.prettyURL();
+
     KMD5 md5(QFile::encodeName(inpath.prettyURL()));
     QFile file(path + QString::fromLatin1(".") + QString(md5.hexDigest()));
 
     if(file.open(IO_WriteOnly))
     {
-        QString k = inpath.prettyURL().utf8();
+        QString k = content.utf8();
         file.writeBlock(k, k.length());
         file.close();
     }
@@ -38,8 +46,20 @@ void SQ_StorageFile::writeStorageFile(const QString &path, const KURL &inpath)
 
 KURL SQ_StorageFile::readStorageFile(const QString &path)
 {
+    QString n = SQ_StorageFile::readStorageFileAsString(path);
+
+    int ind = n.find('\n');
+
+    if(ind != -1)
+        n.truncate(ind);
+
+    return KURL::fromPathOrURL(n);
+}
+
+QString SQ_StorageFile::readStorageFileAsString(const QString &path)
+{
     QFile file(path);
-    KURL url;
+    QString str;
 
     if(file.open(IO_ReadOnly))
     {
@@ -48,12 +68,12 @@ KURL SQ_StorageFile::readStorageFile(const QString &path)
         if(file.status() == IO_Ok)
         {
             QString k;
-            k.append(ba);
-            url = KURL::fromPathOrURL(QString::fromUtf8(k));
+            str.append(ba);
+            str = QString::fromUtf8(str);
         }
     }
 
     file.close();
 
-    return url;
+    return str;
 }

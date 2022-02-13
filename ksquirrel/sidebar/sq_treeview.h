@@ -23,6 +23,8 @@
 #include <kfiletreeview.h>
 #include <kurl.h>
 
+class KDirWatch;
+
 class SQ_TreeViewItem;
 class SQ_ThreadDirLister;
 class SQ_TreeViewMenu;
@@ -112,8 +114,17 @@ class SQ_TreeView : public KFileTreeView
          */
         bool doSearch();
 
-    public slots:
+    private slots:
+        /*
+         *  Load url.
+         */
+        void slotNewURL(const KURL &url);
+
+        void slotCurrentChanged(QListViewItem *);
+        void slotAddToFolderBasket();
         void slotClearChecked();
+        void slotDirty(const QString &);
+        void slotDeleteItemMy(KFileItem *);
 
         /*
          *  Item executed. Let's pass its url to SQ_WidgetStack (if needed).
@@ -124,12 +135,6 @@ class SQ_TreeView : public KFileTreeView
          *  New item is opened. Try to continue loading url.
          */
         void slotOpened(KFileTreeViewItem *);
-
-    private slots:
-        /*
-         *  Load url.
-         */
-        void slotNewURL(const KURL &url);
 
         void slotNewTreeViewItems(KFileTreeBranch*, const KFileTreeViewItemList &);
         void slotDelayedScan();
@@ -152,13 +157,15 @@ class SQ_TreeView : public KFileTreeView
     private:
         SQ_FileTreeViewBranch *root;
         QStringList paths;
-        KURL pendingURL;
+        KURL pendingURL, cURL;
         SQ_ThreadDirLister    *lister;
         KFileTreeViewItemList m_mapFolders;
         QTimer *m_animTimer, *scanTimer;
         bool m_ignoreClick;
         int m_recurs;
         SQ_TreeViewMenu *menu;
+        KDirWatch *dw;
+        KFileTreeViewItem *itemToBeOpened;
 
         static SQ_TreeView *m_instance;
 };

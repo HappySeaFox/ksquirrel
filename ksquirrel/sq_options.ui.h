@@ -133,6 +133,8 @@ void SQ_Options::init()
     checkLazy->setChecked(kconf->readBoolEntry("lazy", true));
     spinLazy->setRange(10, 5000, 100, true);
     spinLazy->setValue(kconf->readNumEntry("lazy_delay", 500));
+    spinRows->setRange(0, 5, 1, true);
+    spinRows->setValue(kconf->readNumEntry("rows", 2));
 
 
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, KIcon::SizeMedium), i18n("General"));    
@@ -203,6 +205,7 @@ int SQ_Options::start()
         kconf->writeEntry("mark", checkMark->isChecked());
         kconf->writeEntry("lazy", checkLazy->isChecked());
         kconf->writeEntry("lazy_delay", spinLazy->value());
+        kconf->writeEntry("rows", spinRows->value());
 
         kconf->setGroup("GL view");
         kconf->writeEntry("load_pages", buttonGroupPages->selectedId());

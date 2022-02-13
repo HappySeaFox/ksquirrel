@@ -22,6 +22,8 @@
 
 namespace KIO { class Job; }
 
+class SQ_Dir;
+
 /**
   *@author Baryshev Dmitry
   */
@@ -56,6 +58,7 @@ class SQ_ImageBasket : public KDirOperator
 
         private:
             bool m_stat, m_exist;
+            SQ_Dir *dir;
             static SQ_ImageBasket *m_inst;
 };
 

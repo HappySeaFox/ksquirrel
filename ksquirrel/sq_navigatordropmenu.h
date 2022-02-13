@@ -23,7 +23,9 @@
 
 #include <kurl.h>
 
-class KPopupMenu;
+namespace KIO { class Job; }
+
+class SQ_PopupMenu;
 
 /*
  *  SQ_NavigatorDropMenu will help in drag-and-drop
@@ -51,6 +53,8 @@ class SQ_NavigatorDropMenu : public QObject
 
         static SQ_NavigatorDropMenu* instance() { return m_instance; }
 
+        enum FileAction { Copy = 0, Move, Link };
+
         /*
          *  Save destination url and urls of dropped files.
          */
@@ -59,9 +63,9 @@ class SQ_NavigatorDropMenu : public QObject
         /*
          *  Show popup menu with available actions.
          */
-        void exec(const QPoint &pos);
+        void exec(const QPoint &pos, bool = false);
 
-    protected slots:
+    private slots:
         /*
          *  These slots will use KIO to
          *  copy, move or link files.
@@ -69,11 +73,16 @@ class SQ_NavigatorDropMenu : public QObject
         void slotCopy();
         void slotMove();
         void slotLink();
+        void slotJobResult(KIO::Job *);
+
+    signals:
+        void done(const KURL &, int);
 
     private:
-        KPopupMenu *dropmenu;
+        SQ_PopupMenu *dropmenu;
         KURL::List list;
         KURL url;
+        bool also;
 
         static SQ_NavigatorDropMenu *m_instance;
 };

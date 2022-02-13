@@ -7,8 +7,6 @@
 ** place of a destructor.
 *****************************************************************************/
 
-#include <kiconloader.h>
-
 void SQ_ExternalTools::init()
 {
     listTools->setSorting(-1);
@@ -133,10 +131,10 @@ void SQ_ExternalTools::slotToolRenameRequest( QListViewItem *item, const QPoint 
         dialog.setup(KIcon::Desktop, KIcon::Application, true, 16);
         QString result = dialog.openDialog();
     
-        if(result != QString::null)
+        if(!result.isEmpty())
         {
             item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(result, KIcon::Desktop, 16));
-        item->setText(3, result);
+            item->setText(3, result);
         }
     }
 }

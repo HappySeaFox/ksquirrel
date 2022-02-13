@@ -56,8 +56,6 @@
 
 #define SQ_PREDOWNLOAD_SIZE 20
 
-#define TM(a) //printf("TM %s %s\n", a, QDateTime::currentDateTime().toString("hh:mm:ss:zzz").ascii());
-
 SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList &items, SQ_FileThumbView *parnt) 
     : KIO::Job(false), parent(parnt)
 {
@@ -76,25 +74,21 @@ void SQ_ThumbnailLoadJob::start()
 {
     if(mItems.isEmpty())
     {
-//        printf("ISEMPTY\n");
         emit result(this);
         delete this;
         return;
     }
 
-    TM("determine start")
     determineNextIcon();
 }
 
 void SQ_ThumbnailLoadJob::appendItem(const KFileItem* item)
 {
-//    printf("APPEND ITEM %s\n", item->name().ascii());
     mItems.append(item);
 }
 
 void SQ_ThumbnailLoadJob::itemRemoved(const KFileItem* item)
 {
-    //printf("ITEM REMOVED %s\n", item->url().path().ascii());
     mItems.removeRef(item);
 
     nextFile(item == mCurrentItem);
@@ -105,8 +99,6 @@ void SQ_ThumbnailLoadJob::itemsRemoved(const KFileItemList &items)
     KFileItem *item;
     bool next = false;
     KFileItemList *m_items = const_cast<KFileItemList *>(&items);
-
-//    printf("JOB REMOVE %d from %d\n", items.count(), mItems.count());
 
     if(!mItems.isEmpty() && !items.isEmpty())
     {
@@ -194,7 +186,6 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
 
     if(mItems.isEmpty() || !item)
     {
-//        printf("*** RETURN\n");
         emit result(this);
         delete this;
         return;
@@ -206,19 +197,12 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
         mCurrentURL = mCurrentItem->url();
         mItems.removeFirst();
 
-        //printf("*** Adding stat %s\n", mCurrentURL.url().ascii());
-        TM("ADD STAT")
-
         addSubjob(KIO::stat(mCurrentItem->url(), false));
     }
 }
 
 void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
 {
-    //printf("RESULT [%d] of %d: %d\n", job, mState, job->error());
-    TM("RESULT")
-
-    //printf("*** SUBJOBS = %d\n", subjobs.count());
     subjobs.remove(job);
 //    Q_ASSERT(subjobs.isEmpty());
 
@@ -226,9 +210,6 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
     {
         case STATE_STATORIG:
         {
-            //printf("STATE_STATORIG %s\n", mCurrentURL.url().ascii());
-            TM("STAT_ORIG")
-
             KIO::UDSEntry entry = mCurrentItem->entry();
             KIO::UDSEntry::ConstIterator it = entry.begin();
             mOriginalTime = 0;
@@ -244,7 +225,6 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
                 else if((*it).m_uds == KIO::UDS_SIZE)
                 {
                     totalSize = (KIO::filesize_t)((*it).m_long);
-                    //printf("UDS %ld\n", totalSize);
                 }
                 else if((*it).m_uds == KIO::UDS_NAME)
                 {
@@ -252,17 +232,10 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
                 }
             }
 
-            //printf("DETERMINE %s\n", mCurrentURL.url().ascii()  );
-            TM("DETERMINE")
-            //printf("\n\n");
-
-            TM("CALC ABSPATH_BEGIN")
             mThumbURL.setPath(dir->absPath(mCurrentURL));
-            TM("CALC ABSPATH_END")
 
             if(mCurrentURL.isLocalFile())
             {
-                //printf("START LOCAL\n");
                 if(!statResultThumbnail())
                     createThumbnail(mCurrentURL);
 
@@ -272,7 +245,6 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
                 determineNextIcon();
             else if(SQ_ThumbnailsUnused::instance()->needUpdate(mCurrentURL, mOriginalTime))
             {
-                //printf("START REMOTE\n");
                 mState = STATE_PREDOWNLOAD;
                 continueDownload = false;
 
@@ -296,9 +268,6 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
 
         case STATE_PREDOWNLOAD:
         {
-            //printf("STATE_PREDOWNLOAD %s => %s\n", mCurrentURL.path().ascii(), mTempURL.path().ascii());
-            TM("STATE_PREDOWN")
-
             // error
             if(job->error() && job->error() != KIO::ERR_USER_CANCELED)
                 emitThumbnailLoadingFailed();
@@ -311,9 +280,6 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
 
         case STATE_DOWNLOAD:
         {
-            //printf("STATE_DOWNLOAD %s %d\n", mTempURL.path().ascii(), job->error());
-            TM("STATE_DOWN")
-
             if(job->error())
                 emitThumbnailLoadingFailed();
             else if(SQ_LibraryHandler::instance()->libraryForFile(mTempURL.path()))
@@ -335,14 +301,10 @@ void SQ_ThumbnailLoadJob::slotData(KIO::Job *job, const QByteArray &data)
 
     size += data.size();
 
-    //printf("GET [%d] %ld / %ld\n", job, size, totalSize);
-    TM("GET")
-
     QFile f(mTempURL.path());
 
     if(f.open(IO_WriteOnly | IO_Append))
     {
-        TM("WRITE")
         f.writeBlock(data);
         f.close();
     }
@@ -350,31 +312,25 @@ void SQ_ThumbnailLoadJob::slotData(KIO::Job *job, const QByteArray &data)
     // 20 bytes are enough to determine file type
     if(size >= SQ_PREDOWNLOAD_SIZE && !continueDownload)
     {
-        TM("if !size")
         // cancel download (file type is not supported)
         if(totalSize != size
             && !SQ_LibraryHandler::instance()->libraryForFile(mTempURL.path()))
         {
             SQ_ThumbnailsUnused::instance()->insert(mCurrentURL, mOriginalTime);
-            TM("*** KILL")
             job->kill(false);          // kill job & emit result
         }
         else if(!statResultThumbnail())
         {
             // nice, we can open this image - 
             // go to 'STATE_DOWNLOAD' stage and continue download
-            TM("SLOTDATA !stat")
             continueDownload = true;
             mState = STATE_DOWNLOAD;
         }
         else if(size != totalSize)
         {
-            TM("*** KILL SILENT")
             job->kill(true);          // kill job
             subjobs.remove(job);
-            TM("*** KILL SILENT KILLED")
             determineNextIcon();
-            TM("*** KILL SILENT DETERMINED");
         }
     }
 }
@@ -383,13 +339,8 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail()
 {
     SQ_Thumbnail th;
 
-    TM("STAT START")
-
-    //printf("STAT searching \"%s\"\n", mCurrentURL.url().ascii());
-
     if(SQ_PixmapCache::instance()->contains2(mCurrentURL, th))
     {
-        //printf("STAT found in cache %dx%d \"%s\"\n",  th.thumbnail.width(), th.thumbnail.height(), mCurrentURL.url().ascii());
         emitThumbnailLoaded(th);
         return true;
     }
@@ -403,22 +354,8 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail()
     if(!th.thumbnail.load(mThumbURL.path(), sqdirThumbFormat))
         return false;
 
-    TM("STAT LOADED")
-    //printf("STAT loaded %s\n", mThumbURL.url().ascii());
-
-    bool ok;
-    QString s;
-    int dim;
-
-    th.w = th.h = 0;
-
-    s = th.thumbnail.text("Thumb::Image::Width");
-    dim = s.toInt(&ok);
-    if(ok) th.w = dim;
-
-    s = th.thumbnail.text("Thumb::Image::Height");
-    dim = s.toInt(&ok);
-    if(ok) th.h = dim;
+    th.w = th.thumbnail.text("Thumb::Image::Width").toInt();
+    th.h = th.thumbnail.text("Thumb::Image::Height").toInt();
 
     SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->libraryForFile(mCurrentURL);
     th.mime = lib->mime;
@@ -428,7 +365,6 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail()
     insertOrSync(mCurrentURL, th);
 
     emitThumbnailLoaded(th);
-    TM("STAT END")
 
     return true;
 }
@@ -477,8 +413,6 @@ void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
     int biggestDimension = QMAX(t.thumbnail.width(), t.thumbnail.height());
     int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize();
 
-//    //printf("THUMB %d %d\n", biggestDimension, thumbPixelSize);
-
     if(biggestDimension <= thumbPixelSize)
     {
         emit thumbnailLoaded(mCurrentItem, t);
@@ -504,8 +438,6 @@ void SQ_ThumbnailLoadJob::appendItems(const KFileItemList &items)
     KFileItem *item;
     KFileItemList *m_items = const_cast<KFileItemList *>(&items);
 
-//    printf("JOB APPEND %d to %d\n", items.count(), mItems.count());
-
     if(!mItems.isEmpty() && !items.isEmpty())
     {
         for(item = m_items->first();item;item = m_items->next())
@@ -517,8 +449,6 @@ void SQ_ThumbnailLoadJob::prependItems(const KFileItemList &items)
 {
     KFileItem *item;
     KFileItemList *m_items = const_cast<KFileItemList *>(&items);
-
-//    printf("JOB PREPEND %d to %d\n", items.count(), mItems.count());
 
     if(!mItems.isEmpty() && !items.isEmpty())
     {

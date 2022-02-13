@@ -20,11 +20,13 @@
 #include <kmdcodec.h>
 #include <kfileview.h>
 #include <klocale.h>
+#include <kglobal.h>
 #include <kpopupmenu.h>
 #include <kfileiconview.h>
 #include <kpropertiesdialog.h>
 #include <kio/job.h>
 #include <kapplication.h>
+#include <kmimetype.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -36,16 +38,13 @@
 
 SQ_ImageBasket * SQ_ImageBasket::m_inst;
 
-SQ_ImageBasket::SQ_ImageBasket(QWidget *parent, const char *name) : KDirOperator(SQ_Dir(SQ_Dir::Basket).root(), parent, name)
+SQ_ImageBasket::SQ_ImageBasket(QWidget *parent, const char *name) : KDirOperator((dir = new SQ_Dir(SQ_Dir::Basket))->root(), parent, name)
 {
     m_inst = this;
 
     connect(this, SIGNAL(dropped(const KFileItem *, QDropEvent*, const KURL::List&)),
             this, SLOT(slotDropped(const KFileItem *, QDropEvent*, const KURL::List&)));
 
-//        disconnect(dirLister(), SIGNAL(started(const KURL&)), 0, 0);
-//        disconnect(dirLister(), SIGNAL(completed()), 0, 0);
-//        disconnect(dirLister(), SIGNAL(percent(int)), 0, 0);
     disconnect(dirLister(), SIGNAL(refreshItems(const KFileItemList &)), 0, 0);
 
     // redirect "Properties" dialog
@@ -77,16 +76,18 @@ SQ_ImageBasket::SQ_ImageBasket(QWidget *parent, const char *name) : KDirOperator
 }
 
 SQ_ImageBasket::~SQ_ImageBasket()
-{}
+{
+    delete dir;
+}
 
 void SQ_ImageBasket::insertNewFiles(const KFileItemList &list)
 {
-    KFileItem *tmp;
-    KFileItemList newlist;
     QString n;
     int ind;
+    KFileItemListIterator it(list);
+    KFileItem *tmp;
 
-    for(KFileItemListIterator it(list); (tmp = it.current()); ++it)
+    for(; (tmp = it.current()); ++it)
     {
         n = tmp->name();
         ind = n.findRev('.');
@@ -95,25 +96,51 @@ void SQ_ImageBasket::insertNewFiles(const KFileItemList &list)
         if(ind != -1)
             n.truncate(ind);
 
+        // force determining mimetype
+        (void)tmp->mimetype();
         tmp->setName(n);
-        newlist.append(tmp);
+
+        QStringList list = QStringList::split(QChar('\n'), SQ_StorageFile::readStorageFileAsString(tmp->url().path()), true);
+        QStringList::iterator it = list.begin();
+
+        if(list.count() > 1)
+        {
+            ++it; // skip url
+            tmp->setMimeType(*it);
+        }
+        else
+        {
+            KURL url = KURL::fromPathOrURL(*it);
+            QString mime = KMimeType::findByURL(url)->name();
+            tmp->setMimeType(mime);
+
+            static const QString &nl = KGlobal::staticQString("\n");
+
+            QString inurl = url.prettyURL() + nl + mime;
+
+            SQ_StorageFile::writeStorageFileAsString(
+                    dir->root() + QDir::separator() + url.fileName(),
+                    url, inurl);
+        }
     }
 
-    //KDirOperator::insertNewFiles(newlist);
-    view()->addItemList(newlist);
+    view()->addItemList(list);
 }
 
 void SQ_ImageBasket::add(const KFileItemList &list)
 {
     KFileItem *tmp;
-    QString name;
+    static const QString &nl = KGlobal::staticQString("\n");
 
     for(KFileItemListIterator it(list); (tmp = it.current()); ++it)
     {
         if(tmp->isFile())
         {
-            name = url().path() + QDir::separator() + tmp->name();
-            SQ_StorageFile::writeStorageFile(name, tmp->url().path());
+            QString inurl = tmp->url().prettyURL() + nl + tmp->mimetype();
+
+            SQ_StorageFile::writeStorageFileAsString(
+                    dir->root() + QDir::separator() + tmp->name(),
+                    tmp->url(), inurl);
         }
     }
 }
@@ -122,11 +149,15 @@ void SQ_ImageBasket::slotDropped(const KFileItem *, QDropEvent*, const KURL::Lis
 {
     QString name;
     KURL::List::const_iterator itEnd = list.end();
+    static const QString &nl = KGlobal::staticQString("\n");
 
     for(KURL::List::const_iterator it = list.begin();it != itEnd;++it)
     {
-        name = url().path() + QDir::separator() + (*it).fileName();
-        SQ_StorageFile::writeStorageFile(name, *it);
+        QString inurl = (*it).prettyURL() + nl + KMimeType::findByURL(*it)->name();
+
+        SQ_StorageFile::writeStorageFileAsString(
+                dir->root() + QDir::separator() + (*it).fileName(),
+                *it, inurl);
     }
 }
 

@@ -84,6 +84,10 @@ class SQ_ThreadDirLister : public QThread
         ~SQ_ThreadDirLister();
 
         void appendURL(const KURL &url);
+
+        bool hasURL(const KURL &url);
+        bool isCurrent(const KURL &url);
+
         void lock();
         void unlock();
 
@@ -104,6 +108,18 @@ inline
 void SQ_ThreadDirLister::appendURL(const KURL &url)
 {
     todo.append(url);
+}
+
+inline
+bool SQ_ThreadDirLister::hasURL(const KURL &url)
+{
+    return todo.find(url) != todo.end();
+}
+
+inline
+bool SQ_ThreadDirLister::isCurrent(const KURL &url)
+{
+    return todo.first().equals(url, true);
 }
 
 inline

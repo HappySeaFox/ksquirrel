@@ -39,8 +39,8 @@ class SQ_PreviewWidget : public QWidget
     Q_OBJECT
 
     public: 
-	SQ_PreviewWidget(QWidget *parent = 0, const char *name = 0);
-	~SQ_PreviewWidget();
+        SQ_PreviewWidget(QWidget *parent = 0, const char *name = 0);
+        ~SQ_PreviewWidget();
 
         void rereadColor();
 
@@ -69,6 +69,7 @@ class SQ_PreviewWidget : public QWidget
 
     private:
         bool fit();
+        void fitAndConvert();
 
     private:
         QImage *all, *small;
@@ -80,6 +81,8 @@ class SQ_PreviewWidget : public QWidget
         int m_delay;
         QWMatrix matrix;
         SQ_Downloader *down;
+        bool multi;
+        QPixmap multi_pix;
 
         static SQ_PreviewWidget *m_inst;
 };

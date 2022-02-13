@@ -34,6 +34,7 @@
 #include <kio/job.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
+#include <kstringhandler.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -55,6 +56,7 @@
 #include "sq_thumbnailloadjob.h"
 #include "sq_pixmapcache.h"
 #include "sq_selectdeselectgroup.h"
+#include "sq_navigatordropmenu.h"
 
 SQ_WidgetStack * SQ_WidgetStack::m_instance = 0;
 
@@ -107,6 +109,33 @@ KURL SQ_WidgetStack::url() const
     return dirop->url();
 }
 
+void SQ_WidgetStack::init()
+{
+    SQ_Config::instance()->setGroup("Fileview");
+
+    fileaction = static_cast<SQ_WidgetStack::FileAction>(SQ_Config::instance()->readNumEntry("last_action", SQ_WidgetStack::Unknown));
+    KURL uu = KURL::fromPathOrURL(SQ_Config::instance()->readEntry("last_url"));
+
+    connect(SQ_NavigatorDropMenu::instance(), SIGNAL(done(const KURL &, int)),
+            this, SLOT(slotTreeMenuDone(const KURL &, int)));
+
+    emitNewLastURL(uu);
+}
+
+void SQ_WidgetStack::slotTreeMenuDone(const KURL &url, int a)
+{
+    if(a == SQ_NavigatorDropMenu::Copy)
+        fileaction = SQ_WidgetStack::Copy;
+    else if(a == SQ_NavigatorDropMenu::Move)
+        fileaction = SQ_WidgetStack::Cut;
+    else if(a == SQ_NavigatorDropMenu::Link)
+        fileaction = SQ_WidgetStack::Link;
+
+    lastURL = url;
+
+    emitNewLastURL(lastURL);
+}
+
 void SQ_WidgetStack::setURL(const KURL &newurl, bool parseTree)
 {
     KURL url = newurl;
@@ -126,7 +155,7 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool parseTree)
         SQ_Config::instance()->setGroup("Fileview");
         int sync_type = SQ_Config::instance()->readNumEntry("sync type", 0);
 
-        if(sync_type !=1)
+        if(sync_type != 2)
             SQ_TreeView::instance()->emitNewURL(url);
     }
 }
@@ -226,7 +255,7 @@ void SQ_WidgetStack::raiseWidget(SQ_DirOperator::ViewT id, bool doUpdate)
         {
             SQ_FileDetailView *dv = dynamic_cast<SQ_FileDetailView *>(dirop->preparedView());
 
-            action("detailed view")->activate();
+            dirop->setPreparedView();
             dv->setSelectionMode(KFile::Extended);
         }
         break;
@@ -246,6 +275,8 @@ void SQ_WidgetStack::raiseWidget(SQ_DirOperator::ViewT id, bool doUpdate)
 
     // enable/disable menu with thumbnail sizes
     KSquirrel::app()->enableThumbsMenu(id == SQ_DirOperator::TypeThumbs);
+    dirop->enableThumbnailActions(id == SQ_DirOperator::TypeThumbs);
+    dirop->selectOld();
 }
 
 /*
@@ -507,16 +538,51 @@ void SQ_WidgetStack::slotFilePaste()
 
     // get current url
     KURL _url = url();
+    emitNewLastURL(_url);
+    KIO::Job *job;
 
     // now copy or move files to current url
+    job = (fileaction == SQ_WidgetStack::Copy) ? KIO::copy(files, _url) : KIO::move(files, _url);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotJobResult(KIO::Job *)));
+}
+
+void SQ_WidgetStack::slotJobResult(KIO::Job *job)
+{
+    if(job && job->error())
+        job->showErrorDialog(KSquirrel::app());
+}
+
+void SQ_WidgetStack::emitNewLastURL(const KURL &u)
+{
+    lastURL = u;
+    QString text;
+
+    QString targ = KStringHandler::csqueeze(u.isLocalFile() ? u.path() : u.prettyURL(), 25);
+
     if(fileaction == SQ_WidgetStack::Copy)
-    {
-        KIO::copy(files, _url);
-    }
+        text = i18n("Repeat (copy to %1)").arg(targ);
     else if(fileaction == SQ_WidgetStack::Cut)
-    {
-        KIO::move(files, _url);
-    }
+        text = i18n("Repeat (move to %1)").arg(targ);
+    else if(fileaction == SQ_WidgetStack::Link)
+        text = i18n("Repeat (link to %1)").arg(targ);
+
+    if(!text.isEmpty())
+        emit newLastURL(text);
+}
+
+void SQ_WidgetStack::repeat()
+{
+    if(fileaction == SQ_WidgetStack::Copy || fileaction == SQ_WidgetStack::Cut)
+        prepare();
+    else
+        return;
+
+    // No files to copy ?
+    if(lastURL.isEmpty() || files.isEmpty())
+        return;
+
+    KIO::Job *job = (fileaction == SQ_WidgetStack::Copy) ? KIO::copy(files, lastURL) : KIO::move(files, lastURL);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotJobResult(KIO::Job *)));
 }
 
 // Create links
@@ -526,10 +592,13 @@ void SQ_WidgetStack::slotFileLinkTo()
         return;
 
     // select a directory
-    KURL url = KFileDialog::getExistingURL(QString::null, dirop);
+    KURL url = KFileDialog::getExistingURL(lastURL.url(), dirop);
 
     if(url.isEmpty())
         return;
+
+    fileaction = SQ_WidgetStack::Link;
+    emitNewLastURL(url);
 
     // create symlinks
     KIO::link(files, url);
@@ -542,10 +611,13 @@ void SQ_WidgetStack::slotFileCopyTo()
         return;
 
     // select a directory
-    KURL url = KFileDialog::getExistingURL(QString::null, dirop);
+    KURL url = KFileDialog::getExistingURL(lastURL.url(), dirop);
 
     if(url.isEmpty())
         return;
+
+    fileaction = SQ_WidgetStack::Copy;
+    emitNewLastURL(url);
 
     // copy files to selected directory
     KIO::copy(files, url);
@@ -558,10 +630,13 @@ void SQ_WidgetStack::slotFileMoveTo()
         return;
 
     // select a directory
-    KURL url = KFileDialog::getExistingURL(QString::null, dirop);
+    KURL url = KFileDialog::getExistingURL(lastURL.url(), dirop);
 
     if(url.isEmpty())
         return;
+
+    fileaction = SQ_WidgetStack::Cut;
+    emitNewLastURL(url);
 
     // move files to selected directory
     KIO::move(files, url);
@@ -669,6 +744,15 @@ bool SQ_WidgetStack::updateRunning() const
         return false;
 
     return tv->updateRunning();
+}
+
+void SQ_WidgetStack::saveState()
+{
+    SQ_Config::instance()->writeEntry("last visited", dirop->url().prettyURL());
+    SQ_Config::instance()->writeEntry("last_action", static_cast<int>(fileaction));
+    SQ_Config::instance()->writeEntry("last_url", lastURL.prettyURL());
+
+    dirop->saveConfig();
 }
 
 #include "sq_widgetstack.moc"

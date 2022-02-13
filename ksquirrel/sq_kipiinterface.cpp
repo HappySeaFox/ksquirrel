@@ -117,7 +117,7 @@ class SQ_KIPIImageInfo : public KIPI::ImageInfoShared
 SQ_KIPIInterface::SQ_KIPIInterface(QWidget *parent)
  : KIPI::Interface(parent, "KSquirrel KIPI Interface")
 {
-    connect(dynamic_cast<KFileIconView *>(SQ_WidgetStack::instance()->diroperator()->view()), SIGNAL(selectionChanged()),
+    connect(SQ_WidgetStack::instance()->diroperator(), SIGNAL(fileHighlighted(const KFileItem *)),
         this, SLOT(slotSelectionChanged()));
 
     connect(SQ_WidgetStack::instance()->diroperator()->dirLister(), SIGNAL(completed(const KURL&)),

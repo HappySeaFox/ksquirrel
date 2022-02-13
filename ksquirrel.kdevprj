@@ -39,7 +39,7 @@ project_name=KSquirrel
 project_type=mini_kde2
 short_info=KSquirrel - image viewer for KDE >= 3.5
 sub_dir=ksquirrel/
-version=0.7.1
+version=0.7.2
 version_control=CVS
 workspace=1
 
@@ -287,7 +287,7 @@ install_location=
 type=SOURCE
 
 [ksquirrel/mime/Makefile.am]
-files=ksquirrel/mime/x-avs.desktop,ksquirrel/mime/x-cut.desktop,ksquirrel/mime/x-dxf.desktop,ksquirrel/mime/x-iff.desktop,ksquirrel/mime/x-jbig.desktop,ksquirrel/mime/x-koala.desktop,ksquirrel/mime/x-leaf.desktop,ksquirrel/mime/x-lif.desktop,ksquirrel/mime/x-mac.desktop,ksquirrel/mime/x-msp.desktop,ksquirrel/mime/x-mtv.desktop,ksquirrel/mime/x-neo.desktop,ksquirrel/mime/x-pi1.desktop,ksquirrel/mime/x-pict.desktop,ksquirrel/mime/x-pix.desktop,ksquirrel/mime/x-pxr.desktop,ksquirrel/mime/x-ras.desktop,ksquirrel/mime/x-ras.magic,ksquirrel/mime/x-rawrgb.desktop,ksquirrel/mime/x-sct.desktop,ksquirrel/mime/x-sun.desktop,ksquirrel/mime/x-sun.magic,ksquirrel/mime/x-utah.desktop,ksquirrel/mime/x-utah.magic,ksquirrel/mime/x-wal.desktop,ksquirrel/mime/x-wbmp.desktop,ksquirrel/mime/x-xim.desktop,ksquirrel/mime/x-xwd.desktop,ksquirrel/mime/x-pi3.desktop,ksquirrel/mime/ljpeg.desktop
+files=ksquirrel/mime/x-avs.desktop,ksquirrel/mime/x-cut.desktop,ksquirrel/mime/x-dxf.desktop,ksquirrel/mime/x-iff.desktop,ksquirrel/mime/x-jbig.desktop,ksquirrel/mime/x-koala.desktop,ksquirrel/mime/x-leaf.desktop,ksquirrel/mime/x-lif.desktop,ksquirrel/mime/x-mac.desktop,ksquirrel/mime/x-msp.desktop,ksquirrel/mime/x-mtv.desktop,ksquirrel/mime/x-neo.desktop,ksquirrel/mime/x-pi1.desktop,ksquirrel/mime/x-pict.desktop,ksquirrel/mime/x-pix.desktop,ksquirrel/mime/x-pxr.desktop,ksquirrel/mime/x-ras.desktop,ksquirrel/mime/x-ras.magic,ksquirrel/mime/x-rawrgb.desktop,ksquirrel/mime/x-sct.desktop,ksquirrel/mime/x-sun.desktop,ksquirrel/mime/x-sun.magic,ksquirrel/mime/x-utah.desktop,ksquirrel/mime/x-utah.magic,ksquirrel/mime/x-wal.desktop,ksquirrel/mime/x-wbmp.desktop,ksquirrel/mime/x-xim.desktop,ksquirrel/mime/x-xwd.desktop,ksquirrel/mime/x-pi3.desktop,ksquirrel/mime/ljpeg.desktop,ksquirrel/mime/x-dicom.desktop,ksquirrel/mime/x-mdl.desktop
 sub_dirs=
 type=normal
 
@@ -307,6 +307,12 @@ type=DATA
 dist=true
 install=true
 install_location=$$(kde_mimedir)/image/x-cut.desktop
+type=DATA
+
+[ksquirrel/mime/x-dicom.desktop]
+dist=true
+install=true
+install_location=$$(kde_mimedir)/image/x-dicom.desktop
 type=DATA
 
 [ksquirrel/mime/x-dxf.desktop]
@@ -349,6 +355,12 @@ type=DATA
 dist=true
 install=true
 install_location=$$(kde_mimedir)/image/x-mac.desktop
+type=DATA
+
+[ksquirrel/mime/x-mdl.desktop]
+dist=true
+install=true
+install_location=$$(kde_mimedir)/image/x-mdl.desktop
 type=DATA
 
 [ksquirrel/mime/x-msp.desktop]
@@ -472,7 +484,7 @@ install_location=$$(kde_mimedir)/image/x-xwd.desktop
 type=DATA
 
 [ksquirrel/sidebar/Makefile.am]
-files=ksquirrel/sidebar/sq_mountview.cpp,ksquirrel/sidebar/sq_mountview.h,ksquirrel/sidebar/sq_multibar.cpp,ksquirrel/sidebar/sq_multibar.h,ksquirrel/sidebar/sq_treeview.cpp,ksquirrel/sidebar/sq_treeview.h,ksquirrel/sidebar/sq_categoriesview.cpp,ksquirrel/sidebar/sq_categoriesview.h,ksquirrel/sidebar/sq_categorybrowsermenu.cpp,ksquirrel/sidebar/sq_categorybrowsermenu.h,ksquirrel/sidebar/sq_threaddirlister.cpp,ksquirrel/sidebar/sq_threaddirlister.h,ksquirrel/sidebar/sq_treeviewitem.h,ksquirrel/sidebar/sq_treeviewitem.cpp,ksquirrel/sidebar/sq_mountviewitem.cpp,ksquirrel/sidebar/sq_mountviewitem.h,ksquirrel/sidebar/sq_imagebasket.cpp,ksquirrel/sidebar/sq_imagebasket.h,ksquirrel/sidebar/sq_storagefile.h,ksquirrel/sidebar/sq_storagefile.cpp,ksquirrel/sidebar/sq_previewwidget.cpp,ksquirrel/sidebar/sq_previewwidget.h,ksquirrel/sidebar/sq_treeviewmenu.cpp,ksquirrel/sidebar/sq_treeviewmenu.h
+files=ksquirrel/sidebar/sq_mountview.cpp,ksquirrel/sidebar/sq_mountview.h,ksquirrel/sidebar/sq_multibar.cpp,ksquirrel/sidebar/sq_multibar.h,ksquirrel/sidebar/sq_treeview.cpp,ksquirrel/sidebar/sq_treeview.h,ksquirrel/sidebar/sq_categoriesview.cpp,ksquirrel/sidebar/sq_categoriesview.h,ksquirrel/sidebar/sq_categorybrowsermenu.cpp,ksquirrel/sidebar/sq_categorybrowsermenu.h,ksquirrel/sidebar/sq_threaddirlister.cpp,ksquirrel/sidebar/sq_threaddirlister.h,ksquirrel/sidebar/sq_treeviewitem.h,ksquirrel/sidebar/sq_treeviewitem.cpp,ksquirrel/sidebar/sq_mountviewitem.cpp,ksquirrel/sidebar/sq_mountviewitem.h,ksquirrel/sidebar/sq_imagebasket.cpp,ksquirrel/sidebar/sq_imagebasket.h,ksquirrel/sidebar/sq_storagefile.h,ksquirrel/sidebar/sq_storagefile.cpp,ksquirrel/sidebar/sq_previewwidget.cpp,ksquirrel/sidebar/sq_previewwidget.h,ksquirrel/sidebar/sq_treeviewmenu.cpp,ksquirrel/sidebar/sq_treeviewmenu.h,ksquirrel/sidebar/sq_directorybasket.cpp,ksquirrel/sidebar/sq_directorybasket.h
 sharedlib_LDFLAGS=-version-info 0:0:0
 sharedlib_rootname=sidebar
 sub_dirs=
@@ -497,6 +509,18 @@ install_location=
 type=SOURCE
 
 [ksquirrel/sidebar/sq_categorybrowsermenu.h]
+dist=true
+install=false
+install_location=
+type=HEADER
+
+[ksquirrel/sidebar/sq_directorybasket.cpp]
+dist=true
+install=false
+install_location=
+type=SOURCE
+
+[ksquirrel/sidebar/sq_directorybasket.h]
 dist=true
 install=false
 install_location=

@@ -60,12 +60,12 @@ int main(int argc, char *argv[])
             "(c) 2003-2007 Baryshev Dmitry",
             QString::null,
             "http://ksquirrel.sourceforge.net",
-            QString::null);
+            "ksquirrel@tut.by");
 
     // setup 'About' dialog
     aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
     aboutData.addCredit("Andrey Rahmatullin aka wrar", I18N_NOOP("Bug reports, patches"), "wrar@altlinux.ru", QString::null);
-    aboutData.addCredit("CJ", I18N_NOOP("Testing"), "cj-serg@mail.ru", QString::null);
+    aboutData.addCredit("SeaJey", I18N_NOOP("Testing"), "seajey.serg@gmail.com", QString::null);
     aboutData.addCredit("JaguarWan", I18N_NOOP("Bug reports"), "jaguarwan@gmail.com", QString::null);
     aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
     aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Initial artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");

@@ -117,7 +117,14 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
             t.h = 0;
             t.mime = lib->mime;
 
-            SQ_ImageLoader::instance()->tasteImage(pixPath.path(), &t.w, &t.h, lib);
+            QString w, h;
+            w = im.text("Thumb::Image::Width");
+            h = im.text("Thumb::Image::Height");
+            t.w = w.toInt();
+            t.h = h.toInt();
+
+            if(!t.w || !t.h)
+                SQ_ImageLoader::instance()->tasteImage(pixPath.path(), &t.w, &t.h, lib);
 
             t.thumbnail = SQ_Utils::scaleImage((unsigned char *)im.bits(), im.width(),
                 im.height(), SQ_ThumbnailSize::biggest());
@@ -137,7 +144,7 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
 
     RGBA *all;
 
-    bool b = SQ_ImageLoader::instance()->loadImage(pixPath.path(), false);
+    bool b = SQ_ImageLoader::instance()->loadImage(pixPath.path(), SQ_CodecSettings::ThumbnailLoader);
 
     //printf("LOAD %s = %d\n", pixPath.prettyURL().ascii(), b);
 

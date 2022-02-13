@@ -19,7 +19,6 @@
 #include "config.h"
 #endif
 
-#include <qapplication.h>
 #include <qclipboard.h>
 #include <qeventloop.h>
 #include <qstringlist.h>
@@ -34,6 +33,7 @@
 #include <qpopupmenu.h>
 #include <qslider.h>
 
+#include <kapplication.h>
 #include <kaction.h>
 #include <kcursor.h>
 #include <kstandarddirs.h>
@@ -47,6 +47,7 @@
 #include <kdebug.h>
 #include <kio/job.h>
 #include <ktempfile.h>
+#include <kwin.h>
 
 #include <cmath>
 #include <cstdlib>
@@ -672,6 +673,16 @@ void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
     // left button, update cursor
     if(e->button() == Qt::LeftButton && e->state() == Qt::NoButton && glselection == -1)
     {
+        QTime t = QTime::currentTime();
+
+        if(clickTime.isValid() && clickTime.msecsTo(t) <= kapp->doubleClickInterval())
+        {
+            KSquirrel::app()->closeGLWidget();
+            return;
+        }
+        else
+            clickTime = t;
+
         setCursor(KCursor::sizeAllCursor());
 
         xmoveold = e->x();
@@ -1485,6 +1496,8 @@ bool SQ_GLWidget::prepare()
     else
         lib = m_lib;
 
+    SQ_CodecSettings::applySettings(lib, SQ_CodecSettings::ImageViewer);
+
     // determine codec
     codeK = lib->codec;
 
@@ -1530,8 +1543,8 @@ bool SQ_GLWidget::showFrames(int i, Parts *p, bool swap)
         // setup texture parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         setupBits(p, buffer, i, k);
 
@@ -1615,18 +1628,18 @@ void SQ_GLWidget::startDecoding(const QString &file)
 
     // show window with image
     KSquirrel::app()->raiseGLWidget();
-    KSquirrel::app()->setCaption(originalURL());
 
-    QTimer::singleShot(10, this, SLOT(decode()));
+    QTimer::singleShot(5, this, SLOT(decode()));
 }
 
 
 void SQ_GLWidget::decode()
 {
-//    printf("DECODE %s\n", m_File.ascii());
     // prepare decoding...
     if(!prepare())
         return;
+
+    KSquirrel::app()->setCaption(originalURL());
 
     if(!pAHideToolbars->isChecked())
         SQ_GLView::window()->toolbar()->show();
@@ -1647,10 +1660,6 @@ void SQ_GLWidget::decode()
     orient = -1;
     rotate = false;
 #endif
-
-    SQ_CodecSettings::applySettings(lib, SQ_CodecSettings::ImageViewer);
-
-//    QApplication::flush();
 
     errors = 0;
 
@@ -2248,6 +2257,11 @@ void SQ_GLWidget::decodeFailedOn0(const int err_code)
  */
 bool SQ_GLWidget::fullscreen() const
 {
+    KWin::WindowInfo wi = KWin::windowInfo(SQ_GLView::window()->winId());
+
+    if(wi.valid())
+        pAFull->setChecked((wi.state() & NET::FullScreen));
+
     return pAFull->isChecked();
 }
 
@@ -2322,6 +2336,10 @@ void SQ_GLWidget::useBrokenImage(const int err_index)
 
     // show error message instead of file name
     SQ_GLView::window()->sbarWidget("SBFile")->setText(SQ_ErrorString::instance()->string(err_index));
+
+    matrix_pure_reset();
+    curangle = 0.0f;
+    isflippedH = isflippedV = false;
 
     // update context and show "broken" image
     updateGL();
@@ -2465,9 +2483,9 @@ void SQ_GLWidget::toClipboard()
 
     // image doesn't have extra regions
     if(parts[current].realw == parts[current].w && parts[current].realh == parts[current].h)
-        QApplication::clipboard()->setImage(im, QClipboard::Clipboard);
+        KApplication::clipboard()->setImage(im, QClipboard::Clipboard);
     else
-        QApplication::clipboard()->setImage(im.copy(0, 0, parts[current].w, parts[current].h), QClipboard::Clipboard);
+        KApplication::clipboard()->setImage(im.copy(0, 0, parts[current].w, parts[current].h), QClipboard::Clipboard);
 }
 
 void SQ_GLWidget::updateFactors()
@@ -2639,9 +2657,6 @@ void SQ_GLWidget::slotShowNav()
 {
     KSquirrel::app()->setDemo(false);
     KSquirrel::app()->activate();
-
-    if(!SQ_GLView::window()->isSeparate())
-        KSquirrel::app()->closeGLWidget();
 }
 
 void SQ_GLWidget::initAccelsAndMenu()

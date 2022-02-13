@@ -31,7 +31,7 @@ void SQ_CodecSettings::applySettings(SQ_LIBRARY *lib, SQ_CodecSettings::settings
 
     // thumbnail loader and image viewer will use default settings
     if((fromwhere == SQ_CodecSettings::ThumbnailLoader && (set == SQ_CodecSettings::ThumbnailLoader || set == SQ_CodecSettings::Both))
-                || (fromwhere == SQ_CodecSettings::ImageViewer && (set == SQ_CodecSettings::ImageViewer || set == SQ_CodecSettings::Both)))
+    || (fromwhere == SQ_CodecSettings::ImageViewer && (set == SQ_CodecSettings::ImageViewer || set == SQ_CodecSettings::Both)))
         lib->codec->set_settings(lib->settings);
     else
         lib->codec->fill_default_settings();

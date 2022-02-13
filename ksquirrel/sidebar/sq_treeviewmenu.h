@@ -14,31 +14,45 @@ class SQ_TreeViewMenu : public KPopupMenu
 
     public:
         SQ_TreeViewMenu(QWidget *parent = 0, const char *name = 0);
-        ~SQ_TreeViewMenu();
+        virtual ~SQ_TreeViewMenu();
 
-        enum Element { New, Rename, Delete, Properties };
+        enum Element { New, Rename, Delete, Properties, Clear };
 
         void setURL(const KURL &_url);
+        KURL url() const;
 
         void reconnect(Element, QObject *receiver, const char *member);
-        void updateDirActions(bool isdir);
+        virtual void updateDirActions(bool isdir, bool isroot = false);
 
-    private slots:
-        void slotDirectoryNew();
-        void slotDirectoryRename();
-        void slotDirectoryDelete();
-        void slotDirectoryProperties();
-        void slotDirectoryResult(KIO::Job *job);
+    protected slots:
+        virtual void slotDirectoryNew();
+        virtual void slotDirectoryRename();
+        virtual void slotDirectoryDelete();
+        virtual void slotDirectoryProperties();
+        virtual void slotDirectoryResult(KIO::Job *job);
+
+        void slotDirectoryClear();
+        void slotEntries(KIO::Job *, const KIO::UDSEntryList &);
+        void slotListResult(KIO::Job *);
+
+    protected:
+        int id_new, id_rename, id_delete, id_prop, id_clear;
 
     private:
-        KURL url;
-        int id_new, id_rename, id_delete, id_prop;
+        KURL m_url;
+        KURL::List urlstodel;
 };
 
 inline
 void SQ_TreeViewMenu::setURL(const KURL &_url)
 {
-    url = _url;
+    m_url = _url;
+}
+
+inline
+KURL SQ_TreeViewMenu::url() const
+{
+    return m_url;
 }
 
 #endif

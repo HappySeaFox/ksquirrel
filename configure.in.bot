@@ -1,0 +1,15 @@
+echo
+echo "Results:"
+echo "--------"
+echo 
+echo "Version:        ${VERSION}"
+echo 
+echo "Compiler:       ${CC}"
+echo "CXXFLAGS:       ${CXXFLAGS}"
+echo 
+echo "Prefix:         ${prefix}"
+echo "KDE prefix:     ${kde_libs_prefix}"
+echo 
+echo "KIPI  support:  ${have_kipi}"
+echo "KEXIF support:  ${have_kexif}"
+echo "ASM flags:      ${KSQUIRREL_ASM_DEFS}"

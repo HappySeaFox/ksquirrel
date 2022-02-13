@@ -26,6 +26,8 @@
 
 #include "sq_diroperator.h"
 
+namespace KIO { class Job; }
+
 class QTimer;
 
 class KAction;
@@ -59,15 +61,21 @@ class SQ_WidgetStack : public QObject
         /*
          *  Direction for moveTo(). 
          */
-        enum Direction { Next = 0, Previous = 1 };
+        enum Direction { Next = 0, Previous };
 
-        enum FileAction { Copy = 0, Cut, Paste, Unknown };
+        enum FileAction { Copy = 0, Cut, Link, Unknown };
 
         enum moveToError { moveSuccess = 0, moveFailed } ;
 
         SQ_DirOperator* diroperator() const;
 
         bool updateRunning() const;
+
+        void repeat();
+
+        void init();
+
+        void saveState();
 
         /*
          *  Get current url. Just calls SQ_DirOperator::url().
@@ -104,6 +112,8 @@ class SQ_WidgetStack : public QObject
 
     private:
 
+        void emitNewLastURL(const KURL &u);
+
         void moveToFirstLast(Direction d);
         /*
          *  Save currently selected items' paths, if any.
@@ -123,6 +133,9 @@ class SQ_WidgetStack : public QObject
          *  tree, SQ_QuickOperator etc.)
          */
         void setURL(const KURL &, bool = true);
+
+    signals:
+        void newLastURL(const QString &);
 
     public slots:
         /*
@@ -190,6 +203,10 @@ class SQ_WidgetStack : public QObject
         void slotRecreateThumbnail();
         void slotDelayedRecreateThumbnail();
 
+        void slotTreeMenuDone(const KURL &, int);
+
+        void slotJobResult(KIO::Job *job);
+
         /*
          *  User wants to select to deselect some files.
          */
@@ -212,8 +229,9 @@ class SQ_WidgetStack : public QObject
          */
         SQ_DirOperator    *dirop;
 
-        QTimer     *timerShowProgress;
+        QTimer        *timerShowProgress;
         KURL::List    files; // files to copy, move or link
+        KURL          lastURL;
         FileAction    fileaction;
 
         static SQ_WidgetStack    *m_instance;

@@ -1,3 +1,18 @@
+ksquirrel-0.7.2
+****************
+* lazy thumbnail generation now can generate additional rows
+* improvements in treeview
+* F10 to repeat last operation with selected files (copy/move/link)
+* it is highly recommended that you won't have FAM running,
+  see http://oss.sgi.com/bugzilla/show_bug.cgi?id=158 for more
+* Added folder basket
+
+ksquirrel-libs:
+* SVG codec now uses rsvg-convert
+* fixed segfault in GIF codec (in rare cases)
+* added DICOM (requires medcon)
+* added APNG (see http://wiki.mozilla.org/APNG_Specification, http://en.wikipedia.org/wiki/APNG)
+
 ksquirrel-0.7.1try5
 *********************
 * lazy thumbnail generation (like in DigiKam)

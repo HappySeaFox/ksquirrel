@@ -1,0 +1,6 @@
+#!/bin/sh
+
+make clean && ./configure.gnu && make &&
+/usr/local/sbin/checkinstall -D --nodoc --maintainer=ksquirrel@tut.by \
+--requires="libkexif1, kipi-plugins, libkipi0, ksquirrel-libs, libfam0" \
+--pkglicense=GPL --backup=no --pkgrelease=4etch

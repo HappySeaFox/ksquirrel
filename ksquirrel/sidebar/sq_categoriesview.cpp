@@ -19,15 +19,14 @@
 #include "config.h"
 #endif
 
-#include <qfileinfo.h>
 #include <qfile.h>
 #include <qheader.h>
-#include <qdir.h>
 
 #include <kio/job.h>
 #include <ktoolbar.h>
 #include <kicontheme.h>
 #include <klocale.h>
+#include <kmimetype.h>
 #include <kfileitem.h>
 #include <kurldrag.h>
 #include <kinputdialog.h>
@@ -89,10 +88,10 @@ SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileT
 {
     setAcceptDrops(true);
 
-    SQ_Dir dir(SQ_Dir::Categories);
+    m_dir = new SQ_Dir(SQ_Dir::Categories);
 
     // create custom branch
-    root = new SQ_CategoriesViewBranch(this, dir.root(), i18n("Categories"),
+    root = new SQ_CategoriesViewBranch(this, m_dir->root(), i18n("Categories"),
                 SQ_IconLoader::instance()->loadIcon("bookmark", KIcon::Desktop, KIcon::SizeSmall));
 
     addBranch(root);
@@ -114,14 +113,16 @@ SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileT
 }
 
 SQ_CategoriesView::~SQ_CategoriesView()
-{}
+{
+    delete m_dir;
+}
 
 void SQ_CategoriesView::slotContextMenu(KListView *, QListViewItem *item, const QPoint &p)
 {
     if(item)
     {
         KFileTreeViewItem *kfi = static_cast<KFileTreeViewItem*>(item);
-        menu->updateDirActions(kfi->isDir());
+        menu->updateDirActions(kfi->isDir(), (item == root->root()));
         menu->setURL(kfi->url());
         menu->exec(p);
     }
@@ -130,6 +131,12 @@ void SQ_CategoriesView::slotContextMenu(KListView *, QListViewItem *item, const 
 void SQ_CategoriesView::slotItemExecuted(QListViewItem *item)
 {
     if(!item) return;
+
+    if(item == root->root())
+    {
+        root->setOpen(true);
+        return;
+    }
 
     KFileTreeViewItem *cur = static_cast<KFileTreeViewItem *>(item);
 
@@ -156,9 +163,7 @@ SQ_CategoriesBox::SQ_CategoriesBox(QWidget *parent, const char *name) : QVBox(pa
 
     connect(view, SIGNAL(dropped(QDropEvent*, QListViewItem*, QListViewItem*)), this, SLOT(slotDropped(QDropEvent*, QListViewItem*, QListViewItem*)));
 
-    SQ_Dir dir(SQ_Dir::Categories);
-
-    menu = new SQ_CategoryBrowserMenu(dir.root(), 0, "Categories menu");
+    menu = new SQ_CategoryBrowserMenu(view->dir()->root(), 0, "Categories menu");
 
     toolbar->setIconSize(KIcon::SizeSmall);
 
@@ -201,12 +206,11 @@ void SQ_CategoriesBox::slotDefaultCategories()
         i18n("Create default categories")) == KMessageBox::Yes)
     {
         QStringList list;
-        SQ_Dir dir(SQ_Dir::Categories);
 
         list << "Concerts" << "Pets" << "Home" << "Friends" << "Free time" << "Traveling" << "Nature";
 
         for(QStringList::iterator it = list.begin();it != list.end();++it)
-            dir.mkdir(*it);
+            view->dir()->mkdir(*it);
     }
 }
 
@@ -243,19 +247,22 @@ void SQ_CategoriesBox::slotDropped(QDropEvent *e, QListViewItem *parent, QListVi
     KURL::List list;
     KURLDrag::decode(e, list);
     QString path = cur->path();
-    QFileInfo fi;
-    SQ_Dir dir(SQ_Dir::Categories);
 
-    if(list.first().path().startsWith(dir.root()))
+    if(list.first().path().startsWith(view->dir()->root()))
         KIO::move(list, cur->url());
     else
-        for(KURL::List::iterator it = list.begin(); it != list.end();++it)
-        {
-            fi.setFile((*it).path());
+    {
+        KURL::List::iterator itEnd = list.end();
+        QString mimeDet;
 
-            if(fi.isFile())
-                SQ_StorageFile::writeStorageFile(path + QDir::separator() + (*it).fileName(), (*it).path());
+        for(KURL::List::iterator it = list.begin(); it != itEnd;++it)
+        {
+            mimeDet = KMimeType::findByURL(*it)->name();
+
+            if(mimeDet != "inode/directory")
+                SQ_StorageFile::writeStorageFile(path + QDir::separator() + (*it).fileName(), (*it));
         }
+    }
 }
 
 void SQ_CategoriesBox::slotDeleteItem()
@@ -264,10 +271,8 @@ void SQ_CategoriesBox::slotDeleteItem()
 
     if(!cur) return;
 
-    SQ_Dir dir(SQ_Dir::Categories);
-
     KURL root;
-    root.setPath(dir.root());
+    root.setPath(view->dir()->root());
 
     if(cur->url().equals(root, true))
         return;

@@ -190,6 +190,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         /*
          *  Catch some events and do specific actions.
          */
+        virtual bool eventFilter(QObject *o, QEvent *e);
         virtual void closeEvent(QCloseEvent *e);
         virtual void resizeEvent(QResizeEvent *e);
 
@@ -385,11 +386,14 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
     private slots:
 
+        void slotSaveYourself();
         void slotRename();
         void slotRenameResult(KIO::Job *);
         void slotExtendedToggled(bool);
         void slotTrayQuit();
         void slotClose();
+
+        void slotRepeat();
 
         /*
          *  Reload disk usage information
@@ -422,11 +426,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Invoke 'Options' dialog.
          */
         void slotOptions();
-
-        /*
-         *  Change interface, see 'viewtype'
-         */
-        void slotChangeInterface(bool);
 
         /*
          *  Invoke 'Filters' dialog.
@@ -542,9 +541,9 @@ class KSquirrel : public KMainWindow, public DCOPObject
     private:
         static KSquirrel     *m_instance;
 
-        bool builtin, m_demo;
+        bool m_demo;
 
-        KToggleAction *pAInterface, *pAThumbsE;
+        KToggleAction *pAThumbsE;
 
         // main toolbar
         KToolBar    *tools;
@@ -611,13 +610,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         // contains paths of found libraries
         QStringList    strlibFound;
-
-        // QWidgetStack, which contains
-        // tree and filemanager at the first page
-        // and SQ_GLView at the second
-        QWidgetStack    *viewBrowser;
-
-        QVBox    *b2;
 
         // sizes for mainSplitter
         QValueList<int>    mainSizes;
@@ -750,8 +742,10 @@ class KSquirrel : public KMainWindow, public DCOPObject
         KURL renameSrcURL, renameDestURL;
         int     old_id;
         bool   old_disable, old_ext,
-                 m_urlbox, old_marks, m_intray;
+                 m_urlbox, old_marks, m_intray,
+                 waitForShow;
         SQ_Downloader *down;
+        QVBox    *mainPage;
 };
 
 // Is slideshow running ?
@@ -789,12 +783,6 @@ inline
 KPopupMenu* KSquirrel::menuViews()
 {
     return actionViews;
-}
-
-inline
-bool KSquirrel::separateImageWindow() const
-{
-    return builtin;
 }
 
 inline

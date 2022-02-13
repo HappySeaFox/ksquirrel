@@ -84,9 +84,11 @@ void SQ_FileIconView::insertItem(KFileItem *i)
     SQ_FileIconViewItem *item;
 
     // add new item
+    setUpdatesEnabled(false);
     item = new SQ_FileIconViewItem((QIconView*)this, i->text(), i->pixmap(iconSize()), i);
 
     initItemMy(item, i);
+    setUpdatesEnabled(true);
 
     i->setExtraData(this, item);
 }

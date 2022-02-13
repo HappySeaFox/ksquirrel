@@ -27,6 +27,7 @@ class KToolBar;
 
 class SQ_CategoryBrowserMenu;
 class SQ_TreeViewMenu;
+class SQ_Dir;
 
 /**
   *@author Baryshev Dmitry
@@ -56,6 +57,8 @@ class SQ_CategoriesView : public KFileTreeView
 
         SQ_TreeViewMenu *popupMenu() const;
 
+        SQ_Dir* dir();
+
     private slots:
         void slotItemExecuted(QListViewItem *item);
         void slotContextMenu(KListView *, QListViewItem *i, const QPoint &p);
@@ -63,12 +66,20 @@ class SQ_CategoriesView : public KFileTreeView
     private:
         KFileTreeBranch *root;
         SQ_TreeViewMenu *menu;
+
+        SQ_Dir *m_dir;
 };
 
 inline
 SQ_TreeViewMenu* SQ_CategoriesView::popupMenu() const
 {
     return menu;
+}
+
+inline
+SQ_Dir* SQ_CategoriesView::dir()
+{
+    return m_dir;
 }
 
 /* *************************************************** */

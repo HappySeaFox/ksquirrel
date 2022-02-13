@@ -164,7 +164,7 @@ void SQ_SlideShowWidget::loadImage(const QString &_path, int _current)
     RGBA *bits;
 
     // load first page
-    bool b = SQ_ImageLoader::instance()->loadImage(_path, false);
+    bool b = SQ_ImageLoader::instance()->loadImage(_path, SQ_CodecSettings::ImageViewer);
 
     finfo = SQ_ImageLoader::instance()->info();
     bits = SQ_ImageLoader::instance()->bits();
@@ -269,7 +269,10 @@ void SQ_SlideShowWidget::keyPressEvent(QKeyEvent *e)
     if(e->key() == Qt::Key_Enter || e->key() == Qt::Key_Escape || e->key() == Qt::Key_Return)
         close();
     else if(e->key() == Qt::Key_Pause || e->key() == Qt::Key_Space)
+    {
+        buttonPause->toggle();
         emit pause();
+    }
     else if(e->key() == Qt::Key_PageUp)
         emit previous();
     else if(e->key() == Qt::Key_PageDown)

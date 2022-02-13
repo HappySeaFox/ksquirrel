@@ -18,12 +18,17 @@
 #ifndef SQ_STORAGEFILE_H
 #define SQ_STORAGEFILE_H
 
+#include <qstring.h>
+
 #include <kurl.h>
 
 namespace SQ_StorageFile
 {
-    void writeStorageFile(const QString &path, const KURL &inpath);
+    void writeStorageFile(const QString &path, const KURL &inpath, KURL w = KURL());
+    void writeStorageFileAsString(const QString &path, const KURL &inpath, QString content = QString::null);
+
     KURL readStorageFile(const QString &path);
+    QString readStorageFileAsString(const QString &path);
 };
 
 #endif

@@ -48,23 +48,23 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 libsidebar_a_AR = $(AR) $(ARFLAGS)
 libsidebar_a_LIBADD =
-am_libsidebar_a_OBJECTS = sq_treeviewmenu.$(OBJEXT) \
-	sq_previewwidget.$(OBJEXT) sq_storagefile.$(OBJEXT) \
-	sq_imagebasket.$(OBJEXT) sq_mountviewitem.$(OBJEXT) \
-	sq_treeviewitem.$(OBJEXT) sq_threaddirlister.$(OBJEXT) \
-	sq_categorybrowsermenu.$(OBJEXT) sq_categoriesview.$(OBJEXT) \
-	sq_treeview.$(OBJEXT) sq_multibar.$(OBJEXT) \
-	sq_mountview.$(OBJEXT)
+am_libsidebar_a_OBJECTS = sq_directorybasket.$(OBJEXT) \
+	sq_treeviewmenu.$(OBJEXT) sq_previewwidget.$(OBJEXT) \
+	sq_storagefile.$(OBJEXT) sq_imagebasket.$(OBJEXT) \
+	sq_mountviewitem.$(OBJEXT) sq_treeviewitem.$(OBJEXT) \
+	sq_threaddirlister.$(OBJEXT) sq_categorybrowsermenu.$(OBJEXT) \
+	sq_categoriesview.$(OBJEXT) sq_treeview.$(OBJEXT) \
+	sq_multibar.$(OBJEXT) sq_mountview.$(OBJEXT)
 #>- libsidebar_a_OBJECTS = $(am_libsidebar_a_OBJECTS)
 #>+ 10
 libsidebar_a_final_OBJECTS = libsidebar_a.all_cpp.o 
-libsidebar_a_nofinal_OBJECTS = sq_treeviewmenu.$(OBJEXT) \
-	sq_previewwidget.$(OBJEXT) sq_storagefile.$(OBJEXT) \
-	sq_imagebasket.$(OBJEXT) sq_mountviewitem.$(OBJEXT) \
-	sq_treeviewitem.$(OBJEXT) sq_threaddirlister.$(OBJEXT) \
-	sq_categorybrowsermenu.$(OBJEXT) sq_categoriesview.$(OBJEXT) \
-	sq_treeview.$(OBJEXT) sq_multibar.$(OBJEXT) \
-	sq_mountview.$(OBJEXT)
+libsidebar_a_nofinal_OBJECTS = sq_directorybasket.$(OBJEXT) \
+	sq_treeviewmenu.$(OBJEXT) sq_previewwidget.$(OBJEXT) \
+	sq_storagefile.$(OBJEXT) sq_imagebasket.$(OBJEXT) \
+	sq_mountviewitem.$(OBJEXT) sq_treeviewitem.$(OBJEXT) \
+	sq_threaddirlister.$(OBJEXT) sq_categorybrowsermenu.$(OBJEXT) \
+	sq_categoriesview.$(OBJEXT) sq_treeview.$(OBJEXT) \
+	sq_multibar.$(OBJEXT) sq_mountview.$(OBJEXT)
 @KDE_USE_FINAL_FALSE@libsidebar_a_OBJECTS = $(libsidebar_a_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@libsidebar_a_OBJECTS = $(libsidebar_a_final_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -354,8 +354,8 @@ xdg_menudir = @xdg_menudir@
 ####### kdevelop will overwrite this part!!! (begin)##########
 noinst_LIBRARIES = libsidebar.a
 #>- libsidebar_a_METASOURCES = AUTO
-libsidebar_a_SOURCES = sq_treeviewmenu.cpp sq_previewwidget.cpp sq_storagefile.cpp sq_imagebasket.cpp sq_mountviewitem.cpp sq_treeviewitem.cpp sq_threaddirlister.cpp sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp 
-EXTRA_DIST = sq_mountview.cpp sq_mountview.h sq_multibar.cpp sq_multibar.h sq_treeview.cpp sq_treeview.h sq_categoriesview.cpp sq_categoriesview.h sq_categorybrowsermenu.cpp sq_categorybrowsermenu.h sq_threaddirlister.cpp sq_threaddirlister.h sq_treeviewitem.h sq_treeviewitem.cpp sq_mountviewitem.cpp sq_mountviewitem.h sq_imagebasket.cpp sq_imagebasket.h sq_storagefile.h sq_storagefile.cpp sq_previewwidget.cpp sq_previewwidget.h sq_treeviewmenu.cpp sq_treeviewmenu.h 
+libsidebar_a_SOURCES = sq_directorybasket.cpp sq_treeviewmenu.cpp sq_previewwidget.cpp sq_storagefile.cpp sq_imagebasket.cpp sq_mountviewitem.cpp sq_treeviewitem.cpp sq_threaddirlister.cpp sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp 
+EXTRA_DIST = sq_mountview.cpp sq_mountview.h sq_multibar.cpp sq_multibar.h sq_treeview.cpp sq_treeview.h sq_categoriesview.cpp sq_categoriesview.h sq_categorybrowsermenu.cpp sq_categorybrowsermenu.h sq_threaddirlister.cpp sq_threaddirlister.h sq_treeviewitem.h sq_treeviewitem.cpp sq_mountviewitem.cpp sq_mountviewitem.h sq_imagebasket.cpp sq_imagebasket.h sq_storagefile.h sq_storagefile.cpp sq_previewwidget.cpp sq_previewwidget.h sq_treeviewmenu.cpp sq_treeviewmenu.h sq_directorybasket.cpp sq_directorybasket.h 
 
 ####### kdevelop will overwrite this part!!! (end)############
 INCLUDES = $(all_includes) -I$(srcdir) -I$(top_srcdir)/ksquirrel
@@ -423,6 +423,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_categoriesview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_categorybrowsermenu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_directorybasket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_imagebasket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_mountview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_mountviewitem.Po@am__quote@
@@ -669,6 +670,13 @@ sq_treeview.moc: $(srcdir)/sq_treeview.h
 mocs: sq_treeview.moc
 
 #>+ 3
+sq_directorybasket.moc: $(srcdir)/sq_directorybasket.h
+	$(MOC) $(srcdir)/sq_directorybasket.h -o sq_directorybasket.moc
+
+#>+ 2
+mocs: sq_directorybasket.moc
+
+#>+ 3
 sq_previewwidget.moc: $(srcdir)/sq_previewwidget.h
 	$(MOC) $(srcdir)/sq_previewwidget.h -o sq_previewwidget.moc
 
@@ -705,7 +713,7 @@ mocs: sq_imagebasket.moc
 
 #>+ 3
 clean-metasources:
-	-rm -f  sq_categorybrowsermenu.moc sq_categoriesview.moc sq_treeview.moc sq_previewwidget.moc sq_multibar.moc sq_mountview.moc sq_treeviewmenu.moc sq_imagebasket.moc
+	-rm -f  sq_categorybrowsermenu.moc sq_categoriesview.moc sq_treeview.moc sq_directorybasket.moc sq_previewwidget.moc sq_multibar.moc sq_mountview.moc sq_treeviewmenu.moc sq_imagebasket.moc
 
 #>+ 2
 KDE_DIST=libsidebar.a Makefile.in Makefile.am 
@@ -752,11 +760,11 @@ bcheck-am:
 
 
 #>+ 11
-libsidebar_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_treeviewmenu.cpp $(srcdir)/sq_previewwidget.cpp $(srcdir)/sq_storagefile.cpp $(srcdir)/sq_imagebasket.cpp $(srcdir)/sq_mountviewitem.cpp $(srcdir)/sq_treeviewitem.cpp $(srcdir)/sq_threaddirlister.cpp $(srcdir)/sq_categorybrowsermenu.cpp $(srcdir)/sq_categoriesview.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_multibar.cpp $(srcdir)/sq_mountview.cpp  sq_treeview.moc sq_categoriesview.moc sq_categorybrowsermenu.moc sq_multibar.moc sq_previewwidget.moc sq_mountview.moc sq_treeviewmenu.moc sq_imagebasket.moc
+libsidebar_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_directorybasket.cpp $(srcdir)/sq_treeviewmenu.cpp $(srcdir)/sq_previewwidget.cpp $(srcdir)/sq_storagefile.cpp $(srcdir)/sq_imagebasket.cpp $(srcdir)/sq_mountviewitem.cpp $(srcdir)/sq_treeviewitem.cpp $(srcdir)/sq_threaddirlister.cpp $(srcdir)/sq_categorybrowsermenu.cpp $(srcdir)/sq_categoriesview.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_multibar.cpp $(srcdir)/sq_mountview.cpp  sq_treeview.moc sq_categoriesview.moc sq_categorybrowsermenu.moc sq_directorybasket.moc sq_multibar.moc sq_previewwidget.moc sq_mountview.moc sq_treeviewmenu.moc sq_imagebasket.moc
 	@echo 'creating libsidebar_a.all_cpp.cpp ...'; \
 	rm -f libsidebar_a.all_cpp.files libsidebar_a.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> libsidebar_a.all_cpp.final; \
-	for file in sq_treeviewmenu.cpp sq_previewwidget.cpp sq_storagefile.cpp sq_imagebasket.cpp sq_mountviewitem.cpp sq_treeviewitem.cpp sq_threaddirlister.cpp sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp ; do \
+	for file in sq_directorybasket.cpp sq_treeviewmenu.cpp sq_previewwidget.cpp sq_storagefile.cpp sq_imagebasket.cpp sq_mountviewitem.cpp sq_treeviewitem.cpp sq_threaddirlister.cpp sq_categorybrowsermenu.cpp sq_categoriesview.cpp sq_treeview.cpp sq_multibar.cpp sq_mountview.cpp ; do \
 	  echo "#include \"$$file\"" >> libsidebar_a.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> libsidebar_a.all_cpp.final; \
 	done; \
@@ -787,9 +795,10 @@ no-final-install:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 19
+#>+ 21
 sq_imagebasket.o: sq_imagebasket.moc 
 sq_multibar.o: sq_multibar.moc 
+sq_directorybasket.lo: sq_directorybasket.moc 
 sq_treeviewmenu.o: sq_treeviewmenu.moc 
 sq_previewwidget.o: sq_previewwidget.moc 
 sq_categorybrowsermenu.lo: sq_categorybrowsermenu.moc 
@@ -797,6 +806,7 @@ sq_categorybrowsermenu.o: sq_categorybrowsermenu.moc
 sq_treeview.lo: sq_treeview.moc 
 nmcheck: 
 sq_imagebasket.lo: sq_imagebasket.moc 
+sq_directorybasket.o: sq_directorybasket.moc 
 sq_treeview.o: sq_treeview.moc 
 nmcheck-am: nmcheck
 sq_treeviewmenu.lo: sq_treeviewmenu.moc 

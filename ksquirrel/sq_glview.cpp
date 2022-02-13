@@ -47,8 +47,6 @@ SQ_GLView::SQ_GLView(QWidget *parent) : QVBox(parent, "ksquirrel-image-window")
 {
     m_instance = this;
 
-    separate = parent ? false : true;
-
     createContent();
 
     installEventFilter(this);
@@ -107,9 +105,6 @@ void SQ_GLView::createContent()
     SQ_Config::instance()->setGroup("GL view");
     sbar->setShown(SQ_Config::instance()->readBoolEntry("statusbar", true));
 
-    if(!separate)
-        return;
-
     // restore geometry from config file
     restoreGeometry();
 
@@ -123,18 +118,6 @@ void SQ_GLView::closeEvent(QCloseEvent *e)
 
     // let KSquirrel close SQ_GLView, since it can be built-in
     KSquirrel::app()->closeGLWidget();
-}
-
-/*
- *  Make widget built-in with reparenting it.
- */
-void SQ_GLView::reparent(QWidget *parent, const QPoint &p, bool showIt)
-{
-    // reparent
-    QVBox::reparent(parent, p, showIt);
-
-    // store current state
-    separate = (parent) ? false : true;
 }
 
 bool SQ_GLView::eventFilter(QObject *watched, QEvent *e)

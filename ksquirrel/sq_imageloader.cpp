@@ -23,7 +23,6 @@
 
 #include "sq_imageloader.h"
 #include "sq_libraryhandler.h"
-#include "sq_codecsettings.h"
 
 #include <ksquirrel-libs/fileio.h>
 #include <ksquirrel-libs/fmt_utils.h>
@@ -102,7 +101,7 @@ bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h, SQ_LIBRARY 
  *  Try to load image and store a pointer to decoded image data in m_image. Aslo
  *  store information about the image in finfo.
  */
-bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomorethan, bool changeSettings)
+bool SQ_ImageLoader::loadImage(const QString &pixPath, const SQ_CodecSettings::settings &sett, bool multi, int nomorethan)
 {
     SQ_LIBRARY      *lib;
     int    res, current = 0, i, j;
@@ -129,6 +128,9 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomoretha
     // determine codec
     codeK = lib->codec;
 
+    if(sett != SQ_CodecSettings::None)
+        SQ_CodecSettings::applySettings(lib, sett);
+
     // init...
     res = codeK->read_init(QString(QFile::encodeName(pixPath)));
 
@@ -138,9 +140,6 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomoretha
         codeK->read_close();
         return false;
     }
-
-    if(changeSettings)
-        SQ_CodecSettings::applySettings(lib, SQ_CodecSettings::ThumbnailLoader);
 
     // read all pages in image...
     while(true)
@@ -208,11 +207,9 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomoretha
                 {
                     i = codeK->read_scanline(dumbscan);
 
-                    if(i != SQE_OK)
-                    {
-                        SQ_SAVE_INF
-                        return false;
-                    }
+                    SQ_SAVE_INF
+
+                    return (i == SQE_OK);
                 }
             }
         }

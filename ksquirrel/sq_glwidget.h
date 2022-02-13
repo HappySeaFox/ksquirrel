@@ -24,6 +24,7 @@
 #include <qrect.h>
 #include <qpair.h>
 #include <qwmatrix.h>
+#include <qdatetime.h>
 
 #include <kurl.h>
 
@@ -556,6 +557,7 @@ class SQ_GLWidget : public QGLWidget
         KURL                   m_original;
         QWMatrix               wm;
         KURL                   lastCopy;
+        QTime                  clickTime;
 
         static SQ_GLWidget    *m_instance;
 };

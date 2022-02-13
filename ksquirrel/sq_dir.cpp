@@ -36,6 +36,9 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
 {
     switch(p)
     {
+        case SQ_Dir::DirectoryBasket:
+            setRoot("directorybasket");
+        break;
         case SQ_Dir::Basket:
             setRoot("basket");
         break;

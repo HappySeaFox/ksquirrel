@@ -520,7 +520,7 @@ msgid "Edit file type"
 msgstr "Редактировать тип файла"
 
 #: sq_diroperator.cpp:307
-msgid "Add To Basket"
+msgid "Add to Basket"
 msgstr "Добавить в Корзину"
 
 #: sq_diroperator.cpp:309 sq_diroperator.cpp:889
@@ -586,7 +586,7 @@ msgid "Unsupported format \"%1\""
 msgstr "неподдерживаемый формат \"%1\""
 
 #: sq_diroperator.cpp:886
-msgid "Add To &Category"
+msgid "Add to &Category"
 msgstr "Добавить в &Категорию"
 
 #: sq_diroperator.cpp:890
@@ -1367,8 +1367,8 @@ msgid "Thumbnail loader"
 msgstr "Загрузчике эскизов"
 
 #: sq_options.cpp:754
-msgid "Image viewer"
-msgstr "Просмотрщике изображений"
+msgid "Image viewer (also preview window)"
+msgstr "Просмотрщике изображений (также окне предпросмотра)"
 
 #: sq_options.cpp:755 sq_options.cpp:773
 msgid "Both"
@@ -2183,3 +2183,42 @@ msgstr "Количество строк текста"
 
 msgid "Show file preview"
 msgstr "Показывать предпросмотр файла"
+
+msgid "Number of additionally generated rows"
+msgstr "Количество дополнительно генерируемых рядов"
+
+msgid "Repeat (copy to %1)"
+msgstr "Повторить (копировать в %1)"
+
+msgid "Repeat (move to %1)"
+msgstr "Повторить (переместить в %1)"
+
+msgid "Repeat (link to %1)"
+msgstr "Повторить (ссылку в %1)"
+
+msgid "Repeat (nothing to repeat)"
+msgstr "Повторить (нечего повторять)"
+
+msgid "Clear contents"
+msgstr "Очистить содержимое"
+
+msgid "Are you sure you want to delete contents of <b>%1</b> ?"
+msgstr "Вы точно хотите удалить содержимое <b>%1</b> ?"
+
+msgid "Add to Folder Basket"
+msgstr "Добавить в Корзину Папок"
+
+msgid "Folder basket"
+msgstr "Корзина папок"
+
+msgid "Change icon"
+msgstr "Сменить иконку"
+
+msgid "<p>Rename item <b>%1</b> to:</p>"
+msgstr "<p>Переименовать элемент <b>%1</b> в:</p>"
+
+msgid "Copy file path"
+msgstr "Копировать путь файла"
+
+msgid "Copy file url"
+msgstr "Копировать адрес файла"

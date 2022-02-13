@@ -26,7 +26,7 @@ struct SQ_LIBRARY;
 
 struct SQ_CodecSettings
 {
-    enum settings { ThumbnailLoader = 0, ImageViewer, Both, RunTume };
+    enum settings { ThumbnailLoader = 0, ImageViewer, Both, RunTume, None };
 
     static void applySettings(SQ_LIBRARY *l, SQ_CodecSettings::settings fromwhere);
 };

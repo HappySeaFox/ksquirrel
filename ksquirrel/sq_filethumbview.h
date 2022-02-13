@@ -49,6 +49,8 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
 
         void setLazy(bool l, int delay);
 
+        void setAddRows(int rows);
+
         void rebuildCachedPixmaps();
 
         /*
@@ -182,6 +184,7 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         bool    isPending;
         bool    m_lazy;
         int     lazyDelay;
+        int     m_rows;
 };
 
 inline
@@ -200,6 +203,12 @@ inline
 bool SQ_FileThumbView::lazy() const
 {
     return m_lazy;
+}
+
+inline
+void SQ_FileThumbView::setAddRows(int rows)
+{
+    m_rows = rows;
 }
 
 #endif

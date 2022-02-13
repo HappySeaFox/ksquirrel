@@ -513,7 +513,7 @@ msgid "Edit file type"
 msgstr ""
 
 #: sq_diroperator.cpp:307
-msgid "Add To Basket"
+msgid "Add to Basket"
 msgstr ""
 
 #: sq_diroperator.cpp:309 sq_diroperator.cpp:889
@@ -579,7 +579,7 @@ msgid "Unsupported format \"%1\""
 msgstr ""
 
 #: sq_diroperator.cpp:886
-msgid "Add To &Category"
+msgid "Add to &Category"
 msgstr ""
 
 #: sq_diroperator.cpp:890
@@ -1331,7 +1331,7 @@ msgid "Thumbnail loader"
 msgstr ""
 
 #: sq_options.cpp:754
-msgid "Image viewer"
+msgid "Image viewer (also preview window)"
 msgstr ""
 
 #: sq_options.cpp:755 sq_options.cpp:773
@@ -2058,4 +2058,43 @@ msgid "Number of text lines"
 msgstr ""
 
 msgid "Show file preview"
+msgstr ""
+
+msgid "Number of additionally generated rows"
+msgstr ""
+
+msgid "Repeat (copy to %1)"
+msgstr ""
+
+msgid "Repeat (move to %1)"
+msgstr ""
+
+msgid "Repeat (link to %1)"
+msgstr ""
+
+msgid "Repeat (nothing to repeat)"
+msgstr ""
+
+msgid "Clear contents"
+msgstr ""
+
+msgid "Are you sure you want to delete contents of <b>%1</b> ?"
+msgstr ""
+
+msgid "Add to Folder Basket"
+msgstr ""
+
+msgid "Folder basket"
+msgstr ""
+
+msgid "Change icon"
+msgstr ""
+
+msgid "<p>Rename item <b>%1</b> to:</p>"
+msgstr ""
+
+msgid "Copy file path"
+msgstr ""
+
+msgid "Copy file url"
 msgstr ""

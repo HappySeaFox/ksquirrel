@@ -400,7 +400,7 @@ void fmt_filters::desaturate(const image &im, float desat)
 
     rgba *_rgba = (rgba *)im.data;
     const s32 S = im.w * im.h;
-    s32 h, s, v;
+    s32 h = 0, s = 0, v = 0;
 
     for(s32 i = 0;i < S;++i)
     {

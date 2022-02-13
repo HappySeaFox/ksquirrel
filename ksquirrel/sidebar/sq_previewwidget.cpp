@@ -32,6 +32,7 @@
 
 #include "ksquirrel.h"
 #include "sq_previewwidget.h"
+#include "sq_iconloader.h"
 #include "sq_imageloader.h"
 #include "sq_libraryhandler.h"
 #include "sq_config.h"
@@ -58,6 +59,10 @@ SQ_PreviewWidget::SQ_PreviewWidget(QWidget *parent, const char *name)
 
     popup = new KPopupMenu;
     popup->insertItem(i18n("Background color..."), this, SLOT(slotBackground()));
+
+    multi_pix = SQ_IconLoader::instance()->loadIcon("kmultiple", KIcon::Desktop, KIcon::SizeSmall);
+
+    setMinimumHeight(20);
 }
 
 SQ_PreviewWidget::~SQ_PreviewWidget()
@@ -74,17 +79,11 @@ void SQ_PreviewWidget::load(const KURL &url)
 
     if(m_forceignore || m_ignore)
     {
-//        m_ignore = true;
         pending = url;
-//        printf("Remember %s\n", url.path().ascii());
         return;
     }
     else
-    {
-//        m_ignore = false;
         pending = KURL();
-//        printf("Load remembered %s\n", url.path().ascii());
-    }
 
     if(url.isLocalFile())
         slotDownloadResult(url);
@@ -95,14 +94,15 @@ void SQ_PreviewWidget::load(const KURL &url)
     }
 }
 
+void SQ_PreviewWidget::fitAndConvert()
+{
+    if(!m_ignore && fit())
+        pixmap.convertFromImage(small?*small:*all);
+}
+
 void SQ_PreviewWidget::resizeEvent(QResizeEvent *)
 {
-//    printf("resize %d %d\n", e, m_ignore);
-    if(!m_ignore && fit())
-    {
-        if(pixmap.convertFromImage(small?*small:*all))
-            update();
-    }
+    fitAndConvert();
 }
 
 void SQ_PreviewWidget::paintEvent(QPaintEvent *)
@@ -114,19 +114,17 @@ void SQ_PreviewWidget::paintEvent(QPaintEvent *)
     if(!m_ignore && !pixmap.isNull())
     {
         p.drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
+        if(multi) p.drawPixmap(4, 4, multi_pix);
     }
 }
 
 bool SQ_PreviewWidget::fit()
 {
-//    printf("FIT %d\n", all);
     if(!all)
         return false;
 
-    // image is bigger that preview widget -
+    // image is bigger than preview widget -
     // scale it down
-//    printf("sz %d %d - %d %d\n", width(), height(), sizeHint().width(), sizeHint().height());
-
     if(width() < 2 || height() < 2)
         return false;
 
@@ -186,12 +184,9 @@ void SQ_PreviewWidget::mousePressEvent(QMouseEvent *e)
 
 void SQ_PreviewWidget::loadPending()
 {
-//    printf("show\n");
-
     if(pending.isValid())
     {
         KURL tmp = pending;
-//        printf("Show %s\n", pending.path().ascii());
         load(tmp);
     }
 }
@@ -203,7 +198,7 @@ void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
     RGBA *bits;
 
     // load first page
-    bool b = SQ_ImageLoader::instance()->loadImage(path, false);
+    bool b = SQ_ImageLoader::instance()->loadImage(path, SQ_CodecSettings::ImageViewer, true, 2);
 
     finfo = SQ_ImageLoader::instance()->info();
     bits = SQ_ImageLoader::instance()->bits();
@@ -250,14 +245,15 @@ void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
         *all = img;
     }
     else
-        *all = all->copy();
-#else
-    *all = all->copy();
 #endif
+    *all = all->copy();
+
+    multi = finfo->image.size() > 1;
 
     SQ_ImageLoader::instance()->cleanup();
 
-    resizeEvent(0);
+    fitAndConvert();
+    update();
 }
 
 #include "sq_previewwidget.moc"

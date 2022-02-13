@@ -1,6 +1,26 @@
 #MIN_CONFIG(3.3)
 
-AM_INIT_AUTOMAKE(ksquirrel,0.7.1)
+AM_INIT_AUTOMAKE(ksquirrel,0.7.2)
+
+sq_kipi="yes"
+AC_ARG_ENABLE(kipi,
+              [AS_HELP_STRING([--disable-kipi], [don't search for KIPI plugins [default=no]])],
+              [     case "${enableval}" in
+                       yes) sq_kipi="yes" ;;
+                       no)  sq_kipi="no" ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for this parameter]) ;;
+                    esac]
+             )
+
+sq_kexif="yes"
+AC_ARG_ENABLE(kexif,
+              [AS_HELP_STRING([--disable-kexif], [don't search for KEXIF [default=no]])],
+              [     case "${enableval}" in
+                       yes) sq_kexif="yes" ;;
+                       no)  sq_kexif="no" ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for this parameter]) ;;
+                    esac]
+             )
 
 AC_CHECK_HEADER([utime.h], AC_DEFINE([HAVE_UTIME_H], [], [utime.h support]), [])
 
@@ -105,11 +125,12 @@ AC_SUBST(KSQUIRREL_ASM_DEFS)
 # KIPI
 #
 have_kipi=no
+if test x$sq_kipi = xyes; then
 PKG_CHECK_MODULES([libkipi], libkipi, [
-        _cppflags=$CPPFLAGS
+        _cxxflags=$CXXFLAGS
         _ldflags=$LDFLAGS
                                 
-        CPPFLAGS="$libkipi_CFLAGS $CPPFLAGS"
+        CXXFLAGS="$libkipi_CFLAGS $CXXFLAGS"
         LDFLAGS="$LDFLAGS $libkipi_LIBS"
 
         KDE_CHECK_HEADER(libkipi/interface.h, have_kipi=yes, have_kipi=no)
@@ -119,21 +140,23 @@ PKG_CHECK_MODULES([libkipi], libkipi, [
             AC_WARN([Can't find KIPI headers, KSquirrel won't be compiled with KIPI support])
           fi
 
-            CPPFLAGS=$_cppflags
+            CXXFLAGS=$_cxxflags
             LDFLAGS=$_ldflags
     ],
         [AC_WARN([KIPI development file (.pc) was not found. KIPI support will be disabled.])]
 )
+fi
 
 #
 # KEXIF
 #
 have_kexif=no
+if test x$sq_kexif = xyes; then
 PKG_CHECK_MODULES([libkexif], libkexif, [
-        _cppflags=$CPPFLAGS
+        _cxxflags=$CXXFLAGS
         _ldflags=$LDFLAGS
 
-        CPPFLAGS="$libkexif_CFLAGS $CPPFLAGS"
+        CXXFLAGS="$libkexif_CFLAGS $CXXFLAGS"
         LDFLAGS="$LDFLAGS $libkexif_LIBS"
 
         KDE_CHECK_HEADER(libkexif/kexifdata.h, have_kexif=yes, have_kexif=no)
@@ -143,11 +166,12 @@ PKG_CHECK_MODULES([libkexif], libkexif, [
             AC_WARN([Can't find KEXIF headers, KSquirrel won't be compiled with KEXIF support])
           fi
 
-            CPPFLAGS=$_cppflags
+            CXXFLAGS=$_cxxflags
             LDFLAGS=$_ldflags
     ],
         [AC_WARN([KEXIF development file (.pc) was not found. KEXIF support will be disabled.])]
 )
+fi
 
 AM_CONDITIONAL(SQ_HAVE_KIPI,  test x$have_kipi  = xyes)
 AM_CONDITIONAL(SQ_HAVE_KEXIF, test x$have_kexif = xyes)

@@ -303,7 +303,7 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-EXTRA_DIST = x-avs.desktop x-cut.desktop x-dxf.desktop x-iff.desktop x-jbig.desktop x-koala.desktop x-leaf.desktop x-lif.desktop x-mac.desktop x-msp.desktop x-mtv.desktop x-neo.desktop x-pi1.desktop x-pict.desktop x-pix.desktop x-pxr.desktop x-ras.desktop x-ras.magic x-rawrgb.desktop x-sct.desktop x-sun.desktop x-sun.magic x-utah.desktop x-utah.magic x-wal.desktop x-wbmp.desktop x-xim.desktop x-xwd.desktop x-pi3.desktop ljpeg.desktop 
+EXTRA_DIST = x-avs.desktop x-cut.desktop x-dxf.desktop x-iff.desktop x-jbig.desktop x-koala.desktop x-leaf.desktop x-lif.desktop x-mac.desktop x-msp.desktop x-mtv.desktop x-neo.desktop x-pi1.desktop x-pict.desktop x-pix.desktop x-pxr.desktop x-ras.desktop x-ras.magic x-rawrgb.desktop x-sct.desktop x-sun.desktop x-sun.magic x-utah.desktop x-utah.magic x-wal.desktop x-wbmp.desktop x-xim.desktop x-xwd.desktop x-pi3.desktop ljpeg.desktop x-dicom.desktop x-mdl.desktop 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
@@ -672,6 +672,18 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/ljpeg.desktop $(kde_mimedir)/image/ljpeg.desktop
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/ljpeg.desktop $(DESTDIR)$(kde_mimedir)/image/ljpeg.desktop
+#>- 	$(mkinstalldirs) $(kde_mimedir)/image/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_mimedir)/image/
+#>- 	$(INSTALL_DATA) $(srcdir)/x-dicom.desktop $(kde_mimedir)/image/x-dicom.desktop
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/x-dicom.desktop $(DESTDIR)$(kde_mimedir)/image/x-dicom.desktop
+#>- 	$(mkinstalldirs) $(kde_mimedir)/image/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_mimedir)/image/
+#>- 	$(INSTALL_DATA) $(srcdir)/x-mdl.desktop $(kde_mimedir)/image/x-mdl.desktop
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/x-mdl.desktop $(DESTDIR)$(kde_mimedir)/image/x-mdl.desktop
 
 uninstall-local:
 #>- 	-rm -f $(kde_mimedir)/image/x-avs.desktop
@@ -764,6 +776,12 @@ uninstall-local:
 #>- 	-rm -f $(kde_mimedir)/image/ljpeg.desktop
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_mimedir)/image/ljpeg.desktop
+#>- 	-rm -f $(kde_mimedir)/image/x-dicom.desktop
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_mimedir)/image/x-dicom.desktop
+#>- 	-rm -f $(kde_mimedir)/image/x-mdl.desktop
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_mimedir)/image/x-mdl.desktop
 
 ####### kdevelop will overwrite this part!!! (end)############
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

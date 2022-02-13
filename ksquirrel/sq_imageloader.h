@@ -22,6 +22,8 @@
 #include <qimage.h>
 #include <qobject.h>
 
+#include "sq_codecsettings.h"
+
 struct fmt_info;
 struct RGBA;
 
@@ -45,7 +47,7 @@ class SQ_ImageLoader : public QObject
          *
          *  If 'multi' is true, read all image pages from file.
          */
-        bool loadImage(const QString &path, bool multi = true, int nomorethan = -1, bool changeSettings = false);
+        bool loadImage(const QString &path, const SQ_CodecSettings::settings &sett, bool multi = false, int nomorethan = -1);
 
         /*
          *  Try to determine image dimensions.

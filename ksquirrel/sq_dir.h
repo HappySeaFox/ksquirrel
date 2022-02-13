@@ -39,6 +39,8 @@ class SQ_Dir : public QDir
     public:
         enum Prefix {
 
+            DirectoryBasket,
+
             // image basket cache
             Basket,
 

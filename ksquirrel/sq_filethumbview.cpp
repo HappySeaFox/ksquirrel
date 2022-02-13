@@ -67,6 +67,8 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     m_lazy = SQ_Config::instance()->readBoolEntry("lazy", true);
     lazyDelay = SQ_Config::instance()->readNumEntry("lazy_delay", 500);
     if(lazyDelay <= 0) lazyDelay = 500;
+    m_rows = SQ_Config::instance()->readNumEntry("rows", 2);
+    if(m_rows <= 0  || m_rows > 5) m_rows = 2;
 
     setResizeMode(QIconView::Adjust);
 
@@ -97,6 +99,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 
     SQ_FileThumbViewItem *item;
 
+    setUpdatesEnabled(false);
     if(SQ_Config::instance()->readBoolEntry("mark", false) && SQ_LibraryHandler::instance()->libraryForFile(i->url().path()))
     {
         item = new SQ_FileThumbViewItem(this, i->text(), pendingCache, i);
@@ -116,6 +119,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
     initItemMy(item, i);
 
     i->setExtraData(this, item);
+    setUpdatesEnabled(true);
 }
 
 /*
@@ -209,24 +213,56 @@ KFileItemList SQ_FileThumbView::itemsToUpdate(bool fromAll)
     KFileItemList list;
 
     QRect rect(contentsX(), contentsY(), viewport()->width(), viewport()->height());
-    //printf("** FIND in %d,%d %dx%d\n", rect.x(), rect.y(), rect.width(), rect.height());
     QIconViewItem *first = fromAll ? firstItem() : findFirstVisibleItem(rect);
     QIconViewItem *last  = fromAll ? lastItem()  : findLastVisibleItem(rect);
 
     if(first && last)
     {
-        last = last->nextItem(); // next item or 0
         SQ_FileThumbViewItem *tfi;
+
+        QIconViewItem *f = first;
+        int yy;
+
+        if(m_rows)
+        {
+            // one row more up and down
+            for(int i = 0;i < m_rows;++i)
+            {
+                if(!last) break;
+
+                last = last->nextItem();
+
+                if(last)
+                {
+                    yy = last->y();
+
+                    while((last = last->nextItem()) && last->y() == yy)
+                    {}
+                }
+            }
+
+            for(int i = 0;i < m_rows;++i)
+            {
+                f = first->prevItem();
+
+                if(f)
+                {
+                    yy = f->y();
+
+                    while((f = first->prevItem()) && f->y() == yy)
+                        first = f;
+                }
+            }
+        }
+        else
+            last = last->nextItem();
 
         for(QIconViewItem *item = first;(item && item != last);item = item->nextItem())
         {
             tfi = dynamic_cast<SQ_FileThumbViewItem *>(item);
 
             if(tfi && !tfi->listed())
-            {
                 list.append(tfi->fileInfo());
-                //printf("** %s\n", tfi->text().ascii());
-            }
         }
     }
 
@@ -235,7 +271,10 @@ KFileItemList SQ_FileThumbView::itemsToUpdate(bool fromAll)
 
 void SQ_FileThumbView::slotContentsMoving(int, int)
 {
-    timerScroll->start(lazyDelay, true);
+    if(isVisible())
+        timerScroll->start(lazyDelay, true);
+    else
+        waitForShowEvent();
 }
 
 void SQ_FileThumbView::slotDelayedContentsMoving()
@@ -346,10 +385,7 @@ void SQ_FileThumbView::slotDelayedAddItems()
 
     // job is not running
     if(thumbJob.isNull())
-    {
-        //printf("Starting job %d\n", items.count());
         doStartThumbnailUpdate(_newItems);
-    }
     // add new items to running job
     else
     {
@@ -500,9 +536,12 @@ void SQ_FileThumbView::setLazy(bool l, int delay)
 
 void SQ_FileThumbView::resizeEvent(QResizeEvent *e)
 {
-    timerScroll->start(lazyDelay, true);
-
     KFileIconView::resizeEvent(e);
+
+    if(isVisible())
+        timerScroll->start(lazyDelay, true);
+    else
+        waitForShowEvent();
 }
 
 #include "sq_filethumbview.moc"

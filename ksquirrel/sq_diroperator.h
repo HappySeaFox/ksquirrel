@@ -23,6 +23,8 @@
 #include <kdiroperator.h>
 
 class QTimer;
+class QListViewItem;
+class QIconViewItem;
 
 class KDirLister;
 class KFileIconView;
@@ -55,9 +57,11 @@ class SQ_DirOperator : public KDirOperator
 
         ~SQ_DirOperator();
 
+        void enableThumbnailActions(bool enable);
+
         void fireDiskSize(const KURL &url);
 
-        void setLazy(bool l, int delay);
+        void setLazy(bool l, int delay, int rows);
 
         /*
          *  Deselect all items, set current item, select this item,
@@ -107,6 +111,8 @@ class SQ_DirOperator : public KDirOperator
         void execute(KFileItem *item);
 
         void saveConfig();
+
+        void selectOld();
 
     protected:
         /*
@@ -164,6 +170,11 @@ class SQ_DirOperator : public KDirOperator
 
     private slots:
 
+        void slotCopyPath();
+        void slotCopyURL();
+
+        void slotEnableFileActions(bool);
+
         void slotInvokeBrowser();
         /*
          *  Since KDE 3.4 (or 3.5 ?) it is neccessary to reimplement this slot
@@ -197,17 +208,13 @@ class SQ_DirOperator : public KDirOperator
 
         void slotDropped(const KFileItem *, QDropEvent*, const KURL::List&);
         void slotAddToBasket();
+        void slotAddToDirectoryBasket();
 
         /*
          *  Execute item. If current clicking policy is "Single click",
          *  single click will execute item, and double click otherwise.
          */
         void slotExecutedConst(const KFileItem *item);
-
-        /*
-         *  Item selected.
-         */
-        void slotSelected(KFileItem *);
 
         /*
          *  URL entered.
@@ -223,6 +230,9 @@ class SQ_DirOperator : public KDirOperator
         void slotUpdateInformation(int,int);
 
         void slotSelectionChanged();
+
+        void slotCurrentChanged(QListViewItem *);
+        void slotCurrentChanged(QIconViewItem *);
 
     private:
         typedef QMap<KURL, KDirLister *> SQ_Listers;
@@ -246,6 +256,8 @@ class SQ_DirOperator : public KDirOperator
         bool usenew;
         QString m_pending;
         KIO::filesize_t totalSize;
+        KFileItemList oldSelected;
+        KFileItem     *oldCurrentItem;
         SQ_Downloader *down;
 };
 

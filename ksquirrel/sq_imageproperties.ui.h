@@ -156,13 +156,15 @@ void SQ_ImageProperties::setFileParams()
 void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta )
 {
     QListViewItem *after = 0, *item;
-    
-    for(QValueVector<QPair<QString,QString> >::iterator it = meta.begin();it != meta.end();++it)
+
+    QValueVector<QPair<QString,QString> >::iterator itEnd = meta.end();
+
+    for(QValueVector<QPair<QString,QString> >::iterator it = meta.begin();it != itEnd;++it)
     {
         if(after)
-            item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second);
+            item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second.replace(QChar('\n'), QChar(' ')));
         else
-            after = item = new QListViewItem(listMeta, (*it).first+QString::fromLatin1("  "), (*it).second);
+            after = item = new QListViewItem(listMeta, (*it).first+QString::fromLatin1("  "), (*it).second.replace(QChar('\n'), QChar(' ')));
 
         listMeta->insertItem(item);
     }

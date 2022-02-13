@@ -77,18 +77,6 @@ class SQ_GLView : public QVBox
         ~SQ_GLView();
 
         /*
-         *  Is this widget separate ?
-         *
-         *  Note: it can be separate, or built-in.
-         */
-        bool isSeparate() const;
-
-        /*
-         *  Make widget built-in with reparenting it.
-         */
-        void reparent(QWidget *parent, const QPoint &p = QPoint(0,0), bool showIt = false);
-
-        /*
          *  Save current position and size to config
          */
         void saveGeometry();
@@ -136,8 +124,6 @@ class SQ_GLView : public QVBox
         virtual bool eventFilter(QObject *watched, QEvent *e);
 
     private:
-
-        bool separate;
         SQ_GLWidget             *gl;
         KStatusBar              *sbar;
         QMap<QString, QLabel* > names;
@@ -162,12 +148,6 @@ inline
 QLabel* SQ_GLView::sbarWidget(const QString &name) const
 {
     return names[name];
-}
-
-inline
-bool SQ_GLView::isSeparate() const
-{
-    return separate;
 }
 
 #endif

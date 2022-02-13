@@ -1,1 +1,0 @@
-?package(ksquirrel):needs="X11" section="Apps/Viewers" title="KSquirrel" command="/usr/bin/ksquirrel" icon="/usr/share/apps/ksquirrel/images/tray.png"
