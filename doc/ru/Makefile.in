@@ -500,7 +500,7 @@ uninstall-am:
 
 
 #>+ 2
-KDE_DIST=plugins_info.png license.html sidebar.png interface-iw.html intro.docbook index.html intro.html sidebar_mounts.png index.docbook interface-menu.html interface-sidebar.html running.html imagewindow.html imagewindow.docbook Makefile.in credits.docbook sidebar_categories.png internals.html install-binary.html sidebar_basket.png internals-libs.html imagewindow_separate.png imagewindow_builtin.png installation.html interface.html interface.docbook imagewindow_button.png view_thumbnails.png Makefile.am internals.docbook running.docbook index.cache.bz2 
+KDE_DIST=plugins_info.png license.html sidebar.png interface-iw.html intro.docbook index.html intro.html sidebar_mounts.png index.docbook interface-menu.html interface-sidebar.html imagewindow.html running.html imagewindow.docbook Makefile.in credits.docbook sidebar_categories.png internals.html install-binary.html internals-libs.html sidebar_basket.png imagewindow_builtin.png imagewindow_separate.png installation.html interface.docbook interface.html imagewindow_button.png view_thumbnails.png Makefile.am internals.docbook index.cache.bz2 running.docbook 
 
 #>+ 24
 index.cache.bz2: $(srcdir)/index.docbook $(KDE_XSL_STYLESHEET) interface.html imagewindow_separate.png plugins_info.png view_thumbnails.png sidebar_categories.png internals.html sidebar.png interface-sidebar.html running.html credits.docbook imagewindow.html imagewindow.docbook internals.docbook imagewindow_button.png index.docbook intro.html install-binary.html running.docbook sidebar_mounts.png interface-iw.html sidebar_basket.png index.html license.html intro.docbook internals-libs.html interface.docbook interface-menu.html installation.html imagewindow_builtin.png 

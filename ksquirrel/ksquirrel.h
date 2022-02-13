@@ -386,6 +386,13 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
     private slots:
 
+        void slotStatResult(KIO::Job *job);
+        void slotDCOPStatResult(KIO::Job *job);
+
+        void slotPreviewWidgetNext();
+        void slotPreviewWidgetPrevious();
+        void slotPreviewWidgetExecute();
+
         void slotSaveYourself();
         void slotRename();
         void slotRenameResult(KIO::Job *);
@@ -746,6 +753,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
                  waitForShow;
         SQ_Downloader *down;
         QVBox    *mainPage;
+        bool     statStage;
 };
 
 // Is slideshow running ?

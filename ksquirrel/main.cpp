@@ -17,6 +17,7 @@
 
 #include <qgl.h>
 #include <qdir.h>
+#include <qfile.h>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -40,8 +41,6 @@ static KCmdLineOptions options[] =
 {
     {"+[file to open]", I18N_NOOP("File to be opened at startup."), 0},
     {"l", I18N_NOOP("Print found libraries and exit."), 0},
-    {"d", 0, 0},
-    {"directory <directory>", I18N_NOOP("Directory to be opened at startup."), 0},
     KCmdLineLastOption
 };
 
@@ -60,10 +59,10 @@ int main(int argc, char *argv[])
             "(c) 2003-2007 Baryshev Dmitry",
             QString::null,
             "http://ksquirrel.sourceforge.net",
-            "ksquirrel@tut.by");
+            "ksquirrel@mail.ru");
 
     // setup 'About' dialog
-    aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
+    aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@mail.ru", QString::null);
     aboutData.addCredit("Andrey Rahmatullin aka wrar", I18N_NOOP("Bug reports, patches"), "wrar@altlinux.ru", QString::null);
     aboutData.addCredit("SeaJey", I18N_NOOP("Testing"), "seajey.serg@gmail.com", QString::null);
     aboutData.addCredit("JaguarWan", I18N_NOOP("Bug reports"), "jaguarwan@gmail.com", QString::null);
@@ -81,23 +80,10 @@ int main(int argc, char *argv[])
     //create high level options
     high = new SQ_HLOptions;
 
-    QString d = sq_args->getOption("directory");
-    if(!d.isEmpty() && QDir::isRelativePath(d))
-        d.prepend(QDir::currentDirPath()+QDir::separator());
+    if(sq_args->count())
+        high->param = QFile::decodeName(sq_args->arg(0));
 
-    high->dir = KURL::fromPathOrURL(d);
     high->showLibsAndExit = sq_args->isSet("l");
-
-    if(high->dir.isEmpty())
-    {
-        high->file = sq_args->count() ? sq_args->url(0) : KURL();
-
-        if(!high->file.isEmpty())
-        {
-            high->dir = high->file;
-            high->dir.cd("..");
-        }
-    }
 
     KApplication    a;
 
@@ -115,20 +101,16 @@ int main(int argc, char *argv[])
 
         // Check if KSquirrel already registered.
         // If registered, send an url to it.
-        if(reg && !high->dir.isEmpty())
+        if(reg && !high->param.isEmpty())
         {
             // Yes, it is registered. Let's send a message to it.
             QCString replyType;
             QByteArray data, replyData;
             QDataStream dataStream(data, IO_WriteOnly);
-            KURL url = (!high->file.isEmpty()) ? high->file : high->dir;
 
-            if(high->file.isEmpty())
-                url.adjustPath(+1);
+            dataStream << high->param;
 
-            dataStream << url.prettyURL();
-
-            if(!a.dcopClient()->call(App, App, (high->file.isEmpty()?"load_directory(QString)":"load_image(QString)"), data, replyType, replyData))
+            if(!a.dcopClient()->call(App, App, "load(QString)", data, replyType, replyData))
                 qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
 
             sq_args->clear();
@@ -159,7 +141,7 @@ int main(int argc, char *argv[])
 
     if(config->readBoolEntry("splash", true))
     {
-        splash = new SQ_SplashScreen;
+        splash = new SQ_SplashScreen(0, "ksquirrel-splash-screen");
         if(!high->showLibsAndExit) splash->show(); // don't show splash when -l
         KApplication::flush();
     }

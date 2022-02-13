@@ -1,473 +1,478 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of de2.po to german
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Oliver Dörr <kde@doerr-privat.de>, 2007.
+# Frederik Schwarzer <schwarzerf@gmail.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: de2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-07 09:34+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2007-11-03 20:25+0100\n"
+"Last-Translator: Oliver Dörr <kde@doerr-privat.de>\n"
+"Language-Team: german <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: sq_filters.ui.h:56 sq_filters.ui.h:58 sq_externaltools.cpp:67
 #: sq_externaltools.cpp:194 sidebar/sq_mountview.cpp:64 sq_viewcache.cpp:47
 #: sq_viewcache.cpp:105 sq_filters.cpp:123 sq_filters.cpp:196
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: sq_externaltool.cpp:102 sq_externaltool.cpp:162 sq_externaltool.cpp:170
 msgid "No file selected"
-msgstr ""
+msgstr "Keine Datei ausgewählt"
 
 #: sq_kipimanager.cpp:68
 msgid "No Plugins"
-msgstr ""
+msgstr "Keine Module"
 
 #: sq_kipimanager.cpp:125
 msgid "Image actions"
-msgstr ""
+msgstr "Bildaktionen"
 
 #: sq_kipimanager.cpp:126
 msgid "Effects"
-msgstr ""
+msgstr "Effekte"
 
 #: sq_kipimanager.cpp:127
 msgid "Tools"
-msgstr ""
+msgstr "Extras"
 
 #: sq_kipimanager.cpp:130
 msgid "Batch processing"
-msgstr ""
+msgstr "Stapelverarbeitung"
 
 #: sq_kipimanager.cpp:131
 msgid "Collections"
-msgstr ""
+msgstr "Sammlungen"
 
 #: sq_libraryhandler.cpp:148
 msgid "All files"
-msgstr ""
+msgstr "Alle Dateien"
 
 #: sq_navigatordropmenu.cpp:40
 msgid "Copy here"
-msgstr ""
+msgstr "Hierher kopieren"
 
 #: sq_navigatordropmenu.cpp:43
 msgid "Move here"
-msgstr ""
+msgstr "Hierher verschieben"
 
 #: sq_navigatordropmenu.cpp:46
 msgid "Link here"
-msgstr ""
+msgstr "Hierher verknüpfen"
 
 #: sq_glinfo.cpp:45 sq_glinfo.cpp:92
 msgid "Parameter"
-msgstr ""
+msgstr "Parameter"
 
 #: sq_glinfo.cpp:46 sq_glinfo.cpp:93 sq_imageproperties.cpp:321
 #: sq_imageproperties.cpp:408 imageedit/sq_imagefilter.cpp:487
 msgid "Value"
-msgstr ""
+msgstr "Wert"
 
 #: sq_glinfo.cpp:91
 msgid "OpenGL information"
-msgstr ""
+msgstr "Informationen zu OpenGL"
 
 #: sq_externaltools.cpp:66 sq_externaltools.cpp:193
 msgid "Pixmap"
-msgstr ""
+msgstr "Pixmap"
 
 #: sq_externaltools.cpp:68 sq_externaltools.cpp:195
 msgid "Command"
-msgstr ""
+msgstr "Befehl"
 
 #: sq_externaltools.cpp:190
 msgid "Adjust external tools"
-msgstr ""
+msgstr "Externe Werkzeuge justieren"
 
 #: sq_externaltools.cpp:192 sq_filters.cpp:182
 msgid " OK "
-msgstr ""
+msgstr " OK "
 
 #: sq_externaltools.cpp:196 sq_externaltools.ui.h:146
 #, c-format
-msgid ""
-"<b>Command</b> can contain <ul><li>%f: one file<li>%F: multiple files</ul>"
+msgid "<b>Command</b> can contain <ul><li>%f: one file<li>%F: multiple files</ul>"
 msgstr ""
+"<b>Befehl</b> kann enthalten: <ul><li>%f: eine Datei<li>%F: mehrere Dateien</"
+"ul>"
 
 #: sq_externaltools.cpp:199
 msgid "New tool"
-msgstr ""
+msgstr "Neues Werkzeug"
 
 #: sq_externaltools.cpp:206
 msgid "Move tool up"
-msgstr ""
+msgstr "Werkzeug nach oben verschieben"
 
 #: sq_externaltools.cpp:208
 msgid "Move tool down"
-msgstr ""
+msgstr "Werkzeug nach unten verschieben"
 
 #: sq_kipiinterface.cpp:72
 msgid "Root directory"
-msgstr ""
+msgstr "Basisordner"
 
 #: sq_kipiinterface.cpp:144
 msgid "Folder content"
-msgstr ""
+msgstr "Ordnerinhalt"
 
 #: sq_kipiinterface.cpp:161
 msgid "Selected images"
-msgstr ""
+msgstr "Ausgewählte Bilder"
 
 #: sq_kipiinterface.cpp:175 ksquirrel.cpp:513
 msgid "Image basket"
-msgstr ""
+msgstr "Bildkorb"
 
 #: main.cpp:40
 msgid "File to be opened at startup."
-msgstr ""
+msgstr "Datei die während des Starts geöffnet werden soll."
 
 #: main.cpp:41
 msgid "Print found libraries and exit."
-msgstr ""
+msgstr "Gefunden Bibliotheken anzeigen und beenden."
 
 #: main.cpp:57
 msgid "KSquirrel - image viewer for KDE"
-msgstr ""
+msgstr "KSquirrel - Bildbetrachter für KDE"
 
 #: main.cpp:66
 msgid "Bug reports, patches"
-msgstr ""
+msgstr "Fehlerberichte, -bereinigungen"
 
 #: main.cpp:67
 msgid "Bug reports"
-msgstr ""
+msgstr "Fehlerberichte"
 
 #: main.cpp:68
 msgid "Translation help"
-msgstr ""
+msgstr "Übersetzungshilfe"
 
 #: main.cpp:69
 msgid "TiamaT"
-msgstr ""
+msgstr "TiamaT"
 
 #: main.cpp:69
 msgid "Initial artwork for edit tools"
-msgstr ""
+msgstr "Erste Grafiken für die Bearbeitungswerkzeuge"
 
 #: main.cpp:70
 msgid "Fera"
-msgstr ""
+msgstr "Fera"
 
 #: main.cpp:70
 msgid "Great artwork for edit tools"
-msgstr ""
+msgstr "Großartige Grafiken für die Bearbeitungswerkzeuge"
 
 #: main.cpp:71
 msgid "OpenGL forum at"
-msgstr ""
+msgstr "OpenGL-Forum unter"
 
 #: main.cpp:72
 msgid "GameDev forum at"
-msgstr ""
+msgstr "GameDev-Forum unter"
 
 #: sq_imageproperties.cpp:320 sq_imageproperties.cpp:407
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: sq_imageproperties.cpp:359 sq_glwidget.cpp:350
 msgid "Image properties"
-msgstr ""
+msgstr "Bildeigenschaften"
 
 #: sq_imageproperties.cpp:361
 msgid "Attributes"
-msgstr ""
+msgstr "Attribute"
 
 #: sq_imageproperties.cpp:362
 msgid "Owner:"
-msgstr ""
+msgstr "Eigentümer:"
 
 #: sq_imageproperties.cpp:363
 msgid "Group:"
-msgstr ""
+msgstr "Gruppe:"
 
 #: sq_imageproperties.cpp:365
 msgid "Permissions:"
-msgstr ""
+msgstr "Berechtigungen:"
 
 #: sq_imageproperties.cpp:368
 msgid "Time"
-msgstr ""
+msgstr "Zeit"
 
 #: sq_imageproperties.cpp:369
 msgid "Created:"
-msgstr ""
+msgstr "Erstellt:"
 
 #: sq_imageproperties.cpp:370
 msgid "Last read:"
-msgstr ""
+msgstr "Zuletzt gelesen:"
 
 #: sq_imageproperties.cpp:371
 msgid "Last modified:"
-msgstr ""
+msgstr "Zuletzt geändert:"
 
 #: sq_imageproperties.cpp:375 sq_helpwidget.cpp:181 sq_options.ui.h:134
 msgid "General"
-msgstr ""
+msgstr "Allgemein"
 
 #: sq_imageproperties.cpp:376
 msgid "File:"
-msgstr ""
+msgstr "Datei:"
 
 #: sq_imageproperties.cpp:378 sq_pluginsinfo.cpp:137 sq_slideshow.cpp:211
 msgid "Directory:"
-msgstr ""
+msgstr "Ordner:"
 
 #: sq_imageproperties.cpp:379
 msgid "Size:"
-msgstr ""
+msgstr "Größe:"
 
 #: sq_imageproperties.cpp:381
 msgid "Type:"
-msgstr ""
+msgstr "Typ:"
 
 #: sq_imageproperties.cpp:382
 msgid "Number of frames:"
-msgstr ""
+msgstr "Anzahl der Einzelbilder:"
 
 #: sq_imageproperties.cpp:383
 msgid "Current frame"
-msgstr ""
+msgstr "Aktuelles Einzelbild"
 
 #: sq_imageproperties.cpp:384 sq_slideshow.cpp:219
 msgid "Delay:"
-msgstr ""
+msgstr "Verzögerung:"
 
 #: sq_imageproperties.cpp:385
 msgid "Dimensions:"
-msgstr ""
+msgstr "Größe:"
 
 #: sq_imageproperties.cpp:386
 msgid "Bits per pixel:"
-msgstr ""
+msgstr "Bits pro Pixel:"
 
 #: sq_imageproperties.cpp:387
 msgid "Color space:"
-msgstr ""
+msgstr "Farbraum:"
 
 #: sq_imageproperties.cpp:388
 msgid "Compression:"
-msgstr ""
+msgstr "Kompression:"
 
 #: sq_imageproperties.cpp:389
 msgid "Uncompressed size:"
-msgstr ""
+msgstr "Unkomprimierte Größe:"
 
 #: sq_imageproperties.cpp:390
 msgid "Compress ratio:"
-msgstr ""
+msgstr "Kompressionsrate:"
 
 #: sq_imageproperties.cpp:391
 msgid "Interlaced:"
-msgstr ""
+msgstr "Interlaced:"
 
 #: sq_imageproperties.cpp:392
 msgid "Status:"
-msgstr ""
+msgstr "Status:"
 
 #: sq_imageproperties.cpp:406 sq_glwidget.cpp:2662 sq_options.cpp:816
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 #: sq_imageproperties.cpp:409
 msgid "Metadata"
-msgstr ""
+msgstr "Metadaten"
 
 #: sq_pluginsinfo.cpp:55 sq_pluginsinfo.cpp:129
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: sq_pluginsinfo.cpp:56 sq_pluginsinfo.cpp:130
 msgid "Icon"
-msgstr ""
+msgstr "Symbol"
 
 #: sq_pluginsinfo.cpp:57 sq_pluginsinfo.cpp:131
 msgid "Library"
-msgstr ""
+msgstr "Bibliothek"
 
 #: sq_pluginsinfo.cpp:58 sq_pluginsinfo.cpp:132
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: sq_pluginsinfo.cpp:59 sq_pluginsinfo.cpp:133 sq_viewcache.cpp:48
 #: sq_viewcache.cpp:106
 msgid "MIME"
-msgstr ""
+msgstr "Dateizuordnungen"
 
 #: sq_pluginsinfo.cpp:128
 msgid "Codecs information and settings"
-msgstr ""
+msgstr "Codecs-Information und Einstellungen"
 
 #: sq_pluginsinfo.cpp:138
 msgid "Total found:"
-msgstr ""
+msgstr "Insgesamt gefunden:"
 
 #: sq_errorstring.cpp:34
 msgid "cannot open file for reading"
-msgstr ""
+msgstr "Die Datei kann nicht zum Lesen geöffnet werden"
 
 #: sq_errorstring.cpp:35
 msgid "file corrupted"
-msgstr ""
+msgstr "Die Datei ist defekt"
 
 #: sq_errorstring.cpp:36
 msgid "no memory"
-msgstr ""
+msgstr "Kein Speicher"
 
 #: sq_errorstring.cpp:37
 msgid "file type not supported"
-msgstr ""
+msgstr "Die Dateizuordnung wird nicht unterstützt"
 
 #: sq_errorstring.cpp:38
 msgid "wrong image dimensions"
-msgstr ""
+msgstr "Falsche Bildgröße"
 
 #: sq_errorstring.cpp:39
 msgid "cannot open file for writing"
-msgstr ""
+msgstr "Die Datei kann nicht zum Schreiben geöffnet werden"
 
 #: sq_errorstring.cpp:40
 msgid "write feature is not supported"
-msgstr ""
+msgstr "Schreiben ist nicht unterstützt"
 
 #: sq_errorstring.cpp:41
 msgid "write error (check free space)"
-msgstr ""
+msgstr "Schreibfehler, bitte überprüfen Sie den freien Platz"
 
 #: sq_errorstring.cpp:42
 msgid "wrong parameters"
-msgstr ""
+msgstr "Falsche Parameter"
 
 #: sq_errorstring.cpp:43
 msgid "Editing process is not finished yet"
-msgstr ""
+msgstr "Der Bearbeitungsprozess ist noch nicht beendet"
 
 #: sq_selectdeselectgroup.cpp:83
 msgid "Filename or mask:"
-msgstr ""
+msgstr "Dateiname oder -maske:"
 
 #: sidebar/sq_treeview.cpp:89
 msgid "root"
-msgstr ""
+msgstr "Basisordner"
 
 #: sidebar/sq_categoriesview.cpp:95 ksquirrel.cpp:512
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
 
 #: sidebar/sq_categoriesview.cpp:115 sidebar/sq_categoriesview.cpp:166
 msgid "New category"
-msgstr ""
+msgstr "Neue Kategorie"
 
 #: sidebar/sq_categoriesview.cpp:153 sidebar/sq_categoriesview.cpp:218
 msgid "New Category"
-msgstr ""
+msgstr "Neue Kategorie"
 
 #: sidebar/sq_categoriesview.cpp:169 sidebar/sq_categoriesview.cpp:198
 msgid "Create default categories"
-msgstr ""
+msgstr "Standardkategorien erstellen"
 
 #: sidebar/sq_categoriesview.cpp:197
 msgid ""
 "It will create default categories: Concerts, Pets, Home, Friends, Free time, "
 "Traveling, Nature. Continue?"
 msgstr ""
+"Dies wird die Standardkategorien erstellen: Konzerte, Haustiere, Zuhause, "
+"Freunde, Freizeit, Reisen, Natur. Fortfahren?"
 
 #: sidebar/sq_categoriesview.cpp:218
 msgid "Create new category:"
-msgstr ""
+msgstr "Neue Kategorie erstellen:"
 
 #: sidebar/sq_mountview.cpp:43
 msgid "Mount"
-msgstr ""
+msgstr "Laufwerk einbinden"
 
 #: sidebar/sq_mountview.cpp:45
 msgid "Unmount"
-msgstr ""
+msgstr "Laufwerkeinbindung lösen"
 
 #: sidebar/sq_mountview.cpp:47
 msgid "Refresh"
-msgstr ""
+msgstr "Aktualisieren"
 
 #: sidebar/sq_mountview.cpp:170
 msgid "Device"
-msgstr ""
+msgstr "Gerät"
 
 #: sidebar/sq_mountview.cpp:173
 msgid "FS Type"
-msgstr ""
+msgstr "Dateisystemtyp"
 
 #: sidebar/sq_imagebasket.cpp:244
 msgid "Synchronize"
-msgstr ""
+msgstr "Synchronisieren"
 
 #: sidebar/sq_previewwidget.cpp:60
 msgid "Background color..."
-msgstr ""
+msgstr "Hintergrundfarbe ..."
 
 #: sidebar/sq_categorybrowsermenu.cpp:137
 #: sidebar/sq_categorybrowsermenu.cpp:146
 msgid "Failed to Read Folder"
-msgstr ""
+msgstr "Lesen des Ordners nicht möglich"
 
 #: sidebar/sq_categorybrowsermenu.cpp:154
 msgid "Not Authorized to Read Folder"
-msgstr ""
+msgstr "Unzureichende Zugriffsrechte zum Öffnen des Ordners"
 
 #: sidebar/sq_categorybrowsermenu.cpp:167
 msgid "Add here"
-msgstr ""
+msgstr "Hier hinzufügen"
 
 #: sidebar/sq_categorybrowsermenu.cpp:310
 msgid "More..."
-msgstr ""
+msgstr "Mehr ..."
 
 #: sq_thumbnailcachemaster.cpp:143
 msgid "Thumbnail cache"
-msgstr ""
+msgstr "Bildvorschauzwischenspeicher"
 
 #: sq_thumbnailcachemaster.cpp:144
 msgid "Calculate cache size on disk"
-msgstr ""
+msgstr "Zwischenspeichergröße auf der Platte berechnen"
 
 #: sq_thumbnailcachemaster.cpp:146
 msgid "Clear cache on disk"
-msgstr ""
+msgstr "Zwischenspeicher auf der Platte säubern"
 
 #: sq_thumbnailcachemaster.cpp:147
 msgid "View memory cache"
-msgstr ""
+msgstr "Zwischenspeicher im Hauptspeicher ansehen"
 
 #: sq_thumbnailcachemaster.cpp:148
 msgid "Clear cache in memory"
-msgstr ""
+msgstr "Zwischenspeicher im Hauptspeicher säubern"
 
 #: sq_thumbnailcachemaster.cpp:150
 msgid "Sync cache to disk"
-msgstr ""
+msgstr "Zwischenspeicher auf Platte synchronisieren"
 
 #: sq_thumbnailcachemaster.cpp:151
 msgid "Calculate cache size in memory"
-msgstr ""
+msgstr "Zwischenspeichergröße im Hauptspeicher berechnen"
 
 #: sq_diroperator.cpp:138
 msgid "non-local filesystem"
-msgstr ""
+msgstr "Nicht lokales Dateisystem"
 
 #: sq_diroperator.cpp:158
 msgid ""
@@ -475,88 +480,91 @@ msgid ""
 "2</td></tr><tr><td>Used:</td><td>%3</td></tr><tr><td>Available:</td><td>%4</"
 "td></tr></table>"
 msgstr ""
+"<table><tr><td>Einhängepunkt:</td><td>%1</td></tr><tr><td>Gesamtgröße:</"
+"td><td>%2</td></tr><tr><td>Benutzt:</td><td>%3</td></tr><tr><td>Verfügbar:</"
+"td><td>%4</td></tr></table>"
 
 #: sq_diroperator.cpp:245
 msgid "no files selected"
-msgstr ""
+msgstr "Keine Dateien ausgewählt"
 
 #: sq_diroperator.cpp:306
 msgid "Edit file type"
-msgstr ""
+msgstr "Dateityp bearbeiten"
 
 #: sq_diroperator.cpp:307
 msgid "Add to Basket"
-msgstr ""
+msgstr "Zum Korb hinzufügen"
 
 #: sq_diroperator.cpp:309 sq_diroperator.cpp:889
 msgid "File actions"
-msgstr ""
+msgstr "Dateiaktionen"
 
 #: sq_diroperator.cpp:327
 msgid "Copy to..."
-msgstr ""
+msgstr "Kopieren nach ..."
 
 #: sq_diroperator.cpp:328
 msgid "Move to..."
-msgstr ""
+msgstr "Verschieben nach ..."
 
 #: sq_diroperator.cpp:329
 msgid "Link to..."
-msgstr ""
+msgstr "Verknüpfen mit ..."
 
 #: sq_diroperator.cpp:331
 msgid "Run"
-msgstr ""
+msgstr "Ausführen"
 
 #: sq_diroperator.cpp:333
 msgid "Recreate selected thumbnails"
-msgstr ""
+msgstr "Die ausgewählten Vorschaubilder werden neu erstellt"
 
 #: sq_diroperator.cpp:336
 msgid "Convert..."
-msgstr ""
+msgstr "Konvertieren ..."
 
 #: sq_diroperator.cpp:439
 msgid "Total %1 in %2 (%3, %4)"
-msgstr ""
+msgstr "Total %1 in %2 (%3, %4)"
 
 #: sq_diroperator.cpp:441
 msgid "1 item"
-msgstr ""
+msgstr "1 Eintrag"
 
 #: sq_diroperator.cpp:442
 msgid "1 folder"
-msgstr ""
+msgstr "1 Ordner"
 
 #: sq_diroperator.cpp:443
 msgid "1 file"
-msgstr ""
+msgstr "1 Datei"
 
 #: sq_diroperator.cpp:627
 #, c-format
 msgid "Command cannot contain both \"%f\" and \"%F\""
-msgstr ""
+msgstr "Der Befehl kann nicht zugleich \"%f\" und \"%F\" enthalten"
 
 #: sq_diroperator.cpp:627 sq_diroperator.cpp:632
 msgid "Error processing command"
-msgstr ""
+msgstr "Fehler bei der Verarbeitung des Befehls"
 
 #: sq_diroperator.cpp:632
 #, c-format
 msgid "Command should contain \"%f\" or \"%F\""
-msgstr ""
+msgstr "Der Befehl sollte \"%f\" oder \"%F\" enthalten"
 
 #: sq_diroperator.cpp:741
 msgid "Unsupported format \"%1\""
-msgstr ""
+msgstr "Nicht unterstütztes Format \"%1\""
 
 #: sq_diroperator.cpp:886
 msgid "Add to &Category"
-msgstr ""
+msgstr "Zur &Kategorie hinzufügen"
 
 #: sq_diroperator.cpp:890
 msgid "&External tools"
-msgstr ""
+msgstr "&Externe Werkzeuge"
 
 #: sq_slideshowwidget.cpp:345
 msgid ""
@@ -566,32 +574,41 @@ msgid ""
 "tr><tr><td><b>Page Down</b></td><td>next image</td></tr><tr><td><b>M</b></"
 "td><td>show/hide onscreen messages</td></tr></table>"
 msgstr ""
+"<table cellspacing=0><tr><td><b>Eingabe, Escape</b></td><td>beendet die "
+"Diaschau</td></tr><tr><td><b>Pause, Leertaste</b></td><td>pausiert oder "
+"beendet die Pause der Diaschau</td></tr><tr><td><b>Bild auf</b></"
+"td><td>vorheriges Bild</td></tr><tr><td><b>Bild ab</b></td><td>nächstes "
+"Bild</td></tr><tr><td><b>M</b></td><td>Bildschirmmeldungen anzeigen/"
+"ausblenden</td></tr></table>"
 
 #: sq_codecsettingsskeleton.ui.h:28
 msgid ""
 "Error loading widget from <b>%1</b>. Please check your installation or "
 "contact <a href=\"mailto:ksquirrel@mail.ru\">ksquirrel@mail.ru</a>"
 msgstr ""
+"Fehler beim Laden des Bildschirmelementes von <b>%1</b>. Bitte überprüfen "
+"Sie Ihre Installaton oder kontaktieren Sie <a href=\"mailto:ksquirrel@mail.ru"
+"\">ksquirrel@mail.ru</a>."
 
 #: sq_widgetstack.cpp:473 sq_widgetstack.cpp:507
 msgid "No files to copy or move"
-msgstr ""
+msgstr "Keine Dateien zum Kopieren oder Verschieben"
 
 #: sq_widgetstack.cpp:607
 msgid "Select a group of files"
-msgstr ""
+msgstr "Gruppe von Dateien auswählen"
 
 #: sq_widgetstack.cpp:607
 msgid "Deselect a group of files"
-msgstr ""
+msgstr "Auswahl einer Gruppe von Dateien aufheben"
 
 #: sq_widgetstack.cpp:608
 msgid "Select!"
-msgstr ""
+msgstr "Auswählen"
 
 #: sq_widgetstack.cpp:608
 msgid "Deselect!"
-msgstr ""
+msgstr "Auswahl aufheben"
 
 #: sq_filethumbview.cpp:370
 msgid ""
@@ -599,162 +616,167 @@ msgid ""
 "td></tr><tr><td align=left>Size:</td><td align=left><b>%2</b></td></tr>%3%4</"
 "table>"
 msgstr ""
+"<table cellspacing=0><tr><td align=left>Datei:</td><td align=left><b>%1</b></"
+"td></tr><tr><td align=left>Größe:</td><td align=left><b>%2</b></td></tr>%3%"
+"4</table>"
 
 #: sq_filethumbview.cpp:373
 msgid "<tr><td align=left>Link destination:</td><td align=left>%1</td></tr>"
-msgstr ""
+msgstr "<tr><td align=left>Ziel der Verknüpfung:</td><td align=left>%1</td></tr>"
 
 #: imageedit/sq_writeoption.cpp:108
 msgid "RLE compression"
-msgstr ""
+msgstr "RLE-Kompression"
 
 #: imageedit/sq_writeoption.cpp:109
 msgid "Compression level"
-msgstr ""
+msgstr "Kompressionsstärke:"
 
 #: imageedit/sq_writeoption.cpp:110
 msgid "Interlaced"
-msgstr ""
+msgstr "Interlaced"
 
 #: imageedit/sq_writeoption.cpp:112
 msgid "<i>No special options available for this format</i>"
-msgstr ""
+msgstr "<i>Für dieses Format sind keine speziellen Optionen verfügbar</i>"
 
 #: imageedit/sq_converter.cpp:47
 msgid "internal error"
-msgstr ""
+msgstr "Interner Fehler"
 
 #: imageedit/sq_converter.cpp:48
 msgid "failed"
-msgstr ""
+msgstr "Fehlgeschlagen"
 
 #: imageedit/sq_converter.cpp:50
 msgid "Converting"
-msgstr ""
+msgstr "Konvertiere"
 
 #: imageedit/sq_converter.cpp:68
 msgid "Select files to edit"
-msgstr ""
+msgstr "Wählen Sie die Dateien zur Bearbeitung aus"
 
 #: imageedit/sq_converter.cpp:73
 msgid ""
 "Converter cannot work with non-local files.\n"
 "Sorry"
 msgstr ""
+"Der Konverter kann nicht mit entfernten Dateien arbeiten.\n"
+"Entschuldigen Sie dies bitte."
 
 #: imageedit/sq_converter.cpp:160
 msgid "Temporary file creation failed"
-msgstr ""
+msgstr "Die Erstellung einer temporären Datei ist fehlgeschlagen"
 
 #: imageedit/sq_converter.cpp:243 sq_imageproperties.ui.h:72
 msgid "1 error"
-msgstr ""
+msgstr "1 Fehler"
 
 #: imageedit/sq_converter.cpp:250
 msgid "Removing"
-msgstr ""
+msgstr "Entferne"
 
 #: imageedit/sq_converter.cpp:436
 msgid "Convert 1 file"
-msgstr ""
+msgstr "1 Datei konvertieren"
 
 #: imageedit/sq_imageeditoptions.cpp:134
 msgid "Edit options"
-msgstr ""
+msgstr "Bearbeitungsoptionen"
 
 #: imageedit/sq_imageeditoptions.cpp:135
 msgid "New files"
-msgstr ""
+msgstr "Neue Dateien"
 
 #: imageedit/sq_imageeditoptions.cpp:136
 msgid "Put here"
-msgstr ""
+msgstr "Hier abspeichern"
 
 #: imageedit/sq_imageeditoptions.cpp:137
 msgid "Replace original files"
-msgstr ""
+msgstr "Originaldateien ersetzen"
 
 #: imageedit/sq_imageeditoptions.cpp:138
 msgid "Put files to current directory, renaming them if neccessary"
-msgstr ""
+msgstr "Im aktuellen Ordner abspeichern; umbenennen falls nötig."
 
 #: imageedit/sq_imageeditoptions.cpp:139
 msgid "Put files to current directory, replacing existing files"
-msgstr ""
+msgstr "Im aktuellen Ordner abspeichern; existierende Dateien ersetzen."
 
 #: imageedit/sq_imageeditoptions.cpp:140
 msgid "Close, when all operations succeeded"
-msgstr ""
+msgstr "Schließen, wenn alle Operationen erfolgreich durchgeführt wurden."
 
 #: imageedit/sq_imagebcg.ui.h:17 imageedit/sq_imagebcg.ui.h:31
 #: imageedit/sq_imagebcg.cpp:382
 msgid "Brightness"
-msgstr ""
+msgstr "Helligkeit"
 
 #: imageedit/sq_imagebcg.ui.h:18 imageedit/sq_imagebcg.ui.h:31
 #: imageedit/sq_imagebcg.cpp:383
 msgid "Contrast"
-msgstr ""
+msgstr "Kontrast"
 
 #: imageedit/sq_imagebcg.ui.h:19 imageedit/sq_imagebcg.ui.h:31
 #: imageedit/sq_imagebcg.cpp:384
 msgid "Gamma"
-msgstr ""
+msgstr "Gamma"
 
 #: imageedit/sq_imagebcg.ui.h:20 imageedit/sq_imagebcg.ui.h:32
 #: imageedit/sq_imagebcg.cpp:390
 msgid "Red"
-msgstr ""
+msgstr "Rot"
 
 #: imageedit/sq_imagebcg.ui.h:20
 msgid "Cyan"
-msgstr ""
+msgstr "Cyan"
 
 #: imageedit/sq_imagebcg.ui.h:21 imageedit/sq_imagebcg.ui.h:32
 #: imageedit/sq_imagebcg.cpp:389
 msgid "Green"
-msgstr ""
+msgstr "Grün"
 
 #: imageedit/sq_imagebcg.ui.h:21
 msgid "Magenta"
-msgstr ""
+msgstr "Magenta"
 
 #: imageedit/sq_imagebcg.ui.h:22 imageedit/sq_imagebcg.ui.h:32
 #: imageedit/sq_imagebcg.cpp:388
 msgid "Blue"
-msgstr ""
+msgstr "Blau"
 
 #: imageedit/sq_imagebcg.ui.h:22
 msgid "Yellow"
-msgstr ""
+msgstr "Gelb"
 
 #: imageedit/sq_imagefilter.cpp:473 imageedit/sq_imagefilter.cpp:539
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #: imageedit/sq_imagefilter.cpp:474 imageedit/sq_imagefilter.cpp:486
 msgid "Color:"
-msgstr ""
+msgstr "Farbe:"
 
 #: imageedit/sq_imagefilter.cpp:476
 msgid "Opacity"
-msgstr ""
+msgstr "Deckkraft"
 
 #: imageedit/sq_imagefilter.cpp:477 imageedit/sq_imagefilter.cpp:482
 #: imageedit/sq_imagefilter.cpp:505
 msgid "Sigma"
-msgstr ""
+msgstr "Sigma"
 
 #: imageedit/sq_imagefilter.cpp:478 imageedit/sq_imagefilter.cpp:481
 #: imageedit/sq_imagefilter.cpp:483 imageedit/sq_imagefilter.cpp:501
 #: imageedit/sq_imagefilter.cpp:506
 msgid "Radius"
-msgstr ""
+msgstr "Radius"
 
 #: imageedit/sq_imagefilter.cpp:479 imageedit/sq_imagefilter.cpp:492
 #: imageedit/sq_imagefilter.cpp:507
 msgid "Factor"
-msgstr ""
+msgstr "Faktor"
 
 #: imageedit/sq_imagefilter.cpp:480 imageedit/sq_imagefilter.cpp:484
 #: imageedit/sq_imagefilter.cpp:493 imageedit/sq_imagefilter.cpp:514
@@ -762,1087 +784,1093 @@ msgid ""
 "There are no special options available for this filter. Just click \"Filter"
 "\"."
 msgstr ""
+"Für diesen Filter gibt es keine speziellen Optionen. Benutzen Sie einfach "
+"\"Filter\"."
 
 #: imageedit/sq_imagefilter.cpp:490
 msgid "Color 1:"
-msgstr ""
+msgstr "Farbe 1:"
 
 #: imageedit/sq_imagefilter.cpp:491
 msgid "Color 2:"
-msgstr ""
+msgstr "Farbe 2:"
 
 #: imageedit/sq_imagefilter.cpp:494
 msgid "Noise type"
-msgstr ""
+msgstr "Rauschtyp"
 
 #: imageedit/sq_imagefilter.cpp:495
 msgid "Uniform"
-msgstr ""
+msgstr "Gleichförmig"
 
 #: imageedit/sq_imagefilter.cpp:496
 msgid "Impulse"
-msgstr ""
+msgstr "Impuls"
 
 #: imageedit/sq_imagefilter.cpp:497
 msgid "MultiplicativeGaussian"
-msgstr ""
+msgstr "Multiplikativ gaußsch"
 
 #: imageedit/sq_imagefilter.cpp:498
 msgid "Poisson"
-msgstr ""
+msgstr "Poisson"
 
 #: imageedit/sq_imagefilter.cpp:499
 msgid "Gaussian"
-msgstr ""
+msgstr "Gaußsch"
 
 #: imageedit/sq_imagefilter.cpp:500
 msgid "Laplacian"
-msgstr ""
+msgstr "Laplace"
 
 #: imageedit/sq_imagefilter.cpp:502
 msgid "Color"
-msgstr ""
+msgstr "Farbe"
 
 #: imageedit/sq_imagefilter.cpp:503
 msgid "Elevation"
-msgstr ""
+msgstr "Erhöhung"
 
 #: imageedit/sq_imagefilter.cpp:504
 msgid "Azimuth"
-msgstr ""
+msgstr "Azimut"
 
 #: imageedit/sq_imagefilter.cpp:508
 msgid "Amount"
-msgstr ""
+msgstr "Menge"
 
 #: imageedit/sq_imagefilter.cpp:509
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: imageedit/sq_imagefilter.cpp:510
 msgid "GBR"
-msgstr ""
+msgstr "GBR"
 
 #: imageedit/sq_imagefilter.cpp:511
 msgid "BRG"
-msgstr ""
+msgstr "BRG"
 
 #: imageedit/sq_imagefilter.cpp:512
 msgid "Degrees"
-msgstr ""
+msgstr "Grad"
 
 #: imageedit/sq_imagefilter.cpp:513 imageedit/sq_imagefilter.cpp:515
 #: imageedit/sq_imagefilter.cpp:536
 msgid "Threshold"
-msgstr ""
+msgstr "Schwellwert"
 
 #: imageedit/sq_imagefilter.cpp:517
 msgid "Blend"
-msgstr ""
+msgstr "Einblenden"
 
 #: imageedit/sq_imagefilter.cpp:518
 msgid "Blur"
-msgstr ""
+msgstr "Weichzeichnen"
 
 #: imageedit/sq_imagefilter.cpp:519
 msgid "Desaturate"
-msgstr ""
+msgstr "Sättigung vermindern"
 
 #: imageedit/sq_imagefilter.cpp:520
 msgid "Despeckle"
-msgstr ""
+msgstr "Flecken entfernen"
 
 #: imageedit/sq_imagefilter.cpp:521
 msgid "Edge"
-msgstr ""
+msgstr "Kanten"
 
 #: imageedit/sq_imagefilter.cpp:522
 msgid "Emboss"
-msgstr ""
+msgstr "Relief"
 
 #: imageedit/sq_imagefilter.cpp:523
 msgid "Equalize"
-msgstr ""
+msgstr "Farben ausgleichen"
 
 #: imageedit/sq_imagefilter.cpp:524
 msgid "Fade"
-msgstr ""
+msgstr "Verblassen"
 
 #: imageedit/sq_imagefilter.cpp:525
 msgid "Flatten"
-msgstr ""
+msgstr "Abflachung"
 
 #: imageedit/sq_imagefilter.cpp:526
 msgid "Implode"
-msgstr ""
+msgstr "Implosion"
 
 #: imageedit/sq_imagefilter.cpp:527
 msgid "Negative"
-msgstr ""
+msgstr "Negativ"
 
 #: imageedit/sq_imagefilter.cpp:528
 msgid "Noise"
-msgstr ""
+msgstr "Rauschen"
 
 #: imageedit/sq_imagefilter.cpp:529
 msgid "Oil"
-msgstr ""
+msgstr "Öl"
 
 #: imageedit/sq_imagefilter.cpp:530
 msgid "Shade"
-msgstr ""
+msgstr "Schattieren"
 
 #: imageedit/sq_imagefilter.cpp:531
 msgid "Sharpen"
-msgstr ""
+msgstr "Schärfen"
 
 #: imageedit/sq_imagefilter.cpp:532
 msgid "Solarize"
-msgstr ""
+msgstr "Solarisieren"
 
 #: imageedit/sq_imagefilter.cpp:533
 msgid "Spread"
-msgstr ""
+msgstr "Ausdehnen"
 
 #: imageedit/sq_imagefilter.cpp:534
 msgid "Swap colors"
-msgstr ""
+msgstr "Farben tauschen"
 
 #: imageedit/sq_imagefilter.cpp:535
 msgid "Swirl"
-msgstr ""
+msgstr "Wirbel"
 
 #: imageedit/sq_imagefilter.cpp:537
 msgid "Grayscale"
-msgstr ""
+msgstr "Graustufen"
 
 #: imageedit/sq_imagefilter.cpp:538
 msgid "Redeye"
-msgstr ""
+msgstr "Rote Augen"
 
 #: imageedit/sq_imagefilter.cpp:541
 msgid "Image after filtering:"
-msgstr ""
+msgstr "Bild nach der Filterung:"
 
 #: imageedit/sq_imagefilter.cpp:542 imageedit/sq_imagebcg.cpp:397
 msgid "Original image:"
-msgstr ""
+msgstr "Original-Bild:"
 
 #: imageedit/sq_imagebcg.cpp:378
 msgid "Color balance"
-msgstr ""
+msgstr "Farbbalance"
 
 #: imageedit/sq_imagebcg.cpp:394
 msgid "Colorize"
-msgstr ""
+msgstr "Einfärben"
 
 #: imageedit/sq_imagebcg.cpp:396
 msgid "Image after colorizing:"
-msgstr ""
+msgstr "Bild nach der Einfärbung:"
 
 #: imageedit/sq_imageconvert.cpp:167
 msgid "Convert"
-msgstr ""
+msgstr "Umwandeln"
 
 #: imageedit/sq_imageconvert.cpp:172
 msgid "Convertion options"
-msgstr ""
+msgstr "Umwandlungsoptionen"
 
 #: sq_viewcache.cpp:49 sq_viewcache.cpp:107
 msgid "Parameters"
-msgstr ""
+msgstr "Parameter"
 
 #: sq_viewcache.cpp:103
 msgid "Memory cache"
-msgstr ""
+msgstr "Hauptspeicher-Zwischenspeicher"
 
 #: sq_viewcache.cpp:108
 msgid "<b>Total:</b>"
-msgstr ""
+msgstr "<b>Gesamt:</b>"
 
 #: sq_imageproperties.ui.h:29
 msgid "Copy entry"
-msgstr ""
+msgstr "Eintrag kopieren"
 
 #: sq_imageproperties.ui.h:30
 msgid "Copy all entries"
-msgstr ""
+msgstr "Alle Einträge kopieren"
 
 #: sq_imageproperties.ui.h:95
 msgid "EXIF"
-msgstr ""
+msgstr "Exif"
 
 #: sq_imageproperties.ui.h:105
 msgid "Simple"
-msgstr ""
+msgstr "Einfach"
 
 #: sq_imageproperties.ui.h:108
 msgid "Full"
-msgstr ""
+msgstr "Vollständig"
 
 #: sq_imageproperties.ui.h:127
 msgid "EXIF (no)"
-msgstr ""
+msgstr "Exif (Nein)"
 
 #: sq_imageproperties.ui.h:177
 msgid "Metadata (no)"
-msgstr ""
+msgstr "Metadaten (Nein)"
 
 #: _translatorinfo.cpp:1
 msgid ""
 "_: NAME OF TRANSLATORS\n"
 "Your names"
-msgstr ""
+msgstr "Oliver Dörr"
 
 #: _translatorinfo.cpp:3
 msgid ""
 "_: EMAIL OF TRANSLATORS\n"
 "Your emails"
-msgstr ""
+msgstr "kde@doerr-privat.de"
 
 #: sq_glwidget.cpp:233
 msgid "Rectangle"
-msgstr ""
+msgstr "Rechteck"
 
 #: sq_glwidget.cpp:234
 msgid "Ellipse"
-msgstr ""
+msgstr "Ellipse"
 
 #: sq_glwidget.cpp:239
 msgid "Fit width"
-msgstr ""
+msgstr "An die Breite anpassen"
 
 #: sq_glwidget.cpp:240
 msgid "Fit height"
-msgstr ""
+msgstr "An die Höhe anpassen"
 
 #: sq_glwidget.cpp:241
 msgid "Fit image"
-msgstr ""
+msgstr "Das Bild anpassen"
 
 #: sq_glwidget.cpp:242
 msgid "Zoom 100%"
-msgstr ""
+msgstr "Zoom 100%"
 
 #: sq_glwidget.cpp:243
 msgid "Leave previous zoom"
-msgstr ""
+msgstr "Vorherigen Zoom beibehalten"
 
 #: sq_glwidget.cpp:244
 msgid "Ignore, if the image is less than window"
-msgstr ""
+msgstr "Ignorieren, falls das Bild kleiner ist als das Fenster"
 
 #: sq_glwidget.cpp:318
 msgid "Go to first image"
-msgstr ""
+msgstr "Zum ersten Bild gehen"
 
 #: sq_glwidget.cpp:319
 msgid "Previous image"
-msgstr ""
+msgstr "Vorheriges Bild"
 
 #: sq_glwidget.cpp:321
 msgid "Next image"
-msgstr ""
+msgstr "Nächstes Bild"
 
 #: sq_glwidget.cpp:323
 msgid "Go to last image"
-msgstr ""
+msgstr "Zum letzten Bild gehen"
 
 #: sq_glwidget.cpp:326 sq_glwidget.cpp:2685
 msgid "Zoom +"
-msgstr ""
+msgstr "Zoom +"
 
 #: sq_glwidget.cpp:328 sq_glwidget.cpp:2686
 msgid "Zoom -"
-msgstr ""
+msgstr "Zoom -"
 
 #: sq_glwidget.cpp:332 sq_glwidget.cpp:2677
 msgid "Rotate left"
-msgstr ""
+msgstr "Nach links drehen"
 
 #: sq_glwidget.cpp:334 sq_glwidget.cpp:2678
 msgid "Rotate right"
-msgstr ""
+msgstr "Nach rechts drehen"
 
 #: sq_glwidget.cpp:336 sq_glwidget.cpp:2707
 msgid "Flip vertically"
-msgstr ""
+msgstr "Vertikal spiegeln"
 
 #: sq_glwidget.cpp:338 sq_glwidget.cpp:2708
 msgid "Flip horizontally"
-msgstr ""
+msgstr "Horizontal spiegeln"
 
 #: sq_glwidget.cpp:340
 msgid "Normalize"
-msgstr ""
+msgstr "Normalisieren"
 
 #: sq_glwidget.cpp:342 sq_glwidget.cpp:2723
 msgid "Fullscreen"
-msgstr ""
+msgstr "Vollbild"
 
 #: sq_glwidget.cpp:344
 msgid "Select image"
-msgstr ""
+msgstr "Bild auswählen"
 
 #: sq_glwidget.cpp:346
 msgid "Selection"
-msgstr ""
+msgstr "Auswahl"
 
 #: sq_glwidget.cpp:348 sq_glwidget.cpp:2717 sq_codecsettingsskeleton.cpp:128
 msgid "Codec settings"
-msgstr ""
+msgstr "Codec-Einstellungen"
 
 #: sq_glwidget.cpp:351
 msgid "Show navigator"
-msgstr ""
+msgstr "Navigator anzeigen"
 
 #: sq_glwidget.cpp:1024
 msgid "yes"
-msgstr ""
+msgstr "Ja"
 
 #: sq_glwidget.cpp:1024
 msgid "no"
-msgstr ""
+msgstr "Nein"
 
 #: sq_glwidget.cpp:1485
 msgid "Codec for %1 format not found"
-msgstr ""
+msgstr "Codec für %1-Format wurde nicht gefunden"
 
 #: sq_glwidget.cpp:1729
 msgid "Memory allocation failed for %1 of memory"
-msgstr ""
+msgstr "Hauptspeicherreservierung fehlgeschlagen für %1 vom Hauptspeicher"
 
 #: sq_glwidget.cpp:1741
 msgid "Memory allocation failed"
-msgstr ""
+msgstr "Hauptspeicherreservierung fehlgeschlagen"
 
 #: sq_glwidget.cpp:1747
 msgid "Decoding failed"
-msgstr ""
+msgstr "Dekodierung fehlgeschlagen"
 
 #: sq_glwidget.cpp:1849
 msgid " ms."
-msgstr ""
+msgstr " ms."
 
 #: sq_glwidget.cpp:2363
 msgid ""
 "Sorry, could not perfom write operation\n"
 "for codec \"%1\""
 msgstr ""
+"Die Schreiboperation konnte nicht durchgeführt werden\n"
+"für den Codec \"%1\""
 
 #: sq_glwidget.cpp:2382 sq_glwidget.cpp:2390 sq_glwidget.cpp:2412
 msgid "Error writing image"
-msgstr ""
+msgstr "Fehler beim Speichern des Bildes"
 
 #: sq_glwidget.cpp:2433
 msgid "Try another location?"
-msgstr ""
+msgstr "Möchten Sie einen anderen Ort angeben?"
 
 #: sq_glwidget.cpp:2658
 msgid "Rotate"
-msgstr ""
+msgstr "Drehen"
 
 #: sq_glwidget.cpp:2661 sq_options.cpp:803
 msgid "Window"
-msgstr ""
+msgstr "Fenster"
 
 #: sq_glwidget.cpp:2670
 msgid "Next"
-msgstr ""
+msgstr "Nächstes"
 
 #: sq_glwidget.cpp:2671
 msgid "Previous"
-msgstr ""
+msgstr "Vorheriges"
 
 #: sq_glwidget.cpp:2672
 msgid "First"
-msgstr ""
+msgstr "Erstes"
 
 #: sq_glwidget.cpp:2673
 msgid "Last"
-msgstr ""
+msgstr "Letztes"
 
 #: sq_glwidget.cpp:2680
 msgid "Rotate 180'"
-msgstr ""
+msgstr "180 Grad drehen"
 
 #: sq_glwidget.cpp:2682
 msgid "Rotate 1' left"
-msgstr ""
+msgstr "1 Grad nach links"
 
 #: sq_glwidget.cpp:2683
 msgid "Rotate 1' right"
-msgstr ""
+msgstr "1 Grad nach rechts"
 
 #: sq_glwidget.cpp:2687
 msgid "Zoom 2x"
-msgstr ""
+msgstr "Zoom 2x"
 
 #: sq_glwidget.cpp:2688
 msgid "Zoom 1/2x"
-msgstr ""
+msgstr "Zoom 1/2x"
 
 #: sq_glwidget.cpp:2698
 msgid "Move left"
-msgstr ""
+msgstr "Nach links verschieben"
 
 #: sq_glwidget.cpp:2699
 msgid "Move right"
-msgstr ""
+msgstr "Nach rechts verschieben"
 
 #: sq_glwidget.cpp:2700
 msgid "Move up"
-msgstr ""
+msgstr "Nach oben verschieben"
 
 #: sq_glwidget.cpp:2701
 msgid "Move down"
-msgstr ""
+msgstr "Nach unten verschieben"
 
 #: sq_glwidget.cpp:2703
 msgid "Start/stop animation"
-msgstr ""
+msgstr "Animation starten/stoppen"
 
 #: sq_glwidget.cpp:2704
 msgid "Hide/show background"
-msgstr ""
+msgstr "Hintergrund ein-/ausblenden"
 
 #: sq_glwidget.cpp:2705
 msgid "Hide/show tickmarks"
-msgstr ""
+msgstr "Kästchen ein-/ausblenden"
 
 #: sq_glwidget.cpp:2710
 msgid "First page"
-msgstr ""
+msgstr "Erste Seite"
 
 #: sq_glwidget.cpp:2711
 msgid "Previous page"
-msgstr ""
+msgstr "Vorherige Seite"
 
 #: sq_glwidget.cpp:2712
 msgid "Next page"
-msgstr ""
+msgstr "Nächste Seite"
 
 #: sq_glwidget.cpp:2713
 msgid "Last page"
-msgstr ""
+msgstr "Letzte Seite"
 
 #: sq_glwidget.cpp:2715
 msgid "To clipboard"
-msgstr ""
+msgstr "In die Zwischenablage"
 
 #: sq_glwidget.cpp:2720
 msgid "Color balance..."
-msgstr ""
+msgstr "Farbbalance ..."
 
 #: sq_glwidget.cpp:2721
 msgid "Apply filter..."
-msgstr ""
+msgstr "Filter anwenden ..."
 
 #: sq_glwidget.cpp:2724
 msgid "Hide/show toolbar"
-msgstr ""
+msgstr "Werkzeugleiste anzeigen/ausblenden"
 
 #: sq_glwidget.cpp:2725
 msgid "Hide/show statusbar"
-msgstr ""
+msgstr "Statusleiste anzeigen/ausblenden"
 
 #: sq_glwidget.cpp:2728
 msgid "Reset"
-msgstr ""
+msgstr "Zurücksetzen"
 
 #: sq_glwidget.cpp:2731 sq_helpwidget.cpp:174
 msgid "Hotkeys"
-msgstr ""
+msgstr "Tastaturkürzel"
 
 #: sq_glview.cpp:84
 msgid "Loading time"
-msgstr ""
+msgstr "Ladezeit"
 
 #: sq_options.cpp:746
 msgid "<b>The main options</b>"
-msgstr ""
+msgstr "<b>Allgemeine Optionen</b>"
 
 #: sq_options.cpp:748
 msgid "Write configuration file to disk, when I press \"OK\""
-msgstr ""
+msgstr "Konfigurationsdatei auf die Platte schreiben wenn \"Ok\" gedrückt wird"
 
 #: sq_options.cpp:749
 msgid "Minimize to tray after closing"
-msgstr ""
+msgstr "Nach dem Schliessen in der Kontrollleiste anzeigen"
 
 #: sq_options.cpp:750
 msgid "Show splash screen at startup"
-msgstr ""
+msgstr "Startbildschirm anzeigen"
 
 #: sq_options.cpp:751
 msgid "Don't show animated logo in toolbar"
-msgstr ""
+msgstr "Animiertes Logo in der Werkzeugleiste nicht anzeigen"
 
 #: sq_options.cpp:752
 msgid "Apply codec settings to"
-msgstr ""
+msgstr "Einstellungen des Codecs anwenden auf"
 
 #: sq_options.cpp:753
 msgid "Thumbnail loader"
-msgstr ""
+msgstr "Bildvorschau"
 
 #: sq_options.cpp:754
 msgid "Image viewer (also preview window)"
-msgstr ""
+msgstr "Bildbetrachter (auch das Vorschaufenster)"
 
 #: sq_options.cpp:755 sq_options.cpp:773
 msgid "Both"
-msgstr ""
+msgstr "Beide"
 
 #: sq_options.cpp:756
 msgid "RunTime"
-msgstr ""
+msgstr "Laufzeit"
 
 #: sq_options.cpp:757
 msgid "Treat unknown mime types as unsupported"
-msgstr ""
+msgstr "Unbekannte Dateizuordnung als nicht unterstützt behandeln"
 
 #: sq_options.cpp:758
 msgid "Load KIPI plugins on demand (for slow machines)"
-msgstr ""
+msgstr "KIPI-Module laden wenn sie benötigt werden (für langsame Rechner)"
 
 #: sq_options.cpp:759
 msgid "<b>Disk navigator</b>"
-msgstr ""
+msgstr "<b>Plattennavigation</b>"
 
 #: sq_options.cpp:760
 msgid "On starting open..."
-msgstr ""
+msgstr "Beim Start öffnen ..."
 
 #: sq_options.cpp:762
 msgid "Custom directory:"
-msgstr ""
+msgstr "ausgewählten Ordner:"
 
 #: sq_options.cpp:763
 msgid "Last visited directory"
-msgstr ""
+msgstr "zuletzt besuchten Ordner"
 
 #: sq_options.cpp:764
 msgid "Current directory, where KSquirrel starts"
-msgstr ""
+msgstr "aktuellen Ordner in dem KSquirrel gestartet ist"
 
 #: sq_options.cpp:765
 msgid "Run unknown file formats separately (with default application)"
-msgstr ""
+msgstr "Unbekannte Dateiformate mit der KDE-Standardanwendung starten"
 
 #: sq_options.cpp:767
 msgid "Save history"
-msgstr ""
+msgstr "Verlauf speichern"
 
 #: sq_options.cpp:768
 msgid "Jump into archives"
-msgstr ""
+msgstr "In Archiven springen"
 
 #: sq_options.cpp:769
 msgid "Jump to first image"
-msgstr ""
+msgstr "Zum ersten Bild springen"
 
 #: sq_options.cpp:770
 msgid "Don't show directories"
-msgstr ""
+msgstr "Ordner nicht anzeigen"
 
 #: sq_options.cpp:771
 msgid "Main"
-msgstr ""
+msgstr "Haupt"
 
 #: sq_options.cpp:772
 msgid "Synchronization"
-msgstr ""
+msgstr "Synchronisation"
 
 #: sq_options.cpp:774
 msgid "Tree -> Navigator"
-msgstr ""
+msgstr "Baum -> Navigator"
 
 #: sq_options.cpp:775
 msgid "Tree <- Navigator"
-msgstr ""
+msgstr "Baum <- Navigator"
 
 #: sq_options.cpp:776
 msgid "Clicking"
-msgstr ""
+msgstr "Klicke"
 
 #: sq_options.cpp:777
 msgid "<b>Thumbnails</b>"
-msgstr ""
+msgstr "<b>Vorschaubilder</b>"
 
 #: sq_options.cpp:779
 msgid "Do not write thumbnails on disk"
-msgstr ""
+msgstr "Die Vorschaubilder nicht auf der Platte speichern"
 
 #: sq_options.cpp:780
 msgid "Show tooltips with file information"
-msgstr ""
+msgstr "Kurzinfos mit Dateiinformationen anzeigen"
 
 #: sq_options.cpp:781
 msgid "Margin between thumbnails"
-msgstr ""
+msgstr "Freiräume zwischen den Vorschaubildern"
 
 #: sq_options.cpp:782 sq_options.cpp:815
 msgid " pixels"
-msgstr ""
+msgstr " Pixel"
 
 #: sq_options.cpp:783
 msgid "Don't show tooltips when the main window is inactive"
-msgstr ""
+msgstr "Kurzinfos nicht anzeigen, wenn das Hauptfenster inaktiv ist"
 
 #: sq_options.cpp:784
 msgid "Mark supported image formats with clock icon (slow)"
-msgstr ""
+msgstr "Unterstützte Bildformate mit einem Uhrensymbol markieren (Langsam)"
 
 #: sq_options.cpp:785
 msgid "Maximum cache size (in memory)"
-msgstr ""
+msgstr "Maximale Zwischenspeichergröße im Hauptspeicher"
 
 #: sq_options.cpp:786
 msgid " Kb"
-msgstr ""
+msgstr " Kb"
 
 #: sq_options.cpp:787
 msgid "No cache"
-msgstr ""
+msgstr "Kein Zwischenspeicher"
 
 #: sq_options.cpp:788
 msgid "On scroll event"
-msgstr ""
+msgstr "Aktion des Mausrades"
 
 #: sq_options.cpp:789
 msgid "Zoom the scene"
-msgstr ""
+msgstr "In die Szene zoomen"
 
 #: sq_options.cpp:790
 msgid "Load next/previous file"
-msgstr ""
+msgstr "Nächste/Vorherige Datei laden"
 
 #: sq_options.cpp:791
 msgid "Background"
-msgstr ""
+msgstr "Hintergrund"
 
 #: sq_options.cpp:792
 msgid "Custom texture"
-msgstr ""
+msgstr "Eigene Textur"
 
 #: sq_options.cpp:793
 msgid "Custom color"
-msgstr ""
+msgstr "Eigene Farbe"
 
 #: sq_options.cpp:794
 msgid "System color"
-msgstr ""
+msgstr "Systemfarbe"
 
 #: sq_options.cpp:798
 msgid "Validate"
-msgstr ""
+msgstr "Überprüfen"
 
 #: sq_options.cpp:802
 msgid "Show images progressively"
-msgstr ""
+msgstr "Bilder stufenweise anzeigen"
 
 #: sq_options.cpp:804
 msgid "Image pages"
-msgstr ""
+msgstr "Bildseiten"
 
 #: sq_options.cpp:805
 msgid "Load all pages"
-msgstr ""
+msgstr "Alle Seiten laden"
 
 #: sq_options.cpp:806
 msgid "Load only first page"
-msgstr ""
+msgstr "Nur die erste Seite laden"
 
 #: sq_options.cpp:807
 msgid "Load no more than"
-msgstr ""
+msgstr "Nicht mehr laden als"
 
 #: sq_options.cpp:808
 msgid " pages"
-msgstr ""
+msgstr " Seiten"
 
 #: sq_options.cpp:809
 msgid "Loader"
-msgstr ""
+msgstr "Lader"
 
 #: sq_options.cpp:810
 msgid "Draw tickmarks around the image"
-msgstr ""
+msgstr "Kästchen um das Bild anzeigen"
 
 #: sq_options.cpp:811
 msgid "Draw background for transparent images"
-msgstr ""
+msgstr "Hintergrund für durchsichtige Bilder anzeigen"
 
 #: sq_options.cpp:812
 msgid "Rotating"
-msgstr ""
+msgstr "Drehe"
 
 #: sq_options.cpp:813
 msgid " degrees"
-msgstr ""
+msgstr " Grad"
 
 #: sq_options.cpp:814 sq_helpwidget.cpp:183
 msgid "Moving"
-msgstr ""
+msgstr "Verschiebe"
 
 #: sq_options.cpp:817
 msgid "Zoom limit"
-msgstr ""
+msgstr "Zoomgrenze"
 
 #: sq_options.cpp:818
 msgid "Minimum: 1%, maximum: 10'000%"
-msgstr ""
+msgstr "Minimum: 1%, Maximum: 10'000%"
 
 #: sq_options.cpp:819
 msgid "Custom"
-msgstr ""
+msgstr "Benutzerdefiniert"
 
 #: sq_options.cpp:821
 msgid "minimum"
-msgstr ""
+msgstr "Minimum"
 
 #: sq_options.cpp:822 sq_options.cpp:824
 msgid " %"
-msgstr ""
+msgstr " %"
 
 #: sq_options.cpp:823
 msgid "maximum"
-msgstr ""
+msgstr "Maximum"
 
 #: sq_options.cpp:825
 msgid "No limit"
-msgstr ""
+msgstr "Keine Begrenzung"
 
 #: sq_options.cpp:826
 msgid "Zoom coefficient"
-msgstr ""
+msgstr "Zoomfaktor"
 
 #: sq_options.cpp:827
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: sq_options.cpp:828
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #: sq_options.cpp:830
 msgid "<b>Customize OpenGL widget</b>"
-msgstr ""
+msgstr "<b>OpenGL-Element anpassen</b>"
 
 #: sq_options.cpp:831
 msgid "Recursion"
-msgstr ""
+msgstr "Rekursion"
 
 #: sq_options.cpp:832
 msgid "No recursion"
-msgstr ""
+msgstr "Keine Rekursion"
 
 #: sq_options.cpp:833
 msgid "Show number of files"
-msgstr ""
+msgstr "Anzahl der Dateien anzeigen"
 
 #: sq_options.cpp:834
 msgid "Show number of subfolders and files"
-msgstr ""
+msgstr "Anzahl der Unterordner und Dateien anzeigen"
 
 #: sq_options.cpp:835
 msgid "Show number of subfolders"
-msgstr ""
+msgstr "Anzahl der Unterordner anzeigen"
 
 #: sq_options.cpp:836
 msgid "Treeview"
-msgstr ""
+msgstr "Baumansicht"
 
 #: sq_options.cpp:837
 msgid "Show device path"
-msgstr ""
+msgstr "Gerätepfad anzeigen"
 
 #: sq_options.cpp:838
 msgid "Show mount options"
-msgstr ""
+msgstr "Einbindungsoptionen anzeigen"
 
 #: sq_options.cpp:839
 msgid "Show filesystem type"
-msgstr ""
+msgstr "Dateisystemtyp anzeigen"
 
 #: sq_options.cpp:840
 msgid "Mount view"
-msgstr ""
+msgstr "Einbindungsansicht"
 
 #: sq_options.cpp:841
 msgid "Enable preview window"
-msgstr ""
+msgstr "Vorschaufenster einschalten"
 
 #: sq_options.cpp:843
 msgid "Delay before image loading"
-msgstr ""
+msgstr "Verzögerung vor dem Laden des Bildes"
 
 #: sq_options.cpp:844 sq_slideshow.cpp:218
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #: sq_options.cpp:845
 msgid "Background color for preview widget:"
-msgstr ""
+msgstr "Hintergrundfarbe für das Vorschauelement:"
 
 #: sq_options.cpp:847
 msgid "Don't load preview image on file execution"
-msgstr ""
+msgstr "Vorschaubild bei der Dateiausführung nicht laden"
 
 #: sq_options.cpp:848
 msgid "Disables loading preview image when user launches image with mouse"
-msgstr ""
+msgstr "Schaltet das Laden des Vorschaubildes ab, wenn der Benutzer das Bild mit der Maus startet"
 
 #: sq_options.cpp:849
 msgid "Image preview"
-msgstr ""
+msgstr "Bildvorschau"
 
 #: sq_options.cpp:850
 msgid "<b>Sidebar settings</b>"
-msgstr ""
+msgstr "<b>Einstellungen der Seitenleiste</b>"
 
 #: sq_options.cpp:851
 msgid "<b>KIPI Configuration</b>"
-msgstr ""
+msgstr "<b>KIPI-Konfiguration</b>"
 
 #: sq_slideshow.cpp:205
 msgid "Slideshow options"
-msgstr ""
+msgstr "Optionen für die Diaschau"
 
 #: sq_slideshow.cpp:206
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: sq_slideshow.cpp:209
 msgid "Set directory to current"
-msgstr ""
+msgstr "Den Ordner auf den aktuellen setzen"
 
 #: sq_slideshow.cpp:210
 msgid "Last visited directories"
-msgstr ""
+msgstr "Zuletzt besuchte Ordner"
 
 #: sq_slideshow.cpp:220
 msgid "Repeats:"
-msgstr ""
+msgstr "Wiederholungen:"
 
 #: sq_slideshow.cpp:221
 msgid "Background color:"
-msgstr ""
+msgstr "Hintergrundfarbe:"
 
 #: sq_slideshow.cpp:222
 msgid "Onscreen messages"
-msgstr ""
+msgstr "Bildschirmmeldungen"
 
 #: sq_slideshow.cpp:223
 msgid "Show current index"
-msgstr ""
+msgstr "Aktuellen Index anzeigen"
 
 #: sq_slideshow.cpp:224
 msgid "Show file name"
-msgstr ""
+msgstr "Dateinamen anzeigen"
 
 #: sq_slideshow.cpp:225
 msgid "Show file size"
-msgstr ""
+msgstr "Dateigröße anzeigen"
 
 #: sq_slideshow.cpp:226
 msgid "Recursively"
-msgstr ""
+msgstr "Rekursiv"
 
 #: ksquirrel.cpp:288
 msgid "Clear history"
-msgstr ""
+msgstr "Verlauf löschen"
 
 #: ksquirrel.cpp:289
 msgid "Clear adress"
-msgstr ""
+msgstr "Adresse löschen"
 
 #: ksquirrel.cpp:294
 msgid "Go!"
-msgstr ""
+msgstr "Starten"
 
 #: ksquirrel.cpp:341
 msgid "Libraries' filters"
-msgstr ""
+msgstr "Bibliotheksfilter"
 
 #: ksquirrel.cpp:364
 msgid "All supported formats"
-msgstr ""
+msgstr "Alle unterstützen Formate"
 
 #: ksquirrel.cpp:374
 msgid "User's filters"
-msgstr ""
+msgstr "Filter des Benutzers"
 
 #: ksquirrel.cpp:510
 msgid "Folder tree"
-msgstr ""
+msgstr "Ordnerbaum"
 
 #: ksquirrel.cpp:511
 msgid "Mount points"
-msgstr ""
+msgstr "Einhängepunkte"
 
 #: ksquirrel.cpp:628
 msgid "&Navigator"
-msgstr ""
+msgstr "&Navigator"
 
 #: ksquirrel.cpp:630
 msgid "&Action"
-msgstr ""
+msgstr "&Aktion"
 
 #: ksquirrel.cpp:633
 msgid "&KIPI Plugins"
-msgstr ""
+msgstr "&KIPI-Module"
 
 #: ksquirrel.cpp:661
 msgid "Fi&lter"
-msgstr ""
+msgstr "&Filter"
 
 #: ksquirrel.cpp:720
 msgid "Thumbnail size"
-msgstr ""
+msgstr "Größe der Vorschaubilder"
 
 #: ksquirrel.cpp:723 sq_options.ui.h:137
 msgid "Image window"
-msgstr ""
+msgstr "Bildfenster"
 
 #: ksquirrel.cpp:725
 msgid "Reload codecs from disk"
-msgstr ""
+msgstr "Codecs neu von der Platte laden"
 
 #: ksquirrel.cpp:726
 msgid "Configure external tools..."
-msgstr ""
+msgstr "Externe Werkzeuge konfigurieren ..."
 
 #: ksquirrel.cpp:727
 msgid "Configure filters..."
-msgstr ""
+msgstr "Filter konfigurieren ..."
 
 #: ksquirrel.cpp:728
 msgid "Goto tray"
-msgstr ""
+msgstr "In die Kontrollleiste minimieren"
 
 #: ksquirrel.cpp:729
 msgid "Open file and change directory"
-msgstr ""
+msgstr "Datei öffnen und Ordner wechseln"
 
 #: ksquirrel.cpp:730
 msgid "Open file"
-msgstr ""
+msgstr "Datei öffnen"
 
 #: ksquirrel.cpp:731
 msgid "Thumbnail cache manager..."
-msgstr ""
+msgstr "Verwaltung des Zwischenspeichers für die Bildvorschauen ..."
 
 #: ksquirrel.cpp:735
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: ksquirrel.cpp:736
 msgid "Icons"
-msgstr ""
+msgstr "Symbole"
 
 #: ksquirrel.cpp:737
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: ksquirrel.cpp:738 sq_options.ui.h:136
 msgid "Thumbnails"
-msgstr ""
+msgstr "Vorschaubilder"
 
 #: ksquirrel.cpp:740
 msgid "Show URL box"
-msgstr ""
+msgstr "Adress-Leiste anzeigen"
 
 #: ksquirrel.cpp:742
 msgid "Built-in image window"
-msgstr ""
+msgstr "Eingebauter Bildbetrachter"
 
 #: ksquirrel.cpp:745
 msgid "Slideshow"
-msgstr ""
+msgstr "Diaschau"
 
 #: ksquirrel.cpp:746
 msgid "Slideshow advanced"
-msgstr ""
+msgstr "Erweiterte Diaschau"
 
 #: ksquirrel.cpp:748
 msgid "Codecs information..."
-msgstr ""
+msgstr "Codecs-Information ..."
 
 #: ksquirrel.cpp:749
 msgid "OpenGL information..."
-msgstr ""
+msgstr "OpenGL-Information ..."
 
 #: ksquirrel.cpp:751
 msgid "Medium thumbnails"
-msgstr ""
+msgstr "Mittlere Vorschaubilder"
 
 #: ksquirrel.cpp:752
 msgid "Large thumbnails"
-msgstr ""
+msgstr "Große Vorschaubilder"
 
 #: ksquirrel.cpp:753
 msgid "Huge thumbnails"
-msgstr ""
+msgstr "Riesige Vorschaubilder"
 
 #: ksquirrel.cpp:755
 msgid "Select group"
-msgstr ""
+msgstr "Gruppe auswählen"
 
 #: ksquirrel.cpp:756
 msgid "Deselect group"
-msgstr ""
+msgstr "Gruppenauswahl aufheben"
 
 #: ksquirrel.cpp:776
 msgid "Extended thumbnails"
-msgstr ""
+msgstr "Erweiterte Vorschaubilder"
 
 #: ksquirrel.cpp:1085
 msgid " writing settings and thumbnails...  "
-msgstr ""
+msgstr " speichere Einstellungen und Vorschaubilder ...  "
 
 #: sq_filters.cpp:124 sq_filters.cpp:197
 msgid "Extensions"
-msgstr ""
+msgstr "Erweiterungen"
 
 #: sq_filters.cpp:181
 msgid "Adjust filters"
-msgstr ""
+msgstr "Filter justieren"
 
 #: sq_filters.cpp:186
 msgid "New filter"
-msgstr ""
+msgstr "Neuer Filter"
 
 #: sq_filters.cpp:193
 msgid "Move filter up"
-msgstr ""
+msgstr "Filter nach oben verschieben"
 
 #: sq_filters.cpp:195
 msgid "Move filter down"
-msgstr ""
+msgstr "Filter nach unten verschieben"
 
 #: sq_filters.cpp:198
 msgid "Menuitem contains both name and extension"
-msgstr ""
+msgstr "Der Menüeintrag enthält sowohl Name, als auch Erweiterung"
 
 #: sq_helpwidget.cpp:175
 msgid ""
 "<p align=center><table><tr><td><b><p align=right>Esc,X,Return</p></b></"
 "td><td>close</td></tr><tr><td><b><p align=right>Middle click, F</p></b></"
-"td><td>fullscreen</td></tr>"
-"<tr><td><b><p align=right>Z</p></b></"
-"td><td>show 'Zoom' menu</td></tr>"
-"<tr><td><b><p align=right>/</p></b></"
-"td><td>show this help</td></tr><tr><td><b><p align=right>Right click, M, "
-"ContextMenu</p></b></td><td>show context menu</td></tr><tr><td><b><p "
-"align=right>N</p></b></td><td>toggle filter</td></tr><tr><td><b><p "
-"align=right>Shift + Left button</p></b></td><td>select a region</td></tr>"
-"<tr><td><b><p align=right>Shift + Left</p></b></td><td>previous tab</td></tr>"
-"<tr><td><b><p align=right>Shift + Right</p></b></td><td>next tab</td></tr>"
-"<tr><td><b><p align=right>W</p></b></td><td>close tab</td></tr>"
-"</table></p>"
+"td><td>fullscreen</td></tr><tr><td><b><p align=right>Z</p></b></td><td>show "
+"'Zoom' menu</td></tr><tr><td><b><p align=right>/</p></b></td><td>show this "
+"help</td></tr><tr><td><b><p align=right>Right click, M, ContextMenu</p></b></"
+"td><td>show context menu</td></tr><tr><td><b><p align=right>N</p></b></"
+"td><td>toggle filter</td></tr><tr><td><b><p align=right>Shift + Left button</"
+"p></b></td><td>select a region</td></tr><tr><td><b><p align=right>Shift + "
+"Left</p></b></td><td>previous tab</td></tr><tr><td><b><p align=right>Shift + "
+"Right</p></b></td><td>next tab</td></tr><tr><td><b><p align=right>W</p></b></"
+"td><td>close tab</td></tr></table></p>"
 msgstr ""
+"<p align=center><table><tr><td><b><p align=right>Esc, X, Eingabe</p></b></"
+"td><td>Schliessen</td></tr><tr><td><b><p align=right>Mittlere Maustaste, F</p></b></td><td>Vollbild</td></tr><tr><td><b><p align=right>Z</p></b></td><td>Zoom-Menü anzeigen</td></tr><tr><td><b><p align=right>/</p></b></td><td>Diese Hilfe zeigen</td></tr><tr><td><b><p align=right>Rechte Maustaste, M, Kontextmenü</p></b></"
+"td><td>Kontextmenü anzeigen</td></tr><tr><td><b><p align=right>N</p></b></td><td>Filter umschalten</td></tr><tr><td><b><p align=right>Umschalt + Linke Maustaste</p></b></td><td>Bereich auswählen</td></tr><tr><td><b><p align=right>Umschalt + Links</p></b></td><td>Vorheriges Unterfenster</td></tr><tr><td><b><p align=right>Umschalt + "
+"Rechts</p></b></td><td>Nächstes Unterfenster</td></tr><tr><td><b><p align=right>W</p></b></"
+"td><td>Unterfenster schließen</td></tr></table></p>"
 
 #: sq_helpwidget.cpp:176
 msgid ""
@@ -1852,18 +1880,20 @@ msgid ""
 "td><td>first image</td></tr><tr><td><b><p align=right>End</p></b></"
 "td><td>last image</td></tr></table></p>"
 msgstr ""
+"<p align=center><table><tr><td><b><p align=right>Leertaste, Bild unten</p></b></td><td>Nächstes Bild</td></tr><tr><td><b><p align=right>Rücktaste, Bild hoch</p></b></td><td>Vorheriges Bild</td></tr><tr><td><b><p align=right>Pos1</p></b></"
+"td><td>Erstes Bild</td></tr><tr><td><b><p align=right>Ende</p></b></"
+"td><td>Letztes Bild</td></tr></table></p>"
 
 #: sq_helpwidget.cpp:177
 msgid ""
-"<p align=center><table><tr><td><b><p align=right>Left, Right,"
-" Up, Down</p></b></td><td>move the image</td></"
-"tr><tr><td><b><p align=right>Ctrl + Left</p></b></td><td>rotate left</"
-"td></tr><tr><td><b><p align=right>Ctrl + Right</p></b></td><td>rotate "
-"right</td></tr><tr><td><b><p align=right>Ctrl + Up/Down</p></b></"
-"td><td>rotate for 180 degrees up/down</td></tr><tr><td><b><p "
-"align=right>Alt + Left/Right</p></b></td><td>rotate for 1 degree "
-"left/right</td></tr></table</p>"
-msgstr ""
+"<p align=center><table><tr><td><b><p align=right>Left, Right, Up, Down</p></"
+"b></td><td>move the image</td></tr><tr><td><b><p align=right>Ctrl + Left</"
+"p></b></td><td>rotate left</td></tr><tr><td><b><p align=right>Ctrl + Right</"
+"p></b></td><td>rotate right</td></tr><tr><td><b><p align=right>Ctrl + Up/"
+"Down</p></b></td><td>rotate for 180 degrees up/down</td></tr><tr><td><b><p "
+"align=right>Alt + Left/Right</p></b></td><td>rotate for 1 degree left/right</"
+"td></tr></table</p>"
+msgstr "<p align=center><table><tr><td><b><p align=right>Links, Rechts, Oben, Unten</p></b></td><td>Das Bild verschieben</td></tr><tr><td><b><p align=right>Strg + Links</p></b></td><td>Nach links drehen</td></tr><tr><td><b><p align=right>Strg + Rechts</p></b></td><td>Nach rechts drehen</td></tr><tr><td><b><p align=right>Strg + Oben/Unten</p></b></td><td>Um 180 Grad nach oben/unten drehen</td></tr><tr><td><b><p align=right>Alt + Links/Rechts</p></b></td><td>Um 1 Grad nach links/rechts drehen</td></tr></table</p>"
 
 #: sq_helpwidget.cpp:178
 msgid ""
@@ -1879,6 +1909,8 @@ msgid ""
 "td></tr><tr><td><b><p align=right>*</p></b></td><td>fit image</td></tr></"
 "table</p>"
 msgstr ""
+"<p align=center><table><tr><td><b><p align=right>+/-</p></b></td><td>Zoom Nx</td></tr><tr><td><b><p align=right>Strg + +/-</p></b></td><td>Zoom 2x/0.5x</td></tr><tr><td><b><p align=right>Rollen</p></b></td><td>Nächste/vorherige Datei laden ODER Zoom + /Zoom -</td></tr><tr><td><b><p align=right>Unschalt + Rollen</p></b></td><td>Zoom + / Zoom -</td></tr><tr><td><b><p align=right>Strg + Rollen</p></b></td><td>Zoom + 2x / Zoom - 2x</td></tr><tr><td><b><p align=right>1 ... 9</p></b></td><td>Zoom 1 ... 9x</td></tr><tr><td><b><p align=right>0</p></b></td><td>Zoom 10x</td></tr><tr><td><b><p align=right>Komma</p></b></td><td>Auf Breite anpassen</td></tr><tr><td><b><p align=right>Punkt</p></b></td><td>Auf Höhe anpassen</td></tr><tr><td><b><p align=right>*</p></b></td><td>Bild anpassen</td></tr></"
+"table</p>"
 
 #: sq_helpwidget.cpp:179
 msgid ""
@@ -1901,186 +1933,194 @@ msgid ""
 "td></tr><tr><td><p align=right><b>F4</b></p></td><td>last</td></tr></table></"
 "p>"
 msgstr ""
+"<p align=center><table><tr><td><p align=right><b>S</b></p></td><td>Speichern unter</td></tr><tr><td><p align=right><b>V</b></p></td><td>Vertikal spiegeln</td></"
+"tr><tr><td><p align=right><b>H</b></p></td><td>Horizontal spiegeln</td></tr><tr><td><p align=right><b>R</b></p></td><td>Zurücksetzen</td></tr><tr><td><p "
+"align=right><b>P</b></p></td><td>Bildeigenschaften</td></tr><tr><td><p "
+"align=right><b>C</b></p></td><td>Codec-Einstellungen</td></tr><tr><td><p "
+"align=right><b>L</b></p></td><td>Zoom ignorieren, falls das Bild kleiner ist als das Fenster</td></tr><tr><td><p align=right><b>I</b></p></td><td>Menü mit Bildern</td></tr><tr><td><p align=right><b>A</b></p></td><td>Animation starten/stoppen</td></tr><tr><td><p align=right><b>B</b></p></td><td>Hintergrund für durchsichtige Bilder umschalten</td></tr><tr><td><p "
+"align=right><b>K</b></p></td><td>Häkchen anzeigen umschalten</td></"
+"tr><tr><td><p align=right><b>E</b></p></td><td>Menü mit externen Werkzeugen anzeigen</td></tr><tr><td><p align=right><b>F1</b></p></td><td>Erstes Bild in mehrseitigen Bildern</td></tr><tr><td><p align=right><b>F2</b></p></td><td>Vorheriges</td></tr><tr><td><p align=right><b>F3</b></p></td><td>Nächstes</td></tr><tr><td><p align=right><b>F4</b></p></td><td>Letztes</td></tr></table></p>"
 
 #: sq_helpwidget.cpp:182 sq_options.ui.h:135
 msgid "Filing"
-msgstr ""
+msgstr "Dateien"
 
 #: sq_helpwidget.cpp:184
 msgid "Current image"
-msgstr ""
+msgstr "Aktuelles Bild"
 
 #: sq_options.ui.h:138
 msgid "Sidebar"
-msgstr ""
+msgstr "Seitenleiste"
 
 #: sq_options.ui.h:141
 msgid "KIPI"
-msgstr ""
+msgstr "KIPI"
 
 #: sq_options.ui.h:260
 msgid "Wrong dimensions: %1x%2."
-msgstr ""
+msgstr "Falsche Größe: %1x%2."
 
 #: sq_slideshowlisting.cpp:87
 msgid "Listing"
-msgstr ""
+msgstr "Aufzählung"
 
 #: ksquirrel.cpp:751
 msgid "Rename"
-msgstr ""
+msgstr "Umbenennen"
 
 #: ksquirrel.cpp:1951
 msgid "Renaming File"
-msgstr ""
+msgstr "Daitei umbenennen"
 
 #: ksquirrel.cpp:1952
 msgid "<p>Rename file <b>%1</b> to:</p>"
-msgstr ""
+msgstr "<p>Neuer Name für <b>%1</b>:</p>"
 
 msgid "Calculate directory size"
-msgstr ""
+msgstr "Ordnergröße wird berechnet"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Neuer Ordner ..."
 
 msgid "Create Subfolder"
-msgstr ""
+msgstr "Unterordner erstellen"
 
 msgid "<p>Create new folder in <b>%1</b>:</p>"
-msgstr ""
+msgstr "<p>Neuen Ordner erstellen in <b>%1</b>:</p>"
 
 msgid "Rename Folder"
-msgstr ""
+msgstr "Ordner umbenennen"
 
 msgid "<p>Rename folder <b>%1</b> to:</p>"
-msgstr ""
+msgstr "<p>Ordner <b>%1</b> umbenennen in:</p>"
 
 msgid "Are you sure you want to delete <b>%1</b>?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie <b>%1</b> löschen möchten?"
 
 msgid "Copy to last folder"
-msgstr ""
+msgstr "Zum letzten Ordner kopieren"
 
 msgid "Move to last folder"
-msgstr ""
+msgstr "Zum letzten Ordner verschieben"
 
 msgid "Message text color:"
-msgstr ""
+msgstr "Farbe des Meldungstextes:"
 
 msgid "Total"
-msgstr ""
+msgstr "Gesamt"
 
 msgid "Visualize drag operation"
-msgstr ""
+msgstr "Ziehen und ablegen visualisieren"
 
 msgid "Testing"
-msgstr ""
+msgstr "Testen"
 
 msgid "Lazy thumbnail generation"
-msgstr ""
+msgstr "Verzögerte Generierung der Vorschaubilder"
 
 msgid "Delay"
-msgstr ""
+msgstr "Verzögerung"
 
 msgid "Interface"
-msgstr ""
+msgstr "Schnittstelle"
 
 msgid "Number of text lines"
-msgstr ""
+msgstr "Anzahl der Textzeilen"
 
 msgid "Show file preview"
-msgstr ""
+msgstr "Dateivorschau anzeigen"
 
 msgid "Number of additionally generated rows"
-msgstr ""
+msgstr "Anzahl der zusätzlich generierten Reihen"
 
 msgid "Repeat (copy to %1)"
-msgstr ""
+msgstr "Wiederholen (Kopieren nach %1)"
 
 msgid "Repeat (move to %1)"
-msgstr ""
+msgstr "Wiederholen (Verschieben nach %1)"
 
 msgid "Repeat (link to %1)"
-msgstr ""
+msgstr "Wiederholen (Verknüpfen mit %1)"
 
 msgid "Repeat (nothing to repeat)"
-msgstr ""
+msgstr "Wiederholen (Nichts zu wiederholen)"
 
 msgid "Clear contents"
-msgstr ""
+msgstr "Inhalte löschen"
 
 msgid "Are you sure you want to delete contents of <b>%1</b>?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie den Inhalt von <b>%1</b> löschen möchten?"
 
 msgid "Add to Folder Basket"
-msgstr ""
+msgstr "Zum Ordnerkorb hinzufügen"
 
 msgid "Folder basket"
-msgstr ""
+msgstr "Ordnerkorb"
 
 msgid "Change icon"
-msgstr ""
+msgstr "Symbol ändern"
 
 msgid "<p>Rename item <b>%1</b> to:</p>"
-msgstr ""
+msgstr "<p>Eintrag <b>%1</b> umbenennen in:</p>"
 
 msgid "Copy file path"
-msgstr ""
+msgstr "Dateipfad kopieren"
 
 msgid "Copy file url"
-msgstr ""
+msgstr "Datei-Adresse kopieren"
 
 msgid "Text color:"
-msgstr ""
+msgstr "Textfarbe:"
 
 msgid "Show image dimensions"
-msgstr ""
+msgstr "Bildabmessungen anzeigen"
 
 msgid "Text color..."
-msgstr ""
+msgstr "Textfarbe ..."
 
 msgid "Double click"
-msgstr ""
+msgstr "Doppelklick"
 
 msgid "Close window"
-msgstr ""
+msgstr "Fenster schließen"
 
 msgid "Crop"
-msgstr ""
+msgstr "Zuschneiden"
 
 msgid "Tabs"
-msgstr ""
+msgstr "Unterfenster"
 
 msgid "Enable tabs"
-msgstr ""
+msgstr "Unterfenster einschalten"
 
 msgid "Ask what to do when opening new image"
-msgstr ""
+msgstr "Beim Öffnen eines neuen Bildes nachfragen"
 
 msgid "Show close buttons"
-msgstr ""
+msgstr "Knöpfe zum Schließen anzeigen"
 
 msgid "Open in a new tab"
-msgstr ""
+msgstr "In einem neuen Unterfenster öffnen"
 
 msgid "Replace current tab"
-msgstr ""
+msgstr "Aktuelles Unterfenster ersetzen"
 
 msgid "Close all and open in a new tab"
-msgstr ""
+msgstr "Alle schließen und in einem neuen Unterfenster öffnen"
 
 msgid "Opening..."
-msgstr ""
+msgstr "Öffne ..."
 
 msgid "Previous tab"
-msgstr ""
+msgstr "Vorheriges Unterfenster"
 
 msgid "Next tab"
-msgstr ""
+msgstr "Nächstes Unterfenster"
 
 msgid "Close tab"
-msgstr ""
+msgstr "Unterfenster schließen"
 
 msgid "Do nothing"
-msgstr ""
+msgstr "Nichts machen"
+

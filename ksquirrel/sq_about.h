@@ -23,6 +23,6 @@
  *  'About' dialog
  */
 
-#define SQ_VERSION "0.7.2"
+#define SQ_VERSION "0.7.3"
 
 #endif

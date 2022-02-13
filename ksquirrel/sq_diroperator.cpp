@@ -485,7 +485,7 @@ void SQ_DirOperator::slotFinishedLoading()
 
     // setting current file directly doesn't work. let
     // events to be processed and only then set current file
-    QTimer::singleShot(1, this, SLOT(slotDelayedFinishedLoading()));
+    QTimer::singleShot(0, this, SLOT(slotDelayedFinishedLoading()));
 }
 
 void SQ_DirOperator::slotDelayedFinishedLoading()
@@ -646,15 +646,19 @@ void SQ_DirOperator::smartUpdate()
 void SQ_DirOperator::selectOld()
 {
     // set current item...
-    setCurrentItem(oldCurrentItem);
+    fileview->setCurrentItem(oldCurrentItem);
 
     // restore selection
     KFileItemListIterator it(oldSelected);
+
+    fileview->ensureItemVisible(it.current());
 
     for(; it.current();++it)
         fileview->setSelected(it.current(), true);
 
     oldSelected.clear();
+
+    stopPreview();
 }
 
 /*
@@ -735,7 +739,7 @@ void SQ_DirOperator::slotActivateExternalTool(int id)
     // %F = multiple files
     if(per_f && per_F)
     {
-        KMessageBox::error(this, i18n("Command cann't contain both \"%f\" and \"%F\""), i18n("Error processing command"));
+        KMessageBox::error(this, i18n("Command cannot contain both \"%f\" and \"%F\""), i18n("Error processing command"));
         return;
     }
     else if(!per_f && !per_F)
@@ -853,8 +857,6 @@ void SQ_DirOperator::executePrivate(KFileItem *fi)
         SQ_GLWidget::window()->startDecoding(fullpath);
     else
     {
-        SQ_GLView::window()->sbarWidget("SBFile")->setText(i18n("Unsupported format \"%1\"").arg(fm.extension(false)));
-
         SQ_Config::instance()->setGroup("Fileview");
 
         // archive ?
@@ -909,7 +911,6 @@ void SQ_DirOperator::slotNewItems(const KFileItemList &list)
     // start delayed thumbnail update, if needed
     if(type == SQ_DirOperator::TypeThumbs && usenew)
     {
-//        printf("*** APPEND\n");
         SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(fileview);
 
         if(tv)
@@ -1005,17 +1006,6 @@ void SQ_DirOperator::stopPreview()
     timer_preview->stop();
 }
 
-void SQ_DirOperator::stopThumbnailUpdate()
-{
-    if(type == SQ_DirOperator::TypeThumbs)
-    {
-        SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(fileview);
-
-        if(tv && tv->updateRunning())
-            tv->stopThumbnailUpdate();
-    }
-}
-
 void SQ_DirOperator::activatedMenu(const KFileItem *, const QPoint &pos)
 {
     // remove "View" submenu, since we will insert our's one.
@@ -1105,6 +1095,17 @@ void SQ_DirOperator::slotInvokeBrowser()
 void SQ_DirOperator::enableThumbnailActions(bool enable)
 {
     actionCollection()->action("dirop_recreate_thumbnails")->setEnabled(enable);
+}
+
+void SQ_DirOperator::stopThumbnailUpdate()
+{
+    if(type == SQ_DirOperator::TypeThumbs)
+    {
+        SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(fileview);
+
+        if(tv && tv->updateRunning())
+            tv->stopThumbnailUpdate();
+    }
 }
 
 #include "sq_diroperator.moc"

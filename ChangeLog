@@ -1,3 +1,19 @@
+ksquirrel-0.7.3 and ksquirrel-libs-0.7.3
+*****************************************
+* command line arguments now work better
+* improvements in preview window
+* cusomizable double click in image window
+* select a region in image window and press Y to crop image
+* added tabs in image window (off by default) with Opera-like navigation
+* 100% zoom now doesn't use linear interpolation
+  (image is displayed "as is")
+* added service menu for Dolphin
+* added German translation
+
+ksquirrel-libs:
+* added DDS
+* JPEG2000 decoder is much faster now
+
 ksquirrel-0.7.2
 ****************
 * lazy thumbnail generation now can generate additional rows

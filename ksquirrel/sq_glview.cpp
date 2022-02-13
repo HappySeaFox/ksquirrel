@@ -32,11 +32,13 @@
 #include <kactioncollection.h>
 #include <klocale.h>
 #include <ksqueezedtextlabel.h>
+#include <ktabbar.h>
 
 #include "sq_glview.h"
 #include "sq_glwidget.h"
 #include "sq_glwidget_helpers.h"
 #include "sq_config.h"
+#include "sq_iconloader.h"
 
 #include "ksquirrel.h"
 #include "sq_widgetstack.h"
@@ -57,14 +59,40 @@ SQ_GLView::~SQ_GLView()
 
 void SQ_GLView::createContent()
 {
-    m_toolbar = new SQ_ToolBar(this);
+    box = new QVBox(this);
 
-    gl = new SQ_GLWidget(this, "ksquirrel image window");
+    m_toolbar = new SQ_ToolBar(box);
+    m_toolbar->setMouseTracking(true);
+
+    SQ_Config::instance()->setGroup("GL view");
+
+    // read settings
+    m_tabs = SQ_Config::instance()->readBoolEntry("tabs", false);
+    m_tabsclose = SQ_Config::instance()->readBoolEntry("tabs_close", true);
+
+    m_tabbar = new KTabBar(box);
+    m_tabbar->setHoverCloseButton(m_tabsclose);
+    m_tabbar->setHoverCloseButtonDelayed(false);
+    m_tabbar->setMouseTracking(true);
+    m_tabbar->setFocusPolicy(QWidget::NoFocus);
+
+    box->setStretchFactor(m_toolbar, 1);
+
+    m_tabbar->setShown(false);
+
+    gl = new SQ_GLWidget(this, "ksquirrel-opengl-widget");
     gl->glInitA();
+    gl->setFocus();
+
+    connect(m_tabbar, SIGNAL(selected(int)), gl, SLOT(slotChangeTab(int)));
+    connect(m_tabbar, SIGNAL(closeRequest(int)), gl, SLOT(slotCloseRequest(int)));
+    connect(m_tabbar, SIGNAL(mouseMiddleClick(int)), gl, SLOT(slotCloseRequest(int)));
+    connect(gl, SIGNAL(tabCountChanged()), this, SLOT(slotTabCountChanged()));
 
     setStretchFactor(gl, 1);
 
     sbar = new KStatusBar(this);
+    sbar->setMouseTracking(true);
 
     // create QLabels, fill 'names' with pointers
     QHBox *sqSBDecodedBox = new QHBox;
@@ -102,7 +130,6 @@ void SQ_GLView::createContent()
 
     resetStatusBar();
 
-    SQ_Config::instance()->setGroup("GL view");
     sbar->setShown(SQ_Config::instance()->readBoolEntry("statusbar", true));
 
     // restore geometry from config file
@@ -194,6 +221,139 @@ SQ_ToolBar::~SQ_ToolBar()
 void SQ_ToolBar::mouseReleaseEvent(QMouseEvent *e)
 {
     e->accept();
+}
+
+void SQ_GLView::addPage(const QString &label)
+{
+    QTab *tab = new QTab(label);
+
+    m_tabbar->addTab(tab);
+
+    SQ_Config::instance()->setGroup("GL view");
+
+    if(m_tabsclose)
+        tab->setIconSet(SmallIcon("fileclose"));
+}
+
+void SQ_GLView::removePage(int index)
+{
+    m_tabbar->removeTab(m_tabbar->tabAt(index));
+    m_tabbar->setHidden(m_tabbar->count() <= 1);
+}
+
+void SQ_GLView::removeTabs()
+{
+    blockSignals(true);
+    int cnt = m_tabbar->count();
+
+    while(cnt--)
+        m_tabbar->removeTab(m_tabbar->tabAt(0));
+
+    blockSignals(false);
+}
+
+void SQ_GLView::setupTabbar()
+{
+    SQ_Config::instance()->setGroup("GL view");
+
+    int cnt;
+
+    if(m_tabsclose != SQ_Config::instance()->readBoolEntry("tabs_close", true))
+    {
+        m_tabsclose = SQ_Config::instance()->readBoolEntry("tabs_close", true);
+
+        // change iconset
+        cnt = m_tabbar->count();
+
+        for(int i = 0;i < cnt;i++)
+            m_tabbar->tabAt(i)->setIconSet(m_tabsclose ? SmallIcon("fileclose") : QPixmap());
+
+        m_tabbar->setHoverCloseButton(m_tabsclose);
+        m_tabbar->layoutTabs();
+    }
+
+    if(m_tabs == SQ_Config::instance()->readBoolEntry("tabs", false))
+        return;
+
+    blockSignals(true);
+
+    m_tabs = SQ_Config::instance()->readBoolEntry("tabs", false);
+
+    m_tabbar->setHoverCloseButton(m_tabsclose);
+    m_tabbar->setShown(m_tabs);
+
+    int id = m_tabbar->currentTab();
+
+    if(id == -1)
+    {
+        if(m_tabs) m_tabbar->setHidden(m_tabbar->count() <= 1);
+        blockSignals(false);
+        return;
+    }
+
+    int index = m_tabbar->indexOf(id);
+
+    // remove other tabs if needed
+    if(!m_tabs)
+    {
+        int ind = 0;
+        cnt = m_tabbar->count();
+        cnt--;
+
+        while(cnt--)
+        {
+            if(m_tabbar->tabAt(ind)->identifier() == id)
+            {
+                ind++;
+                continue;
+            }
+
+            m_tabbar->removeTab(m_tabbar->tabAt(ind));
+        }
+    }
+    else
+        m_tabbar->setHidden(m_tabbar->count() <= 1);
+
+    blockSignals(false);
+
+    if(!m_tabs)
+        gl->removeNonCurrentTabs(index);
+}
+
+void SQ_GLView::slotTabCountChanged()
+{
+    if(m_tabs)
+        m_tabbar->setHidden(m_tabbar->count() <= 1);
+}
+
+void SQ_GLView::leftTab()
+{
+    int index = m_tabbar->indexOf(m_tabbar->currentTab());
+
+    // smth went wrong
+    if(index < 0) return;
+
+    index--;
+    if(index < 0)
+        index = m_tabbar->count() - 1;
+
+    if(index < 0) return;
+
+    m_tabbar->setCurrentTab(m_tabbar->tabAt(index));
+}
+
+void SQ_GLView::rightTab()
+{
+    int index = m_tabbar->indexOf(m_tabbar->currentTab());
+
+    // smth went wrong
+    if(index < 0) return;
+
+    index++;
+    if(index >= m_tabbar->count())
+        index = 0;
+
+    m_tabbar->setCurrentTab(m_tabbar->tabAt(index));
 }
 
 #include "sq_glview.moc"

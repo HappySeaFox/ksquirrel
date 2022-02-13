@@ -318,7 +318,7 @@ void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList &list)
     connect(thumbJob, SIGNAL(thumbnailLoaded(const KFileItem*, const SQ_Thumbnail &)),
             this, SLOT(setThumbnailPixmap(const KFileItem*, const SQ_Thumbnail&)));
 
-    connect(thumbJob, SIGNAL(result(KIO::Job*)), SQ_WidgetStack::instance(), SLOT(thumbnailsUpdateEnded()));
+    connect(thumbJob, SIGNAL(done()), SQ_WidgetStack::instance(), SLOT(thumbnailsUpdateEnded()));
 
     // start!
     thumbJob->start();
@@ -327,6 +327,10 @@ void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList &list)
 // Stop thumbnail update: delete job, reset progress bar
 void SQ_FileThumbView::stopThumbnailUpdate()
 {
+    timerScroll->stop();
+    timerAdd->stop();
+    newItems.clear();
+
     if(!thumbJob.isNull())
     {
         thumbJob->kill();

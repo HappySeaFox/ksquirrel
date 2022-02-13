@@ -59,10 +59,16 @@ SQ_PreviewWidget::SQ_PreviewWidget(QWidget *parent, const char *name)
 
     popup = new KPopupMenu;
     popup->insertItem(i18n("Background color..."), this, SLOT(slotBackground()));
+    popup->insertItem(i18n("Text color..."), this, SLOT(slotText()));
+    popup->insertSeparator();
+    popup->insertItem(i18n("Next image")+"\tSpace", this, SIGNAL(next()));
+    popup->insertItem(i18n("Previous image")+"\tBackSpace", this, SIGNAL(previous()));
+    popup->insertItem(i18n("Execute")+"\tEnter", this, SIGNAL(execute()));
 
     multi_pix = SQ_IconLoader::instance()->loadIcon("kmultiple", KIcon::Desktop, KIcon::SizeSmall);
 
     setMinimumHeight(20);
+    setFocusPolicy(QWidget::WheelFocus);
 }
 
 SQ_PreviewWidget::~SQ_PreviewWidget()
@@ -72,24 +78,26 @@ SQ_PreviewWidget::~SQ_PreviewWidget()
     delete all;
 }
 
-void SQ_PreviewWidget::load(const KURL &url)
+void SQ_PreviewWidget::load(const KURL &_url)
 {
-    if(SQ_LibraryHandler::instance()->maybeSupported(url) == SQ_LibraryHandler::No)
+    if(SQ_LibraryHandler::instance()->maybeSupported(_url) == SQ_LibraryHandler::No)
         return;
 
     if(m_forceignore || m_ignore)
     {
-        pending = url;
+        pending = m_url = _url;
         return;
     }
     else
         pending = KURL();
 
-    if(url.isLocalFile())
-        slotDownloadResult(url);
+    m_url = _url;
+
+    if(m_url.isLocalFile())
+        slotDownloadResult(m_url);
     else
     {
-        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, url);
+        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, m_url);
         down->start(&fi);
     }
 }
@@ -113,8 +121,23 @@ void SQ_PreviewWidget::paintEvent(QPaintEvent *)
 
     if(!m_ignore && !pixmap.isNull())
     {
+        int x = 4;
         p.drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
-        if(multi) p.drawPixmap(4, 4, multi_pix);
+
+        if(multi)
+        {
+            x = x + multi_pix.width() + 4;
+            p.drawPixmap(4, 4, multi_pix);
+        }
+
+        if(dim)
+        {
+            QFont fnt = p.font();
+            fnt.setBold(true);
+            p.setFont(fnt);
+            p.setPen(colorText);
+            p.drawText(x, 4, width(), height(), Qt::AlignLeft, dimstring);
+        }
     }
 }
 
@@ -143,8 +166,9 @@ bool SQ_PreviewWidget::fit()
 
 void SQ_PreviewWidget::saveValues()
 {
-    SQ_Config::instance()->setGroup("Main");
+    SQ_Config::instance()->setGroup("Sidebar");
     SQ_Config::instance()->writeEntry("preview_background", color.name());
+    SQ_Config::instance()->writeEntry("preview_text", colorText.name());
 }
 
 void SQ_PreviewWidget::rereadColor()
@@ -154,12 +178,15 @@ void SQ_PreviewWidget::rereadColor()
     m_forceignore = !b;
     setShown(b);
     color.setNamedColor(SQ_Config::instance()->readEntry("preview_background", "#4e4e4e"));
+    dim = SQ_Config::instance()->readBoolEntry("preview_text_enable", true);
+    colorText.setNamedColor(SQ_Config::instance()->readEntry("preview_text", "#ffffff"));
     m_delay = SQ_Config::instance()->readNumEntry("preview_delay", 400);
     m_cancel = SQ_Config::instance()->readBoolEntry("preview_dont", true);
 
     if(m_delay < 50 || m_delay > 2000)
         m_delay = 400;
 }
+
 
 void SQ_PreviewWidget::slotBackground()
 {
@@ -170,6 +197,21 @@ void SQ_PreviewWidget::slotBackground()
     if(dlg.exec() == QDialog::Accepted)
     {
         color = dlg.color();
+        saveValues();
+        update();
+    }
+}
+
+void SQ_PreviewWidget::slotText()
+{
+    KColorDialog dlg(KSquirrel::app(), 0, true);
+
+    dlg.setColor(colorText);
+
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        colorText = dlg.color();
+        saveValues();
         update();
     }
 }
@@ -214,6 +256,7 @@ void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
 
     int w = finfo->image[0].w;
     int h = finfo->image[0].h;
+    dimstring = QString::fromLatin1("%1x%2").arg(w).arg(h);
 
     const int wh = w * h;
     unsigned char t;
@@ -254,6 +297,32 @@ void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
 
     fitAndConvert();
     update();
+}
+
+void SQ_PreviewWidget::keyPressEvent(QKeyEvent *e)
+{
+    e->accept();
+
+    if(e->key() == Qt::Key_PageDown || e->key() == Qt::Key_Space)
+        emit next();
+    else if(e->key() == Qt::Key_PageUp || e->key() == Qt::Key_BackSpace)
+        emit previous();
+    else if(e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)
+        emit execute();
+}
+
+void SQ_PreviewWidget::wheelEvent(QWheelEvent *e)
+{
+    if(e->delta() < 0)
+        emit next();
+    else
+        emit previous();
+}
+
+void SQ_PreviewWidget::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    e->accept();
+    emit execute();
 }
 
 #include "sq_previewwidget.moc"

@@ -230,6 +230,8 @@ QString SQ_WidgetStack::nameFilter() const
  */
 void SQ_WidgetStack::raiseWidget(SQ_DirOperator::ViewT id, bool doUpdate)
 {
+    if(doUpdate) dirop->stopThumbnailUpdate();
+
     dirop->removeCdUpItem();
     dirop->prepareView(id);
 
@@ -298,13 +300,21 @@ const KFileItemList* SQ_WidgetStack::items() const
 void SQ_WidgetStack::emitNextSelected()
 {
     if(moveTo(SQ_WidgetStack::Next) == SQ_WidgetStack::moveSuccess)
-        dirop->execute(dirop->view()->currentFileItem());
+    {
+        KFileItem *fi = dirop->view()->currentFileItem();
+        SQ_GLWidget::window()->setExpectedURL(fi->url());
+        dirop->execute(fi);
+    }
 }
 
 void SQ_WidgetStack::emitPreviousSelected()
 {
     if(moveTo(SQ_WidgetStack::Previous) == SQ_WidgetStack::moveSuccess)
-        dirop->execute(dirop->view()->currentFileItem());
+    {
+        KFileItem *fi = dirop->view()->currentFileItem();
+        SQ_GLWidget::window()->setExpectedURL(fi->url());
+        dirop->execute(fi);
+    }
 }
 
 // Go to first file
@@ -371,7 +381,9 @@ void SQ_WidgetStack::updateGrid(bool arrange)
 
 void SQ_WidgetStack::thumbnailsUpdateEnded()
 {
-//    printf("ENDED\n");
+    if(dirop->viewType() != SQ_DirOperator::TypeThumbs)
+        return;
+
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
     if(!tv) return;

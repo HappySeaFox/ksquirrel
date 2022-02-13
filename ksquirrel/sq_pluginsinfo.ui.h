@@ -13,6 +13,9 @@
 
 void SQ_PluginsInfo::init()
 {
+    tableLib->setColumnText (5, SQ_IconLoader::instance()->loadIcon("fileopen", KIcon::Desktop, KIcon::SizeSmall), "");
+    tableLib->setColumnText (6, SQ_IconLoader::instance()->loadIcon("filesave", KIcon::Desktop, KIcon::SizeSmall), "");
+
     showLibs();
 }
 

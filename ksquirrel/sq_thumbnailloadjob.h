@@ -51,6 +51,8 @@ class SQ_ThumbnailLoadJob : public KIO::Job
         SQ_ThumbnailLoadJob(const KFileItemList &itemList, SQ_FileThumbView *parnt);
         ~SQ_ThumbnailLoadJob();
 
+        virtual void kill(bool q = true);
+
         void start();
         void itemRemoved(const KFileItem* item);
         void itemsRemoved(const KFileItemList &list);
@@ -71,6 +73,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 
     signals:
         void thumbnailLoaded(const KFileItem* item, const SQ_Thumbnail &t);
+        void done();
 
     private slots:
         void slotResult(KIO::Job *job);
@@ -88,7 +91,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
         KTempFile         *tmp;
         time_t mOriginalTime;
         QString mime;
-        bool continueDownload;
+        bool continueDownload, donothing;
 
         SQ_DirThumbs *dir;
         SQ_Thumbnail mBrokenThumbnail;

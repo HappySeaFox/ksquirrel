@@ -146,8 +146,6 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
 
     bool b = SQ_ImageLoader::instance()->loadImage(pixPath.path(), SQ_CodecSettings::ThumbnailLoader);
 
-    //printf("LOAD %s = %d\n", pixPath.prettyURL().ascii(), b);
-
     finfo = SQ_ImageLoader::instance()->info();
     all = SQ_ImageLoader::instance()->bits();
 

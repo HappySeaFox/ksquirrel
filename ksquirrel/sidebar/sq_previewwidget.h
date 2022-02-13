@@ -44,8 +44,6 @@ class SQ_PreviewWidget : public QWidget
 
         void rereadColor();
 
-        void saveValues();
-
         void load(const KURL &url);
 
         void ignore(bool ign);
@@ -58,14 +56,28 @@ class SQ_PreviewWidget : public QWidget
 
         bool cancel() const;
 
+        KURL url() const;
+
+    private:
+        void saveValues();
+
+    signals:
+        void next();
+        void previous();
+        void execute();
+
     private slots:
         void slotBackground();
+        void slotText();
         void slotDownloadResult(const KURL &);
 
     protected:
         virtual void resizeEvent(QResizeEvent *);
         virtual void paintEvent(QPaintEvent *);
         virtual void mousePressEvent(QMouseEvent *e);
+        virtual void keyPressEvent(QKeyEvent *e);
+        virtual void wheelEvent(QWheelEvent *e);
+        virtual void mouseDoubleClickEvent(QMouseEvent *e);
 
     private:
         bool fit();
@@ -75,14 +87,16 @@ class SQ_PreviewWidget : public QWidget
         QImage *all, *small;
         QPixmap pixmap;
         bool m_ignore, m_forceignore, m_cancel;
-        QColor color;
+        QColor color, colorText;
         KPopupMenu *popup;
-        KURL pending;
+        KURL pending, m_url;
         int m_delay;
         QWMatrix matrix;
         SQ_Downloader *down;
         bool multi;
         QPixmap multi_pix;
+        QString dimstring;
+        bool dim;
 
         static SQ_PreviewWidget *m_inst;
 };
@@ -103,6 +117,12 @@ inline
 bool SQ_PreviewWidget::cancel() const
 {
     return m_cancel;
+}
+
+inline
+KURL SQ_PreviewWidget::url() const
+{
+    return m_url;
 }
 
 #endif

@@ -62,9 +62,11 @@
 #include <kurlcompletion.h>
 #include <konq_pixmapprovider.h>
 #include <kio/job.h>
+#include <kio/netaccess.h>
 #include <kinputdialog.h>
 #include <ksystemtray.h>
 #include <ksqueezedtextlabel.h>
+#include <ktabbar.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
@@ -133,7 +135,7 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name)
     slideShowPaused = false;
     m_intray = false;
     waitForShow = true;
-    m_demo = !SQ_HLOptions::instance()->file.isEmpty();
+    m_demo = false;
 
     writeDefaultEntries();
 
@@ -545,6 +547,9 @@ void KSquirrel::createWidgets(int createFirst)
     connect(ptree, SIGNAL(urlRemoved(const KURL &)), pWidgetStack->diroperator(), SLOT(urlRemoved(const KURL &)));
     connect(pWidgetStack->diroperator(), SIGNAL(urlEntered(const KURL &)), ptree, SLOT(slotClearChecked()));
     connect(pWidgetStack, SIGNAL(newLastURL(const QString &)), pWidgetStack->action("dirop_repeat"), SLOT(setText(const QString &)));
+    connect(SQ_PreviewWidget::instance(), SIGNAL(next()), this, SLOT(slotPreviewWidgetNext()));
+    connect(SQ_PreviewWidget::instance(), SIGNAL(previous()), this, SLOT(slotPreviewWidgetPrevious()));
+    connect(SQ_PreviewWidget::instance(), SIGNAL(execute()), this, SLOT(slotPreviewWidgetExecute()));
 
     pWidgetStack->init();
 
@@ -871,6 +876,12 @@ void KSquirrel::raiseGLWidget()
     gl_view->show();
     gl_view->raise();
     KWin::forceActiveWindow(gl_view->winId());
+
+    if(SQ_GLWidget::window()->fullscreen())
+    {
+        gl_view->statusbar()->setShown(false);
+        gl_view->boxBar()->setShown(false);
+    }
 }
 
 // Hide image window
@@ -963,11 +974,11 @@ void KSquirrel::applyDefaultSettings()
     SQ_GLWidget::window()->setClearColor();
     SQ_GLWidget::window()->updateFactors();
 
-    kconf->setGroup("GL view");
-
     // Show/hide tickmarks if needed
     if(old_marks != kconf->readBoolEntry("marks", true))
         SQ_GLWidget::window()->updateGLA();
+
+    gl_view->setupTabbar();
 
     kconf->setGroup("Fileview");
 
@@ -1019,19 +1030,9 @@ void KSquirrel::slotFullScreen(bool full)
 
     kconf->setGroup("GL view");
 
-    // hide statusbar in fullscreen mode ?
-    if(kconf->readBoolEntry("hide_sbar", true))
-    {
-        gl_view->statusbar()->setShown(!full);
-        dynamic_cast<KToggleAction *>(SQ_GLWidget::window()->actionCollection()->action("toggle status"))->setChecked(!full);
-    }
-
-    // hide toolbar in fullscreen mode ?
-    if(kconf->readBoolEntry("hide_toolbar", true))
-    {
-        gl_view->toolbar()->setShown(!full);
-        dynamic_cast<KToggleAction *>(SQ_GLWidget::window()->actionCollection()->action("toggle toolbar"))->setChecked(full);
-    }
+    // avoid automatic image resizing
+    gl_view->statusbar()->setShown(!full);
+    gl_view->boxBar()->setShown(!full);
 
     // goto fullscreen
     if(full)
@@ -1068,10 +1069,8 @@ void KSquirrel::saveValues()
     if(!SQ_GLWidget::window()->fullscreen())
         gl_view->saveGeometry();
 
-    kconf->writeEntry("statusbar", dynamic_cast<KToggleAction *>(SQ_GLWidget::window()->actionCollection()->action("toggle status"))->isChecked());
     kconf->writeEntry("ignore", dynamic_cast<KToggleAction *>(SQ_GLWidget::window()->actionCollection()->action("if less"))->isChecked());
     kconf->writeEntry("zoom type", SQ_GLWidget::window()->zoomType());
-    kconf->writeEntry("toolbars_hidden", SQ_GLWidget::window()->actionsHidden());
 
     kconf->setGroup("Interface");
     kconf->writeEntry("last view", pWidgetStack->diroperator()->viewType());
@@ -1084,8 +1083,6 @@ void KSquirrel::saveValues()
     // only when all sidebar pages are closed
     if(sideBar->currentPage() != -1)
         saveLayout();
-
-    SQ_PreviewWidget::instance()->saveValues();
 
     kconf->setGroup("Thumbnails");
     kconf->writeEntry("size", thumbSize->value());
@@ -1150,10 +1147,6 @@ void KSquirrel::slotThumbsHuge()
 // Final actions before exiting
 void KSquirrel::finalActions()
 {
-//    FILE *f = fopen("/home/krasu/1.tmp", "a");
-//    fprintf(f, "%s\n", QTime::currentTime().toString().ascii());
-//    fclose(f);
-
     gl_view->hide();
 
     // save parameters to config file
@@ -1251,13 +1244,91 @@ void KSquirrel::preCreate()
     if(SQ_HLOptions::instance()->showLibsAndExit)
         exit(0);
 
-    continueLoading();
+    if(!SQ_HLOptions::instance()->param.isEmpty())
+    {
+        // at first try to stat as local url
+        KURL url;
 
-    // show tray icon when restored
-    if(kapp->isRestored())
-        slotGotoTray();
+        if(QDir::isRelativePath(SQ_HLOptions::instance()->param))
+        {
+            url = KURL::fromPathOrURL(QDir::currentDirPath());
+            url.addPath(SQ_HLOptions::instance()->param);
+        }
+        else
+            url.setPath(SQ_HLOptions::instance()->param);
 
-    connect(kapp, SIGNAL(saveYourself()), this, SLOT(slotSaveYourself()));
+        statStage = false;
+        KIO::StatJob *job = KIO::stat(url, false);
+        job->setSide(true);
+        job->setDetails(0);
+        connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotStatResult(KIO::Job *)));
+    }
+    else
+        continueLoading();
+}
+
+void KSquirrel::slotStatResult(KIO::Job *_job)
+{
+    if(_job)
+    {
+        KIO::StatJob *job = static_cast<KIO::StatJob *>(_job);
+
+        if(job->error())
+        {
+            // both local and remote urls are failed
+            if(statStage)
+            {
+                job->showErrorDialog(this);
+                continueLoading();
+                return;
+            }
+        }
+
+        // found local/remote URL
+        KIO::UDSEntry udsEntry = job->statResult();
+        KIO::UDSEntry::ConstIterator itEnd = udsEntry.end();
+
+        for(KIO::UDSEntry::ConstIterator it = udsEntry.begin(); it != itEnd;++it)
+        {
+            // we need just file type...
+            if((*it).m_uds == KIO::UDS_FILE_TYPE)
+            {
+                if(S_ISDIR((mode_t)((*it).m_long)))
+                {
+                    SQ_HLOptions::instance()->dir = job->url();
+                }
+                else
+                {
+                    SQ_HLOptions::instance()->file = job->url();
+                    SQ_HLOptions::instance()->dir = job->url();
+                    SQ_HLOptions::instance()->dir.cd("..");
+                }
+
+                m_demo = !SQ_HLOptions::instance()->file.isEmpty();
+
+                // Ok, it's existing URL
+                continueLoading();
+                return;
+            }
+        }
+
+        // this should not occur, but for safety reasons...
+        if(statStage)
+        {
+            continueLoading();
+            return;
+        }
+
+        // local url is not found. construct remote url and stat() it again
+        KURL url = KURL::fromPathOrURL(SQ_HLOptions::instance()->param);
+        statStage = true;
+        KIO::StatJob *job2 = KIO::stat(url, false);
+        job2->setSide(true);
+        job2->setDetails(0);
+        connect(job2, SIGNAL(result(KIO::Job *)), this, SLOT(slotStatResult(KIO::Job *)));
+    }
+    else
+        continueLoading();
 }
 
 void KSquirrel::resizeEvent(QResizeEvent *e)
@@ -1319,18 +1390,21 @@ void KSquirrel::continueLoading()
             KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, SQ_HLOptions::instance()->file);
             pWidgetStack->diroperator()->execute(&fi);
         }
-        else
-            gl_view->sbarWidget("SBFile")->setText(
-                    i18n("Unsupported format \"%1\"")
-                    .arg(QFileInfo(SQ_HLOptions::instance()->file.path()).extension(false)));
     }
+
+    // show tray icon when restored
+    if(kapp->isRestored())
+        slotGotoTray();
+
+    connect(kapp, SIGNAL(saveYourself()), this, SLOT(slotSaveYourself()));
 }
 
 // Set caption to main window or to image window
 void KSquirrel::setCaption(const QString &cap)
 {
     KMainWindow::setCaption(cap);
-    gl_view->setCaption(cap);
+
+    gl_view->setCaption(cap.isEmpty() ? "ksquirrel" : cap);
 }
 
 // User selected "Open file" or "Open file #2" from menu.
@@ -1449,18 +1523,56 @@ bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& r
         return true;
     }
     // load specified image
-    else if(fun == "load_image(QString)" || fun == "load_directory(QString)")
+    else if(fun == "load(QString)")
     {
         QString arg = getArg(data);
 
-        KURL url = KURL::fromPathOrURL(arg), dir;
-        bool isdir = false, setc = true;
-        dir = url;
+        KURL url = KURL::fromPathOrURL(arg);
 
-        if(url.fileName(false).isEmpty())
-            isdir = true;
-        else
-            dir.cd("..");
+        KIO::StatJob *job = KIO::stat(url, false);
+        job->setSide(true);
+        job->setDetails(0);
+        connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotDCOPStatResult(KIO::Job *)));
+
+        replyType = "void";
+
+        return true;
+    }
+
+    // we have to call it
+    return DCOPObject::process(fun, data, replyType, replyData);
+}
+
+void KSquirrel::slotDCOPStatResult(KIO::Job *_job)
+{
+    if(_job)
+    {
+        KIO::StatJob *job = static_cast<KIO::StatJob *>(_job);
+
+        if(job->error())
+        {
+            job->showErrorDialog(this);
+            return;
+        }
+
+        KURL url = job->url();
+        bool isdir = false, setc = true;
+        KURL dir = url;
+
+        KIO::UDSEntry udsEntry = job->statResult();
+        KIO::UDSEntry::ConstIterator itEnd = udsEntry.end();
+
+        for(KIO::UDSEntry::ConstIterator it = udsEntry.begin(); it != itEnd;++it)
+        {
+            // we need just file type...
+            if((*it).m_uds == KIO::UDS_FILE_TYPE)
+            {
+                isdir = S_ISDIR((mode_t)((*it).m_long));
+                break;
+            }
+        }
+
+        if(!isdir) dir.cd("..");
 
         if(!pWidgetStack->diroperator()->url().equals(dir, true))
         {
@@ -1474,10 +1586,9 @@ bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& r
         if(isdir)
             activate();
         else
+        {
             raiseGLWidget();
 
-        if(!isdir)
-        {
             if(setc)
             {
                 KFileView *v = pWidgetStack->diroperator()->view();
@@ -1486,7 +1597,7 @@ bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& r
                 {
                     v->clearSelection();
                     v->setCurrentItem(url.fileName(false));
-                    v->setSelected(v->currentFileItem(), true);
+                    pWidgetStack->diroperator()->setCurrentItem(v->currentFileItem());
                 }
             }
 
@@ -1501,14 +1612,7 @@ bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& r
                 pWidgetStack->diroperator()->execute(&fi);
             }
         }
-
-        replyType = "void";
-
-        return true;
     }
-
-    // we have to call it
-    return DCOPObject::process(fun, data, replyType, replyData);
 }
 
 // Returnes all available DCOP methods.
@@ -1519,8 +1623,7 @@ QCStringList KSquirrel::functions()
 
     result << "void control(QString)";
     result << "void navigator(QString)";
-    result << "void load_image(QString)";
-    result << "void load_directory(QString)";
+    result << "void load(QString)";
     result << "void activate()";
     result << "void activate_image_window()";
 
@@ -2020,6 +2123,27 @@ void KSquirrel::slotRepeat()
 void KSquirrel::slotSaveYourself()
 {
     finalActions();
+}
+
+void KSquirrel::slotPreviewWidgetNext()
+{
+    pWidgetStack->moveTo(SQ_WidgetStack::Next);
+}
+
+void KSquirrel::slotPreviewWidgetPrevious()
+{
+    pWidgetStack->moveTo(SQ_WidgetStack::Previous);
+}
+
+void KSquirrel::slotPreviewWidgetExecute()
+{
+    KURL u = SQ_PreviewWidget::instance()->url();
+
+    if(!u.isEmpty())
+    {
+        KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, u);
+        pWidgetStack->diroperator()->execute(&fi);
+    }
 }
 
 #include "ksquirrel.moc"

@@ -60,8 +60,6 @@ void SQ_ThreadDirLister::run()
     static const QString &dot    = KGlobal::staticQString(".");
     static const QString &dotdot = KGlobal::staticQString("..");
 
-//    printf("RUN\n");
-
     while(true)
     {
         lock();
@@ -79,8 +77,6 @@ void SQ_ThreadDirLister::run()
         b_read = true;
         fi.setFile(path);
 
-//        printf("TRY PATH %s\n", path.ascii());
-
         if(cache->hasGroup(path))
         {
             cache->setGroup(path);
@@ -91,7 +87,6 @@ void SQ_ThreadDirLister::run()
             {
                 count_files = cache->readNumEntry("count_files", 0);
                 count_dirs = cache->readNumEntry("count_dirs", 0);
-//                printf("RECURS CACHE %d %d\n", count_files, count_dirs);
                 b_read = false;
             }
         }
@@ -106,7 +101,6 @@ void SQ_ThreadDirLister::run()
                 while((file = readdir(dir)))
                 {
                     name = QFile::decodeName(file->d_name);
-//                    printf("TASTE %s\n", filepath.ascii());
 
                     if(name != dot && name != dotdot)
                     {
@@ -125,8 +119,6 @@ void SQ_ThreadDirLister::run()
             }
             else // opendir() failed, this value won't be cached
                 b_read = false;
-
-//            printf("RECURS READ %d %d\n", count_files, count_dirs);
         }
 
         lock();

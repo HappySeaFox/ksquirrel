@@ -38,7 +38,6 @@ SQ_Downloader::~SQ_Downloader()
 
 void SQ_Downloader::start(KFileItem *fi)
 {
-//    printf("DOWNLOADER START %s\n", fi->url().prettyURL().ascii());
     m_error = false;
     mURL = fi->url();
 
@@ -62,15 +61,12 @@ void SQ_Downloader::start(KFileItem *fi)
 
 void SQ_Downloader::slotData(KIO::Job *job, const QByteArray &data)
 {
-//    printf("GET %ld/%ld\n", data.size(), totalSize);
-
     size += data.size();
 
     QFile f(tmp);
 
     if(f.open(IO_WriteOnly | IO_Append))
     {
-//        printf("WRITE\n");
         f.writeBlock(data);
         f.close();
     }
@@ -84,7 +80,6 @@ void SQ_Downloader::slotData(KIO::Job *job, const QByteArray &data)
         if(SQ_ArchiveHandler::instance()->findProtocolByMime(mime).isEmpty()
             && !lib)
         {
-//            printf("*** KILL\n");
             job->kill(false); // kill job & emit result
         }
         else
@@ -97,7 +92,6 @@ void SQ_Downloader::slotData(KIO::Job *job, const QByteArray &data)
 
 void SQ_Downloader::slotDataResult(KIO::Job *cpjob)
 {
-//    printf("DOWNLOADER END\n");
     job = 0;
 
     // job error
@@ -125,7 +119,6 @@ void SQ_Downloader::clean()
 
 void SQ_Downloader::kill()
 {
-//    printf("DOWNLOADER KILL %d\n", (int)job);
     if(job) job->kill();
 }
 

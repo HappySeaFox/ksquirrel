@@ -97,11 +97,13 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const KURL &url)
         }
     }
 
+#if 0
     if(l)
         kdDebug() << KStringHandler::lsqueeze(url.prettyURL())
                   << "\" => "
                   << l->quickinfo
                   << endl;
+#endif
 
     return l;
 }

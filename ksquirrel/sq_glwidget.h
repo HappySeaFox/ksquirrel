@@ -19,11 +19,9 @@
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
 
-#include <qfileinfo.h>
 #include <qimage.h>
 #include <qrect.h>
 #include <qpair.h>
-#include <qwmatrix.h>
 #include <qdatetime.h>
 
 #include <kurl.h>
@@ -32,18 +30,19 @@
 
 #include "sq_glparts.h"
 
+class SQ_GLSelectionPainter;
 struct SQ_ImageFilterOptions;
 struct SQ_ImageBCGOptions;
 struct RGBA;
 
 // parameters in GL matrix
-#define    MATRIX_C1    matrix[0]
-#define    MATRIX_S1    matrix[1]
-#define    MATRIX_X     matrix[3]
-#define    MATRIX_S2    matrix[4]
-#define    MATRIX_C2    matrix[5]
-#define    MATRIX_Y     matrix[7]
-#define    MATRIX_Z     matrix[11]
+#define    MATRIX_C1    tab->matrix[0]
+#define    MATRIX_S1    tab->matrix[1]
+#define    MATRIX_X     tab->matrix[3]
+#define    MATRIX_S2    tab->matrix[4]
+#define    MATRIX_C2    tab->matrix[5]
+#define    MATRIX_Y     tab->matrix[7]
+#define    MATRIX_Z     tab->matrix[11]
 
 class KAction;
 class KActionCollection;
@@ -58,17 +57,9 @@ class QTimer;
 class QPopupMenu;
 class QSlider;
 
-class SQ_GLSelectionPainter;
 class SQ_ToolButtonPopup;
 class SQ_ToolButton;
 class SQ_ToolBar;
-
-struct SQ_LIBRARY;
-class fmt_codec_base;
-
-struct Parts;
-struct Part;
-class memoryPart;
 
 /* *************************************************************** */
 
@@ -78,8 +69,8 @@ class memoryPart;
  *
  *  It contains complex decoding method. Since OpenGL can show textures
  *  only with dimensions of power of 2 (32x62, 512, 256 etc.), we should divide
- * decoded image into quads and only then generate textures.
-  * It means, that the image you see consists of several parts:
+ *  decoded image into quads and only then generate textures.
+ *  It means, that the image you see consists of several parts:
  *
  *   |----------------------------------
  *   |                |                |
@@ -133,6 +124,10 @@ class SQ_GLWidget : public QGLWidget
         SQ_GLWidget(QWidget *parent = 0, const char *name = 0);
         ~SQ_GLWidget();
 
+        void removeNonCurrentTabs(int);
+
+        void setExpectedURL(const KURL &u);
+
         QString originalURL() const;
 
         /*
@@ -179,12 +174,6 @@ class SQ_GLWidget : public QGLWidget
          *  Direct call to updateGL().
          */
         void updateGLA() { updateGL(); }
-
-        /*
-         *  With 'T' user can hide toolbar (with KToolBar::hide()).
-         *  This method will help determine if toolbar is visible.
-         */
-        bool actionsHidden() const;
 
         /*
          *  Type of zoom: fit width, fit height...
@@ -239,8 +228,6 @@ class SQ_GLWidget : public QGLWidget
         void paintGL();
         void resizeGL(int,int);
 
-        void paintEvent(QPaintEvent *);
-
         /*
          *  Mouse wheel event. Let's load next/previous image, or
          *  zoom in/zoom out (depends on settings).
@@ -271,10 +258,13 @@ class SQ_GLWidget : public QGLWidget
     private:
         QImage generatePreview();
 
+        void hackMatrix();
+
         void enableActions(bool U);
 
         void initAccelsAndMenu();
 
+        void crop();
         void bcg();
         void filter();
         void editUpdate();
@@ -295,6 +285,7 @@ class SQ_GLWidget : public QGLWidget
          *  Remove currently loaded textures and memory buffers.
          */
         void removeCurrentParts();
+        void removeCurrentTabs();
 
         /*
          *  Since 0.6.0-final KSquirrel doesn't show error messages,
@@ -365,7 +356,7 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Generate textures for tickmarks and bind them.
          */
-        void bindMarks(bool &first, bool deleteOld);
+        void initMarks();
 
         /*
          *  Load and check tickmarks from disk.
@@ -444,10 +435,16 @@ class SQ_GLWidget : public QGLWidget
         void flip_v();
         void exifRotate(bool);
 
+    signals:
+        void tabCountChanged();
+
     private slots:
         void decode();
 
         void slotAccelActivated();
+
+        void slotChangeTab(int);
+        void slotCloseRequest(int);
 
         void slotCopyJobResult(KIO::Job *job);
 
@@ -472,8 +469,6 @@ class SQ_GLWidget : public QGLWidget
         void slotFlipH();
         void slotMatrixReset();
         void slotProperties(); // show image properties
-        void slotHideToolbars(bool); // show/hide toolbars (with 'T')
-        void slotToggleStatus(bool);
         void slotFirst();
         void slotLast();
         void slotNext();
@@ -500,72 +495,65 @@ class SQ_GLWidget : public QGLWidget
 
     private:
         KAction               *pASelectionClear;
-        KToggleAction         *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
+        KToggleAction         *pAFull, *pAIfLess, *pAZoomW,
                               *pAZoomH, *pAZoomWH, *pAZoom100,
-                              *pAZoomLast, *pAHideToolbars,
+                              *pAZoomLast,
                               *pASelectionEllipse, *pASelectionRect;
 
-        SQ_ToolButton         *pAToolQuick, *pAToolFull;
+        SQ_ToolButton         *pAToolQuick, *pAToolFull, *pAToolProp;
         SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
 
         KActionCollection     *ac, *acMain;
         QPopupMenu            *menu, *menuFile, *menuImage;
-        int                             id_saveas, id_settings;
+        int                             id_saveas, id_settings,
+                                        id_f5, id_f6, id_f7, id_f8, id_del,
+                                        id_prop;
 
         // popup menu with zoom types (fit width, fit height, zoom 100%...)
         KPopupMenu            *zoom, *selectionMenu,
 
-                                      // popup menu with image pages
-                                      *images;
+                                  // popup menu with image pages
+                                  *images;
 
-        QString                 File, m_File;
-        QFileInfo              fm;
-        QImage                BGpixmap, BGquads;
+        QImage                 BGpixmap, BGquads;
 
-        QTimer                  *timer_prev, *timer_next;
-        QTimer                  *timer_anim;
+        QTimer                 *timer_prev, *timer_next;
+        QTimer                 *timer_anim;
 
-        QString                  quickImageInfo;
         QImage                 mm[4];
-        SQ_GLSelectionPainter *gls;
 
-        SQ_LIBRARY      *lib;
-        fmt_codec_base *codeK;
-        fmt_info                  finfo;
-        fmt_image             image_broken;
+        fmt_image              image_broken;
+        SQ_GLSelectionPainter  *gls;
 
-        std::vector<Parts>parts;
-        Parts                       *parts_broken;
+        Parts                  *parts_broken;
 
-        GLfloat                matrix[12], saved[12], zoomfactor, movefactor, rotatefactor, curangle;
+        GLfloat                saved[12], zoomfactor, movefactor, rotatefactor;
 
         unsigned int           texQuads, texPixmap, mark[4];
-        int                    xmoveold, ymoveold, xmove, ymove, current,
+        int                    xmoveold, ymoveold, xmove, ymove,
                                zoom_type, old_id, total, errors, movetype;
-        bool                   reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
-                               changed, changed2, marks, linear, use_broken;
-        float                  zoomFactor;
+        bool                   reset_mode, decoded, blocked, 
+                               changed, marks, linear;
+        float                  zoomFactor, oldZoom;
         RGBA                   *buffer;
         QSlider                *slider_zoom;
-        int                    glselection; // selection type
 
-        int                    sx, sy, sw, sh; // selection geometry (sx,sy is in image
-                                               // coordinates, e.g. (0,0) is a left top corner in current image)
         KTempFile              *tmp;
-        int                    orient;
-        bool                   rotate;
-        KURL                   m_original;
-        QWMatrix               wm;
-        KURL                   lastCopy;
+        KURL                   lastCopy, m_expected, m_original;
         QTime                  clickTime;
 
-        static SQ_GLWidget    *m_instance;
+        std::vector<Tab>        tabs;
+        Tab                     *tab, *tabold;
+        Tab                     tmptab, taborig;
+        bool                    hackResizeGL;
+
+        static SQ_GLWidget     *m_instance;
 };
 
 inline
 bool SQ_GLWidget::manualBlocked()
 {
-    return blocked_force;
+    return tab->manualBlocked;
 }
 
 inline
@@ -595,7 +583,13 @@ void SQ_GLWidget::setOriginalURL(const KURL &u)
 inline
 QString SQ_GLWidget::originalURL() const
 {
-    return m_original.isLocalFile() ? m_original.path() : m_original.prettyURL();
+    return tab->m_original.isLocalFile() ? tab->m_original.path() : tab->m_original.prettyURL();
+}
+
+inline
+void SQ_GLWidget::setExpectedURL(const KURL &u)
+{
+    m_expected = u;
 }
 
 #endif

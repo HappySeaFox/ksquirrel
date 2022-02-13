@@ -33,9 +33,7 @@ class SQ_HLOptions
         static SQ_HLOptions* instance() { return m_instance; }
 
     public:
-        /*
-         *  Directory or file to open.
-         */
+        QString     param;
         KURL        file, dir;
 
         /*

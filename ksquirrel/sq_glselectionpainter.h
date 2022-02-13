@@ -74,13 +74,16 @@ class SQ_GLSelectionPainter
         int type() const;
 
         /*
-         *  when selection is draw it's valid.
+         *  when selection is drawn, it's valid.
          *  After end() it becomes invalid.
          */
         bool valid() const;
 
+        void setVisible(bool vis);
+
         void begin(SQ_GLSelection::Type tp, int x, int y);
         void move(int x, int y);
+        void setGeometry(const QRect &rc);
         void end();
 
         /*
@@ -119,6 +122,13 @@ inline
 bool SQ_GLSelectionPainter::valid() const
 {
     return m_valid;
+}
+
+inline
+void SQ_GLSelectionPainter::setGeometry(const QRect &rc)
+{
+    if(selection)
+        selection->setGeometry(rc);
 }
 
 #endif

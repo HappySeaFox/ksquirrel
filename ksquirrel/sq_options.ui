@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>563</width>
-            <height>478</height>
+            <width>438</width>
+            <height>442</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -857,12 +857,20 @@
                                                 <cstring>radioSRCNext_2</cstring>
                                             </property>
                                             <property name="text">
-                                                <string>Load next/previos file</string>
+                                                <string>Load next/previous file</string>
                                             </property>
                                         </widget>
                                     </grid>
                                 </widget>
-                                <widget class="QLayoutWidget" row="1" column="0">
+                                <widget class="QCheckBox" row="3" column="0">
+                                    <property name="name">
+                                        <cstring>checkProgress</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Show images progressively</string>
+                                    </property>
+                                </widget>
+                                <widget class="QLayoutWidget" row="2" column="0">
                                     <property name="name">
                                         <cstring>layout8</cstring>
                                     </property>
@@ -1081,7 +1089,7 @@
                                         </widget>
                                     </hbox>
                                 </widget>
-                                <spacer row="5" column="0">
+                                <spacer row="4" column="0">
                                     <property name="name">
                                         <cstring>spacer16_2</cstring>
                                     </property>
@@ -1094,33 +1102,61 @@
                                     <property name="sizeHint">
                                         <size>
                                             <width>20</width>
-                                            <height>20</height>
+                                            <height>10</height>
                                         </size>
                                     </property>
                                 </spacer>
-                                <widget class="QCheckBox" row="2" column="0">
+                                <widget class="QButtonGroup" row="1" column="0">
                                     <property name="name">
-                                        <cstring>checkStatus</cstring>
+                                        <cstring>buttonGroupDC</cstring>
                                     </property>
-                                    <property name="text">
-                                        <string>Hide statusbar in fullscreen</string>
+                                    <property name="title">
+                                        <string>Double click</string>
                                     </property>
-                                </widget>
-                                <widget class="QCheckBox" row="3" column="0">
-                                    <property name="name">
-                                        <cstring>checkToolbar</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Hide toolbar in fullscreen</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox" row="4" column="0">
-                                    <property name="name">
-                                        <cstring>checkProgress</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Show images progressively</string>
-                                    </property>
+                                    <grid>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <property name="margin">
+                                            <number>9</number>
+                                        </property>
+                                        <property name="spacing">
+                                            <number>1</number>
+                                        </property>
+                                        <widget class="QRadioButton" row="2" column="0">
+                                            <property name="name">
+                                                <cstring>radioButton27_2</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Fullscreen</string>
+                                            </property>
+                                            <property name="buttonGroupId">
+                                                <number>2</number>
+                                            </property>
+                                        </widget>
+                                        <widget class="QRadioButton" row="0" column="0">
+                                            <property name="name">
+                                                <cstring>radioButton28_2</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Do nothing</string>
+                                            </property>
+                                            <property name="buttonGroupId">
+                                                <number>0</number>
+                                            </property>
+                                        </widget>
+                                        <widget class="QRadioButton" row="1" column="0">
+                                            <property name="name">
+                                                <cstring>radioButton26_3</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Close window</string>
+                                            </property>
+                                            <property name="buttonGroupId">
+                                                <number>1</number>
+                                            </property>
+                                        </widget>
+                                    </grid>
                                 </widget>
                             </grid>
                         </widget>
@@ -1351,7 +1387,7 @@
                                                         <cstring>textLabel1_3</cstring>
                                                     </property>
                                                     <property name="text">
-                                                        <string>mimimum</string>
+                                                        <string>minimum</string>
                                                     </property>
                                                 </widget>
                                                 <widget class="QSpinBox" row="1" column="0">
@@ -1410,7 +1446,7 @@
                                         <cstring>spinZoomFactor</cstring>
                                     </property>
                                     <property name="label">
-                                        <string>Zoom koefficient</string>
+                                        <string>Zoom coefficient</string>
                                     </property>
                                     <property name="suffix">
                                         <string>%</string>
@@ -1436,6 +1472,76 @@
                                         </size>
                                     </property>
                                 </spacer>
+                            </grid>
+                        </widget>
+                        <widget class="QWidget">
+                            <property name="name">
+                                <cstring>TabPage</cstring>
+                            </property>
+                            <attribute name="title">
+                                <string>Tabs</string>
+                            </attribute>
+                            <grid>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QCheckBox" row="0" column="0">
+                                    <property name="name">
+                                        <cstring>checkTabs</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Enable tabs</string>
+                                    </property>
+                                </widget>
+                                <spacer row="2" column="0">
+                                    <property name="name">
+                                        <cstring>spacer15_2</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>46</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QGroupBox" row="1" column="0">
+                                    <property name="name">
+                                        <cstring>groupTabs</cstring>
+                                    </property>
+                                    <property name="enabled">
+                                        <bool>false</bool>
+                                    </property>
+                                    <property name="title">
+                                        <string></string>
+                                    </property>
+                                    <grid>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QCheckBox" row="0" column="0">
+                                            <property name="name">
+                                                <cstring>checkTabAsk</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Ask what to do when opening new image</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QCheckBox" row="1" column="0">
+                                            <property name="name">
+                                                <cstring>checkTabClose</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Show close buttons</string>
+                                            </property>
+                                        </widget>
+                                    </grid>
+                                </widget>
                             </grid>
                         </widget>
                     </widget>
@@ -1685,7 +1791,7 @@
                                                 <string></string>
                                             </property>
                                         </widget>
-                                        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                                        <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="2">
                                             <property name="name">
                                                 <cstring>previewDont</cstring>
                                             </property>
@@ -1694,6 +1800,36 @@
                                             </property>
                                             <property name="whatsThis" stdset="0">
                                                 <string>Disables loading preview image when user launches image with mouse</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="KColorButton" row="3" column="1">
+                                            <property name="name">
+                                                <cstring>previewTextColor</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLabel" row="3" column="0">
+                                            <property name="name">
+                                                <cstring>textPreviewText</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="text">
+                                                <string>Text color:</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                                            <property name="name">
+                                                <cstring>checkPreviewText</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Show image dimensions</string>
                                             </property>
                                         </widget>
                                     </grid>
@@ -1866,6 +2002,24 @@
         <receiver>groupTooltip</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
+    <connection>
+        <sender>checkPreviewText</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>textPreviewText</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkPreviewText</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>previewTextColor</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkTabs</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>groupTabs</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>checkMinimize</tabstop>
@@ -1889,7 +2043,6 @@
     <tabstop>radioColorSystem</tabstop>
     <tabstop>radioColorCustom</tabstop>
     <tabstop>radioColorCustomTexture</tabstop>
-    <tabstop>checkStatus</tabstop>
     <tabstop>kURLReqCustomTexture</tabstop>
     <tabstop>pushCustomValidate</tabstop>
     <tabstop>checkDrawQuads</tabstop>
@@ -1971,6 +2124,7 @@
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
 </includehints>
 </UI>

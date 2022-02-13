@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>465</width>
-            <height>440</height>
+            <width>537</width>
+            <height>421</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,7 +22,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QWidgetStack" row="0" column="1">
+        <widget class="QWidgetStack" row="0" column="1" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>widgetStackFilters</cstring>
             </property>
@@ -1114,7 +1114,87 @@
                 </grid>
             </widget>
         </widget>
-        <widget class="QListBox" row="0" column="0" rowspan="2" colspan="1">
+        <spacer row="1" column="1">
+            <property name="name">
+                <cstring>spacer27</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>16</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>layout2</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer14</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>285</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushFilter</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Filter</string>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Close</string>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="Line" row="4" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>line7</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QListBox" row="0" column="0" rowspan="4" colspan="1">
             <item>
                 <property name="text">
                     <string>Blend</string>
@@ -1230,121 +1310,74 @@
             </property>
             <property name="sizePolicy">
                 <sizepolicy>
-                    <hsizetype>3</hsizetype>
+                    <hsizetype>1</hsizetype>
                     <vsizetype>7</vsizetype>
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
+            <property name="minimumSize">
+                <size>
+                    <width>140</width>
+                    <height>0</height>
+                </size>
+            </property>
         </widget>
-        <widget class="QLayoutWidget" row="3" column="0" rowspan="1" colspan="2">
+        <spacer row="3" column="2">
             <property name="name">
-                <cstring>layout2</cstring>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer14</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>285</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>pushFilter</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Filter</string>
-                    </property>
-                    <property name="default">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>pushCancel</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Close</string>
-                    </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
-                    </property>
-                </widget>
-            </hbox>
-        </widget>
-        <widget class="Line" row="2" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>line7</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
+                <cstring>spacer26</cstring>
             </property>
             <property name="orientation">
-                <enum>Horizontal</enum>
+                <enum>Vertical</enum>
             </property>
-        </widget>
-        <widget class="QLayoutWidget" row="1" column="1">
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>16</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="2" column="1" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>layout8</cstring>
+                <cstring>layout4</cstring>
             </property>
             <grid>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <spacer row="0" column="2">
+                <widget class="SQ_BCGLabel" row="1" column="3">
                     <property name="name">
-                        <cstring>spacer27</cstring>
+                        <cstring>pixmap1</cstring>
                     </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
                     </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
+                    <property name="minimumSize">
                         <size>
-                            <width>11</width>
-                            <height>21</height>
+                            <width>160</width>
+                            <height>160</height>
                         </size>
                     </property>
-                </spacer>
-                <spacer row="2" column="3">
+                </widget>
+                <widget class="QLabel" row="0" column="1">
                     <property name="name">
-                        <cstring>spacer26</cstring>
+                        <cstring>textLabel1_3</cstring>
                     </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
+                    <property name="text">
+                        <string>Original image:</string>
                     </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>16</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
+                </widget>
                 <spacer row="1" column="0">
                     <property name="name">
-                        <cstring>spacer42</cstring>
+                        <cstring>spacer27_2</cstring>
                     </property>
                     <property name="orientation">
                         <enum>Horizontal</enum>
@@ -1354,51 +1387,50 @@
                     </property>
                     <property name="sizeHint">
                         <size>
-                            <width>16</width>
+                            <width>1</width>
                             <height>16</height>
                         </size>
                     </property>
                 </spacer>
-                <widget class="QLayoutWidget" row="1" column="2" rowspan="1" colspan="2">
+                <spacer row="1" column="2">
                     <property name="name">
-                        <cstring>layout3</cstring>
+                        <cstring>spacer28</cstring>
                     </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>textLabel2</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Image after filtering:</string>
-                            </property>
-                        </widget>
-                        <widget class="SQ_BCGLabel">
-                            <property name="name">
-                                <cstring>pixmap1</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="minimumSize">
-                                <size>
-                                    <width>128</width>
-                                    <height>128</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </vbox>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>1</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="SQ_BCGLabel" row="1" column="1">
+                    <property name="name">
+                        <cstring>pixmap</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>160</width>
+                            <height>160</height>
+                        </size>
+                    </property>
                 </widget>
                 <spacer row="1" column="4">
                     <property name="name">
-                        <cstring>spacer43</cstring>
+                        <cstring>spacer27_3</cstring>
                     </property>
                     <property name="orientation">
                         <enum>Horizontal</enum>
@@ -1408,47 +1440,18 @@
                     </property>
                     <property name="sizeHint">
                         <size>
-                            <width>16</width>
+                            <width>1</width>
                             <height>16</height>
                         </size>
                     </property>
                 </spacer>
-                <widget class="QLayoutWidget" row="1" column="1">
+                <widget class="QLabel" row="0" column="3" rowspan="1" colspan="2">
                     <property name="name">
-                        <cstring>layout4</cstring>
+                        <cstring>textLabel2</cstring>
                     </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>textLabel1_3</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Original image:</string>
-                            </property>
-                        </widget>
-                        <widget class="SQ_BCGLabel">
-                            <property name="name">
-                                <cstring>pixmap</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="minimumSize">
-                                <size>
-                                    <width>128</width>
-                                    <height>128</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </vbox>
+                    <property name="text">
+                        <string>Image after filtering:</string>
+                    </property>
                 </widget>
             </grid>
         </widget>
@@ -1511,6 +1514,7 @@
 </includes>
 <variables>
     <variable access="private">QImage sample, sample_saved;</variable>
+    <variable access="private">static SQ_ImageFilter *m_inst;</variable>
 </variables>
 <signals>
     <signal>filter(SQ_ImageFilterOptions*)</signal>
@@ -1546,6 +1550,7 @@
     <function access="private" specifier="non virtual">equalize()</function>
     <function access="private" specifier="non virtual">despeckle()</function>
     <function access="private" specifier="non virtual">hackConnect()</function>
+    <function specifier="static" returnType="SQ_ImageFilter *">instance()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

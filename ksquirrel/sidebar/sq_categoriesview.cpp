@@ -36,7 +36,6 @@
 
 #include "ksquirrel.h"
 #include "sq_dir.h"
-#include "sq_glwidget.h"
 #include "sq_iconloader.h"
 #include "sq_categoriesview.h"
 #include "sq_libraryhandler.h"
@@ -202,7 +201,7 @@ void SQ_CategoriesBox::addToCategory(const QString &path)
 void SQ_CategoriesBox::slotDefaultCategories()
 {
     if(KMessageBox::questionYesNo(KSquirrel::app(),
-        i18n("It will create default categories: Concerts, Pets, Home, Friends, Free time, Traveling, Nature. Continue ?"),
+        i18n("It will create default categories: Concerts, Pets, Home, Friends, Free time, Traveling, Nature. Continue?"),
         i18n("Create default categories")) == KMessageBox::Yes)
     {
         QStringList list;

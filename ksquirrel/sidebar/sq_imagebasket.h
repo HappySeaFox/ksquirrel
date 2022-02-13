@@ -20,8 +20,6 @@
 
 #include <kdiroperator.h>
 
-namespace KIO { class Job; }
-
 class SQ_Dir;
 
 /**
@@ -52,12 +50,10 @@ class SQ_ImageBasket : public KDirOperator
             void slotSync();
             void slotViewChanged(KFileView *);
             void slotExecuted(const KFileItem *fi);
-            void slotStatResult(KIO::Job *job);
 
             void activatedMenu(const KFileItem *, const QPoint &pos);
 
         private:
-            bool m_stat, m_exist;
             SQ_Dir *dir;
             static SQ_ImageBasket *m_inst;
 };

@@ -122,7 +122,7 @@ void SQ_KIPIManager::slotReplug()
 
     clearMap();
 
-    SQ_ActionMenu *menuImages  = new SQ_ActionMenu(i18n("Image Actions"));
+    SQ_ActionMenu *menuImages  = new SQ_ActionMenu(i18n("Image actions"));
     SQ_ActionMenu *menuEffects = new SQ_ActionMenu(i18n("Effects"));
     SQ_ActionMenu *menuTools   = new SQ_ActionMenu(i18n("Tools"));
     SQ_ActionMenu *menuImport  = new SQ_ActionMenu(i18n("Import"));

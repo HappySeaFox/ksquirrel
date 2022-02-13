@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>530</width>
-            <height>349</height>
+            <width>546</width>
+            <height>391</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,7 +22,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QWidgetStack" row="1" column="0">
+        <widget class="QWidgetStack" row="1" column="0" rowspan="3" colspan="1">
             <property name="name">
                 <cstring>widgetStackParams</cstring>
             </property>
@@ -525,7 +525,24 @@
                 </widget>
             </grid>
         </widget>
-        <widget class="QLayoutWidget" row="3" column="0" rowspan="1" colspan="2">
+        <spacer row="3" column="1">
+            <property name="name">
+                <cstring>spacer12_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>MinimumExpanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>16</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>layout8</cstring>
             </property>
@@ -574,7 +591,7 @@
                 </widget>
             </hbox>
         </widget>
-        <widget class="Line" row="2" column="0" rowspan="1" colspan="2">
+        <widget class="Line" row="4" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>line2</cstring>
             </property>
@@ -588,68 +605,31 @@
                 <enum>Horizontal</enum>
             </property>
         </widget>
-        <widget class="QLayoutWidget" row="1" column="1">
+        <spacer row="1" column="1">
             <property name="name">
-                <cstring>layout19</cstring>
+                <cstring>spacer11</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>MinimumExpanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>16</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="2" column="1">
+            <property name="name">
+                <cstring>layout15</cstring>
             </property>
             <grid>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QLayoutWidget" row="1" column="2">
-                    <property name="name">
-                        <cstring>layout18</cstring>
-                    </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>textLabel4</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Image after colorizing:</string>
-                            </property>
-                        </widget>
-                        <widget class="SQ_BCGLabel">
-                            <property name="name">
-                                <cstring>pixmap1</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="minimumSize">
-                                <size>
-                                    <width>128</width>
-                                    <height>128</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </vbox>
-                </widget>
-                <spacer row="0" column="1">
-                    <property name="name">
-                        <cstring>spacer11</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>MinimumExpanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>16</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
                 <spacer row="1" column="0">
                     <property name="name">
                         <cstring>spacer13</cstring>
@@ -667,61 +647,59 @@
                         </size>
                     </property>
                 </spacer>
-                <spacer row="2" column="1">
+                <widget class="QLabel" row="0" column="1" rowspan="1" colspan="2">
                     <property name="name">
-                        <cstring>spacer12_2</cstring>
+                        <cstring>textLabel3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Original image:</string>
+                    </property>
+                </widget>
+                <spacer row="1" column="2">
+                    <property name="name">
+                        <cstring>spacer35</cstring>
                     </property>
                     <property name="orientation">
-                        <enum>Vertical</enum>
+                        <enum>Horizontal</enum>
                     </property>
                     <property name="sizeType">
-                        <enum>MinimumExpanding</enum>
+                        <enum>Expanding</enum>
                     </property>
                     <property name="sizeHint">
                         <size>
-                            <width>16</width>
+                            <width>1</width>
                             <height>16</height>
                         </size>
                     </property>
                 </spacer>
-                <widget class="QLayoutWidget" row="1" column="1">
+                <widget class="SQ_BCGLabel" row="1" column="3">
                     <property name="name">
-                        <cstring>layout17</cstring>
+                        <cstring>pixmap1</cstring>
                     </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>textLabel3</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Original image:</string>
-                            </property>
-                        </widget>
-                        <widget class="SQ_BCGLabel">
-                            <property name="name">
-                                <cstring>pixmap</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="minimumSize">
-                                <size>
-                                    <width>128</width>
-                                    <height>128</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </vbox>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>160</width>
+                            <height>160</height>
+                        </size>
+                    </property>
                 </widget>
-                <spacer row="1" column="3">
+                <widget class="QLabel" row="0" column="3" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>textLabel4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Image after colorizing:</string>
+                    </property>
+                </widget>
+                <spacer row="1" column="4">
                     <property name="name">
                         <cstring>spacer34</cstring>
                     </property>
@@ -734,10 +712,29 @@
                     <property name="sizeHint">
                         <size>
                             <width>1</width>
-                            <height>11</height>
+                            <height>16</height>
                         </size>
                     </property>
                 </spacer>
+                <widget class="SQ_BCGLabel" row="1" column="1">
+                    <property name="name">
+                        <cstring>pixmap</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>160</width>
+                            <height>160</height>
+                        </size>
+                    </property>
+                </widget>
             </grid>
         </widget>
     </grid>
@@ -953,9 +950,10 @@
     <include location="local" impldecl="in implementation">sq_imagebcg.ui.h</include>
 </includes>
 <variables>
-    <variable access="private">QStringList strings;</variable>
-    <variable access="private">QImage sample, sample_saved;</variable>
     <variable access="private">int id;</variable>
+    <variable access="private">QImage sample, sample_saved;</variable>
+    <variable access="private">QStringList strings;</variable>
+    <variable access="private">static SQ_ImageBCG *m_inst;</variable>
 </variables>
 <signals>
     <signal>bcg(SQ_ImageBCGOptions*)</signal>
@@ -983,6 +981,7 @@
     <function access="private" specifier="non virtual">assignNewImage( const QImage &amp; im )</function>
     <function access="private" specifier="non virtual">changeImage( int b, int c, int g1, int red, int green, int blue )</function>
     <function specifier="non virtual">setPreviewImage( const QImage &amp; im )</function>
+    <function specifier="static" returnType="SQ_ImageBCG *">instance()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

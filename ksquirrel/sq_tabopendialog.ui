@@ -1,0 +1,104 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>SQ_TabOpenDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_TabOpenDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>341</width>
+            <height>85</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Opening...</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QPushButton" row="0" column="0">
+            <property name="name">
+                <cstring>pushButton1</cstring>
+            </property>
+            <property name="text">
+                <string>Open in a new tab</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="1">
+            <property name="name">
+                <cstring>pushButton2</cstring>
+            </property>
+            <property name="text">
+                <string>Replace current tab</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="1" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>pushButton3</cstring>
+            </property>
+            <property name="text">
+                <string>Close all and open in a new tab</string>
+            </property>
+        </widget>
+        <spacer row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>10</width>
+                    <height>31</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushButton1</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_TabOpenDialog</receiver>
+        <slot>slotPush1()</slot>
+    </connection>
+    <connection>
+        <sender>pushButton2</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_TabOpenDialog</receiver>
+        <slot>slotPush2()</slot>
+    </connection>
+    <connection>
+        <sender>pushButton3</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_TabOpenDialog</receiver>
+        <slot>slotPush3()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">sq_tabopendialog.ui.h</include>
+</includes>
+<variables>
+    <variable access="private">int res;</variable>
+</variables>
+<slots>
+    <slot access="private" specifier="non virtual">slotPush1()</slot>
+    <slot access="private" specifier="non virtual">slotPush2()</slot>
+    <slot access="private" specifier="non virtual">slotPush3()</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function specifier="non virtual" returnType="int">result()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

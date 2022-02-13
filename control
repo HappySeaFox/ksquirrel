@@ -1,0 +1,9 @@
+Package: ksquirrel-libs
+Priority: extra
+Section: checkinstall
+Installed-Size: 3236
+Maintainer: ksquirrel@mail.ru
+Architecture: i386
+Version: 0.7.3-1etch
+Depends: liblcms1, libjpeg62, libopenexr2c2a, libmng1, libpng12-0, transfig, netpbm, djvulibre-bin, libfreetype6, libjasper-1.701-1, libtiff4, libungif4g, libwmf0.2-7, librsvg2-bin, medcon, zlib1g
+Description: Set of image codecs for KSquirrel

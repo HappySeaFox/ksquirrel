@@ -49,7 +49,12 @@
 SQ_SplashScreen * SQ_SplashScreen::m_inst = 0;
 
 SQ_SplashScreen::SQ_SplashScreen(QWidget * parent, const char *name) 
-    : QWidget(parent, name, Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WStyle_StaysOnTop | Qt::WDestructiveClose)
+    : QWidget(parent, name,
+                        Qt::WStyle_Customize |
+                        Qt::WStyle_NoBorder |
+                        Qt::WStyle_StaysOnTop |
+                        Qt::WDestructiveClose |
+                        Qt::WX11BypassWM)
 {
     kdDebug() << "+SQ_SplashScreen" << endl;
 
@@ -61,7 +66,9 @@ SQ_SplashScreen::SQ_SplashScreen(QWidget * parent, const char *name)
 
     QRect rc = KGlobalSettings::splashScreenDesktopGeometry();
 
-    setGeometry(rc.center().x() - pix.width()/2, rc.center().y() - pix.height()/2, pix.width(), pix.height());
+    move(rc.center().x() - pix.width()/2, rc.center().y() - pix.height()/2);
+    setFixedWidth(pix.width());
+    setFixedHeight(pix.height());
 
     pr = new SQ_Progress(this);
     pr->setGeometry(201, 255, 162, 14);

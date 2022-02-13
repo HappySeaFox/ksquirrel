@@ -58,11 +58,8 @@ bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const 
 #ifdef SQ_HAVE_KEXIF
     if(!wm.isIdentity())
     {
-//        printf("NORMALIZE1 %d,%d %dx%d\n", sx, sy, sw, sh);
         int ax = -w/2 + sx;
         int ay = h/2  - sy;
-
-//        printf("NORMALIZE2 %d,%d %dx%d\n", ax, ay, sw, sh);
 
         QPointArray pa(4), pb;
 
@@ -72,12 +69,7 @@ bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const 
         pa.setPoint(3, ax,    ay);
 
         pb = wm.map(pa);
-/*
-        printf("P %d,%d\n", pb.point(0).x(), pb.point(0).y());
-        printf("P %d,%d\n", pb.point(1).x(), pb.point(1).y());
-        printf("P %d,%d\n", pb.point(2).x(), pb.point(2).y());
-        printf("P %d,%d\n", pb.point(3).x(), pb.point(3).y());
-*/
+
         int fx, fy, fx2, fy2;
         fx = std::min(std::min(pb.point(0).x(), pb.point(1).x()), std::min(pb.point(2).x(), pb.point(3).x()));
         fy = std::max(std::max(pb.point(0).y(), pb.point(1).y()), std::max(pb.point(2).y(), pb.point(3).y()));
@@ -85,19 +77,13 @@ bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const 
         fx2 = std::max(std::max(pb.point(0).x(), pb.point(1).x()), std::max(pb.point(2).x(), pb.point(3).x()));
         fy2 = std::min(std::min(pb.point(0).y(), pb.point(1).y()), std::min(pb.point(2).y(), pb.point(3).y()));
 
-//        printf("FF %d %d %d %d\n", fx, fy, fx2, fy2);
-
         sx = fx;
         sy = fy;
         sw = fx2 - fx;
         sh = fy - fy2;
 
-//        printf("RECT %d,%d %dx%d\n", sx, sy, sw, sh);
-
         sx += w/2;
         sy = h/2-sy;
-
-//        printf("*** SEL %d,%d %dx%d\n", sx, sy, sw, sh);
     }
 #endif
 

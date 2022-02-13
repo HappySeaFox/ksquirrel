@@ -67,12 +67,17 @@ void SQ_Options::init()
     kconf->setGroup("GL view");
 
     QPixmap p1;
-    checkStatus->setChecked(kconf->readBoolEntry("hide_sbar", true));    
-    checkToolbar->setChecked(kconf->readBoolEntry("hide_toolbar", true));    
     checkProgress->setChecked(kconf->readBoolEntry("progressiv", true));
     checkDrawQuads->setChecked(kconf->readBoolEntry("alpha_bkgr", true));
     checkMarks->setChecked(kconf->readBoolEntry("marks", true));    
 
+    // tabs
+    checkTabs->setChecked(kconf->readBoolEntry("tabs", false));    
+    checkTabAsk->setChecked(kconf->readBoolEntry("tabs_ask", false));    
+    checkTabClose->setChecked(kconf->readBoolEntry("tabs_close", true));    
+
+    tp = kconf->readNumEntry("double_click", 0);
+    buttonGroupDC->setButton(tp);
     tp = kconf->readNumEntry("load_pages", 0);
     buttonGroupPages->setButton(tp);
     pagesNumber->setEnabled(tp == 2);
@@ -117,7 +122,10 @@ void SQ_Options::init()
     checkMountFS->setChecked(kconf->readBoolEntry("mount_fstype", true));
     color.setNamedColor(kconf->readEntry("preview_background", "#4e4e4e"));
     previewColor->setColor(color);
+    color.setNamedColor(kconf->readEntry("preview_text", "#ffffff"));
+    previewTextColor->setColor(color);
     preview->setChecked(kconf->readBoolEntry("preview", true));
+    checkPreviewText->setChecked(kconf->readBoolEntry("preview_text_enable", true));
     previewDont->setChecked(kconf->readBoolEntry("preview_dont", true));
     previewDelay->setRange(50, 2000, 50, true);
     previewDelay->setValue(kconf->readNumEntry("preview_delay", 400));
@@ -208,6 +216,7 @@ int SQ_Options::start()
         kconf->writeEntry("rows", spinRows->value());
 
         kconf->setGroup("GL view");
+        kconf->writeEntry("double_click", buttonGroupDC->selectedId());
         kconf->writeEntry("load_pages", buttonGroupPages->selectedId());
         kconf->writeEntry("load_pages_number", pagesNumber->value());
         kconf->writeEntry("GL view background", kColorGLbackground->color().name());
@@ -216,8 +225,6 @@ int SQ_Options::start()
         kconf->writeEntry("zoom limit", buttonGroupZoomLimit->selectedId());
         kconf->writeEntry("alpha_bkgr", checkDrawQuads->isChecked());
         kconf->writeEntry("marks", checkMarks->isChecked());
-        kconf->writeEntry("hide_sbar", checkStatus->isChecked());
-        kconf->writeEntry("hide_toolbar", checkToolbar->isChecked());
         kconf->writeEntry("progressiv", checkProgress->isChecked());
         kconf->writeEntry("scroll", buttonGroupScrolling->selectedId());
         kconf->writeEntry("angle", sliderAngle->value());
@@ -225,6 +232,9 @@ int SQ_Options::start()
         kconf->writeEntry("zoom_min", spinZoomMin->value());
         kconf->writeEntry("zoom_max", spinZoomMax->value());
         kconf->writeEntry("move", sliderMove->value());
+        kconf->writeEntry("tabs", checkTabs->isChecked());
+        kconf->writeEntry("tabs_ask", checkTabAsk->isChecked());
+        kconf->writeEntry("tabs_close", checkTabClose->isChecked());
 
         kconf->setGroup("Sidebar");
         kconf->writeEntry("recursion_type", buttonGroupRecurs->selectedId());
@@ -232,6 +242,8 @@ int SQ_Options::start()
         kconf->writeEntry("mount_options", checkMountOptions->isChecked());
         kconf->writeEntry("mount_fstype", checkMountFS->isChecked());
         kconf->writeEntry("preview_background", previewColor->color().name());
+        kconf->writeEntry("preview_text", previewTextColor->color().name());
+        kconf->writeEntry("preview_text_enable", checkPreviewText->isChecked());
         kconf->writeEntry("preview_delay", previewDelay->value());
         kconf->writeEntry("preview_dont", previewDont->isChecked());
         kconf->writeEntry("preview", preview->isChecked());

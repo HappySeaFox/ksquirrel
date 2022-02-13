@@ -29,6 +29,7 @@ class SQ_LibraryHandler;
 class SQ_Config;
 
 class KStatusBar;
+class KTabBar;
 
 class QLabel;
 
@@ -76,6 +77,19 @@ class SQ_GLView : public QVBox
         SQ_GLView(QWidget *parent = 0);
         ~SQ_GLView();
 
+        void leftTab();
+        void rightTab();
+
+        void addPage(const QString &label);
+
+        void removePage(int);
+        void removeTabs();
+        void setupTabbar();
+
+        bool tabs() const;
+        bool tabsClose() const;
+
+
         /*
          *  Save current position and size to config
          */
@@ -93,10 +107,14 @@ class SQ_GLView : public QVBox
         KStatusBar* statusbar();
 
 
+        KTabBar* tabbar();
+
         /*
          *  Get a poniter to toolbar with actions (next file, zoom, rotate...)
          */ 
         SQ_ToolBar* toolbar();
+
+        QWidget* boxBar();
 
         /*
          *  Get a pointer to a widget in statusbar by name.
@@ -104,6 +122,9 @@ class SQ_GLView : public QVBox
         QLabel* sbarWidget(const QString &name) const;
 
         static SQ_GLView* window() { return m_instance; }
+
+    private slots:
+        void slotTabCountChanged();
 
     protected:
 
@@ -128,6 +149,9 @@ class SQ_GLView : public QVBox
         KStatusBar              *sbar;
         QMap<QString, QLabel* > names;
         SQ_ToolBar              *m_toolbar;
+        KTabBar                 *m_tabbar;
+        bool                    m_tabs, m_tabsclose;
+        QVBox                   *box;
 
         static SQ_GLView *m_instance;
 };
@@ -136,6 +160,12 @@ inline
 SQ_ToolBar* SQ_GLView::toolbar()
 {
     return m_toolbar;
+}
+
+inline
+KTabBar* SQ_GLView::tabbar()
+{
+    return m_tabbar;
 }
 
 inline
@@ -148,6 +178,24 @@ inline
 QLabel* SQ_GLView::sbarWidget(const QString &name) const
 {
     return names[name];
+}
+
+inline
+bool SQ_GLView::tabs() const
+{
+    return m_tabs;
+}
+
+inline
+bool SQ_GLView::tabsClose() const
+{
+    return m_tabsclose;
+}
+
+inline
+QWidget* SQ_GLView::boxBar()
+{
+    return box;
 }
 
 #endif

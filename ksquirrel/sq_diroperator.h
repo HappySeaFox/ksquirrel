@@ -57,6 +57,8 @@ class SQ_DirOperator : public KDirOperator
 
         ~SQ_DirOperator();
 
+        void stopThumbnailUpdate();
+
         void enableThumbnailActions(bool enable);
 
         void fireDiskSize(const KURL &url);
@@ -150,8 +152,6 @@ class SQ_DirOperator : public KDirOperator
     public slots:
         void urlAdded(const KURL &);
         void urlRemoved(const KURL &);
-
-        void stopThumbnailUpdate();
 
         /*
          *  Invoked, when current directory has been loaded.

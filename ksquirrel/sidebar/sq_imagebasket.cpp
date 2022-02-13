@@ -24,7 +24,7 @@
 #include <kpopupmenu.h>
 #include <kfileiconview.h>
 #include <kpropertiesdialog.h>
-#include <kio/job.h>
+#include <kio/netaccess.h>
 #include <kapplication.h>
 #include <kmimetype.h>
 
@@ -219,33 +219,16 @@ void SQ_ImageBasket::slotSync()
     {
         KFileItem *item = 0;
         KURL path;
-        KIO::Job *j;
+        KIO::UDSEntry entry;
 
         for((item = fileView->firstFileItem()); item; item = fileView->nextItem(item))
         {
             path = SQ_StorageFile::readStorageFile(item->url().path());
 
-            j = KIO::stat(path, false);
-            connect(j, SIGNAL(result(KIO::Job *)), this, SLOT(slotStatResult(KIO::Job *)));
-
-            m_stat = false;
-            m_exist = true;
-
-            while(!m_stat)
-                kapp->processOneEvent();
-
-            if(!m_exist)
+            if(!KIO::NetAccess::stat(path, entry, KSquirrel::app()))
                 QFile::remove(item->url().path());
         }
     }
-}
-
-void SQ_ImageBasket::slotStatResult(KIO::Job *job)
-{
-    if(job->error())
-        m_exist = false;
-
-    m_stat = true;
 }
 
 void SQ_ImageBasket::slotViewChanged(KFileView *v)

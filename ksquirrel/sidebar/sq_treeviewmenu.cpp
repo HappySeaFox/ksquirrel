@@ -108,7 +108,7 @@ void SQ_TreeViewMenu::slotDirectoryDelete()
         QString dir = QStyleSheet::escape(m_url.path());
 
         if(KMessageBox::questionYesNo(KSquirrel::app(),
-            "<qt>" + i18n("Are you sure you want to delete <b>%1</b> ?").arg(dir) + "</qt>") == KMessageBox::No)
+            "<qt>" + i18n("Are you sure you want to delete <b>%1</b>?").arg(dir) + "</qt>") == KMessageBox::No)
             return;
 
         KIO::Job *job = KIO::del(m_url);
@@ -124,7 +124,7 @@ void SQ_TreeViewMenu::slotDirectoryClear()
         urlstodel.clear();
 
         if(KMessageBox::questionYesNo(KSquirrel::app(),
-            "<qt>" + i18n("Are you sure you want to delete contents of <b>%1</b> ?").arg(m_url.path()) + "</qt>") == KMessageBox::No)
+            "<qt>" + i18n("Are you sure you want to delete contents of <b>%1</b>?").arg(m_url.path()) + "</qt>") == KMessageBox::No)
             return;
 
         KIO::Job *job = KIO::listDir(m_url, false, true);

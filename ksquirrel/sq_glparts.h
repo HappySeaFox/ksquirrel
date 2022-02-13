@@ -20,11 +20,17 @@
 
 #include <qgl.h>
 
+#include <qwmatrix.h>
+#include <qrect.h>
+
+#include <kurl.h>
+
 #include <vector>
 
 #include <ksquirrel-libs/fmt_defs.h>
 
-struct RGBA;
+struct SQ_LIBRARY;
+class fmt_codec_base;
 
 class memoryPart
 {
@@ -100,5 +106,46 @@ void Parts::deleteBuffer()
     buffer = 0;
 }
 
+/* *************************************************************** */
+
+struct Tab
+{
+    Tab();
+    ~Tab();
+
+    void nullMatrix();
+    void empty();
+    void clearParts();
+    void removeParts();
+    void remakeParts();
+
+    GLfloat             matrix[12];
+    GLfloat             curangle;
+
+    KURL                m_original;
+    QString             File, m_File, quickImageInfo;
+    QString             fmt_ext;
+
+    QWMatrix            wm;
+    QRect               srect;
+
+    int                 orient;
+    int                 current;
+    int                 fmt_size;
+    int                 total;
+    int                 glselection;
+    int                 sx, sy, sw, sh;
+
+    bool                rotate;
+    bool                manualBlocked;
+    bool                isflippedV, isflippedH;
+    bool                broken;
+
+    std::vector<Parts>  parts;
+    fmt_info            finfo;
+
+    SQ_LIBRARY          *lib;
+    fmt_codec_base      *codeK;
+};
 
 #endif

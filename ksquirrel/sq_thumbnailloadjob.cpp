@@ -62,6 +62,8 @@ SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList &items, SQ_FileThum
     mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::Desktop, SQ_ThumbnailSize::smallest());
     mItems = items;
 
+    donothing = false;
+
     dir = new SQ_DirThumbs;
 }
 
@@ -74,7 +76,7 @@ void SQ_ThumbnailLoadJob::start()
 {
     if(mItems.isEmpty())
     {
-        emit result(this);
+        emit done();
         delete this;
         return;
     }
@@ -155,6 +157,9 @@ void SQ_ThumbnailLoadJob::nextFile(bool b)
 
 void SQ_ThumbnailLoadJob::determineNextIcon()
 {
+    if(donothing)
+        return;
+
     KFileItem *item = 0;
     SQ_FileThumbViewItem *tfi;
 
@@ -164,7 +169,7 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
 
         if(!item)
         {
-            emit result(this);
+            emit done();
             delete this;
             return;
         }
@@ -186,7 +191,7 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
 
     if(mItems.isEmpty() || !item)
     {
-        emit result(this);
+        emit done();
         delete this;
         return;
     }
@@ -197,7 +202,10 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
         mCurrentURL = mCurrentItem->url();
         mItems.removeFirst();
 
-        addSubjob(KIO::stat(mCurrentItem->url(), false));
+        KIO::StatJob *job = KIO::stat(mCurrentItem->url(), false);
+        job->setSide(true);
+        job->setDetails(0);
+        addSubjob(job);
     }
 }
 
@@ -455,6 +463,13 @@ void SQ_ThumbnailLoadJob::prependItems(const KFileItemList &items)
         for(item = m_items->last();item;item = m_items->prev())
             mItems.prepend(item);
     }
+}
+
+void SQ_ThumbnailLoadJob::kill(bool q)
+{
+    donothing = true;
+
+    KIO::Job::kill(q);
 }
 
 #include "sq_thumbnailloadjob.moc"

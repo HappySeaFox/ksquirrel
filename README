@@ -20,7 +20,7 @@ Having become dissapointed, I've decided to write the image viewer with the flex
 architecture. Birthday for KSquirrel - on December 10, 2003. 
 
 KSquirrel is the first viewer for KDE widely supporting such a quantity of image formats,
-including Photoshop PSD, X cursors, animated GIF, FLI Animation, WMF, SVG, TTF, MNG ...
+including Photoshop PSD, X cursors, animated GIF, FLI Animation, WMF, SVG, TTF, APNG, MNG ...
 
 The detailed information, format of libraries with examples and screenshots you can find
 visiting page http://ksquirrel.sourceforge.net/
@@ -31,8 +31,8 @@ Notes
 -----
 
 * OpenGL drivers are required to run KSquirrel successfully
-* To let KSquirrel unpack RAR archives please install "unrar"
-  program
+* To let KSquirrel unpack RAR archives please install kio_rar
+* To let KSquirrel unpack 7Z  archives please install kio_p7zip
 
 ***********************************************************************************
 
@@ -109,8 +109,8 @@ zoom_plus                     zoom plus                 wrapper for +
 New parameters since 0.6.0-pre8:
 --------------------------------
 
-- load specified image
-# dcop ksquirrel ksquirrel load_image <path_to_file>
+- load specified image/directory
+# dcop ksquirrel ksquirrel load <path_to_file_or_directory>
 
 - activate window
 # dcop ksquirrel ksquirrel activate

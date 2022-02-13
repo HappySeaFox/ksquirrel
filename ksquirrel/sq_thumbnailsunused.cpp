@@ -38,16 +38,10 @@ SQ_ThumbnailsUnused::~SQ_ThumbnailsUnused()
 
 bool SQ_ThumbnailsUnused::needUpdate(const KURL &u, time_t t)
 {
-//    printf("TU SIZE %d\n", size());
     iterator it = find(u);
 
     if(it == end())
-    {
-//        printf("TU NOTFOUND %s\n", u.url().ascii());
         return true;
-    }
-
-//    printf("TU COMPARE %s\n", (it.data() != t)?"!=":"=");
 
     return it.data() != t;
 }
@@ -75,8 +69,6 @@ void SQ_ThumbnailsUnused::load()
 
         insert(KURL::fromPathOrURL(s), t);
     }
-
-//    printf("TU LOADED %d\n", size());
 }
 
 void SQ_ThumbnailsUnused::save()

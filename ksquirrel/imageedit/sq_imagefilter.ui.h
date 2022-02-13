@@ -6,8 +6,13 @@
 ** init() function in place of a constructor, and a destroy() function in
 ** place of a destructor.
 *****************************************************************************/
+
+SQ_ImageFilter * SQ_ImageFilter::m_inst = 0;
+
 void SQ_ImageFilter::init()
 {
+    m_inst = this;
+
     // restore NumInputs...
     const double sigmaMax = 99.9, sigmaMin = 0.01;
     const double radiusMax = 99.9, radiusMin = 0.01;
@@ -597,4 +602,9 @@ void SQ_ImageFilter::hackConnect()
     connect( swirlAngle, SIGNAL( valueChanged(double) ), this, SLOT( swirl() ) );
     connect( thresholdValue, SIGNAL( valueChanged(int) ), this, SLOT( threshold() ) );
     connect( thresholdRE, SIGNAL( valueChanged(int) ), this, SLOT( redeye() ) );
+}
+
+SQ_ImageFilter* SQ_ImageFilter::instance()
+{
+    return m_inst;
 }

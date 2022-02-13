@@ -7,8 +7,12 @@
 ** place of a destructor.
 *****************************************************************************/
 
+SQ_ImageBCG * SQ_ImageBCG::m_inst = 0;
+
 void SQ_ImageBCG::init()
 {
+    m_inst = this;
+
     QPixmap p = QPixmap::fromMimeSource(locate("appdata", "images/imageedit/reset_value.png"));
 
     sQ_LabelB->setSingle(true);
@@ -227,4 +231,11 @@ void SQ_ImageBCG::setPreviewImage(const QImage &im)
     p.convertFromImage(sample_saved);
     pixmap->setPixmap(p);
     pixmap1->setPixmap(p);
+
+    changeImage(sliderB->value(), sliderC->value(), sliderG->value(), sliderRed->value(), sliderGreen->value(), sliderBlue->value());
+}
+
+SQ_ImageBCG* SQ_ImageBCG::instance()
+{
+    return m_inst;
 }

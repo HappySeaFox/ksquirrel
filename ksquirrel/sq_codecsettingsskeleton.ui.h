@@ -25,7 +25,7 @@ void SQ_CodecSettingsSkeleton::addSettingsWidget(const QString &path)
 		pushApply->setEnabled(false);
 		pushOK->setEnabled(false);
 
-		QTextEdit *t = new QTextEdit(i18n("Error loading widget from <b>%1</b>. Please check your installation or contact <a href=\"mailto:ksquirrel@tut.by\">ksquirrel@tut.by</a>").arg(path), QString::null, groupBox);		
+		QTextEdit *t = new QTextEdit(i18n("Error loading widget from <b>%1</b>. Please check your installation or contact <a href=\"mailto:ksquirrel@mail.ru\">ksquirrel@mail.ru</a>").arg(path), QString::null, groupBox);		
 		t->setReadOnly(true);
 		fake = t;
 	}

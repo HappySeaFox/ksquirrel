@@ -865,7 +865,7 @@ bcheck-am:
 
 
 #>+ 2
-KDE_DIST=stamp-h.in description-pak subdirs configure.in.bot Makefile.in configure.files config.h.in reconfigure configure.in configure.gnu builddeb aclocal.m4 Makefile.dist ksquirrel.kdevses Doxyfile configure.in.in configure Makefile.am acinclude.m4 LICENSE start 
+KDE_DIST=description-pak configure.in.bot configure.files reconfigure configure.gnu builddeb aclocal.m4 Makefile.dist ksquirrel.kdevses Doxyfile configure.in.in start stamp-h.in subdirs Makefile.in config.h.in control configure.in acinclude.m4 Makefile.am configure LICENSE 
 
 #>+ 2
 docs-am:

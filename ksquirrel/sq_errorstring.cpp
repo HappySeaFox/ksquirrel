@@ -31,12 +31,12 @@ SQ_ErrorString::SQ_ErrorString(QObject *parent) : QObject(parent)
 
     // fill map with translated messages
     messages.insert(SQE_OK,             QString::fromLatin1("OK"));
-    messages.insert(SQE_R_NOFILE,       i18n("can't open file for reading"));
+    messages.insert(SQE_R_NOFILE,       i18n("cannot open file for reading"));
     messages.insert(SQE_R_BADFILE,      i18n("file corrupted"));
     messages.insert(SQE_R_NOMEMORY,     i18n("no memory"));
     messages.insert(SQE_R_NOTSUPPORTED, i18n("file type not supported"));
     messages.insert(SQE_R_WRONGDIM,     i18n("wrong image dimensions"));
-    messages.insert(SQE_W_NOFILE,       i18n("can't open file for writing"));
+    messages.insert(SQE_W_NOFILE,       i18n("cannot open file for writing"));
     messages.insert(SQE_W_NOTSUPPORTED, i18n("write feature is not supported"));
     messages.insert(SQE_W_ERROR,        i18n("write error (check free space)"));
     messages.insert(SQE_W_WRONGPARAMS,  i18n("wrong parameters"));

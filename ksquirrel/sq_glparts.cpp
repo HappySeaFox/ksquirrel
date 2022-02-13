@@ -16,6 +16,9 @@
  ***************************************************************************/
 
 #include "sq_glparts.h"
+#include "sq_library.h"
+
+#include <ksquirrel-libs/fmt_codec_base.h>
 
 /* ***************************************************************************************** */
 
@@ -124,4 +127,90 @@ void Parts::computeCoords()
 
         Y -= tilesy[y];
     }
+}
+
+/* ***************************************************************************************** */
+
+Tab::Tab()
+{
+    empty();
+}
+
+Tab::~Tab()
+{}
+
+void Tab::clearParts()
+{
+    if(broken) return;
+
+    std::vector<Parts>::iterator itEnd = parts.end();
+
+    for(std::vector<Parts>::iterator it = parts.begin();it != itEnd;++it)
+    {
+        // delete textures and memory buffers
+        (*it).removeParts();
+        (*it).deleteBuffer();
+    }
+
+    parts.clear();
+
+    finfo.image.clear();
+    finfo.meta.clear();
+}
+
+void Tab::removeParts()
+{
+    if(broken) return;
+
+    std::vector<Parts>::iterator itEnd = parts.end();
+
+    for(std::vector<Parts>::iterator it = parts.begin();it != itEnd;++it)
+        (*it).removeParts();
+}
+
+void Tab::remakeParts()
+{
+    if(broken) return;
+
+    std::vector<Parts>::iterator itEnd = parts.end();
+
+    for(std::vector<Parts>::iterator it = parts.begin();it != itEnd;++it)
+    {
+        (*it).makeParts();
+        (*it).computeCoords();
+    }
+}
+
+void Tab::empty()
+{
+    nullMatrix();
+
+    orient = -1;
+    rotate = 0;
+    fmt_size = 0;
+    lib = 0;
+    codeK = 0;
+    current = 0;
+    curangle = 0;
+    total = 0;
+    sx = sy = sw = sh = 0;
+
+    glselection = -1;
+    srect = QRect();
+
+    manualBlocked = false;
+    isflippedV = isflippedH = false;
+    broken = false;
+
+    m_original = KURL();
+    File = QString::null;
+    m_File = QString::null;
+    quickImageInfo = QString::null;
+    fmt_ext = QString::null;
+}
+
+void Tab::nullMatrix()
+{
+    for(int i = 0;i < 12;i++)
+        matrix[i] = (GLfloat)(i % 5 == 0);
 }

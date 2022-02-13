@@ -70,7 +70,7 @@ void SQ_Converter::slotStartEdit()
     }
     else if(!items->first()->url().isLocalFile())
     {
-        KMessageBox::information(KSquirrel::app(), i18n("Converter cann't work with non-local files.\nSorry."));
+        KMessageBox::information(KSquirrel::app(), i18n("Converter cannot work with non-local files.\nSorry"));
         return;
     }
 
@@ -163,12 +163,13 @@ void SQ_Converter::decodingCycle()
 
     tempfile->close();
 
-    QValueList<QString>::iterator last_it = files.fromLast();
+    QStringList::iterator last_it = files.fromLast();
+    QStringList::iterator itEnd = files.end();
     convert->startConvertion(files.count());
 
     putto = imageopt.putto;
 
-    for(QValueList<QString>::iterator it = files.begin();it != files.end();++it)
+    for(QStringList::iterator it = files.begin();it != itEnd;++it)
     {
         currentFile = *it;
         last = (it == last_it);

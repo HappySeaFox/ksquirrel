@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Codecs Information and Settings</string>
+        <string>Codecs information and settings</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>
@@ -94,7 +94,7 @@
             </column>
             <column>
                 <property name="text">
-                    <string>R</string>
+                    <string></string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
@@ -105,7 +105,7 @@
             </column>
             <column>
                 <property name="text">
-                    <string>W</string>
+                    <string></string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>

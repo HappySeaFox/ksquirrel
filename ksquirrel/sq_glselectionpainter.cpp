@@ -107,3 +107,9 @@ void SQ_GLSelectionPainter::end()
 
     m_valid = false;
 }
+
+void SQ_GLSelectionPainter::setVisible(bool vis)
+{
+    if(m_valid)
+        selection->setShown(vis);
+}
