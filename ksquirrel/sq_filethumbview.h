@@ -18,18 +18,17 @@
 #ifndef SQ_FILETHUMBVIEW_H
 #define SQ_FILETHUMBVIEW_H
 
-#include "sq_fileiconviewbase.h"
-
 #include <qguardedptr.h>
-#include <qmap.h>
+#include <qsize.h>
 
+#include "sq_fileiconviewbase.h"
 #include "sq_thumbnailinfo.h"
 
 class QHBox;
 class QToolButton;
 class QTimer;
 
-class SQ_Progress;
+class SQ_ProgressBox;
 class SQ_ThumbnailLoadJob;
 class SQ_FileThumbViewItem;
 
@@ -53,6 +52,8 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          */
         KFileIconViewItem* viewItem(const KFileItem *item);
 
+        void rebuildCachedPixmaps();
+
         /*
          *  Reimplement insertItem() to enable/disable inserting
          *  directories (depends on current settings) and inserting thumbnails.
@@ -68,7 +69,8 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          *  Internal.
          */
         virtual void updateView(const KFileItem *i);
-        virtual void updateView(bool b);
+        virtual void updateView(bool)
+        {}
 
         /*
          *  Clear current view and insert "..".
@@ -86,11 +88,6 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         void doStartThumbnailUpdate(const KFileItemList* list);
 
         /*
-         *  Don't start thumbnail job until thumbnail view is hidden.
-         */
-        void waitForShowEvent();
-
-        /*
          *  Is thumbnail job running ?
          */
         bool updateRunning() const;
@@ -100,6 +97,8 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          */
         virtual void insertCdUpItem(const KURL &base);
 
+        SQ_ProgressBox* progressBox() const;
+
     protected:
         /*
          *  For tooltip support.
@@ -107,16 +106,16 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         virtual bool eventFilter(QObject *o, QEvent *e);
         virtual void hideEvent(QHideEvent *);
 
-        /*
-         *  Show event! Let's start thumbnail job, if needed.
-         */
-        virtual void showEvent(QShowEvent *);
-
     private:
         /*
          *  Internal. Set item's sorting key.
          */
         void initItem(KFileIconViewItem *item, const KFileItem *i);
+
+        /*
+         *  rebuild "pending" thumbnail for supported items
+         */
+        void rebuildPendingPixmap(bool dir = false);
 
     public slots:
         /*
@@ -158,13 +157,7 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         /*
          *  Layout box with progress bar and "stop" button.
          */
-        QHBox    *progressBox;
-
-        /*
-         *  Progress bar. It uses QPainter to draw progress line,
-         *  which is MUCH faster, than using QProgressBar.
-         */
-        SQ_Progress    *progress;
+        SQ_ProgressBox    *m_progressBox;
 
         /*
          *  "Stop" button.
@@ -175,9 +168,9 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         QGuardedPtr<SQ_ThumbnailLoadJob> thumbJob;
 
         /*
-         *  "Pending" thumbnails.
+         *  "Pending" thumbnail.
          */
-        QMap<QString, QPixmap> pending;
+        QPixmap pending;
 
         /*
          *  Tooltip for thumbnail item.
@@ -187,20 +180,14 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         SQ_FileThumbViewItem    *tooltipFor;
         QTimer     *timer;
 
-        /*
-         *  Thumbnail job won't start until isPending
-         *  is false. It means, that thumbnail view currently is hidden.
-         */
-        bool    isPending;
-
-        QPixmap    dirPix;
-        int    pixelSize;
+        QPixmap    directoryCache,  pendingCache;
+        QSize    pixelSize;
 };
 
 inline
-void SQ_FileThumbView::waitForShowEvent()
+SQ_ProgressBox* SQ_FileThumbView::progressBox() const
 {
-    isPending = true;
+    return m_progressBox;
 }
 
 #endif

@@ -22,6 +22,10 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qdir.h>
 #include <qimage.h>
 #include <qpainter.h>
@@ -41,9 +45,9 @@
 #include "sq_thumbnailsize.h"
 #include "sq_imageloader.h"
 
-#include <csetjmp>
+#include "libpixops/pixops.h"
 
-#include "fmt_defs.h"
+#include <ksquirrel-libs/fmt_defs.h>
 
 #include <string>
 
@@ -51,7 +55,7 @@ static const QString thumbFormat = "PNG";
 
 SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList *items) : KIO::Job(false)
 {
-    mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::NoGroup, SQ_ThumbnailSize::instance()->pixelSize());
+    mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::Desktop, 48);
     mBrokenThumbnail.info.dimensions = mBrokenThumbnail.info.bpp = QString("0");
     mItems = *items;
 
@@ -68,7 +72,7 @@ SQ_ThumbnailLoadJob::~SQ_ThumbnailLoadJob()
 
 void SQ_ThumbnailLoadJob::start()
 {
-    if (mItems.isEmpty())
+    if(mItems.isEmpty())
     {
         emit result(this);
         delete this;
@@ -108,12 +112,15 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
 
         SQ_WidgetStack::instance()->thumbnailProcess();
 
-        if(item->isDir())
+        if(item->isDir() || !item->isReadable())
             mItems.removeFirst();
         else if(SQ_LibraryHandler::instance()->supports(item->url().path()))
             break;
         else
+        {
+//            printf("Determine passoff\n");
             mItems.removeFirst();
+        }
     }
 
     if(mItems.isEmpty())
@@ -136,11 +143,11 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job * job)
     subjobs.remove(job);
     Q_ASSERT(subjobs.isEmpty());
 
-    switch (mState)
+    switch(mState)
     {
         case STATE_STATORIG:
         {
-            if (job->error())
+            if(job->error())
             {
                 emitThumbnailLoadingFailed();
                 determineNextIcon();
@@ -160,7 +167,7 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job * job)
                 }
             }
 
-            mThumbURL.setPath(QDir::cleanDirPath(dir->root() + "/" + mCurrentURL.path()));
+            mThumbURL.setPath(QDir::cleanDirPath(dir->root() + QDir::separator() + mCurrentURL.path()));
             mState = STATE_STATTHUMB;
             addSubjob(KIO::stat(mThumbURL, false));
             return;
@@ -194,7 +201,7 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
     QString origPath = mThumbURL.path();
     origPath = QDir::cleanDirPath(origPath.replace(0, dir->root().length(), ""));
 
-    lib = SQ_LibraryHandler::instance()->libraryForFile(origPath);
+    lib = SQ_LibraryHandler::instance()->latestLibrary();//libraryForFile(origPath);
 
     if(!lib)
         return false;
@@ -235,14 +242,14 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
         return false;
     }
 
-    kdDebug() << "Loaded thumbnail " << mThumbURL.path() << endl;
+    kdDebug() << "STAT loaded " << mThumbURL.path() << endl;
 
     th.info.type = th.thumbnail.text("sq_type");
     th.info.dimensions = th.thumbnail.text("sq_dimensions");
     th.info.bpp = th.thumbnail.text("sq_bpp");
     th.info.color = th.thumbnail.text("sq_color");
     th.info.compression = th.thumbnail.text("sq_compression");
-    th.info.frames = th.thumbnail.text("sq_frames");
+    th.info.frames = th.thumbnail.text("sq_frames").toInt();
     th.info.uncompressed = th.thumbnail.text("sq_uncompressed");
     th.info.uncompressed = QString::fromUtf8(th.info.uncompressed.ascii());
 
@@ -270,6 +277,8 @@ void SQ_ThumbnailLoadJob::createThumbnail(const QString& pixPath)
 
     if(loaded)
     {
+        kdDebug() << "CREATE loaded " << pixPath << endl;
+        th.thumbnail = th.thumbnail.swapRGB();
         insertOrSync(pixPath, th);
         emitThumbnailLoaded(th);
     }
@@ -282,11 +291,11 @@ void SQ_ThumbnailLoadJob::insertOrSync(const QString &path, SQ_Thumbnail &th)
     if(!SQ_PixmapCache::instance()->full())
     {
         SQ_PixmapCache::instance()->insert(path, th);
-        kdDebug() << "STAT inserting \"" << path << "\"" << endl;
+        kdDebug() << "IOSYNC inserting \"" << path << "\"" << endl;
     }
     else
     {
-        kdDebug() << "STAT SQ_PixmapCache is full! Cache is ignored!" << endl;
+        kdDebug() << "IOSYNC SQ_PixmapCache is full! Cache is ignored!" << endl;
         SQ_PixmapCache::instance()->syncEntry(path, th);
     }
 }
@@ -297,7 +306,7 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
 
     RGBA *all;
 
-    bool b = SQ_ImageLoader::instance()->loadImage(pixPath);
+    bool b = SQ_ImageLoader::instance()->loadImage(pixPath, true, 2, true);
 
     finfo = SQ_ImageLoader::instance()->info();
     all = SQ_ImageLoader::instance()->bits();
@@ -325,51 +334,54 @@ bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t,
     t.info.type = lib->quickinfo;
     t.info.dimensions = QString::fromLatin1("%1x%2").arg(finfo->image[0].w).arg(finfo->image[0].h);
     t.info.bpp = QString::fromLatin1("%1").arg(finfo->image[0].bpp);
-
-#ifndef QT_NO_STL
-
     t.info.color = finfo->image[0].colorspace;
     t.info.compression = finfo->image[0].compression;
-
-#else
-
-    t.info.color = finfo->image[0].colorspace.c_str();
-    t.info.compression = finfo->image[0].compression.c_str();
-
-#endif
-
-    t.info.frames = QString::fromLatin1("0");
+    t.info.frames = 0;
     t.info.mime = lib->mime;
     t.info.uncompressed = KIO::convertSize(finfo->image[0].w * finfo->image[0].h * sizeof(RGBA));
-    t.info.frames = QString::fromLatin1("%1").arg(finfo->image.size());
-
-    QImage image((unsigned char *)all, finfo->image[0].w, finfo->image[0].h, 32, 0, 0, QImage::LittleEndian);
-    image.setAlphaBuffer(true);
+    t.info.frames = finfo->image.size();
 
     if(processImage)
-        t.thumbnail = SQ_ThumbnailLoadJob::makeBigThumb(&image);
+        t.thumbnail = SQ_ThumbnailLoadJob::scaleImage((unsigned char *)all, finfo->image[0].w,
+                finfo->image[0].h, SQ_ThumbnailSize::biggest());
     else
-        t.thumbnail = image;
+    {
+        QImage image((unsigned char *)all, finfo->image[0].w, finfo->image[0].h, 32, 0, 0, QImage::LittleEndian);
+        image.setAlphaBuffer(true);
+        t.thumbnail = image.copy();
+    }
 
     SQ_ImageLoader::instance()->cleanup();
 
     return true;
 }
 
-QImage SQ_ThumbnailLoadJob::makeBigThumb(QImage *image)
+QImage SQ_ThumbnailLoadJob::scaleImage(unsigned char *im, int w, int h, int fitwithin)
 {
-    const int SZ = SQ_ThumbnailSize::biggest();
+    if(w <= fitwithin && h <= fitwithin)
+    {
+        QImage scaled(im, w, h, 32, 0, 0, QImage::LittleEndian);
+        scaled.setAlphaBuffer(true);
+        return scaled.copy();
+    }
 
-    if(image->width() > SZ || image->height() > SZ)
-        return image->smoothScale(QSize(SZ, SZ), QImage::ScaleMin).swapRGB();
-    else
-        return image->swapRGB();
+    QSize sz(w, h);
+    sz.scale(fitwithin, fitwithin, QSize::ScaleMin);
+    QImage scaled(sz.width(), sz.height(), 32);
+    scaled.setAlphaBuffer(true);
+
+    pixops_scale(scaled.bits(), 0, 0, scaled.width(), scaled.height(), scaled.width() * 4, 4, true,
+                    im, w, h, w * 4, 4, true,
+                    (double)sz.width() / w, (double)sz.height() / h,
+                    PIXOPS_INTERP_BILINEAR);
+
+    return scaled;
 }
 
 void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
 {
     int biggestDimension = QMAX(t.thumbnail.width(), t.thumbnail.height());
-    int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize() - 2;
+    int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize();
 
     if(biggestDimension <= thumbPixelSize)
     {
@@ -377,9 +389,11 @@ void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
         return;
     }
 
-    double scale = double(thumbPixelSize) / double(biggestDimension);
-
-    t.thumbnail = t.thumbnail.smoothScale(int(t.thumbnail.width() * scale), int(t.thumbnail.height() * scale));
+    t.thumbnail = SQ_ThumbnailLoadJob::scaleImage(
+                        t.thumbnail.bits(),
+                        t.thumbnail.width(),
+                        t.thumbnail.height(),
+                        thumbPixelSize);
 
     emit thumbnailLoaded(mCurrentItem, t);
 }

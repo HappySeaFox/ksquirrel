@@ -36,7 +36,7 @@ class SQ_Splitter : public QHBox
         void slotNewX(const int);
 
     private:
-        QWidget *first, *second;
+        QWidget *first;
         SQ_RubberBand *rb;
 };
 

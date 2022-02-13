@@ -18,7 +18,8 @@
 #ifndef SQ_THUMBNAILINFO_H
 #define SQ_THUMBNAILINFO_H
 
-#include <qstringlist.h>
+#include <qstring.h>
+#include <qpixmap.h>
 #include <qimage.h>
 
 /*
@@ -26,8 +27,9 @@
  */
 struct SQ_ThumbInfo
 {
-    QString type, dimensions, bpp, color, compression, frames, uncompressed;
-    QImage mime;
+    QString type, dimensions, bpp, color, compression, uncompressed;
+    int frames;
+    QPixmap mime;
 };
 
 /*

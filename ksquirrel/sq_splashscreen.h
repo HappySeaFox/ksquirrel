@@ -1,3 +1,8 @@
+/*
+ *  (C) Baryshev Dmitry, KSquirrel project.
+ *  Originally based on kstartuplogo.h from KDevelop project
+ */
+
 /***************************************************************************
                           kstartuplogo.h  -  description
                              -------------------
@@ -33,29 +38,23 @@
 #define KSTARTUPLOGO_H
 
 #include <qwidget.h>
-#include <qbitmap.h>
 
-class KProgress;
+class SQ_Progress;
 
 class SQ_SplashScreen : public QWidget
 {
-    Q_OBJECT
-
     public:
         SQ_SplashScreen(QWidget *parent = 0, const char *name = 0);
         ~SQ_SplashScreen();
 
         void advance();
+        void finish();
 
     protected:
         virtual void mousePressEvent(QMouseEvent *);
-        virtual void updateMask();
 
     private:
-        QBitmap bm;
-
-    private:
-        KProgress *pr;
+        SQ_Progress *pr;
 };
 
 #endif

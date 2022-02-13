@@ -1,3 +1,8 @@
+/*
+ *  (C) 2006 Baryshev Dmitry, KSquirrel project.
+ *  Originally based on kstartuplogo.cpp from KDEvelop project
+ */
+
 /***************************************************************************
                            kstartuplogo.cpp  -  description
                              -------------------
@@ -29,33 +34,36 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <kglobalsettings.h>
 #include <kstandarddirs.h>
 #include <kprogress.h>
 #include <kdebug.h>
 
 #include "sq_splashscreen.h"
+#include "sq_progress.h"
 
 SQ_SplashScreen::SQ_SplashScreen(QWidget * parent, const char *name) 
     : QWidget(parent, name, WStyle_NoBorder | WStyle_Customize | WDestructiveClose)
 {
     kdDebug() << "+SQ_SplashScreen" << endl;
 
-    setAutoMask(true);
+    QPixmap pix = QPixmap(locate("appdata", "images/splash.png"));
 
-    QPixmap pix;
-    pix.load(locate("appdata", "images/splash_mask.png"));
     setPaletteBackgroundPixmap(pix);
 
     QRect rc = KGlobalSettings::splashScreenDesktopGeometry();
 
     setGeometry(rc.center().x() - pix.width()/2, rc.center().y() - pix.height()/2, pix.width(), pix.height());
 
-    bm = *pix.mask();
-
-    pr = new KProgress(23, this);
-    pr->setGeometry(20, pix.height()-40, pix.width()-40, 12);
-    pr->setTextEnabled(false);
+    pr = new SQ_Progress(this);
+    pr->setGeometry(201, 255, 162, 14);
+    pr->setShowText(false);
+    pr->setColor(QColor(170,100,110));
+    pr->setTotalSteps(10);
 }
 
 SQ_SplashScreen::~SQ_SplashScreen()
@@ -63,22 +71,17 @@ SQ_SplashScreen::~SQ_SplashScreen()
     kdDebug() << "-SQ_SplashScreen" << endl;
 }
 
+void SQ_SplashScreen::finish()
+{
+    pr->flush();
+}
+
 void SQ_SplashScreen::mousePressEvent(QMouseEvent *)
 {
     hide();
 }
 
-void SQ_SplashScreen::updateMask()
-{
-    if(bm.isNull())
-        return;
-
-    setMask(bm);
-}
-
 void SQ_SplashScreen::advance()
 {
-    pr->advance(1);
+    pr->advance();
 }
-
-#include "sq_splashscreen.moc"

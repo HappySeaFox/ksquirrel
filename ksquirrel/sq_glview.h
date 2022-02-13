@@ -24,14 +24,9 @@
 #include <ktoolbar.h>
 
 class SQ_GLWidget;
-
-#ifdef SQ_SMALL
-
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_Config;
-
-#endif
 
 class KStatusBar;
 
@@ -49,9 +44,6 @@ class SQ_ToolBar : public KToolBar
 
 /*
  *  SQ_GLView represents a widget containing SQ_GLWidget, toolbar and statusbar.
- *
- *  If SQ_SMALL is defined, it becomes the main widget (and class) in 'small' version
- *  of KSquirrel.
  *
  *
  *  + -------------------------------------------------+
@@ -81,10 +73,8 @@ class SQ_GLView : public QVBox
     Q_OBJECT
 
     public: 
-        SQ_GLView(QWidget *parent = 0, const char *name = 0);
+        SQ_GLView(QWidget *parent = 0);
         ~SQ_GLView();
-
-#ifndef SQ_SMALL
 
         /*
          *  Is this widget separate ?
@@ -99,8 +89,6 @@ class SQ_GLView : public QVBox
         void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
 
         void statusBarLikeGQview(bool b);
-
-#endif
 
         /*
          *  Save current position and size to config
@@ -147,41 +135,11 @@ class SQ_GLView : public QVBox
          */
         void createContent();
 
-#ifndef SQ_SMALL
-
         virtual bool eventFilter(QObject *watched, QEvent *e);
 
-#endif
-
-    public slots:
-        /*
-         *  Goto fullscreen. If current version is NOT
-         *  'small', fullscreen state will be managed by KSquirrel.
-         */
-        void slotFullScreen(bool full);
-
-    private slots:
-        /*
-         *  All libraries now loaded.
-         */
-        void slotContinueLoading();
-
-#ifdef SQ_SMALL
-
     private:
-        SQ_LibraryListener *libl;
-        SQ_LibraryHandler  *libh;
-        SQ_Config          *kconf;
-
-#endif
-
-    private:
-
-#ifndef SQ_SMALL
 
         bool separate;
-
-#endif
         SQ_GLWidget             *gl;
         KStatusBar              *sbar;
         QMap<QString, QLabel* > names;
@@ -208,14 +166,10 @@ QLabel* SQ_GLView::sbarWidget(const QString &name) const
     return names[name];
 }
 
-#ifndef SQ_SMALL
-
 inline
 bool SQ_GLView::isSeparate() const
 {
     return separate;
 }
-
-#endif
 
 #endif

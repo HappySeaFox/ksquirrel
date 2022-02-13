@@ -19,24 +19,31 @@
 #define SQ_LIBRARY_HANDLER_H
 
 #include <qvaluevector.h>
+#include <qdatetime.h>
+#include <qmap.h>
 #include <qobject.h>
 
 #include "sq_library.h"
 
 class QStringList;
 
+class KConfig;
+
 /*
  *  SQ_LibraryHandler is a library manager. It's the main class
  *  in library loading mechanizm. 
- *
- *  See http://ksquirrel.sf.net/development.php for more.
  */
 
 class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
 {
     public:
-        SQ_LibraryHandler(QObject *parent, QStringList *foundLibraries = 0);
+        SQ_LibraryHandler(QObject *parent);
         ~SQ_LibraryHandler();
+
+        /*
+        *  Reload libraries from disk
+        */
+        void reload();
 
         /*
          *  Find appropriate SQ_LIBRARY by filename. If
@@ -90,6 +97,13 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
         QString allFiltersString() const;
 
         /*
+         *  Filters as one string suitable for KFileDialogs.
+         *  If r == true, return readable codecs
+         *  If allfiles == true, append *.* to result
+         */
+        QString allFiltersFileDialogString(bool r, bool allfiles = true) const;
+
+        /*
          *  Remove and unload all libraries.
          */
         void clear();
@@ -98,21 +112,6 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
          *  Print some information on found libraries.
          */
         void dump() const;
-
-        /*
-         *  Clear old libraries, and load new.
-         */
-        void reInit(QStringList *foundLibraries);
-
-        /*
-         *  Add new libraries.
-         */
-        void add(QStringList *foundLibraries);
-
-        /*
-         *  Remove given libraries.
-         */
-        void remove(QStringList *foundLibraries);
 
         /*
          *  supports() saves last found library.
@@ -129,16 +128,44 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
 
     private:
 
+        void add(QStringList &foundLibraries);
+
+        /*
+         *  Load libraries from disk.
+         */
+        void load();
         /*
          *  Is library with name 'quick' already been handled ?
          */
         bool alreadyInMap(const QString &quick) const;
+
+        void writeSettings(SQ_LIBRARY *lib);
+        void readSettings(SQ_LIBRARY *lib);
+
+        void debugInfo(const QString &symbol, const QString &path, const QString &lib, int);
 
     private:
         /*
          *  Last found library by libraryForFile().
          */
         SQ_LIBRARY *latest;
+
+        struct LibCacheEntry
+        {
+            LibCacheEntry() : library(0)
+            {}
+
+            LibCacheEntry(const QDateTime &dt, SQ_LIBRARY *l) : modified(dt), library(l)
+            {}
+
+            QDateTime modified;
+            SQ_LIBRARY *library;
+        };
+
+        typedef QMap<QString, LibCacheEntry> LibCache;
+        LibCache cache;
+
+        KConfig *kconf;
 
         static SQ_LibraryHandler *m_instance;
 };

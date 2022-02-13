@@ -2,21 +2,13 @@
 
 SUBDIRS = menu imageedit toolbar like 
 
-EXTRA_DIST = checker.png drag.png usual.png progress.png tray.png thumb_resume.png thumbs_huge.png thumbs_large.png thumbs_medium.png thumbs_small.png thumb_stop.png thumb_pending128.png thumb_pending48.png thumb_pending64.png thumb_pending96.png image_win.png cache_disk_clear.png cache_disk.png cache_mem_clear.png cache_mem.png cache_mem_view.png cache_mem_sync.png anime.png mark_1.png mark_2.png mark_3.png mark_4.png cache_disk_browse.png slideshow.png splash_mask.png 
+EXTRA_DIST = checker.png tray.png thumbs_huge.png thumbs_large.png thumbs_medium.png thumbs_small.png image_win.png cache_disk_clear.png cache_disk.png cache_mem_clear.png cache_mem.png cache_mem_view.png cache_mem_sync.png anime.png mark_1.png mark_2.png mark_3.png mark_4.png cache_disk_browse.png slideshow.png thumb_pending.png splash.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
 	$(INSTALL_DATA) $(srcdir)/checker.png $(kde_datadir)/ksquirrel/images/checker.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/cursors/
-	$(INSTALL_DATA) $(srcdir)/drag.png $(kde_datadir)/ksquirrel/cursors/drag.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/cursors/
-	$(INSTALL_DATA) $(srcdir)/usual.png $(kde_datadir)/ksquirrel/cursors/usual.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
-	$(INSTALL_DATA) $(srcdir)/progress.png $(kde_datadir)/ksquirrel/images/progress.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
 	$(INSTALL_DATA) $(srcdir)/tray.png $(kde_datadir)/ksquirrel/images/tray.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
-	$(INSTALL_DATA) $(srcdir)/thumb_resume.png $(kde_datadir)/ksquirrel/images/thumbs/thumb_resume.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
 	$(INSTALL_DATA) $(srcdir)/thumbs_huge.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_huge.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
@@ -25,16 +17,6 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/thumbs_medium.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_medium.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
 	$(INSTALL_DATA) $(srcdir)/thumbs_small.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_small.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
-	$(INSTALL_DATA) $(srcdir)/thumb_stop.png $(kde_datadir)/ksquirrel/images/thumbs/thumb_stop.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
-	$(INSTALL_DATA) $(srcdir)/thumb_pending128.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending128.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
-	$(INSTALL_DATA) $(srcdir)/thumb_pending48.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending48.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
-	$(INSTALL_DATA) $(srcdir)/thumb_pending64.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending64.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
-	$(INSTALL_DATA) $(srcdir)/thumb_pending96.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending96.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/listbox/
 	$(INSTALL_DATA) $(srcdir)/image_win.png $(kde_datadir)/ksquirrel/images/listbox/image_win.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/cache/
@@ -63,25 +45,18 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/cache_disk_browse.png $(kde_datadir)/ksquirrel/images/cache/cache_disk_browse.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/slideshow.png $(kde_datadir)/ksquirrel/images/actions/slideshow.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/thumbs/
+	$(INSTALL_DATA) $(srcdir)/thumb_pending.png $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/
-	$(INSTALL_DATA) $(srcdir)/splash_mask.png $(kde_datadir)/ksquirrel/images/splash_mask.png
+	$(INSTALL_DATA) $(srcdir)/splash.png $(kde_datadir)/ksquirrel/images/splash.png
 
 uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/checker.png
-	-rm -f $(kde_datadir)/ksquirrel/cursors/drag.png
-	-rm -f $(kde_datadir)/ksquirrel/cursors/usual.png
-	-rm -f $(kde_datadir)/ksquirrel/images/progress.png
 	-rm -f $(kde_datadir)/ksquirrel/images/tray.png
-	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumb_resume.png
 	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_huge.png
 	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_large.png
 	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_medium.png
 	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_small.png
-	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumb_stop.png
-	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending128.png
-	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending48.png
-	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending64.png
-	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending96.png
 	-rm -f $(kde_datadir)/ksquirrel/images/listbox/image_win.png
 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_disk_clear.png
 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_disk.png
@@ -96,6 +71,7 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/marks/mark_4.png
 	-rm -f $(kde_datadir)/ksquirrel/images/cache/cache_disk_browse.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/slideshow.png
-	-rm -f $(kde_datadir)/ksquirrel/images/splash_mask.png
+	-rm -f $(kde_datadir)/ksquirrel/images/thumbs/thumbs_pending.png
+	-rm -f $(kde_datadir)/ksquirrel/images/splash.png
 
 ####### kdevelop will overwrite this part!!! (end)############

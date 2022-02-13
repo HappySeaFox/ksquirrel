@@ -20,12 +20,14 @@
 
 #include <qstring.h>
 #include <qregexp.h>
-#include <qimage.h>
+#include <qpixmap.h>
 
-#include "fmt_types.h"
-#include "fmt_defs.h"
+#include <ksquirrel-libs/fmt_defs.h>
+#include <ksquirrel-libs/settings.h>
 
 class QLibrary;
+
+class KTempFile;
 
 class fmt_codec_base;
 
@@ -39,49 +41,53 @@ class fmt_codec_base;
 
 struct SQ_LIBRARY
 {
-    SQ_LIBRARY() : lib(0), codec(0)
+    SQ_LIBRARY() : lib(0), codec(0), tmp(0)
     {}
 
     // pointer to library
     QLibrary    *lib;
     
-    // path to library on disk
+    // path to a library on disk
     QString    libpath;
 
     // converted regular expression
     QRegExp    regexp;
 
-    // filter for filemanager (returned by fmt_filter())
+    // filter for a filemanager
     QString    filter;
 
-    // regular expression as string (returned by fmt_mime())
+    // path to config file (.ui)
+    QString    config;
+
+    fmt_settings settings;
+
+    // regular expression as string
     QString    regexp_str;
 
-    // information on codec (returned by fmt_quickinfo())
+    // information on codec
     QString    quickinfo;
 
-    // codec's version  (returned by fmt_version())
+    // codec's version
     QString    version;
 
-    // pointer to codec
+    // pointer to a codec
     fmt_codec_base    *codec;
 
     // 'create' and 'destroy' functions.
     // should exist in library!
-    fmt_codec_base*     (*fmt_codec_create)();
-    void                (*fmt_codec_destroy)(fmt_codec_base*);
+    fmt_codec_base*     (*codec_create)();
+    void                (*codec_destroy)(fmt_codec_base*);
 
-    // mime image (returned by fmt_pixmap())
-    QImage     mime;
+    QPixmap     mime;
 
     // options for writers.
     fmt_writeoptionsabs    opt;
 
-    // readable ?  (returned by fmt_readable())
-    bool        writable;
-
-    // writeable ?  (returned by fmt_writeable())
+    bool        writestatic, writeanimated;
     bool        readable;
+    bool        canbemultiple, needtempfile;
+    
+    KTempFile *tmp;
 };
 
 #endif

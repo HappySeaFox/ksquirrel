@@ -15,12 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <kdebug.h>
 
 #include "sq_iconloader.h"
 #include "sq_iconloader_pixmaps.h"
 
-SQ_IconLoader* SQ_IconLoader::m_instance = NULL;
+SQ_IconLoader* SQ_IconLoader::m_instance = 0;
 
 SQ_IconLoader::SQ_IconLoader(QObject *parent) : QObject(parent), KIconLoader("ksquirrel")
 {
@@ -39,7 +43,7 @@ SQ_IconLoader::~SQ_IconLoader()
 QPixmap SQ_IconLoader::loadIcon(const QString& name, KIcon::Group group, int size) const
 {
     // try to load from installed icon theme
-    QPixmap p = KIconLoader::loadIcon(name, group, size, KIcon::DefaultState, NULL, true);
+    QPixmap p = KIconLoader::loadIcon(name, group, size, KIcon::DefaultState, 0, true);
 
     // requested pixmap not found, let's
     // try to find it in our pixmaps

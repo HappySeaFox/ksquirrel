@@ -30,23 +30,6 @@ struct SQ_ImageOptions
     bool close;
 };
 
-struct SQ_ImageResizeOptions
-{
-    bool percentage;
-    int pc;
-
-    int w, h;
-    bool preserve;
-    int adjust;
-    int method;
-};
-
-struct SQ_ImageRotateOptions
-{
-    bool flipv, fliph;
-    int angle;
-};
-
 struct SQ_ImageBCGOptions
 {
     int b, c, g;
@@ -58,21 +41,11 @@ struct SQ_ImageConvertOptions
     QString libname;
 };
 
-struct SQ_ImagePrintOptions
-{
-    int type;
-    int in_x, in_y;
-    QString align;
-    bool prop;
-    int transp;
-    QColor transp_color;
-};
-
 struct SQ_ImageFilterOptions
 {
-        int type;
+    int type;
 
-        bool _bool;
+    bool _bool;
     fmt_filters::rgb rgb1, rgb2;
     float _float;
     unsigned int _uint;
@@ -83,28 +56,28 @@ namespace F
 {
     enum ftype
     {
-    fblend = 0,
-    fblur,
-    fdesaturate,
-    fdespeckle,
-    fedge,
-    femboss,
-    fequalize,
-    ffade,
-    fflatten,
-    fimplode,
-    fnegative,
-    fnoise,
-    foil,
-    fshade,
-    fsharpen,
-    fsolarize,
-    fspread,
-    fswapRGB,
-    fswirl,
-    fthreshold,
-    fgray,
-    fwave
+        fblend = 0,
+        fblur,
+        fdesaturate,
+        fdespeckle,
+        fedge,
+        femboss,
+        fequalize,
+        ffade,
+        fflatten,
+        fimplode,
+        fnegative,
+        fnoise,
+        foil,
+        fshade,
+        fsharpen,
+        fsolarize,
+        fspread,
+        fswapRGB,
+        fswirl,
+        fthreshold,
+        fgray,
+        fwave
     };
 }
 

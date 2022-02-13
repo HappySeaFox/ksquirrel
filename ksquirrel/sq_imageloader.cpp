@@ -15,17 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <kdebug.h>
 
 #include "sq_imageloader.h"
 #include "sq_libraryhandler.h"
+#include "sq_codecsettings.h"
 
-#include "fileio.h"
-#include "fmt_utils.h"
-#include "fmt_codec_base.h"
-#include "error.h"
+#include <ksquirrel-libs/fileio.h>
+#include <ksquirrel-libs/fmt_utils.h>
+#include <ksquirrel-libs/fmt_codec_base.h>
+#include <ksquirrel-libs/error.h>
 
-SQ_ImageLoader * SQ_ImageLoader::m_instance = NULL;
+SQ_ImageLoader * SQ_ImageLoader::m_instance = 0;
 
 SQ_ImageLoader::SQ_ImageLoader(QObject *parent) : QObject(parent), m_errors(0)
 {
@@ -33,8 +38,8 @@ SQ_ImageLoader::SQ_ImageLoader(QObject *parent) : QObject(parent), m_errors(0)
 
     kdDebug() << "+SQ_ImageLoader" << endl;
 
-    m_image = NULL;
-    dumbscan = NULL;
+    m_image = 0;
+    dumbscan = 0;
     finfo = new fmt_info;
 }
 
@@ -66,30 +71,22 @@ bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h)
     // determine codec
     codeK = lib->codec;
 
-#ifndef QT_NO_STL
-
     // init...
-    res = codeK->fmt_read_init(QString(path.local8Bit()));
-
-#else
-
-    res = codeK->fmt_read_init(QString(path.local8Bit()).ascii());
-
-#endif
+    res = codeK->read_init(QString(path.local8Bit()));
 
     // error in init()!
     if(res != SQE_OK)
     {
-        codeK->fmt_read_close();
+        codeK->read_close();
         return false;
     }
 
     // advance to next page
-    res = codeK->fmt_read_next();
+    res = codeK->read_next();
 
     if(res != SQE_OK)
     {
-        codeK->fmt_read_close();
+        codeK->read_close();
         return false;
     }
     else
@@ -99,7 +96,7 @@ bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h)
         image = codeK->image(0);
         *w = image->w;
         *h = image->h;
-        codeK->fmt_read_close();
+        codeK->read_close();
 
         return true;
     }
@@ -109,7 +106,7 @@ bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h)
  *  Try to load image and store a pointer to decoded image data in m_image. Aslo
  *  store information about the image in finfo.
  */
-bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
+bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomorethan, bool changeSettings)
 {
     SQ_LIBRARY      *lib;
     int    res, current = 0, i, j;
@@ -122,7 +119,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
 
 #define SQ_SAVE_INF \
     *finfo = codeK->information(); \
-    codeK->fmt_read_close();
+    codeK->read_close();
 
     // reset error count
     m_errors = 0;
@@ -136,41 +133,35 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
     // determine codec
     codeK = lib->codec;
 
-#ifndef QT_NO_STL
-
     // init...
-    res = codeK->fmt_read_init(QString(pixPath.local8Bit()));
-
-#else
-
-    res = codeK->fmt_read_init(QString(pixPath.local8Bit()).ascii());
-
-#endif
+    res = codeK->read_init(QString(pixPath.local8Bit()));
 
     // error in init()!
     if(res != SQE_OK)
     {
-        codeK->fmt_read_close();
+        codeK->read_close();
         return false;
     }
+
+    if(changeSettings)
+        SQ_CodecSettings::applySettings(lib, SQ_CodecSettings::ThumbnailLoader);
 
     // read all pages in image...
     while(true)
     {
-        // error occured while decoding previuos page...
-        if(m_errors)
+        if(m_errors || (!multi && current) || (multi && current == nomorethan))
             break;
 
         // advance to next page
-        i = codeK->fmt_read_next();
+        i = codeK->read_next();
 
         // error occured while decoding first page
         if(i != SQE_OK && i != SQE_NOTOK && !current)
         {
-            codeK->fmt_read_close();
+            codeK->read_close();
             return false;
         }
-        else if((i != SQE_OK && i != SQE_NOTOK && current) || (i == SQE_NOTOK && current) || (!multi && current))
+        else if((i != SQE_OK && i != SQE_NOTOK && current) || (i == SQE_NOTOK && current))
             break;
 
         image = codeK->image(current);
@@ -184,7 +175,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
 
             if(!m_image)
             {
-                codeK->fmt_read_close();
+                codeK->read_close();
                 return false;
             }
 
@@ -204,14 +195,14 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
         // read all passes
         for(int pass = 0;pass < image->passes;pass++)
         {
-            codeK->fmt_read_next_pass();
+            codeK->read_next_pass();
 
             if(!current)
             {
                 for(j = 0;j < image->h;j++)
                 {
                     scan = m_image + j * image->w;
-                    i = codeK->fmt_read_scanline(scan);
+                    i = codeK->read_scanline(scan);
                     m_errors += (i != SQE_OK);
                 }
             }
@@ -219,7 +210,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi)
             {
                 for(j = 0;j < image->h;j++)
                 {
-                    i = codeK->fmt_read_scanline(dumbscan);
+                    i = codeK->read_scanline(dumbscan);
 
                     if(i != SQE_OK)
                     {
@@ -249,8 +240,8 @@ void SQ_ImageLoader::cleanup()
     if(dumbscan) free(dumbscan);
     if(m_image) free(m_image);
 
-    dumbscan = NULL;
-    m_image = NULL;
+    dumbscan = 0;
+    m_image = 0;
 }
 
 /*

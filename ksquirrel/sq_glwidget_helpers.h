@@ -41,22 +41,6 @@ class SQ_ToolButton : public QToolButton
         static int fixedWidth();
 };
 
-class SQ_ToolButtonPage : public SQ_ToolButton
-{
-    public:
-        SQ_ToolButtonPage(QObject *receiver, const char *slot, QToolBar *parent, const char *name = 0);
-        ~SQ_ToolButtonPage();
-
-        void advanceValue();
-        void flush();
-
-    private:
-        QPixmap generatePixmap();
-
-    private:
-        int val;
-};
-
 inline
 int SQ_ToolButton::fixedWidth()
 {

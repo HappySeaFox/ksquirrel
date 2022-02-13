@@ -15,25 +15,28 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kstandarddirs.h>
-
-#include <qpainter.h>
-#include <qpixmap.h>
-
-#include "sq_progress.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <limits.h>
 
-SQ_Progress::SQ_Progress(QWidget * parent, const char * name, WFlags f) : QLabel(parent, name, f)
-{
-    painter = NULL;
+#include <qpainter.h>
+#include <qbrush.h>
+#include <qpen.h>
 
-    setAutoResize(true);
-    setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/progress.png")));
-}
+#include <kglobalsettings.h>
+
+#include "sq_progress.h"
+
+SQ_Progress::SQ_Progress(QWidget *parent, const char *name, WFlags f) 
+    : QLabel(parent, name, f), m_text(true), painter(0)
+{}
 
 SQ_Progress::~SQ_Progress()
-{}
+{
+    delete painter;
+}
 
 void SQ_Progress::setTotalSteps(int totalSteps)
 {
@@ -41,11 +44,20 @@ void SQ_Progress::setTotalSteps(int totalSteps)
     step = 0;
     percentage = 0;
 
-    QColor c(104,120,247);
+    if(!color.isValid())
+        color = KGlobalSettings::highlightColor();
 
     painter = new QPainter(this);
-    painter->setBrush(c);
-    painter->setPen(c);
+    painter->setBrush(color);
+    painter->setPen(color);
+
+    QFont f = font();
+    f.setBold(true);
+    painter->setFont(f);
+
+    painter->setPen(color);
+    painter->setBrush(KGlobalSettings::baseColor());
+    painter->drawRect(rect());
 }
 
 /*
@@ -62,16 +74,16 @@ void SQ_Progress::setIndicator(int progress)
         totalSteps /= 1000;
     }
 
-    int np = progress * 192 / totalSteps;
+    int np = progress * 100 / totalSteps;
 
     // draw progress if needed
     if(np != percentage)
     {
         percentage = np;
-        painter->drawRect(4, 3, percentage, 14);
+        drawProgress();
     }
 
-    step++;
+    step = progress;
 }
 
 /*
@@ -87,8 +99,39 @@ void SQ_Progress::advance(int step_new)
  */
 void SQ_Progress::flush()
 {
-    update();
+    delete painter;
+    painter = 0;
+}
 
+void SQ_Progress::paintEvent(QPaintEvent *)
+{
     if(painter)
-        delete painter;
+    {
+        drawProgress();
+    }
+}
+
+void SQ_Progress::drawProgress()
+{
+        int np = width() * percentage / 100;
+
+        // reset clip rectangle
+        painter->setClipRect(0, 0, width(), height());
+        painter->setPen(color);
+        painter->setBrush(KGlobalSettings::baseColor());
+        painter->drawRect(rect());
+
+        // draw rectangle
+        painter->fillRect(2, 2, np-4, height()-4, color);
+
+        if(m_text)
+        {
+            // draw percentage value
+            painter->setPen(KGlobalSettings::highlightedTextColor());
+            painter->setClipRect(0, 0, np, height());
+            painter->drawText(rect(), Qt::AlignCenter | Qt::SingleLine, QString::number(percentage) + "%");
+            painter->setPen(KGlobalSettings::textColor());
+            painter->setClipRect(np, 0, width()-np, height());
+            painter->drawText(rect(), Qt::AlignCenter | Qt::SingleLine, QString::number(percentage) + "%");
+        }
 }

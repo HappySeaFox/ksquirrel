@@ -15,12 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "sq_splitter.h"
 #include "sq_rubberband.h"
 #include "sq_multibar.h"
 
 SQ_Splitter::SQ_Splitter(QWidget *parent, const char *name) 
-    : QHBox(parent, name), first(0), second(0)
+    : QHBox(parent, name), first(0)
 {
     setSpacing(0);
 }
@@ -41,7 +45,6 @@ void SQ_Splitter::addWidget(QWidget *w)
     }
     else
     {
-        second = w;
         w->reparent(this, QPoint());
         setStretchFactor(w, 1);
     }
@@ -49,10 +52,8 @@ void SQ_Splitter::addWidget(QWidget *w)
 
 void SQ_Splitter::slotNewX(const int x)
 {
-    SQ_MultiBar *mt = dynamic_cast<SQ_MultiBar*>(first);
-
-    if(mt)
-        mt->updateWidth(x);
+    if(SQ_MultiBar::instance())
+        SQ_MultiBar::instance()->updateWidth(x);
 }
 
 #include "sq_splitter.moc"

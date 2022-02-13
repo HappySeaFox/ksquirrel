@@ -28,6 +28,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qpixmap.h>
 #include <qdir.h>
 
@@ -165,7 +169,7 @@ void SQ_CategoryBrowserMenu::initialize()
        if(dir.root() != path())
        {
             insertTitle(path().right(path().length() - dir.root().length()));
-            insertItem(CICON("bookmark_add"), i18n("Add To This Category"), this, SLOT(slotAddToCategory()));
+            insertItem(CICON("bookmark_add"), i18n("Add here"), this, SLOT(slotAddToCategory()));
        }
     }
 

@@ -3,12 +3,12 @@ bin_PROGRAMS = ksquirrel
 
 ## INCLUDES were found outside kdevelop specific part
 
-ksquirrel_SOURCES = sq_thumbnailloadjob.cpp sq_splashscreen.cpp sq_popupmenu.cpp sq_interfacetype.ui sq_glinfo.ui sq_glwidget_helpers.cpp sq_imageloader.cpp sq_pluginsinfo.ui sq_iconloader.cpp sq_slideshow.ui sq_selectdeselectgroup.ui sq_checkversion.ui sq_thumbnailcachemaster.ui fmt_filters.cpp sq_errorstring.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
-ksquirrel_LDADD   = ./imageedit_overlay/libimageedit_overlay.a ./imageedit_dlg/libimageedit_dlg.a ./sidebar/libsidebar.a $(LIB_KUTILS) $(LIB_KIO) $(LIB_KDEPRINT) -Llibpixops -lpixops -lkonq $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
+ksquirrel_SOURCES = sq_codecsettings.cpp sq_filedialog.cpp sq_codecsettingsskeleton.ui sq_kipimanager.cpp sq_kipiinterface.cpp sq_progressbox.cpp sq_thumbnailloadjob.cpp sq_splashscreen.cpp sq_popupmenu.cpp sq_interfacetype.ui sq_glinfo.ui sq_glwidget_helpers.cpp sq_imageloader.cpp sq_pluginsinfo.ui sq_iconloader.cpp sq_slideshow.ui sq_selectdeselectgroup.ui sq_thumbnailcachemaster.ui fmt_filters.cpp sq_errorstring.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_glview.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_tray.cpp sq_options.ui sq_libraryhandler.cpp sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
+ksquirrel_LDADD   = ./imageedit_overlay/libimageedit_overlay.a ./imageedit_dlg/libimageedit_dlg.a ./sidebar/libsidebar.a $(LIB_KUTILS) $(LIB_KIO) -Llibpixops -lpixops -lkonq -lqui $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
 SUBDIRS = imageedit_dlg imageedit_overlay sidebar 
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop hi32-app-ksquirrel.png hi16-app-ksquirrel.png sq_about.h sq_archivehandler.cpp sq_archivehandler.h sq_bookmarkowner.cpp sq_bookmarkowner.h sq_config.cpp sq_config.h sq_diroperator.cpp sq_diroperator.h sq_externaltool.cpp sq_externaltool.h sq_externaltools.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_filters.ui sq_glu.cpp sq_glu.h sq_glwidget.cpp sq_glwidget.h sq_hloptions.cpp sq_hloptions.h sq_imageproperties.ui sq_librarieschanged.ui sq_libraryhandler.cpp sq_libraryhandler.h sq_librarylistener.cpp sq_librarylistener.h sq_options.ui sq_quickbrowser.cpp sq_quickbrowser.h sq_tray.cpp sq_tray.h sq_widgetstack.cpp sq_widgetstack.h sq_iconlistitem.cpp sq_iconlistitem.h sq_iconlistbox.cpp sq_iconlistbox.h sq_dir.cpp sq_dir.h sq_filethumbview.cpp sq_filethumbview.h sq_pixmapcache.cpp sq_pixmapcache.h sq_thumbnailsize.cpp sq_thumbnailsize.h sq_progress.cpp sq_progress.h sq_diroperatorbase.cpp sq_diroperatorbase.h sq_thumbnailinfo.h sq_filethumbviewitem.cpp sq_filethumbviewitem.h sq_viewcache.ui sq_locationtoolbar.cpp sq_locationtoolbar.h sq_glview.cpp sq_glview.h sq_helpwidget.ui sq_fileiconviewbase.cpp sq_fileiconviewbase.h sq_navigatordropmenu.cpp sq_navigatordropmenu.h sq_errorstring.cpp sq_errorstring.h fmt_filters.cpp fmt_filters.h sq_thumbnailcachemaster.ui sq_glwidget_helpers.h sq_checkversion.ui sq_library.h sq_selectdeselectgroup.ui sq_slideshow.ui sq_iconloader.cpp sq_iconloader.h sq_pluginsinfo.ui sq_iconloader_pixmaps.h sq_imageloader.cpp sq_imageloader.h sq_glwidget_helpers.cpp file_broken.xpm ksquirrel-small.desktop sq_glinfo.ui sq_interfacetype.ui sq_popupmenu.cpp sq_popupmenu.h sq_splashscreen.cpp sq_splashscreen.h sq_thumbnailloadjob.cpp sq_thumbnailloadjob.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop hi32-app-ksquirrel.png hi16-app-ksquirrel.png sq_about.h sq_archivehandler.cpp sq_archivehandler.h sq_bookmarkowner.cpp sq_bookmarkowner.h sq_config.cpp sq_config.h sq_diroperator.cpp sq_diroperator.h sq_externaltool.cpp sq_externaltool.h sq_externaltools.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_filters.ui sq_glu.cpp sq_glu.h sq_glwidget.cpp sq_glwidget.h sq_hloptions.cpp sq_hloptions.h sq_imageproperties.ui sq_libraryhandler.cpp sq_libraryhandler.h sq_options.ui sq_tray.cpp sq_tray.h sq_widgetstack.cpp sq_widgetstack.h sq_iconlistitem.cpp sq_iconlistitem.h sq_iconlistbox.cpp sq_iconlistbox.h sq_dir.cpp sq_dir.h sq_filethumbview.cpp sq_filethumbview.h sq_pixmapcache.cpp sq_pixmapcache.h sq_thumbnailsize.cpp sq_thumbnailsize.h sq_progress.cpp sq_progress.h sq_thumbnailinfo.h sq_filethumbviewitem.cpp sq_filethumbviewitem.h sq_viewcache.ui sq_glview.cpp sq_glview.h sq_helpwidget.ui sq_fileiconviewbase.cpp sq_fileiconviewbase.h sq_navigatordropmenu.cpp sq_navigatordropmenu.h sq_errorstring.cpp sq_errorstring.h fmt_filters.cpp fmt_filters.h sq_thumbnailcachemaster.ui sq_glwidget_helpers.h sq_library.h sq_selectdeselectgroup.ui sq_slideshow.ui sq_iconloader.cpp sq_iconloader.h sq_pluginsinfo.ui sq_iconloader_pixmaps.h sq_imageloader.cpp sq_imageloader.h sq_glwidget_helpers.cpp file_broken.xpm sq_glinfo.ui sq_interfacetype.ui sq_popupmenu.cpp sq_popupmenu.h sq_splashscreen.cpp sq_splashscreen.h sq_thumbnailloadjob.cpp sq_thumbnailloadjob.h sq_progressbox.cpp sq_progressbox.h sq_kipiinterface.cpp sq_kipiinterface.h sq_kipimanager.cpp sq_kipimanager.h sq_codecsettingsskeleton.ui sq_codecsettingsskeleton.ui.h sq_filedialog.cpp sq_filedialog.h sq_codecsettings.cpp sq_codecsettings.h 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Graphics/
@@ -17,33 +17,15 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/hi32-app-ksquirrel.png $(kde_icondir)/hicolor/32x32/apps/ksquirrel.png
 	$(mkinstalldirs) $(kde_icondir)/hicolor/16x16/apps/
 	$(INSTALL_DATA) $(srcdir)/hi16-app-ksquirrel.png $(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
-	$(mkinstalldirs) $(kde_appsdir)/Graphics/
-	$(INSTALL_DATA) $(srcdir)/ksquirrel-small.desktop $(kde_appsdir)/Graphics/ksquirrel-small.desktop
 
 uninstall-local:
 	-rm -f $(kde_appsdir)/Graphics/ksquirrel.desktop
 	-rm -f $(kde_icondir)/hicolor/32x32/apps/ksquirrel.png
 	-rm -f $(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
-	-rm -f $(kde_appsdir)/Graphics/ksquirrel-small.desktop
 
 ####### kdevelop will overwrite this part!!! (end)############
 
 SUBDIRS += libpixops
-
-if SQ_ENABLE_KSMALL
-
-# build light version of KSquirrel
-bin_PROGRAMS += ksquirrel-small
-
-ksquirrel_small_SOURCES = sq_imageproperties.ui sq_helpwidget.ui ksquirrel-small-main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp sq_errorstring.cpp sq_iconloader.cpp sq_glwidget_helpers.cpp
-
-ksquirrel_small_LDADD   = $(LIB_KUTILS) $(LIB_KIO) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
-
-ksquirrel_small_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(ksquirrellibs_LIBS)
-
-ksquirrel_small_CPPFLAGS = -DSQ_SMALL
-
-endif
 
 # These paths are KDE specific. Use them:
 # kde_appsdir         Where your application's menu entry (.desktop) should go to.
@@ -69,10 +51,15 @@ endif
 # set the include path for X, qt and KDE
 INCLUDES = $(all_includes) -Iimageedit_overlay -Iimageedit_dlg -Isidebar
 
-METASOURCES = AUTO
-
 # the library search path. 
 ksquirrel_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(ksquirrellibs_LIBS)
+
+if SQ_HAVE_KIPI
+AM_CXXFLAGS = ${libkipi_CFLAGS}
+AM_LDFLAGS  = ${libkipi_LIBS}
+endif
+
+METASOURCES = AUTO
 
 # Uncomment the following two lines if you add a ui.rc file for your application to make use of
 # KDE?s XML GUI builing

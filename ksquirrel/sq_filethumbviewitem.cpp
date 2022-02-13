@@ -15,12 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qstring.h>
 #include <qpainter.h>
+#include <qfontmetrics.h>
 
 #include <klocale.h>
-#include <kglobal.h>
-#include <kiconloader.h>
+#include <kglobalsettings.h>
 #include <kpixmap.h>
 #include <kpixmapeffect.h>
 #include <kwordwrap.h>
@@ -29,24 +33,29 @@
 
 SQ_FileThumbViewItem::SQ_FileThumbViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi):
     KFileIconViewItem(parent, text, pixmap, fi)
-{}
+{
+    fm = 0;
+}
 
 SQ_FileThumbViewItem::~SQ_FileThumbViewItem()
-{}
+{
+    delete fm;
+}
 
 /*
  *  Get additional information as QString object.
  */
 QString SQ_FileThumbViewItem::fullInfo() const
 {
-    QString s = i18n("Type: %1\nDimensions: %2\nBits per pixel: %3\nColor space: %4\nCompression: %5\nNumber of frames: %6\nUncompressed size: %7")
-    .arg(info.info.type)
-    .arg(info.info.dimensions)
-    .arg(info.info.bpp)
-    .arg(info.info.color)
-    .arg(info.info.compression)
-    .arg(info.info.frames)
-    .arg(info.info.uncompressed);
+    QString s = i18n("<tr><td align=left>Type:</td><td align=left>%1</td></tr><tr><td align=left>Dimensions:</td><td align=left>%2</td></tr><tr><td align=left>Bits per pixel:</td><td align=left>%3</td></tr><tr><td align=left>Color space:</td><td align=left>%4</td></tr><tr><td align=left>Compression:</td><td align=left>%5</td></tr><tr><td align=left>Number of frames:</td><td align=left>%6</td></tr><tr><td align=left>Uncompressed size:</td><td align=left>%7</td></tr>")
+            .arg(info.info.type)
+            .arg(info.info.dimensions)
+            .arg(info.info.bpp)
+            .arg(info.info.color)
+            .arg(info.info.compression)
+            .arg((info.info.frames > 1 ? i18n("at least 2") : "1")) // since 0.7.0 thumbnail loader doesn't load
+                                                                                                      // more than 2 pages (performance reason)
+            .arg(info.info.uncompressed);
 
     return s;
 }
@@ -61,24 +70,8 @@ void SQ_FileThumbViewItem::setInfo(const SQ_Thumbnail &t)
 
 void SQ_FileThumbViewItem::paintItem(QPainter *p, const QColorGroup &cg)
 {
-    QIconView* view = iconView();
-
-    Q_ASSERT(view);
-
-    if(!view) return;
-
-    if(!wordWrap())
-    {
-        kdWarning() << "KIconViewItem::paintItem called but wordwrap not ready - calcRect not called, or aborted!" << endl;
-        return;
-    }
-
-    p->save();
-
     paintPixmap(p, cg);
     paintText(p, cg);
-
-    p->restore();
 }
 
 void SQ_FileThumbViewItem::paintPixmap(QPainter *p, const QColorGroup &cg)
@@ -86,47 +79,78 @@ void SQ_FileThumbViewItem::paintPixmap(QPainter *p, const QColorGroup &cg)
     int iconX = pixmapRect(false).x();
     int iconY = pixmapRect(false).y();
 
-    QPixmap *pix = pixmap();
+    QPixmap *pxm = pixmap();
 
-    if(isSelected())
+    if(pxm && !pxm->isNull())
     {
-        if(pix && !pix->isNull())
+        if(isSelected())
         {
-            QPixmap selectedPix = KPixmapEffect::selectedPixmap(KPixmap(*pix), cg.highlight());
-            p->drawPixmap(iconX, iconY, selectedPix);
-//        p->setPen(QPen(cg.highlight(), 3));
-//        p->drawRect(pixmapRect(false));
+            if(selected.isNull())
+                selected = KPixmapEffect::selectedPixmap(KPixmap(*pxm), cg.highlight());
+
+            p->drawPixmap(iconX, iconY, selected);
         }
+        else
+            p->drawPixmap(iconX, iconY, *pxm);
     }
-    else
+}
+
+void SQ_FileThumbViewItem::calcTmpText()
+{
+    int w = pixmapRect().width();
+
+    if(!fm) fm = new QFontMetrics(iconView()->font());
+
+    QString itemText = text();
+
+    if(fm->width(itemText) < w)
     {
-        p->drawPixmap(iconX, iconY, *pix);
+        tmpText = itemText;
+        return;
     }
+
+    tmpText = "...";
+    int i = 0;
+
+    while(fm->width(tmpText + itemText[ i ]) < w)
+        tmpText += itemText[i++];
+
+    tmpText.remove((uint)0, 3);
+    tmpText += "...";
 }
 
 void SQ_FileThumbViewItem::paintText(QPainter *p, const QColorGroup &cg)
 {
     calcTmpText();
 
-    int textX = textRect(false).x();
-    int textY = textRect(false).y();
+    QRect rectText = textRect(false);
+    QRect rc = pixmapRect(false);
+
+    rectText.setX(rc.x());
+    rectText.setWidth(rc.width()-2);
 
     if(isSelected())
     {
-        p->fillRect(textRect(false), cg.highlight());
+        p->fillRect(rectText, cg.highlight());
         p->setPen(QPen(cg.highlightedText()));
     }
     else
     {
         if(iconView()->itemTextBackground() != NoBrush)
-            p->fillRect(textRect(false), iconView()->itemTextBackground());
+            p->fillRect(rectText, iconView()->itemTextBackground());
 
         p->setPen(cg.text());
     }
 
-    int align = (iconView()->itemTextPos() == QIconView::Bottom) ? AlignHCenter : AlignAuto;
-    wordWrap()->drawText(p, textX, textY, align);
+    p->drawText(rectText, Qt::AlignCenter, tmpText);
 }
 
 void SQ_FileThumbViewItem::paintFocus(QPainter *, const QColorGroup &)
 {}
+
+void SQ_FileThumbViewItem::setPixmap(const QPixmap &pixmap)
+{
+    KFileIconViewItem::setPixmap(pixmap);
+
+    selected = QPixmap();
+}

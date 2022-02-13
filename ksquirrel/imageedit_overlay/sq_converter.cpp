@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -23,7 +27,7 @@
 #include "sq_converter.h"
 #include "sq_imageconvert.h"
 
-SQ_Converter * SQ_Converter::sing = NULL;
+SQ_Converter * SQ_Converter::sing = 0;
 
 SQ_Converter::SQ_Converter(QObject *parent) : SQ_EditBase(parent)
 {

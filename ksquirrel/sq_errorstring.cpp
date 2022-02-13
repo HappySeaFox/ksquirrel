@@ -15,11 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <kdebug.h>
 
 #include "sq_errorstring.h"
 
-#include "error.h"
+#include <ksquirrel-libs/error.h>
 
 SQ_ErrorString * SQ_ErrorString::m_instance = 0;
 

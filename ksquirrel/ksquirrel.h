@@ -18,6 +18,10 @@
 #ifndef KSQUIRREL_H
 #define KSQUIRREL_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <qstringlist.h>
 #include <qmap.h>
 #include <qdir.h>
@@ -38,7 +42,6 @@ class KActionMenu;
 class KHistoryCombo;
 class KToggleAction;
 class KBookmarkMenu;
-class SQ_SplashScreen;
 
 template <class T> class QValueVector;
 class QLabel;
@@ -48,20 +51,20 @@ class QVBox;
 class QTimer;
 class QSplitter;
 
+class SQ_SplashScreen;
 class SQ_WidgetStack;
 class SQ_Tray;
-class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_Config;
 class SQ_ExternalTool;
 class SQ_TreeView;
 class SQ_ThumbnailSize;
 class SQ_PixmapCache;
-class SQ_LocationToolbar;
 class SQ_GLView;
 class SQ_GLWidget;
 class SQ_ArchiveHandler;
 class SQ_MultiBar;
+class SQ_KIPIManager;
 class SQ_Dir;
 
 /*
@@ -73,6 +76,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
     Q_OBJECT
 
     public:
+            enum View { Classic, BuiltIn, GQView };
+
         /*
          *  Constructor & destructor
          */
@@ -183,6 +188,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
      */
     private:
 
+        void continueLoading();
+
         /*
          *  Check if current config file left from older KSquirrel's
          *  version. If so, return true, and new config file will be
@@ -200,7 +207,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Create location toolbar and store a pointer to
          *  it in passed argument.
          */
-        void createLocationToolbar(SQ_LocationToolbar *);
+        void createLocationToolbar(KToolBar *);
 
         /*
          *  Create statusbar.
@@ -224,7 +231,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         /*
          *  Create all needed objects
-         *  (SQ_LibraryHandler, SQ_LibraryListener, edit tools, etc.)
          */
         void preCreate();
 
@@ -324,6 +330,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void control(const QString &command);
 
         /*
+         *  Send a message to navigator from incoming DCOP message
+         */
+        void navigatorSend(const QString &command);
+
+        /*
          *  Activate this instance (DCOP method)
          */
         void activate();
@@ -339,12 +350,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  emitted, when user chages thumbails' size (from menu).
          */
         void thumbSizeChanged(const QString&);
-
-        /*
-         *  emitted, when all KSquirrel created thumbnails for all
-         *  found images (if -t option was specified).
-         */
-        void continueLoading();
 
     public slots:
 
@@ -374,11 +379,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Change interface, see 'viewtype'
          */
         void slotChangeInterface();
-
-        /*
-         *  Edit current item's mimetype (Konqueror-related action).
-         */
-        void slotEditMime();
 
         /*
          *  Invoke 'Filters' dialog.
@@ -429,21 +429,9 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Next four slots will be called, when user selected
          *  subitem in 'Thumbnail size' menu.
          */
-        void slotThumbsSmall();
         void slotThumbsMedium();
         void slotThumbsLarge();
         void slotThumbsHuge();
-
-        /*
-         *  Invoked, when SQ_LibraryListener found all libraries
-         *  in /usr/lib/ksquirrel-libs. Now we can decode images.
-         */
-        void slotContinueLoading();
-
-        /*
-         *  Invoked, when user clicked "Check for a newer version" button.
-         */
-        void slotCheckVersion();
 
         /*
          *  Invoked, when user clicked "Open file" button.
@@ -472,11 +460,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          *  Invoked, when image finder found all images (or didn't find any image)
          */
         void listResult(KIO::Job *);
-
-        /*
-         *  Continue loading, when all images are found
-         */
-        void slotContinueLoading2();
 
         /*
          *  Invokes a dialog with specific thumbnails actions:
@@ -571,8 +554,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // Open "SQ_ThumbnailCacheMaster"
         *pATCMaster,
 
-        *pAEditMime,
-
         // Show image window
         *pAGLView,
 
@@ -609,7 +590,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         QWidgetStack    *viewBrowser;
 
         // main QVBox, will contain menu, toolbar and 'viewBrowser'
-        QVBox    *mainBox, *b2;
+        QVBox    *b2;
 
         // sizes for mainSplitter
         QValueList<int>    mainSizes;
@@ -645,9 +626,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         // "Configure KSquirrel"
         KAction    *pAConfigure,
-
-        // "Check for a newer version"
-        *pACheck,
 
         // "Select group", "Deselect group", "Select all", "Deselect"
         // actions for filemanager
@@ -686,7 +664,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         bool    slideShowStop;
 
         // url box
-        SQ_LocationToolbar    *pTLocation;
+        KToolBar    *pTLocation;
 
         // used by image finder (if -t option specified)
         SQ_Dir    *dir;
@@ -699,9 +677,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         // our library handler
         SQ_LibraryHandler    *libhandler;
-
-        // our library finder with dynamic loading/deleting support
-        SQ_LibraryListener    *libl;
 
         // ou tray instance
         SQ_Tray    *tray;
@@ -729,6 +704,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
         SQ_MultiBar       *sideBar;
 
         SQ_SplashScreen     *splash_to_delete;
+
+        // KIPI plugins loader
+#ifdef SQ_HAVE_KIPI
+        SQ_KIPIManager *kipiManager;
+#endif
 
         // not interesting ;)
         int     old_id;

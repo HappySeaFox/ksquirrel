@@ -32,8 +32,6 @@ class KAction;
 class KToggleAction;
 class KFileView;
 
-class SQ_DirOperatorBase;
-
 /*
  *  SQ_WidgetStack is a simple wrapper for file manager (navigator).
  *
@@ -78,13 +76,6 @@ class SQ_WidgetStack : public QVBox
         KURL url() const;
 
         /*
-         *  Set current url for all _other_ widgets and objects (bookmarks,
-         *  tree, SQ_QuickOperator etc.)
-         */
-        void setURL(const QString &, bool, bool = true);
-        void setURL(const KURL &, bool, bool = true);
-
-        /*
          *  Selected items in currently visible diroperator.
          */
         const KFileItemList* selectedItems() const;
@@ -93,19 +84,6 @@ class SQ_WidgetStack : public QVBox
          *  All items in currently visible diroperator.
          */
         const KFileItemList* items() const;
-
-        /*
-         *  Reconfigure clicking policy.
-         */
-        void configureClickPolicy();
-
-        /*
-         *  Set current item to 'item', select it, and synchronize with
-         *  SQ_QuickBrowser.
-         *
-         *  TODO: remove workAround?
-         */
-        void selectFile(KFileItem *item, SQ_DirOperatorBase *workAround = NULL);
 
         /*
          *  Update grid for thumbnail view. New grid is calcalated from item
@@ -140,16 +118,22 @@ class SQ_WidgetStack : public QVBox
          */
         void selectDeselectGroup(bool select);
 
+        /*
+         *  Set current url for all _other_ widgets and objects (bookmarks,
+         *  tree, SQ_QuickOperator etc.)
+         */
+        void setURL(const KURL &, bool = true);
+
     public slots:
 
         /*
-         *  Change view type. See SQ_DirOperatorBase::ViewT for more.
+         *  Change view type. See SQ_DirOperator::ViewT for more.
          */
-        void raiseWidget(SQ_DirOperatorBase::ViewT);
+        void raiseWidget(SQ_DirOperator::ViewT, bool doUpdate = true);
 
         /*
          *  Try to unpack an archive referenced by given KFileItem.
-         *  Used by SQ_DirOperatorBase, when user clicked on item in filemanager.
+         *  Used by SQ_DirOperator, when user clicked on item in filemanager.
          */
         void tryUnpack(KFileItem *);
 
@@ -194,7 +178,7 @@ class SQ_WidgetStack : public QVBox
          *  Do nothing, if no more supported images found in given
          *  direction.
          */
-        int moveTo(Direction direction, KFileItem *it = 0L);
+        int moveTo(Direction direction, KFileItem *it = 0, bool useSupported = true);
 
         /*
          *  Get current filter.
@@ -210,9 +194,8 @@ class SQ_WidgetStack : public QVBox
         void slotFileCopyTo();
         void slotFileMoveTo();
         void slotFileLinkTo();
-    
-    private slots:
 
+    private slots:
         /*
          *  Go to unpacked archive.
          */

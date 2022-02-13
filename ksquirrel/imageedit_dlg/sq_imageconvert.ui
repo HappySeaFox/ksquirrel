@@ -478,8 +478,8 @@
     <tabstop>textResult</tabstop>
 </tabstops>
 <includes>
-    <include location="local" impldecl="in declaration">fmt_types.h</include>
-    <include location="local" impldecl="in declaration">fmt_defs.h</include>
+    <include location="global" impldecl="in implementation">ksquirrel-libs/fmt_types.h</include>
+    <include location="global" impldecl="in implementation">ksquirrel-libs/fmt_defs.h</include>
     <include location="local" impldecl="in declaration">sq_imageedit.h</include>
     <include location="local" impldecl="in implementation">sq_libraryhandler.h</include>
     <include location="global" impldecl="in implementation">qfileinfo.h</include>
@@ -495,6 +495,10 @@
     <include location="global" impldecl="in implementation">knuminput.h</include>
     <include location="local" impldecl="in implementation">sq_imageconvert.ui.h</include>
 </includes>
+<forwards>
+    <forward>struct fmt_writeoptions;</forward>
+    <forward>struct fmt_writeoptionsabs;</forward>
+</forwards>
 <variables>
     <variable access="private">SQ_ImageOptions imageopt;</variable>
     <variable access="private">int paragraph;</variable>

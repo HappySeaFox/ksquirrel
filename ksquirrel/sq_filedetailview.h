@@ -82,13 +82,18 @@ class SQ_FileDetailView : public KFileDetailView
          */
         virtual void dragEnterEvent(QDragEnterEvent *);
 
-    protected slots:
+    private:
+        void exec(QListViewItem *i, bool single, bool hl = false);
 
-        /*
-         *  Somebody dropped urls in viewport. Let's execute popup menu with
-         *  file actions.
-         */
-        void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
+    signals:
+        void launch(KFileItem *);
+        void highlighted(KFileItem *);
+
+    private slots:
+        void slotMouseButtonClicked(int, QListViewItem *);
+        void slotDoubleClicked(QListViewItem *i);
+        void slotReturnPressed(QListViewItem *i);
+        void slotCurrentChanged(QListViewItem *i);
 
     private:
         QPixmap    dirPix;

@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 #include <qlabel.h>
@@ -49,17 +49,16 @@
 #include "sq_archivehandler.h"
 #include "sq_glview.h"
 #include "sq_glwidget.h"
-#include "sq_quickbrowser.h"
 #include "sq_libraryhandler.h"
 #include "sq_diroperator.h"
 #include "sq_bookmarkowner.h"
 #include "sq_thumbnailsize.h"
-#include "sq_progress.h"
+#include "sq_progressbox.h"
 #include "sq_thumbnailloadjob.h"
 #include "sq_pixmapcache.h"
 #include "sq_selectdeselectgroup.h"
 
-SQ_WidgetStack * SQ_WidgetStack::m_instance = NULL;
+SQ_WidgetStack * SQ_WidgetStack::m_instance = 0;
 
 SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 {
@@ -67,7 +66,7 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 
     kdDebug() << "+SQ_WidgetStack" << endl;
 
-    SQ_DirOperatorBase::ViewT m_type = static_cast<SQ_DirOperatorBase::ViewT>(id);
+    SQ_DirOperator::ViewT m_type = static_cast<SQ_DirOperator::ViewT>(id);
 
     QString path;
 
@@ -93,17 +92,15 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 
     KURL _url = path;
 
-    dirop = new SQ_DirOperator(_url, static_cast<SQ_DirOperatorBase::ViewT>(id), this);
+    dirop = new SQ_DirOperator(_url, static_cast<SQ_DirOperator::ViewT>(id), this);
 
-    Q_ASSERT(dirop);
-
-    raiseWidget(m_type);
+    raiseWidget(m_type, false);
 
     connect(KSquirrel::app(), SIGNAL(thumbSizeChanged(const QString&)), dirop, SLOT(slotSetThumbSize(const QString&)));
     connect(dirop, SIGNAL(tryUnpack(KFileItem *)), this, SLOT(tryUnpack(KFileItem *)));
     connect(dirop, SIGNAL(runSeparately(KFileItem *)), this, SLOT(slotRunSeparately()));
 
-    KSquirrel::app()->historyCombo()->setEditURL(dirop->url());
+    KSquirrel::app()->historyCombo()->setEditText(dirop->url().path());
 
     timerShowProgress = new QTimer(this);
     connect(timerShowProgress, SIGNAL(timeout()), this, SLOT(slotDelayedShowProgress()));
@@ -122,17 +119,7 @@ KURL SQ_WidgetStack::url() const
     return dirop->url();
 }
 
-/*
- *  Set current url.
- */
-void SQ_WidgetStack::setURL(const QString &newpath, bool cl, bool parseTree)
-{
-    KURL url = newpath;
-
-    setURL(url, cl, parseTree);
-}
-
-void SQ_WidgetStack::setURL(const KURL &newurl, bool cl, bool parseTree)
+void SQ_WidgetStack::setURL(const KURL &newurl, bool parseTree)
 {
     KURL url = newurl;
     url.adjustPath(1);
@@ -143,16 +130,8 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool cl, bool parseTree)
     // update history combobox
     if(KSquirrel::app()->historyCombo())
     {
-        KSquirrel::app()->historyCombo()->addToHistory(url.prettyURL());
-        KSquirrel::app()->historyCombo()->setEditURL(url);
-    }
-
-    // synchronize with SQ_QuickBrowser
-    if(SQ_GLWidget::window())
-    {
-        SQ_QuickBrowser::quickOperator()->blockSignals(true);
-        SQ_QuickBrowser::quickOperator()->setURL(url, cl);
-        SQ_QuickBrowser::quickOperator()->blockSignals(false);
+        KSquirrel::app()->historyCombo()->addToHistory(url.path());
+        KSquirrel::app()->historyCombo()->setEditText(url.path());
     }
 
     // set url for file tree
@@ -171,7 +150,7 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool cl, bool parseTree)
  *  Do nothing, if no more supported images found in given
  *  direction.
  */
-int SQ_WidgetStack::moveTo(Direction direction, KFileItem *it)
+int SQ_WidgetStack::moveTo(Direction direction, KFileItem *it, bool useSupported)
 {
     KFileView *local;
     KFileItem *item;
@@ -189,23 +168,26 @@ int SQ_WidgetStack::moveTo(Direction direction, KFileItem *it)
     if(!item)
         return moveFailed;
 
-    while(true)
+    if(useSupported)
     {
-        if(item->isFile())
-            // supported image type ?
-            if(SQ_LibraryHandler::instance()->supports(item->url().path()))
-                break;
+        while(true)
+        {
+            if(item->isFile())
+                // supported image type ?
+                if(SQ_LibraryHandler::instance()->supports(item->url().path()))
+                    break;
 
-        item = (direction == SQ_WidgetStack::Next)?
-                (local->nextItem(item)):
-                (local->prevItem(item));
+            item = (direction == SQ_WidgetStack::Next)?
+                    (local->nextItem(item)):
+                    (local->prevItem(item));
 
-        if(!item)
-            return moveFailed;
+            if(!item)
+                return moveFailed;
+        }
     }
 
     // set current file, select it
-    selectFile(item);
+    dirop->setCurrentItem(item);
 
     return moveSuccess;
 }
@@ -216,10 +198,7 @@ int SQ_WidgetStack::moveTo(Direction direction, KFileItem *it)
 void SQ_WidgetStack::setNameFilter(const QString &f)
 {
     dirop->setNameFilter(f);
-    if(SQ_GLWidget::window()) SQ_QuickBrowser::quickOperator()->setNameFilter(f);
-
     dirop->actionCollection()->action("reload")->activate();
-    if(SQ_GLWidget::window()) SQ_QuickBrowser::quickOperator()->actionCollection()->action("reload")->activate();
 }
 
 /*
@@ -231,9 +210,9 @@ QString SQ_WidgetStack::nameFilter() const
 }
 
 /*
- *  Change view type. See SQ_DirOperatorBase::ViewT for more.
+ *  Change view type. See SQ_DirOperator::ViewT for more.
  */
-void SQ_WidgetStack::raiseWidget(SQ_DirOperatorBase::ViewT id)
+void SQ_WidgetStack::raiseWidget(SQ_DirOperator::ViewT id, bool doUpdate)
 {
     dirop->removeCdUpItem();
     dirop->prepareView(id);
@@ -249,8 +228,13 @@ void SQ_WidgetStack::raiseWidget(SQ_DirOperatorBase::ViewT id)
             iv->setSelectionMode(KFile::Extended);
             action("short view")->activate();
 
-            if(id == SQ_DirOperator::TypeList)iv->actionCollection()->action("small columns")->activate();
-            else iv->actionCollection()->action("large rows")->activate();
+            if(id == SQ_DirOperator::TypeList)
+                iv->actionCollection()->action("small columns")->activate();
+            else
+            {
+//                iv->setIconTextHeight(1);
+                iv->actionCollection()->action("large rows")->activate();
+            }
         }
         break;
 
@@ -266,12 +250,14 @@ void SQ_WidgetStack::raiseWidget(SQ_DirOperatorBase::ViewT id)
         case SQ_DirOperator::TypeThumbs:
         {
             SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->preparedView());
+            tv->actionCollection()->action("large rows")->activate();
+            tv->setWordWrapIconText(false);
             dirop->setPreparedView();
             action("short view")->activate();
-            tv->actionCollection()->action("large rows")->activate();
             tv->setSelectionMode(KFile::Extended);
             updateGrid(true);
-            dirop->actionCollection()->action("reload")->activate();//startOrNotThumbnailUpdate();
+//            dirop->actionCollection()->action("reload")->activate();
+            if(doUpdate) dirop->startOrNotThumbnailUpdate();
         }
         break;
     }
@@ -334,39 +320,6 @@ void SQ_WidgetStack::slotDelayedSetExtractURL()
     dirop->setURL(_url, true);
 }
 
-/*
- *  Reconfigure clicking policy.
- */
-void SQ_WidgetStack::configureClickPolicy()
-{
-    dirop->reconnectClick();
-
-    SQ_QuickBrowser::quickOperator()->reconnectClick();
-}
-
-/*
- *  Set current item to 'item', select it, and synchronize with
- *  SQ_QuickBrowser.
- */
-void SQ_WidgetStack::selectFile(KFileItem *item, SQ_DirOperatorBase *workAround)
-{
-    if(!item) return;
-
-    SQ_DirOperatorBase *local = dynamic_cast<SQ_DirOperatorBase*>(dirop);
-
-    // let diroperator set current item
-    if(local != workAround) local->setCurrentItem(item);
-
-    // also set current item for Quick Browser
-    if(SQ_QuickBrowser::quickOperator() != workAround)
-    {
-        SQ_FileIconView *iv = dynamic_cast<SQ_FileIconView *>(SQ_QuickBrowser::quickOperator()->view());
-        iv->blockSignals(true);
-        SQ_QuickBrowser::quickOperator()->setCurrentItem(item);
-        iv->blockSignals(false);
-    }
-}
-
 // Go to first file
 void SQ_WidgetStack::slotFirstFile()
 {
@@ -413,8 +366,11 @@ void SQ_WidgetStack::updateGrid(bool arrange)
         return;
 
     SQ_Config::instance()->setGroup("Thumbnails");
-    int newgrid = SQ_ThumbnailSize::instance()->currentPixelSize() 
-                    + SQ_Config::instance()->readNumEntry("margin", 2) + 2;
+    int newgrid = SQ_ThumbnailSize::instance()->extended() ?
+                    SQ_ThumbnailSize::instance()->extendedSize().width()
+                    : SQ_ThumbnailSize::instance()->pixelSize();
+
+    newgrid += (SQ_Config::instance()->readNumEntry("margin", 2) + 2);
 
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
@@ -430,28 +386,24 @@ void SQ_WidgetStack::updateGrid(bool arrange)
 
 void SQ_WidgetStack::thumbnailsUpdateEnded()
 {
-    static QPixmap play_pixmap = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumb_resume.png"));
-
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
     if(!tv) return;
 
     timerShowProgress->stop();
-    tv->progressBox->hide();
-    tv->progress->flush();
-    tv->buttonStop->setPixmap(play_pixmap);
+    tv->progressBox()->hide();
+    tv->progressBox()->flush();
+    tv->progressBox()->toggleButtonPixmap();
 }
 
 void SQ_WidgetStack::thumbnailUpdateStart(int count)
 {
-    static QPixmap stop_pixmap = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumb_stop.png"));
-
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
     if(!tv) return;
 
-    tv->progress->setTotalSteps(count);
-    tv->buttonStop->setPixmap(stop_pixmap);
+    tv->progressBox()->setTotalSteps(count);
+    tv->progressBox()->toggleButtonPixmap();
 
     timerShowProgress->start(1000, true);
 }
@@ -462,7 +414,7 @@ void SQ_WidgetStack::slotDelayedShowProgress()
 
     if(!tv) return;
 
-    tv->progressBox->show();
+    tv->progressBox()->show();
 }
 
 void SQ_WidgetStack::thumbnailProcess()
@@ -471,20 +423,20 @@ void SQ_WidgetStack::thumbnailProcess()
 
     if(!tv) return;
 
-    tv->progress->advance(1);
+    tv->progressBox()->advance();
 }
 
 void SQ_WidgetStack::setURLForCurrent(const QString &path, bool parseTree)
 {
-    KURL url = path;
+    KURL url;
+    url.setPath(path);
 
     setURLForCurrent(url, parseTree);
 }
 
 void SQ_WidgetStack::setURLForCurrent(const KURL &url, bool parseTree)
 {
-    setURL(url, true, parseTree);
-
+    setURL(url, parseTree);
     dirop->setURL(url, true);
 }
 
@@ -521,9 +473,9 @@ void SQ_WidgetStack::slotRecreateThumbnail()
     if(tv->updateRunning())
         return;
 
-    tv->progressBox->show();
+    tv->progressBox()->show();
 
-    QTimer::singleShot(30, this, SLOT(slotDelayedRecreateThumbnail()));
+    QTimer::singleShot(10, this, SLOT(slotDelayedRecreateThumbnail()));
 
     qApp->processEvents();
 }
@@ -547,27 +499,27 @@ void SQ_WidgetStack::slotDelayedRecreateThumbnail()
 
     while((item = list->take()))
     {
-        if(!item)
-            continue;
-
         QString path = item->url().path();
 
         if(!SQ_ThumbnailLoadJob::loadThumbnail(path, thumb, true))
             continue;
 
-        int biggestDimension = QMAX(thumb.thumbnail.width(), thumb.thumbnail.height());
-        int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize() - 2;
+        thumb.thumbnail = thumb.thumbnail.swapRGB();
 
-        if(biggestDimension > thumbPixelSize)
-        {
-            double scale = double(thumbPixelSize) / double(biggestDimension);
-            thumb.thumbnail = thumb.thumbnail.smoothScale(int(thumb.thumbnail.width() * scale),
-                int(thumb.thumbnail.height() * scale));
-        }
-
+        // save in cache
         SQ_PixmapCache::instance()->removeEntryFull(path);
-
         SQ_PixmapCache::instance()->insert(path, thumb);
+
+        int biggestDimension = QMAX(thumb.thumbnail.width(), thumb.thumbnail.height());
+        int thumbPixelSize = SQ_ThumbnailSize::instance()->pixelSize();
+
+        // scale down for thumbnail view
+        if(biggestDimension > thumbPixelSize)
+            thumb.thumbnail = SQ_ThumbnailLoadJob::scaleImage(
+                                        thumb.thumbnail.bits(),
+                                        thumb.thumbnail.width(),
+                                        thumb.thumbnail.height(),
+                                        thumbPixelSize);
 
         thumbnailProcess();
 

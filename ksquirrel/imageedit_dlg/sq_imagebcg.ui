@@ -1176,8 +1176,8 @@
     <include location="local" impldecl="in implementation">sq_imageeditoptions.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">fmt_filters.h</include>
-    <include location="local" impldecl="in implementation">fmt_types.h</include>
-    <include location="local" impldecl="in implementation">fmt_defs.h</include>
+    <include location="global" impldecl="in implementation">ksquirrel-libs/fmt_types.h</include>
+    <include location="global" impldecl="in implementation">ksquirrel-libs/fmt_defs.h</include>
     <include location="local" impldecl="in implementation">sq_errorstring.h</include>
     <include location="local" impldecl="in implementation">sq_imagebcg.ui.h</include>
 </includes>

@@ -24,11 +24,9 @@
 #include <sstream>
 #include <csetjmp>
 
-#include <fmt_types.h>
-#include <fmt_utils.h>
-#include <fileio.h>
-#include <fmt_codec_base.h>
-#include <error.h>
+#include <ksquirrel-libs/fmt_utils.h>
+#include <ksquirrel-libs/fmt_codec_base.h>
+#include <ksquirrel-libs/error.h>
 
 #include "sq_imageedit.h"
 

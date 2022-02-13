@@ -23,10 +23,25 @@
 #include <kfiletreeview.h>
 #include <kurl.h>
 
+class SQ_TreeViewItem;
+class SQ_ThreadDirLister;
+
+/*
+ *  We should subclass KFileTreeBranch to let us create
+ *  our own items. See SQ_TreeViewitem.
+ */
+class SQ_FileTreeViewBranch : public KFileTreeBranch
+{
+    public:
+        SQ_FileTreeViewBranch(KFileTreeView*, const KURL &url, const QString &name, const QPixmap &pix);
+        ~SQ_FileTreeViewBranch();
+
+    protected:
+        virtual KFileTreeViewItem *createTreeViewItem(KFileTreeViewItem *parent, KFileItem *fileItem);
+};
+
 /*
  *  SQ_TreeView represents a file tree.
- *
- *  TODO: calculate subpaths.
  */
 
 class SQ_TreeView : public KFileTreeView
@@ -37,22 +52,54 @@ class SQ_TreeView : public KFileTreeView
         SQ_TreeView(QWidget *parent = 0, const char *name = 0);
         ~SQ_TreeView();
 
+        enum Recursion { No = 0, Files, Dirs, FilesDirs };
+
+        /*
+         *  Recursion settings. If recursion > 0, treeview will
+         *  show a number of files/directories in the given directory.
+         *  It will look like that:
+         *
+         *  + mypictures [8]
+         *  | + wallpapers [231]
+         *  | + nature [12]
+         *  | + pets [43]
+         *    | + cats [22]
+         *    | + dogs [32]
+         *
+         *  This operation is threaded.
+         */
+        void setupRecursion();
+
         /*
          *  Load new url, if tree is visible. Save url and do nothing
          *  otherwise.
          */
         void emitNewURL(const KURL &url);
 
+        virtual void clearSelection();
+        virtual void setSelected(QListViewItem *item, bool selected);
+        virtual void setCurrentItem(QListViewItem *item);
+        virtual void setOpen(QListViewItem *item, bool open);
+
         static SQ_TreeView* instance() { return m_instance; }
 
     protected:
 
+        virtual void customEvent(QCustomEvent *e);
+        virtual void startAnimation(KFileTreeViewItem* item, const char*, uint);
+        virtual void stopAnimation(KFileTreeViewItem* item);
+        virtual void viewportResizeEvent(QResizeEvent *);
+        virtual void contentsMousePressEvent(QMouseEvent *e);
+        virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+
         /*
          *  On show event load saved url, if any. See emitNewURL().
          */
-        void showEvent(QShowEvent *);
+        virtual void showEvent(QShowEvent *);
 
     private:
+
+        void setRecursion(int);
 
         /*
          *  Set given item visible, current, and populate it.
@@ -74,6 +121,8 @@ class SQ_TreeView : public KFileTreeView
 
     public slots:
 
+        void slotClearChecked();
+
         /*
          *  Item executed. Let's pass its url to SQ_WidgetStack (if needed).
          */
@@ -91,14 +140,32 @@ class SQ_TreeView : public KFileTreeView
          */
         void slotNewURL(const KURL &url);
 
+        void slotNewTreeViewItems(KFileTreeBranch*, const KFileTreeViewItemList &);
+        void slotDelayedScan();
+        void slotAnimation();
+
     signals:
         void newURL(const KURL &url);
 
+        /*
+         *  Since 0.7.0 our file manager supports multiple directories.
+         *  These signals tell SQ_DirOperator to add or remove some
+         *  urls.
+         */
+        void urlAdded(const KURL &);
+        void urlRemoved(const KURL &);
+
     private:
-        KFileTreeBranch *root, *home;
+        SQ_FileTreeViewBranch *root;
         QStringList paths;
         KFileTreeViewItemList *itemsToClose;
         KURL pendingURL;
+        SQ_ThreadDirLister    *lister;
+        KFileTreeViewItemList m_mapFolders;
+        QTimer *m_animTimer, *scanTimer;
+        bool m_ignoreClick;
+        int m_recurs;
+
         static SQ_TreeView *m_instance;
 };
 

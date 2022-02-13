@@ -156,6 +156,9 @@
 /* The size of a `unsigned long', as computed by sizeof. */
 #undef SIZEOF_UNSIGNED_LONG
 
+/* If we have libkipi installed */
+#undef SQ_HAVE_KIPI
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 

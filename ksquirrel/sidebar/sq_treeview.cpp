@@ -15,36 +15,94 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qdir.h>
 #include <qheader.h>
+#include <qtimer.h>
+
+#include <klocale.h>
 
 #include "sq_iconloader.h"
 #include "sq_widgetstack.h"
 #include "sq_config.h"
 #include "sq_treeview.h"
+#include "sq_treeviewitem.h"
+#include "sq_threaddirlister.h"
 
-SQ_TreeView * SQ_TreeView::m_instance = NULL;
+SQ_TreeView * SQ_TreeView::m_instance = 0;
+
+SQ_FileTreeViewBranch::SQ_FileTreeViewBranch(KFileTreeView *parent, const KURL &url,
+        const QString &name, const QPixmap &pix) : KFileTreeBranch(parent, url, name, pix)
+{}
+
+SQ_FileTreeViewBranch::~SQ_FileTreeViewBranch()
+{}
+
+KFileTreeViewItem* SQ_FileTreeViewBranch::createTreeViewItem(KFileTreeViewItem *parent, KFileItem *fileItem)
+{
+    KFileTreeViewItem *tvi = 0;
+
+    if(parent && fileItem)
+        tvi = new SQ_TreeViewItem(parent, fileItem, this);
+
+    return tvi;
+}
+
+/******************************************************************************************************/
 
 SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
     m_instance = this;
 
-    // we should add at least one branch
-    root = addBranch(KURL(QDir::rootDirPath()), " /", 
-                SQ_IconLoader::instance()->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall));
+    m_animTimer = new QTimer(this);
+    scanTimer = new QTimer(this);
 
+    connect(m_animTimer, SIGNAL(timeout()), this, SLOT(slotAnimation()));
+    connect(scanTimer, SIGNAL(timeout()), this, SLOT(slotDelayedScan()));
+
+    m_recurs = No;
+    lister = new SQ_ThreadDirLister(this);
+    setupRecursion();
+
+    setFrameShape(QFrame::NoFrame);
     addColumn("Name");
+    addColumn("Check");
+
     header()->hide();
+    header()->moveSection(1, 0);
+    setColumnWidthMode(1, QListView::Manual);
+    setColumnWidth(1, 18);
+//    setHScrollBarMode(QScrollView::AlwaysOn);
+//    setResizeMode(QListView::LastColumn);
+
+    root = new SQ_FileTreeViewBranch(this, QDir::rootDirPath(), QString::null,
+        SQ_IconLoader::instance()->loadIcon("folder_red", KIcon::Desktop, KIcon::SizeSmall));
+
+    // some hacks to create our SQ_TreeViewItem as root item
+    SQ_TreeViewItem  *ritem = new SQ_TreeViewItem(this,
+                                        new KFileItem(QDir::rootDirPath(),
+                                        "inode/directory", S_IFDIR),
+                                        root);
+
+    ritem->setText(0, i18n("root"));
+    ritem->setExpandable(true);
+
+    // oops :)
+    delete root->root();
+
+    // set new root
+    root->setRoot(ritem);
+
+    addBranch(root);
 
     // don't show files
     setDirOnlyMode(root, true);
 
     // show '+'
     setRootIsDecorated(true);
-
-    setCurrentItem(root->root());
-    root->setChildRecurse(true);
-    root->setOpen(true);
 
     // connect signals
 
@@ -58,6 +116,9 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 
     itemsToClose = new KFileTreeViewItemList;
 
+    setCurrentItem(root->root());
+    root->setChildRecurse(false);
+
     SQ_Config::instance()->setGroup("Fileview");
     int sync_type = SQ_Config::instance()->readNumEntry("sync type", 0);
 
@@ -69,6 +130,67 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 SQ_TreeView::~SQ_TreeView()
 {
     delete itemsToClose;
+    delete lister;
+}
+
+void SQ_TreeView::setRecursion(int b)
+{
+    // avoid duplicate calls
+    if(m_recurs == b)
+        return;
+
+    QListViewItemIterator it(this);
+    SQ_TreeViewItem *tvi;
+
+    if(m_recurs == No && b)
+    {
+        lister->lock();
+        while(it.current())
+        {
+            tvi = static_cast<SQ_TreeViewItem *>(it.current());
+
+            if(tvi)
+                lister->appendURL(tvi->url());
+
+            ++it;
+        }
+        lister->unlock();
+
+        m_recurs = b;
+        scanTimer->start(1, true);
+    }
+    else
+    {
+        m_recurs = b;
+        while(it.current())
+        {
+            tvi = static_cast<SQ_TreeViewItem *>(it.current());
+
+            // reset item names
+            if(tvi)
+                tvi->setCount(tvi->files(), tvi->dirs(),
+                        (m_recurs == Files || m_recurs == FilesDirs),
+                        (m_recurs == Dirs || m_recurs == FilesDirs));
+
+            ++it;
+        }
+    }
+}
+
+void SQ_TreeView::slotClearChecked()
+{
+    QListViewItemIterator it(this);
+    SQ_TreeViewItem *tvi;
+
+    while(it.current())
+    {
+        tvi = static_cast<SQ_TreeViewItem *>(it.current());
+
+        if(tvi && tvi->checked())
+            tvi->setChecked(false);
+
+        ++it;
+    }
 }
 
 /*
@@ -120,6 +242,7 @@ void SQ_TreeView::populateItem(KFileTreeViewItem *item)
 {
     setCurrentItem(item);
     ensureItemVisible(item);
+    setSelected(item, true);
     item->setOpen(true);
 }
 
@@ -133,7 +256,7 @@ void SQ_TreeView::collapseOpened()
     KFileTreeViewItem *item;
 
     // go through array of items and close them all
-    while((item = itemsToClose->getFirst()) != NULL)
+    while((item = itemsToClose->getFirst()) != 0)
     {
         item->setOpen(false);
         itemsToClose->removeFirst();
@@ -174,6 +297,14 @@ void SQ_TreeView::slotNewURL(const KURL &url)
 
     while(doSearch())
     {}
+
+    KFileTreeViewItem *tvi = root->findTVIByURL(url);
+
+    if(tvi)
+    {
+        setCurrentItem(tvi);
+        setSelected(tvi, true);
+    }
 }
 
 /*
@@ -197,7 +328,7 @@ bool SQ_TreeView::doSearch()
     if(paths.empty())
         return false;
 
-    QValueList<QString>::iterator it = paths.begin();
+    QStringList::iterator it = paths.begin();
 
     KFileTreeViewItem *found = findItem(root, *it);
 
@@ -220,7 +351,7 @@ bool SQ_TreeView::doSearch()
     // save a pointer to this item for collapseOpened()
     itemsToClose->prepend(found);
 
-    // done, but new subpaths are pending...
+    // done, but subpaths are pending...
     return true;
 }
 
@@ -241,6 +372,155 @@ void SQ_TreeView::showEvent(QShowEvent *)
         // finally, load url
         emit newURL(url);
     }
+}
+
+void SQ_TreeView::slotNewTreeViewItems(KFileTreeBranch *, const KFileTreeViewItemList &list)
+{
+    if(!m_recurs)
+        return;
+
+//  uuuuuuuggggggghhhhhhh :)
+    KFileTreeViewItemListIterator it(list);
+    KFileTreeViewItem *item;
+
+    lister->lock();
+    while((item = it.current()) != 0)
+    {
+        lister->appendURL(item->url());
+        ++it;
+    }
+    lister->unlock();
+
+    scanTimer->start(1, true);
+}
+
+void SQ_TreeView::slotDelayedScan()
+{
+//    printf("*** START THREAD\n");
+    if(!lister->running())
+        lister->start();
+}
+
+void SQ_TreeView::customEvent(QCustomEvent *e)
+{
+    if(e->type() != SQ_ItemsEventId)
+        return;
+
+    SQ_ItemsEvent *ie = static_cast<SQ_ItemsEvent *>(e);
+
+    SQ_TreeViewItem *tvi = static_cast<SQ_TreeViewItem *>(root->findTVIByURL(ie->url()));
+
+    if(tvi)
+        tvi->setCount(ie->files(), ie->dirs(),
+                (m_recurs == Files || m_recurs == FilesDirs),
+                (m_recurs == Dirs || m_recurs == FilesDirs));
+}
+
+void SQ_TreeView::slotAnimation()
+{
+    KFileTreeViewItem *it = m_mapFolders.first();
+
+    for(;it;it = m_mapFolders.next())
+        it->setPixmap(0, SmallIcon("kalarm"));
+}
+
+void SQ_TreeView::startAnimation(KFileTreeViewItem *item, const char *, uint)
+{
+    if(!item)
+        return;
+
+    m_mapFolders.append(item);
+
+    if(!m_animTimer->isActive())
+        m_animTimer->start(50, true);
+}
+
+void SQ_TreeView::stopAnimation(KFileTreeViewItem *item)
+{
+    if(!item)
+        return;
+
+    int f = m_mapFolders.find(item);
+
+    if(f != -1)
+    {
+        item->setPixmap(0, itemIcon(item));
+        m_mapFolders.remove(item);
+    }
+
+    m_animTimer->stop();
+}
+
+void SQ_TreeView::viewportResizeEvent(QResizeEvent *)
+{
+    setColumnWidth(0, viewport()->width() - columnWidth(1));
+    triggerUpdate();
+}
+
+void SQ_TreeView::clearSelection()
+{
+    if(!m_ignoreClick) QListView::clearSelection();
+}
+
+void SQ_TreeView::setSelected(QListViewItem *item, bool selected)
+{
+    if(!m_ignoreClick) QListView::setSelected(item, selected);
+}
+
+void SQ_TreeView::setCurrentItem(QListViewItem *item)
+{
+    if(!m_ignoreClick) QListView::setCurrentItem(item);
+}
+
+void SQ_TreeView::setOpen(QListViewItem *item, bool open)
+{
+    if(!m_ignoreClick) QListView::setOpen(item, open);
+}
+
+void SQ_TreeView::contentsMousePressEvent(QMouseEvent *e)
+{
+    QListViewItem *item;
+
+    QPoint point = e->pos();
+    point.setY(point.y() - contentsY());
+
+    if(header()->sectionAt(point.x()) && (item = itemAt(point)))
+    {
+        SQ_TreeViewItem *m = static_cast<SQ_TreeViewItem *>(item);
+
+        if(m)
+        {
+            m->setChecked(!m->checked());
+
+            if(m->checked())
+                emit urlAdded(m->url());
+            else
+                emit urlRemoved(m->url());
+        }
+
+        m_ignoreClick = true;
+    }
+
+    QListView::contentsMousePressEvent(e);
+
+    m_ignoreClick = false;
+}
+
+void SQ_TreeView::contentsMouseDoubleClickEvent(QMouseEvent *e)
+{
+    if(header()->sectionAt(e->x()))
+        m_ignoreClick = true;
+
+    QListView::contentsMouseDoubleClickEvent(e);
+
+    m_ignoreClick = false;
+}
+
+void SQ_TreeView::setupRecursion()
+{
+    SQ_Config::instance()->setGroup("Sidebar");
+
+    setRecursion(SQ_Config::instance()->readNumEntry("recursion_type", No));
 }
 
 #include "sq_treeview.moc"

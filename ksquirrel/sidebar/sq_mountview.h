@@ -18,14 +18,19 @@
 #ifndef SQ_MOUNTVIEW_H
 #define SQ_MOUNTVIEW_H
 
-#include <kfileiconview.h>
+#include <qstringlist.h>
 
+#include <klistview.h>
+
+class KPopupMenu;
+
+class SQ_MountViewItem;
 
 /*
- *  SQ_MountView is an icon view representing mount points.
+ *  SQ_MountView is an detailed view representing mount points.
  */
 
-class SQ_MountView : public KFileIconView
+class SQ_MountView : public KListView
 {
     Q_OBJECT
 
@@ -33,20 +38,46 @@ class SQ_MountView : public KFileIconView
         SQ_MountView(QWidget *parent = 0, const char *name = 0);
 	~SQ_MountView();
 
+        enum { OPT_COL_MOUNTPOINT = 1, OPT_COL_DEVICE = 2, OPT_COL_FSTYPE = 4, OPT_COL_OPTIONS = 8 };
+
+        static SQ_MountView* instance() { return m_inst; }
+
+        void setupColumns();
+
+        void reload(bool current = true);
+
+    private:
+        void setColumns(int cols);
+        bool exists(const QString &);
+
     private slots:
 
+        void slotContextMenu(KListView *, QListViewItem *i, const QPoint &p);
         /*
          *  Item executed. We should emit path() signal.
          */
-        void slotExecuted(QIconViewItem *i);
+        void slotExecuted(QListViewItem *i);
 
-        /*
-         *  Reload current view (reread currently mounted fs).
-         */
-        void slotReload();
+        // for context menu
+        void slotRefresh();
+        void slotMount();
+        void slotUnmount();
+        void slotUnmountFinished();
+        void slotMountFinished();
+        void slotMountFinished2();
+        void slotMountError();
 
     signals:
         void path(const QString &);
+
+    private:
+        int m_columns;
+        SQ_MountViewItem *mountItem, *citem;
+        QStringList mounted;
+        KPopupMenu *popup;
+        int id_mount, id_unmount;
+
+        static SQ_MountView *m_inst;
 };
 
 #endif

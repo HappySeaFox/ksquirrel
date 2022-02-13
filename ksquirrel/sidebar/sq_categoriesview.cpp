@@ -15,8 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qfileinfo.h>
+#include <qfile.h>
 #include <qheader.h>
+#include <qdir.h>
 
 #include <kio/job.h>
 #include <ktoolbar.h>
@@ -29,7 +35,6 @@
 #include <kfiletreeviewitem.h>
 #include <kpopupmenu.h>
 #include <kmessagebox.h>
-#include <kmdcodec.h>
 #include <kdebug.h>
 
 #include "ksquirrel.h"
@@ -41,8 +46,9 @@
 #include "sq_externaltool.h"
 #include "sq_widgetstack.h"
 #include "sq_categorybrowsermenu.h"
+#include "sq_storagefile.h"
 
-SQ_CategoriesBox * SQ_CategoriesBox::sing = NULL;
+SQ_CategoriesBox * SQ_CategoriesBox::sing = 0;
 
 /* *************************************************************************************** */
 
@@ -57,17 +63,20 @@ KFileTreeViewItem* SQ_CategoriesViewBranch::createTreeViewItem(KFileTreeViewItem
 {
     KFileTreeViewItem *i = KFileTreeBranch::createTreeViewItem(parent, fileItem);
 
+    /*
+     *  In storage there are files with MD5 sum appended to their names.
+     *  We should cut off MD5.
+     */
     if(i)
     {
         QString n = i->fileItem()->name();
         int ind = n.findRev('.');
 
-        // OOPS???
+        // OOPS
         if(ind != -1)
-        {
-            n.truncate(ind+1);
-            i->setText(0, n);
-        }
+            n.truncate(ind);
+
+        i->setText(0, n);
     }
 
     return i;
@@ -78,6 +87,8 @@ KFileTreeViewItem* SQ_CategoriesViewBranch::createTreeViewItem(KFileTreeViewItem
 SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
     kdDebug() << "+SQ_CategoriesView" << endl;
+
+    setAcceptDrops(true);
 
     SQ_Dir dir(SQ_Dir::Categories);
 
@@ -92,7 +103,6 @@ SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileT
     setDirOnlyMode(root, false);
     setRootIsDecorated(true);
     setCurrentItem(root->root());
-    setAcceptDrops(true);
     root->setChildRecurse(true);
     root->setOpen(true);
 
@@ -105,7 +115,7 @@ SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileT
 
     menu->insertItem(SQ_IconLoader::instance()->loadIcon("folder_new", KIcon::Desktop, KIcon::SizeSmall), i18n("New category"), SQ_CategoriesBox::instance(), SLOT(slotNewCategory()));
     menu->insertSeparator();
-    menu->insertItem(SQ_IconLoader::instance()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall), i18n("Delete"), SQ_CategoriesBox::instance(), SLOT(slotDeleteItem()));
+    menu->insertItem(i18n("Delete"), SQ_CategoriesBox::instance(), SLOT(slotDeleteItem()));
     menu->insertItem(SQ_IconLoader::instance()->loadIcon("info", KIcon::Desktop, KIcon::SizeSmall), i18n("Properties"), SQ_CategoriesBox::instance(), SLOT(slotItemProperties()));
 }
 
@@ -125,27 +135,16 @@ void SQ_CategoriesView::slotItemExecuted(QListViewItem *item)
 {
     if(!item) return;
 
-    KFileTreeViewItem *cur = dynamic_cast<KFileTreeViewItem *>(item);
+    KFileTreeViewItem *cur = static_cast<KFileTreeViewItem *>(item);
 
     // file item
     if(cur && !cur->isDir())
     {
-        QFile file(cur->path());
+        QString inpath = SQ_StorageFile::readStorageFIle(cur->path());
 
-        if(file.open(IO_ReadOnly))
-        {
-            QByteArray ba = file.readAll();
-
-            if(file.status() == IO_Ok)
-            {
-                QString intpath(ba);
-
-                if(SQ_LibraryHandler::instance()->supports(intpath))
-                    SQ_GLWidget::window()->slotStartDecoding(intpath, true);
-            }
-
-            file.close();
-        }
+        if(!inpath.isEmpty())
+            if(SQ_LibraryHandler::instance()->supports(inpath))
+                SQ_GLWidget::window()->slotStartDecoding(inpath, true);
     }
 }
 
@@ -162,11 +161,11 @@ SQ_CategoriesBox::SQ_CategoriesBox(QWidget *parent, const char *name) : QVBox(pa
     view = new SQ_CategoriesView(this);
     toolbar = new KToolBar(this);
 
-    connect(view, SIGNAL(dropped(QDropEvent*, QListViewItem*)), this, SLOT(slotDropped(QDropEvent*, QListViewItem*)));
+    connect(view, SIGNAL(dropped(QDropEvent*, QListViewItem*, QListViewItem*)), this, SLOT(slotDropped(QDropEvent*, QListViewItem*, QListViewItem*)));
 
     SQ_Dir dir(SQ_Dir::Categories);
 
-    menu = new SQ_CategoryBrowserMenu(dir.root(), NULL, "Categories menu");
+    menu = new SQ_CategoryBrowserMenu(dir.root(), 0, "Categories menu");
 
     toolbar->setIconSize(KIcon::SizeSmall);
 
@@ -194,24 +193,9 @@ void SQ_CategoriesBox::addToCategory(const QString &path)
     while(item)
     {
         if(item->isFile())
-        {
-            writeCategoryFile(path + QString::fromLatin1("/") + item->name(),
-                item->url().path(), item->url().path().length());
-        }
+            SQ_StorageFile::writeStorageFile(path + QDir::separator() + item->name(), item->url().path());
 
         item = selected->next();
-    }
-}
-
-void SQ_CategoriesBox::writeCategoryFile(const QString &path, const QString &inpath, const int len)
-{
-    KMD5 md5(QFile::encodeName(inpath));
-    QFile file(path + QString::fromLatin1(".") + QString(md5.hexDigest()));
-
-    if(file.open(IO_WriteOnly))
-    {
-        file.writeBlock(inpath, len);
-        file.close();
     }
 }
 
@@ -219,8 +203,7 @@ void SQ_CategoriesBox::slotDefaultCategories()
 {
     if(KMessageBox::questionYesNo(KSquirrel::app(),
         i18n("It will create default categories: Concerts, Pets, Home, Friends, Free time, Traveling, Nature. Continue ?"),
-        i18n("Create default categories"))
-        == KMessageBox::Yes)
+        i18n("Create default categories")) == KMessageBox::Yes)
     {
         QStringList list;
         SQ_Dir dir(SQ_Dir::Categories);
@@ -245,15 +228,15 @@ void SQ_CategoriesBox::slotNewCategory()
     if(ok)
     {
         lastdir = tmp;
-        KIO::mkdir(cur->path() + QString::fromLatin1("/") + lastdir);
+        KIO::mkdir(cur->path() + QDir::separator() + lastdir);
     }
 }
 
-void SQ_CategoriesBox::slotDropped(QDropEvent *e, QListViewItem *item)
+void SQ_CategoriesBox::slotDropped(QDropEvent *e, QListViewItem *parent, QListViewItem *item)
 {
-    if(!item) return;
+    if(!item) item = parent;
 
-    KFileTreeViewItem *cur = dynamic_cast<KFileTreeViewItem *>(item);
+    KFileTreeViewItem *cur = static_cast<KFileTreeViewItem *>(item);
 
     if(!cur) return;
 
@@ -271,8 +254,7 @@ void SQ_CategoriesBox::slotDropped(QDropEvent *e, QListViewItem *item)
             fi.setFile((*it).path());
 
             if(fi.isFile())
-                writeCategoryFile(path + QString::fromLatin1("/") + (*it).fileName(),
-                    (*it).path(), (*it).path().length());
+                SQ_StorageFile::writeStorageFile(path + QDir::separator() + (*it).fileName(), (*it).path());
         }
 }
 
@@ -281,6 +263,14 @@ void SQ_CategoriesBox::slotDeleteItem()
     KFileTreeViewItem *cur = view->currentKFileTreeViewItem();
 
     if(!cur) return;
+
+    SQ_Dir dir(SQ_Dir::Categories);
+
+    KURL root;
+    root.setPath(dir.root());
+
+    if(cur->url().equals(root, true))
+        return;
 
     QListViewItem *next = cur->itemBelow();
     if(!next) next = cur->itemAbove();
@@ -298,7 +288,7 @@ void SQ_CategoriesBox::slotDeleteItem()
     cur = 0;
 
     // physically remove file from storage
-    KIO::del(tmp);
+    KIO::del(tmp, false, false);
 }
 
 void SQ_CategoriesBox::slotItemProperties()
@@ -307,27 +297,19 @@ void SQ_CategoriesBox::slotItemProperties()
 
     if(!cur) return;
 
-    // directory - juat show its properties
+    // directory - just show its properties
     if(cur->isDir())
         (void)new KPropertiesDialog(cur->url(), KSquirrel::app());
     // link to real file
     else
     {
-        QFile file(cur->path());
+        QString inpath = SQ_StorageFile::readStorageFIle(cur->path());
 
-        if(file.open(IO_ReadOnly))
+        if(!inpath.isEmpty())
         {
-            QByteArray ba = file.readAll();
-
-            if(file.status() == IO_Ok)
-            {
-                KURL url;
-                QString intpath(ba);
-                url.setPath(intpath);
-                (void)new KPropertiesDialog(url, KSquirrel::app());
-            }
-
-            file.close();
+            KURL url;
+            url.setPath(inpath);
+            (void)new KPropertiesDialog(url, KSquirrel::app());
         }
     }
 }

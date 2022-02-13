@@ -15,9 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "sq_hloptions.h"
 
-SQ_HLOptions * SQ_HLOptions::m_instance = NULL;
+SQ_HLOptions * SQ_HLOptions::m_instance = 0;
 
 SQ_HLOptions::SQ_HLOptions() : QObject(), showLibsAndExit(false)
 {

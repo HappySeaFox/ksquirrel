@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qfile.h>
 
 #include <kstringhandler.h>
@@ -30,7 +34,7 @@
 #include "sq_popupmenu.h"
 #include "sq_config.h"
 
-SQ_ExternalTool * SQ_ExternalTool::m_instance = NULL;
+SQ_ExternalTool * SQ_ExternalTool::m_instance = 0;
 
 Tool::Tool()
 {}
@@ -45,7 +49,7 @@ Tool::Tool(const QString &pix, const QString &nam, const QString &com)
 SQ_ExternalTool::SQ_ExternalTool(QObject *parent) : QObject(parent), QValueVector<Tool>()
 {
     m_instance = this;
-    menu = new SQ_PopupMenu(NULL, "External tools");
+    menu = new SQ_PopupMenu(0, "External tools");
 
     connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
 

@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qwidgetstack.h>
 #include <qsignalmapper.h>
 
@@ -26,8 +30,11 @@
 #include "sq_multibar.h"
 #include "sq_config.h"
 
+SQ_MultiBar * SQ_MultiBar::m_inst = 0;
+
 SQ_MultiBar::SQ_MultiBar(QWidget *parent, const char *name) : QHBox(parent, name)
 {
+    m_inst = this;
     m_id = 0;
     m_selected = -1;
 

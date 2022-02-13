@@ -35,6 +35,10 @@ class SQ_FileIconViewBase : public KFileIconView
 
         virtual void insertCdUpItem(const KURL &base) = 0;
 
+    signals:
+        void launch(KFileItem *);
+        void highlighted(KFileItem *);
+
     protected:
         /*
          *  Accept dragging.
@@ -46,12 +50,14 @@ class SQ_FileIconViewBase : public KFileIconView
          */
         virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
-    protected slots:
-        /*
-         *  Somebody dropped urls in viewport. Let's execute popup menu with
-         *  file actions.
-         */
-        void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
+    private:
+        void exec(QIconViewItem *i, bool single, bool hl = false);
+
+    private slots:
+        void slotMouseButtonClicked(int, QIconViewItem *);
+        void slotDoubleClicked(QIconViewItem *i);
+        void slotReturnPressed(QIconViewItem *i);
+        void slotCurrentChanged(QIconViewItem *i);
 };
 
 #endif

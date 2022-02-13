@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>SQ_ViewCache</class>
 <widget class="QDialog">
     <property name="name">
@@ -13,7 +13,10 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Thumbnails' cache</string>
+        <string>Memory Cache</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
     </property>
     <property name="modal">
         <bool>true</bool>
@@ -27,7 +30,7 @@
                 <cstring>pushButton1</cstring>
             </property>
             <property name="text">
-                <string>OK</string>
+                <string>Close</string>
             </property>
         </widget>
         <widget class="QListView" row="0" column="0" rowspan="1" colspan="3">

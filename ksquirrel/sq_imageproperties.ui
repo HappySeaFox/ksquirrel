@@ -8,12 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>507</width>
-            <height>408</height>
+            <width>475</width>
+            <height>352</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Properties</string>
+        <string>Image Properties</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>
@@ -27,7 +27,7 @@
                 <cstring>pushButton1</cstring>
             </property>
             <property name="text">
-                <string>OK</string>
+                <string>Close</string>
             </property>
             <property name="toggleButton">
                 <bool>false</bool>

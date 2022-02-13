@@ -1,7 +1,7 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = close.png file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png quick.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png slideshow.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png 
+EXTRA_DIST = close.png file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png slideshow.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
@@ -18,8 +18,6 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/flipH.png $(kde_datadir)/ksquirrel/images/actions/flipH.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/flipV.png $(kde_datadir)/ksquirrel/images/actions/flipV.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
-	$(INSTALL_DATA) $(srcdir)/quick.png $(kde_datadir)/ksquirrel/images/actions/quick.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/rotateL.png $(kde_datadir)/ksquirrel/images/actions/rotateL.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
@@ -59,7 +57,6 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_prev.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/flipH.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/flipV.png
-	-rm -f $(kde_datadir)/ksquirrel/images/actions/quick.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/rotateL.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/rotateR.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoom-.png

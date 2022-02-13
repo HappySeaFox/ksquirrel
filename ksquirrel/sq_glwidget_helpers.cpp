@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qpainter.h>
 
 #include "sq_glwidget_helpers.h"
@@ -39,45 +43,3 @@ SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel,
 
 SQ_ToolButton::~SQ_ToolButton()
 {}
-
-SQ_ToolButtonPage::SQ_ToolButtonPage(QObject *receiver, const char *slot, QToolBar *parent, const char *name)
-    : SQ_ToolButton(QIconSet(), QString::null, receiver, slot, parent, name), val(0)
-{
-    setPixmap(generatePixmap());
-}
-
-SQ_ToolButtonPage::~SQ_ToolButtonPage()
-{}
-
-void SQ_ToolButtonPage::advanceValue()
-{
-    val++;
-
-    setPixmap(generatePixmap());
-}
-
-void SQ_ToolButtonPage::flush()
-{
-    val = 0;
-
-    setPixmap(generatePixmap());
-}
-
-QPixmap SQ_ToolButtonPage::generatePixmap()
-{
-    QPixmap pix(SQ_ToolButton::fixedWidth(), SQ_ToolButton::fixedWidth());
-
-    pix.fill(Qt::white);
-
-    QPainter p(&pix);
-
-    p.setPen(Qt::black);
-    QFont f = font();
-    f.setBold(true);
-    f.setPointSize(8);
-    p.setFont(f);
-
-    p.drawText(0, 0, pix.width(), pix.height(), Qt::AlignCenter, QString::number(val));
-
-    return pix;
-}

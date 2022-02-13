@@ -14,22 +14,20 @@ void SQ_ViewCache::init()
     if(SQ_PixmapCache::instance()->isEmpty())
         return;
 
-    QPixmap pix;
-
     listCache->setSorting(-1);
 
-    QListViewItem *itemafter = NULL, *item;
+    QListViewItem *itemafter = 0, *item;
 
-    for(SQ_PixmapCache::cache_iterator it = SQ_PixmapCache::instance()->begin();
-            it != SQ_PixmapCache::instance()->end();++it)
+    SQ_PixmapCache::iterator itEnd = SQ_PixmapCache::instance()->end();
+
+    for(SQ_PixmapCache::iterator it = SQ_PixmapCache::instance()->begin();it != itEnd;++it)
     {
         if(itemafter)
             item = new QListViewItem(listCache, itemafter, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);
         else
             item = new QListViewItem(listCache, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);
 
-        if(pix.convertFromImage(it.data().info.mime))
-            item->setPixmap(1, pix);
+        item->setPixmap(1, it.data().info.mime);
 
         itemafter = item;
 

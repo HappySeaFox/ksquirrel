@@ -18,26 +18,67 @@
 #ifndef SQ_DIROPERATOR_H
 #define SQ_DIROPERATOR_H
 
-#include "sq_diroperatorbase.h"
+#include <qmap.h>
 
-class SQ_DirOperator : public SQ_DirOperatorBase
+#include <kdiroperator.h>
+
+class QTimer;
+
+class KDirLister;
+class KFileIconView;
+
+class SQ_DirOperator : public KDirOperator
 {
     Q_OBJECT
 
     public:
-        SQ_DirOperator(const KURL &url = KURL(), ViewT type_ = SQ_DirOperator::TypeList,
-                                    QWidget *parent = 0, const char *name = 0);
-        virtual ~SQ_DirOperator();
+        /*
+         *  View type.
+         *
+         *  - list view with small icons
+         *  - icon view with large icons
+         *  - detailed view with file details
+         *  - thumbnail view with image thumbnails
+         */
+        enum ViewT {TypeList = 0, TypeIcons, TypeDetailed, TypeThumbs };
 
         /*
-         *  If current view type is "thumbnail view", then
-         *     - if thumbnail view is visible (QWidget::isVisible()), start
-         *       thumbnail update;
-         *     - if thumbnail view is not visible, keep in mind
-         *       (SQ_FileThumbView::waitForShowEvent()) that we should start
-         *       thumbnail update later.
+         *  Constructor. Creates diroperator with specified view type. SQ_DirOperatorBase
+         *  reimplements createView() to create different custom views.
+         *  View type is determined by 'type_'.
          */
+        SQ_DirOperator(const KURL &url = KURL(), ViewT type_ = SQ_DirOperator::TypeList,
+                                    QWidget *parent = 0, const char *name = 0);
+
+        ~SQ_DirOperator();
+
+        /*
+         *  Deselect all items, set current item, select this item,
+         *  and ensure it visible.
+         */
+        void setCurrentItem(KFileItem *item);
+
+        /*
+         *  Save new view type for future use. It means that SQ_WidgetStack
+         *  wants to change view type (for example "list view" => "thumbnail view"),
+         *  and will activate an SQ_DirOperator's action, which will change view type.
+         *
+         *  See SQ_WidgetStack::raiseWidget() for more.
+         */
+        void prepareView(ViewT);
+
+        KFileView* preparedView();
+
+        void setPreparedView();
+
         void startOrNotThumbnailUpdate();
+
+        /*
+         *  Is current diropertor manages thumbnail view ?
+         */
+        bool isThumbView() const;
+
+        int viewType() const;
 
         /*
          *  Smart update. Store all file items, reset view,
@@ -50,15 +91,45 @@ class SQ_DirOperator : public SQ_DirOperatorBase
          */
         void removeCdUpItem();
 
-    private:
+        void execute(KFileItem *);
+
+    protected:
         /*
-         *  Update current file's icon and name
-         *  in statusbar. Will be called after some item
-         *  has been selected.
+         *  Reimplement createView() to create custom views.
          */
-        void statusFile(KFileItem *);
+        virtual KFileView* createView(QWidget *parent, KFile::FileView view);
+
+        virtual bool eventFilter(QObject *o, QEvent *e);
+
+    private:
+        void disableSpecificActions(KFileIconView *);
+
+        void highlight(KFileItem *);
+
+        /*
+         *  SQ_DirOperator has context menu, derived from KDirOperator.
+         *  This method will change this menu, insert new actions.
+         */
+        void setupActions();
+
+        void clearListers();
+
+    signals:
+        /*
+         *  If user clicked on item, and it is archive file,
+         *  emit this signal. Normally SQ_WidgetStack will catch it.
+         */
+        void tryUnpack(KFileItem *item);
+
+        /*
+         *  Run selected file separately (with default application)
+         */
+        void runSeparately(KFileItem *item);
 
     public slots:
+        void urlAdded(const KURL &);
+        void urlRemoved(const KURL &);
+
         /*
          *  Invoked, when current directory has been loaded.
          */
@@ -79,7 +150,36 @@ class SQ_DirOperator : public SQ_DirOperatorBase
          */
         void slotActivateExternalTool(int index);
 
-    protected slots:
+    private slots:
+        /*
+         *  Edit current item's mimetype (Konqueror-related action).
+         */
+        void slotEditMime();
+
+        void slotDropped(const KFileItem *, QDropEvent*, const KURL::List&);
+        void slotAddToBasket();
+
+        /*
+         *  Execute item. If current clicking policy is "Single click",
+         *  single click will execute item, and double click otherwise.
+         */
+        void slotExecuted(KFileItem *item);
+
+        /*
+         *  Item selected.
+         */
+        void slotSelected(KFileItem *);
+
+        /*
+         *  URL entered.
+         */
+        void slotUrlEntered(const KURL&);
+
+        /*
+         *  If user clicked on item, and it is supported image type,
+         *  start decoding with small delay.
+         */
+        void slotDelayedDecode();
 
         /*
          *  Invoked, when some item has been deleted. We should
@@ -89,11 +189,47 @@ class SQ_DirOperator : public SQ_DirOperatorBase
 
         void slotUpdateInformation(int,int);
 
+    private:
+        typedef QMap<KURL, KDirLister *> SQ_Listers;
+        SQ_Listers listers;
         /*
-         *  Some item has been selected.
+         *  Pointer to current view. All view types (such as icon view, list view ...)
+         *  are derived from KFileView.
          */
-        void slotSelected(QIconViewItem*);
-        void slotSelected(QListViewItem*);
+        KFileView     *fileview;
+
+        /*
+         *  Some additional menus.
+         */
+        KActionMenu     *pADirOperatorMenu, *pAFileActions, *pAImageActions;
+
+        ViewT     type;
+        QString    tobeDecoded;
+        QTimer    *timer;
 };
+
+inline
+int SQ_DirOperator::viewType() const
+{
+    return static_cast<int>(type);
+}
+
+inline
+bool SQ_DirOperator::isThumbView() const
+{
+    return (type == SQ_DirOperator::TypeThumbs);
+}
+
+inline
+KFileView* SQ_DirOperator::preparedView()
+{
+    return fileview;
+}
+
+inline
+KFileView* SQ_DirOperator::createView(QWidget *, KFile::FileView)
+{
+    return fileview;
+}
 
 #endif

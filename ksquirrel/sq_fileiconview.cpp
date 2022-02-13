@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qpoint.h>
 
 #include <kdebug.h>
@@ -64,7 +68,7 @@ void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
  */
 SQ_FileIconViewItem* SQ_FileIconView::viewItem(const KFileItem *item)
 {
-    return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : NULL;
+    return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : 0;
 }
 
 void SQ_FileIconView::updateView(bool b)

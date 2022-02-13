@@ -23,9 +23,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "sq_thumbnailsize.h"
 
-SQ_ThumbnailSize * SQ_ThumbnailSize::m_instance = NULL;
+SQ_ThumbnailSize * SQ_ThumbnailSize::m_instance = 0;
 
 SQ_ThumbnailSize::SQ_ThumbnailSize(QObject *parent, Size value) 
     : QObject(parent), mValue(value), m_extended(false), m_margin(16)
@@ -38,9 +42,7 @@ SQ_ThumbnailSize::SQ_ThumbnailSize(QObject *parent, const QString& str)
 {
     QString low = str.lower();
 
-    if(low == "small")
-        mValue = Small;
-    else if(low == "medium")
+    if(low == "medium")
         mValue = Medium;
     else if(low == "large")
         mValue = Large;
@@ -52,9 +54,7 @@ void SQ_ThumbnailSize::setPixelSize(const QString &size)
 {
     QString low = size.lower();
 
-    if(low == "small")
-        mValue = Small;
-    else if(low == "medium")
+    if(low == "medium")
         mValue = Medium;
     else if(low == "large")
         mValue = Large;
@@ -64,7 +64,7 @@ void SQ_ThumbnailSize::setPixelSize(const QString &size)
 
 QString SQ_ThumbnailSize::stringValue() const
 {
-    static QString sizeStr[4] = {"48","64","96","128"};
+    static QString sizeStr[3] = {"64","96","128"};
 
     return sizeStr[int(mValue)];
 }

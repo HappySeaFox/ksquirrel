@@ -25,6 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qfile.h>
@@ -41,7 +45,7 @@
 #include "sq_archivehandler.h"
 #include "sq_dir.h"
 
-SQ_ArchiveHandler * SQ_ArchiveHandler::m_instance = NULL;
+SQ_ArchiveHandler * SQ_ArchiveHandler::m_instance = 0;
 
 SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObject(parent, name)
 {
@@ -163,7 +167,7 @@ bool SQ_ArchiveHandler::unpack()
         return false;
     }
 
-    KArchive *arc = NULL;
+    KArchive *arc = 0;
 
     // find protocol number
     switch(findProtocolByFile(item))
@@ -184,7 +188,7 @@ bool SQ_ArchiveHandler::unpack()
 
         // protocol not found!
         default:
-            arc = NULL;
+            arc = 0;
     }
 
     if(arc)

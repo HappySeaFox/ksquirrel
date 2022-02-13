@@ -45,7 +45,7 @@ SQ_EditBase::SQ_EditBase(QObject *parent) : QObject(parent)
 
     special_action = i18n("Editing");
 
-    image = NULL;
+    image = 0;
 }
 
 SQ_EditBase::~SQ_EditBase()
@@ -106,16 +106,7 @@ QString SQ_EditBase::adjustFileName(const QString &globalprefix, const QString &
     prefix.truncate(name2.length() - ext.length());
 
     suffix = (SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.") + ext))
-
-#ifndef QT_NO_STL
-
-        ? QString(lw->codec->fmt_extension(32)) : ext;
-
-#else
-
-        ? QString(lw->codec->fmt_extension(32).c_str()) : ext;
-
-#endif
+                ? QString(lw->codec->extension(32)) : ext;
 
     if(replace == 0 || replace == 2)
         result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
@@ -210,13 +201,13 @@ void SQ_EditBase::decodingCycle()
 
             name = QFile::encodeName(*it);
 
-            i = lr->codec->fmt_read_init(name.ascii());
+            i = lr->codec->read_init(name.ascii());
 
             if(setjmp(jmp))
             {
                 gerrors++;
 
-                lr->codec->fmt_read_close();
+                lr->codec->read_close();
 
                 emit convertText(SQ_ErrorString::instance()->stringSN(error_code), true);
                 emit oneFileProcessed();
@@ -242,7 +233,7 @@ void SQ_EditBase::decodingCycle()
 
                 qApp->processEvents();
 
-                i = lr->codec->fmt_read_next();
+                i = lr->codec->read_next();
 
                 im = lr->codec->image(current-1);
 
@@ -331,12 +322,12 @@ void SQ_EditBase::decodingCycle()
 
                 for(int pass = 0;pass < im->passes;pass++)
                 {
-                    lr->codec->fmt_read_next_pass();
+                    lr->codec->read_next_pass();
 
                     for(j = 0;j < im->h;j++)
                     {
                         scan = image + j * im->w;
-                        i = lr->codec->fmt_read_scanline(scan);
+                        i = lr->codec->read_scanline(scan);
                         errors += (int)(i != SQE_OK);
                     }
                 }
@@ -351,7 +342,7 @@ void SQ_EditBase::decodingCycle()
                 current++;
             }
 
-            lr->codec->fmt_read_close();
+            lr->codec->read_close();
         }
         else
         {
@@ -363,7 +354,7 @@ void SQ_EditBase::decodingCycle()
     if(image)
     {
         free(image);
-        image = NULL;
+        image = 0;
     }
 
     cycleDone();
@@ -381,7 +372,7 @@ int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im)
 {
     int     passes = opt.interlaced ?  lw->opt.passes : 1;
     int     s, j, err;
-    RGBA     *scan = NULL;
+    RGBA     *scan = 0;
 
     err = manipDecodedImage(im);
 
@@ -393,23 +384,19 @@ int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im)
     if(!scan)
         return SQE_W_NOMEMORY;
 
-#ifndef QT_NO_STL
-    err = lw->codec->fmt_write_init(name, *im, opt);
-#else
-    err = lw->codec->fmt_write_init(name.ascii(), *im, opt);
-#endif
+    err = lw->codec->write_init(name, *im, opt);
 
     if(err != SQE_OK)
         goto error_exit;
 
-    err = lw->codec->fmt_write_next();
+    err = lw->codec->write_next();
 
     if(err != SQE_OK)
         goto error_exit;
 
     for(s = 0;s < passes;s++)
     {
-        err = lw->codec->fmt_write_next_pass();
+        err = lw->codec->write_next_pass();
 
         if(err != SQE_OK)
             goto error_exit;
@@ -421,7 +408,7 @@ int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im)
             else
                 determineNextScan(*im, scan, j);
 
-            err = lw->codec->fmt_write_scanline(scan);
+            err = lw->codec->write_scanline(scan);
 
             if(err != SQE_OK)
                 goto error_exit;
@@ -432,7 +419,7 @@ int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im)
 
     error_exit:
 
-    lw->codec->fmt_write_close();
+    lw->codec->write_close();
 
     if(scan) delete scan;
 
@@ -498,7 +485,7 @@ void SQ_EditBase::initWriteOptions()
 
 void SQ_EditBase::setWritingLibrary()
 {
-    lw = lr->writable ? lr : altw;
+    lw = lr->writestatic ? lr : altw;
 }
 
 QImage SQ_EditBase::generatePreview() const

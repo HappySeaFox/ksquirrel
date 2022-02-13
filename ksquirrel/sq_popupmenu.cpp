@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "sq_popupmenu.h"
 
 SQ_PopupMenu::SQ_PopupMenu(QWidget *parent, const char *name)

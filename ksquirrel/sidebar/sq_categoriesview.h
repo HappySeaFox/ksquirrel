@@ -85,15 +85,12 @@ class SQ_CategoriesBox : public QVBox
 
         static SQ_CategoriesBox* instance() { return sing; };
 
-    private:
-        void writeCategoryFile(const QString &path, const QString &inpath, const int len);
-
     private slots:
         void slotNewCategory();
         void slotDefaultCategories();
         void slotDeleteItem();
         void slotItemProperties();
-        void slotDropped(QDropEvent*, QListViewItem*);
+        void slotDropped(QDropEvent *, QListViewItem *, QListViewItem *);
 
     private:
         SQ_CategoriesView *view;

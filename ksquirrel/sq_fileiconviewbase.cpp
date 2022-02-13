@@ -15,42 +15,80 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qdragobject.h>
-#include <qevent.h>
 #include <qcursor.h>
 
 #include <kapplication.h>
-#include <kpopupmenu.h>
+#include <kglobalsettings.h>
 #include <kaction.h>
+#include <kfileitem.h>
 #include <kio/job.h>
 
 #include "sq_fileiconviewbase.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
-#include "sq_navigatordropmenu.h"
 
 SQ_FileIconViewBase::SQ_FileIconViewBase(QWidget *parent, const char *name)
     : KFileIconView(parent, name)
 {
-    setAcceptDrops(true);
-    connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)),
-                this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
+    disconnect(this, SIGNAL(currentChanged(QIconViewItem *)), 0, 0);
+
+    connect(this, SIGNAL(mouseButtonClicked(int, QIconViewItem *, const QPoint &)),
+                    this, SLOT(slotMouseButtonClicked(int, QIconViewItem *)));
+    connect(this, SIGNAL(doubleClicked(QIconViewItem *)),
+                    this, SLOT(slotDoubleClicked(QIconViewItem *)));
+    connect(this, SIGNAL(returnPressed(QIconViewItem *)),
+                    this, SLOT(slotReturnPressed(QIconViewItem *)));
+    connect(this, SIGNAL(currentChanged(QIconViewItem *)),
+                    this, SLOT(slotCurrentChanged(QIconViewItem *)));
 }
 
 SQ_FileIconViewBase::~SQ_FileIconViewBase()
 {}
 
-/*
- *  Somebody dropped urls in viewport. Let's execute popup menu with
- *  file actions.
- */
-void SQ_FileIconViewBase::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
+void SQ_FileIconViewBase::exec(QIconViewItem *i, bool single, bool hl)
 {
-    KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
+    if(i)
+    {
+        KFileIconViewItem *kvi = static_cast<KFileIconViewItem *>(i);
+        KFileItem *kfi = kvi->fileInfo();
 
-    // setup and show popup menu with actions
-    SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
-    SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
+        if(hl && kfi) // highlight all items
+        {
+//            printf("HL: url: %s\n", kfi->url().path().ascii());
+            emit highlighted(kfi);
+        }
+        else if(single && kfi && kfi->isFile()) // execute only files
+        {
+//            printf("EXEC: url: %s\n", kfi->url().path().ascii());
+            emit launch(kfi);
+        }
+    }
+}
+
+void SQ_FileIconViewBase::slotDoubleClicked(QIconViewItem *i)
+{
+    exec(i, !KGlobalSettings::singleClick());
+}
+
+void SQ_FileIconViewBase::slotMouseButtonClicked(int btn, QIconViewItem *i)
+{
+    if(btn == Qt::LeftButton)
+        exec(i, KGlobalSettings::singleClick());
+}
+
+void SQ_FileIconViewBase::slotReturnPressed(QIconViewItem *i)
+{
+    exec(i, true);
+}
+
+void SQ_FileIconViewBase::slotCurrentChanged(QIconViewItem *i)
+{
+    exec(i, true, true);
 }
 
 // Accept drag
@@ -70,17 +108,11 @@ void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
     // double click on item
     if(item)
-    {
-        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->diroperator()->singleClick())
-            emitExecute(item, e->globalPos());
-
         emit doubleClicked(item, e->globalPos());
-    }
+
     // double click in viewport, lets invoke browser
     else
-    {
         kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
-    }
 }
 
 #include "sq_fileiconviewbase.moc"

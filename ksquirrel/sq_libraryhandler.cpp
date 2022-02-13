@@ -15,67 +15,50 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qmessagebox.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qlibrary.h>
 #include <qfileinfo.h>
 #include <qstringlist.h>
 #include <qfile.h>
+#include <qdatetime.h>
+#include <qdir.h>
 
 #include <kstringhandler.h>
+#include <ktempfile.h>
+#include <kconfig.h>
+#include <klocale.h>
 #include <kdebug.h>
 
 #include "sq_libraryhandler.h"
 #include "sq_config.h"
 
-#include <csetjmp>
-
-#include <fileio.h>
-#include <fmt_codec_base.h>
+#include <ksquirrel-libs/fmt_codec_base.h>
 
 static const int buffer_size = 10;
 
-SQ_LibraryHandler * SQ_LibraryHandler::m_instance = NULL;
-
-/*
- *  Convert a string, return by fmt_pixmap() to
- *  "normal" string.
- */
-
-int convertMimeFromBits(const QString &s, QString &dest)
-{
-    int num;
-
-    dest = "";
-
-    QStringList list = QStringList::split(',', s);
-    QStringList::iterator it = list.begin();
-    QStringList::iterator lend = list.end();
-
-    while(it != lend)
-    {
-        num = (*it).toInt();
-        dest.append((unsigned char)num);
-        ++it;
-    }
-
-    return list.count();
-}
+SQ_LibraryHandler * SQ_LibraryHandler::m_instance = 0;
 
 // SQ_LibraryHandler
-SQ_LibraryHandler::SQ_LibraryHandler(QObject *parent, QStringList *foundLibraries) 
-    : QObject(parent), QValueVector<SQ_LIBRARY>(), latest(NULL)
+SQ_LibraryHandler::SQ_LibraryHandler(QObject *parent) 
+    : QObject(parent), QValueVector<SQ_LIBRARY>(), latest(0)
 {
     m_instance = this;
 
     kdDebug() << "+SQ_LibraryHandler" << endl;
 
-    if(foundLibraries)
-        reInit(foundLibraries);
+    kconf = new KConfig("ksquirrel-codec-settings");
+
+    load();
 }
 
 SQ_LibraryHandler::~SQ_LibraryHandler()
 {
     clear();
+
+    delete kconf;
 
     kdDebug() << "-SQ_LibraryHandler" << endl;
 }
@@ -88,15 +71,35 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 {
     // wrong parameter, or file doesn't exist
     if(full_path.isEmpty() || !QFile::exists(full_path))
-        return NULL;
+        return 0;
 
-    SQ_LIBRARY *l, *found = NULL;
+    QTime tm;
+    tm.start();
+
+    QFileInfo fi(full_path);
+
+    // Cache support since 0.7.0 :)
+    LibCache::iterator it = cache.find(full_path);
+
+    if(it != cache.end())
+    {
+        if(fi.lastModified().isValid() && fi.lastModified() == it.data().modified)
+        {
+            latest = it.data().library;
+
+            debugInfo("[C]", full_path, latest->quickinfo, tm.elapsed());
+
+            return latest;
+        }
+    }
+
+    SQ_LIBRARY *l, *found = 0;
 
     QFile file(full_path);
     char buffer[buffer_size+1];
 
     if(!file.open(IO_ReadOnly))
-        return NULL;
+        return 0;
 
     // read some bytes from file, and compare it with
     // regexps. If regexp succeeded, we found library!
@@ -105,7 +108,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
     if(rr != buffer_size || file.status() != IO_Ok)
     {
         file.close();
-        return NULL;
+        return 0;
     }
     else
         file.close();
@@ -118,8 +121,10 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 
     QString read = QString::fromLatin1(buffer);
 
+    iterator itEnd = end();
+
     // go through array and compare current regexp with 'read'
-    for(QValueVector<SQ_LIBRARY>::iterator it = begin();it != end();++it)
+    for(iterator it = begin();it != itEnd;++it)
     {
         l = &(*it);
 
@@ -136,50 +141,49 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
     if(found)
     {
         // can found library read files ?
-        if(found->codec->fmt_readable())
+        if(found->readable)
         {
-            // yes, print some debug info and return
-            kdDebug() << "[1] SQ_LibraryHandler: \""
-                      << KStringHandler::csqueeze(full_path, 22)
-                      << "\" => \""
-                      << found->quickinfo
-                      << "\""
-                      << endl;
+            debugInfo("[1]", full_path, found->quickinfo, tm.elapsed());
+
+            if(fi.lastModified().isValid())
+                cache.insert(full_path, LibCacheEntry(fi.lastModified(), found));
 
             return found;
         }
 
         // oops, library can't read files !
-        return NULL;
+        return 0;
     }
 
-    QFileInfo f(full_path);
     QString ext = "*.";
-    ext += f.extension(false);
+    ext += fi.extension(false);
     ext += " ";
 
     // library still not found ...
     // let's find it by file extension
-    for(QValueVector<SQ_LIBRARY>::iterator it = begin();it != end();++it)
+    for(iterator it = begin();it != itEnd;++it)
     {
         l = &(*it);
 
         if(l->filter.find(ext, 0, false) != -1 && l->regexp_str.isEmpty())
         {
-            kdDebug() << "[2] SQ_LibraryHandler: \""
-                      << KStringHandler::csqueeze(full_path, 22)
-                      << "\" => \""
-                      << l->quickinfo
-                      << "\""
-                      << endl;
+            debugInfo("[2]", full_path, l->quickinfo, tm.elapsed());
 
             latest = l;
 
-            return ((l && l->codec->fmt_readable()) ? l : NULL);
+            if(l && l->readable)
+            {
+                if(fi.lastModified().isValid())
+                    cache.insert(full_path, LibCacheEntry(fi.lastModified(), l));
+
+                return l;
+            }
+
+            return 0;
         }
     }
 
-    return NULL;
+    return 0;
 }
 
 /*
@@ -189,7 +193,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
  */
 bool SQ_LibraryHandler::supports(const QString &f)
 {
-    return libraryForFile(f) != NULL;
+    return libraryForFile(f) != 0;
 }
 
 /*
@@ -199,14 +203,36 @@ QString SQ_LibraryHandler::allFiltersString() const
 {
     QString ret;
 
+    const_iterator itEnd = end();
+
     // construct string
-    for(QValueVector<SQ_LIBRARY>::const_iterator it = begin();it != end();++it)
+    for(const_iterator it = begin();it != itEnd;++it)
     {
         if(!(*it).filter.isEmpty())
             ret = ret + (*it).filter + " ";
     }
 
     return ret;
+}
+
+QString SQ_LibraryHandler::allFiltersFileDialogString(bool r, bool allfiles) const
+{
+    QString ret;
+
+    const_iterator itEnd = end();
+
+    // construct string
+    for(const_iterator it = begin();it != itEnd;++it)
+    {
+        if(!r)
+            if((*it).writestatic)
+                ret = ret + (*it).filter + "|" + (*it).quickinfo + "\n";
+            else;
+        else if((*it).readable)
+            ret = ret + (*it).filter + "|" + (*it).quickinfo + "\n";
+    }
+
+    return allfiles ? (ret + "*.*|" + i18n("All files")) : ret.left(ret.length() - 1);
 }
 
 /*
@@ -223,8 +249,10 @@ void SQ_LibraryHandler::allFilters(QStringList &filters, QStringList &quick) con
     if(empty())
         return;
 
+    const_iterator itEnd = end();
+
     // go through array and fill QStringLists
-    for(QValueVector<SQ_LIBRARY>::const_iterator it = begin();it != end();++it)
+    for(const_iterator it = begin();it != itEnd;++it)
         if(!(*it).filter.isEmpty())
         {
             filters.append((*it).filter);
@@ -242,9 +270,11 @@ void SQ_LibraryHandler::allWritableFilters(QStringList &filters, QStringList &qu
     if(empty())
         return;
 
+    const_iterator itEnd = end();
+
     // go through array and fill QStringLists
-    for(QValueVector<SQ_LIBRARY>::const_iterator it = begin();it != end();++it)
-        if((*it).writable && !(*it).filter.isEmpty())
+    for(const_iterator it = begin();it != itEnd;++it)
+        if((*it).writestatic && !(*it).filter.isEmpty())
         {
             filters.append((*it).filter);
             quick.append((*it).quickinfo);
@@ -258,37 +288,37 @@ void SQ_LibraryHandler::clear()
 {
     kdDebug() << "SQ_LibraryHandler::clear()" << endl;
 
+    cache.clear();
+
+    iterator itEnd = end();
+
     // unload libraries on clear()
-    for(QValueVector<SQ_LIBRARY>::iterator it = begin();it != end();++it)
+    for(iterator it = begin();it != itEnd;++it)
     {
-        (*it).fmt_codec_destroy((*it).codec);
-        (*it).lib->unload();
+        writeSettings(&(*it));
+
+        // delete temp file
+        if((*it).needtempfile)
+            delete (*it).tmp;
+
+        (*it).codec_destroy((*it).codec);
+        delete (*it).lib;
+        (*it).lib = 0;
     }
 
     QValueVector<SQ_LIBRARY>::clear();
 }
 
 /*
- *  Clear old libraries, and load new.
- */
-void SQ_LibraryHandler::reInit(QStringList *foundLibraries)
-{
-    clear();
-    add(foundLibraries);
-}
-
-/*
  *  Add new libraries.
  */
-void SQ_LibraryHandler::add(QStringList *foundLibraries)
+void SQ_LibraryHandler::add(QStringList &foundLibraries)
 {
-    QString mime_str;
-    int mime_len;
+    codec_options o;
 
-    // hell, nothing to add ?
-    if(foundLibraries->empty()) return;
+    QStringList::iterator itEnd = foundLibraries.end();
 
-    for(QValueList<QString>::iterator it = foundLibraries->begin();it != foundLibraries->end();++it)
+    for(QStringList::iterator it = foundLibraries.begin();it != itEnd;++it)
     {
         QFileInfo ff(*it);
 
@@ -305,11 +335,11 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
         libtmp.lib->load();
 
         // resolve create() and destroy() functions
-        libtmp.fmt_codec_create = (fmt_codec_base*(*)())(libtmp.lib)->resolve("fmt_codec_create");
-        libtmp.fmt_codec_destroy = (void (*)(fmt_codec_base*))(libtmp.lib)->resolve(QString::fromLatin1("fmt_codec_destroy"));
+        libtmp.codec_create = (fmt_codec_base*(*)())(libtmp.lib)->resolve(QString::fromLatin1("codec_create"));
+        libtmp.codec_destroy = (void (*)(fmt_codec_base*))(libtmp.lib)->resolve(QString::fromLatin1("codec_destroy"));
 
         // couldn't resolve - corrupted library ?
-        if(!libtmp.fmt_codec_create || !libtmp.fmt_codec_destroy)
+        if(!libtmp.codec_create || !libtmp.codec_destroy)
         {
             libtmp.lib->unload();
             delete libtmp.lib;
@@ -317,59 +347,54 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
         else
         {
             // create codec !
-            fmt_codec_base *codeK = libtmp.fmt_codec_create();
+            fmt_codec_base *codeK = libtmp.codec_create();
 
-#ifndef QT_NO_STL
-            QString q = codeK->fmt_quickinfo();
-#else
-            QString q = codeK->fmt_quickinfo().c_str();
-#endif
+            // read options
+            codeK->options(&o);
+
+            QString q = o.name;
 
             // Yet unknown library ?
             if(!alreadyInMap(q))
             {
 
                 // get all information on codec: filter, mime icon, mime regexp,
-                // version, etc.
-#ifndef QT_NO_STL
-                mime_len = convertMimeFromBits(codeK->fmt_pixmap(), mime_str);
-#else
-                mime_len = convertMimeFromBits(codeK->fmt_pixmap().c_str(), mime_str);
-#endif
-
-                libtmp.mime.loadFromData((const uchar *)mime_str.ascii(), mime_len, "PNG");
+                libtmp.mime = QPixmap(reinterpret_cast<const char **>(o.pixmap));
                 libtmp.quickinfo = q;
-
-#ifndef QT_NO_STL
-
-                libtmp.filter = codeK->fmt_filter();
-                libtmp.version = codeK->fmt_version();
-                libtmp.regexp_str = codeK->fmt_mime();
-
-#else
-
-                libtmp.filter = codeK->fmt_filter().c_str();
-                libtmp.version = codeK->fmt_version().c_str();
-                libtmp.regexp_str = codeK->fmt_mime().c_str();
-
-#endif
-
+                libtmp.filter = o.filter;
+                libtmp.version = o.version;
+                libtmp.regexp_str = o.mime;
+                libtmp.config = o.config;
                 libtmp.regexp.setPattern(libtmp.regexp_str);
                 libtmp.regexp.setCaseSensitive(true);
-                libtmp.writable = codeK->fmt_writable();
-                libtmp.readable = codeK->fmt_readable();
+                libtmp.writestatic = o.writestatic;
+                libtmp.writeanimated = o.writeanimated;
+                libtmp.readable = o.readable;
+                libtmp.canbemultiple = o.canbemultiple;
+                libtmp.needtempfile = o.needtempfile;
+                libtmp.tmp = 0;
 
-                if(libtmp.writable)
-                    codeK->fmt_getwriteoptions(&libtmp.opt);
+                if(libtmp.needtempfile)
+                {
+                    libtmp.tmp = new KTempFile;
+                    libtmp.tmp->setAutoDelete(true);
+                    libtmp.tmp->close();
+                    codeK->settempfile(libtmp.tmp->name());
+                }
+
+                if(libtmp.writestatic)
+                    codeK->getwriteoptions(&libtmp.opt);
 
                 libtmp.codec = codeK;
+
+                readSettings(&libtmp);
 
                 append(libtmp);
             }
             else // already known library
             {
                 // destroy codec
-                libtmp.fmt_codec_destroy(codeK);
+                libtmp.codec_destroy(codeK);
 
                 // unload library
                 libtmp.lib->unload();
@@ -388,8 +413,10 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
  */
 bool SQ_LibraryHandler::alreadyInMap(const QString &quick) const
 {
+    const_iterator itEnd = end();
+
     // go through array and find 'quick'
-    for(QValueVector<SQ_LIBRARY>::const_iterator it = begin();it != end();++it)
+    for(const_iterator it = begin();it != itEnd;++it)
         if((*it).quickinfo == quick)
             return true;
 
@@ -397,53 +424,21 @@ bool SQ_LibraryHandler::alreadyInMap(const QString &quick) const
 }
 
 /*
- *  Remove given libraries.
- */
-void SQ_LibraryHandler::remove(QStringList *foundLibraries)
-{
-    for(QValueList<QString>::iterator it = foundLibraries->begin();it != foundLibraries->end();++it)
-    {
-        for(QValueVector<SQ_LIBRARY>::iterator vit = begin();vit != end();++vit)
-        {
-            if(*it == (*vit).libpath)
-            {
-                // destroy codec
-                (*vit).fmt_codec_destroy((*vit).codec);
-
-                // unload & delete library
-                (*vit).lib->unload();
-                delete (*vit).lib;
-
-                // remove this entry
-                erase(vit);
-                break;
-            }
-        }
-    }
-
-    dump();
-}
-
-/*
  *  Print some information on found libraries.
  */
 void SQ_LibraryHandler::dump() const
 {
-#ifndef SQ_SMALL
-
     kdDebug() << "SQ_LibraryHandler: memory dump (total " << count() << ")" << endl;
 
-    for(QValueVector<SQ_LIBRARY>::const_iterator it = begin();it != end();++it)
+    const_iterator itEnd = end();
+
+    for(const_iterator it = begin();it != itEnd;++it)
     {
         kdDebug() << KStringHandler::csqueeze(QFileInfo((*it).libpath).fileName(), 30) << "  [" 
-                  << KStringHandler::rsqueeze((*it).quickinfo, 45) << "]" << endl;
+                  << KStringHandler::rsqueeze((*it).quickinfo, 45)
+                  << "]"
+                  << endl;
     }
-
-#else
-
-    kdDebug() << "SQ_LibraryHandler: memory dump (total " << count() << ")" << endl;
-
-#endif
 }
 
 /*
@@ -451,8 +446,10 @@ void SQ_LibraryHandler::dump() const
  */
 bool SQ_LibraryHandler::knownExtension(const QString &ext)
 {
+    iterator itEnd = end();
+
     // go through array and compare extensions
-    for(QValueVector<SQ_LIBRARY>::iterator it = begin();it != end();++it)
+    for(iterator it = begin();it != itEnd;++it)
     {
         if((*it).filter.contains(ext, false))
             return true;
@@ -471,8 +468,10 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryByName(const QString &name)
 {
     SQ_LIBRARY *l;
 
+    iterator itEnd = end();
+
     // go through array and compare names
-    for(QValueVector<SQ_LIBRARY>::iterator it = begin();it != end();++it)
+    for(iterator it = begin();it != itEnd;++it)
     {
         l = &(*it);
 
@@ -480,7 +479,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryByName(const QString &name)
             return l;
     }
 
-    return NULL;
+    return 0;
 }
 
 /*
@@ -493,7 +492,7 @@ fmt_codec_base* SQ_LibraryHandler::codecForFile(const QString &file)
     SQ_LIBRARY *lib = libraryForFile(file);
 
     //  return result
-    return (lib && lib->codec) ? lib->codec : NULL;
+    return (lib && lib->codec) ? lib->codec : 0;
 }
 
 /*
@@ -505,10 +504,140 @@ fmt_codec_base* SQ_LibraryHandler::codecByName(const QString &name)
     SQ_LIBRARY *lib = libraryByName(name);
 
     // return result
-    return (lib && lib->codec) ? lib->codec : NULL;
+    return (lib && lib->codec) ? lib->codec : 0;
 }
 
-fmt_codec_base *SQ_LibraryHandler::latestCodec()
+fmt_codec_base* SQ_LibraryHandler::latestCodec()
 {
-    return (latest && latest->codec) ? latest->codec : NULL;
+    return (latest && latest->codec) ? latest->codec : 0;
+}
+
+void SQ_LibraryHandler::writeSettings(SQ_LIBRARY *lib)
+{
+    // no config - no settings
+    if(lib->config.isEmpty())
+        return;
+
+    kconf->setGroup(lib->quickinfo);
+
+    fmt_settings::iterator itEnd = lib->settings.end();
+
+    QString k;
+
+    for(fmt_settings::iterator it = lib->settings.begin();it != itEnd;++it)
+    {
+        k = (*it).first;
+
+        if((*it).second.type == settings_value::v_bool) // boolean
+        {
+           k.prepend("b");
+           kconf->writeEntry(k, (*it).second.bVal);
+        }
+        else if((*it).second.type == settings_value::v_int) // integer
+        {
+            k.prepend("i");
+            kconf->writeEntry(k, (*it).second.iVal);
+        }
+        else if((*it).second.type == settings_value::v_double) // double
+         {
+             k.prepend("d");
+             kconf->writeEntry(k, (*it).second.dVal);
+         }
+        else // string
+        {
+            k.prepend("s");
+            kconf->writeEntry(k, (*it).second.sVal);
+        }
+    }
+}
+
+void SQ_LibraryHandler::readSettings(SQ_LIBRARY *lib)
+{
+    // no config - no settings
+    if(lib->config.isEmpty())
+        return;
+
+    QMap<QString, QString> map = kconf->entryMap(lib->quickinfo);
+
+    if(!map.size())
+    {
+        lib->codec->fill_default_settings();
+        lib->settings = lib->codec->settings();
+        return;
+    }
+
+    QMap<QString, QString>::iterator mapEnd = map.end();
+    fmt_settings &sett = lib->settings;
+    QString d, k;
+    settings_value val;
+
+    for(QMap<QString, QString>::iterator mapIt = map.begin();mapIt != mapEnd;++mapIt)
+    {
+        k = mapIt.key();
+        d = mapIt.data();
+
+        if(k.startsWith("i"))
+        {
+            val.type = settings_value::v_int;
+            val.iVal = d.toInt();
+        }
+        else if(k.startsWith("d"))
+        {
+            val.type = settings_value::v_double;
+            val.dVal = d.toDouble();
+        }
+        else if(k.startsWith("b"))
+        {
+            val.type = settings_value::v_bool;
+            val.bVal = (d == "true");
+        }
+        else // all other values are treated as strings
+        {
+            val.type = settings_value::v_string;
+            val.sVal = d.ascii();
+        }
+
+        k = k.right(k.length() - 1);
+        sett[k.ascii()] = val;
+    }
+
+    lib->codec->set_settings(sett);
+}
+
+void SQ_LibraryHandler::debugInfo(const QString &symbol, const QString &path, const QString &lib, int ms)
+{
+    kdDebug() << symbol
+              << " SQ_LibraryHandler: \""
+              << KStringHandler::lsqueeze(path, 20)
+              << "\" => \""
+              << lib
+              << "\" ["
+              << ms
+              << " ms.]"
+              << endl;
+}
+
+void SQ_LibraryHandler::reload()
+{
+    clear();
+    load();
+}
+
+void SQ_LibraryHandler::load()
+{
+    QStringList libs;
+
+    QDir dir(SQ_KLIBS, QString::null, QDir::Unsorted, QDir::Files);
+
+    const QFileInfoList *list = dir.entryInfoList();
+    QFileInfoListIterator it(*list);
+    QFileInfo *fi;
+
+    while((fi = it.current()) != 0)
+    {
+        libs.append(fi->absFilePath());
+        ++it;
+    }
+
+    add(libs);
 }

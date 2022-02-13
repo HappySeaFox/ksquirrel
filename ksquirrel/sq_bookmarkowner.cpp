@@ -15,9 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "sq_bookmarkowner.h"
 
-SQ_BookmarkOwner * SQ_BookmarkOwner::m_instance = NULL;
+SQ_BookmarkOwner * SQ_BookmarkOwner::m_instance = 0;
 
 SQ_BookmarkOwner::SQ_BookmarkOwner(QWidget *parent) : QObject(parent)
 {

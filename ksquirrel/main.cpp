@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     high->thumbs = sq_args->isSet("t");
     high->recurs = (high->thumbs) ? sq_args->isSet("r") : false;
 
-    SQ_SplashScreen *splash = NULL;
+    SQ_SplashScreen *splash = 0;
 
     if(high->thumbs)
         high->thumbs_p = sq_args->getOption("t");
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
         a.dcopClient()->registerAs(App, false);
 
     // create an instance
-    SQ = new KSquirrel(NULL, App, &splash);
+    SQ = new KSquirrel(0, App, &splash);
 
     a.setMainWidget(SQ);
 

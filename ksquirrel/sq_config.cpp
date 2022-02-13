@@ -15,11 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <kdebug.h>
 
 #include "sq_config.h"
 
-SQ_Config * SQ_Config::m_instance = NULL;
+SQ_Config * SQ_Config::m_instance = 0;
 
 SQ_Config::SQ_Config(const QString& fileName) : KConfig(fileName)
 {

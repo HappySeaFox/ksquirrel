@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>508</width>
-            <height>417</height>
+            <width>512</width>
+            <height>377</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -37,6 +37,9 @@
             <property name="name">
                 <cstring>widgetStack1</cstring>
             </property>
+            <property name="frameShape">
+                <enum>Box</enum>
+            </property>
             <widget class="QWidget">
                 <property name="name">
                     <cstring>WStackPage</cstring>
@@ -53,7 +56,7 @@
                             <cstring>textLabel2</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Esc,X,Return&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;close&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Q&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Quick Browser&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Middle click, F&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fullscreen&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;T&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Z&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show 'Zoom' menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;S&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide statusbar&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;/&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show this help&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Right click, M, ContextMenu&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show context menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;N&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;toggle filter&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;SHIFT+Left button&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;select a region&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Esc,X,Return&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;close&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Middle click, F&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;fullscreen&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;T&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide toolbar with actions&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Z&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show 'Zoom' menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Y&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show/hide statusbar&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;/&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show this help&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;Right click, M, ContextMenu&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;show context menu&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;N&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;toggle filter&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;&lt;p align=right&gt;SHIFT+Left button&lt;/p&gt;&lt;/b&gt;&lt;/td&gt;&lt;td&gt;select a region&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
                         </property>
                         <property name="alignment">
                             <set>WordBreak|AlignTop</set>
@@ -144,12 +147,15 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
                             <cstring>textLabel5</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;V&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip vertically&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;H&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip horizontally&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;R&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;reset&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;P&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;image properties&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;L&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;"Ignore, if the image is less than window"&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;I&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;menu with images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;A&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;stop/start animation&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;B&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing background for transparent images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;K&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing tickmarks&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;E&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;show menu with external tools&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F1&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;first image in miltipaged image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F2&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;previous&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F3&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;next&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F4&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;last&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
+                            <string>&lt;p align=center&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;S&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;save as&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;V&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip vertically&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;H&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;flip horizontally&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;R&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;reset&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;P&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;image properties&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;C&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;codec settings&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;L&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;ignore zoom if the image is less than window&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;I&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;menu with images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;A&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;stop/start animation&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;B&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing background for transparent images&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;K&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;toggle drawing tickmarks&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;E&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;show menu with external tools&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F1&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;first image in miltipaged image&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F2&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;previous&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F3&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;next&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=right&gt;&lt;b&gt;F4&lt;/b&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;last&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;</string>
                         </property>
                         <property name="alignment">
                             <set>WordBreak|AlignTop</set>
@@ -194,9 +200,6 @@
                     <property name="on">
                         <bool>true</bool>
                     </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
-                    </property>
                     <property name="flat">
                         <bool>true</bool>
                     </property>
@@ -216,9 +219,6 @@
                     </property>
                     <property name="toggleButton">
                         <bool>true</bool>
-                    </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
                     </property>
                     <property name="flat">
                         <bool>true</bool>
@@ -240,9 +240,6 @@
                     <property name="toggleButton">
                         <bool>true</bool>
                     </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
-                    </property>
                     <property name="flat">
                         <bool>true</bool>
                     </property>
@@ -263,9 +260,6 @@
                     <property name="toggleButton">
                         <bool>true</bool>
                     </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
-                    </property>
                     <property name="flat">
                         <bool>true</bool>
                     </property>
@@ -285,9 +279,6 @@
                     </property>
                     <property name="toggleButton">
                         <bool>true</bool>
-                    </property>
-                    <property name="autoDefault">
-                        <bool>false</bool>
                     </property>
                     <property name="flat">
                         <bool>true</bool>
@@ -311,7 +302,7 @@
             <property name="sizeHint">
                 <size>
                     <width>16</width>
-                    <height>61</height>
+                    <height>16</height>
                 </size>
             </property>
         </spacer>

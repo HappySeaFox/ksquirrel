@@ -823,13 +823,13 @@ void fmt_filters::blur(const image &im, double radius, double sigma)
     if(sigma == 0.0)
         return;
 
-    kernel = NULL;
+    kernel = 0;
 
     if(radius > 0)
         width = getBlurKernel((s32)(2*ceil(radius)+1), sigma, &kernel);
     else
     {
-        double *last_kernel = NULL;
+        double *last_kernel = 0;
 
         width = getBlurKernel(3, sigma, &kernel);
 
@@ -839,7 +839,7 @@ void fmt_filters::blur(const image &im, double radius, double sigma)
                 delete [] last_kernel;
 
             last_kernel = kernel;
-            kernel = NULL;
+            kernel = 0;
 
             width = getBlurKernel(width+2, sigma, &kernel);
         }
@@ -1181,7 +1181,7 @@ void fmt_filters::edge(image &im, double radius)
     double *kernel;
     int width;
     register long i;
-    rgba *dest = NULL;
+    rgba *dest = 0;
 /*
     if(radius == 50.0)
     {
@@ -1230,7 +1230,7 @@ void fmt_filters::emboss(image &im, double radius, double sigma)
     double alpha, *kernel;
     int j, width;
     register long i, u, v;
-    rgba *dest = NULL;
+    rgba *dest = 0;
 
     if(sigma == 0.0)
         return;
@@ -1292,7 +1292,7 @@ void fmt_filters::sharpen(image &im, double radius, double sigma)
     double alpha, normalize, *kernel;
     int width;
     register long i, u, v;
-    rgba *dest = NULL;
+    rgba *dest = 0;
 
     if(sigma == 0.0)
         sigma = 0.01;
@@ -1354,7 +1354,7 @@ void fmt_filters::oil(const image &im, double radius)
     int width;
     int x, y, mx, my, sx, sy;
     int mcx, mcy;
-    rgba *s = NULL, *q;
+    rgba *s = 0, *q;
 
     scaleDown(radius, 1.0, 5.0);
 
@@ -2099,7 +2099,7 @@ static void hull(const s32 x_offset, const s32 y_offset, const s32 polarity, con
     u8 *p, *q, *r, *s;
     u32 v;
 
-    if(f == NULL || g == NULL)
+    if(f == 0 || g == 0)
         return;
 
     p = f+(columns+2);
@@ -2256,7 +2256,7 @@ static int getOptimalKernelWidth(double radius, double sigma)
 		  artifacting occurs. 
 
 		- All memory allocations checked for failure; zoom() returns 
-		  error code. new_image() returns NULL if unable to allocate 
+		  error code. new_image() returns 0 if unable to allocate 
 		  pixel storage, even if Image struct can be allocated.
 		  Some assertions added.
 
@@ -2465,7 +2465,7 @@ static s32 calc_x_contrib(CLIST *contribX, double xscale, double fwidth, s32 /*d
 		contribX->n = 0;
 		contribX->p = (CONTRIB *)calloc((s32) (width * 2 + 1),
 				sizeof(CONTRIB));
-		if (contribX->p == NULL) {
+		if (contribX->p == 0) {
 			return -1;
 		}
 
@@ -2495,7 +2495,7 @@ static s32 calc_x_contrib(CLIST *contribX, double xscale, double fwidth, s32 /*d
 		contribX->n = 0;
 		contribX->p = (CONTRIB*)calloc((s32) (fwidth * 2 + 1),
 				sizeof(CONTRIB));
-		if (contribX->p == NULL) {
+		if (contribX->p == 0) {
 			return -1;
 		}
 		center = (double) i / xscale;
@@ -2545,7 +2545,7 @@ static s32 zoom(fmt_filters::image *dst, fmt_filters::image *src, double (*filte
 
 	/* create intermediate column to hold horizontal dst column zoom */
 	tmp = (u8 *)malloc(src->h * sizeof(u8));
-	if (tmp == NULL) {
+	if (tmp == 0) {
 		return 0;
 	}
 
@@ -2554,7 +2554,7 @@ static s32 zoom(fmt_filters::image *dst, fmt_filters::image *src, double (*filte
 	/* Build y weights */
 	/* pre-calculate filter contributions for a column */
 	contribY = (CLIST*)calloc(dst->h, sizeof(CLIST));
-	if (contribY == NULL) {
+	if (contribY == 0) {
 		free(tmp);
 		return -1;
 	}
@@ -2570,7 +2570,7 @@ static s32 zoom(fmt_filters::image *dst, fmt_filters::image *src, double (*filte
 			contribY[i].n = 0;
 			contribY[i].p = (CONTRIB*)calloc((s32) (width * 2 + 1),
 					sizeof(CONTRIB));
-			if(contribY[i].p == NULL) {
+			if(contribY[i].p == 0) {
 				free(tmp);
 				free(contribY);
 				return -1;
@@ -2598,7 +2598,7 @@ static s32 zoom(fmt_filters::image *dst, fmt_filters::image *src, double (*filte
 			contribY[i].n = 0;
 			contribY[i].p = (CONTRIB*)calloc((s32) (fwidth * 2 + 1),
 					sizeof(CONTRIB));
-			if (contribY[i].p == NULL) {
+			if (contribY[i].p == 0) {
 				free(tmp);
 				free(contribY);
 				return -1;

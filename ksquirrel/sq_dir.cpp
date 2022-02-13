@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qstringlist.h>
 #include <qimage.h>
 #include <qfile.h>
@@ -33,6 +37,9 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
 {
     switch(p)
     {
+        case SQ_Dir::Basket:
+            setRoot("basket");
+        break;
         case SQ_Dir::Thumbnails:
             setRoot("thumbnails");
         break;
@@ -127,7 +134,7 @@ void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
     thumb.thumbnail.setText("sq_bpp", 0, thumb.info.bpp);
     thumb.thumbnail.setText("sq_color", 0, thumb.info.color);
     thumb.thumbnail.setText("sq_compression", 0, thumb.info.compression);
-    thumb.thumbnail.setText("sq_frames", 0, thumb.info.frames);
+    thumb.thumbnail.setText("sq_frames", 0, QString::number(thumb.info.frames));
     thumb.thumbnail.setText("sq_uncompressed", 0, k);
 
     thumb.thumbnail.save(fullpath, sqdirThumbFormat, thumbQuality);
@@ -153,12 +160,6 @@ bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
 
 /*
  *  Check if file needs to be updated.
- *
- *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
- *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
- *  archive to it. Today you replaced /opt/arc.zip with newer version. Now
- *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
- *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack it once more.
  */
 bool SQ_Dir::updateNeeded(const QString &file)
 {

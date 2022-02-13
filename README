@@ -87,12 +87,28 @@ New parameters since 0.6.0-pre8:
 --------------------------------
 
 - load specified image
-
 # dcop ksquirrel ksquirrel load_image <path_to_file>
 
 - activate window
-
 # dcop ksquirrel ksquirrel activate
+
+----------------------------------------------------------------------------
+
+New parameters since 0.7.0:
+--------------------------------
+
+- go to the next file in file manager
+# dcop ksquirrel ksquirrel navigator next
+
+- go to the previous file in file manager
+# dcop ksquirrel ksquirrel navigator previous
+
+- execute current file in file manager (as if user pressed Enter)
+# dcop ksquirrel ksquirrel navigator execute
+
+- activate image window
+# dcop ksquirrel ksquirrel activate_image_window
+
 
 ----------------------------------------------------------------------------
 
@@ -110,16 +126,9 @@ Examples
 Since 0.6.0-pre1 KSquirrel has edit tools:
 - convert tool
 
-Since 0.6.0-pre6 KSquirrel has additional edit tools:
-- resize tool
-- rotate tool
-- colorize tool
-- print tool
-
 Since 0.6.0-pre7 KSquirrel has additional edit tools:
 - filter tool with many filters
 
 ***********************************************************************************
 
 See ChangeLog for more
-

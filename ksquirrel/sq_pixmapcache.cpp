@@ -15,10 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "sq_pixmapcache.h"
 #include "sq_dir.h"
 
-SQ_PixmapCache * SQ_PixmapCache::m_instance = NULL;
+SQ_PixmapCache * SQ_PixmapCache::m_instance = 0;
 
 SQ_PixmapCache::SQ_PixmapCache(QObject *parent, int limit) 
     : QObject(parent), QMap<QString, SQ_Thumbnail>()
@@ -45,8 +49,10 @@ void SQ_PixmapCache::sync()
     if(empty())
         return;
 
+    iterator itEnd = end();
+
     // go through array and sync each entry
-    for(QMapIterator<QString, SQ_Thumbnail> it = begin();it != end();++it)
+    for(iterator it = begin();it != itEnd;++it)
         syncEntry(it.key(), it.data());
 
     // remove all entries from cache
@@ -83,7 +89,7 @@ void SQ_PixmapCache::insert(const QString &key, const SQ_Thumbnail &thumb)
  */
 void SQ_PixmapCache::removeEntry(const QString &key)
 {
-    cache_iterator it = find(key);
+    iterator it = find(key);
 
     // no item to remove ?
     if(it == end())
@@ -111,7 +117,7 @@ void SQ_PixmapCache::removeEntryFull(const QString &key)
  */
 bool SQ_PixmapCache::contains2(const QString &key, SQ_Thumbnail &th)
 {
-    cache_iterator it = find(key);
+    iterator it = find(key);
 
     // item found
     if(it != end())
@@ -134,11 +140,11 @@ int SQ_PixmapCache::totalSize()
 
     int total = 0;
 
+    const_iterator itEnd = constEnd();
+
     // go through rray and calculate total size
-    for(cache_constiterator it = constBegin();it != constEnd();++it)
-    {
+    for(const_iterator it = constBegin();it != itEnd;++it)
         total += SQ_PixmapCache::entrySize(it.data());
-    }
 
     last_full = total;
     valid_full = true;
@@ -147,11 +153,12 @@ int SQ_PixmapCache::totalSize()
 }
 
 /*
- *  Calculate cache-related size of given thumbnail.
+ *  Calculate cache-related size of given thumbnail (not exactly).
  */
 int SQ_PixmapCache::entrySize(const SQ_Thumbnail &t)
 {
     int  total = (((t.thumbnail.width() * t.thumbnail.height() * t.thumbnail.depth()) >> 3)
+/*
                 + t.info.bpp.length()
                 + t.info.color.length()
                 + t.info.compression.length()
@@ -159,6 +166,7 @@ int SQ_PixmapCache::entrySize(const SQ_Thumbnail &t)
                 + t.info.frames.length()
                 + t.info.type.length()
                 + t.info.uncompressed.length()
+*/
                 + ((t.info.mime.width() * t.info.mime.height() * t.info.mime.depth()) >> 3));
 
     return total;

@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <qstring.h>
 #include <qobject.h>
+#include <qsize.h>
 
 /**
  * This is an "enum-like" class : an enum with cast operators to convert
@@ -35,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class SQ_ThumbnailSize : public QObject
 {
     public:
-        enum Size { Small = 0, Medium, Large, Huge };
+        enum Size { Medium, Large, Huge };
 
         SQ_ThumbnailSize(QObject *parent, Size value);
         SQ_ThumbnailSize(QObject *parent, const QString& str);
@@ -48,9 +49,10 @@ class SQ_ThumbnailSize : public QObject
 
         void setPixelSize(const QString &size);
 
+        QString pixelSizeString() const;
         int pixelSize() const;
-        int extendedPixelSize() const;
-        int currentPixelSize() const;
+
+        QSize extendedSize() const;
 
         bool operator== (const SQ_ThumbnailSize& size) const
         { return mValue == size.mValue; }
@@ -105,8 +107,6 @@ int SQ_ThumbnailSize::pixelSize() const
 {
     switch (mValue)
     {
-        case Small:
-            return 48;
         case Medium:
             return 64;
         case Large:
@@ -117,15 +117,31 @@ int SQ_ThumbnailSize::pixelSize() const
 }
 
 inline
-int SQ_ThumbnailSize::extendedPixelSize() const
+QSize SQ_ThumbnailSize::extendedSize() const
 {
-    return pixelSize() + m_margin*2;
+    switch (mValue)
+    {
+        case Medium:
+            return QSize(76, 108);
+        case Large:
+            return QSize(108, 139);
+        default:
+            return QSize(140, 170);
+    }
 }
 
 inline
-int SQ_ThumbnailSize::currentPixelSize() const
+QString SQ_ThumbnailSize::pixelSizeString() const
 {
-    return extended() ? extendedPixelSize() : pixelSize();
+    switch (mValue)
+    {
+        case Medium:
+            return "medium";
+        case Large:
+            return "large";
+        default:
+            return "huge";
+    }
 }
 
 #endif

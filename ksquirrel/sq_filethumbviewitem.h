@@ -18,9 +18,13 @@
 #ifndef SQ_FILETHUMBVIEWITEM_H
 #define SQ_FILETHUMBVIEWITEM_H
 
+#include <qpixmap.h>
+
 #include <kfileiconview.h>
 
 #include "sq_thumbnailinfo.h"
+
+class QFontMetrics;
 
 /*
  *  SQ_FileThumbViewItem represents a thumbnail item in SQ_FileThumbView.
@@ -43,6 +47,8 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
          */
         void setInfo(const SQ_Thumbnail &t);
 
+        virtual void setPixmap(const QPixmap &pixmap);
+
     protected:
         /*
          *  Painting routines.
@@ -53,10 +59,16 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
         void paintText(QPainter *p, const QColorGroup &c);
 
     private:
+        void calcTmpText();
+
+    private:
         /*
          *  Additional information.
          */
         SQ_Thumbnail info;
+        QPixmap selected;
+        QString  tmpText;
+        QFontMetrics *fm;
 };
 
 #endif

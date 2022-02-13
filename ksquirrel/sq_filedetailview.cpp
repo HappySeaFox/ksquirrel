@@ -15,25 +15,29 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qheader.h>
 #include <qcursor.h>
 
 #include <kapplication.h>
 #include <kpopupmenu.h>
 #include <kdebug.h>
+#include <kfileitem.h>
+#include <kglobalsettings.h>
 
 #include "sq_config.h"
 #include "sq_iconloader.h"
 #include "sq_filedetailview.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
-#include "sq_navigatordropmenu.h"
 
 SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, KFileItem *fi) : KFileListViewItem(parent, fi)
 {}
 
-SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, const QString &text,
-     const QPixmap &icon, KFileItem *fi)
+SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi)
     : KFileListViewItem(parent, text, icon, fi)
 {}
 
@@ -51,18 +55,65 @@ SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
 {
     kdDebug() << "+SQ_FileDetailView" << endl;
 
-    // drag & drop support
-    setAcceptDrops(true);
-    connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this,
-    SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
-
     // pixmap for directory item
     dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
+
+    disconnect(this, SIGNAL(currentChanged(QListViewItem *)), 0, 0);
+
+    connect(this, SIGNAL(mouseButtonClicked(int, QListViewItem *, const QPoint &, int)),
+                    this, SLOT(slotMouseButtonClicked(int, QListViewItem *)));
+    connect(this, SIGNAL(doubleClicked(QListViewItem *, const QPoint &, int)),
+                    this, SLOT(slotDoubleClicked(QListViewItem *)));
+    connect(this, SIGNAL(returnPressed(QListViewItem *)),
+                    this, SLOT(slotReturnPressed(QListViewItem *)));
+    connect(this, SIGNAL(currentChanged(QListViewItem *)),
+                    this, SLOT(slotCurrentChanged(QListViewItem *)));
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
 {
     kdDebug() << "-SQ_FileDetailView" << endl;
+}
+
+void SQ_FileDetailView::exec(QListViewItem *i, bool single, bool hl)
+{
+    if(i)
+    {
+        KFileListViewItem *kvi = static_cast<KFileListViewItem *>(i);
+        KFileItem *kfi = kvi->fileInfo();
+
+        if(hl && kfi) // highlight all items
+        {
+//            printf("HL: url: %s\n", kfi->url().path().ascii());
+            emit highlighted(kfi);
+        }
+        else if(single && kfi && kfi->isFile()) // execute only files
+        {
+//            printf("EXEC: url: %s\n", kfi->url().path().ascii());
+            emit launch(kfi);
+        }
+    }
+}
+
+void SQ_FileDetailView::slotDoubleClicked(QListViewItem *i)
+{
+    exec(i, !KGlobalSettings::singleClick());
+}
+
+void SQ_FileDetailView::slotMouseButtonClicked(int btn, QListViewItem *i)
+{
+    if(btn == Qt::LeftButton)
+        exec(i, KGlobalSettings::singleClick());
+}
+
+void SQ_FileDetailView::slotReturnPressed(QListViewItem *i)
+{
+    exec(i, true);
+}
+
+void SQ_FileDetailView::slotCurrentChanged(QListViewItem *i)
+{
+    exec(i, true, true);
 }
 
 /*
@@ -117,30 +168,11 @@ void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
     // double click on item
     if(item)
-    {
-        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->diroperator()->singleClick())
-            emitExecute(item, e->globalPos(), col);
-
         emit doubleClicked(item, e->globalPos(), col);
-    }
+
     // double click was in viewport, let's invoke browser
     else
-    {
         kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
-    }
-}
-
-/*
- *  Somebody dropped urls in viewport. Let's execute popup menu with
- *  file actions.
- */
-void SQ_FileDetailView::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
-{
-    KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
-
-    // setup and execute menu with file actions
-    SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
-    SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
 }
 
 // Accept dragging

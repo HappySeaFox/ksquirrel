@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <qpainter.h>
 #include <qhbox.h>
 #include <qtoolbar.h>
@@ -44,32 +48,17 @@
 #include "sq_diroperator.h"
 #include "sq_pixmapcache.h"
 #include "sq_progress.h"
+#include "sq_progressbox.h"
 #include "sq_filethumbviewitem.h"
 
-SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name), isPending(false)
+SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
 {
     kdDebug() << "+SQ_FileThumbView" << endl;
 
-    toolTip = NULL;
-    disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
-
-    // create layout box 
-    progressBox = new QHBox(this);
-    QToolBar *progressBoxBar = new QToolBar(QString::null, NULL, progressBox);
-    buttonStop = new QToolButton(QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumb_resume.png")),
-    QString::null, QString::null, this, SLOT(slotThumbnailUpdateToggle()), progressBoxBar);
+    toolTip = 0;
 
     // create progress bar
-    progress = new SQ_Progress(progressBox);
-
-    // setup progress bar
-    progressBox->setPalette(QPalette(QColor(255,255,255), QColor(255,255,255)));
-    progressBox->setFrameShape(QFrame::Box);
-    progressBox->setSpacing(1);
-    progressBox->setMargin(0);
-    progressBox->setStretchFactor(progress, 1);
-    progressBox->setStretchFactor(progressBoxBar, 0);
-    progressBox->setGeometry(5, 5, 235, 24);
+    m_progressBox = new SQ_ProgressBox(this);
 
     // create timer 
     timer = new QTimer(this);
@@ -82,10 +71,7 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     setResizeMode(QIconView::Adjust);
 
     // load "pending" pixmaps
-    pending.insert("48",  QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending48.png")));
-    pending.insert("64",  QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending64.png")));
-    pending.insert("96",  QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending96.png")));
-    pending.insert("128", QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending128.png")));
+    pending = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending.png"));
 
     // some hacks for tooltip support
     disconnect(this, SIGNAL(onViewport()), this, 0);
@@ -93,16 +79,12 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     connect(this, SIGNAL(onItem(QIconViewItem *)), this, SLOT(slotShowToolTip(QIconViewItem *)));
     connect(this, SIGNAL(onViewport()), this, SLOT(slotRemoveToolTip()));
 
-    // load "directory" pixmap
-    dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 48);
-    pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
+    rebuildCachedPixmaps();
 }
 
 SQ_FileThumbView::~SQ_FileThumbView()
 {
     kdDebug() << "-SQ_FileThumbView" << endl;
-
-    pending.clear();
 
     slotRemoveToolTip();
 }
@@ -119,7 +101,7 @@ void SQ_FileThumbView::slotSelected(QIconViewItem *item, const QPoint &point)
  */
 KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
 {
-    return item ? ((KFileIconViewItem *)item->extraData(this)) : NULL;
+    return item ? ((KFileIconViewItem *)item->extraData(this)) : 0;
 }
 
 /*
@@ -128,8 +110,6 @@ KFileIconViewItem* SQ_FileThumbView::viewItem(const KFileItem *item)
  */
 void SQ_FileThumbView::insertItem(KFileItem *i)
 {
-//    int pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
-
     SQ_Config::instance()->setGroup("Fileview");
 
     // directores disabled ?
@@ -138,50 +118,28 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 
     SQ_Config::instance()->setGroup("Thumbnails");
 
-    // mimetype disabled ?
-    bool disable_mime = SQ_Config::instance()->readBoolEntry("disable_mime", false);
-
-    // common icon for all mimetypes
-    const QPixmap mimeall = SQ_IconLoader::instance()->loadIcon("unknown", KIcon::Desktop,
-                pixelSize);
-
     SQ_FileThumbViewItem *item;
 
-    QPixmap thumbnail(pixelSize, pixelSize);
-    QPainter painter(&thumbnail);
-    painter.eraseRect(0, 0, pixelSize, pixelSize);
-    painter.setBrush(white);
-    painter.setPen(colorGroup().highlight());
-    painter.drawRect(0, 0, pixelSize, pixelSize);
-
-    if(i->isDir())
-        painter.drawPixmap((pixelSize-dirPix.width())/2, (pixelSize-dirPix.height())/2, dirPix);
-    else
-        painter.drawPixmap((pixelSize-mimeall.width())/2, (pixelSize-mimeall.height())/2,
-                            (disable_mime ? mimeall : i->pixmap(pixelSize)));
-
-    // "pending" thumbnail
-    QPixmap p = pending[QString(SQ_ThumbnailSize::instance()->stringValue())];
-    QPixmap p2(pixelSize, pixelSize);
-
-    if(!p.isNull())
+    if(SQ_LibraryHandler::instance()->supports(i->url().path()))
     {
-        QPainter painter2(&p2);
-        painter2.eraseRect(0, 0, pixelSize, pixelSize);
-        painter2.setBrush(white);
-        painter2.setPen(colorGroup().highlight());
-        painter2.drawRect(0, 0, pixelSize, pixelSize);
-        painter2.drawPixmap((pixelSize - p.width())/2, (pixelSize-p.height())/2, p);
+        item = new SQ_FileThumbViewItem(this, i->text(), pendingCache, i);
     }
-
-    if(i->isDir())
-        item = new SQ_FileThumbViewItem(this, i->text(), thumbnail, i);
-    else if(SQ_LibraryHandler::instance()->supports(i->url().path()) && !p2.isNull())
-        item = new SQ_FileThumbViewItem(this, i->text(), p2, i);
-    else if(disable_mime)
-        item = new SQ_FileThumbViewItem(this, i->text(), mimeall, i);
     else
-        item = new SQ_FileThumbViewItem(this, i->text(), thumbnail, i);
+    {
+        if(i->isDir())
+            item = new SQ_FileThumbViewItem(this, i->text(), directoryCache, i);
+        else
+        {
+            QPixmap mimeall = i->pixmap(48);
+            QPixmap thumbnail(pixelSize.width(), pixelSize.height());
+            QPainter painter(&thumbnail);
+            painter.setBrush(colorGroup().base());
+            painter.setPen(colorGroup().highlight());
+            painter.drawRect(0, 0, pixelSize.width(), pixelSize.height());
+            painter.drawPixmap((pixelSize.width()-mimeall.width())/2, (pixelSize.height()-mimeall.height())/2, mimeall);
+            item = new SQ_FileThumbViewItem(this, i->text(), thumbnail, i);
+        }
+    }
 
     initItem(item, i);
 
@@ -217,35 +175,60 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 
     if(!item) return;
 
-    int pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
-
-    // erase original pixmap
-    QPainter painter(item->pixmap());
-    painter.eraseRect(0, 0, pixelSize, pixelSize);
-    painter.setPen(colorGroup().highlight());
-    painter.setBrush(white);
-
-    // draw bounding rect
-    painter.drawRect(0, 0, pixelSize, pixelSize);
-
-    // draw pixmap
-    painter.drawImage((pixelSize - t.thumbnail.width())/2, (pixelSize - t.thumbnail.height())/2, t.thumbnail);
+    QPixmap newpix;
 
     // Extended thumbnail also have mime icon and dimensions
     if(SQ_ThumbnailSize::instance()->extended())
     {
-        // draw mime icon
-        if(!t.info.mime.isNull() && SQ_ThumbnailSize::instance()->extended())
-        painter.drawImage(QPoint(pixelSize - t.info.mime.width() - 1, 1), t.info.mime);
+        QSize sz = pixelSize;//SQ_ThumbnailSize::instance()->extendedSize();
+        int W = sz.width(), H = sz.height();
 
-        // draw dimensions
-        QFont font = painter.font();
-        font.setPixelSize(12);
-        painter.setFont(font);
+        // erase original pixmap
+        newpix.resize(W, H);
+
+        QPainter painter;
+        painter.begin(&newpix);
+
+        painter.setPen(colorGroup().highlight());
+        painter.setBrush(colorGroup().base());
+
+        // draw bounding rect
+        painter.drawRect(0, 0, W, H);
+
+        painter.drawImage((W - t.thumbnail.width())/2, (W - t.thumbnail.height())/2, t.thumbnail);
+        painter.drawPixmap(W-t.info.mime.width()-5, H-t.info.mime.height()-4, t.info.mime);
+        painter.drawLine(3, W-1, W-4, W-1);
+
+        QFont f = painter.font();
+        f.setPixelSize(10);
+        painter.setFont(f);
+
+        int rest = H-W-2;
+
         painter.setPen(colorGroup().text());
-        painter.drawText(0, pixelSize - SQ_ThumbnailSize::instance()->margin(), pixelSize, SQ_ThumbnailSize::instance()->margin(),
-        Qt::AlignCenter, QString::fromLatin1("%1x%2").arg(t.info.dimensions).arg(t.info.bpp));
+        painter.drawText(4, W+rest/2-12, 100, 12, 0, QString::fromLatin1("%1").arg(t.info.dimensions));
+        painter.drawText(4, W+rest/2+1, 100, 12, 0, KIO::convertSize(fileItem->size()));
+        painter.end();
     }
+    else
+    {
+        newpix.resize(pixelSize.width(), pixelSize.height());
+
+        QPainter painter;
+        painter.begin(&newpix);
+
+        painter.setPen(colorGroup().highlight());
+        painter.setBrush(colorGroup().base());
+
+        // draw bounding rect
+        painter.drawRect(0, 0, pixelSize.width(), pixelSize.height());
+
+        // draw pixmap
+        painter.drawImage((pixelSize.width() - t.thumbnail.width())/2, (pixelSize.height() - t.thumbnail.height())/2, t.thumbnail);
+        painter.end();
+    }
+
+    item->setPixmap(newpix);
 
     // store thumbnail information
     item->setInfo(t);
@@ -269,7 +252,7 @@ void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList* list)
     thumbJob = new SQ_ThumbnailLoadJob(list);
 
     connect(thumbJob, SIGNAL(thumbnailLoaded(const KFileItem*, const SQ_Thumbnail &)),
-    this, SLOT(setThumbnailPixmap(const KFileItem*, const SQ_Thumbnail&)));
+            this, SLOT(setThumbnailPixmap(const KFileItem*, const SQ_Thumbnail&)));
 
     connect(thumbJob, SIGNAL(result(KIO::Job*)), SQ_WidgetStack::instance(), SLOT(thumbnailsUpdateEnded()));
 
@@ -312,23 +295,6 @@ void SQ_FileThumbView::appendItems(const KFileItemList &items)
     thumbJob->appendItems(items);
 }
 
-void SQ_FileThumbView::updateView(bool b)
-{
-    if(!b)
-        return;
-
-    KFileIconViewItem *item = static_cast<KFileIconViewItem*>(QIconView::firstItem());
-
-    if(item)
-    {
-        do
-        {
-            item->setPixmap((item->fileInfo())->pixmap(SQ_ThumbnailSize::instance()->pixelSize()));
-            item = static_cast<KFileIconViewItem*>(item->nextItem());
-        }while(item);
-    }
-}
-
 void SQ_FileThumbView::updateView(const KFileItem *i)
 {
      KFileIconViewItem *item = viewItem(i);
@@ -362,7 +328,7 @@ void SQ_FileThumbView::slotShowToolTip(QIconViewItem *item)
 
     tooltipFor = fitem;
 
-    timer->start(450, true);
+    timer->start(600, true);
 }
 
 /*
@@ -372,11 +338,8 @@ void SQ_FileThumbView::slotRemoveToolTip()
 {
     timer->stop();
 
-    if(toolTip)
-    {
-        delete toolTip;
-        toolTip = NULL;
-    }
+    delete toolTip;
+    toolTip = 0;
 }
 
 bool SQ_FileThumbView::eventFilter(QObject *o, QEvent *e)
@@ -390,20 +353,6 @@ bool SQ_FileThumbView::eventFilter(QObject *o, QEvent *e)
     }
 
     return KFileIconView::eventFilter(o, e);
-}
-
-/*
- *  "showEvent()"! Let's start thumbnail job, if needed.
- */
-void SQ_FileThumbView::showEvent(QShowEvent *e)
-{
-    KFileIconView::showEvent(e);
-
-    if(isPending)
-    {
-        isPending = false;
-        startThumbnailUpdate();
-    }
 }
 
 /*
@@ -429,22 +378,13 @@ void SQ_FileThumbView::slotTooltipDelay()
     if(!f)
         return;
 
-    // construct tooltip
-    if(f->isLink())
-        toolTip = new QLabel(i18n("File: %1\nSize: %2\nLink to: %3\n\n%4")
-            .arg(KStringHandler::csqueeze(tooltipFor->text()))
-            .arg(KIO::convertSize(f->size()))
-            .arg(KStringHandler::csqueeze(f->linkDest()))
-            .arg(tooltipFor->fullInfo()), 0, "myToolTip",
-            WStyle_StaysOnTop | WStyle_Customize | WStyle_NoBorder
-            | WStyle_Tool | WX11BypassWM);
-    else
-        toolTip = new QLabel(i18n("File: %1\nSize: %2\n\n%3")
-            .arg(KStringHandler::csqueeze(tooltipFor->text()))
-            .arg(KIO::convertSize(f->size()))
-            .arg(tooltipFor->fullInfo()), 0, "myToolTip",
-            WStyle_StaysOnTop | WStyle_Customize | WStyle_NoBorder
-            | WStyle_Tool | WX11BypassWM);
+    toolTip = new QLabel(i18n("<table cellspacing=0><tr><td align=left>File:</td><td align=left><b>%1</b></td></tr><tr><td align=left>Size:</td><td align=left><b>%2</b></td></tr>%3%4</table>")
+        .arg(KStringHandler::csqueeze(f->name()))
+        .arg(KIO::convertSize(f->size()))
+        .arg(f->isLink() ? i18n("<tr><td align=left>Link destination:</td><td align=left>%1</td></tr>").arg(KStringHandler::csqueeze(f->linkDest())) : QString::null)
+        .arg(tooltipFor->fullInfo()),
+        0, "myToolTip", WStyle_StaysOnTop | WStyle_Customize | WStyle_NoBorder
+        | WStyle_Tool | WX11BypassWM);
 
     // setup tooltip
     toolTip->setFrameStyle(QFrame::Plain | QFrame::Box);
@@ -480,7 +420,8 @@ void SQ_FileThumbView::clearView()
     // stop job
     stopThumbnailUpdate();
 
-    pixelSize = SQ_ThumbnailSize::instance()->currentPixelSize();
+    pixelSize = SQ_ThumbnailSize::instance()->extended() ?
+            SQ_ThumbnailSize::instance()->extendedSize() : QSize(SQ_ThumbnailSize::instance()->pixelSize()+2,SQ_ThumbnailSize::instance()->pixelSize()+2);
 
     // clear
     KFileIconView::clearView();
@@ -504,21 +445,10 @@ void SQ_FileThumbView::insertCdUpItem(const KURL &base)
 {
     static const QString &dirup = KGlobal::staticQString("..");
 
-    // create pixmap for ".."
-    QPixmap thumbnail(pixelSize, pixelSize);
-    QPainter painter(&thumbnail);
-    painter.eraseRect(0, 0, pixelSize, pixelSize);
-    painter.setBrush(white);
-    painter.setPen(colorGroup().highlight());
-    painter.drawRect(0, 0, pixelSize, pixelSize);
-
-    // draw "directory" pixmap
-    painter.drawPixmap((pixelSize-dirPix.width())/2, (pixelSize-dirPix.height())/2, dirPix);
-
     KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
 
     // insert new item
-    SQ_FileThumbViewItem *item = new SQ_FileThumbViewItem(this, dirup, thumbnail, fi);
+    SQ_FileThumbViewItem *item = new SQ_FileThumbViewItem(this, dirup, directoryCache, fi);
 
     // item ".." won't be selectable
     item->setSelectable(false);
@@ -532,6 +462,37 @@ void SQ_FileThumbView::insertCdUpItem(const KURL &base)
 void SQ_FileThumbView::listingCompleted()
 {
     arrangeItemsInGrid();
+}
+
+void SQ_FileThumbView::rebuildPendingPixmap(bool dir)
+{
+    QPixmap pixmapDir;
+
+    if(dir)
+        pixmapDir = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 48);
+
+    QPixmap *p = dir ? &directoryCache : &pendingCache;
+    QPixmap *w = dir ? &pixmapDir : &pending;
+
+    p->resize(pixelSize.width(), pixelSize.height());
+
+    QPainter painter(p);
+    painter.setBrush(colorGroup().base());
+    painter.setPen(colorGroup().highlight());
+    painter.drawRect(0, 0, pixelSize.width(), pixelSize.height());
+    painter.drawPixmap((pixelSize.width() - w->width())/2, (pixelSize.height() - w->height())/2, *w);
+}
+
+void SQ_FileThumbView::rebuildCachedPixmaps()
+{
+    pixelSize = SQ_ThumbnailSize::instance()->extended() ?
+            SQ_ThumbnailSize::instance()->extendedSize() : QSize(SQ_ThumbnailSize::instance()->pixelSize()+2,SQ_ThumbnailSize::instance()->pixelSize()+2);
+
+    // rebuild "pending" thumbnail
+    rebuildPendingPixmap();
+
+    // rebuild directory pixmap
+    rebuildPendingPixmap(true);
 }
 
 #include "sq_filethumbview.moc"

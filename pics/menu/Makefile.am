@@ -1,11 +1,9 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = 116.png 18016.png animate16.png background16.png close16.png first16.png flipH16.png flipV16.png fullscreen16.png last16.png moveDown16.png moveLeft16.png moveRight16.png moveUp16.png next16.png page116.png page216.png page316.png page416.png prev16.png prop16.png quick16.png reset16.png rotateLeft16.png rotateRight16.png statusbar16.png tickmarks16.png toolbar16.png window16.png zoom0.516.png zoom-16.png zoom+16.png zoom16.png zoom216.png zoom100016.png zoom10016.png zoom20016.png zoom30016.png zoom50016.png zoom70016.png zoom90016.png 
+EXTRA_DIST = 18016.png animate16.png background16.png close16.png first16.png flipH16.png flipV16.png fullscreen16.png last16.png moveDown16.png moveLeft16.png moveRight16.png moveUp16.png next16.png page116.png page216.png page316.png page416.png prev16.png prop16.png reset16.png rotateLeft16.png rotateRight16.png statusbar16.png tickmarks16.png toolbar16.png window16.png zoom-16.png zoom+16.png zoom16.png zoom100016.png zoom10016.png zoom20016.png zoom30016.png zoom50016.png zoom70016.png zoom90016.png 
 
 install-data-local:
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
-	$(INSTALL_DATA) $(srcdir)/116.png $(kde_datadir)/ksquirrel/images/menu/116.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/18016.png $(kde_datadir)/ksquirrel/images/menu/18016.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
@@ -47,8 +45,6 @@ install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/prop16.png $(kde_datadir)/ksquirrel/images/menu/prop16.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
-	$(INSTALL_DATA) $(srcdir)/quick16.png $(kde_datadir)/ksquirrel/images/menu/quick16.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/reset16.png $(kde_datadir)/ksquirrel/images/menu/reset16.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/rotateLeft16.png $(kde_datadir)/ksquirrel/images/menu/rotateLeft16.png
@@ -63,15 +59,11 @@ install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/window16.png $(kde_datadir)/ksquirrel/images/menu/window16.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
-	$(INSTALL_DATA) $(srcdir)/zoom0.516.png $(kde_datadir)/ksquirrel/images/menu/zoom0.516.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/zoom-16.png $(kde_datadir)/ksquirrel/images/menu/zoom-16.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/zoom+16.png $(kde_datadir)/ksquirrel/images/menu/zoom+16.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/zoom16.png $(kde_datadir)/ksquirrel/images/menu/zoom16.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
-	$(INSTALL_DATA) $(srcdir)/zoom216.png $(kde_datadir)/ksquirrel/images/menu/zoom216.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
 	$(INSTALL_DATA) $(srcdir)/zoom100016.png $(kde_datadir)/ksquirrel/images/menu/zoom100016.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/menu/
@@ -88,7 +80,6 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/zoom90016.png $(kde_datadir)/ksquirrel/images/menu/zoom90016.png
 
 uninstall-local:
-	-rm -f $(kde_datadir)/ksquirrel/images/menu/116.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/18016.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/animate16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/background16.png
@@ -109,7 +100,6 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/page416.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/prev16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/prop16.png
-	-rm -f $(kde_datadir)/ksquirrel/images/menu/quick16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/reset16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/rotateLeft16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/rotateRight16.png
@@ -117,11 +107,9 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/tickmarks16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/toolbar16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/window16.png
-	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom0.516.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom-16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom+16.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom16.png
-	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom216.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom100016.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom10016.png
 	-rm -f $(kde_datadir)/ksquirrel/images/menu/zoom20016.png

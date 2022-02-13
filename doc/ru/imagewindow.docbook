@@ -6,8 +6,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2006-01-02</date>
-<releaseinfo>0.2</releaseinfo>
+<date>2007-03-10</date>
+<releaseinfo>0.3</releaseinfo>
 </chapterinfo>
 
 <title>Окно просмотра изображения</title>
@@ -38,11 +38,6 @@
 </varlistentry>
 
 <varlistentry>
-<term><keycap>Q</keycap></term>
-<listitem><para>Панель быстрой навигации</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><keycap>Средний клик</keycap>, <keycap>F</keycap></term>
 <listitem><para>Во весь экран</para></listitem>
 </varlistentry>
@@ -58,7 +53,7 @@
 </varlistentry>
 
 <varlistentry>
-<term><keycap>S</keycap></term>
+<term><keycap>Y</keycap></term>
 <listitem><para>Строка статуса с различной информацией об изображении</para></listitem>
 </varlistentry>
 
@@ -205,6 +200,16 @@
 <title>Сочетания клавиш для управления текущим изображением</title>
 
 <variablelist>
+<varlistentry>
+<term><keycap>Q</keycap></term>
+<listitem><para>Занести текущую страницу изображения в буфер обмена</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><keycap>S</keycap></term>
+<listitem><para>Сохранить текущую страницу изображения в другом формате</para></listitem>
+</varlistentry>
+
 <varlistentry>
 <term><keycap>V</keycap></term>
 <listitem><para>Отразить зеркально по вертикали</para></listitem>

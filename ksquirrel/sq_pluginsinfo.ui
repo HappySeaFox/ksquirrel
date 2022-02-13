@@ -8,12 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>570</width>
-            <height>473</height>
+            <width>484</width>
+            <height>375</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Plugins info</string>
+        <string>Plugins Information and Settings</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>
@@ -22,7 +22,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="Line" row="2" column="0" rowspan="1" colspan="3">
+        <widget class="Line" row="2" column="0">
             <property name="name">
                 <cstring>line1</cstring>
             </property>
@@ -36,35 +36,18 @@
                 <enum>Horizontal</enum>
             </property>
         </widget>
-        <widget class="QPushButton" row="3" column="1">
-            <property name="name">
-                <cstring>pushClose</cstring>
-            </property>
-            <property name="text">
-                <string>Close</string>
-            </property>
-            <property name="accel">
-                <string></string>
-            </property>
-        </widget>
-        <spacer row="3" column="0">
-            <property name="name">
-                <cstring>spacer1</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>500</width>
-                    <height>21</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QListView" row="1" column="0" rowspan="1" colspan="2">
+        <widget class="QListView" row="1" column="0">
+            <column>
+                <property name="text">
+                    <string>...</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
             <column>
                 <property name="text">
                     <string>Icon</string>
@@ -111,7 +94,18 @@
             </column>
             <column>
                 <property name="text">
-                    <string>I/O</string>
+                    <string>R</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>W</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
@@ -130,7 +124,7 @@
                 <enum>LastColumn</enum>
             </property>
         </widget>
-        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="2">
+        <widget class="QLayoutWidget" row="0" column="0">
             <property name="name">
                 <cstring>layout1</cstring>
             </property>
@@ -199,6 +193,44 @@
                 </widget>
             </grid>
         </widget>
+        <widget class="QLayoutWidget" row="3" column="0">
+            <property name="name">
+                <cstring>layout6</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>445</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushClose</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Close</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
     </grid>
 </widget>
 <connections>
@@ -208,12 +240,32 @@
         <receiver>SQ_PluginsInfo</receiver>
         <slot>reject()</slot>
     </connection>
+    <connection>
+        <sender>tableLib</sender>
+        <signal>doubleClicked(QListViewItem*)</signal>
+        <receiver>SQ_PluginsInfo</receiver>
+        <slot>slotDoubleClicked(QListViewItem*)</slot>
+    </connection>
+    <connection>
+        <sender>tableLib</sender>
+        <signal>mouseButtonClicked(int,QListViewItem*,const QPoint&amp;,int)</signal>
+        <receiver>SQ_PluginsInfo</receiver>
+        <slot>slotMouseButtonClicked(int,QListViewItem*,const QPoint&amp;,int)</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">sq_libraryhandler.h</include>
     <include location="global" impldecl="in implementation">kstandarddirs.h</include>
+    <include location="local" impldecl="in implementation">sq_iconloader.h</include>
+    <include location="local" impldecl="in implementation">sq_codecsettingsskeleton.h</include>
+    <include location="global" impldecl="in implementation">ksquirrel-libs/fileio.h</include>
+    <include location="global" impldecl="in implementation">ksquirrel-libs/fmt_codec_base.h</include>
     <include location="local" impldecl="in implementation">sq_pluginsinfo.ui.h</include>
 </includes>
+<slots>
+    <slot>slotDoubleClicked( QListViewItem * i )</slot>
+    <slot>slotMouseButtonClicked( int button, QListViewItem * i, const QPoint &amp;, int c )</slot>
+</slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>
     <function access="private">showLibs()</function>

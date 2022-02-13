@@ -39,6 +39,9 @@ class SQ_Dir : public QDir
     public:
         enum Prefix {
 
+            // image basket cache
+            Basket,
+
             // thumbnail cache (~/.ksquirrel/thumbnails).
             Thumbnails,
 
@@ -104,7 +107,7 @@ class SQ_Dir : public QDir
          *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
          *  archive in it. Today you replaced /opt/arc.zip with newer version. Now
          *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
-         *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack this archive once more.
+         *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack this archive again.
          */
         bool updateNeeded(const QString &file);
 

@@ -80,6 +80,8 @@ class SQ_MultiBar : public QHBox
 
         KMultiTabBar* multiBar() const;
 
+        static SQ_MultiBar* instance() { return m_inst; }
+
     public slots:
 
         /*
@@ -93,6 +95,8 @@ class SQ_MultiBar : public QHBox
         QWidgetStack *stack;
         int m_id, m_selected, m_width;
         QSignalMapper *mapper;
+
+        static SQ_MultiBar *m_inst;
 };
 
 inline

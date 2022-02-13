@@ -15,13 +15,10 @@
 
 void SQ_ThumbnailCacheMaster::init()
 {
-    pushCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_disk.png")));
-    pushCacheBrowse->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_disk_browse.png")));
-    pushCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_mem.png")));
-    pushClearCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_disk_clear.png")));
-    pushClearCacheMemory->setPixmap(QPixmap::fromMimeSource(locate("appdata", "imagescache//cache_mem_clear.png")));
-    pushShowCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_mem_view.png")));
-    pushSyncCache->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/cache/cache_mem_sync.png")));
+    pushCache->setIconSet(SQ_IconLoader::instance()->loadIcon("kcalc", KIcon::Desktop, KIcon::SizeSmall));
+    pushCacheBrowse->setIconSet(SQ_IconLoader::instance()->loadIcon("konqueror", KIcon::Desktop, KIcon::SizeSmall));
+    pushCacheMemory->setIconSet(SQ_IconLoader::instance()->loadIcon("kcalc", KIcon::Desktop, KIcon::SizeSmall));
+    pushShowCache->setIconSet(SQ_IconLoader::instance()->loadIcon("memory", KIcon::Desktop, KIcon::SizeSmall));
 }
 
 void SQ_ThumbnailCacheMaster::slotCalcCache()
@@ -68,11 +65,7 @@ void SQ_ThumbnailCacheMaster::slotClearMemoryCache()
 
 void SQ_ThumbnailCacheMaster::slotCalcCacheMemory()
 {
-    int size = SQ_PixmapCache::instance()->totalSize();
-
-    QString s = KIO::convertSize(size);
-
-    textCacheMemSize->setText(s);
+	textCacheMemSize->setText(QString::fromLatin1("%1/%2").arg(KIO::convertSize(SQ_PixmapCache::instance()->totalSize())).arg(KIO::convertSize(SQ_PixmapCache::instance()->cacheLimit())));
 }
 
 void SQ_ThumbnailCacheMaster::slotShowDiskCache()

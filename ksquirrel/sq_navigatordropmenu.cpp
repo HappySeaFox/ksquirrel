@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <klocale.h>
 #include <kpopupmenu.h>
 #include <kaction.h>
@@ -31,9 +35,9 @@ SQ_NavigatorDropMenu::SQ_NavigatorDropMenu(QObject *parent) : QObject(parent)
 
     kdDebug() << "+SQ_NavigatorDropMenu" << endl;
 
-    KActionCollection *ac = new KActionCollection(NULL, this, "Actions for drop menu");
+    KActionCollection *ac = new KActionCollection(0, this, "Actions for drop menu");
 
-    dropmenu = new KPopupMenu(NULL);
+    dropmenu = new KPopupMenu(0);
 
     // "copy" action
     KAction *pACopy = new KAction(i18n("Copy here"), "editpaste", 0, this, SLOT(slotCopy()), ac, "sq_copy");

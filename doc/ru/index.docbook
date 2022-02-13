@@ -2,15 +2,13 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
   <!ENTITY kappname "KSquirrel">
-  <!ENTITY kappnamesmall "ksquirrel-small">
   <!ENTITY klibname "ksquirrel-libs">
-  <!ENTITY Dmitry.Baryshev "<firstname>Дмитрий</firstname><surname>Барышев</surname><othername>Алексеевич</othername>">
+  <!ENTITY Dmitry.Baryshev "<firstname>Дмитрий</firstname> <othername>Алексеевич</othername> <surname>Барышев</surname>">
   <!ENTITY Dmitry.Baryshev.mail "<email>ksquirrel@tut.by</email>">
   <!ENTITY intro          SYSTEM "intro.docbook">
   <!ENTITY internals      SYSTEM "internals.docbook">
   <!ENTITY interface      SYSTEM "interface.docbook">
   <!ENTITY imagewindow    SYSTEM "imagewindow.docbook">
-  <!ENTITY ksquirrelsmall SYSTEM "ksquirrelsmall.docbook">
   <!ENTITY install        SYSTEM "install.docbook">
   <!ENTITY running        SYSTEM "running.docbook">
   <!ENTITY credits        SYSTEM "credits.docbook">
@@ -32,16 +30,16 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 
 <copyright>
-<year>2003-2006</year>
+<year>2003-2007</year>
 <holder>&Dmitry.Baryshev;</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2006-01-02</date>
-<releaseinfo>0.2.0</releaseinfo>
+<date>2007-03-10</date>
+<releaseinfo>0.3.0</releaseinfo>
 <abstract>
-<para>&kappname; это просмотрщик изображений для KDE поддерживающий OpenGL.</para>
+<para>&kappname; это просмотрщик изображений для KDE реализующий OpenGL.</para>
 </abstract>
 <keywordset>
 <keyword>KDE</keyword>
@@ -54,7 +52,6 @@
 &internals;
 &interface;
 &imagewindow;
-&ksquirrelsmall;
 &running;
 &credits;
 
@@ -68,7 +65,7 @@
 &kappname; из исходников устанавливается как обычно, за исключением некоторых моментов. Рассмотрим все шаги инсталляции подробнее.
 </para>
 
-<sect2 id="install-source-ksquirrel">
+<sect2 id="install-source-ksquirrel-libs">
 <title>Установка &klibname;</title>
 
 <para>
@@ -97,7 +94,7 @@ configure.gnu это просто обёртка вокруг configure - это
 </para>
 </sect2>
 
-<sect2 id="install-source-ksquirrel-libs">
+<sect2 id="install-source-ksquirrel">
 <title>Установка &kappname;</title>
 
 <para>
@@ -116,10 +113,10 @@ configure.gnu это просто обёртка вокруг configure - это
 Пояснения.
 <itemizedlist>
 <listitem><para>
-configure.gnu это просто обёртка вокруг configure - это обычный shell-скрипт, который вызывает configure с установленным префиксом.
+configure.gnu это просто обёртка вокруг configure - это обычный shell-скрипт, который вызывает configure с установленным префиксом и отключённой поддержкой arts.
 Вместо configure.gnu Вы можете спокойно использовать
 
-<command>./configure --prefix="`kde-config --prefix`"</command>
+<command>./configure --prefix="`kde-config --prefix`" --without-arts</command>
 </para></listitem>
 </itemizedlist>
 

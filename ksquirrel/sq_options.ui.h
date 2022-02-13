@@ -11,24 +11,30 @@
  *  SQ_Options is a configuration dialog for KSquirrel.
  */
 
+// for KIPI defs
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef SQ_HAVE_KIPI
+#include <libkipi/pluginloader.h>
+#endif
+
 void SQ_Options::init()
 {
+    buttonOk->setIconSet(SQ_IconLoader::instance()->loadIcon("ok", KIcon::Desktop, KIcon::SizeSmall));
     int tp;
     SQ_Config *kconf = SQ_Config::instance();
 
     pagesNumber->setRange(1, 1000, 1, true);
-    pagesNumberET->setRange(1, 1000, 1, true);
 
     SQ_Config::instance()->setGroup("Main");
 
+    tp = kconf->readNumEntry("applyto", SQ_CodecSettings::Both);
+    buttonGroupCS->setButton(tp);
     checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", false));
     checkSync->setChecked(kconf->readBoolEntry("sync", false));
     checkSplash->setChecked(kconf->readBoolEntry("splash", true));
-
-    SQ_Config::instance()->setGroup("Libraries");
-
-    checkMonitor->setChecked(kconf->readBoolEntry("monitor", true));
-    checkFAMMessage->setChecked(kconf->readBoolEntry("show dialog", false));
 
     KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
@@ -39,8 +45,6 @@ void SQ_Options::init()
     tp = kconf->readNumEntry("set path", 0);
     buttonGroupSetPath->setButton(tp);
     kURLReqOpenCustom->setURL(kconf->readEntry("custom directory", "/"));
-    tp = kconf->readNumEntry("click policy", 0);
-    buttonGroupClick->setButton(tp);
 
     checkSaveHistory->setChecked(kconf->readBoolEntry("history", true));
     checkRunUnknown->setChecked(kconf->readBoolEntry("run unknown", false));
@@ -48,9 +52,9 @@ void SQ_Options::init()
     checkJumpFirst->setChecked(kconf->readBoolEntry("tofirst", true));
     checkDisableDirs->setChecked(kconf->readBoolEntry("disable_dirs", false));
 
+// Init GLView page
     SQ_Config::instance()->setGroup("GL view");
 
-// Init GLView page
     QPixmap p1;
     checkStatus->setChecked(kconf->readBoolEntry("hide_sbar", true));    
     checkToolbar->setChecked(kconf->readBoolEntry("hide_toolbar", true));    
@@ -94,15 +98,22 @@ void SQ_Options::init()
     color.setNamedColor(kconf->readEntry("GL view background", "#4e4e4e"));
     kColorGLbackground->setColor(color);
 
+    SQ_Config::instance()->setGroup("Sidebar");
+    tp = kconf->readNumEntry("recursion_type", 0);
+    buttonGroupRecurs->setButton(tp);
+    checkDevice->setChecked(kconf->readBoolEntry("mount_device", false));
+    checkMountOptions->setChecked(kconf->readBoolEntry("mount_options", false));
+    checkMountFS->setChecked(kconf->readBoolEntry("mount_fstype", true));
+
     SQ_Config::instance()->setGroup("Thumbnails");
 
-    spinCacheSize->setRange(10, 104857, 10, true);
+    spinCacheSize->setRange(0, 104857, 10, true);
     spinMargin->setRange(0, 20, 1, true);
     spinMargin->setValue(kconf->readNumEntry("margin", 2));
     spinCacheSize->setValue(kconf->readNumEntry("cache", 1024*5));
-    checkMime->setChecked(kconf->readBoolEntry("disable_mime", false));
     checkNoWriteThumbs->setChecked(kconf->readBoolEntry("dont write", false));
     checkExtended->setChecked(kconf->readBoolEntry("extended", false));
+
     if(kconf->readBoolEntry("tooltips", false))
     {
 	checkTooltips->toggle();
@@ -110,42 +121,26 @@ void SQ_Options::init()
     }
     checkInactive->setChecked(kconf->readBoolEntry("tooltips_inactive", true));
 
-    SQ_Config::instance()->setGroup("Edit tools");
-
-    tp = kconf->readNumEntry("load_pages", 0);
-    buttonGroupPagesET->setButton(tp);
-    pagesNumberET->setEnabled(tp == 2);
-    tp = kconf->readNumEntry("load_pages_number", 1);
-    pagesNumberET->setValue(tp);
-
-    checkPreview->setChecked(kconf->readBoolEntry("preview", true));
-    checkDontGenerate->setChecked(kconf->readBoolEntry("preview_dont", true));
-    spinLargerW->setValue(kconf->readNumEntry("preview_larger_w", 1024));
-    spinLargerH->setValue(kconf->readNumEntry("preview_larger_h", 768));
-
-    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, 32), i18n("Main"));    
-    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 32), i18n("Filing"));
-    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, 32), i18n("Thumbnails"));
+	new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, KIcon::SizeMedium), i18n("General"));    
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeMedium), i18n("Filing"));
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, KIcon::SizeMedium), i18n("Thumbnails"));
     new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
-    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("binary", KIcon::Desktop, 32), i18n("Libraries"));
-    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("edit", KIcon::Desktop, 32), i18n("Edit tools"));
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("penguin", KIcon::Desktop, KIcon::SizeMedium), i18n("Sidebar"));
+
+#ifdef SQ_HAVE_KIPI
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("kipi", KIcon::Desktop, KIcon::SizeMedium), i18n("KIPI"));
+
+	QWidget *pg6 = widgetStack->widget(5);
+	QGridLayout *pageLayout6 = new QGridLayout(pg6, 1, 1, 0, 0, "pageLayout_6");
+	kipi = new KIPI::ConfigWidget(pg6);
+	pageLayout6->addWidget(kipi, 0, 0);
+#endif
 
     listMain->updateAndInstall(this);
 
     connect(listMain, SIGNAL(selectionChanged()), SLOT(slotShowPage()));
 
     kURLReqOpenCustom->setMode(mode);
-
-    fillAltCombo();
-
-    SQ_Config::instance()->setGroup("Edit tools");
-
-    QString lib = kconf->readEntry("altlibrary", "Portable Network Graphics");
-
-    if(SQ_LibraryHandler::instance()->libraryByName(lib))
-        comboAlt->setCurrentText(lib);
-    else if(comboAlt->count() > 1)
-        comboAlt->setCurrentItem(1);
 }
 
 int SQ_Options::start()
@@ -154,13 +149,16 @@ int SQ_Options::start()
 
     if(result == QDialog::Accepted)
     {
+#ifdef SQ_HAVE_KIPI
+	static_cast<KIPI::ConfigWidget *>(kipi)->apply();
+#endif
+
         SQ_Config *kconf = SQ_Config::instance();
 
         kconf->setGroup("Fileview");
         kconf->writeEntry("set path", buttonGroupSetPath->selectedId());
         kconf->writeEntry("custom directory", kURLReqOpenCustom->url());
         kconf->writeEntry("sync type", buttonGroupSync->selectedId());
-        kconf->writeEntry("click policy", buttonGroupClick->selectedId());
         kconf->writeEntry("history", checkSaveHistory->isChecked());
         kconf->writeEntry("run unknown", checkRunUnknown->isChecked());
         kconf->writeEntry("archives", checkSupportAr->isChecked());
@@ -168,6 +166,7 @@ int SQ_Options::start()
         kconf->writeEntry("disable_dirs", checkDisableDirs->isChecked());
 
         kconf->setGroup("Main");
+        kconf->writeEntry("applyto", buttonGroupCS->selectedId());
         kconf->writeEntry("minimize to tray", checkMinimize->isChecked());
         kconf->writeEntry("sync", checkSync->isChecked());
         kconf->writeEntry("splash", checkSplash->isChecked());
@@ -175,16 +174,15 @@ int SQ_Options::start()
         kconf->setGroup("Thumbnails");
         kconf->writeEntry("margin", spinMargin->value());
         kconf->writeEntry("cache", spinCacheSize->value());
-        kconf->writeEntry("disable_mime", checkMime->isChecked());
         kconf->writeEntry("dont write", checkNoWriteThumbs->isChecked());
         kconf->writeEntry("extended", checkExtended->isChecked());
         kconf->writeEntry("tooltips", checkTooltips->isChecked());
         kconf->writeEntry("tooltips_inactive", checkInactive->isChecked());
-    
+
         kconf->setGroup("GL view");
         kconf->writeEntry("load_pages", buttonGroupPages->selectedId());
         kconf->writeEntry("load_pages_number", pagesNumber->value());
-        kconf->writeEntry("GL view background", (kColorGLbackground->color()).name());
+        kconf->writeEntry("GL view background", kColorGLbackground->color().name());
         kconf->writeEntry("GL view custom texture", custpixmap);
         kconf->writeEntry("GL view background type", buttonGroupColor->selectedId());
         kconf->writeEntry("zoom limit", buttonGroupZoomLimit->selectedId());
@@ -200,18 +198,11 @@ int SQ_Options::start()
         kconf->writeEntry("zoom_max", spinZoomMax->value());
         kconf->writeEntry("move", sliderMove->value());
 
-        kconf->setGroup("Libraries");
-        kconf->writeEntry("monitor", checkMonitor->isChecked());
-        kconf->writeEntry("show dialog", checkFAMMessage->isChecked());
-
-        kconf->setGroup("Edit tools");
-        kconf->writeEntry("load_pages", buttonGroupPagesET->selectedId());
-        kconf->writeEntry("load_pages_number", pagesNumberET->value());
-        kconf->writeEntry("preview", checkPreview->isChecked());
-        kconf->writeEntry("preview_dont", checkDontGenerate->isChecked());
-        kconf->writeEntry("preview_larger_w", spinLargerW->value());
-        kconf->writeEntry("preview_larger_h", spinLargerH->value());
-        kconf->writeEntry("altlibrary", comboAlt->currentText());
+        kconf->setGroup("Sidebar");
+        kconf->writeEntry("recursion_type", buttonGroupRecurs->selectedId());
+        kconf->writeEntry("mount_device", checkDevice->isChecked());
+        kconf->writeEntry("mount_options", checkMountOptions->isChecked());
+        kconf->writeEntry("mount_fstype", checkMountFS->isChecked());
     }
 
     return result;
@@ -271,8 +262,8 @@ void SQ_Options::slotNewCustomTexture( const QString & path)
 void SQ_Options::slotShowPage()
 {
     int id = listMain->currentItem();
-    
-    widgetStack1->raiseWidget(id);
+
+    widgetStack->raiseWidget(id);
     widgetStackLines->raiseWidget(id);
 }
 
@@ -297,23 +288,4 @@ void SQ_Options::paletteChange( const QPalette &oldPalette )
 void SQ_Options::slotSetSystemBack( const QColor & )
 {
     kColorSystem->setColor(colorGroup().color(QColorGroup::Base));
-}
-
-void SQ_Options::fillAltCombo()
-{
-    QPixmap pix;
-
-    // return anyway
-    if(!SQ_LibraryHandler::instance()->count())
-        return;
-
-    for(QValueVector<SQ_LIBRARY>::iterator it = SQ_LibraryHandler::instance()->begin();
-            it != SQ_LibraryHandler::instance()->end();++it)
-    {
-        if(pix.convertFromImage((*it).mime))
-        {
-            if((*it).writable)
-            comboAlt->insertItem(pix, (*it).quickinfo);
-        }
-    }
 }

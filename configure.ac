@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.3], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.7.0-pre1], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.3)
+AM_INIT_AUTOMAKE(ksquirrel, 0.7.0-pre1)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -121,14 +121,6 @@ AC_FUNC_STAT
 
 AC_CHECK_FUNCS([memcpy memset], [], AC_MSG_ERROR("ksquirrel needs memcpy() and memset() functions!"))
 
-AC_ARG_ENABLE(ksmall,
-              [AS_HELP_STRING([--disable-ksmall], [don't compile ksquirrel-small [default=no]])],
-	      [ sq_ksmall="$enableval" ],
-	      [ sq_ksmall="yes" ]
-             )
-
-AM_CONDITIONAL([SQ_ENABLE_KSMALL], [test $sq_ksmall = yes])
-
 ##################### from gdk-pixbuf-0.22 #########################
 #
 # Checks to see if we should compile in MMX support (there will be
@@ -188,6 +180,31 @@ else
 fi
 
 AM_CONDITIONAL(USE_MMX, test x$use_mmx_asm = xyes)
+
+# KIPI
+have_kipi=no
+PKG_CHECK_MODULES([libkipi], libkipi, [
+        _cppflags=$CPPFLAGS
+        _ldflags=$LDFLAGS
+                                
+        CPPFLAGS="$libkipi_CFLAGS $CPPFLAGS"
+        LDFLAGS="$LDFLAGS $libkipi_LIBS"
+
+        KDE_CHECK_HEADER(libkipi/interface.h, have_kipi=yes, have_kipi=no)
+          if test "$have_kipi" = "yes"; then
+        	AC_DEFINE(SQ_HAVE_KIPI, [], [If we have libkipi installed])
+          else
+            AC_WARN([Can't find KIPI headers, KSquirrel won't be compiled with KIPI support])
+          fi
+
+            CPPFLAGS=$_cppflags
+            LDFLAGS=$_ldflags
+    ],
+        [AC_WARN([KIPI development file (.pc) was not found. KIPI support will be disabled.])]
+)
+
+AM_CONDITIONAL(SQ_HAVE_KIPI, test x$have_kipi = xyes)
+
 ###################################################
 
 KDE_CREATE_SUBDIRSLIST
@@ -203,7 +220,6 @@ AC_CONFIG_FILES([pics/toolbar/Makefile])
 AC_CONFIG_FILES([pics/like/Makefile])
 AC_CONFIG_FILES([pics/menu/Makefile])
 AC_CONFIG_FILES([pics/imageedit/Makefile])
-AC_CONFIG_FILES([pics/imageedit/squirrels/Makefile])
 AC_CONFIG_FILES([po/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/ru/Makefile])
@@ -215,13 +231,11 @@ KSquirrel configuration:
 -------------------------
   Source code location:     ${srcdir}
   KSquirrel version:        ${VERSION}
-  C Compiler:               ${CC}
-  C Compiler flags:         ${CFLAGS}
   C++ Compiler:             ${CXX}
   C++ Compiler flags:       ${CXXFLAGS}
   ksquirrel-libs CFLAGS:    $ksquirrellibs_CFLAGS
   ksquirrel-libs LIBS:      $ksquirrellibs_LIBS
-  Compile ksquirrel-small:  $sq_ksmall
+  KIPI support:             $have_kipi
 
 Installation options:
 ----------------------

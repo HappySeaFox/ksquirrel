@@ -4,4 +4,4 @@
 ####### kdevelop will overwrite this part!!! (end)############
 SUBDIRS = ru
 
-man_MANS = ksquirrel.1 ksquirrel-small.1
+man_MANS = ksquirrel.1

@@ -24,11 +24,12 @@
 #include <qfileinfo.h>
 #include <qimage.h>
 #include <qrect.h>
+#include <qpair.h>
 
 #include <kurl.h>
 
-#include "fmt_types.h"
-#include "fmt_defs.h"
+#include <ksquirrel-libs/fmt_types.h>
+#include <ksquirrel-libs/fmt_defs.h>
 
 #include <vector>
 
@@ -50,15 +51,9 @@ class KRadioAction;
 class QTimer;
 class QPainter;
 class QPopupMenu;
-
-#ifndef SQ_SMALL
-
-class SQ_QuickBrowser;
-
-#endif
+class QSlider;
 
 class SQ_ToolButtonPopup;
-class SQ_ToolButtonPage;
 class SQ_ToolButton;
 class SQ_ToolBar;
 
@@ -69,14 +64,16 @@ struct Parts;
 struct Part;
 class memoryPart;
 
+/* *************************************************************** */
+
 /*
  *  SQ_GLWidget represents a widget, which loads, shows and manipulates
  *  an image.
  *
  *  It contains complex decoding method. Since OpenGL can show textures
- *  only with dimensions of power of 2, we should divide decoded image into
- *  quads and only then generate textures. It means, that the image you see
- *  consists of several parts:
+ *  only with dimensions of power of 2 (32x62, 512, 256 etc.), we should divide
+ * decoded image into quads and only then generate textures.
+  * It means, that the image you see consists of several parts:
  *
  *   |----------------------------------
  *   |                |                |
@@ -89,10 +86,9 @@ class memoryPart;
  *   -----------------------------------
  *
  *
- *  The main class member is 'parts'. It is an array of decoded images
+ *  The main class member is 'parts'. It's an array of decoded images
  *  and appropriate memory buffers and textures. Here comes an explanation:
- *
- *
+ *  [ use monotype fonts :) ]
  *
  *                                                           textures & coordinates           Part
  *     +-----------------------------------+                 #####################     ##################
@@ -120,11 +116,6 @@ class memoryPart;
  *
  *
  ******************************************************************************
- *
- *
- *  Since 0.6.0-pre9 KSquirrel stores only one image page in video memory.
- *  When user presses F2 or F3 (previous page/next page) current textures
- *  are deleted and new ones are bound (see reassignParts()).
  *
  */
 
@@ -184,22 +175,6 @@ class SQ_GLWidget : public QGLWidget
          */
         bool isnice();
 
-#ifndef SQ_SMALL
-
-        /*
-         *  Create 'Quick Browser' - a small widget
-         *  representing a simple filemanager. Is is very useful
-         *  in fullscreen mode.
-         */
-        void createQuickBrowser();
-
-        /*
-         * Show/hide quickbrowser.
-         */
-        void toggleQuickBrowser();
-
-#endif
-
         /*
          *  Direct call to glInit();
          */
@@ -226,20 +201,14 @@ class SQ_GLWidget : public QGLWidget
          */
         void matrixChanged();
 
-#ifndef SQ_SMALL
-
         /*
          *  Check or uncheck 'Slideshow' button in toolbar.
          */
         void updateSlideShowButton(bool toggled);
 
-#endif
         static SQ_GLWidget* window() { return m_instance; }
 
     protected:
-
-        void resizeEvent(QResizeEvent *);
-
         /*
          *  Next three methods should be reimplemented in
          *  every QGLWidget's subclass.
@@ -281,6 +250,9 @@ class SQ_GLWidget : public QGLWidget
         void mouseMoveEvent(QMouseEvent *);
 
     private:
+        void toClipboard();
+        void saveAs();
+        void  enableSettingsButton(bool enab);
 
         /*
          *  Remove currently loaded textures and memory buffers.
@@ -301,11 +273,6 @@ class SQ_GLWidget : public QGLWidget
         void useBrokenImage(const int err_index);
 
         /*
-         *  Remove parts (Parts::m32).
-         */
-        void clearParts(Parts *p, const int s = -1);
-
-        /*
          *  Update filter. If 'nice' is true, use GL_LINEAR
          *  and GL_NEAREST otherwise.
          */
@@ -315,11 +282,6 @@ class SQ_GLWidget : public QGLWidget
          *  Cleanup method.
          */
         void decodeFailedOn0();
-
-        /*
-         *  Create textures for current image page, bind them.
-         */
-        void reassignParts();
 
         /*
          *  Create KActions.
@@ -337,32 +299,10 @@ class SQ_GLWidget : public QGLWidget
         void draw_background(void *bits, unsigned int *tex, int dim, GLfloat w, GLfloat h, bool &bind, bool deleteOld);
 
         /*
-         *  Change statusbar info according with
-         *  current matrix (it shows current coordinates).
-         */
-        void coordChanged();
-
-        /*
          *  Divide currently decoded image into
          *  several parts and store them in MemoryPart::m_data.
          */
-        void setupBits(Parts *p, RGBA *b, int y);
-
-        /*
-         *  Take milliseconds as argument and return
-         *  seconds+milliseconds.
-         *
-         *  For example:
-         *
-         *  int secs, msec = 2350;
-         *  adjustTimeFromMsecs(secs, msec);
-         *  printf("%d : %d\n", secs, msec);
-         *
-         *  will print
-         *
-         *  2 : 350
-         */
-        void adjustTimeFromMsecs(int &msecs, int &secs);
+        void setupBits(Parts *p, RGBA *buffer, int y, int x);
 
         /*
          *  Jump to first or last image in animated sequence.
@@ -384,14 +324,10 @@ class SQ_GLWidget : public QGLWidget
          */
         void toggleDrawingBackground();
 
-#ifndef SQ_SMALL
-
         /*
          *  Show popup menu with external tools.
          */
         void showExternalTools();
-
-#endif
 
         /*
          *  Generate textures for tickmarks and bind them.
@@ -429,7 +365,7 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Set current zoom to 'z'.
          */
-        void internalZoom(const GLfloat &z);
+        void internalZoom(const GLfloat &z, bool U = false);
 
         /*
          *  Create context menu :-)
@@ -438,11 +374,9 @@ class SQ_GLWidget : public QGLWidget
 
         /*
          *  Find best tile's width and height for given width and height.
-         *
-         *  For example, closer tile size for image with size 257x120
-         *  is 256x128. This image will be divided into 2 parts.
          */
-        int findCloserTiles(int w, int h, int &tile1, int &tile2);
+        void findCloserTiles(int w, int h, std::vector<int> &x, std::vector<int> &y);
+        QPair<int, int> calcRealDimensions(Parts &, int y = -1, int x = -1);
 
         /*
          *  Prepare decoding. It will find proper library for decoding,
@@ -460,12 +394,7 @@ class SQ_GLWidget : public QGLWidget
          *  Bind textures, draw them and create GL lists.
          *  If 'swap' it true, swap buffers.
          */
-        bool showFrames(int, Parts *, int fake_i, bool swap);
-
-        /*
-         *  Calculate color.
-         */
-        QColor calculateAdjustedColor(const QImage &im, const QColor &rgb, bool color);
+        bool showFrames(int y, Parts *, bool swap);
 
         /*
          *  OpenGL-related methods, not interesting :-)
@@ -497,15 +426,11 @@ class SQ_GLWidget : public QGLWidget
     private slots:
 
         /*
-         *  User clicked some toolbutton in toolbar
-         */
-        void slotToolButtonPageClicked();
-
-        /*
          *  Slots for toolbar's actions:
          *  fit width, fit height, zoom+, zoom-, rotate, flip,
          *  first file, last file, reset...
          */
+        void slotSetZoomPercents(int);
         void slotZoomW();
         void slotZoomH();
         void slotZoomWH();
@@ -520,7 +445,6 @@ class SQ_GLWidget : public QGLWidget
         void slotFlipH();
         void slotMatrixReset();
         void slotProperties(); // show image properties
-        void slotShowQuick(bool);  // show/hide Quick Browser
         void slotDecode();
         void slotHideToolbars(bool); // show/hide toolbars (with 'T')
         void slotToggleStatus(bool);
@@ -537,6 +461,8 @@ class SQ_GLWidget : public QGLWidget
         void slotImagesShown();
         void slotContextMenuItem(int);
         void slotShowHelp();
+        void slotShowCodecSettings();
+        void slotApplyCodecSettings();
 
     private:
         KAction         *pAReset, *pAClose, *pAProperties, *pAHelp;
@@ -544,20 +470,12 @@ class SQ_GLWidget : public QGLWidget
                         *pAZoomH, *pAZoomWH, *pAZoom100,
                         *pAZoomLast, *pAHideToolbars;
 
-#ifndef SQ_SMALL // light version of KSquirrel (ksquirrel-small) won't have these actions
-
-        KToggleAction   *pAQuick;
-        SQ_ToolButton   *pAToolSlideShow, *pAToolQuick;
-        SQ_QuickBrowser *v;
-
-#endif
-
-        SQ_ToolButton         *pAToolClose, *pAToolFull;
+        SQ_ToolButton   *pAToolSlideShow, *pAToolQuick, *pAToolFull;
         SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
 
         KActionCollection     *ac;
-        QPopupMenu            *menu;
-        SQ_ToolButtonPage     *anim;
+        QPopupMenu            *menu, *menuFile, *menuImage;
+        int                                 id_settings, id_saveas;
 
         // popup menu with zoom types (fit width, fit height, zoom 100%...)
         KPopupMenu            *zoom,
@@ -566,14 +484,10 @@ class SQ_GLWidget : public QGLWidget
                               *images;
 
         QString               File, m_File;
-        QCursor               cusual, cdrag, cZoomIn;
         QFileInfo             fm;
         QImage                BGpixmap, BGquads;
 
-#ifndef SQ_SMALL
         QTimer                *timer_prev, *timer_next;
-#endif
-
         QTimer                *timer_decode, *timer_anim;
 
         QString               quickImageInfo;
@@ -583,7 +497,7 @@ class SQ_GLWidget : public QGLWidget
 
         SQ_LIBRARY            *lib;
         fmt_codec_base        *codeK;
-        RGBA                  *next;
+//        RGBA                  *next;
         fmt_info              finfo;
         fmt_image             image_broken;
 
@@ -599,6 +513,9 @@ class SQ_GLWidget : public QGLWidget
                               changed, crossDrawn, changed2, marks, linear, use_broken;
         float                 zoomFactor;
         QWidget               *hack;
+        RGBA                    *buffer;
+        QSlider *slider_zoom;
+        bool messages;
 
         static SQ_GLWidget    *m_instance;
 };
@@ -661,15 +578,15 @@ class memoryPart
         void del();
 
         bool valid() const;
-        unsigned char *data();
+        RGBA *data();
 
     private:
         int m_size;
-        unsigned char *m_data;
+        RGBA *m_data;
 };
 
 inline
-unsigned char *memoryPart::data()
+RGBA* memoryPart::data()
 {
     return m_data;
 }
@@ -678,13 +595,13 @@ inline
 void memoryPart::del()
 {
     delete [] m_data;
-    m_data = NULL;
+    m_data = 0;
 }
 
 inline
 bool memoryPart::valid() const
 {
-    return m_data != NULL;
+    return m_data != 0;
 }
 
 /* *************************************************************** */
@@ -700,19 +617,28 @@ struct Part
 
 /* *************************************************************** */
 
+// one image page. All pages are stored in SQ_GLWidget::parts
 struct Parts
 {
     Parts();
 
-    int tilesx, tilesy, tiles, tileSize;
     int w, h, realw, realh;
 
     std::vector<Part> m_parts;
-    std::vector<memoryPart *> m32;
+    std::vector<int> tilesx, tilesy;
+    memoryPart *buffer;
 
     bool makeParts();
     void removeParts();
     void computeCoords();
+    void deleteBuffer();
 };
+
+inline
+void Parts::deleteBuffer()
+{
+    delete buffer;
+    buffer = 0;
+}
 
 #endif

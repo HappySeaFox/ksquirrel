@@ -25,21 +25,15 @@
  *  'About' dialog
  */
 
-#define SQ_VERSION "0.6.3"
+#define SQ_VERSION "0.7.0-pre1"
 
 static KAboutData aboutData(
             "ksquirrel",
-
-#ifndef SQ_SMALL
             "KSquirrel",
-#else
-            "KSquirrel (light version)",
-#endif
-
             SQ_VERSION, 
             I18N_NOOP("KSquirrel - image viewer for KDE"),
             KAboutData::License_GPL,
-            "(c) 2003-2005 Baryshev Dmitry", 
+            "(c) 2003-2007 Baryshev Dmitry", 
             QString::null,
             "http://ksquirrel.sourceforge.net",
             QString::null);

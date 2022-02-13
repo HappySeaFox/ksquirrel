@@ -43,7 +43,7 @@ class SQ_ImageLoader : public QObject
          *
          *  If 'multi' is true, read all image pages from file.
          */
-        bool loadImage(const QString &path, bool multi = true);
+        bool loadImage(const QString &path, bool multi = true, int nomorethan = -1, bool changeSettings = false);
 
         /*
          *  Try to determine image dimensions.

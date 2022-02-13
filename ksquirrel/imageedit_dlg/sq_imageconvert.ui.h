@@ -37,19 +37,19 @@ void SQ_ImageConvert::init()
 
 void SQ_ImageConvert::initLibs()
 {
-    QPixmap pix;
     QListViewItem *first;
-    
+
+    QValueVector<SQ_LIBRARY>::iterator itEnd = SQ_LibraryHandler::instance()->end();
+
     for(QValueVector<SQ_LIBRARY>::iterator it = SQ_LibraryHandler::instance()->begin();
-            it != SQ_LibraryHandler::instance()->end();++it)
+            it != itEnd;++it)
     {
-        if((*it).writable)
+        if((*it).writestatic)
         {
             QFileInfo libfileinfo((*it).libpath);
             QListViewItem *item = new QListViewItem(tableLib, QString::null, QString((*it).quickinfo));
-    
-            if(pix.convertFromImage((*it).mime))
-                item->setPixmap(0, pix);
+
+            item->setPixmap(0, (*it).mime);
 
             tableLib->insertItem(item);
         }

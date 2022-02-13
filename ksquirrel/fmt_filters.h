@@ -19,8 +19,8 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef KSQUIRREL_LIBS_FILTERS_H
-#define KSQUIRREL_LIBS_FILTERS_H
+#ifndef FMT_FILTERS_H
+#define FMT_FILTERS_H
 
 //////////////////////////////////////////
 //                                      //

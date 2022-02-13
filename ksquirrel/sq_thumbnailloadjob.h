@@ -53,7 +53,10 @@ class SQ_ThumbnailLoadJob : public KIO::Job
         void appendItem(const KFileItem* item);
         void appendItems(const KFileItemList &items);
 
-        static QImage makeBigThumb(QImage *image);
+        // scale given image im with dimensions w x h to
+        // fit within a quad fitwithin x fitwithin pixels
+        static QImage scaleImage(unsigned char *im, int w, int h, int fitwithin);
+
         static bool loadThumbnail(const QString& pixPath, SQ_Thumbnail&, bool = true);
 
     private:

@@ -107,9 +107,6 @@ class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
 
         static SQ_PixmapCache* instance() { return m_instance; }
 
-        typedef QMapIterator<QString, SQ_Thumbnail> cache_iterator;
-        typedef QMapConstIterator<QString, SQ_Thumbnail> cache_constiterator;
-
     private:
         int cache_limit;
         int last_full;
@@ -133,7 +130,8 @@ void SQ_PixmapCache::setCacheLimit(int n)
 inline
 bool SQ_PixmapCache::full()
 {
-    return cache_limit <= totalSize();
+    // when 'cache_limit' is 0, pixmap cache is always full
+    return cache_limit ? (cache_limit <= totalSize()) : true;
 }
 
 #endif
