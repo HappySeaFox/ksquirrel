@@ -1,1 +1,27 @@
- 
+GL view
+	[    ]  scrollbars
+	[    ]  editable zoomfactor
+	[    ]  "currentzoom = N%"
+	[    ]  gradually drawing (string by string)
+
+Libraries
+	[    ]  gradually decoding (string by string)
+	[ X ] not-compressed BMP
+	[ X ] not-grayscale jpeg
+	[    ] PNM
+	[    ] png
+	[    ] gif
+	[    ] ico, cur
+
+Fileview
+	[ X ] WidgetStack
+	[ X ] "Run separately"
+	[ X ] Communication with statusbar
+
+Interface
+	[ X ] Mutable interface (Kuickshow, XnView ...)
+
+Main
+	[    ] Activate old instance, when running new one
+	[    ] Command line support
+	[    ] Associate SQuirrel with images

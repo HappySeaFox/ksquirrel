@@ -1,0 +1,798 @@
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
+# KDE tags expanded automatically by am_edit - $Revision: 1.349.2.2 $ 
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
+# Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+####### kdevelop will overwrite this part!!! (begin)##########
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = @program_transform_name@
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AMTAR = @AMTAR@
+ARTSCCONFIG = @ARTSCCONFIG@
+AS = @AS@
+AUTODIRS = @AUTODIRS@
+AWK = @AWK@
+CC = @CC@
+CONF_FILES = @CONF_FILES@
+CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DCOPIDL = @DCOPIDL@
+DCOPIDL2CPP = @DCOPIDL2CPP@
+DCOP_DEPENDENCIES = @DCOP_DEPENDENCIES@
+DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
+DOXYGEN_PROJECT_NAME = @DOXYGEN_PROJECT_NAME@
+DOXYGEN_PROJECT_NUMBER = @DOXYGEN_PROJECT_NUMBER@
+DPMSINC = @DPMSINC@
+DPMSLIB = @DPMSLIB@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+FRAMEWORK_COREAUDIO = @FRAMEWORK_COREAUDIO@
+GCJ = @GCJ@
+GCJFLAGS = @GCJFLAGS@
+GLINC = @GLINC@
+GLLIB = @GLLIB@
+GMSGFMT = @GMSGFMT@
+IDL = @IDL@
+IDL_DEPENDENCIES = @IDL_DEPENDENCIES@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+JAR = @JAR@
+JAVAC = @JAVAC@
+JAVAH = @JAVAH@
+JVMLIBS = @JVMLIBS@
+KDECONFIG = @KDECONFIG@
+KDE_EXTRA_RPATH = @KDE_EXTRA_RPATH@
+KDE_HAS_DOXYGEN = @KDE_HAS_DOXYGEN@
+KDE_HAVE_DOT = @KDE_HAVE_DOT@
+KDE_INCLUDES = @KDE_INCLUDES@
+KDE_LDFLAGS = @KDE_LDFLAGS@
+KDE_MT_LDFLAGS = @KDE_MT_LDFLAGS@
+KDE_MT_LIBS = @KDE_MT_LIBS@
+KDE_PLUGIN = @KDE_PLUGIN@
+KDE_RPATH = @KDE_RPATH@
+KDE_USE_CLOSURE_FALSE = @KDE_USE_CLOSURE_FALSE@
+KDE_USE_CLOSURE_TRUE = @KDE_USE_CLOSURE_TRUE@
+KDE_USE_FINAL_FALSE = @KDE_USE_FINAL_FALSE@
+KDE_USE_FINAL_TRUE = @KDE_USE_FINAL_TRUE@
+KDE_XSL_STYLESHEET = @KDE_XSL_STYLESHEET@
+LEX = @LEX@
+LEXLIB = @LEXLIB@
+LIBBZ2 = @LIBBZ2@
+LIBCOMPAT = @LIBCOMPAT@
+LIBCRYPT = @LIBCRYPT@
+LIBDL = @LIBDL@
+LIBGEN = @LIBGEN@
+LIBJPEG = @LIBJPEG@
+LIBMICO = @LIBMICO@
+LIBOBJS = @LIBOBJS@
+LIBPNG = @LIBPNG@
+LIBPTHREAD = @LIBPTHREAD@
+LIBPYTHON = @LIBPYTHON@
+LIBQIMGIO = @LIBQIMGIO@
+LIBRESOLV = @LIBRESOLV@
+LIBSHADOW = @LIBSHADOW@
+LIBSM = @LIBSM@
+LIBSOCKET = @LIBSOCKET@
+LIBSSL = @LIBSSL@
+LIBTIFF = @LIBTIFF@
+LIBTOOL = @LIBTOOL@
+LIBUCB = @LIBUCB@
+LIBUTIL = @LIBUTIL@
+LIBXINERAMA = @LIBXINERAMA@
+LIBZ = @LIBZ@
+LIB_KAB = @LIB_KAB@
+LIB_KABC = @LIB_KABC@
+LIB_KDECORE = @LIB_KDECORE@
+LIB_KDEPRINT = @LIB_KDEPRINT@
+LIB_KDEUI = @LIB_KDEUI@
+LIB_KFILE = @LIB_KFILE@
+LIB_KFM = @LIB_KFM@
+LIB_KHTML = @LIB_KHTML@
+LIB_KIMGIO = @LIB_KIMGIO@
+LIB_KIO = @LIB_KIO@
+LIB_KPARTS = @LIB_KPARTS@
+LIB_KSPELL = @LIB_KSPELL@
+LIB_KSYCOCA = @LIB_KSYCOCA@
+LIB_POLL = @LIB_POLL@
+LIB_QPE = @LIB_QPE@
+LIB_QT = @LIB_QT@
+LIB_QTOPIA = @LIB_QTOPIA@
+LIB_SMB = @LIB_SMB@
+LIB_X11 = @LIB_X11@
+LIB_XEXT = @LIB_XEXT@
+LN_S = @LN_S@
+MCOPIDL = @MCOPIDL@
+MEINPROC = @MEINPROC@
+MICO_INCLUDES = @MICO_INCLUDES@
+MICO_LDFLAGS = @MICO_LDFLAGS@
+MOC = @MOC@
+MSGFMT = @MSGFMT@
+NOOPT_CFLAGS = @NOOPT_CFLAGS@
+NOOPT_CXXFLAGS = @NOOPT_CXXFLAGS@
+NOREPO = @NOREPO@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+PAMLIBS = @PAMLIBS@
+PASSWDLIBS = @PASSWDLIBS@
+PYTHONINC = @PYTHONINC@
+PYTHONLIB = @PYTHONLIB@
+PYTHONMODDIR = @PYTHONMODDIR@
+QTDOCDIR = @QTDOCDIR@
+QTE_NORTTI = @QTE_NORTTI@
+QTOPIA_INCLUDES = @QTOPIA_INCLUDES@
+QT_INCLUDES = @QT_INCLUDES@
+QT_LDFLAGS = @QT_LDFLAGS@
+RANLIB = @RANLIB@
+RC = @RC@
+REPO = @REPO@
+SETUIDFLAGS = @SETUIDFLAGS@
+SSL_INCLUDES = @SSL_INCLUDES@
+SSL_LDFLAGS = @SSL_LDFLAGS@
+STRIP = @STRIP@
+TOPSUBDIRS = @TOPSUBDIRS@
+UIC = @UIC@
+UIC_TR = @UIC_TR@
+USER_INCLUDES = @USER_INCLUDES@
+USER_LDFLAGS = @USER_LDFLAGS@
+USE_EXCEPTIONS = @USE_EXCEPTIONS@
+USE_RTTI = @USE_RTTI@
+USE_THREADS = @USE_THREADS@
+VERSION = @VERSION@
+WOVERLOADED_VIRTUAL = @WOVERLOADED_VIRTUAL@
+XGETTEXT = @XGETTEXT@
+XPMINC = @XPMINC@
+XPMLIB = @XPMLIB@
+X_EXTRA_LIBS = @X_EXTRA_LIBS@
+X_INCLUDES = @X_INCLUDES@
+X_LDFLAGS = @X_LDFLAGS@
+X_PRE_LIBS = @X_PRE_LIBS@
+all_includes = @all_includes@
+all_libraries = @all_libraries@
+am__include = @am__include@
+am__quote = @am__quote@
+idldir = @idldir@
+install_sh = @install_sh@
+jni_includes = @jni_includes@
+kde_appsdir = @kde_appsdir@
+kde_bindir = @kde_bindir@
+kde_confdir = @kde_confdir@
+kde_datadir = @kde_datadir@
+kde_htmldir = @kde_htmldir@
+kde_icondir = @kde_icondir@
+kde_includes = @kde_includes@
+kde_libraries = @kde_libraries@
+kde_libs_htmldir = @kde_libs_htmldir@
+kde_libs_prefix = @kde_libs_prefix@
+kde_locale = @kde_locale@
+kde_mimedir = @kde_mimedir@
+kde_moduledir = @kde_moduledir@
+kde_qtver = @kde_qtver@
+kde_servicesdir = @kde_servicesdir@
+kde_servicetypesdir = @kde_servicetypesdir@
+kde_sounddir = @kde_sounddir@
+kde_styledir = @kde_styledir@
+kde_templatesdir = @kde_templatesdir@
+kde_wallpaperdir = @kde_wallpaperdir@
+kde_widgetdir = @kde_widgetdir@
+micodir = @micodir@
+qt_includes = @qt_includes@
+qt_libraries = @qt_libraries@
+x_includes = @x_includes@
+x_libraries = @x_libraries@
+
+bin_PROGRAMS = ksquirrel
+
+#>- ksquirrel_SOURCES = sq_bookmarks.cpp sq_options.ui sq_convertwidget.ui sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_dir.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp 
+#>+ 1
+ksquirrel_SOURCES=sq_bookmarks.cpp   sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_dir.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp  sq_options.cpp sq_convertwidget.cpp
+ksquirrel_LDADD = -lkio -lGLU $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
+
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_application.cpp sq_decoder.cpp sq_dir.cpp sq_diroperator.cpp sq_filedetailview.cpp sq_fileiconview.cpp sq_glviewwidget.cpp sq_libraryhandler.cpp sq_runprocess.cpp sq_specialpage.cpp sq_splash.cpp sq_tray.cpp sq_treeview.cpp sq_widgetstack.cpp defs.h sq_about.h sq_application.h sq_convertwidget.ui.h sq_decoder.h sq_dir.h sq_diroperator.h sq_editpicture.ui.h sq_filedetailview.h sq_fileiconview.h sq_glviewwidget.h sq_libraryhandler.h sq_options.ui.h sq_runprocess.h sq_specialpage.h sq_splash.h sq_tray.h sq_treeview.h sq_version.h sq_widgetstack.h sq_convertwidget.ui sq_options.ui sq_version sq_bookmarks.cpp sq_bookmarks.h 
+
+####### kdevelop will overwrite this part!!! (end)############
+# These paths are KDE specific. Use them:
+# kde_appsdir         Where your application's menu entry (.desktop) should go to.
+# kde_icondir         Where your icon should go to - better use KDE_ICON.
+# kde_sounddir        Where your sounds should go to.
+# kde_htmldir         Where your docs should go to. (contains lang subdirs)
+# kde_datadir         Where you install application data. (Use a subdir)
+# kde_locale          Where translation files should go to. (contains lang subdirs)
+# kde_cgidir          Where cgi-bin executables should go to.
+# kde_confdir         Where config files should go to (system-wide ones with default values).
+# kde_mimedir         Where mimetypes .desktop files should go to.
+# kde_servicesdir     Where services .desktop files should go to.
+# kde_servicetypesdir Where servicetypes .desktop files should go to.
+# kde_toolbardir      Where general toolbar icons should go to (deprecated, use KDE_ICON).
+# kde_wallpaperdir    Where general wallpapers should go to.
+# kde_templatesdir    Where templates for the "New" menu (Konqueror/KDesktop) should go to.
+# kde_bindir          Where executables should go to. Use bin_PROGRAMS or bin_SCRIPTS.
+# kde_libdir          Where shared libraries should go to. Use lib_LTLIBRARIES.
+# kde_moduledir       Where modules (e.g. parts) should go to. Use kde_module_LTLIBRARIES.
+# kde_styledir        Where Qt/KDE widget styles should go to (new in KDE 3).
+# kde_designerdir     Where Qt Designer plugins should go to (new in KDE 3).
+
+# set the include path for X, qt and KDE
+INCLUDES = $(all_includes)
+
+#>- METASOURCES = AUTO
+
+# the library search path. 
+ksquirrel_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+subdir = ksquirrel
+mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+bin_PROGRAMS = ksquirrel$(EXEEXT)
+PROGRAMS = $(bin_PROGRAMS)
+
+am_ksquirrel_OBJECTS = sq_bookmarks.$(OBJEXT) sq_widgetstack.$(OBJEXT) \
+	sq_treeview.$(OBJEXT) sq_tray.$(OBJEXT) sq_splash.$(OBJEXT) \
+	sq_specialpage.$(OBJEXT) sq_runprocess.$(OBJEXT) \
+	sq_libraryhandler.$(OBJEXT) sq_glviewwidget.$(OBJEXT) \
+	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
+	sq_diroperator.$(OBJEXT) sq_dir.$(OBJEXT) sq_decoder.$(OBJEXT) \
+	sq_application.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT)
+#>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
+#>+ 11
+ksquirrel_final_OBJECTS = ksquirrel.all_cpp.o 
+ksquirrel_nofinal_OBJECTS = sq_bookmarks.$(OBJEXT) sq_widgetstack.$(OBJEXT) \
+	sq_treeview.$(OBJEXT) sq_tray.$(OBJEXT) sq_splash.$(OBJEXT) \
+	sq_specialpage.$(OBJEXT) sq_runprocess.$(OBJEXT) \
+	sq_libraryhandler.$(OBJEXT) sq_glviewwidget.$(OBJEXT) \
+	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
+	sq_diroperator.$(OBJEXT) sq_dir.$(OBJEXT) sq_decoder.$(OBJEXT) \
+	sq_application.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_options.$(OBJEXT) sq_convertwidget.$(OBJEXT)\
+sq_fileiconview.moc.o sq_runprocess.moc.o sq_diroperator.moc.o sq_glviewwidget.moc.o sq_treeview.moc.o sq_widgetstack.moc.o ksquirrel.moc.o sq_splash.moc.o sq_filedetailview.moc.o sq_decoder.moc.o 
+@KDE_USE_FINAL_FALSE@ksquirrel_OBJECTS = $(ksquirrel_nofinal_OBJECTS)
+@KDE_USE_FINAL_TRUE@ksquirrel_OBJECTS = $(ksquirrel_final_OBJECTS)
+ksquirrel_DEPENDENCIES =
+
+DEFS = @DEFS@
+DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
+#>- @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/ksquirrel.Po $(DEPDIR)/main.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_application.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_bookmarks.Po $(DEPDIR)/sq_decoder.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_dir.Po $(DEPDIR)/sq_diroperator.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_filedetailview.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_fileiconview.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_glviewwidget.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_libraryhandler.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_runprocess.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_specialpage.Po $(DEPDIR)/sq_splash.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_tray.Po $(DEPDIR)/sq_treeview.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/sq_widgetstack.Po
+#>+ 25
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/sq_options.P $(DEPDIR)/sq_convertwidget.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/sq_runprocess.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_glviewwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_widgetstack.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_filedetailview.moc.P $(DEPDIR)/sq_decoder.moc.P  $(DEPDIR)/ksquirrel.all_cpp.P  $(DEPDIR)/ksquirrel.Po $(DEPDIR)/main.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_application.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_bookmarks.Po $(DEPDIR)/sq_decoder.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_dir.Po $(DEPDIR)/sq_diroperator.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_filedetailview.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_fileiconview.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_glviewwidget.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_libraryhandler.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_runprocess.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_specialpage.Po $(DEPDIR)/sq_splash.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_tray.Po $(DEPDIR)/sq_treeview.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/sq_widgetstack.Po
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/sq_options.P $(DEPDIR)/sq_convertwidget.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/sq_runprocess.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_glviewwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_widgetstack.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_filedetailview.moc.P $(DEPDIR)/sq_decoder.moc.P  $(DEPDIR)/ksquirrel.Po $(DEPDIR)/main.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_application.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_bookmarks.Po $(DEPDIR)/sq_decoder.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_dir.Po $(DEPDIR)/sq_diroperator.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_filedetailview.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_fileiconview.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_glviewwidget.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_libraryhandler.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_runprocess.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_specialpage.Po $(DEPDIR)/sq_splash.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_tray.Po $(DEPDIR)/sq_treeview.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/sq_widgetstack.Po
+
+#>- CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+#>- 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+#>+ 2
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS)
+#>- LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+#>- 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+#>- 	$(AM_CXXFLAGS) $(CXXFLAGS)
+#>+ 3
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile --tag=CXX $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS)
+CXXLD = $(CXX)
+#>- CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+#>- 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+#>+ 2
+CXXLINK = $(LIBTOOL) --mode=link --tag=CXX $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXFLAGS = @CXXFLAGS@
+DIST_SOURCES = $(ksquirrel_SOURCES)
+DIST_COMMON = Makefile.am Makefile.in
+SOURCES = $(ksquirrel_SOURCES)
+
+#>- all: all-am
+#>+ 1
+all: docs-am  all-am
+
+.SUFFIXES:
+.SUFFIXES: .cpp .lo .o .obj
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+#>- 	cd $(top_srcdir) && \
+#>- 	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
+#>+ 3
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.3/ksquirrel/Makefile.in
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo $$p1|sed '$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
+	  rm -f $(DESTDIR)$(bindir)/$$f; \
+	done
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+ksquirrel$(EXEEXT): $(ksquirrel_OBJECTS) $(ksquirrel_DEPENDENCIES) 
+	@rm -f ksquirrel$(EXEEXT)
+	$(CXXLINK) $(ksquirrel_LDFLAGS) $(ksquirrel_OBJECTS) $(ksquirrel_LDADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT) core *.core
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ksquirrel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_application.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_bookmarks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_decoder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_dir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_diroperator.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_filedetailview.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_fileiconview.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_glviewwidget.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_libraryhandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_runprocess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_specialpage.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_splash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_tray.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_treeview.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sq_widgetstack.Po@am__quote@
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+.cpp.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cpp.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+.cpp.lo:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+CXXDEPMODE = @CXXDEPMODE@
+uninstall-info-am:
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+GTAGS:
+	here=`CDPATH=: && cd $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
+
+#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#>+ 4
+KDE_DIST=sq_convertwidget.h sq_options.h 
+
+DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
+
+
+top_distdir = ..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+check-am: all-am
+check: check-am
+all-am: Makefile $(PROGRAMS)
+
+installdirs:
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+
+installcheck: installcheck-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
+#>- clean: clean-am
+#>+ 1
+clean: kde-rpo-clean  clean-am
+
+#>- clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+#>+ 1
+clean-am: clean-metasources clean-ui clean-final  clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+
+distclean: distclean-am
+
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-tags
+
+dvi: dvi-am
+
+dvi-am:
+
+info: info-am
+
+info-am:
+
+install-data-am: install-data-local
+
+install-exec-am: install-binPROGRAMS
+
+install-info: install-info-am
+
+install-man:
+
+installcheck-am:
+
+maintainer-clean: maintainer-clean-am
+
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
+
+uninstall-am: uninstall-binPROGRAMS uninstall-info-am uninstall-local
+
+.PHONY: GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libtool distclean distclean-compile \
+	distclean-depend distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am info info-am install \
+	install-am install-binPROGRAMS install-data install-data-am \
+	install-data-local install-exec install-exec-am install-info \
+	install-info-am install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool tags uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-local
+
+
+install-data-local:
+	$(mkinstalldirs) $(kde_appsdir)/Applications/
+	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(kde_appsdir)/Applications/ksquirrel.desktop
+	$(mkinstalldirs) $(kde_icondir)/locolor/32x32/apps/
+	$(INSTALL_DATA) $(srcdir)/lo32-app-ksquirrel.png $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
+	$(mkinstalldirs) $(kde_icondir)/locolor/16x16/apps/
+	$(INSTALL_DATA) $(srcdir)/lo16-app-ksquirrel.png $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
+
+uninstall-local:
+	-rm -f $(kde_appsdir)/Applications/ksquirrel.desktop
+	-rm -f $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
+	-rm -f $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
+
+# Uncomment the following two lines if you add a ui.rc file for your application to make use of
+# KDEs XML GUI builing
+#rcdir = $(kde_datadir)/ksquirrel
+#rc_DATA = ksquirrelui.rc
+
+#WARNING: if you use a ui.rc file above, use:
+
+# messages: rc.cpp
+
+# instead of 
+
+# messages:
+
+messages: 
+	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp -o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \
+	if test -n "$$LIST"; then \
+	 $(XGETTEXT) $$LIST -o $(podir)/ksquirrel.pot; \
+	fi
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
+
+
+#>+ 27
+sq_options.cpp: $(srcdir)/sq_options.ui sq_options.h sq_options.moc
+	rm -f sq_options.cpp
+	echo '#include <klocale.h>' > sq_options.cpp
+	$(UIC) -tr ${UIC_TR} -i sq_options.h $(srcdir)/sq_options.ui > sq_options.cpp.temp ; ret=$$?; \
+	sed -e "s,${UIC_TR}( \"\" ),QString::null,g" sq_options.cpp.temp | sed -e "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | sed -e "s,image\([0-9][0-9]*\)_data,img\1_sq_options,g" >> sq_options.cpp ;\
+	rm -f sq_options.cpp.temp ;\
+	if test "$$ret" = 0; then echo '#include "sq_options.moc"' >> sq_options.cpp; else rm -f sq_options.cpp ; exit $$ret ; fi
+
+sq_options.h: $(srcdir)/sq_options.ui
+	$(UIC) -o sq_options.h $(srcdir)/sq_options.ui
+
+sq_options.moc: sq_options.h
+	$(MOC) sq_options.h -o sq_options.moc
+sq_convertwidget.cpp: $(srcdir)/sq_convertwidget.ui sq_convertwidget.h sq_convertwidget.moc
+	rm -f sq_convertwidget.cpp
+	echo '#include <klocale.h>' > sq_convertwidget.cpp
+	$(UIC) -tr ${UIC_TR} -i sq_convertwidget.h $(srcdir)/sq_convertwidget.ui > sq_convertwidget.cpp.temp ; ret=$$?; \
+	sed -e "s,${UIC_TR}( \"\" ),QString::null,g" sq_convertwidget.cpp.temp | sed -e "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | sed -e "s,image\([0-9][0-9]*\)_data,img\1_sq_convertwidget,g" >> sq_convertwidget.cpp ;\
+	rm -f sq_convertwidget.cpp.temp ;\
+	if test "$$ret" = 0; then echo '#include "sq_convertwidget.moc"' >> sq_convertwidget.cpp; else rm -f sq_convertwidget.cpp ; exit $$ret ; fi
+
+sq_convertwidget.h: $(srcdir)/sq_convertwidget.ui
+	$(UIC) -o sq_convertwidget.h $(srcdir)/sq_convertwidget.ui
+
+sq_convertwidget.moc: sq_convertwidget.h
+	$(MOC) sq_convertwidget.h -o sq_convertwidget.moc
+
+#>+ 3
+sq_fileiconview.moc.cpp: $(srcdir)/sq_fileiconview.h
+	$(MOC) $(srcdir)/sq_fileiconview.h -o sq_fileiconview.moc.cpp
+
+#>+ 3
+sq_runprocess.moc.cpp: $(srcdir)/sq_runprocess.h
+	$(MOC) $(srcdir)/sq_runprocess.h -o sq_runprocess.moc.cpp
+
+#>+ 3
+sq_diroperator.moc.cpp: $(srcdir)/sq_diroperator.h
+	$(MOC) $(srcdir)/sq_diroperator.h -o sq_diroperator.moc.cpp
+
+#>+ 3
+sq_glviewwidget.moc.cpp: $(srcdir)/sq_glviewwidget.h
+	$(MOC) $(srcdir)/sq_glviewwidget.h -o sq_glviewwidget.moc.cpp
+
+#>+ 3
+sq_treeview.moc.cpp: $(srcdir)/sq_treeview.h
+	$(MOC) $(srcdir)/sq_treeview.h -o sq_treeview.moc.cpp
+
+#>+ 3
+sq_widgetstack.moc.cpp: $(srcdir)/sq_widgetstack.h
+	$(MOC) $(srcdir)/sq_widgetstack.h -o sq_widgetstack.moc.cpp
+
+#>+ 3
+ksquirrel.moc.cpp: $(srcdir)/ksquirrel.h
+	$(MOC) $(srcdir)/ksquirrel.h -o ksquirrel.moc.cpp
+
+#>+ 3
+sq_splash.moc.cpp: $(srcdir)/sq_splash.h
+	$(MOC) $(srcdir)/sq_splash.h -o sq_splash.moc.cpp
+
+#>+ 3
+sq_filedetailview.moc.cpp: $(srcdir)/sq_filedetailview.h
+	$(MOC) $(srcdir)/sq_filedetailview.h -o sq_filedetailview.moc.cpp
+
+#>+ 3
+sq_decoder.moc.cpp: $(srcdir)/sq_decoder.h
+	$(MOC) $(srcdir)/sq_decoder.h -o sq_decoder.moc.cpp
+
+#>+ 3
+clean-metasources:
+	-rm -f  sq_fileiconview.moc.cpp sq_runprocess.moc.cpp sq_diroperator.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp
+
+#>+ 5
+clean-ui:
+	-rm -f \
+	sq_options.cpp sq_options.h sq_options.moc \
+	sq_convertwidget.cpp sq_convertwidget.h sq_convertwidget.moc 
+
+#>+ 2
+docs-am:
+
+#>+ 6
+force-reedit:
+		cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.3/ksquirrel/Makefile.in
+
+
+#>+ 11
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_bookmarks.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_runprocess.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_glviewwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_decoder.cpp $(srcdir)/sq_application.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_convertwidget.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_runprocess.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp  sq_convertwidget.moc sq_options.moc
+	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
+	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
+	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
+	for file in sq_bookmarks.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_dir.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp sq_options.cpp sq_convertwidget.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_runprocess.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp ; do \
+	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
+	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
+	done; \
+	cat ksquirrel.all_cpp.final ksquirrel.all_cpp.files > ksquirrel.all_cpp.cpp; \
+	rm -f ksquirrel.all_cpp.final ksquirrel.all_cpp.files
+
+#>+ 3
+clean-final:
+	-rm -f ksquirrel.all_cpp.cpp
+
+#>+ 2
+final:
+	$(MAKE) ksquirrel_OBJECTS="$(ksquirrel_final_OBJECTS)" all-am
+#>+ 2
+final-install:
+	$(MAKE) ksquirrel_OBJECTS="$(ksquirrel_final_OBJECTS)" install-am
+#>+ 2
+no-final:
+	$(MAKE) ksquirrel_OBJECTS="$(ksquirrel_nofinal_OBJECTS)" all-am
+#>+ 2
+no-final-install:
+	$(MAKE) ksquirrel_OBJECTS="$(ksquirrel_nofinal_OBJECTS)" install-am
+#>+ 3
+cvs-clean:
+	$(MAKE) admindir=$(top_srcdir)/admin -f $(top_srcdir)/admin/Makefile.common cvs-clean
+
+#>+ 3
+kde-rpo-clean:
+	-rm -f *.rpo
+
+#>+ 18
+$(srcdir)/sq_splash.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_dir.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_treeview.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_widgetstack.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/main.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_diroperator.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_application.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_specialpage.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_decoder.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_bookmarks.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_tray.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_libraryhandler.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_runprocess.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_glviewwidget.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/ksquirrel.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_fileiconview.cpp: sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_filedetailview.cpp: sq_options.h sq_convertwidget.h 

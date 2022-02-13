@@ -1,6 +1,11 @@
-#MIN_CONFIG(3.0.0)
+#MIN_CONFIG(3)
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.1)
-AC_C_BIGENDIAN
-AC_CHECK_KDEMAXPATHLEN
+AM_INIT_AUTOMAKE(ksquirrel,0.1.3)
+
+dnl CXXFLAGS="$NOOPT_CXXFLAGS" dnl __kdevelop[noopt]__
+dnl CFLAGS="$NOOPT_CFLAGS" dnl __kdevelop[noopt]__
+CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" dnl __kdevelop[exc]__
+
+dnl KDE_NEED_FLEX dnl __kdevelop__
+dnl AC_PROG_YACC dnl __kdevelop__
 
