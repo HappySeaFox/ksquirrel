@@ -1234,11 +1234,6 @@ void KSquirrel::continueLoading()
 
     if(splash_to_delete) splash_to_delete->advance();
 
-    if(gl_view->isSeparate())
-        gl_view->show();
-
-    if(gl_view->isSeparate())
-        gl_view->hide();
 
     splash_to_delete->finish();
     delete splash_to_delete;
@@ -1249,7 +1244,7 @@ void KSquirrel::continueLoading()
     {
         QFileInfo fm(SQ_HLOptions::instance()->path);
 
-        if(!fm.isDir() && fm.isReadable())
+        if(fm.isFile() && fm.isReadable())
         {
             KFileView *v = pWidgetStack->diroperator()->view();
             v->clearSelection();
@@ -1259,6 +1254,11 @@ void KSquirrel::continueLoading()
             // if it is known image type - let's load it
             SQ_GLWidget::window()->startDecoding(SQ_HLOptions::instance()->path);
         }
+    }
+    else if(gl_view->isSeparate())
+    {
+        gl_view->show();
+        gl_view->hide();
     }
 }
 

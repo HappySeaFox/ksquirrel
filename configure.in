@@ -91,7 +91,7 @@ PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
 KDE_CHECK_HEADER(konq_operations.h, [], AC_MSG_ERROR("Header file konq_operations.h is missing. Please install kdebase-devel package."))
 
 # Checks for OpenGL.
-AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h, ...) and GLU (GL/glu.h) headers to be installed."))
+KDE_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h, ...) and GLU (GL/glu.h) headers to be installed."))
 
 AC_CHECK_LIB([GL], [glBegin], [LDFLAGS="-lGL $LDFLAGS"], [ogl="no"])
 

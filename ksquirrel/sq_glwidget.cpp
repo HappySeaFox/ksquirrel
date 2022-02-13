@@ -1735,8 +1735,8 @@ void SQ_GLWidget::startDecoding(const QString &file)
     timer_anim->stop();
     images->clear();
 
-    m_File = file;
-    File = QFile::encodeName(m_File);
+    m_File = file;                    // original name
+    File = QFile::encodeName(m_File); // translated name
 
     // prepare decoding...
     if(!prepare())
@@ -1772,8 +1772,9 @@ void SQ_GLWidget::decode()
     int line, res, first_id = 0;
     fmt_image *im;
     memoryPart *pt;
-    SQ_Config::instance()->setGroup("GL view");
     bool progr;
+
+    SQ_Config::instance()->setGroup("GL view");
 
     // in fullscreen mode progressive loading is disabled anyway
     if(fullscreen())
@@ -2239,7 +2240,6 @@ void SQ_GLWidget::createMarks()
 // Delete current image (user pressed 'Delete' key).
 void SQ_GLWidget::deleteWrapper()
 {
-
     if(m_File.isEmpty())
         return;
 
@@ -2804,6 +2804,9 @@ void SQ_GLWidget::slotSelectionClear()
 {
     glselection = -1;
     gls->end();
+
+    pASelectionEllipse->setChecked(false);
+    pASelectionRect->setChecked(false);
 
     if(!manualBlocked())
         startAnimation();

@@ -202,6 +202,7 @@ SQ_ToolBar::SQ_ToolBar(QWidget *parent) : KToolBar(parent)
 {
     setFixedHeight(SQ_ToolButton::fixedWidth() + 5);
     boxLayout()->setSpacing(0);
+    boxLayout()->setMargin(0);
 }
 
 SQ_ToolBar::~SQ_ToolBar()

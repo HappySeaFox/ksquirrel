@@ -1,3 +1,11 @@
+ksquirrel-0.7.0try2
+*********************
+* file path via command line parameter now works, e.g.
+ # ksquirrel /home/me/1.png
+* new autoconf test for OpenGL
+* small fix in image window toolbar (in 'Selection' popup menu)
+* fixed toolbar height in image window
+
 ksquirrel-0.7.0 and ksquirrel-libs-0.7.0
 ********************************************
 

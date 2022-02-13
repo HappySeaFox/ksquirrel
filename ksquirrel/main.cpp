@@ -46,8 +46,8 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-    KSquirrel             *SQ;
-    SQ_HLOptions        *high;
+    KSquirrel            *SQ;
+    SQ_HLOptions         *high;
     const QCString App = "ksquirrel";
 
     // setup 'About' dialog
