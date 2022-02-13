@@ -994,8 +994,6 @@ void Squirrel::writeDefaultEntries()
 		sqConfig->writeEntry("GL view background type", 0);
 		sqConfig->writeEntry("GL view background", "#a8a8a8");
 		sqConfig->writeEntry("GL view custom texture", "");
-		sqConfig->writeEntry("GL view border", "#ff0000");
-		sqConfig->writeEntry("border size", 2);
 		sqConfig->writeEntry("zoom type", 0);
 		sqConfig->writeEntry("zoom pretty", false);
 		sqConfig->writeEntry("manipulation center", 0);
@@ -1004,8 +1002,6 @@ void Squirrel::writeDefaultEntries()
 		sqConfig->writeEntry("angle", 90);
 		sqConfig->writeEntry("zoom", 25);
 		sqConfig->writeEntry("move", 5);
-		sqConfig->writeEntry("border", true);
-		sqConfig->writeEntry("image background", true);
 		sqConfig->writeEntry("save pos", true);
 		sqConfig->writeEntry("save size", true);
 		sqConfig->writeEntry("render path", "");

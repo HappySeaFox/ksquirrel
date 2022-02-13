@@ -22,16 +22,16 @@ bin_program=ksquirrel
 cflags=
 cppflags=
 cxxflags=\s-O2 -g3 -Wall
-ldadd=-lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
-ldflags=\s      \s
+ldadd=-lkio -lGL $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
+ldflags=\s       \s
 
 [General]
 AMChanged=false
 author=CKulT
-configure_args=
+configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux\s
 email=squirrel-sf@yandex.ru
 kdevprj_version=1.3
-lfv_open_groups=Others
+lfv_open_groups=Sources
 make_options=\s-j2
 makefiles=Makefile.am,ksquirrel/Makefile.am,doc/Makefile.am,doc/en/Makefile.am,po/Makefile.am,pics/Makefile.am,scripts/Makefile.am
 modifyMakefiles=true

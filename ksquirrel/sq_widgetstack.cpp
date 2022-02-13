@@ -90,7 +90,10 @@ KURL SQ_WidgetStack::getURL() const
 
 void SQ_WidgetStack::setURL(const QString &newpath, bool cl)
 {
-	setURL(KURL(newpath), cl);
+	KURL url;
+	url.setPath(newpath);
+
+	setURL(url, cl);
 }
 
 void SQ_WidgetStack::setURL(const KURL &newurl, bool cl)
@@ -559,7 +562,10 @@ void SQ_WidgetStack::slotDelete()
 
 void SQ_WidgetStack::setURLForCurrent(const QString &path)
 {
-	setURLForCurrent(KURL(path));
+	KURL url;
+	url.setPath(path);
+
+	setURLForCurrent(url);
 }
 
 void SQ_WidgetStack::setURLForCurrent(const KURL &url)

@@ -2,10 +2,6 @@ Due to a lot of error reports related to autoconf/automake that
 I've received, the configuration script is now to be run as
 'scripts/configure' instead of './configure'.
 
-P.S. You can pass all './configure' options to 'scripts/configure', for example:
-
-[ckult@localhost ksquirrel]$ scripts/configure --prefix=/usr
-
 ********************************************************************************
 
 Shortcuts for GL widget

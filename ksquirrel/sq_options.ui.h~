@@ -73,7 +73,12 @@ void SQ_Options::init()
 	color.setNamedColor(sqConfig->readEntry("GL view", "GL view background", "#cccccc"));
 	kColorGLbackground->setColor(color);
     
+	if(sqConfig->readBoolEntry("GL view", "image background", true)) checkBackgroundTransparent->toggle();
+	if(sqConfig->readBoolEntry("GL view", "border", true)) checkBorder->toggle();
 	if(sqConfig->readBoolEntry("GL view", "progress", true)) checkProgress->toggle();
+	color.setNamedColor(sqConfig->readEntry("GL view", "GL view border", "#00ff00"));
+	kColorBorder->setColor(color);
+	spinBorder->setValue(sqConfig->readNumEntry("GL view", "border size", 2));
 	if(sqConfig->readBoolEntry("GL view", "save pos", true)) checkGLSavePos->toggle();
 	if(sqConfig->readBoolEntry("GL view", "save size", true)) checkGLSaveSize->toggle();
 	kURLReqSaveInto->setURL(sqConfig->readEntry("GL view", "render path", "/"));
@@ -168,6 +173,8 @@ int SQ_Options::start()
 		sqConfig->setGroup("GL view");
 		sqConfig->writeEntry("GL view background", (kColorGLbackground->color()).name());
 		sqConfig->writeEntry("GL view custom texture", kURLReqCustomTexture->url());
+		sqConfig->writeEntry("GL view border", (kColorBorder->color()).name());
+		sqConfig->writeEntry("border size", spinBorder->value());
 		sqConfig->writeEntry("GL view background type", buttonGroupColor->id(buttonGroupColor->selected()));
 		sqConfig->writeEntry("zoom pretty", checkZoomPretty->isChecked());
 		sqConfig->writeEntry("progress", checkProgress->isChecked());
@@ -177,6 +184,8 @@ int SQ_Options::start()
 		sqConfig->writeEntry("angle", sliderAngle->value());
 		sqConfig->writeEntry("zoom", spinZoomFactor->value());
 		sqConfig->writeEntry("move", sliderMove->value());
+		sqConfig->writeEntry("border", checkBorder->isChecked());
+		sqConfig->writeEntry("image background", checkBackgroundTransparent->isChecked());
 		sqConfig->writeEntry("save pos", checkGLSavePos->isChecked());
 		sqConfig->writeEntry("save size", checkGLSaveSize->isChecked());
 		sqConfig->writeEntry("render path", kURLReqSaveInto->url());

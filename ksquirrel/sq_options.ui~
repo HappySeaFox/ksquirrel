@@ -1459,6 +1459,89 @@
                                                 <property name="name">
                                                     <cstring>unnamed</cstring>
                                                 </property>
+                                                <widget class="QCheckBox" row="0" column="0">
+                                                    <property name="name">
+                                                        <cstring>checkBackgroundTransparent</cstring>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>Background for transparent images</string>
+                                                    </property>
+                                                    <property name="checked">
+                                                        <bool>false</bool>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QCheckBox" row="1" column="0">
+                                                    <property name="name">
+                                                        <cstring>checkBorder</cstring>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>Draw a border</string>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QButtonGroup" row="2" column="0">
+                                                    <property name="name">
+                                                        <cstring>buttonGroup17</cstring>
+                                                    </property>
+                                                    <property name="enabled">
+                                                        <bool>false</bool>
+                                                    </property>
+                                                    <property name="title">
+                                                        <string></string>
+                                                    </property>
+                                                    <grid>
+                                                        <property name="name">
+                                                            <cstring>unnamed</cstring>
+                                                        </property>
+                                                        <widget class="KColorButton" row="0" column="0">
+                                                            <property name="name">
+                                                                <cstring>kColorBorder</cstring>
+                                                            </property>
+                                                            <property name="minimumSize">
+                                                                <size>
+                                                                    <width>0</width>
+                                                                    <height>25</height>
+                                                                </size>
+                                                            </property>
+                                                            <property name="text">
+                                                                <string></string>
+                                                            </property>
+                                                        </widget>
+                                                        <widget class="QSpinBox" row="0" column="1">
+                                                            <property name="name">
+                                                                <cstring>spinBorder</cstring>
+                                                            </property>
+                                                            <property name="prefix">
+                                                                <string></string>
+                                                            </property>
+                                                            <property name="suffix">
+                                                                <string> pixels</string>
+                                                            </property>
+                                                            <property name="maxValue">
+                                                                <number>10</number>
+                                                            </property>
+                                                            <property name="minValue">
+                                                                <number>1</number>
+                                                            </property>
+                                                        </widget>
+                                                        <spacer row="0" column="2">
+                                                            <property name="name">
+                                                                <cstring>spacer12_2</cstring>
+                                                            </property>
+                                                            <property name="orientation">
+                                                                <enum>Horizontal</enum>
+                                                            </property>
+                                                            <property name="sizeType">
+                                                                <enum>Expanding</enum>
+                                                            </property>
+                                                            <property name="sizeHint">
+                                                                <size>
+                                                                    <width>40</width>
+                                                                    <height>20</height>
+                                                                </size>
+                                                            </property>
+                                                        </spacer>
+                                                    </grid>
+                                                </widget>
                                                 <widget class="QButtonGroup" row="3" column="0">
                                                     <property name="name">
                                                         <cstring>buttonGroupCenter</cstring>
@@ -2468,7 +2551,7 @@
 <customwidgets>
     <customwidget>
         <class>SQ_IconListBox</class>
-        <header location="global">./sq_iconlistbox.h</header>
+        <header location="global">/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_iconlistbox.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>
@@ -2506,6 +2589,12 @@
         <signal>clicked()</signal>
         <receiver>SQ_Options</receiver>
         <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>checkBorder</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>buttonGroup17</receiver>
+        <slot>setEnabled(bool)</slot>
     </connection>
     <connection>
         <sender>checkMonitor</sender>
@@ -2602,6 +2691,7 @@
     <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
     <includehint>kpushbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
     <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
     <includehint>kpushbutton.h</includehint>

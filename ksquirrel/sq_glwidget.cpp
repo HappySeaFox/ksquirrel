@@ -300,7 +300,7 @@ void SQ_GLWidget::paintGL()
 		matrix_move_z(-10.0f);
 		draw_background(BGpixmap.bits(), BGpixmap.width(), width(), height());
 		matrix_pop();
-		write_gl_matrix(false);
+		write_gl_matrix();
 	}
 
 //	printf("decoded: %d\n", decoded);
@@ -311,29 +311,28 @@ void SQ_GLWidget::paintGL()
 
 	if(!reset_mode && decoded)
 	{
-		if(sqConfig->readBoolEntry("GL view", "border", true))
+		if(finfo->hasalpha)
 		{
-			matrix_move_z(-9.0f);
-			int size = sqConfig->readNumEntry("GL view", "border size", 2);
-			draw_background(BGborder, 2, (float)finfo->w + (float)size*2.0, (float)finfo->h + (float)size*2.0);
-		}
-
-		if(sqConfig->readBoolEntry("GL view", "image background", true) && finfo->hasalpha)
-		{
+//			matrix_push();
+//			matrix_pure_reset_noxy();
 			matrix_move_z(-8.0f);
 			draw_background(BGquads.bits(), 32, (float)finfo->w, (float)finfo->h);
+//			matrix_pop();
+//			write_gl_matrix();
 		}
 	}
 
-	matrix_move_z(-7.0f);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(-half_w, half_h);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f( half_w, half_h);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f( half_w, -half_h);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(-half_w, -half_h);
-	glEnd();
+	if(!reset_mode)
+	{
+		matrix_move_z(-7.0f);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(-half_w, half_h);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f( half_w, half_h);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f( half_w, -half_h);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(-half_w, -half_h);
+		glEnd();
+	}
 
 	glDisable(GL_TEXTURE_2D);
 }
@@ -523,7 +522,7 @@ void SQ_GLWidget::slotZoomW()
 	if(pAIfLess->isChecked() && (finfo->w < (unsigned long)width() && finfo->h < (unsigned long)height()))
 		factor = 1.0f;
 
-	matrix_reset(false);
+	matrix_reset();
 	matrix_zoom(factor);
 }
 
@@ -535,6 +534,9 @@ void SQ_GLWidget::slotZoomH()
 
 	if(pAIfLess->isChecked() && (finfo->w < (unsigned long)width() && finfo->h < (unsigned long)height()))
 		factor = 1.0f;
+
+	matrix_reset();
+	matrix_zoom(factor);
 }
 
 void SQ_GLWidget::slotZoomWH()
@@ -556,7 +558,7 @@ void SQ_GLWidget::slotZoomWH()
 	if(pAIfLess->isChecked() && (finfo->w < (unsigned long)width() && finfo->h < (unsigned long)height()))
 		factor = 1.0f;
 
-	matrix_reset(false);
+	matrix_reset();
 	matrix_zoom(factor);
 }
 
@@ -565,7 +567,7 @@ void SQ_GLWidget::slotZoom100()
 	zoom_type = 3;
 	pAZoom100->setChecked(true);
 
-	matrix_reset(false);
+	matrix_reset();
 	matrix_zoom(1.0);
 }
 
@@ -667,7 +669,7 @@ void SQ_GLWidget::flip(int id)
 	{
 		x = MATRIX_X, y = MATRIX_Y;
 		MATRIX_X = MATRIX_Y = 0;
-		write_gl_matrix(false);
+		write_gl_matrix();
 	}
 
 	matrix[id] *= -1.0;
@@ -680,7 +682,10 @@ void SQ_GLWidget::flip(int id)
 		MATRIX_Y = y;
 	}
 
-	write_gl_matrix(!reset_mode);
+	write_gl_matrix();
+
+	if(!reset_mode)
+		updateGL();
 }
 
 void SQ_GLWidget::slotFlipH()
@@ -698,9 +703,10 @@ void SQ_GLWidget::slotFlipV()
 void SQ_GLWidget::slotMatrixReset()
 {
 	matrix_reset();
+	updateGL();
 }
 
-void SQ_GLWidget::write_gl_matrix(bool update)
+void SQ_GLWidget::write_gl_matrix()
 {
 	static GLfloat transposed[16] =
 	{
@@ -719,11 +725,7 @@ void SQ_GLWidget::write_gl_matrix(bool update)
 
 	glLoadMatrixf(transposed);
 
-	if(update)
-	{
-		updateGL();
-		emit matrixChanged();
-	}
+	emit matrixChanged();
 }
 
 void SQ_GLWidget::matrix_move(GLfloat x, GLfloat y)
@@ -731,14 +733,17 @@ void SQ_GLWidget::matrix_move(GLfloat x, GLfloat y)
 	MATRIX_X += x;
 	MATRIX_Y += y;
 
-	write_gl_matrix(true & !reset_mode);
+	write_gl_matrix();
+
+	if(!reset_mode)
+		updateGL();
 }
 
 void SQ_GLWidget::matrix_move_z(GLfloat z)
 {
   	MATRIX_Z = z;
 
-	write_gl_matrix(false);
+	write_gl_matrix();
 }
 
 void SQ_GLWidget::matrix_push()
@@ -751,7 +756,7 @@ void SQ_GLWidget::matrix_pop()
 	memcpy(matrix, saved, sizeof(matrix));
 }
 
-void SQ_GLWidget::matrix_reset(bool update)
+void SQ_GLWidget::matrix_reset()
 {
 	int i;
 
@@ -768,7 +773,7 @@ void SQ_GLWidget::matrix_reset(bool update)
 			return;
 		}
 
-	write_gl_matrix(update);
+	write_gl_matrix();
 }
 
 void SQ_GLWidget::matrix_pure_reset()
@@ -781,7 +786,25 @@ void SQ_GLWidget::matrix_pure_reset()
 	curangle = 0.0f;
 	isflippedH = isflippedV = 0;
 
-	write_gl_matrix(false);
+	write_gl_matrix();
+}
+
+void SQ_GLWidget::matrix_pure_reset_noxy()
+{
+	int i;
+
+	GLfloat x = MATRIX_X, y = MATRIX_Y;
+
+	for (i = 0; i < 12; i++)
+		matrix[i] = (GLfloat) (i % 5 == 0);
+
+	curangle = 0.0f;
+	isflippedH = isflippedV = 0;
+
+	MATRIX_X = x;
+	MATRIX_Y = y;
+
+	write_gl_matrix();
 }
 
 void SQ_GLWidget::matrix_zoom(GLfloat ratio)
@@ -793,7 +816,10 @@ void SQ_GLWidget::matrix_zoom(GLfloat ratio)
 	MATRIX_C2 *= ratio;
 	MATRIX_Y *= ratio;
 
-	write_gl_matrix(!reset_mode);
+	write_gl_matrix();
+
+	if(!reset_mode)
+		updateGL();
 }
 
 GLfloat SQ_GLWidget::get_zoom() const
@@ -837,6 +863,7 @@ void SQ_GLWidget::matrix_rotate(GLfloat angle)
 		curangle += 360.0f;
 
 	write_gl_matrix();
+	updateGL();
 }
 
 void SQ_GLWidget::emitShowImage(const KURL &url)
@@ -868,13 +895,6 @@ void SQ_GLWidget::setClearColor()
 
 		default: ;
 	}
-
-	QColor color2;
-	color2.setNamedColor(sqConfig->readEntry("GL view", "GL view border", "#00ff00"));
-	BGborder[0] = BGborder[4] = BGborder[8] = BGborder[12] = color2.red();
-	BGborder[1] = BGborder[5] = BGborder[9] = BGborder[13] = color2.green();
-	BGborder[2] = BGborder[6] = BGborder[10] = BGborder[14] = color2.blue();
-	BGborder[3] = BGborder[7] = BGborder[11] = BGborder[15] = 255;
 
 	glClearColorA(color.red(), color.green(), color.blue());
 

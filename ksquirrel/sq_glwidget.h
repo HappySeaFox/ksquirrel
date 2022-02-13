@@ -80,11 +80,12 @@ class SQ_GLWidget : public QGLWidget
 		void matrix_move(GLfloat x, GLfloat y);
 		void matrix_move_z(GLfloat z);
 		void matrix_zoom(GLfloat ratio);
-		void matrix_reset(bool update = true);
+		void matrix_reset();
 		void matrix_pure_reset();
+		void matrix_pure_reset_noxy();
 		void matrix_push();
 		void matrix_pop();
-		void write_gl_matrix(bool update = true);
+		void write_gl_matrix();
 		void matrix_rotate(GLfloat angle);
 		void flip(int);
 		void flip_h();
@@ -177,7 +178,6 @@ class SQ_GLWidget : public QGLWidget
 		QCursor			cusual, cdrag;
 		QFileInfo			fm;
 		QImage 			BGpixmap, BGquads;
-		unsigned char		BGborder[16];
 		KToolBar			*toolbar, *toolbar2;
 		QTimer			*timer_show, *timer_hide;
 		SQ_DecodingThread	*thread;

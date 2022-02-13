@@ -1,7 +1,6 @@
 #!/bin/sh
 
 gmake -f Makefile.dist &&
-
-echo "Doing ./configure $* ..."
-echo
+echo "Doing ./configure $* ..." &&
+echo &&
 ./configure $*

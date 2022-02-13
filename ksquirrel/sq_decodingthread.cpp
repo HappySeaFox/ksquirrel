@@ -71,6 +71,7 @@ void SQ_DecodingThread::run()
 		if(m_stop)
 		{
 			m_stop = false;
+			pdraw->hide();
 //			lib->fmt_close(finfo);
 			return;
 		}
@@ -83,6 +84,7 @@ void SQ_DecodingThread::run()
 
 	lib->fmt_close(finfo);
 
+	pdraw->hide();
 	pdraw->flush();
 
 	if(connected)

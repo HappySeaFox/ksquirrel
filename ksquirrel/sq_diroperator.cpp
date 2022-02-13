@@ -88,7 +88,7 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, VV type_, QWidget *parent, const
 SQ_DirOperator::~SQ_DirOperator()
 {}
 
-KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
+KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView)
 {
 	fileview = 0L;
 
