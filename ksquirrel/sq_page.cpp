@@ -16,9 +16,11 @@ SQ_Page::SQ_Page(QWidget *parent, PAGESETT *ps)
 SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type) : QWidget(parent), Type(type)
 {
 	l = new QVBoxLayout (this);
+	menuBookmarksID = 8000;
+
+	folderPix = sqLoader->loadIcon("folder", KIcon::Desktop, 16);
 
 	sqConfig->setGroup("file browser");
-//	bool showHidden = sqConfig->readBoolEntry("Show hidden files", false);
 
 	dirop = new SQ_DirOperator(path, this, "file view");
 	dirop->readConfig(sqConfig, "file browser");
@@ -37,12 +39,19 @@ SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type) : Q
 	toolbar2->setVerticalStretchable(false);
 	toolbar2->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
 
-	tbBack = new QToolButton(dirop->actionCollection()->action("back")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotBack()), toolbar);
-	tbForward = new QToolButton(dirop->actionCollection()->action("forward")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotForward()), toolbar);
-	tbUp = new QToolButton(dirop->actionCollection()->action("up")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotUp()), toolbar);
+	tbBack = new QToolButton(dirop->actionCollection()->action("back")->iconSet(KIcon::Desktop, 16), "Go back in history", QString::null, this, SLOT(slotBack()), toolbar);
+	tbForward = new QToolButton(dirop->actionCollection()->action("forward")->iconSet(KIcon::Desktop, 16), "Go forward in history", QString::null, this, SLOT(slotForward()), toolbar);
+	tbUp = new QToolButton(dirop->actionCollection()->action("up")->iconSet(KIcon::Desktop, 16), "Go up level", QString::null, this, SLOT(slotUp()), toolbar);
 	toolbar->addSeparator();
-	new QToolButton(dirop->actionCollection()->action("reload")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotReload()), toolbar);
-	new QToolButton(dirop->actionCollection()->action("home")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotHome()), toolbar);
+	new QToolButton(dirop->actionCollection()->action("reload")->iconSet(KIcon::Desktop, 16), "Reload current directory", QString::null, this, SLOT(slotReload()), toolbar);
+	new QToolButton(dirop->actionCollection()->action("home")->iconSet(KIcon::Desktop, 16), "Go your home directory", QString::null, this, SLOT(slotHome()), toolbar);
+	toolbar->addSeparator();
+
+	QToolButton *ww = new QToolButton(sqLoader->loadIcon("bookmark_add", KIcon::Desktop, 16), "Add current path to bookmarks", QString::null, this, SLOT(slotAddBookmark()), toolbar);
+	menuBookmarks = new QPopupMenu(this);
+	ww->setPopupDelay(250);
+	ww->setPopup(menuBookmarks);
+	connect(menuBookmarks, SIGNAL(activated(int)), this, SLOT(slotSetURLfromMenu(int)));
 	toolbar->addSeparator();
 
 	(new QLabel(" URL:", toolbar))->setFrameShape(QFrame::ToolBarPanel);
@@ -50,13 +59,13 @@ SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type) : Q
 	curPath->setFrameShape(QFrame::ToolBarPanel);
 	
 	
-	new QToolButton(dirop->actionCollection()->action("mkdir")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotMkdir()), toolbar2);
-	new QToolButton(sqLoader->loadIcon("penguin", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotProp()), toolbar2);
-	new QToolButton(dirop->actionCollection()->action("delete")->iconSet(KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotDelete()), toolbar2);
+	new QToolButton(dirop->actionCollection()->action("mkdir")->iconSet(KIcon::Desktop, 16), "Create new directory", QString::null, this, SLOT(slotMkdir()), toolbar2);
+	new QToolButton(sqLoader->loadIcon("penguin", KIcon::Desktop, 16), "Properties", QString::null, this, SLOT(slotProp()), toolbar2);
+	new QToolButton(dirop->actionCollection()->action("delete")->iconSet(KIcon::Desktop, 16), "Delete selected files", QString::null, this, SLOT(slotDelete()), toolbar2);
 	toolbar2->addSeparator();
 
+///////// insert button "icon size"	////////////////////////
 
-// insert button "icon size"	////////////////////////
 	KActionCollection *actcoll = dirop->actionCollection();
 	KRadioAction *i16 = new KRadioAction("16", 0, 0, this, SLOT(slotSetIconSize16()), actcoll, "ic16");
 	KRadioAction *i22 = new KRadioAction("22", 0, 0, this, SLOT(slotSetIconSize22()), actcoll, "ic22");
@@ -83,7 +92,7 @@ SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type) : Q
 	ics->setTextPosition(QToolButton::Right);
 	toolbar2->addSeparator();
 
-/////////////////////////   insert filters   ////////////////////////////////////////////////////
+///////////////////////////////   insert filters   ////////////////////////////////////////////
 
 	filterButton = new QToolButton(sqLoader->loadIcon("down", KIcon::Desktop, 16), QString::null, QString::null, this, 0, toolbar2);
 	filterButton->setPopupDelay(10);
@@ -138,15 +147,33 @@ SQ_Page::SQ_Page(QWidget *parent, KURL path, KFile::FileView View, int type) : Q
 	viewButton->setPopup(((KActionMenu*)(dirop->actionCollection()->action("view menu")))->popupMenu());
 	toolbar2->addSeparator();
 
+	sqConfig->setGroup("Bookmarks");
+	QString s, read_;
+
+	for(int i = 1;;i++)
+	{
+		s.sprintf("%d", i);
+		read_ = sqConfig->readEntry(s, "");
+		
+		if(read_ == QString(""))
+			break;
+			
+		if(sqBookmarks->find(KURL(read_)) == sqBookmarks->end())
+		{
+			sqBookmarks->append(KURL(read_));
+                     menuBookmarks->insertItem(folderPix, read_, menuBookmarksID++);
+		}
+	}
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 	toolbar2->setStretchableWidget(new QToolButton(QPixmap(0), QString::null, QString::null, this, 0, toolbar2));
 	
 ////////////////////////////////////////////////////////////////////////////////////
 	
-	new QToolButton(sqLoader->loadIcon("bookmark_add", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotAddBookmark()), toolbar2);
-	new QToolButton(sqLoader->loadIcon("tab_duplicate", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotDupTab()), toolbar2);	
-	new QToolButton(sqLoader->loadIcon("tab_remove", KIcon::Desktop, 16), QString::null, QString::null, this, SLOT(slotCloseTab()), toolbar2);
+	new QToolButton(sqLoader->loadIcon("tab_duplicate", KIcon::Desktop, 16), "Duplicate current page", QString::null, this, SLOT(slotDupTab()), toolbar2);	
+	new QToolButton(sqLoader->loadIcon("tab_remove", KIcon::Desktop, 16), "Close page", QString::null, this, SLOT(slotCloseTab()), toolbar2);
     
 
 	l->addWidget(toolbar2);
@@ -265,8 +292,13 @@ void SQ_Page::slotDupTab()
 
 void SQ_Page::slotAddBookmark()
 {
-	if(sqBookmarks->find(dirop->url()) == sqBookmarks->end())
-		sqBookmarks->append(dirop->url());
+	KURL ur = dirop->url();
+	
+	if(sqBookmarks->find(ur) == sqBookmarks->end())
+	{
+		sqBookmarks->append(ur);
+		menuBookmarks->insertItem(folderPix, ur.path(), menuBookmarksID++);
+	}
 }
 
 void SQ_Page::slotSetIconSize16()
@@ -297,4 +329,9 @@ void SQ_Page::slotSetIconSize64()
 {
 	if(dirop->getViewType() == KFile::Simple)
 		((SQ_FileIconView*)dirop->new_view)->setIconSize(64);
+}
+
+void SQ_Page::slotSetURLfromMenu(int id)
+{
+	setURL(menuBookmarks->text(id));
 }

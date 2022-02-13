@@ -19,8 +19,6 @@
 #include <kpopupmenu.h>
 #include <kmenubar.h>
 
-
-
 #include "sq_tray.h"
 
 class SQ_MyTabWidget : public QTabWidget
@@ -54,7 +52,7 @@ class Squirrel : public KDockMainWindow
 		KToolBar			*fileTools;
 		KPopupMenu		*pop_file, *pop_view, *pop_edit;
 		QPixmap		fullIcon, unfullIcon;
-
+		QPopupMenu *pmNewPageMenu;
     public slots:
 		void slotEdit();
 		void slotOptions();

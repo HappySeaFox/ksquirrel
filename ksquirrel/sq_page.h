@@ -44,9 +44,12 @@ class SQ_Page : public QWidget
 	KURLRequester *curPath;
 	QToolButton *togHidden, *tbUp, *tbBack, *tbForward;
 	KPopupMenu		*menuIconSize;
+	QPopupMenu		*menuBookmarks;
 	int Type;
 	QValueList<FILTER> *fl;
 	QToolButton *filterButton;
+ 	int menuBookmarksID;
+	QPixmap	folderPix;
     public:
     
 	SQ_Page(QWidget *parent, PAGESETT *ps);
@@ -78,6 +81,7 @@ class SQ_Page : public QWidget
 	void slotSetIconSize32();
 	void slotSetIconSize48();
 	void slotSetIconSize64();
+	void slotSetURLfromMenu(int);
 };
 
 #endif

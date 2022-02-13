@@ -367,7 +367,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1/ksquirrel/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.2/ksquirrel/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
@@ -520,7 +520,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=Makefile.in 
+KDE_DIST=ksquirrel sq_options.ui.h squirrelrc Makefile.in sq_options.h sq_editpicture.h 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -703,6 +703,7 @@ messages:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
+
 #>+ 27
 sq_options.cpp: $(srcdir)/sq_options.ui sq_options.h sq_options.moc
 	rm -f sq_options.cpp
@@ -784,11 +785,11 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1/ksquirrel/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.2/ksquirrel/Makefile.in
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_page.cpp $(srcdir)/sq_menu_proc.cpp $(srcdir)/sq_grabwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp sq_options.cpp sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp  sq_options.moc sq_editpicture.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_page.cpp $(srcdir)/sq_menu_proc.cpp $(srcdir)/sq_grabwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp  sq_options.moc sq_editpicture.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \

@@ -1864,7 +1864,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=ksquirrel
- VERSION=0.1
+ VERSION=0.1.2
 
 
 cat >>confdefs.h <<_ACEOF
@@ -24245,7 +24245,7 @@ fi
 #MIN_CONFIG(3)
 
 
-
+CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
 
 

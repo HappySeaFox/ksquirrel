@@ -240,7 +240,7 @@ x_libraries = @x_libraries@
 
 SUBDIRS = ksquirrel po 
 
-EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO ksquirrel.lsm 
+EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO ksquirrel.lsm ksquirrel.spec 
 
 ####### kdevelop will overwrite this part!!! (end)############
 # not a GNU package. You can remove this line, if 
@@ -282,7 +282,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.2/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)
 
@@ -446,7 +446,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=Makefile.in 
+KDE_DIST=stamp-h.in subdirs Makefile.in configure.files start__ ksquirrel-0.1.2.tar.gz ksquirrel.kdevses Makefile.dist configure.in.in 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -700,6 +700,7 @@ dist-hook:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
+
 #>+ 2
 docs-am:
 
@@ -707,7 +708,7 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.2/Makefile.in
 
 
 #>+ 2

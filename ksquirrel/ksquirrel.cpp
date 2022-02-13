@@ -111,7 +111,7 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
     tbNewPage->setTextLabel("New page", false);
     tbNewPage->setTextPosition(QToolButton::Under);
 
-    QPopupMenu *pmNewPageMenu = new QPopupMenu;
+    pmNewPageMenu = new QPopupMenu;
 
     pmNewPageMenu->insertItem(sqLoader->loadIcon("view_icon", KIcon::Desktop, 16), "Icon view", 10000);
     pmNewPageMenu->insertItem(sqLoader->loadIcon("view_choose", KIcon::Desktop, 16), "List view", 10001);
@@ -252,35 +252,26 @@ void Squirrel::slotExit()
 void Squirrel::slotNewPage(int id)
 {
     SQ_Page *tmpw;
-    QString head;
+    QString head = pmNewPageMenu->text(id);
 
     if(id == 10000)
-    {
         tmpw = new SQ_Page(0, "/", KFile::Simple, 1);
-        head = "Icon view";
-    }
     else if(id == 10001)
-   {    
         tmpw = new SQ_Page(0, "/", KFile::Simple, 2);
-        head = "List view";
-   }
     else if(id == 10002)
-   {
         tmpw = new SQ_Page(0, "/", KFile::Detail, -1);
-        head = "Detailed view";
-   }
-   else if(id == 10003)
-   {
+    else if(id == 10003)
+    {
 	SQ_SpecialPage *spec = new SQ_SpecialPage(0xff, 0);
 	tbmain->addTab(spec, "konsole");
 	tbmain->setCurrentPage(tbmain->indexOf(spec));
 	return;
-   }
-   else if(id == 10004)
-   {
-     slotCloseCurrentPage();
-     return;
-   }
+    }
+    else if(id == 10004)
+    {
+      slotCloseCurrentPage();
+      return;
+    }
     else return;
 
     tbmain->addTab(tmpw, head);

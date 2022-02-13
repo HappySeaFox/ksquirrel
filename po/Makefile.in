@@ -258,7 +258,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  po/Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1/po/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.2/po/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 
@@ -279,7 +279,7 @@ CTAGS:
 
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=Makefile.in 
+KDE_DIST=Makefile.in ksquirrel.pot 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -403,6 +403,7 @@ uninstall-am: uninstall-info-am
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
+
 #>+ 2
 docs-am:
 
@@ -410,7 +411,7 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  po/Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1/po/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.2/po/Makefile.in
 
 
 #>+ 2

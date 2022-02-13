@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2004-01-22 17:51+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sq_grabwidget.moc.cpp:34 sq_grabwidget.moc.cpp:42
+msgid "SQ_GrabWidget"
+msgstr ""
+
+#: sq_filedetailview.moc.cpp:34 sq_filedetailview.moc.cpp:42
+msgid "SQ_FileDetailView"
+msgstr ""
+
+#: ksquirrel.moc.cpp:34 ksquirrel.moc.cpp:42
+msgid "SQ_MyTabWidget"
+msgstr ""
+
+#: ksquirrel.moc.cpp:119 ksquirrel.moc.cpp:127
+msgid "Squirrel"
+msgstr ""
+
+#: sq_fileiconview.moc.cpp:34 sq_fileiconview.moc.cpp:42
+msgid "SQ_FileIconView"
+msgstr ""
+
+#: sq_options.cpp:133
+msgid "Main"
+msgstr ""
+
+#: sq_options.cpp:134
+msgid "Interface"
+msgstr ""
+
+#: sq_options.cpp:137 sq_editpicture.cpp:93
+msgid "F1"
+msgstr ""
+
+#: sq_options.cpp:142
+msgid "Set last path visited"
+msgstr ""
+
+#: sq_options.cpp:144
+msgid "Icon view"
+msgstr ""
+
+#: sq_options.cpp:145
+msgid "Detailed view"
+msgstr ""
+
+#: sq_options.cpp:146
+msgid "List view"
+msgstr ""
+
+#: sq_options.cpp:147
+msgid "don't create tree view"
+msgstr ""
+
+#: sq_options.cpp:148
+msgid "create page"
+msgstr ""
+
+#: sq_options.cpp:149
+msgid "don't create preview"
+msgstr ""
+
+#: sq_menu_proc.moc.cpp:34 sq_menu_proc.moc.cpp:42
+msgid "SQ_MenuProcess"
+msgstr ""
+
+#: sq_editpicture.cpp:89
+msgid "Standart edition of picture"
+msgstr ""
+
+#: sq_editpicture.cpp:90
+msgid "Resize"
+msgstr ""
+
+#: sq_editpicture.cpp:91
+msgid "Convert to ..."
+msgstr ""
+
+#: sq_diroperator.moc.cpp:34 sq_diroperator.moc.cpp:42
+msgid "SQ_DirOperator"
+msgstr ""
+
+#: sq_splash.moc.cpp:34 sq_splash.moc.cpp:42
+msgid "SQ_Splash"
+msgstr ""
+
+#: sq_treeview.moc.cpp:34 sq_treeview.moc.cpp:42
+msgid "SQ_TreeView"
+msgstr ""
+
+#: sq_page.moc.cpp:34 sq_page.moc.cpp:42
+msgid "SQ_Page"
+msgstr ""
