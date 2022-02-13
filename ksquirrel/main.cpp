@@ -22,6 +22,7 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 #include <kapplication.h>
+#include <dcopclient.h>
 
 #include "ksquirrel.h"
 #include "sq_about.h"
@@ -45,10 +46,11 @@ int main(int argc, char *argv[])
 
 	aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
 	aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
+	aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Great artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");
 	aboutData.addCredit(I18N_NOOP("OpenGL forum at"), 0, 0, "http://opengl.org");
 	aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
 	aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
-	
+
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
 
@@ -74,11 +76,14 @@ int main(int argc, char *argv[])
 	if(high->thumbs)
 		high->thumbs_p = sq_args->getOption("t");
 
-	SQ = new KSquirrel;
+	SQ = new KSquirrel(NULL, "ksquirrel");
 
 	a.setMainWidget(SQ);
 
 	sq_args->clear();
+
+        if(a.dcopClient()->attach())
+            a.dcopClient()->registerAs("ksquirrel", false);
 
 	return a.exec();
 }

@@ -1,0 +1,192 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SQ_CheckVersion</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>SQ_CheckVersion</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>517</width>
+            <height>218</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Check version</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <property name="whatsThis" stdset="0">
+        <string>This tool will connect to &lt;a href="http://ksquirrel.sourceforge.net"&gt;http://ksquirrel.sourceforge.net&lt;/a&gt; and check for newer versions of KSquirrel and ksquirrel-libs. Connection timeout depends on system settings.</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="2" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Action:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="1">
+            <property name="name">
+                <cstring>textAction</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="textFormat">
+                <enum>RichText</enum>
+            </property>
+        </widget>
+        <spacer row="1" column="1">
+            <property name="name">
+                <cstring>spacer10</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>16</width>
+                    <height>222</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QFrame" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>frame3</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>GroupBoxPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Raised</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textResultK</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="textFormat">
+                        <enum>RichText</enum>
+                    </property>
+                </widget>
+                <widget class="KURLLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>kurlLabelK</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="2">
+                    <property name="name">
+                        <cstring>textResultKL</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="textFormat">
+                        <enum>RichText</enum>
+                    </property>
+                </widget>
+                <widget class="KURLLabel" row="1" column="2">
+                    <property name="name">
+                        <cstring>kurlLabelKL</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="Line" row="0" column="1" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>line1</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>VLine</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Sunken</enum>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>kurlLabelK</sender>
+        <signal>leftClickedURL(const QString&amp;)</signal>
+        <receiver>SQ_CheckVersion</receiver>
+        <slot>slotDownloadK(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>kurlLabelKL</sender>
+        <signal>leftClickedURL(const QString&amp;)</signal>
+        <receiver>SQ_CheckVersion</receiver>
+        <slot>slotDownloadKL(const QString&amp;)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in implementation">qurloperator.h</include>
+    <include location="global" impldecl="in implementation">qfile.h</include>
+    <include location="local" impldecl="in implementation">sq_about.h</include>
+    <include location="global" impldecl="in implementation">qnetwork.h</include>
+    <include location="global" impldecl="in implementation">krun.h</include>
+    <include location="global" impldecl="in implementation">ktempfile.h</include>
+    <include location="local" impldecl="in implementation">sq_checkversion.ui.h</include>
+</includes>
+<forwards>
+    <forward>class QNetworkOperation;</forward>
+    <forward>class KTempFile;</forward>
+</forwards>
+<variables>
+    <variable access="private">KTempFile *f1, *f2;</variable>
+    <variable access="private">bool k, kl;</variable>
+    <variable access="private">QString kv, klv;</variable>
+</variables>
+<slots>
+    <slot access="private">slotCheck()</slot>
+    <slot access="private">slotFinished( QNetworkOperation * netop )</slot>
+    <slot access="private">slotFinishedKL( QNetworkOperation * netop )</slot>
+    <slot access="private">slotDownloadK( const QString &amp; url )</slot>
+    <slot access="private">slotDownloadKL( const QString &amp; url )</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function access="private" specifier="non virtual">destroy()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurllabel.h</includehint>
+    <includehint>kurllabel.h</includehint>
+</includehints>
+</UI>

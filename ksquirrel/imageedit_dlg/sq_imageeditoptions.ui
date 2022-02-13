@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>461</width>
-            <height>250</height>
+            <height>252</height>
         </rect>
     </property>
     <property name="caption">
@@ -217,6 +217,17 @@
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>linePrefix</tabstop>
+    <tabstop>radioCurrentDir</tabstop>
+    <tabstop>radioReplace</tabstop>
+    <tabstop>radioPutHere</tabstop>
+    <tabstop>linePutTo</tabstop>
+    <tabstop>pushPut</tabstop>
+    <tabstop>checkClose</tabstop>
+    <tabstop>pushOK</tabstop>
+    <tabstop>pushCancel</tabstop>
+</tabstops>
 <includes>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="global" impldecl="in implementation">kiconloader.h</include>

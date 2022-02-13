@@ -1,8 +1,8 @@
 /***************************************************************************
-                          sq_about.h  -  description
+                          sq_label.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by Baryshev Dmitry
+    begin                : June 10 2005
+    copyright            : (C) 2005 by Baryshev Dmitry
     email                : ksquirrel@tut.by
  ***************************************************************************/
 
@@ -15,25 +15,39 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qpainter.h>
 
-#ifndef SQ_ABOUT_KSQUIRREL_H
-#define SQ_ABOUT_KSQUIRREL_H
+#include "sq_label.h"
 
-#include <kaboutdata.h>
+SQ_Label::SQ_Label(QWidget *parent, const char *name) : QWidget(parent, name)
+{}
 
-static const char *description = I18N_NOOP("KSquirrel - image viewer for KDE");
+SQ_Label::~SQ_Label()
+{}
 
-#define SQ_VERSION "0.6.0-pre5"
+void SQ_Label::paintEvent(QPaintEvent *)
+{
+	if(text.isEmpty())
+		return;
 
-static KAboutData aboutData(
-			"ksquirrel", 
-			"KSquirrel",
-			SQ_VERSION, 
-			description,
-			KAboutData::License_GPL,
-			"(c) 2004,2005 Baryshev Dmitry", 
-			QString::null,
-			"http://ksquirrel.sourceforge.net",
-			QString::null);
-    
-#endif
+	QPainter paint(this);
+
+	QFont font = paint.font();
+	font.setBold(true);
+	font.setPointSize(8);
+	paint.setFont(font);
+
+	paint.translate((width() + paint.fontMetrics().height()) / 2, (height() + paint.fontMetrics().width(text)) / 2);
+      paint.rotate(-90);
+	paint.drawText(0, 0, text);
+}
+
+void SQ_Label::setText(const QString &ntext)
+{
+	if(ntext == text)
+		return;
+
+	text = ntext;
+
+	update();
+}

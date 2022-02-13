@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>515</width>
-            <height>438</height>
+            <height>442</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -393,7 +393,7 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <spacer row="3" column="0">
+                            <spacer row="2" column="0">
                                 <property name="name">
                                     <cstring>spacer10</cstring>
                                 </property>
@@ -424,14 +424,6 @@
                                 </property>
                                 <property name="text">
                                     <string>Write configuration file to disk, when I press "OK"</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox" row="2" column="0">
-                                <property name="name">
-                                    <cstring>checkCheck</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Check for a new version available</string>
                                 </property>
                             </widget>
                         </grid>
@@ -2066,6 +2058,59 @@
         <slot>slotSetSystemBack(const QColor&amp;)</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>checkMinimize</tabstop>
+    <tabstop>checkSync</tabstop>
+    <tabstop>tabWidget4</tabstop>
+    <tabstop>radioSetLast</tabstop>
+    <tabstop>radioSetCurrent</tabstop>
+    <tabstop>radioSetThis</tabstop>
+    <tabstop>kURLReqOpenCustom</tabstop>
+    <tabstop>checkRunUnknown</tabstop>
+    <tabstop>checkSaveHistory</tabstop>
+    <tabstop>checkSupportAr</tabstop>
+    <tabstop>checkJumpFirst</tabstop>
+    <tabstop>checkDisableDirs</tabstop>
+    <tabstop>radioButton36</tabstop>
+    <tabstop>radioButton17</tabstop>
+    <tabstop>radioButton18</tabstop>
+    <tabstop>radioSyncBoth</tabstop>
+    <tabstop>radioSyncTreeWStack</tabstop>
+    <tabstop>radioSyncWStackTree</tabstop>
+    <tabstop>checkMime</tabstop>
+    <tabstop>checkNoWriteThumbs</tabstop>
+    <tabstop>checkExtended</tabstop>
+    <tabstop>checkTooltips</tabstop>
+    <tabstop>spinMargin</tabstop>
+    <tabstop>spinCacheSize</tabstop>
+    <tabstop>tabWidget2</tabstop>
+    <tabstop>radioSCRZoom_2</tabstop>
+    <tabstop>radioSRCNext_2</tabstop>
+    <tabstop>radioColorSystem</tabstop>
+    <tabstop>radioColorCustom</tabstop>
+    <tabstop>radioColorCustomTexture</tabstop>
+    <tabstop>checkStatus</tabstop>
+    <tabstop>kURLReqCustomTexture</tabstop>
+    <tabstop>pushCustomValidate</tabstop>
+    <tabstop>sliderAngle</tabstop>
+    <tabstop>sliderMove</tabstop>
+    <tabstop>checkDrawQuads</tabstop>
+    <tabstop>checkMarks</tabstop>
+    <tabstop>radioButton26</tabstop>
+    <tabstop>radioButton27</tabstop>
+    <tabstop>radioButton28</tabstop>
+    <tabstop>spinZoomMin</tabstop>
+    <tabstop>spinZoomMax</tabstop>
+    <tabstop>spinZoomFactor</tabstop>
+    <tabstop>listGL</tabstop>
+    <tabstop>checkMonitor</tabstop>
+    <tabstop>checkFAMMessage</tabstop>
+    <tabstop>tableLib</tabstop>
+    <tabstop>buttonOk</tabstop>
+    <tabstop>buttonCancel</tabstop>
+    <tabstop>kColorSystem</tabstop>
+    <tabstop>kColorGLbackground</tabstop>
+</tabstops>
 <includes>
     <include location="global" impldecl="in implementation">kstandarddirs.h</include>
     <include location="global" impldecl="in implementation">kfiledialog.h</include>

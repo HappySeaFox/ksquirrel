@@ -57,44 +57,42 @@ am_ksquirrel_OBJECTS = sq_editsplashbutton.$(OBJEXT) \
 	fmt_filters.$(OBJEXT) sq_errorstring.$(OBJEXT) \
 	fileio.$(OBJEXT) fmt_utils.$(OBJEXT) \
 	sq_navigatordropmenu.$(OBJEXT) sq_fileiconviewbase.$(OBJEXT) \
-	sq_updateksquirrelthread.$(OBJEXT) sq_glview.$(OBJEXT) \
-	sq_locationtoolbar.$(OBJEXT) sq_filethumbviewitem.$(OBJEXT) \
-	sq_diroperatorbase.$(OBJEXT) sq_progress.$(OBJEXT) \
-	sq_thumbnailsize.$(OBJEXT) sq_thumbnailjob.$(OBJEXT) \
-	sq_pixmapcache.$(OBJEXT) sq_filethumbview.$(OBJEXT) \
-	sq_dir.$(OBJEXT) sq_iconlistbox.$(OBJEXT) \
-	sq_iconlistitem.$(OBJEXT) sq_widgetstack.$(OBJEXT) \
-	sq_treeview.$(OBJEXT) sq_tray.$(OBJEXT) \
-	sq_quickbrowser.$(OBJEXT) sq_librarylistener.$(OBJEXT) \
-	sq_libraryhandler.$(OBJEXT) sq_hloptions.$(OBJEXT) \
-	sq_glwidget.$(OBJEXT) sq_glu.$(OBJEXT) \
+	sq_glview.$(OBJEXT) sq_locationtoolbar.$(OBJEXT) \
+	sq_filethumbviewitem.$(OBJEXT) sq_diroperatorbase.$(OBJEXT) \
+	sq_progress.$(OBJEXT) sq_thumbnailsize.$(OBJEXT) \
+	sq_thumbnailjob.$(OBJEXT) sq_pixmapcache.$(OBJEXT) \
+	sq_filethumbview.$(OBJEXT) sq_dir.$(OBJEXT) \
+	sq_iconlistbox.$(OBJEXT) sq_iconlistitem.$(OBJEXT) \
+	sq_widgetstack.$(OBJEXT) sq_treeview.$(OBJEXT) \
+	sq_tray.$(OBJEXT) sq_quickbrowser.$(OBJEXT) \
+	sq_librarylistener.$(OBJEXT) sq_libraryhandler.$(OBJEXT) \
+	sq_hloptions.$(OBJEXT) sq_glwidget.$(OBJEXT) sq_glu.$(OBJEXT) \
 	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
 	sq_externaltool.$(OBJEXT) sq_diroperator.$(OBJEXT) \
 	sq_config.$(OBJEXT) sq_bookmarkowner.$(OBJEXT) \
 	sq_archivehandler.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT)
 #>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
-#>+ 23
+#>+ 22
 ksquirrel_final_OBJECTS = ksquirrel.all_cpp.o 
 ksquirrel_nofinal_OBJECTS = sq_editsplashbutton.$(OBJEXT) \
 	fmt_filters.$(OBJEXT) sq_errorstring.$(OBJEXT) \
 	fileio.$(OBJEXT) fmt_utils.$(OBJEXT) \
 	sq_navigatordropmenu.$(OBJEXT) sq_fileiconviewbase.$(OBJEXT) \
-	sq_updateksquirrelthread.$(OBJEXT) sq_glview.$(OBJEXT) \
-	sq_locationtoolbar.$(OBJEXT) sq_filethumbviewitem.$(OBJEXT) \
-	sq_diroperatorbase.$(OBJEXT) sq_progress.$(OBJEXT) \
-	sq_thumbnailsize.$(OBJEXT) sq_thumbnailjob.$(OBJEXT) \
-	sq_pixmapcache.$(OBJEXT) sq_filethumbview.$(OBJEXT) \
-	sq_dir.$(OBJEXT) sq_iconlistbox.$(OBJEXT) \
-	sq_iconlistitem.$(OBJEXT) sq_widgetstack.$(OBJEXT) \
-	sq_treeview.$(OBJEXT) sq_tray.$(OBJEXT) \
-	sq_quickbrowser.$(OBJEXT) sq_librarylistener.$(OBJEXT) \
-	sq_libraryhandler.$(OBJEXT) sq_hloptions.$(OBJEXT) \
-	sq_glwidget.$(OBJEXT) sq_glu.$(OBJEXT) \
+	sq_glview.$(OBJEXT) sq_locationtoolbar.$(OBJEXT) \
+	sq_filethumbviewitem.$(OBJEXT) sq_diroperatorbase.$(OBJEXT) \
+	sq_progress.$(OBJEXT) sq_thumbnailsize.$(OBJEXT) \
+	sq_thumbnailjob.$(OBJEXT) sq_pixmapcache.$(OBJEXT) \
+	sq_filethumbview.$(OBJEXT) sq_dir.$(OBJEXT) \
+	sq_iconlistbox.$(OBJEXT) sq_iconlistitem.$(OBJEXT) \
+	sq_widgetstack.$(OBJEXT) sq_treeview.$(OBJEXT) \
+	sq_tray.$(OBJEXT) sq_quickbrowser.$(OBJEXT) \
+	sq_librarylistener.$(OBJEXT) sq_libraryhandler.$(OBJEXT) \
+	sq_hloptions.$(OBJEXT) sq_glwidget.$(OBJEXT) sq_glu.$(OBJEXT) \
 	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
 	sq_externaltool.$(OBJEXT) sq_diroperator.$(OBJEXT) \
 	sq_config.$(OBJEXT) sq_bookmarkowner.$(OBJEXT) \
-	sq_archivehandler.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_thumbnailcachemaster.$(OBJEXT) sq_helpwidget.$(OBJEXT) sq_viewcache.$(OBJEXT) sq_options.$(OBJEXT) sq_librarieschanged.$(OBJEXT) sq_imageproperties.$(OBJEXT) sq_filters.$(OBJEXT) sq_externaltools.$(OBJEXT)\
-sq_glwidget.moc.o sq_fileiconview.moc.o sq_editsplashbutton.moc.o sq_externaltool.moc.o sq_fileiconviewbase.moc.o ksquirrel.moc.o sq_filedetailview.moc.o sq_updateksquirrelthread.moc.o sq_filethumbview.moc.o sq_thumbnailjob.moc.o sq_bookmarkowner.moc.o sq_diroperator.moc.o sq_quickbrowser.moc.o sq_diroperatorbase.moc.o sq_tray.moc.o sq_locationtoolbar.moc.o sq_treeview.moc.o sq_librarylistener.moc.o sq_widgetstack.moc.o sq_navigatordropmenu.moc.o 
+	sq_archivehandler.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_checkversion.$(OBJEXT) sq_thumbnailcachemaster.$(OBJEXT) sq_helpwidget.$(OBJEXT) sq_viewcache.$(OBJEXT) sq_options.$(OBJEXT) sq_librarieschanged.$(OBJEXT) sq_imageproperties.$(OBJEXT) sq_filters.$(OBJEXT) sq_externaltools.$(OBJEXT)\
+sq_glwidget.moc.o sq_fileiconview.moc.o sq_editsplashbutton.moc.o sq_externaltool.moc.o sq_fileiconviewbase.moc.o ksquirrel.moc.o sq_filedetailview.moc.o sq_filethumbview.moc.o sq_thumbnailjob.moc.o sq_bookmarkowner.moc.o sq_diroperator.moc.o sq_quickbrowser.moc.o sq_diroperatorbase.moc.o sq_tray.moc.o sq_locationtoolbar.moc.o sq_treeview.moc.o sq_librarylistener.moc.o sq_widgetstack.moc.o sq_navigatordropmenu.moc.o 
 @KDE_USE_FINAL_FALSE@ksquirrel_OBJECTS = $(ksquirrel_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@ksquirrel_OBJECTS = $(ksquirrel_final_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -363,9 +361,9 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-#>- ksquirrel_SOURCES = sq_thumbnailcachemaster.ui sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_updateksquirrelthread.cpp sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
+#>- ksquirrel_SOURCES = sq_checkversion.ui sq_thumbnailcachemaster.ui sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
 #>+ 1
-ksquirrel_SOURCES= sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp  sq_updateksquirrelthread.cpp sq_glview.cpp sq_locationtoolbar.cpp  sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp  sq_librarylistener.cpp sq_libraryhandler.cpp   sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp  sq_fileiconview.cpp sq_filedetailview.cpp  sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp  sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp
+ksquirrel_SOURCES=  sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp  sq_glview.cpp sq_locationtoolbar.cpp  sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp  sq_librarylistener.cpp sq_libraryhandler.cpp   sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp  sq_fileiconview.cpp sq_filedetailview.cpp  sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp  sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp
 
 ####### kdevelop will overwrite this part!!! (end)############
 ksquirrel_LDADD = ./imageedit_overlay/libimageedit_overlay.a ./imageedit_dlg/libimageedit_dlg.a $(LIB_KIO) $(LIB_KDEPRINT) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
@@ -393,12 +391,12 @@ EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	sq_thumbnailinfo.h sq_filethumbviewitem.cpp \
 	sq_filethumbviewitem.h sq_viewcache.ui sq_locationtoolbar.cpp \
 	sq_locationtoolbar.h ksquirrelrc sq_glview.cpp sq_glview.h \
-	sq_updateksquirrelthread.cpp sq_updateksquirrelthread.h \
 	sq_helpwidget.ui sq_fileiconviewbase.cpp sq_fileiconviewbase.h \
 	sq_navigatordropmenu.cpp sq_navigatordropmenu.h fmt_utils.cpp \
 	fileio.cpp sq_errorstring.cpp sq_errorstring.h fmt_filters.cpp \
 	fmt_filters.h sq_editsplashbutton.cpp sq_editsplashbutton.h \
-	sq_thumbnailcachemaster.ui sq_glwidget_helpers.h
+	sq_thumbnailcachemaster.ui sq_glwidget_helpers.h \
+	sq_checkversion.ui
 
 # These paths are KDE specific. Use them:
 # kde_appsdir         Where your application's menu entry (.desktop) should go to.
@@ -549,7 +547,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_thumbnailsize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_tray.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_treeview.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_updateksquirrelthread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_widgetstack.Po@am__quote@
 
 .cpp.o:
@@ -974,13 +971,6 @@ sq_filedetailview.moc.cpp: $(srcdir)/sq_filedetailview.h
 mocs: sq_filedetailview.moc.cpp
 
 #>+ 3
-sq_updateksquirrelthread.moc.cpp: $(srcdir)/sq_updateksquirrelthread.h
-	$(MOC) $(srcdir)/sq_updateksquirrelthread.h -o sq_updateksquirrelthread.moc.cpp
-
-#>+ 2
-mocs: sq_updateksquirrelthread.moc.cpp
-
-#>+ 3
 sq_filethumbview.moc.cpp: $(srcdir)/sq_filethumbview.h
 	$(MOC) $(srcdir)/sq_filethumbview.h -o sq_filethumbview.moc.cpp
 
@@ -1066,14 +1056,15 @@ mocs: sq_navigatordropmenu.moc.cpp
 
 #>+ 3
 clean-metasources:
-	-rm -f  sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_editsplashbutton.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_updateksquirrelthread.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_quickbrowser.moc.cpp sq_diroperatorbase.moc.cpp sq_tray.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp
+	-rm -f  sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_editsplashbutton.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_quickbrowser.moc.cpp sq_diroperatorbase.moc.cpp sq_tray.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp
 
 #>+ 2
-KDE_DIST=sq_imageproperties.ui.h sq_version sq_librarieschanged.h fmt_defs.h sq_librarieschanged.ui.h fmt_codec_base.h sq_viewcache.h sq_imageproperties.h sq_externaltools.ui.h fileio.h sq_externaltools.h fmt_utils.h sq_filters.h fmt_types.h sq_options.ui.h sq_viewcache.ui.h Makefile.in sq_thumbnailcachemaster.h sq_options.h sq_helpwidget.h sq_thumbnailcachemaster.ui.h Makefile.am 
+KDE_DIST=sq_imageproperties.ui.h sq_version sq_librarieschanged.h fmt_defs.h sq_librarieschanged.ui.h fmt_codec_base.h sq_viewcache.h sq_imageproperties.h sq_externaltools.ui.h fileio.h sq_externaltools.h sq_checkversion.ui.h fmt_utils.h ksquirrel sq_filters.h fmt_types.h sq_options.ui.h sq_viewcache.ui.h sq_checkversion.h Makefile.in sq_thumbnailcachemaster.h sq_options.h sq_helpwidget.h sq_thumbnailcachemaster.ui.h Makefile.am 
 
-#>+ 11
+#>+ 12
 clean-ui:
 	-rm -f \
+	sq_checkversion.cpp sq_checkversion.h sq_checkversion.moc \
 	sq_thumbnailcachemaster.cpp sq_thumbnailcachemaster.h sq_thumbnailcachemaster.moc \
 	sq_helpwidget.cpp sq_helpwidget.h sq_helpwidget.moc \
 	sq_viewcache.cpp sq_viewcache.h sq_viewcache.moc \
@@ -1125,11 +1116,11 @@ bcheck-am:
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_editsplashbutton.cpp $(srcdir)/fmt_filters.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/fileio.cpp $(srcdir)/fmt_utils.cpp $(srcdir)/sq_navigatordropmenu.cpp $(srcdir)/sq_fileiconviewbase.cpp $(srcdir)/sq_updateksquirrelthread.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_locationtoolbar.cpp $(srcdir)/sq_filethumbviewitem.cpp $(srcdir)/sq_diroperatorbase.cpp $(srcdir)/sq_progress.cpp $(srcdir)/sq_thumbnailsize.cpp $(srcdir)/sq_thumbnailjob.cpp $(srcdir)/sq_pixmapcache.cpp $(srcdir)/sq_filethumbview.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_iconlistbox.cpp $(srcdir)/sq_iconlistitem.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_quickbrowser.cpp $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_glu.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_externaltool.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_bookmarkowner.cpp $(srcdir)/sq_archivehandler.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_thumbnailcachemaster.cpp $(srcdir)/sq_helpwidget.cpp $(srcdir)/sq_viewcache.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_librarieschanged.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_filters.cpp $(srcdir)/sq_externaltools.cpp sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_editsplashbutton.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_updateksquirrelthread.moc.cpp sq_thumbnailjob.moc.cpp sq_filethumbview.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_tray.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp  sq_options.moc sq_viewcache.moc sq_librarieschanged.moc sq_filters.moc sq_externaltools.moc sq_helpwidget.moc sq_thumbnailcachemaster.moc sq_imageproperties.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_editsplashbutton.cpp $(srcdir)/fmt_filters.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/fileio.cpp $(srcdir)/fmt_utils.cpp $(srcdir)/sq_navigatordropmenu.cpp $(srcdir)/sq_fileiconviewbase.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_locationtoolbar.cpp $(srcdir)/sq_filethumbviewitem.cpp $(srcdir)/sq_diroperatorbase.cpp $(srcdir)/sq_progress.cpp $(srcdir)/sq_thumbnailsize.cpp $(srcdir)/sq_thumbnailjob.cpp $(srcdir)/sq_pixmapcache.cpp $(srcdir)/sq_filethumbview.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_iconlistbox.cpp $(srcdir)/sq_iconlistitem.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_quickbrowser.cpp $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_glu.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_externaltool.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_bookmarkowner.cpp $(srcdir)/sq_archivehandler.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_checkversion.cpp $(srcdir)/sq_thumbnailcachemaster.cpp $(srcdir)/sq_helpwidget.cpp $(srcdir)/sq_viewcache.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_librarieschanged.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_filters.cpp $(srcdir)/sq_externaltools.cpp sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_editsplashbutton.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_thumbnailjob.moc.cpp sq_filethumbview.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_tray.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp  sq_options.moc sq_viewcache.moc sq_checkversion.moc sq_librarieschanged.moc sq_filters.moc sq_externaltools.moc sq_helpwidget.moc sq_thumbnailcachemaster.moc sq_imageproperties.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
-	for file in sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_updateksquirrelthread.cpp sq_glview.cpp sq_locationtoolbar.cpp sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_librarylistener.cpp sq_libraryhandler.cpp sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_editsplashbutton.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_updateksquirrelthread.moc.cpp sq_thumbnailjob.moc.cpp sq_filethumbview.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_tray.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp ; do \
+	for file in sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_glview.cpp sq_locationtoolbar.cpp sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_librarylistener.cpp sq_libraryhandler.cpp sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_editsplashbutton.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_thumbnailjob.moc.cpp sq_filethumbview.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_tray.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
 	done; \
@@ -1164,49 +1155,48 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 41
-$(srcdir)/sq_dir.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_thumbnailsize.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/main.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_config.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_diroperator.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_progress.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/fmt_utils.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_glwidget.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+#>+ 40
+$(srcdir)/sq_dir.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_thumbnailsize.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/main.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_config.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_diroperator.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_progress.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/fmt_utils.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_glwidget.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 nmcheck-am: nmcheck
-$(srcdir)/sq_navigatordropmenu.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_libraryhandler.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_quickbrowser.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_locationtoolbar.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/ksquirrel.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_thumbnailjob.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_fileiconview.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_filedetailview.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_treeview.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/fmt_filters.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_widgetstack.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_glview.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_iconlistbox.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_externaltool.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_updateksquirrelthread.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_diroperatorbase.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_hloptions.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_navigatordropmenu.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_libraryhandler.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_quickbrowser.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_locationtoolbar.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/ksquirrel.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_thumbnailjob.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_filedetailview.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_fileiconview.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_treeview.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/fmt_filters.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_widgetstack.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_glview.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_iconlistbox.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_externaltool.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_diroperatorbase.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_hloptions.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 nmcheck: 
-$(srcdir)/sq_pixmapcache.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_filethumbviewitem.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_archivehandler.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_glu.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_errorstring.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_librarylistener.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_filethumbview.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_fileiconviewbase.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_tray.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_bookmarkowner.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_iconlistitem.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/sq_editsplashbutton.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
-$(srcdir)/fileio.cpp: sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_filethumbviewitem.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_pixmapcache.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_archivehandler.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_glu.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_errorstring.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_librarylistener.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_filethumbview.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_fileiconviewbase.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_tray.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_bookmarkowner.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_iconlistitem.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_editsplashbutton.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/fileio.cpp: sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 
-#>+ 120
+#>+ 135
 sq_helpwidget.cpp: $(srcdir)/sq_helpwidget.ui sq_helpwidget.h sq_helpwidget.moc
 	rm -f sq_helpwidget.cpp
 	echo '#include <kdialog.h>' > sq_helpwidget.cpp
@@ -1267,21 +1257,6 @@ sq_options.h: $(srcdir)/sq_options.ui
 sq_options.moc: sq_options.h
 	$(MOC) sq_options.h -o sq_options.moc
 
-sq_imageproperties.cpp: $(srcdir)/sq_imageproperties.ui sq_imageproperties.h sq_imageproperties.moc
-	rm -f sq_imageproperties.cpp
-	echo '#include <kdialog.h>' > sq_imageproperties.cpp
-	echo '#include <klocale.h>' >> sq_imageproperties.cpp
-	$(UIC) -tr ${UIC_TR} -i sq_imageproperties.h $(srcdir)/sq_imageproperties.ui > sq_imageproperties.cpp.temp ; ret=$$?; \
-	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" sq_imageproperties.cpp.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_sq_imageproperties,g" >> sq_imageproperties.cpp ;\
-	rm -f sq_imageproperties.cpp.temp ;\
-	if test "$$ret" = 0; then echo '#include "sq_imageproperties.moc"' >> sq_imageproperties.cpp; else rm -f sq_imageproperties.cpp ; exit $$ret ; fi
-
-sq_imageproperties.h: $(srcdir)/sq_imageproperties.ui
-	$(UIC) -o sq_imageproperties.h $(srcdir)/sq_imageproperties.ui
-
-sq_imageproperties.moc: sq_imageproperties.h
-	$(MOC) sq_imageproperties.h -o sq_imageproperties.moc
-
 sq_externaltools.cpp: $(srcdir)/sq_externaltools.ui sq_externaltools.h sq_externaltools.moc
 	rm -f sq_externaltools.cpp
 	echo '#include <kdialog.h>' > sq_externaltools.cpp
@@ -1296,6 +1271,21 @@ sq_externaltools.h: $(srcdir)/sq_externaltools.ui
 
 sq_externaltools.moc: sq_externaltools.h
 	$(MOC) sq_externaltools.h -o sq_externaltools.moc
+
+sq_imageproperties.cpp: $(srcdir)/sq_imageproperties.ui sq_imageproperties.h sq_imageproperties.moc
+	rm -f sq_imageproperties.cpp
+	echo '#include <kdialog.h>' > sq_imageproperties.cpp
+	echo '#include <klocale.h>' >> sq_imageproperties.cpp
+	$(UIC) -tr ${UIC_TR} -i sq_imageproperties.h $(srcdir)/sq_imageproperties.ui > sq_imageproperties.cpp.temp ; ret=$$?; \
+	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" sq_imageproperties.cpp.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_sq_imageproperties,g" >> sq_imageproperties.cpp ;\
+	rm -f sq_imageproperties.cpp.temp ;\
+	if test "$$ret" = 0; then echo '#include "sq_imageproperties.moc"' >> sq_imageproperties.cpp; else rm -f sq_imageproperties.cpp ; exit $$ret ; fi
+
+sq_imageproperties.h: $(srcdir)/sq_imageproperties.ui
+	$(UIC) -o sq_imageproperties.h $(srcdir)/sq_imageproperties.ui
+
+sq_imageproperties.moc: sq_imageproperties.h
+	$(MOC) sq_imageproperties.h -o sq_imageproperties.moc
 
 sq_viewcache.cpp: $(srcdir)/sq_viewcache.ui sq_viewcache.h sq_viewcache.moc
 	rm -f sq_viewcache.cpp
@@ -1326,3 +1316,18 @@ sq_thumbnailcachemaster.h: $(srcdir)/sq_thumbnailcachemaster.ui
 
 sq_thumbnailcachemaster.moc: sq_thumbnailcachemaster.h
 	$(MOC) sq_thumbnailcachemaster.h -o sq_thumbnailcachemaster.moc
+
+sq_checkversion.cpp: $(srcdir)/sq_checkversion.ui sq_checkversion.h sq_checkversion.moc
+	rm -f sq_checkversion.cpp
+	echo '#include <kdialog.h>' > sq_checkversion.cpp
+	echo '#include <klocale.h>' >> sq_checkversion.cpp
+	$(UIC) -tr ${UIC_TR} -i sq_checkversion.h $(srcdir)/sq_checkversion.ui > sq_checkversion.cpp.temp ; ret=$$?; \
+	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" sq_checkversion.cpp.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_sq_checkversion,g" >> sq_checkversion.cpp ;\
+	rm -f sq_checkversion.cpp.temp ;\
+	if test "$$ret" = 0; then echo '#include "sq_checkversion.moc"' >> sq_checkversion.cpp; else rm -f sq_checkversion.cpp ; exit $$ret ; fi
+
+sq_checkversion.h: $(srcdir)/sq_checkversion.ui
+	$(UIC) -o sq_checkversion.h $(srcdir)/sq_checkversion.ui
+
+sq_checkversion.moc: sq_checkversion.h
+	$(MOC) sq_checkversion.h -o sq_checkversion.moc

@@ -27,6 +27,7 @@
 
 #include <kmainwindow.h>
 #include <kio/job.h>
+#include <dcopobject.h>
 
 class KMenuBar;
 class KIconLoader;
@@ -60,17 +61,16 @@ class SQ_LocationToolbar;
 class SQ_GLView;
 class SQ_GLWidget;
 class SQ_ArchiveHandler;
-class SQ_UpdateKsquirrelThread;
 class SQ_Dir;
 
-class KSquirrel : public KMainWindow
+class KSquirrel : public KMainWindow, public DCOPObject
 {
 	Q_OBJECT
 
 	public:
 		KSquirrel(QWidget *parent = 0, const char *name = 0);
 		~KSquirrel();
-
+		
 		void finalActions();
 		void enableThumbsMenu(bool);
 		void setCaption(const QString &cap);
@@ -78,6 +78,10 @@ class KSquirrel : public KMainWindow
 		KPopupMenu* menuFilters();
 		KPopupMenu* menuViews();
 		QLabel*		sbarWidget(const QString &name);
+
+		// dcop methods
+	        QCStringList functions();
+	        bool process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData);
 
 	protected:
 		void closeEvent(QCloseEvent *e);
@@ -106,6 +110,11 @@ class KSquirrel : public KMainWindow
 
 		void setFilter(const QString &f, const int id);
 
+		void fillMessages();
+
+		// dcop method
+	        void control(const QString &str);
+
 	signals:
 		void thumbSizeChanged(const QString&);
 		void continueLoading();
@@ -133,10 +142,9 @@ class KSquirrel : public KMainWindow
 		void slotContinueLoading();
 		void slotSetTreeShown(bool shown);
 		void slotSeparateGL(bool);
+		void slotCheckVersion();
 		void slotOpenFile();
 		void slotOpenFileAndSet();
-		void slotNeedUpdate(const QString &ver);
-		void slotShowUpdate();
 		void slotAnimatedClicked();
 		void slotUDSEntries(KIO::Job*, const KIO::UDSEntryList&);
 		void listResult(KIO::Job *);
@@ -155,7 +163,8 @@ class KSquirrel : public KMainWindow
 		KHistoryCombo			*pCurrentURL;
 		QStringList				*sqFiltersName, *sqFiltersExt;
 		KAction					*pAImageConvert, *pAImageResize, *pAImageBCG, *pAImageRotate,
-								*pAImageToolbar, *pAImageFilter, *pAPrintImages, *pAConfigure;
+								*pAImageToolbar, *pAImageFilter, *pAPrintImages, *pAConfigure,
+								*pACheck;
 
 	private:
 		KToolBar				*tools;
@@ -182,9 +191,9 @@ class KSquirrel : public KMainWindow
 		QMap<QString, QLabel*>sbarwidgets;
 		QLabel					*dirInfo, *fileIcon, *fileName;
 		QString					new_version;
+		QMap<QString, int>		messages;
 
 		SQ_LocationToolbar		*pTLocation;
-		SQ_UpdateKsquirrelThread	*updater;
 		SQ_Dir					*dir;
 		SQ_Config				*kconf;
 		SQ_WidgetStack			*pWidgetStack;

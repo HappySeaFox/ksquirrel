@@ -2,7 +2,7 @@
 
 SUBDIRS = squirrels 
 
-EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png 
+EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png flipH.png flipV.png rotateL.png rotateR.png 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
@@ -43,6 +43,14 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/resize_w.png $(kde_datadir)/ksquirrel/images/imageedit/resize_w.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
 	$(INSTALL_DATA) $(srcdir)/resize_toolbutton2.png $(kde_datadir)/ksquirrel/images/imageedit/resize_toolbutton2.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+	$(INSTALL_DATA) $(srcdir)/flipH.png $(kde_datadir)/ksquirrel/images/imageedit/flipH.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+	$(INSTALL_DATA) $(srcdir)/flipV.png $(kde_datadir)/ksquirrel/images/imageedit/flipV.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+	$(INSTALL_DATA) $(srcdir)/rotateL.png $(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
+	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+	$(INSTALL_DATA) $(srcdir)/rotateR.png $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
 
 uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/bcg.png
@@ -64,5 +72,9 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/resize_wh.png
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/resize_w.png
 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/resize_toolbutton2.png
+	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/flipH.png
+	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/flipV.png
+	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
+	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
 
 ####### kdevelop will overwrite this part!!! (end)############

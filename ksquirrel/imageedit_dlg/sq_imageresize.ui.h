@@ -10,12 +10,9 @@
 void SQ_ImageResize::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_resize.png")));
+    pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
     pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
-
-    push1->setFixedWidth(32);
-    push1->setFixedHeight(38);
-    push2->setFixedWidth(32);
-    push2->setFixedHeight(38);
+    groupBoxApsect->setEnabled(false);
 
     method = "NEAREST";
     methods = new QPopupMenu;
@@ -51,6 +48,7 @@ void SQ_ImageResize::init()
     kIntPercent->setRange(1, 5000, 1, show_sl);
     kIntPixH->setRange(1, 10000, 1, show_sl);
     kIntPixW->setRange(1, 10000, 1, show_sl);
+    kIntPercent->setValue(100);
 
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "resize_putto", QString::null);
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "resize_prefix", QString::null);

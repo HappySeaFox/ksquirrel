@@ -1,7 +1,7 @@
 /***************************************************************************
-                          SQ_LibraryHandler.cpp  -  description
+                          sq_libraryhandler.cpp  -  description
                              -------------------
-    begin                :  Mar 5 2004
+    begin                : Mar 5 2004
     copyright            : (C) 2004 by Baryshev Dmitry
     email                : ksquirrel@tut.by
  ***************************************************************************/
@@ -31,7 +31,7 @@
 #include "fmt_codec_base.h"
 
 #define SQ_HAVE_MIMESTRING
-#include "sq_thumbnailjob.h"
+#include "sq_thumbnailinfo.h"
 
 static const int buffer_size = 10;
 
@@ -51,25 +51,25 @@ SQ_LibraryHandler::~SQ_LibraryHandler()
 SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 {
 	if(full_path.isEmpty())
-		return 0;
+		return NULL;
 
 	QValueVector<SQ_LIBRARY>::const_iterator	BEGIN = begin();
 	QValueVector<SQ_LIBRARY>::const_iterator	END = end();
 
-	SQ_LIBRARY *l, *found = 0;
+	SQ_LIBRARY *l, *found = NULL;
 
 	QFile file(full_path);
 	char buffer[buffer_size+1];
 
 	if(!file.open(IO_ReadOnly))
-		return 0;
+		return NULL;
 
 	int rr = file.readBlock(buffer, buffer_size);
 
 	if(rr != buffer_size || file.status() != IO_Ok)
 	{
 		file.close();
-		return 0;
+		return NULL;
 	}
 	else
 		file.close();
@@ -130,7 +130,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 		}
 	}
 
-	return 0;
+	return NULL;
 }
 
 bool SQ_LibraryHandler::supports(const QString &f)
@@ -368,7 +368,7 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryByName(const QString &name)
 			return l;
 	}
 
-	return 0;
+	return NULL;
 }
 
 fmt_codec_base* SQ_LibraryHandler::codecForFile(const QString &file)
@@ -378,7 +378,7 @@ fmt_codec_base* SQ_LibraryHandler::codecForFile(const QString &file)
 	if(lib && lib->codec)
 		return lib->codec;
 
-	return 0;
+	return NULL;
 }
 
 fmt_codec_base* SQ_LibraryHandler::codecByName(const QString &name)
@@ -388,7 +388,7 @@ fmt_codec_base* SQ_LibraryHandler::codecByName(const QString &name)
 	if(lib && lib->codec)
 		return lib->codec;
 
-	return 0;
+	return NULL;
 }
 
 fmt_codec_base *SQ_LibraryHandler::latestCodec()
@@ -396,7 +396,7 @@ fmt_codec_base *SQ_LibraryHandler::latestCodec()
 	if(latest && latest->codec)
 		return latest->codec;
 
-	return 0;
+	return NULL;
 }
 
 SQ_LibraryHandler* SQ_LibraryHandler::instance()

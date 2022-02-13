@@ -15,8 +15,7 @@ void SQ_Options::init()
     
 	checkMinimize->setChecked(SQ_Config::instance()->readBoolEntry("Main", "minimize to tray", true));
 	checkSync->setChecked(SQ_Config::instance()->readBoolEntry("Main", "sync", true));
-	checkCheck->setChecked(SQ_Config::instance()->readBoolEntry("Main", "check", true));
-    
+
 	checkMonitor->setChecked(SQ_Config::instance()->readBoolEntry("Libraries", "monitor", true));
 	checkFAMMessage->setChecked(SQ_Config::instance()->readBoolEntry("Libraries", "show dialog", true));
    
@@ -168,7 +167,6 @@ int SQ_Options::start()
 		SQ_Config::instance()->setGroup("Main");
 		SQ_Config::instance()->writeEntry("minimize to tray", checkMinimize->isChecked());
 		SQ_Config::instance()->writeEntry("sync", checkSync->isChecked());
-		SQ_Config::instance()->writeEntry("check", checkCheck->isChecked());
 
 		SQ_Config::instance()->setGroup("Thumbnails");
 		SQ_Config::instance()->writeEntry("margin", spinMargin->value());

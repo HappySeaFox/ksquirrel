@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>335</height>
+            <height>337</height>
         </rect>
     </property>
     <property name="caption">
@@ -147,6 +147,10 @@
         <slot>accept()</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>listCache</tabstop>
+    <tabstop>pushButton1</tabstop>
+</tabstops>
 <includes>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
     <include location="local" impldecl="in implementation">sq_viewcache.ui.h</include>

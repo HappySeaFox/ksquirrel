@@ -9,11 +9,13 @@
 
 void SQ_ImageRotate::init()
 {
+    pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_rotate.png")));
+    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
     pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
-    pushRotateL->setPixmap(locate("appdata", "images/rotate/rotateL.png"));
-    pushRotateR->setPixmap(locate("appdata", "images/rotate/rotateR.png"));
-    pushFlipV->setPixmap(locate("appdata", "images/rotate/flipV.png"));
-    pushFlipH->setPixmap(locate("appdata", "images/rotate/flipH.png"));
+    pushRotateL->setPixmap(locate("appdata", "images/imageedit/rotateL.png"));
+    pushRotateR->setPixmap(locate("appdata", "images/imageedit/rotateR.png"));
+    pushFlipV->setPixmap(locate("appdata", "images/imageedit/flipV.png"));
+    pushFlipH->setPixmap(locate("appdata", "images/imageedit/flipH.png"));
     pushReset->setPixmap(locate("appdata", "images/imageedit/reset_value.png"));
 
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "rotate_putto", QString::null);

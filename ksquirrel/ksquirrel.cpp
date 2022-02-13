@@ -76,12 +76,12 @@
 #include "sq_pixmapcache.h"
 #include "sq_diroperator.h"
 #include "sq_archivehandler.h"
-#include "sq_updateksquirrelthread.h"
 #include "sq_dir.h"
 #include "sq_thumbnailjob.h"
 #include "sq_navigatordropmenu.h"
 #include "sq_errorstring.h"
 #include "sq_thumbnailcachemaster.h"
+#include "sq_checkversion.h"
 
 #include "sq_imageeditsplash.h"
 #include "sq_converter.h"
@@ -97,7 +97,7 @@ static const int menuParam = 100000;
 KSquirrel * KSquirrel::sing = NULL;
 KIconLoader * KSquirrel::iconL = NULL;
 
-KSquirrel::KSquirrel(QWidget *parent, const char *name) : KMainWindow (parent, name)
+KSquirrel::KSquirrel(QWidget *parent, const char *name) : KMainWindow (parent, name), DCOPObject(name)
 {
 	sing = this;
 	first_time = false;
@@ -125,6 +125,7 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name) : KMainWindow (parent, n
 	sqFiltersName = NULL;
 	pCurrentURL = NULL;
 
+	fillMessages();
 	preCreate();
 
 	connect(libl, SIGNAL(finishedInit()), this, SLOT(slotContinueLoading()));
@@ -484,6 +485,7 @@ void KSquirrel::createMenu(KMenuBar *menubar)
 	pARescan->plug(pop_edit);
 	pAExtTools->plug(pop_edit);
 	pAFilters->plug(pop_edit);
+	pACheck->plug(pop_edit);
 	pAConfigure->plug(pop_edit);
 }
 
@@ -578,19 +580,13 @@ void KSquirrel::createActions()
 	pAThumb2->setExclusiveGroup(thumbs_size__);
 	pAThumb3->setExclusiveGroup(thumbs_size__);
 
+	pACheck = new KAction(i18n("Check for newer version"), "network", CTRL+Key_Slash, this, SLOT(slotCheckVersion()), actionCollection(), "SQ Check Version");
+
 	switch(thumbSize->value())
 	{
-		case SQ_ThumbnailSize::Small:
-			pAThumb0->setChecked(true);
-		break;
-
-		case SQ_ThumbnailSize::Medium:
-			pAThumb1->setChecked(true);
-		break;
-
-		case SQ_ThumbnailSize::Large:
-			pAThumb2->setChecked(true);
-		break;
+		case SQ_ThumbnailSize::Small: 		pAThumb0->setChecked(true); 	break;
+		case SQ_ThumbnailSize::Medium: 	pAThumb1->setChecked(true); 	break;
+		case SQ_ThumbnailSize::Large: 		pAThumb2->setChecked(true);	break;
 
 		default:
 			pAThumb3->setChecked(true);
@@ -602,10 +598,11 @@ void KSquirrel::createActions()
 	pAThumbs->insert(pAThumb3);
 	pAThumbs->setDelayed(false);
 
-	pARaiseListView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
-	pARaiseIconView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
-	pARaiseDetailView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
-	pARaiseThumbView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
+	QString raise_some_widget_from_stack = QString::fromLatin1("raise_some_widget_from_stack");
+	pARaiseListView->setExclusiveGroup(raise_some_widget_from_stack);
+	pARaiseIconView->setExclusiveGroup(raise_some_widget_from_stack);
+	pARaiseDetailView->setExclusiveGroup(raise_some_widget_from_stack);
+	pARaiseThumbView->setExclusiveGroup(raise_some_widget_from_stack);
 }
 
 void KSquirrel::slotGotoTray()
@@ -1040,13 +1037,6 @@ void KSquirrel::slotContinueLoading2()
 				SQ_GLWidget::window()->slotStartDecoding(SQ_HLOptions::instance()->path, true);
 		}
 	}
-
-	updater = new SQ_UpdateKsquirrelThread;
-
-	connect(updater, SIGNAL(needUpdate(const QString &)), this, SLOT(slotNeedUpdate(const QString &)));
-
-	if(kconf->readBoolEntry("Main", "check", true))
-		updater->start();
 }
 
 void KSquirrel::slotSetTreeShown(bool shown)
@@ -1113,18 +1103,6 @@ void KSquirrel::slotOpenFile()
 void KSquirrel::slotOpenFileAndSet()
 {
 	openFile(true);
-}
-
-void KSquirrel::slotNeedUpdate(const QString &ver)
-{
-	(new KAction(i18n("New version is available"), "help", KShortcut(), this, SLOT(slotShowUpdate()), actionCollection(), "SQ show update"))->plug(tools);
-
-	new_version = ver;
-}
-
-void KSquirrel::slotShowUpdate()
-{
-	QWhatsThis::display(i18n("<pre>Current version is <b>%1</b>\nNew version <b>%2</b> is available at <font color=\"#FF0000\">http://ksquirrel.sourceforge.net/download</font> </pre>").arg(QString(SQ_VERSION)).arg(new_version));
 }
 
 void KSquirrel::slotAnimatedClicked()
@@ -1217,7 +1195,108 @@ void KSquirrel::slotTCMaster()
 	m->exec();
 }
 
-QLabel*	KSquirrel::sbarWidget(const QString &name)
+QLabel* KSquirrel::sbarWidget(const QString &name)
 {
 	return sbarwidgets[name];
+}
+
+bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
+{
+	if(fun == "control(QString)")
+	{
+		QDataStream args(data, IO_ReadOnly);
+
+		QString arg1;
+
+		args >> arg1;
+
+		control(arg1);
+
+		replyType = "void";
+
+		return true;
+	}
+
+	return DCOPObject::process(fun, data, replyType, replyData);
+}
+
+QCStringList KSquirrel::functions()
+{
+	QCStringList result = DCOPObject::functions();
+
+	result << "void control(QString)";
+
+	return result;
+}
+
+void KSquirrel::control(const QString &str)
+{
+	if(messages.contains(str))
+	{
+	    int id = messages[str];
+
+	    QKeyEvent *ev = new QKeyEvent(QEvent::KeyPress, id, id, Qt::NoButton);
+
+	    qApp->postEvent(SQ_GLWidget::window(), ev);
+	}
+	else
+	{
+		qDebug("\nList of available DCOP parameters:");
+		qDebug("*****************************");
+
+		QValueList<QString> keys = messages.keys();
+
+		QValueList<QString>::iterator BEGIN = keys.begin();
+		QValueList<QString>::iterator   END = keys.end();
+
+		for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
+		{
+		    qDebug("%s", (*it).ascii());
+		}
+
+		qDebug("******************************\n");
+	}
+}
+
+void KSquirrel::fillMessages()
+{
+	messages["image_next"]					= Qt::Key_PageDown;
+	messages["image_previous"]				= Qt::Key_PageUp;
+	messages["image_first"]						= Qt::Key_Home;
+	messages["image_last"]						= Qt::Key_End;
+	messages["image_reset"]					= Qt::Key_R;
+	messages["image_information"]				= Qt::Key_I;
+	messages["image_delete"]					= Qt::Key_Delete;
+
+	messages["image_animation_toggle"]		= Qt::Key_A;
+
+	messages["image_page_first"]				= Qt::Key_F1;
+	messages["image_page_last"]				= Qt::Key_F4;
+	messages["image_page_next"]				= Qt::Key_F3;
+	messages["image_page_previous"]			= Qt::Key_F2;
+
+	messages["image_window_fullscreen"]		= Qt::Key_F;
+	messages["image_window_quickbrowser"]	= Qt::Key_Q;
+	messages["image_window_close"]			= Qt::Key_X;
+	messages["image_window_help"]			= Qt::Key_Slash;
+
+	messages["zoom_plus"]						= Qt::Key_Plus;
+	messages["zoom_minus"]					= Qt::Key_Minus;
+	messages["zoom_1"]						= Qt::Key_1;
+	messages["zoom_2"]						= Qt::Key_2;
+	messages["zoom_3"]						= Qt::Key_3;
+	messages["zoom_4"]						= Qt::Key_4;
+	messages["zoom_5"]						= Qt::Key_5;
+	messages["zoom_6"]						= Qt::Key_6;
+	messages["zoom_7"]						= Qt::Key_7;
+	messages["zoom_8"]						= Qt::Key_8;
+	messages["zoom_9"]						= Qt::Key_9;
+	messages["zoom_10"]						= Qt::Key_0;
+}
+
+void KSquirrel::slotCheckVersion()
+{
+	SQ_CheckVersion *ch = new SQ_CheckVersion(this);
+
+	ch->exec();
 }

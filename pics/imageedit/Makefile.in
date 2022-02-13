@@ -288,7 +288,7 @@ xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 SUBDIRS = squirrels 
-EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png 
+EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png flipH.png flipV.png rotateL.png rotateR.png 
 #>- all: all-recursive
 #>+ 1
 all: docs-am  all-recursive
@@ -733,6 +733,30 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/resize_toolbutton2.png $(kde_datadir)/ksquirrel/images/imageedit/resize_toolbutton2.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/resize_toolbutton2.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/resize_toolbutton2.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/
+#>- 	$(INSTALL_DATA) $(srcdir)/flipH.png $(kde_datadir)/ksquirrel/images/imageedit/flipH.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/flipH.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/flipH.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/
+#>- 	$(INSTALL_DATA) $(srcdir)/flipV.png $(kde_datadir)/ksquirrel/images/imageedit/flipV.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/flipV.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/flipV.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/
+#>- 	$(INSTALL_DATA) $(srcdir)/rotateL.png $(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/rotateL.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
+#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
+#>+ 1
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/
+#>- 	$(INSTALL_DATA) $(srcdir)/rotateR.png $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
+#>+ 1
+	$(INSTALL_DATA) $(srcdir)/rotateR.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
 
 uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/bcg.png
@@ -792,6 +816,18 @@ uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/resize_toolbutton2.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/resize_toolbutton2.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/flipH.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/flipH.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/flipV.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/flipV.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/rotateL.png
+#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
+#>+ 1
+	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
 
 ####### kdevelop will overwrite this part!!! (end)############
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

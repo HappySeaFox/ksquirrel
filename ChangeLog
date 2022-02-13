@@ -1,3 +1,11 @@
+ksquirrel-0.6.0-pre5
+************************************************************
+
+ksquirrel:
+* added DCOP interface, which was removed in early 0.2.8 :) Check README for list of parameters
+* new version checker (old one removed)
+
+
 ksquirrel-0.6.0-pre4
 ************************************************************
 

@@ -10,8 +10,24 @@
 void SQ_ImageBCG::init()
 {
     pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
+    pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_colorize.png")));
+    pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
 
     QPixmap p = QPixmap::fromMimeSource(locate("appdata", "images/imageedit/reset_value.png"));
+/*
+    pushResetB->setFixedWidth(pushResetB->height());
+    pushResetC->setFixedWidth(pushResetC->height());
+    pushResetG->setFixedWidth(pushResetG->height());
+    pushResetRed->setFixedWidth(pushResetRed->height());
+    pushResetGreen->setFixedWidth(pushResetGreen->height());
+    pushResetBlue->setFixedWidth(pushResetBlue->height());
+*/
+    sQ_LabelB->setText(tr2i18n("Brightness"));
+    sQ_LabelC->setText(tr2i18n("Contrast"));
+    sQ_LabelG->setText(tr2i18n("Gamma"));
+    sQ_LabelRed->setText(tr2i18n("Red"));
+    sQ_LabelGreen->setText(tr2i18n("Green"));
+    sQ_LabelBlue->setText(tr2i18n("Blue"));
 
     pushResetB->setPixmap(p);
     pushResetC->setPixmap(p);
@@ -20,7 +36,19 @@ void SQ_ImageBCG::init()
     pushResetGreen->setPixmap(p);
     pushResetBlue->setPixmap(p);
 
-    widgetStack2->setPaletteBackgroundColor(widgetStack2->colorGroup().highlight().light(110));
+    strings.append(QString("<b>") + tr2i18n("Brightness") + ",&nbsp;" + tr2i18n("Contrast") + ",&nbsp;" + tr2i18n("Gamma") + "</b>");
+    strings.append(QString("<b>") + tr2i18n("Red") + ",&nbsp;" + tr2i18n("Green") + ",&nbsp;" + tr2i18n("Blue") + "</b>");
+
+    id = 0;
+    widgetStackParams->raiseWidget(id);
+    text->setText(strings[id]);
+
+    QPixmap tool1 = QPixmap::fromMimeSource(locate("appdata", "images/imageedit/resize_toolbutton.png"));    
+    QPixmap tool2 = QPixmap::fromMimeSource(locate("appdata", "images/imageedit/resize_toolbutton2.png"));
+    push1->setPixmap(tool1);
+    push2->setPixmap(tool2);
+
+    widgetStackParams->setPaletteBackgroundColor(widgetStackParams->colorGroup().highlight().light(110));
 
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "bcg_putto", QString::null);
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "bcg_prefix", QString::null);
@@ -50,9 +78,6 @@ void SQ_ImageBCG::init()
     pixmap->setPixmap(p);
     pixmap1->setPixmap(p);
     
-    pushBCG->setText(tr2i18n("Brightness") + ", " + tr2i18n("Contrast") + ", " + tr2i18n("Gamma"));
-    pushRGB->setText(tr2i18n("Red") + ", " + tr2i18n("Green") + ", " + tr2i18n("Blue"));
-
     done = true;
 }
 
@@ -272,4 +297,13 @@ void SQ_ImageBCG::slotReject()
 {
     if(done)
 	reject();
+}
+
+void SQ_ImageBCG::slotPush()
+{
+    if(!id)	id = 1;
+    else 	id = 0;
+
+    widgetStackParams->raiseWidget(id);
+    text->setText(strings[id]);
 }

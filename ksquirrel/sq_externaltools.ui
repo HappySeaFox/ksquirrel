@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>581</width>
-            <height>425</height>
+            <height>427</height>
         </rect>
     </property>
     <property name="caption">
@@ -426,6 +426,17 @@
         <slot>slotHelp()</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>listTools</tabstop>
+    <tabstop>pushNew</tabstop>
+    <tabstop>pushDelete</tabstop>
+    <tabstop>pushClearAll</tabstop>
+    <tabstop>pushToolUp</tabstop>
+    <tabstop>pushToolDown</tabstop>
+    <tabstop>pushHelp</tabstop>
+    <tabstop>pushOK</tabstop>
+    <tabstop>pushCancel</tabstop>
+</tabstops>
 <includes>
     <include location="local" impldecl="in implementation">sq_externaltool.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>

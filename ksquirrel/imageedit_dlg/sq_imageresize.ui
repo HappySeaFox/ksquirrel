@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>559</width>
-            <height>306</height>
+            <width>553</width>
+            <height>326</height>
         </rect>
     </property>
     <property name="caption">
@@ -130,9 +130,6 @@
                                         <horstretch>0</horstretch>
                                         <verstretch>0</verstretch>
                                     </sizepolicy>
-                                </property>
-                                <property name="text">
-                                    <string>&lt;b&gt;resize&amp;nbsp;in&amp;nbsp;pixels&lt;/b&gt;</string>
                                 </property>
                                 <property name="alignment">
                                     <set>WordBreak|AlignCenter</set>
@@ -265,7 +262,7 @@
                                         <property name="name">
                                             <cstring>unnamed</cstring>
                                         </property>
-                                        <widget class="KIntNumInput" row="0" column="0" rowspan="1" colspan="2">
+                                        <widget class="KIntNumInput" row="0" column="0">
                                             <property name="name">
                                                 <cstring>kIntPixW</cstring>
                                             </property>
@@ -273,7 +270,7 @@
                                                 <string>Width</string>
                                             </property>
                                         </widget>
-                                        <widget class="KIntNumInput" row="1" column="0" rowspan="1" colspan="2">
+                                        <widget class="KIntNumInput" row="1" column="0">
                                             <property name="name">
                                                 <cstring>kIntPixH</cstring>
                                             </property>
@@ -281,42 +278,67 @@
                                                 <string>Height</string>
                                             </property>
                                         </widget>
-                                        <widget class="QLabel" row="3" column="0">
-                                            <property name="name">
-                                                <cstring>textLabel1_2</cstring>
-                                            </property>
-                                            <property name="enabled">
-                                                <bool>true</bool>
-                                            </property>
-                                            <property name="font">
-                                                <font>
-                                                    <bold>1</bold>
-                                                </font>
-                                            </property>
-                                            <property name="text">
-                                                <string>fit within</string>
-                                            </property>
-                                        </widget>
-                                        <widget class="QComboBox" row="3" column="1">
-                                            <property name="name">
-                                                <cstring>comboFit</cstring>
-                                            </property>
-                                            <property name="sizePolicy">
-                                                <sizepolicy>
-                                                    <hsizetype>0</hsizetype>
-                                                    <vsizetype>0</vsizetype>
-                                                    <horstretch>0</horstretch>
-                                                    <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                            </property>
-                                        </widget>
-                                        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                                        <widget class="QCheckBox" row="2" column="0">
                                             <property name="name">
                                                 <cstring>checkPreserve</cstring>
                                             </property>
                                             <property name="text">
                                                 <string>Preserve aspect ratio</string>
                                             </property>
+                                        </widget>
+                                        <widget class="QGroupBox" row="3" column="0">
+                                            <property name="name">
+                                                <cstring>groupBoxApsect</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>true</bool>
+                                            </property>
+                                            <property name="frameShape">
+                                                <enum>NoFrame</enum>
+                                            </property>
+                                            <property name="title">
+                                                <string></string>
+                                            </property>
+                                            <grid>
+                                                <property name="name">
+                                                    <cstring>unnamed</cstring>
+                                                </property>
+                                                <property name="margin">
+                                                    <number>0</number>
+                                                </property>
+                                                <property name="spacing">
+                                                    <number>0</number>
+                                                </property>
+                                                <widget class="QComboBox" row="0" column="1">
+                                                    <property name="name">
+                                                        <cstring>comboFit</cstring>
+                                                    </property>
+                                                    <property name="sizePolicy">
+                                                        <sizepolicy>
+                                                            <hsizetype>0</hsizetype>
+                                                            <vsizetype>0</vsizetype>
+                                                            <horstretch>0</horstretch>
+                                                            <verstretch>0</verstretch>
+                                                        </sizepolicy>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QLabel" row="0" column="0">
+                                                    <property name="name">
+                                                        <cstring>textLabel1_2</cstring>
+                                                    </property>
+                                                    <property name="enabled">
+                                                        <bool>true</bool>
+                                                    </property>
+                                                    <property name="font">
+                                                        <font>
+                                                            <bold>1</bold>
+                                                        </font>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>fit within</string>
+                                                    </property>
+                                                </widget>
+                                            </grid>
                                         </widget>
                                     </grid>
                                 </widget>
@@ -481,6 +503,9 @@
             <property name="alignment">
                 <set>AlignCenter</set>
             </property>
+            <property name="whatsThis" stdset="0">
+                <string>Hi! How are you ? :) I'll help you resize your images!</string>
+            </property>
         </widget>
     </grid>
 </widget>
@@ -517,21 +542,27 @@
         <receiver>SQ_ImageResize</receiver>
         <slot>slotPush()</slot>
     </connection>
+    <connection>
+        <sender>checkPreserve</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>groupBoxApsect</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>push1</tabstop>
     <tabstop>push2</tabstop>
-    <tabstop>pushOptions</tabstop>
-    <tabstop>kIntPercent</tabstop>
-    <tabstop>comboApplyTo</tabstop>
     <tabstop>kIntPixW</tabstop>
     <tabstop>kIntPixH</tabstop>
-    <tabstop>comboFit</tabstop>
     <tabstop>checkPreserve</tabstop>
+    <tabstop>comboFit</tabstop>
+    <tabstop>kIntPercent</tabstop>
+    <tabstop>comboApplyTo</tabstop>
+    <tabstop>pushOptions</tabstop>
     <tabstop>pushMethod</tabstop>
-    <tabstop>textResult</tabstop>
     <tabstop>pushResize</tabstop>
     <tabstop>pushCancel</tabstop>
+    <tabstop>textResult</tabstop>
 </tabstops>
 <includes>
     <include location="global" impldecl="in declaration">qpixmap.h</include>

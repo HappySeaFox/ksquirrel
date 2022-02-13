@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>511</width>
-            <height>381</height>
+            <height>389</height>
         </rect>
     </property>
     <property name="caption">
@@ -927,6 +927,13 @@
         <slot>slotContextMenu(QListViewItem*,const QPoint&amp;,int)</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>tabWidget3</tabstop>
+    <tabstop>lineDirectory</tabstop>
+    <tabstop>lineFile</tabstop>
+    <tabstop>listMeta</tabstop>
+    <tabstop>pushButton1</tabstop>
+</tabstops>
 <includes>
     <include location="global" impldecl="in declaration">qvaluevector.h</include>
     <include location="global" impldecl="in declaration">qvariant.h</include>

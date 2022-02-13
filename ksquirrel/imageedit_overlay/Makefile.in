@@ -593,6 +593,12 @@ uninstall-am: uninstall-info-am
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
 	uninstall-info-am
 
+
+messages:
+	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp -o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \
+	if test -n "$$LIST"; then \
+	 $(XGETTEXT) $$LIST -o $(podir)/ksquirrel.pot; \
+	fi
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
@@ -645,7 +651,7 @@ clean-metasources:
 	-rm -f  sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_resizer.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp
 
 #>+ 2
-KDE_DIST=Makefile.in Makefile.am 
+KDE_DIST=libimageedit_overlay.a Makefile.in Makefile.am 
 
 #>+ 2
 docs-am:

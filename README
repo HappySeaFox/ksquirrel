@@ -23,3 +23,59 @@ including Photoshop PSD, X cursors, animated GIF, FLI Animation, PGM/PBM/PPM, SV
 
 The detailed information, format of libraries with examples, screenshots you can find
 visiting page http://ksquirrel.sourceforge.net/
+
+-----------------------------------------------------------------------------------
+
+Icons in 'Edit selected images' tool are based on original crystal theme
+by Everaldo.
+
+Since 0.6.0-pre5 you can use DCOP interface to manipulate KSquirrel. Just run
+
+# dcop ksquirrel ksquirrel control <param>
+
+Here is a list of avaliable parameters:
+
+----------------------------------------------------------------------------
+
+Parameter                     Action                    Comments
+----------------------------------------------------------------------------
+image_animation_toggle        toggle animation          wrapper for A
+image_delete                  delete image              wrapper for Delete
+image_first                   first image               wrapper for Home
+image_last                    last image                wrapper for End
+image_next                    next image                wrapper for PageDown
+image_previous                previous image            wrapper for PageUp
+image_information             image information         wrapper for I
+image_page_first              first page                wrapper for F1
+image_page_last               last page                 wrapper for F4
+image_page_next               next page                 wrapper for F3
+image_page_previous           previous page             wrapper for F2
+image_reset                   reset                     wrapper for R
+image_window_close            close image window        wrapper for X
+image_window_fullscreen       toggle fullscreen mode    wrapper for F
+image_window_help             help                      wrapper for /
+image_window_quickbrowser     toggle quickbrowser       wrapper for Q
+zoom_1                        zoom 100%                 wrapper for 1
+zoom_2                        zoom 200%                 wrapper for 2
+zoom_3                        zoom 300%                 wrapper for 3
+zoom_4                        zoom 400%                 wrapper for 4
+zoom_5                        zoom 500%                 wrapper for 5
+zoom_6                        zoom 600%                 wrapper for 6
+zoom_7                        zoom 700%                 wrapper for 7
+zoom_8                        zoom 800%                 wrapper for 8
+zoom_9                        zoom 900%                 wrapper for 9
+zoom_10                       zoom 1000%                wrapper for 0
+zoom_minus                    zoom minus                wrapper for -
+zoom_plus                     zoom plus                 wrapper for +
+
+----------------------------------------------------------------------------
+
+Examples
+--------
+
+* let's zoom currently loaded image:
+[me@localhost /]$ dcop ksquirrel ksquirrel control zoom_plus
+
+* let's see supported paramertes:
+[me@localhost /]$ dcop ksquirrel ksquirrel control params
+

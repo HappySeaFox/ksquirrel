@@ -103,7 +103,6 @@ monitor=true
 show dialog=false
 
 [Main]
-check=true
 first_time=true
 minimize to tray=false
 sync=false

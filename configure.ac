@@ -5,7 +5,7 @@ AC_GNU_SOURCE
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre4)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre5)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH

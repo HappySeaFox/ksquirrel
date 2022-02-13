@@ -187,11 +187,11 @@ void SQ_WidgetStack::slotShowHidden(bool)
 
 void SQ_WidgetStack::setNameFilter(const QString &f)
 {
-	if(pDirOperatorList) pDirOperatorList->setNameFilter(f);
+ if(pDirOperatorList) pDirOperatorList->setNameFilter(f);
 	if(pDirOperatorIcon) pDirOperatorIcon->setNameFilter(f);
 	if(pDirOperatorDetail) pDirOperatorDetail->setNameFilter(f);
 	if(pDirOperatorThumb) pDirOperatorThumb->setNameFilter(f);
-	if(SQ_GLWidget::window()) SQ_QuickBrowser::quickOperator()->setNameFilter(f);
+ if(SQ_GLWidget::window()) SQ_QuickBrowser::quickOperator()->setNameFilter(f);
 
 	if(pDirOperatorList) pDirOperatorList->actionCollection()->action("reload")->activate();
 	if(pDirOperatorIcon) pDirOperatorIcon->actionCollection()->action("reload")->activate();

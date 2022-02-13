@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>382</width>
-            <height>438</height>
+            <height>440</height>
         </rect>
     </property>
     <property name="caption">
@@ -281,6 +281,14 @@
         <slot>slotCurrentLibraryChanged(QListViewItem*)</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>tableLib</tabstop>
+    <tabstop>pushOptions</tabstop>
+    <tabstop>pushWriteOptions</tabstop>
+    <tabstop>textResult</tabstop>
+    <tabstop>pushConvert</tabstop>
+    <tabstop>pushCancel</tabstop>
+</tabstops>
 <includes>
     <include location="local" impldecl="in declaration">fmt_types.h</include>
     <include location="local" impldecl="in declaration">fmt_defs.h</include>

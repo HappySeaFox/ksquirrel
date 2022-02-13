@@ -1,7 +1,7 @@
 /***************************************************************************
-                          sq_updateksquirrelthread.h  -  description
+                          sq_label.h  -  description
                              -------------------
-    begin                : ??? ??? 26 2005
+    begin                : June 10 2005
     copyright            : (C) 2005 by Baryshev Dmitry
     email                : ksquirrel@tut.by
  ***************************************************************************/
@@ -15,37 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_UPDATEKSQUIRRELTHREAD_H
-#define SQ_UPDATEKSQUIRRELTHREAD_H
+#include <qwidget.h>
 
-#include <qthread.h>
-#include <qobject.h>
-
-class QNetworkOperation;
-
-/**
-  *@author Baryshev Dmitry
-  */
-
-class SQ_UpdateKsquirrelThread : public QObject, public QThread
+class SQ_Label : public QWidget
 {
-	Q_OBJECT
+	public:
+		SQ_Label(QWidget *parent = 0, const char *name = 0);
+		~SQ_Label();
 
-	public: 
-		SQ_UpdateKsquirrelThread();
-		~SQ_UpdateKsquirrelThread();
+		void setText(const QString &ntext);
 
 	protected:
-		virtual void run();
-
-	private slots:
-		void slotFinished(QNetworkOperation *netop);
-
-	signals:
-		void needUpdate(const QString &ver);
+		void paintEvent(QPaintEvent *);
 
 	private:
-		QString file;
+		QString text;
 };
-
-#endif

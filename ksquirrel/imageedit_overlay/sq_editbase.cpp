@@ -58,7 +58,7 @@ void SQ_EditBase::slotStartEdit()
 	for(;i;i = items->next())
 	{
 		if(i->isFile())
-			files.append(i->url().path());
+		    files.append(i->url().path());
 	}
 
 	if(!files.count())
