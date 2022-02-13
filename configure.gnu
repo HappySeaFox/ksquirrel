@@ -1,6 +1,6 @@
 #!/bin/sh
 
-par="--without-arts --prefix=`kde-config --prefix`"
+par="--without-arts"
 
 echo "*** Doing configure $* $par ..."
 

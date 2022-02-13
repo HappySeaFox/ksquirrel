@@ -41,13 +41,11 @@
 #include "sq_imageloader.h"
 #include "sq_iconloader.h"
 #include "sq_config.h"
-
-#include "libpixops/pixops.h"
+#include "sq_utils.h"
 
 #ifdef SQ_HAVE_KEXIF
 #include <libkexif/kexifdata.h>
 #include <algorithm>
-#include "sq_utils.h"
 #endif
 
 SQ_SlideShowWidget * SQ_SlideShowWidget::m_inst = 0;
@@ -66,6 +64,7 @@ SQ_SlideShowWidget::SQ_SlideShowWidget(QWidget *parent, const char *name)
     f.setBold(true);
     message->setFont(f);
     message->setMargin(4);
+    message->setFrameShape(QFrame::NoFrame);
 
     connect(timerHide, SIGNAL(timeout()), this, SLOT(slotHide()));
 
@@ -125,6 +124,11 @@ void SQ_SlideShowWidget::beginSlideShow(int totl)
     mes_pos = SQ_Config::instance()->readBoolEntry("messages_pos", true);
     mes_name = SQ_Config::instance()->readBoolEntry("messages_name", true);
     mes_size = SQ_Config::instance()->readBoolEntry("messages_size", false);
+    tcolor.setNamedColor(SQ_Config::instance()->readEntry("message_text", "#ffffff"));
+
+    // fake transparency
+    message->setPaletteForegroundColor(tcolor);
+    message->setPaletteBackgroundColor(bgcolor);
 
     show();
     setGeometry(KGlobalSettings::desktopGeometry(KSquirrel::app()));
@@ -157,7 +161,7 @@ void SQ_SlideShowWidget::endSlideShow()
 void SQ_SlideShowWidget::loadImage(const QString &_path, int _current)
 {
     fmt_info *finfo;
-    RGBA *bits, *small;
+    RGBA *bits;
 
     // load first page
     bool b = SQ_ImageLoader::instance()->loadImage(_path, false);
@@ -178,86 +182,65 @@ void SQ_SlideShowWidget::loadImage(const QString &_path, int _current)
 
     int w = finfo->image[0].w;
     int h = finfo->image[0].h;
-    int smallw, smallh;
-    bool deleteSmall = false;
+    QImage *all = 0, *small = 0;
+
+    all = new QImage((uchar *)bits, w, h, 32, 0, 0, QImage::LittleEndian);
+    all->setAlphaBuffer(true);
 
     // scale down to fit into window
     if(w > width() || h > height())
     {
-        QSize sz(w, h);
-        sz.scale(width(), height(), QSize::ScaleMin);
+        small = new QImage();
+        *small = SQ_Utils::scale(*all, width(), height(), SQ_Utils::SMOOTH_FAST, QImage::ScaleMin);
 
-        smallw = sz.width();
-        smallh = sz.height();
+        delete all;
+        all = 0;
 
-        small = new RGBA[smallw * smallh];
-
-        if(!small)
+        if(small->isNull())
         {
             SQ_ImageLoader::instance()->cleanup();
             return;
         }
-
-//        printf("scale %d %d - %d %d\n", w, h, smallw, smallh);
-
-        // fast MMX scaling...
-        pixops_scale((unsigned char *)small, 0, 0, smallw, smallh, smallw * 4, 4, true,
-                    (unsigned char *)bits, w, h, w * 4, 4, true,
-                    (double)smallw / w, (double)smallh / h,
-                    PIXOPS_INTERP_BILINEAR);
-
-        deleteSmall = true;
     }
     else
-    {
-        small = bits;
-        smallw = w;
-        smallh = h;
-    }
+        small = all;
 
-    const int wh = smallw * smallh;
+    const int wh =  small->width() * small->height();
     unsigned char t;
+    RGBA *sk = reinterpret_cast<RGBA *>(small->bits());
 
     // swap R and B components - QPixmap need it
     for(int i = 0;i < wh;i++)
     {
-        t = (small+i)->r;
-        (small+i)->r = (small+i)->b;
-        (small+i)->b = t;
+        t = (sk+i)->r;
+        (sk+i)->r = (sk+i)->b;
+        (sk+i)->b = t;
     }
 
 #ifdef SQ_HAVE_KEXIF
-    // copy original image
-    QImage img((uchar *)small, smallw, smallh, 32, 0, 0, QImage::LittleEndian);
-
     KExifData data;
     data.readFromFile(_path);
     int O = data.getImageOrientation();
 
-    // rotate image
-    SQ_Utils::exifRotate(QString::null, img, O);
-
-    if(O == KExifData::ROT_90_HFLIP || O == KExifData::ROT_90
-    || O == KExifData::ROT_90_VFLIP || O == KExifData::ROT_270)
+    if(O != KExifData::UNSPECIFIED && O != KExifData::NORMAL)
     {
-        std::swap(smallw, smallh);
-    }
+        // copy original image
+        QImage img = *small;
 
-    // transfer back
-    memcpy(small, img.bits(), wh*4);
+        // rotate image
+        SQ_Utils::exifRotate(QString::null, img, O);
+
+        // transfer back
+        *small = img;
+    }
 #endif
 
-    QImage image((unsigned char *)small, smallw, smallh, 32, 0, 0, QImage::LittleEndian);
-
-    image.setAlphaBuffer(true);
-
-    pixmap.convertFromImage(image);
+    pixmap.convertFromImage(*small);
 
     // finally clean all memory buffers
     SQ_ImageLoader::instance()->cleanup();
 
-    if(deleteSmall)
-        delete [] small;
+    delete small;
 
     // show loaded image
     update();

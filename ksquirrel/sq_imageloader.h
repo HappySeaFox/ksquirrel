@@ -25,6 +25,8 @@
 struct fmt_info;
 struct RGBA;
 
+struct SQ_LIBRARY;
+
 /*
  *  SQ_ImageLoader namespace represents functions to decode images. Uses
  *  SQ_LibraryHandler. Used by SQ_EditBase (preview image) and SQ_ThumbnailLoadJob
@@ -48,7 +50,7 @@ class SQ_ImageLoader : public QObject
         /*
          *  Try to determine image dimensions.
          */
-        bool tasteImage(const QString &path, int *w, int *h);
+        bool tasteImage(const QString &path, int *w, int *h, SQ_LIBRARY *_lib = 0);
 
         /*
          *  Remove any previously saved data.

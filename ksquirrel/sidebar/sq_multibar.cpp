@@ -102,7 +102,6 @@ void SQ_MultiBar::raiseWidget(int id)
 
         m_selected = id;
 
-//        printf("m_width %d\n", m_width);
         setMinimumSize(QSize(0, 0));
         setMaximumSize(QSize(10000, 10000));
         stack->raiseWidget(id);
@@ -111,7 +110,7 @@ void SQ_MultiBar::raiseWidget(int id)
 
         SQ_PreviewWidget::instance()->ignore(false);
         SQ_PreviewWidget::instance()->loadPending();
-}
+    }
     else
     {
         SQ_PreviewWidget::instance()->ignore(true);

@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <qgl.h>
+#include <qdir.h>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -79,7 +80,11 @@ int main(int argc, char *argv[])
     //create high level options
     high = new SQ_HLOptions;
 
-    high->dir = KURL::fromPathOrURL(sq_args->getOption("directory"));
+    QString d = sq_args->getOption("directory");
+    if(!d.isEmpty() && QDir::isRelativePath(d))
+        d.prepend(QDir::currentDirPath()+QDir::separator());
+
+    high->dir = KURL::fromPathOrURL(d);
     high->showLibsAndExit = sq_args->isSet("l");
 
     if(high->dir.isEmpty())

@@ -155,6 +155,7 @@ KDE_USE_NMCHECK_FALSE = @KDE_USE_NMCHECK_FALSE@
 KDE_USE_NMCHECK_TRUE = @KDE_USE_NMCHECK_TRUE@
 KDE_USE_PIE = @KDE_USE_PIE@
 KDE_XSL_STYLESHEET = @KDE_XSL_STYLESHEET@
+KSQUIRREL_ASM_DEFS = @KSQUIRREL_ASM_DEFS@
 LDFLAGS = @LDFLAGS@
 LDFLAGS_AS_NEEDED = @LDFLAGS_AS_NEEDED@
 LDFLAGS_NEW_DTAGS = @LDFLAGS_NEW_DTAGS@
@@ -377,14 +378,14 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign '; \
  (  \
 	      cd $(srcdir) && $(AUTOMAKE) --foreign  \
-	 ) || exit 1; echo ' cd $(top_srcdir) && perl admin/am_edit '; cd $(top_srcdir) && perl admin/am_edit && exit 0;  \
+	 ) || exit 1; echo ' cd $(top_srcdir) && perl admin/am_edit -padmin '; cd $(top_srcdir) && perl admin/am_edit -padmin && exit 0;  \
 	      exit 1;; \
 	  esac; \
 	done; \
 	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  Makefile'; \
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit -padmin Makefile.in
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -841,8 +842,30 @@ dist-hook:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
+clean-bcheck: 
+	rm -f *.bchecktest.cc *.bchecktest.cc.class a.out
+
+bcheck: bcheck-recursive
+
+bcheck-am:
+	@for i in ; do \
+	    if test $(srcdir)/$$i -nt $$i.bchecktest.cc; then \
+	        echo "int main() {return 0;}" > $$i.bchecktest.cc ; \
+	        echo "#include \"$$i\"" >> $$i.bchecktest.cc ; \
+	        echo "$$i"; \
+	        if ! $(CXX) $(DEFS) -I. -I$(srcdir) -I$(top_builddir) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS)  --dump-class-hierarchy -c $$i.bchecktest.cc; then \
+	            rm -f $$i.bchecktest.cc; exit 1; \
+	        fi ; \
+	        echo "" >> $$i.bchecktest.cc.class; \
+	        perl $(top_srcdir)/admin/bcheck.pl $$i.bchecktest.cc.class || { rm -f $$i.bchecktest.cc; exit 1; }; \
+	        rm -f a.out; \
+	    fi ; \
+	done
+
+
+
 #>+ 2
-KDE_DIST=stamp-h.in subdirs Makefile.in configure.files config.h.in reconfigure configure.in configure.gnu aclocal.m4 Doxyfile ksquirrel.kdevses Makefile.dist configure.in.in configure Makefile.am acinclude.m4 start LICENSE 
+KDE_DIST=stamp-h.in description-pak subdirs Makefile.in configure.files config.h.in reconfigure configure.in configure.gnu aclocal.m4 Makefile.dist ksquirrel.kdevses Doxyfile configure.in.in configure Makefile.am acinclude.m4 LICENSE start 
 
 #>+ 2
 docs-am:
@@ -852,7 +875,7 @@ force-reedit:
 	 \
 	      cd $(srcdir) && $(AUTOMAKE) --foreign  \
 	
-	cd $(top_srcdir) && perl admin/am_edit Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit -padmin Makefile.in
 
 
 #>+ 21

@@ -38,6 +38,8 @@ class SQ_ImageBasket : public KDirOperator
 
         KFileItemList realItems() const;
 
+        void saveConfig();
+
         static SQ_ImageBasket* instance() { return m_inst; }
 
         private slots:

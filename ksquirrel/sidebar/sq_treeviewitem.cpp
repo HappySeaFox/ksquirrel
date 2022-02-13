@@ -24,11 +24,13 @@
 #include "sq_treeviewitem.h"
 
 SQ_TreeViewItem::SQ_TreeViewItem(KFileTreeViewItem *parentItem, KFileItem *fileItem, KFileTreeBranch *parentBranch)
-    : KFileTreeViewItem(parentItem, fileItem, parentBranch), m_checked(false), count_files(0), count_dirs(0)
+    : KFileTreeViewItem(parentItem, fileItem, parentBranch),
+        m_checked(false), count_files(0), count_dirs(0), use_c1(false), use_c2(false)
 {}
 
 SQ_TreeViewItem::SQ_TreeViewItem(KFileTreeView *parent, KFileItem *fileItem, KFileTreeBranch *parentBranch)
-    : KFileTreeViewItem(parent, fileItem, parentBranch), m_checked(false), count_files(0), count_dirs(0)
+    : KFileTreeViewItem(parent, fileItem, parentBranch),
+        m_checked(false), count_files(0), count_dirs(0), use_c1(false), use_c2(false)
 {}
 
 SQ_TreeViewItem::~SQ_TreeViewItem()
@@ -81,11 +83,16 @@ void SQ_TreeViewItem::paintCell(QPainter *p, const QColorGroup &cg, int column, 
     }
 }
 
-void SQ_TreeViewItem::setCount(int c1, int c2, bool use_c1, bool use_c2)
+void SQ_TreeViewItem::setCount(int c1, int c2)
 {
     count_files = c1 < 0 ? 0 : c1;
     count_dirs = c2 < 0 ? 0 : c2;
 
+    setText(0, fileItem()->name());
+}
+
+void SQ_TreeViewItem::setText(int column, const QString &text)
+{
     QString s;
 
     if(use_c1 && use_c2) // files + dirs: show these two values anyway
@@ -95,5 +102,6 @@ void SQ_TreeViewItem::setCount(int c1, int c2, bool use_c1, bool use_c2)
     else if(use_c2 && count_dirs) // dirs, dir count is > 0
         s = QString::fromLatin1(" [%1]").arg(count_dirs);
 
-    setText(0, fileItem()->name() + s);
+    KFileTreeViewItem::setText(column, text + s);
 }
+

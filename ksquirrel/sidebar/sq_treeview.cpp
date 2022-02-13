@@ -22,9 +22,13 @@
 #include <qdir.h>
 #include <qheader.h>
 #include <qtimer.h>
+#include <qcursor.h>
 
 #include <klocale.h>
+#include <kurldrag.h>
+#include <kurl.h>
 
+#include "ksquirrel.h"
 #include "sq_iconloader.h"
 #include "sq_widgetstack.h"
 #include "sq_filethumbview.h"
@@ -32,6 +36,8 @@
 #include "sq_treeview.h"
 #include "sq_treeviewitem.h"
 #include "sq_threaddirlister.h"
+#include "sq_navigatordropmenu.h"
+#include "sq_treeviewmenu.h"
 
 SQ_TreeView * SQ_TreeView::m_instance = 0;
 
@@ -122,6 +128,16 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
     // load url, if needed
     if(sync_type != 1)
         emitNewURL(SQ_WidgetStack::instance()->url());
+
+    setAcceptDrops(true);
+
+    connect(this, SIGNAL(dropped(QDropEvent *, QListViewItem *, QListViewItem *)),
+            this, SLOT(slotDropped(QDropEvent *, QListViewItem *, QListViewItem *)));
+
+    connect(this, SIGNAL(contextMenu(KListView *, QListViewItem *, const QPoint &)),
+            this, SLOT(slotContextMenu(KListView *, QListViewItem *, const QPoint &)));
+
+    menu = new SQ_TreeViewMenu(this);
 }
 
 SQ_TreeView::~SQ_TreeView()
@@ -138,6 +154,9 @@ void SQ_TreeView::setRecursion(int b)
     QListViewItemIterator it(this);
     SQ_TreeViewItem *tvi;
 
+    // ignore root item
+    ++it;
+
     if(m_recurs == No && b)
     {
         lister->lock();
@@ -146,7 +165,12 @@ void SQ_TreeView::setRecursion(int b)
             tvi = static_cast<SQ_TreeViewItem *>(it.current());
 
             if(tvi)
+            {
+                tvi->setParams((m_recurs == Files || m_recurs == FilesDirs),
+                               (m_recurs == Dirs || m_recurs == FilesDirs));
+
                 lister->appendURL(tvi->url());
+            }
 
             ++it;
         }
@@ -166,9 +190,11 @@ void SQ_TreeView::setRecursion(int b)
 
             // reset item names
             if(tvi)
-                tvi->setCount(tvi->files(), tvi->dirs(),
-                        (m_recurs == Files || m_recurs == FilesDirs),
-                        (m_recurs == Dirs || m_recurs == FilesDirs));
+            {
+                tvi->setParams((m_recurs == Files || m_recurs == FilesDirs),
+                               (m_recurs == Dirs || m_recurs == FilesDirs));
+                tvi->setCount(tvi->files(), tvi->dirs());
+            }
 
             ++it;
         }
@@ -298,6 +324,8 @@ void SQ_TreeView::slotOpened(KFileTreeViewItem *item)
 {
     if(!item) return;
 
+//    printf("OPENED %s\n", item->path().ascii());
+
     // continue searhing...
     doSearch();
 }
@@ -384,17 +412,21 @@ void SQ_TreeView::slotDelayedScan()
 
 void SQ_TreeView::customEvent(QCustomEvent *e)
 {
-    if(e->type() != SQ_ItemsEventId)
+    if(!e || e->type() != SQ_ItemsEventId)
         return;
 
     SQ_ItemsEvent *ie = static_cast<SQ_ItemsEvent *>(e);
 
     SQ_TreeViewItem *tvi = static_cast<SQ_TreeViewItem *>(root->findTVIByURL(ie->url()));
 
+//    printf("*** FOUND %s %d %d\n", ie->url().path().ascii(), ie->files(), ie->dirs());
+
     if(tvi)
-        tvi->setCount(ie->files(), ie->dirs(),
-                (m_recurs == Files || m_recurs == FilesDirs),
-                (m_recurs == Dirs || m_recurs == FilesDirs));
+    {
+        tvi->setParams((m_recurs == Files || m_recurs == FilesDirs),
+                       (m_recurs == Dirs || m_recurs == FilesDirs));
+        tvi->setCount(ie->files(), ie->dirs());
+    }
 }
 
 void SQ_TreeView::slotAnimation()
@@ -534,6 +566,32 @@ void SQ_TreeView::toggle(SQ_TreeViewItem *item, bool togg, bool set)
         emit urlAdded(item->url());
     else
         emit urlRemoved(item->url());
+}
+
+void SQ_TreeView::slotDropped(QDropEvent *e, QListViewItem *parent, QListViewItem *item)
+{
+    if(!item) item = parent;
+
+    KFileTreeViewItem *cur = static_cast<KFileTreeViewItem *>(item);
+
+    if(!cur) return;
+
+    KURL::List list;
+    KURLDrag::decode(e, list);
+
+    SQ_NavigatorDropMenu::instance()->setupFiles(list, cur->url());
+    SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
+}
+
+void SQ_TreeView::slotContextMenu(KListView *, QListViewItem *item, const QPoint &point)
+{
+    if(item)
+    {
+        KFileTreeViewItem *kfi = static_cast<KFileTreeViewItem*>(item);
+        menu->updateDirActions(kfi->isDir());
+        menu->setURL(kfi->url());
+        menu->exec(point);
+    }
 }
 
 #include "sq_treeview.moc"

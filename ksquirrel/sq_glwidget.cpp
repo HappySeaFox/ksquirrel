@@ -130,6 +130,7 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
     zoomFactor = 1.0f;
     glselection = -1;
     menu = new QPopupMenu(this);
+    lastCopy = KURL::fromPathOrURL("/");
 
     tmp = new KTempFile;
     tmp->setAutoDelete(true);
@@ -2671,6 +2672,11 @@ void SQ_GLWidget::initAccelsAndMenu()
     menuFile->insertItem(QPixmap(locate("appdata", "images/menu/first16.png")), i18n("First") + "\tHome", SQ_ADD_KACTION(Qt::Key_Home), SLOT(activate()));
     menuFile->insertItem(QPixmap(locate("appdata", "images/menu/last16.png")), i18n("Last") + "\tEnd", SQ_ADD_KACTION(Qt::Key_End), SLOT(activate()));
     menuFile->insertSeparator();
+    menuFile->insertItem(i18n("Copy to...") + "\tF5", SQ_ADD_KACTION(Qt::Key_F5), SLOT(activate()));
+    menuFile->insertItem(i18n("Move to...") + "\tF6", SQ_ADD_KACTION(Qt::Key_F7), SLOT(activate()));
+    menuFile->insertItem(i18n("Copy to last folder") + "\tF7", SQ_ADD_KACTION(Qt::Key_F6), SLOT(activate()));
+    menuFile->insertItem(i18n("Move to last folder") + "\tF8", SQ_ADD_KACTION(Qt::Key_F8), SLOT(activate()));
+    menuFile->insertSeparator();
     menuFile->insertItem(i18n("Delete") + "\tDelete", SQ_ADD_KACTION(Qt::Key_Delete), SLOT(activate()));
 
     menuRotate->insertItem(QPixmap(locate("appdata", "images/menu/rotateLeft16.png")), i18n("Rotate left") + "\tCtrl+Left", SQ_ADD_KACTION(Qt::Key_Left+CTRL), SLOT(activate()));
@@ -2808,6 +2814,37 @@ void SQ_GLWidget::slotAccelActivated()
     else if(!ks.compare(Qt::Key_F2))         prevImage();
     else if(!ks.compare(Qt::Key_F3))         nextImage();
     else if(!ks.compare(Qt::Key_F4))         jumpToImage(true);
+    else if(!ks.compare(Qt::Key_F5) || !ks.compare(Qt::Key_F6))
+    {
+        // select a directory
+        KURL url = KFileDialog::getExistingURL(lastCopy.prettyURL(), this);
+
+        if(url.isEmpty())
+            return;
+
+        lastCopy = url;
+        KIO::Job *job;
+
+        if(!ks.compare(Qt::Key_F5))
+            job = KIO::copy(m_original, url);
+        else
+            job = KIO::move(m_original, url);
+
+        job->setWindow(this);
+        connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotCopyJobResult(KIO::Job *)));
+    }
+    else if(!ks.compare(Qt::Key_F7) || !ks.compare(Qt::Key_F8))
+    {
+        KIO::Job *job;
+
+        if(!ks.compare(Qt::Key_F6))
+            job = KIO::copy(m_original, lastCopy);
+        else
+            job = KIO::move(m_original, lastCopy);
+
+        job->setWindow(this);
+        connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotCopyJobResult(KIO::Job *)));
+    }
     else if(!ks.compare(Qt::Key_Slash))      slotShowHelp();
     else if(!ks.compare(Qt::Key_B))          toggleDrawingBackground();
     else if(!ks.compare(Qt::Key_K))          toogleTickmarks();
@@ -2853,6 +2890,12 @@ void SQ_GLWidget::slotAccelActivated()
             matrix_zoom(val);
         }
     }
+}
+
+void SQ_GLWidget::slotCopyJobResult(KIO::Job *job)
+{
+    if(job->error())
+        job->showErrorDialog(this);
 }
 
 void SQ_GLWidget::exifRotate(bool U)

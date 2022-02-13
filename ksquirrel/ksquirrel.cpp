@@ -447,8 +447,6 @@ void KSquirrel::slotSetFilter(int id)
 // Create all widgets (toolbar, menubar, image window ...)
 void KSquirrel::createWidgets(int createFirst)
 {
-    kconf->setGroup("Interface");
-
     // check if location toolbar should be separated
     m_urlbox = kconf->readBoolEntry("has_url", false);
     builtin = kconf->readBoolEntry("builtin", false);
@@ -490,7 +488,7 @@ void KSquirrel::createWidgets(int createFirst)
     // create widgetstack containing views
     pWidgetStack = new SQ_WidgetStack(mainView, createFirst);
 
-    SQ_Config::instance()->setGroup("Interface");
+    kconf->setGroup("Interface");
     QValueList<int> sz = SQ_Config::instance()->readIntListEntry("splitter");
 
     if(sz.count() != 2)
@@ -958,6 +956,9 @@ void KSquirrel::applyDefaultSettings()
 
     kconf->setGroup("Fileview");
 
+    if(kconf->readBoolEntry("calculate", false))
+        pWidgetStack->diroperator()->calcTotalSize();
+
     updateDirs = (old_disable != kconf->readBoolEntry("disable_dirs", false));
 
     updateDirs &= (bool)pWidgetStack->diroperator()->numDirs();
@@ -1032,6 +1033,8 @@ void KSquirrel::saveValues()
 
     kconf->setGroup("Fileview");
     kconf->writeEntry("last visited", pWidgetStack->url().prettyURL());
+    pWidgetStack->diroperator()->saveConfig();
+    SQ_ImageBasket::instance()->saveConfig();
 
     if(kconf->readBoolEntry("history", true) && pCurrentURL)
     {
@@ -1051,10 +1054,16 @@ void KSquirrel::saveValues()
 
     kconf->setGroup("Interface");
     kconf->writeEntry("last view", pWidgetStack->diroperator()->viewType());
+    kconf->writeEntry("last page", sideBar->currentPage());
     kconf->writeEntry("pos", pos());
     kconf->writeEntry("size", size());
     kconf->writeEntry("has_url", pTLocation->isShown());
     kconf->writeEntry("builtin", builtin);
+
+    // splitter sizes are saved automatically
+    // only when all sidebar pages are closed
+    if(sideBar->currentPage() != -1)
+        saveLayout();
 
     SQ_PreviewWidget::instance()->saveValues();
 
@@ -1238,6 +1247,12 @@ void KSquirrel::continueLoading()
 
     // set position & size
     handlePositionSize();
+
+    // restore opened page in sidebar
+    int pg = kconf->readNumEntry("last page", -1);
+    QPushButton *b = 0;
+    if(pg >= 0 && (b = sideBar->multiBar()->tab(pg)))
+        b->animateClick();
 
     // don't show navigator when running with file argument
     if(!m_demo || builtin)

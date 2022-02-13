@@ -93,7 +93,7 @@ class SQ_SlideShowWidget : public QWidget
         QString path;
         int current;
         QPixmap pixmap;
-        QColor bgcolor;
+        QColor bgcolor, tcolor;
         QTimer *timerHide;
         QLabel *message;
         QHBox *options;

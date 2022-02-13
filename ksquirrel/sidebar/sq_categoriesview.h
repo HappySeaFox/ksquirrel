@@ -24,9 +24,9 @@
 #include <kfiletreebranch.h>
 
 class KToolBar;
-class KPopupMenu;
 
 class SQ_CategoryBrowserMenu;
+class SQ_TreeViewMenu;
 
 /**
   *@author Baryshev Dmitry
@@ -51,8 +51,10 @@ class SQ_CategoriesView : public KFileTreeView
     Q_OBJECT
 
     public: 
-	SQ_CategoriesView(QWidget *parent = 0, const char *name = 0);
-	~SQ_CategoriesView();
+        SQ_CategoriesView(QWidget *parent = 0, const char *name = 0);
+        ~SQ_CategoriesView();
+
+        SQ_TreeViewMenu *popupMenu() const;
 
     private slots:
         void slotItemExecuted(QListViewItem *item);
@@ -60,8 +62,14 @@ class SQ_CategoriesView : public KFileTreeView
 
     private:
         KFileTreeBranch *root;
-        KPopupMenu *menu;
+        SQ_TreeViewMenu *menu;
 };
+
+inline
+SQ_TreeViewMenu* SQ_CategoriesView::popupMenu() const
+{
+    return menu;
+}
 
 /* *************************************************** */
 

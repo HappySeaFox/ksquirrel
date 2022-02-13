@@ -55,6 +55,7 @@ void SQ_Options::init()
     checkSupportAr->setChecked(kconf->readBoolEntry("archives", true));
     checkJumpFirst->setChecked(kconf->readBoolEntry("tofirst", true));
     checkDisableDirs->setChecked(kconf->readBoolEntry("disable_dirs", false));
+    checkCalc->setChecked(kconf->readBoolEntry("calculate", false));
 
 // Init GLView page
     kconf->setGroup("GL view");
@@ -176,6 +177,7 @@ int SQ_Options::start()
         kconf->writeEntry("archives", checkSupportAr->isChecked());
         kconf->writeEntry("tofirst", checkJumpFirst->isChecked());
         kconf->writeEntry("disable_dirs", checkDisableDirs->isChecked());
+        kconf->writeEntry("calculate", checkCalc->isChecked());
 
         kconf->setGroup("Main");
         kconf->writeEntry("applyto", buttonGroupCS->selectedId());

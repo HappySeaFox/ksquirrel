@@ -27,6 +27,7 @@
 #include <kapplication.h>
 
 #include "ksquirrel.h"
+#include "sq_config.h"
 #include "sq_imagebasket.h"
 #include "sq_storagefile.h"
 #include "sq_dir.h"
@@ -61,6 +62,18 @@ SQ_ImageBasket::SQ_ImageBasket(QWidget *parent, const char *name) : KDirOperator
     setMode(KFile::Files);
 
     setAcceptDrops(true);
+
+    SQ_Config::instance()->setGroup("Fileview");
+    int sorting = 0;
+
+    if(SQ_Config::instance()->readBoolEntry("basket_sorting_name", true))      sorting |= QDir::Name;
+    if(SQ_Config::instance()->readBoolEntry("basket_sorting_time", false))     sorting |= QDir::Time;
+    if(SQ_Config::instance()->readBoolEntry("basket_sorting_size", false))     sorting |= QDir::Size;
+    if(SQ_Config::instance()->readBoolEntry("basket_sorting_dirs", true))      sorting |= QDir::DirsFirst;
+    if(SQ_Config::instance()->readBoolEntry("basket_sorting_reverse", false))  sorting |= QDir::Reversed;
+    if(SQ_Config::instance()->readBoolEntry("basket_sorting_ignore", false))   sorting |= QDir::IgnoreCase;
+
+    setSorting(static_cast<QDir::SortSpec>(sorting));
 }
 
 SQ_ImageBasket::~SQ_ImageBasket()
@@ -245,6 +258,20 @@ void SQ_ImageBasket::activatedMenu(const KFileItem *, const QPoint &pos)
     pADirOperatorMenu->popupMenu()->insertSeparator(1);
 
     pADirOperatorMenu->popup(pos);
+}
+
+void SQ_ImageBasket::saveConfig()
+{
+    QDir::SortSpec sort = sorting();
+
+    SQ_Config::instance()->writeEntry("basket_sorting_name", KFile::isSortByName(sort));
+    SQ_Config::instance()->writeEntry("basket_sorting_time", KFile::isSortByDate(sort));
+    SQ_Config::instance()->writeEntry("basket_sorting_size", KFile::isSortBySize(sort));
+    SQ_Config::instance()->writeEntry("basket_sorting_dirs", KFile::isSortDirsFirst(sort));
+    SQ_Config::instance()->writeEntry("basket_sorting_reverse", (sort & QDir::Reversed) == QDir::Reversed);
+    SQ_Config::instance()->writeEntry("basket_sorting_ignore", KFile::isSortCaseInsensitive(sort));
+
+    SQ_Config::instance()->writeEntry("show hidden", showHiddenFiles());
 }
 
 #include "sq_imagebasket.moc"

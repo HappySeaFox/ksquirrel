@@ -39,6 +39,9 @@
 /* Define if your system needs _NSGetEnviron to set up the environment */
 #undef HAVE_NSGETENVIRON
 
+/* Define to 1 if the assembler supports AltiVec instructions. */
+#undef HAVE_PPC_ALTIVEC
+
 /* Define if you have res_init */
 #undef HAVE_RES_INIT
 
@@ -93,6 +96,18 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
+/* Define to 1 if the assembler supports 3DNOW instructions. */
+#undef HAVE_X86_3DNOW
+
+/* Define to 1 if the assembler supports MMX instructions. */
+#undef HAVE_X86_MMX
+
+/* Define to 1 if the assembler supports SSE instructions. */
+#undef HAVE_X86_SSE
+
+/* Define to 1 if the assembler supports SSE2 instructions. */
+#undef HAVE_X86_SSE2
+
 /* Suffix for lib directories */
 #undef KDELIBSUFF
 
@@ -138,11 +153,11 @@
 /* If we have libkipi installed */
 #undef SQ_HAVE_KIPI
 
+/* kregexpeditorinterface.h support */
+#undef SQ_HAVE_KREGEXP
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
-
-/* Use MMX instructions */
-#undef USE_MMX
 
 /* Version number of package */
 #undef VERSION

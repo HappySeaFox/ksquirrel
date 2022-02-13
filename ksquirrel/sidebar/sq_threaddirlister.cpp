@@ -79,6 +79,8 @@ void SQ_ThreadDirLister::run()
         b_read = true;
         fi.setFile(path);
 
+//        printf("TRY PATH %s\n", path.ascii());
+
         if(cache->hasGroup(path))
         {
             cache->setGroup(path);

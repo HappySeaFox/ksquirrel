@@ -55,7 +55,6 @@
 #include "sq_thumbnailloadjob.h"
 #include "sq_pixmapcache.h"
 #include "sq_selectdeselectgroup.h"
-#include "sq_downloader.h"
 
 SQ_WidgetStack * SQ_WidgetStack::m_instance = 0;
 
@@ -74,8 +73,9 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QObject(parent)
     {
         switch(SQ_Config::instance()->readNumEntry("set path", 0))
         {
-            case 2: url = KURL::fromPathOrURL(SQ_Config::instance()->readEntry("custom directory", "/")); break;
             case 0: url = KURL::fromPathOrURL(SQ_Config::instance()->readEntry("last visited", "/")); break;
+            case 1: url = KURL::fromPathOrURL(QDir::current().path()); break;
+            case 2: url = KURL::fromPathOrURL(SQ_Config::instance()->readEntry("custom directory", "/")); break;
 
             default: url = KURL::fromPathOrURL("/");
         }
@@ -94,10 +94,6 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QObject(parent)
 
     timerShowProgress = new QTimer(this);
     connect(timerShowProgress, SIGNAL(timeout()), this, SLOT(slotDelayedShowProgress()));
-
-    down = new SQ_Downloader(this, "SQ_Downloader [wstack]");
-
-//    connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloaderResult(const KURL &)));
 }
 
 SQ_WidgetStack::~SQ_WidgetStack()
@@ -530,13 +526,10 @@ void SQ_WidgetStack::slotFileLinkTo()
         return;
 
     // select a directory
-    QString s = KFileDialog::getExistingDirectory(QString::null, dirop);
+    KURL url = KFileDialog::getExistingURL(QString::null, dirop);
 
-    if(s.isEmpty())
+    if(url.isEmpty())
         return;
-
-    KURL url;
-    url.setPath(s);
 
     // create symlinks
     KIO::link(files, url);
@@ -549,13 +542,10 @@ void SQ_WidgetStack::slotFileCopyTo()
         return;
 
     // select a directory
-    QString s = KFileDialog::getExistingDirectory(QString::null, dirop);
+    KURL url = KFileDialog::getExistingURL(QString::null, dirop);
 
-    if(s.isEmpty())
+    if(url.isEmpty())
         return;
-
-    KURL url;
-    url.setPath(s);
 
     // copy files to selected directory
     KIO::copy(files, url);
@@ -568,13 +558,10 @@ void SQ_WidgetStack::slotFileMoveTo()
         return;
 
     // select a directory
-    QString s = KFileDialog::getExistingDirectory(QString::null, dirop);
+    KURL url = KFileDialog::getExistingURL(QString::null, dirop);
 
-    if(s.isEmpty())
+    if(url.isEmpty())
         return;
-
-    KURL url;
-    url.setPath(s);
 
     // move files to selected directory
     KIO::move(files, url);

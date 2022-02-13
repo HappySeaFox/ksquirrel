@@ -35,9 +35,11 @@ class SQ_TreeViewItem : public KFileTreeViewItem
         int files() const;
         int dirs() const;
 
-        void setCount(int c1, int c2, bool use_c1, bool use_c2);
+        void setCount(int c1, int c2);
+        void setParams(bool _use_c1, bool _use_c2);
 
         virtual void paintFocus(QPainter *, const QColorGroup &, const QRect &);
+        virtual void setText(int column, const QString &text);
 
     protected:
         virtual void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
@@ -45,7 +47,15 @@ class SQ_TreeViewItem : public KFileTreeViewItem
     private:
         bool m_checked;
         int count_files, count_dirs;
+        bool use_c1, use_c2;
 };
+
+inline
+void SQ_TreeViewItem::setParams(bool _use_c1, bool _use_c2)
+{
+    use_c1 = _use_c1;
+    use_c2 = _use_c2;
+}
 
 inline
 bool SQ_TreeViewItem::checked() const

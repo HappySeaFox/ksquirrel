@@ -812,7 +812,7 @@ msgstr "Factor"
 msgid ""
 "There are no special options available for this filter. Just click \"Filter"
 "\"."
-msgstr "Нет специальных параметров для этого фильтра. Росто нажмите \"Фильтр\""
+msgstr "Нет специальных параметров для этого фильтра. Просто нажмите \"Фильтр\""
 
 #: imageedit/sq_imagefilter.cpp:490
 msgid "Color 1:"
@@ -2129,3 +2129,33 @@ msgstr ""
 "%n ошибка\n"
 "%n ошибки\n"
 "%n ошибок"
+
+msgid "Calculate directory size"
+msgstr "Подсчитать размер папки"
+
+msgid "New folder..."
+msgstr "Новая папка..."
+
+msgid "Create Subfolder"
+msgstr "Создать Подпапку"
+
+msgid "<p>Create new folder in <b>%1</b>:</p>"
+msgstr "<p>Создать новую папку в <b>%1</b>:</p>"
+
+msgid "Rename Folder"
+msgstr "Переименовать Папку"
+
+msgid "<p>Rename folder <b>%1</b> to:</p>"
+msgstr "<p>Переименовать папку <b>%1</b> в:</p>"
+
+msgid "Are you sure you want to delete <b>%1</b> ?"
+msgstr "Вы точно хотите удалить <b>%1</b> ?"
+
+msgid "Copy to last folder"
+msgstr "Копировать в последнюю папку"
+
+msgid "Move to last folder"
+msgstr "Переместить в последнюю папку"
+
+msgid "Message text color:"
+msgstr "Цвет текста сообщений:"

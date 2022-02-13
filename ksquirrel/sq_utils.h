@@ -35,6 +35,11 @@ class SQ_Thumbnail;
 
 namespace SQ_Utils
 {
+    enum SmoothAlgorithm { SMOOTH_NONE, SMOOTH_FAST, SMOOTH_NORMAL, SMOOTH_BEST };
+
+    QImage scale(const QImage& image, int width, int height,
+                SmoothAlgorithm alg, QImage::ScaleMode mode = QImage::ScaleFree, double blur = 1.0);
+
     /*
      *  Scale given image to fit it within 'fitwithin'
      */

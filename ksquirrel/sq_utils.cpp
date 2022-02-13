@@ -30,7 +30,6 @@
 #include "sq_thumbnailsize.h"
 #include "sq_libraryhandler.h"
 #include "sq_imageloader.h"
-#include "libpixops/pixops.h"
 #include "sq_utils.h"
 
 #ifdef SQ_HAVE_KEXIF
@@ -88,17 +87,11 @@ QImage SQ_Utils::scaleImage(unsigned char *im, int w, int h, int fitwithin)
         return scaled.copy();
     }
 
-    QSize sz(w, h);
-    sz.scale(fitwithin, fitwithin, QSize::ScaleMin);
-    QImage scaled(sz.width(), sz.height(), 32);
-    scaled.setAlphaBuffer(true);
+    QImage orig(im, w, h, 32, 0, 0, QImage::LittleEndian);
+    orig.setAlphaBuffer(true);
 
-    pixops_scale(scaled.bits(), 0, 0, scaled.width(), scaled.height(), scaled.width() * 4, 4, true,
-                    im, w, h, w * 4, 4, true,
-                    (double)sz.width() / w, (double)sz.height() / h,
-                    PIXOPS_INTERP_BILINEAR);
-
-    return scaled;
+    // return scaled image
+    return SQ_Utils::scale(orig, fitwithin, fitwithin, SQ_Utils::SMOOTH_FAST, QImage::ScaleMin);
 }
 
 bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
@@ -117,10 +110,14 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
 
         if(!im.isNull())
         {
+            SQ_Utils::exifRotate(QString::null, im, data.getImageOrientation());
+
             th = true;
             t.w = 0;
             t.h = 0;
             t.mime = lib->mime;
+
+            SQ_ImageLoader::instance()->tasteImage(pixPath.path(), &t.w, &t.h, lib);
 
             t.thumbnail = SQ_Utils::scaleImage((unsigned char *)im.bits(), im.width(),
                 im.height(), SQ_ThumbnailSize::biggest());
@@ -140,7 +137,7 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
 
     RGBA *all;
 
-    bool b = SQ_ImageLoader::instance()->loadImage(pixPath.path(), true, 2, true);
+    bool b = SQ_ImageLoader::instance()->loadImage(pixPath.path(), false);
 
     //printf("LOAD %s = %d\n", pixPath.prettyURL().ascii(), b);
 
@@ -169,8 +166,8 @@ bool SQ_Utils::loadThumbnail(const KURL &pixPath, SQ_Thumbnail &t)
 
     t.w = finfo->image[0].w;
     t.h = finfo->image[0].h;
-
     t.mime = lib->mime;
+
     t.thumbnail = SQ_Utils::scaleImage((unsigned char *)all, finfo->image[0].w,
             finfo->image[0].h, SQ_ThumbnailSize::biggest());
 

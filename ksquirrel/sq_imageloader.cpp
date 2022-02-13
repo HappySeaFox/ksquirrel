@@ -52,14 +52,14 @@ SQ_ImageLoader::~SQ_ImageLoader()
 /*
  *  Try to determine image dimensions.
  */
-bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h)
+bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h, SQ_LIBRARY *_lib)
 {
     SQ_LIBRARY      *lib;
     int             res;
     fmt_codec_base  *codeK;
 
     // determine library for file
-    lib = SQ_LibraryHandler::instance()->libraryForFile(path);
+    lib = _lib ? _lib : SQ_LibraryHandler::instance()->libraryForFile(path);
 
     if(!lib || !lib->codec)
         return false;

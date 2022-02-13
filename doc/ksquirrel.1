@@ -3,7 +3,7 @@
 KSquirrel \- An image viewer for KDE with dynamic format support
 .SH SYNOPSIS
 .B ksquirrel
-[\fIoptions\fR] [\fIfile or folder\fR]
+[\fIoptions\fR] [\fIfile\fR]
 .SH DESCRIPTION
 KSquirrel is an image viewer for KDE with disk navigator, file tree, thumbnails, extended thumbnails, dynamic format support, DCOP interface and tools to resize, rotate, filter, convert, colorize and print images.
 .PP
@@ -11,18 +11,12 @@ Image loading is based on external codecs \- ksquirrel\-libs. It supports dozens
 .SH OPTIONS
 .SS Arguments:
 .TP
-.B file or folder
-An initial image file, or a folder containing images.
+.B file
+An initial image file.
 .SS KSquirrel options:
 .TP
-.B  \-l
-Show found libraries and exit.
-.TP
-.B  \-t \fIfolder\fR
-Find all supported images in folder and create thumbnails.
-.TP
-.B  \-r
-Search for thumbnails recursively (with \-t).
+.B  \-d <folder>
+Folder to open.
 
 .SS Generic options:
 .TP

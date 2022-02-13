@@ -2005,3 +2005,33 @@ msgstr ""
 #: ksquirrel.cpp:1952
 msgid "<p>Rename file <b>%1</b> to:</p>"
 msgstr ""
+
+msgid "Calculate directory size"
+msgstr ""
+
+msgid "New folder..."
+msgstr ""
+
+msgid "Create Subfolder"
+msgstr ""
+
+msgid "<p>Create new folder in <b>%1</b>:</p>"
+msgstr ""
+
+msgid "Rename Folder"
+msgstr ""
+
+msgid "<p>Rename folder <b>%1</b> to:</p>"
+msgstr ""
+
+msgid "Are you sure you want to delete <b>%1</b> ?"
+msgstr ""
+
+msgid "Copy to last folder"
+msgstr ""
+
+msgid "Move to last folder"
+msgstr ""
+
+msgid "Message text color:"
+msgstr ""

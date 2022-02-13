@@ -22,14 +22,13 @@
 #include <qpixmap.h>
 #include <qcolor.h>
 #include <qwmatrix.h>
+#include <qimage.h>
 
 #include <kurl.h>
 
 class KPopupMenu;
 
 class SQ_Downloader;
-
-struct RGBA;
 
 /**
   *@author Baryshev Dmitry
@@ -72,9 +71,8 @@ class SQ_PreviewWidget : public QWidget
         bool fit();
 
     private:
-        RGBA *all, *small;
+        QImage *all, *small;
         QPixmap pixmap;
-        int w, h, smallw, smallh;
         bool m_ignore, m_forceignore, m_cancel;
         QColor color;
         KPopupMenu *popup;

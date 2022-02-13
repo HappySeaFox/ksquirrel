@@ -29,6 +29,8 @@ void SQ_SlideShow::init()
     QColor col;
     col.setNamedColor(SQ_Config::instance()->readEntry("background", "#4e4e4e"));
     bcolor->setColor(col);
+    col.setNamedColor(SQ_Config::instance()->readEntry("message_text", "#ffffff"));
+    tcolor->setColor(col);
 
     QPopupMenu *hist = new QPopupMenu;
     items = SQ_Config::instance()->readListEntry("history");
@@ -60,6 +62,7 @@ int SQ_SlideShow::exec(QString &path)
         SQ_Config::instance()->writeEntry("delay", spinDelay->value());
         SQ_Config::instance()->writeEntry("repeat", spinCycle->value());
         SQ_Config::instance()->writeEntry("background", bcolor->color().name());
+        SQ_Config::instance()->writeEntry("message_text", tcolor->color().name());
         SQ_Config::instance()->writeEntry("messages", checkMessages->isChecked());
         SQ_Config::instance()->writeEntry("messages_name", checkName->isChecked());
         SQ_Config::instance()->writeEntry("messages_size", checkSize->isChecked());
@@ -119,4 +122,6 @@ void SQ_SlideShow::slotMessages( bool b)
     textName->setEnabled(b);
     textSize->setEnabled(b);
     textPos->setEnabled(b);
+    textColor->setEnabled(b);
+    tcolor->setEnabled(b);
 }

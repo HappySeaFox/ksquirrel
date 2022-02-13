@@ -36,7 +36,7 @@
 #include "sq_libraryhandler.h"
 #include "sq_config.h"
 #include "sq_downloader.h"
-#include "libpixops/pixops.h"
+#include "sq_utils.h"
 
 #ifdef SQ_HAVE_KEXIF
 #include <libkexif/kexifdata.h>
@@ -63,8 +63,8 @@ SQ_PreviewWidget::SQ_PreviewWidget(QWidget *parent, const char *name)
 SQ_PreviewWidget::~SQ_PreviewWidget()
 {
     delete popup;
-    delete [] small;
-    delete [] all;
+    delete small;
+    delete all;
 }
 
 void SQ_PreviewWidget::load(const KURL &url)
@@ -100,34 +100,19 @@ void SQ_PreviewWidget::resizeEvent(QResizeEvent *)
 //    printf("resize %d %d\n", e, m_ignore);
     if(!m_ignore && fit())
     {
-        QImage image;
-
-        if(small)
-            image = QImage((unsigned char *)small, smallw, smallh, 32, 0, 0, QImage::LittleEndian);
-        else
-            image = QImage((unsigned char *)all, w, h, 32, 0, 0, QImage::LittleEndian);
-
-        image.setAlphaBuffer(true);
-
-        if(pixmap.convertFromImage(image))
+        if(pixmap.convertFromImage(small?*small:*all))
             update();
     }
 }
 
 void SQ_PreviewWidget::paintEvent(QPaintEvent *)
 {
-//    printf("paint\n");
     QPainter p(this);
-//    p.setViewXForm(true);
 
     p.fillRect(rect(), color);
 
     if(!m_ignore && !pixmap.isNull())
     {
-//        QWMatrix w;
-//        p.translate(width(), -height()/4);
-//        p.rotate(90);
-//        p.setWorldMatrix(w);
         p.drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
     }
 }
@@ -145,31 +130,14 @@ bool SQ_PreviewWidget::fit()
     if(width() < 2 || height() < 2)
         return false;
 
-    if(w > width() || h > height())
+    delete small;
+    small = 0;
+
+    if(all->width() > width() || all->height() > height())
     {
-        QSize sz(w, h);
-        sz.scale(width(), height(), QSize::ScaleMin);
+        small = new QImage();
 
-        smallw = sz.width();
-        smallh = sz.height();
-
-        delete [] small;
-        small = new RGBA[smallw * smallh];
-
-        if(!small)
-            return false;
-
-//        printf("scale %d %d - %d %d\n", w, h, smallw, smallh);
-
-        pixops_scale((unsigned char *)small, 0, 0, smallw, smallh, smallw * 4, 4, true,
-                    (unsigned char *)all, w, h, w * 4, 4, true,
-                    (double)smallw / w, (double)smallh / h,
-                    PIXOPS_INTERP_BILINEAR);
-    }
-    else // image is less than preview widget
-    {
-        small = 0;
-        smallw = smallh = 0;
+        *small = SQ_Utils::scale(*all, width(), height(), SQ_Utils::SMOOTH_FAST, QImage::ScaleMin);
     }
 
     return true;
@@ -244,48 +212,50 @@ void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
     if(!b || !bits || !finfo->image.size())
         return;
 
-    delete [] small;
-    delete [] all;
+    delete small;
+    delete all;
     all = small = 0;
     pixmap = QPixmap();
 
-    w = finfo->image[0].w;
-    h = finfo->image[0].h;
-
-    all = bits;
+    int w = finfo->image[0].w;
+    int h = finfo->image[0].h;
 
     const int wh = w * h;
     unsigned char t;
 
     for(int i = 0;i < wh;i++)
     {
-        t = (all+i)->r;
-        (all+i)->r = (all+i)->b;
-        (all+i)->b = t;
+        t = (bits+i)->r;
+        (bits+i)->r = (bits+i)->b;
+        (bits+i)->b = t;
     }
 
-#ifdef SQ_HAVE_KEXIF
-    // copy original image
-    QImage img((uchar *)all, w, h, 32, 0, 0, QImage::LittleEndian);
+    all = new QImage((uchar *)bits, w, h, 32, 0, 0, QImage::LittleEndian);
+    all->setAlphaBuffer(true);
 
+#ifdef SQ_HAVE_KEXIF
     KExifData data;
     data.readFromFile(path);
     int O = data.getImageOrientation();
 
-    // rotate image
-    SQ_Utils::exifRotate(QString::null, img, O);
-
-    if(O == KExifData::ROT_90_HFLIP || O == KExifData::ROT_90
-    || O == KExifData::ROT_90_VFLIP || O == KExifData::ROT_270)
+    if(O != KExifData::UNSPECIFIED && O != KExifData::NORMAL)
     {
-        std::swap(w, h);
-    }
+        // copy original image
+        QImage img = *all;
 
-    // transfer back
-    memcpy(all, img.bits(), wh*4);
+        // rotate image
+        SQ_Utils::exifRotate(QString::null, img, O);
+
+        // transfer back
+        *all = img;
+    }
+    else
+        *all = all->copy();
+#else
+    *all = all->copy();
 #endif
 
-    SQ_ImageLoader::instance()->cleanup(false);
+    SQ_ImageLoader::instance()->cleanup();
 
     resizeEvent(0);
 }

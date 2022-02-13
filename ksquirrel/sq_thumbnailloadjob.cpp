@@ -200,7 +200,7 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
                 // start an empty job (this will make small time window
                 // to process user activity, qApp->processEvents()
                 // is too dangerous)
-                addSubjob(KIO::stat(KURL(), false));
+                addSubjob(KIO::stat(KURL("file:///"), false));
             }
         }
         break;
@@ -377,7 +377,7 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail()
 
     if(dir->needUpdate(mThumbURL.path(), mOriginalTime))
     {
-        kdDebug() << "STAT **** thumbnailTime < mOriginalTime ****" << endl;
+//        kdDebug() << "STAT **** thumbnailTime < mOriginalTime ****" << endl;
         return false;
     }
 
@@ -422,7 +422,7 @@ void SQ_ThumbnailLoadJob::createThumbnail(const KURL &pixPath)
     if(SQ_PixmapCache::instance()->contains2(pixPath, th))
     {
         emitThumbnailLoaded(th);
-        kdDebug() << "CREATE found in cache \"" << pixPath << "\"" << endl;
+//        kdDebug() << "CREATE found in cache \"" << pixPath << "\"" << endl;
         return;
     }
 
@@ -444,11 +444,11 @@ void SQ_ThumbnailLoadJob::insertOrSync(const KURL &url, SQ_Thumbnail &th)
     if(!SQ_PixmapCache::instance()->full())
     {
         SQ_PixmapCache::instance()->insert(url, th);
-        kdDebug() << "IOSYNC inserting \"" << url.url() << "\"" << endl;
+//        kdDebug() << "IOSYNC inserting \"" << url.url() << "\"" << endl;
     }
     else
     {
-        kdDebug() << "IOSYNC SQ_PixmapCache is full! Cache is ignored!" << endl;
+//        kdDebug() << "IOSYNC SQ_PixmapCache is full! Cache is ignored!" << endl;
         SQ_PixmapCache::instance()->syncEntry(url, th);
     }
 }

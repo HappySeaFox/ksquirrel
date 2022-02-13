@@ -25,6 +25,7 @@
 
 class SQ_TreeViewItem;
 class SQ_ThreadDirLister;
+class SQ_TreeViewMenu;
 
 /*
  *  We should subclass KFileTreeBranch to let us create
@@ -134,6 +135,9 @@ class SQ_TreeView : public KFileTreeView
         void slotDelayedScan();
         void slotAnimation();
 
+        void slotDropped(QDropEvent *, QListViewItem *, QListViewItem *);
+        void slotContextMenu(KListView *, QListViewItem *, const QPoint &);
+
     signals:
         void newURL(const KURL &url);
 
@@ -154,6 +158,7 @@ class SQ_TreeView : public KFileTreeView
         QTimer *m_animTimer, *scanTimer;
         bool m_ignoreClick;
         int m_recurs;
+        SQ_TreeViewMenu *menu;
 
         static SQ_TreeView *m_instance;
 };

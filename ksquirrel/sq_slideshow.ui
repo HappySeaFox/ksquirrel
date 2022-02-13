@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>414</width>
-            <height>311</height>
+            <width>402</width>
+            <height>357</height>
         </rect>
     </property>
     <property name="caption">
@@ -121,47 +121,6 @@
                         <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="5" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>checkMessages</cstring>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="6" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>checkPos</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="8" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>checkSize</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="7" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>checkName</cstring>
-                    </property>
-                    <property name="enabled">
-                        <bool>false</bool>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
                 <spacer row="2" column="2">
                     <property name="name">
                         <cstring>spacer2</cstring>
@@ -179,31 +138,6 @@
                         </size>
                     </property>
                 </spacer>
-                <spacer row="4" column="2">
-                    <property name="name">
-                        <cstring>spacer3_2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>186</width>
-                            <height>16</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="KColorButton" row="4" column="1">
-                    <property name="name">
-                        <cstring>bcolor</cstring>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
                 <widget class="KIntSpinBox" row="3" column="1">
                     <property name="name">
                         <cstring>spinCycle</cstring>
@@ -254,23 +188,34 @@
                         <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
-                <widget class="QLabel" row="4" column="0">
+                <widget class="QLabel" row="1" column="0">
                     <property name="name">
-                        <cstring>textLabel1_3</cstring>
+                        <cstring>textLabel1_6</cstring>
                     </property>
                     <property name="text">
-                        <string>Background color:</string>
+                        <string>Recursively</string>
                     </property>
                     <property name="alignment">
                         <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
-                <widget class="QLabel" row="5" column="0">
+                <widget class="QCheckBox" row="1" column="1" rowspan="1" colspan="2">
                     <property name="name">
-                        <cstring>textLabel1_5</cstring>
+                        <cstring>checkRecurs</cstring>
                     </property>
                     <property name="text">
-                        <string>Onscreen messages</string>
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="8" column="0">
+                    <property name="name">
+                        <cstring>textSize</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Show file size</string>
                     </property>
                     <property name="alignment">
                         <set>AlignVCenter|AlignRight</set>
@@ -290,6 +235,17 @@
                         <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
+                <widget class="QCheckBox" row="8" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>checkSize</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
                 <widget class="QLabel" row="7" column="0">
                     <property name="name">
                         <cstring>textName</cstring>
@@ -304,37 +260,123 @@
                         <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
-                <widget class="QLabel" row="8" column="0">
+                <widget class="QCheckBox" row="6" column="1" rowspan="1" colspan="2">
                     <property name="name">
-                        <cstring>textSize</cstring>
+                        <cstring>checkPos</cstring>
                     </property>
                     <property name="enabled">
                         <bool>false</bool>
                     </property>
                     <property name="text">
-                        <string>Show file size</string>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignVCenter|AlignRight</set>
+                        <string></string>
                     </property>
                 </widget>
-                <widget class="QLabel" row="1" column="0">
+                <widget class="QCheckBox" row="7" column="1" rowspan="1" colspan="2">
                     <property name="name">
-                        <cstring>textLabel1_6</cstring>
+                        <cstring>checkName</cstring>
                     </property>
-                    <property name="text">
-                        <string>Recursively</string>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignVCenter|AlignRight</set>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="1" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>checkRecurs</cstring>
+                    <property name="enabled">
+                        <bool>false</bool>
                     </property>
                     <property name="text">
                         <string></string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="0">
+                    <property name="name">
+                        <cstring>textLabel1_3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Background color:</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignRight</set>
+                    </property>
+                </widget>
+                <widget class="KColorButton" row="4" column="1">
+                    <property name="name">
+                        <cstring>bcolor</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <spacer row="4" column="2">
+                    <property name="name">
+                        <cstring>spacer3_2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>186</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="5" column="0">
+                    <property name="name">
+                        <cstring>textLabel1_5</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Onscreen messages</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignRight</set>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="5" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>checkMessages</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <spacer row="9" column="2">
+                    <property name="name">
+                        <cstring>spacer3_2_2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>145</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="KColorButton" row="9" column="1">
+                    <property name="name">
+                        <cstring>tcolor</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="9" column="0">
+                    <property name="name">
+                        <cstring>textColor</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Message text color:</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
             </grid>
@@ -434,8 +476,9 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>sq_pushbutton.h</includehint>
     <includehint>sq_pushbutton.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
     <includehint>kcolorbutton.h</includehint>
-    <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
 </includehints>
 </UI>

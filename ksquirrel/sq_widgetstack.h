@@ -32,8 +32,6 @@ class KAction;
 class KToggleAction;
 class KFileView;
 
-class SQ_Downloader;
-
 /*
  *  SQ_WidgetStack is a simple wrapper for file manager (navigator).
  *
@@ -217,7 +215,6 @@ class SQ_WidgetStack : public QObject
         QTimer     *timerShowProgress;
         KURL::List    files; // files to copy, move or link
         FileAction    fileaction;
-        SQ_Downloader *down;
 
         static SQ_WidgetStack    *m_instance;
 };

@@ -68,7 +68,7 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, co
 {
     usenew = false;
 
-    totalSize = (KIO::filesize_t)0;
+    totalSize = static_cast<KIO::filesize_t>(0);
 
     // create and insert new actions in context menu
     setupActionsMy();
@@ -98,6 +98,28 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, co
 
     connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloaderResult(const KURL &)));
     connect(SQ_ArchiveHandler::instance(), SIGNAL(unpack(const KURL &)), this, SLOT(slotSetURL(const KURL &)));
+
+    // read sorting settings
+    SQ_Config::instance()->setGroup("Fileview");
+    int sorting = 0;
+
+    if(SQ_Config::instance()->readBoolEntry("sorting_name", true))      sorting |= QDir::Name;
+    if(SQ_Config::instance()->readBoolEntry("sorting_time", false))     sorting |= QDir::Time;
+    if(SQ_Config::instance()->readBoolEntry("sorting_size", false))     sorting |= QDir::Size;
+    if(SQ_Config::instance()->readBoolEntry("sorting_dirs", true))      sorting |= QDir::DirsFirst;
+    if(SQ_Config::instance()->readBoolEntry("sorting_reverse", false))  sorting |= QDir::Reversed;
+    if(SQ_Config::instance()->readBoolEntry("sorting_ignore", false))   sorting |= QDir::IgnoreCase;
+
+    actionHidden = dynamic_cast<KToggleAction *>(actionCollection()->action("show hidden"));
+
+    if(SQ_Config::instance()->readBoolEntry("show hidden", false) && actionHidden)
+    {
+        actionHidden->setChecked(false);
+        actionHidden->activate();
+    }
+
+    setSorting(static_cast<QDir::SortSpec>(sorting));
+    setEnableDirHighlighting(true);
 }
 
 SQ_DirOperator::~SQ_DirOperator()
@@ -106,6 +128,8 @@ SQ_DirOperator::~SQ_DirOperator()
 void SQ_DirOperator::slotUrlEntered(const KURL &url)
 {
     usenew = false;
+
+    totalSize = static_cast<KIO::filesize_t>(0);
 
     clearListers();
 
@@ -244,7 +268,7 @@ void SQ_DirOperator::slotSelectionChanged()
 {
     QString str = i18n("no files selected");
     QPixmap px;
-    KIO::filesize_t sz = 0;
+    KIO::filesize_t sz = static_cast<KIO::filesize_t>(0);
     int add = 0;
     KFileItem *fi = 0;
 
@@ -274,8 +298,8 @@ void SQ_DirOperator::slotSelectionChanged()
         // costruct name and size
         str = QString("%1 %2 %3")
                 .arg(KStringHandler::csqueeze(fi->name(), SQ_MAX_WORD_LENGTH))
-                .arg(sz ? KIO::convertSize(sz):"")
-                .arg(add > 1 ? QString("<b>[%1]</b>").arg(add):"");
+                .arg(KIO::convertSize(fi->size()))
+                .arg(add > 1 ? QString("<b>[%1/%2]</b>").arg(KIO::convertSize(sz)).arg(add):"");
 
         timer_preview->start(SQ_PreviewWidget::instance()->delay(), true);
     }
@@ -302,7 +326,6 @@ void SQ_DirOperator::slotDropped(const KFileItem *i, QDropEvent*, const KURL::Li
 // Insert new actions in context menu.
 void SQ_DirOperator::setupActionsMy()
 {
-//    printf("*** SETUP\n");
     new KAction(i18n("Edit file type"), 0, 0, this, SLOT(slotEditMime()), actionCollection(), "dirop_edit_mime");
     KAction *basketAction = new KAction(i18n("Add To Basket"), "folder_image", CTRL+Key_B,
             this, SLOT(slotAddToBasket()), actionCollection(), "dirop_tobasket");
@@ -423,14 +446,22 @@ void SQ_DirOperator::slotDelayedFinishedLoading()
 
     SQ_Config::instance()->setGroup("Fileview");
 
+    bool goto_first = false;
+
     // SQ_WidgetStack will select first supported image for us
     if(SQ_Config::instance()->readBoolEntry("tofirst", true))
+        goto_first = SQ_WidgetStack::instance()->moveTo(SQ_WidgetStack::Next, first) == SQ_WidgetStack::moveFailed;
+    else
+        goto_first = true;
+
+    if(goto_first)
     {
-        if(SQ_WidgetStack::instance()->moveTo(SQ_WidgetStack::Next, first) == SQ_WidgetStack::moveFailed)
+        if(fileview->currentFileItem())
+            // current item is already set by KDirOperator
+            setCurrentItem(fileview->currentFileItem());
+        else
             setCurrentItem(first);
     }
-    else
-        setCurrentItem(first);
 
 //    printf("START_OR_NOT\n");
     startOrNotThumbnailUpdate();
@@ -439,6 +470,8 @@ void SQ_DirOperator::slotDelayedFinishedLoading()
 void SQ_DirOperator::slotUpdateInformation(int files, int dirs)
 {
     int total = dirs + files;
+
+    SQ_Config::instance()->setGroup("Fileview");
 
     QString str = i18n("Total %1 in %2 (%3, %4)")
                     .arg(KIO::convertSize(totalSize))
@@ -711,10 +744,14 @@ void SQ_DirOperator::urlRemoved(const KURL &url)
             tv->itemsRemoved(list);
     }
 
+    SQ_Config::instance()->setGroup("Fileview");
+    bool c = SQ_Config::instance()->readBoolEntry("calculate", false);
+
     for(KFileItem *itit_tvoyu_mats = list.first();itit_tvoyu_mats;itit_tvoyu_mats = list.next())
     {
         itemDeleted(itit_tvoyu_mats);
-        totalSize -= itit_tvoyu_mats->size();
+
+        if(c) totalSize -= itit_tvoyu_mats->size();
     }
 
     slotUpdateInformation(numFiles(), numDirs());
@@ -781,13 +818,18 @@ void SQ_DirOperator::slotPreview()
 
 void SQ_DirOperator::slotNewItems(const KFileItemList &list)
 {
-    KFileItemListIterator it(list);
-    KFileItem *fi;
+    SQ_Config::instance()->setGroup("Fileview");
 
-    while((fi = it.current()) != 0)
+    if(SQ_Config::instance()->readBoolEntry("calculate", false))
     {
-        ++it;
-        if(fi->isFile()) totalSize += fi->size();
+        KFileItemListIterator it(list);
+        KFileItem *fi;
+
+        while((fi = it.current()) != 0)
+        {
+            ++it;
+            if(fi->isFile()) totalSize += fi->size();
+        }
     }
 
     // start delayed thumbnail update, if needed
@@ -849,7 +891,10 @@ void SQ_DirOperator::itemKill(KFileItem *item)
 {
     if(!item) return;
 
-    totalSize -= item->size();
+    SQ_Config::instance()->setGroup("Fileview");
+    if(SQ_Config::instance()->readBoolEntry("calculate", false))
+        totalSize -= item->size();
+
     slotUpdateInformation(numFiles(), numDirs());
 
     // start delayed thumbnail update, if needed
@@ -892,7 +937,7 @@ void SQ_DirOperator::activatedMenu(const KFileItem *, const QPoint &pos)
     pADirOperatorMenu->insert(actionCollection()->action("dirop_tobasket"));
 
     pADirOperatorMenu->popupMenu()->insertItem(i18n("File actions"), dynamic_cast<KActionMenu *>(actionCollection()->action("dirop_file_menu"))->popupMenu(), -1, 0);
-    pADirOperatorMenu->popupMenu()->insertItem(i18n("&External Tools"), SQ_ExternalTool::instance()->constPopupMenu(), -1, 1);
+    pADirOperatorMenu->popupMenu()->insertItem(i18n("&External tools"), SQ_ExternalTool::instance()->constPopupMenu(), -1, 1);
     pADirOperatorMenu->popupMenu()->insertSeparator(2);
 
     pADirOperatorMenu->popup(pos);
@@ -901,6 +946,42 @@ void SQ_DirOperator::activatedMenu(const KFileItem *, const QPoint &pos)
 void SQ_DirOperator::slotSetURL(const KURL &url)
 {
     setURL(url, true);
+}
+
+void SQ_DirOperator::calcTotalSize()
+{
+    totalSize = static_cast<KIO::filesize_t>(0);
+
+    KFileItemList *list = const_cast<KFileItemList *>(fileview->items());
+
+    if(!list) return;
+
+    KFileItemListIterator it(*list);
+    KFileItem *fi;
+
+    while((fi = it.current()) != 0)
+    {
+        ++it;
+
+        if(fi->isFile())
+            totalSize += fi->size();
+    }
+
+    slotUpdateInformation(numFiles(), numDirs());
+}
+
+void SQ_DirOperator::saveConfig()
+{
+    QDir::SortSpec sort = sorting();
+
+    SQ_Config::instance()->writeEntry("sorting_name", KFile::isSortByName(sort));
+    SQ_Config::instance()->writeEntry("sorting_time", KFile::isSortByDate(sort));
+    SQ_Config::instance()->writeEntry("sorting_size", KFile::isSortBySize(sort));
+    SQ_Config::instance()->writeEntry("sorting_dirs", KFile::isSortDirsFirst(sort));
+    SQ_Config::instance()->writeEntry("sorting_reverse", (sort & QDir::Reversed) == QDir::Reversed);
+    SQ_Config::instance()->writeEntry("sorting_ignore", KFile::isSortCaseInsensitive(sort));
+
+    SQ_Config::instance()->writeEntry("show hidden", showHiddenFiles());
 }
 
 #include "sq_diroperator.moc"

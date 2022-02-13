@@ -142,6 +142,7 @@ KDE_USE_NMCHECK_FALSE = @KDE_USE_NMCHECK_FALSE@
 KDE_USE_NMCHECK_TRUE = @KDE_USE_NMCHECK_TRUE@
 KDE_USE_PIE = @KDE_USE_PIE@
 KDE_XSL_STYLESHEET = @KDE_XSL_STYLESHEET@
+KSQUIRREL_ASM_DEFS = @KSQUIRREL_ASM_DEFS@
 LDFLAGS = @LDFLAGS@
 LDFLAGS_AS_NEEDED = @LDFLAGS_AS_NEEDED@
 LDFLAGS_NEW_DTAGS = @LDFLAGS_NEW_DTAGS@
@@ -359,7 +360,7 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  doc/Makefile'; \
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  doc/Makefile
-	cd $(top_srcdir) && perl admin/am_edit doc/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit -padmin doc/Makefile.in
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -717,6 +718,7 @@ uninstall-man: uninstall-man1
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
+
 #>+ 2
 KDE_DIST=ksquirrel.1 Makefile.in Makefile.am 
 
@@ -736,7 +738,7 @@ force-reedit:
 	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  doc/Makefile'; \
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  doc/Makefile
-	cd $(top_srcdir) && perl admin/am_edit doc/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit -padmin doc/Makefile.in
 
 
 #>+ 21

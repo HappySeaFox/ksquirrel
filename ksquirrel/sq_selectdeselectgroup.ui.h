@@ -6,10 +6,29 @@
 ** init() function in place of a constructor, and a destroy() function in
 ** place of a destructor.
 *****************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef SQ_HAVE_KREGEXP
+#include <kregexpeditorinterface.h>
+#include <kparts/componentfactory.h>
+#include <ktrader.h>
+#endif
+
 void SQ_SelectDeselectGroup::init()
 {
     SQ_Config::instance()->setGroup("Fileview");
     comboMask->insertStringList(SQ_Config::instance()->readListEntry("selectdeselecthistory"));
+
+#ifdef SQ_HAVE_KREGEXP
+    // not installed
+    if(KTrader::self()->query("KRegExpEditor/KRegExpEditor").isEmpty())
+	pushEdit->setEnabled(false);
+#else
+    pushEdit->setEnabled(false);
+#endif
 }
 
 int SQ_SelectDeselectGroup::exec(QString &mask)
@@ -19,8 +38,9 @@ int SQ_SelectDeselectGroup::exec(QString &mask)
     if(result == QDialog::Accepted)
     {
         QStringList list;
+        int cc = comboMask->count();
 
-        for(int i = 0;i < comboMask->count();i++)
+        for(int i = 0;i < cc;i++)
             list.append(comboMask->text(i));
 
         // save history
@@ -32,4 +52,25 @@ int SQ_SelectDeselectGroup::exec(QString &mask)
     }
 
     return mask.isEmpty() ? QDialog::Rejected : result;
+}
+
+void SQ_SelectDeselectGroup::slotEdit()
+{
+#ifdef SQ_HAVE_KREGEXP
+    QDialog *editorDialog = KParts::ComponentFactory::createInstanceFromQuery<QDialog>("KRegExpEditor/KRegExpEditor");
+
+    if(editorDialog)
+    {
+	KRegExpEditorInterface *editor = static_cast<KRegExpEditorInterface *>(editorDialog->qt_cast("KRegExpEditorInterface"));
+
+	Q_ASSERT(editor);
+	editor->setRegExp(comboMask->currentText());
+
+	if(editorDialog->exec())
+        {
+	    comboMask->insertItem(editor->regExp());
+            comboMask->setCurrentText(editor->regExp());
+        }
+    }
+#endif
 }

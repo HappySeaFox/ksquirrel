@@ -61,6 +61,8 @@ class SQ_DirOperator : public KDirOperator
          */
         void setCurrentItem(KFileItem *item);
 
+        void calcTotalSize();
+
         /*
          *  Save new view type for future use. It means that SQ_WidgetStack
          *  wants to change view type (for example "list view" => "thumbnail view"),
@@ -99,6 +101,8 @@ class SQ_DirOperator : public KDirOperator
         void setPendingFile(const QString &p);
 
         void execute(KFileItem *item);
+
+        void saveConfig();
 
     protected:
         /*
@@ -220,6 +224,7 @@ class SQ_DirOperator : public KDirOperator
     private:
         typedef QMap<KURL, KDirLister *> SQ_Listers;
         SQ_Listers listers;
+
         /*
          *  Pointer to current view. All view types (such as icon view, list view ...)
          *  are derived from KFileView.
@@ -230,6 +235,7 @@ class SQ_DirOperator : public KDirOperator
          *  Some additional menus.
          */
         KActionMenu     *pADirOperatorMenu, *pAFileActions, *pAImageActions;
+        KToggleAction   *actionHidden;
 
         ViewT     type;
         QTimer    *timer_preview;

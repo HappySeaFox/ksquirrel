@@ -33,7 +33,6 @@
 #include <kinputdialog.h>
 #include <kpropertiesdialog.h>
 #include <kfiletreeviewitem.h>
-#include <kpopupmenu.h>
 #include <kmessagebox.h>
 
 #include "ksquirrel.h"
@@ -48,6 +47,7 @@
 #include "sq_storagefile.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
+#include "sq_treeviewmenu.h"
 
 SQ_CategoriesBox * SQ_CategoriesBox::sing = 0;
 
@@ -105,27 +105,26 @@ SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileT
     root->setChildRecurse(true);
     root->setOpen(true);
 
+    menu = new SQ_TreeViewMenu(this);
+
     connect(this, SIGNAL(spacePressed(QListViewItem*)), this, SIGNAL(executed(QListViewItem*)));
     connect(this, SIGNAL(returnPressed(QListViewItem*)), this, SIGNAL(executed(QListViewItem*)));
     connect(this, SIGNAL(executed(QListViewItem*)), this, SLOT(slotItemExecuted(QListViewItem*)));
     connect(this, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)), this, SLOT(slotContextMenu(KListView*, QListViewItem*, const QPoint&)));
-
-    menu = new KPopupMenu;
-
-    menu->insertItem(SQ_IconLoader::instance()->loadIcon("folder_new", KIcon::Desktop, KIcon::SizeSmall), i18n("New category"), SQ_CategoriesBox::instance(), SLOT(slotNewCategory()));
-    menu->insertSeparator();
-    menu->insertItem(i18n("Delete"), SQ_CategoriesBox::instance(), SLOT(slotDeleteItem()));
-    menu->insertItem(SQ_IconLoader::instance()->loadIcon("info", KIcon::Desktop, KIcon::SizeSmall), i18n("Properties"), SQ_CategoriesBox::instance(), SLOT(slotItemProperties()));
 }
 
 SQ_CategoriesView::~SQ_CategoriesView()
-{
-    delete menu;
-}
+{}
 
-void SQ_CategoriesView::slotContextMenu(KListView *, QListViewItem *, const QPoint &p)
+void SQ_CategoriesView::slotContextMenu(KListView *, QListViewItem *item, const QPoint &p)
 {
-    menu->exec(p);
+    if(item)
+    {
+        KFileTreeViewItem *kfi = static_cast<KFileTreeViewItem*>(item);
+        menu->updateDirActions(kfi->isDir());
+        menu->setURL(kfi->url());
+        menu->exec(p);
+    }
 }
 
 void SQ_CategoriesView::slotItemExecuted(QListViewItem *item)
@@ -167,6 +166,10 @@ SQ_CategoriesBox::SQ_CategoriesBox(QWidget *parent, const char *name) : QVBox(pa
     toolbar->insertButton("edittrash", 0, SIGNAL(clicked()), this, SLOT(slotDeleteItem()), true, i18n("Delete"));
     toolbar->insertButton("info", 0, SIGNAL(clicked()), this, SLOT(slotItemProperties()), true, i18n("Properties"));
     toolbar->insertButton("bookmark_add", 0, SIGNAL(clicked()), this, SLOT(slotDefaultCategories()), true, i18n("Create default categories"));
+
+    view->popupMenu()->reconnect(SQ_TreeViewMenu::New, this, SLOT(slotNewCategory()));
+    view->popupMenu()->reconnect(SQ_TreeViewMenu::Delete, this, SLOT(slotDeleteItem()));
+    view->popupMenu()->reconnect(SQ_TreeViewMenu::Properties, this, SLOT(slotItemProperties()));
 }
 
 SQ_CategoriesBox::~SQ_CategoriesBox()
@@ -212,6 +215,11 @@ void SQ_CategoriesBox::slotNewCategory()
     bool ok;
 
     KFileTreeViewItem *cur = view->currentKFileTreeViewItem();
+
+    if(!cur) return;
+
+    if(!cur->isDir())
+        cur = static_cast<KFileTreeViewItem *>(cur->parent());
 
     if(!cur) return;
 
@@ -292,6 +300,7 @@ void SQ_CategoriesBox::slotItemProperties()
     // directory - just show its properties
     if(cur->isDir())
         (void)new KPropertiesDialog(cur->url(), KSquirrel::app());
+
     // link to real file
     else
     {

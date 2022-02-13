@@ -1,3 +1,11 @@
+ksquirrel-0.7.1try3
+* context menu in folder tree
+* folder tree now accepts drops
+* previous directory now selected during navigating
+* current page in sidebar is now saved
+* "Show hidden files" is also saved
+* Sorting order is also saved :)
+
 ksquirrel-0.7.1 and ksquirrel-libs-0.7.1
 ******************************************
 

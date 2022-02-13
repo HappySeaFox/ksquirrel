@@ -1011,16 +1011,15 @@ LIB_KUNITTEST
 LIB_KSYCOCA
 LIB_KFILE
 LIB_KFM
+PKG_CONFIG
+ksquirrellibs_CFLAGS
+ksquirrellibs_LIBS
 CCAS
 CCASFLAGS
 CCASDEPMODE
 am__fastdepCCAS_TRUE
 am__fastdepCCAS_FALSE
-PKG_CONFIG
-ksquirrellibs_CFLAGS
-ksquirrellibs_LIBS
-USE_MMX_TRUE
-USE_MMX_FALSE
+KSQUIRREL_ASM_DEFS
 libkipi_CFLAGS
 libkipi_LIBS
 libkexif_CFLAGS
@@ -1049,11 +1048,11 @@ CXXCPP
 F77
 FFLAGS
 XMKMF
-CCAS
-CCASFLAGS
 PKG_CONFIG
 ksquirrellibs_CFLAGS
 ksquirrellibs_LIBS
+CCAS
+CCASFLAGS
 libkipi_CFLAGS
 libkipi_LIBS
 libkexif_CFLAGS
@@ -1667,7 +1666,6 @@ Optional Features:
   --disable-threading     disables threading even if libpthread found
   --disable-rpath         do not use the rpath feature of ld
   --disable-path-check    don't try to find out, where to install
-  --disable-mmx           don't use MMX [default=auto]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1699,13 +1697,13 @@ Some influential environment variables:
   F77         Fortran 77 compiler command
   FFLAGS      Fortran 77 compiler flags
   XMKMF       Path to xmkmf, Makefile generator for X Window System
-  CCAS        assembler compiler command (defaults to CC)
-  CCASFLAGS   assembler compiler flags (defaults to CFLAGS)
   PKG_CONFIG  path to pkg-config utility
   ksquirrellibs_CFLAGS
               C compiler flags for ksquirrellibs, overriding pkg-config
   ksquirrellibs_LIBS
               linker flags for ksquirrellibs, overriding pkg-config
+  CCAS        assembler compiler command (defaults to CC)
+  CCASFLAGS   assembler compiler flags (defaults to CFLAGS)
   libkipi_CFLAGS
               C compiler flags for libkipi, overriding pkg-config
   libkipi_LIBS
@@ -8428,7 +8426,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 8431 "configure"' > conftest.$ac_ext
+  echo '#line 8429 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -10169,11 +10167,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10172: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10170: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10176: \$? = $ac_status" >&5
+   echo "$as_me:10174: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -10402,11 +10400,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10405: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10403: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10409: \$? = $ac_status" >&5
+   echo "$as_me:10407: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -10469,11 +10467,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10472: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10470: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10476: \$? = $ac_status" >&5
+   echo "$as_me:10474: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -12555,7 +12553,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12558 "configure"
+#line 12556 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12653,7 +12651,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 12656 "configure"
+#line 12654 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14814,11 +14812,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14817: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14815: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14821: \$? = $ac_status" >&5
+   echo "$as_me:14819: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -14881,11 +14879,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14884: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14882: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14888: \$? = $ac_status" >&5
+   echo "$as_me:14886: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16184,7 +16182,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 16187 "configure"
+#line 16185 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -16282,7 +16280,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 16285 "configure"
+#line 16283 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -17105,11 +17103,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17108: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17106: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17112: \$? = $ac_status" >&5
+   echo "$as_me:17110: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -17172,11 +17170,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17175: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17173: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17179: \$? = $ac_status" >&5
+   echo "$as_me:17177: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -19140,11 +19138,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:19143: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:19141: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:19147: \$? = $ac_status" >&5
+   echo "$as_me:19145: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -19373,11 +19371,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:19376: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:19374: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:19380: \$? = $ac_status" >&5
+   echo "$as_me:19378: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -19440,11 +19438,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:19443: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:19441: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:19447: \$? = $ac_status" >&5
+   echo "$as_me:19445: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -21526,7 +21524,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 21529 "configure"
+#line 21527 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -21624,7 +21622,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 21627 "configure"
+#line 21625 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -30112,7 +30110,7 @@ for i in $jpeg_incdirs;
 do
   for j in jpeglib.h;
   do
-    echo "configure: 30115: $i/$j" >&5
+    echo "configure: 30113: $i/$j" >&5
     if test -r "$i/$j"; then
       echo "taking that" >&5
       jpeg_incdir=$i
@@ -30410,7 +30408,7 @@ for i in $qt_incdirs;
 do
   for j in $kde_qt_header;
   do
-    echo "configure: 30413: $i/$j" >&5
+    echo "configure: 30411: $i/$j" >&5
     if test -r "$i/$j"; then
       echo "taking that" >&5
       qt_incdir=$i
@@ -31241,7 +31239,7 @@ for i in $kde_incdirs;
 do
   for j in $kde_check_header;
   do
-    echo "configure: 31244: $i/$j" >&5
+    echo "configure: 31242: $i/$j" >&5
     if test -r "$i/$j"; then
       echo "taking that" >&5
       kde_incdir=$i
@@ -31271,7 +31269,7 @@ for i in $kde_libdirs;
 do
   for j in $kde_check_lib;
   do
-    echo "configure: 31274: $i/$j" >&5
+    echo "configure: 31272: $i/$j" >&5
     if test -r "$i/$j"; then
       echo "taking that" >&5
       kde_libdir=$i
@@ -31289,7 +31287,7 @@ for i in $kde_libdirs;
 do
   for j in "kde3/plugins/designer/kdewidgets.la";
   do
-    echo "configure: 31292: $i/$j" >&5
+    echo "configure: 31290: $i/$j" >&5
     if test -r "$i/$j"; then
       echo "taking that" >&5
       kde_widgetdir=$i
@@ -32808,7 +32806,7 @@ for i in $kde_sharedirs;
 do
   for j in apps/ksgmltools2/customization/kde-chunk.xsl;
   do
-    echo "configure: 32811: $i/$j" >&5
+    echo "configure: 32809: $i/$j" >&5
     if test -r "$i/$j"; then
       echo "taking that" >&5
       KDE_XSL_STYLESHEET=$i
@@ -32965,122 +32963,6 @@ fi
 
 
 #MIN_CONFIG(3.3)
-
-
-# By default we simply use the C compiler to build assembly code.
-
-test "${CCAS+set}" = set || CCAS=$CC
-test "${CCASFLAGS+set}" = set || CCASFLAGS=$CFLAGS
-
-
-
-depcc="$CCAS"   am_compiler_list=
-
-{ echo "$as_me:$LINENO: checking dependency style of $depcc" >&5
-echo $ECHO_N "checking dependency style of $depcc... $ECHO_C" >&6; }
-if test "${am_cv_CCAS_dependencies_compiler_type+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
-  # We make a subdir and do the tests there.  Otherwise we can end up
-  # making bogus files that we don't know about and never remove.  For
-  # instance it was reported that on HP-UX the gcc test will end up
-  # making a dummy file named `D' -- because `-MD' means `put the output
-  # in D'.
-  mkdir conftest.dir
-  # Copy depcomp to subdir because otherwise we won't find it if we're
-  # using a relative directory.
-  cp "$am_depcomp" conftest.dir
-  cd conftest.dir
-  # We will build objects and dependencies in a subdirectory because
-  # it helps to detect inapplicable dependency modes.  For instance
-  # both Tru64's cc and ICC support -MD to output dependencies as a
-  # side effect of compilation, but ICC will put the dependencies in
-  # the current directory while Tru64 will put them in the object
-  # directory.
-  mkdir sub
-
-  am_cv_CCAS_dependencies_compiler_type=none
-  if test "$am_compiler_list" = ""; then
-     am_compiler_list=`sed -n 's/^#*\([a-zA-Z0-9]*\))$/\1/p' < ./depcomp`
-  fi
-  for depmode in $am_compiler_list; do
-    # Setup a source with many dependencies, because some compilers
-    # like to wrap large dependency lists on column 80 (with \), and
-    # we should not choose a depcomp mode which is confused by this.
-    #
-    # We need to recreate these files for each test, as the compiler may
-    # overwrite some of them when testing with obscure command lines.
-    # This happens at least with the AIX C compiler.
-    : > sub/conftest.c
-    for i in 1 2 3 4 5 6; do
-      echo '#include "conftst'$i'.h"' >> sub/conftest.c
-      # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
-      # Solaris 8's {/usr,}/bin/sh.
-      touch sub/conftst$i.h
-    done
-    echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
-
-    case $depmode in
-    nosideeffect)
-      # after this tag, mechanisms are not by side-effect, so they'll
-      # only be used when explicitly requested
-      if test "x$enable_dependency_tracking" = xyes; then
-	continue
-      else
-	break
-      fi
-      ;;
-    none) break ;;
-    esac
-    # We check with `-c' and `-o' for the sake of the "dashmstdout"
-    # mode.  It turns out that the SunPro C++ compiler does not properly
-    # handle `-M -o', and we need to detect this.
-    if depmode=$depmode \
-       source=sub/conftest.c object=sub/conftest.${OBJEXT-o} \
-       depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
-       $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
-         >/dev/null 2>conftest.err &&
-       grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
-       grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
-       grep sub/conftest.${OBJEXT-o} sub/conftest.Po > /dev/null 2>&1 &&
-       ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
-      # icc doesn't choke on unknown options, it will just issue warnings
-      # or remarks (even with -Werror).  So we grep stderr for any message
-      # that says an option was ignored or not supported.
-      # When given -MP, icc 7.0 and 7.1 complain thusly:
-      #   icc: Command line warning: ignoring option '-M'; no argument required
-      # The diagnosis changed in icc 8.0:
-      #   icc: Command line remark: option '-MP' not supported
-      if (grep 'ignoring option' conftest.err ||
-          grep 'not supported' conftest.err) >/dev/null 2>&1; then :; else
-        am_cv_CCAS_dependencies_compiler_type=$depmode
-        break
-      fi
-    fi
-  done
-
-  cd ..
-  rm -rf conftest.dir
-else
-  am_cv_CCAS_dependencies_compiler_type=none
-fi
-
-fi
-{ echo "$as_me:$LINENO: result: $am_cv_CCAS_dependencies_compiler_type" >&5
-echo "${ECHO_T}$am_cv_CCAS_dependencies_compiler_type" >&6; }
-CCASDEPMODE=depmode=$am_cv_CCAS_dependencies_compiler_type
-
- if
-  test "x$enable_dependency_tracking" != xno \
-  && test "$am_cv_CCAS_dependencies_compiler_type" = gcc3; then
-  am__fastdepCCAS_TRUE=
-  am__fastdepCCAS_FALSE='#'
-else
-  am__fastdepCCAS_TRUE='#'
-  am__fastdepCCAS_FALSE=
-fi
-
 
 
 if test "${ac_cv_header_utime_h+set}" = set; then
@@ -33746,6 +33628,161 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
    CPPFLAGS=$kde_safe_cppflags
 
 
+   kde_safe_cppflags=$CPPFLAGS
+   CPPFLAGS="$CPPFLAGS $all_includes"
+
+    ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+ac_link='rm -rf SunWS_cache; ${CXX-g++} -o conftest${ac_exeext} $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS 1>&5'
+
+
+   if test "${ac_cv_header_kregexpeditorinterface_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for kregexpeditorinterface.h" >&5
+echo $ECHO_N "checking for kregexpeditorinterface.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_kregexpeditorinterface_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_kregexpeditorinterface_h" >&5
+echo "${ECHO_T}$ac_cv_header_kregexpeditorinterface_h" >&6; }
+else
+  # Is the header compilable?
+{ echo "$as_me:$LINENO: checking kregexpeditorinterface.h usability" >&5
+echo $ECHO_N "checking kregexpeditorinterface.h usability... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <kregexpeditorinterface.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_cxx_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_header_compiler=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6; }
+
+# Is the header present?
+{ echo "$as_me:$LINENO: checking kregexpeditorinterface.h presence" >&5
+echo $ECHO_N "checking kregexpeditorinterface.h presence... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <kregexpeditorinterface.h>
+_ACEOF
+if { (ac_try="$ac_cpp conftest.$ac_ext"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null && {
+	 test -z "$ac_cxx_preproc_warn_flag$ac_cxx_werror_flag" ||
+	 test ! -s conftest.err
+       }; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+
+rm -f conftest.err conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6; }
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: kregexpeditorinterface.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: kregexpeditorinterface.h: in the future, the compiler will take precedence" >&2;}
+
+    ;;
+esac
+{ echo "$as_me:$LINENO: checking for kregexpeditorinterface.h" >&5
+echo $ECHO_N "checking for kregexpeditorinterface.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_kregexpeditorinterface_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_kregexpeditorinterface_h=$ac_header_preproc
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_kregexpeditorinterface_h" >&5
+echo "${ECHO_T}$ac_cv_header_kregexpeditorinterface_h" >&6; }
+
+fi
+if test $ac_cv_header_kregexpeditorinterface_h = yes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define SQ_HAVE_KREGEXP
+_ACEOF
+
+fi
+
+
+   ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+   CPPFLAGS=$kde_safe_cppflags
+
+
 # Checks for OpenGL.
 
    kde_safe_cppflags=$CPPFLAGS
@@ -34046,86 +34083,393 @@ fi
 
 fi
 
-##################### from gdk-pixbuf-0.22 #########################
-#
-# Checks to see if we should compile in MMX support (there will be
-# a runtime test when the code is actually run to see if it should
-# be used - this just checks if we can compile it.)
-#
-# This code is partially taken from Mesa
-#
-# Check whether --enable-mmx was given.
-if test "${enable_mmx+set}" = set; then
-  enableval=$enable_mmx;  enable_mmx="$enableval"
+# By default we simply use the C compiler to build assembly code.
+
+test "${CCAS+set}" = set || CCAS=$CC
+test "${CCASFLAGS+set}" = set || CCASFLAGS=$CFLAGS
+
+
+
+depcc="$CCAS"   am_compiler_list=
+
+{ echo "$as_me:$LINENO: checking dependency style of $depcc" >&5
+echo $ECHO_N "checking dependency style of $depcc... $ECHO_C" >&6; }
+if test "${am_cv_CCAS_dependencies_compiler_type+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-   enable_mmx="auto"
+  if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
+  # We make a subdir and do the tests there.  Otherwise we can end up
+  # making bogus files that we don't know about and never remove.  For
+  # instance it was reported that on HP-UX the gcc test will end up
+  # making a dummy file named `D' -- because `-MD' means `put the output
+  # in D'.
+  mkdir conftest.dir
+  # Copy depcomp to subdir because otherwise we won't find it if we're
+  # using a relative directory.
+  cp "$am_depcomp" conftest.dir
+  cd conftest.dir
+  # We will build objects and dependencies in a subdirectory because
+  # it helps to detect inapplicable dependency modes.  For instance
+  # both Tru64's cc and ICC support -MD to output dependencies as a
+  # side effect of compilation, but ICC will put the dependencies in
+  # the current directory while Tru64 will put them in the object
+  # directory.
+  mkdir sub
 
-fi
-
-
-{ echo "$as_me:$LINENO: checking for x86 platform" >&5
-echo $ECHO_N "checking for x86 platform... $ECHO_C" >&6; }
-  case $host_cpu in
-    i386|i486|i586|i686|i786|k6|k7)
-	use_x86_asm=yes
-	;;
-    *)
-  	use_x86_asm=no
-  esac
-{ echo "$as_me:$LINENO: result: $use_x86_asm" >&5
-echo "${ECHO_T}$use_x86_asm" >&6; }
-
-use_mmx_asm=no
-
-{ echo "$as_me:$LINENO: checking compiler support for MMX" >&5
-echo $ECHO_N "checking compiler support for MMX... $ECHO_C" >&6; }
-
-if test x$enable_mmx = xauto ; then
-  if test $use_x86_asm = yes; then
-    save_ac_ext=$ac_ext
-    ac_ext=S
-
-    cp $srcdir/ksquirrel/libpixops/scale_line_22_33_mmx.S conftest.S
-    if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; then
-        use_mmx_asm=yes
-    fi
-
-    ac_ext=$save_ac_ext
+  am_cv_CCAS_dependencies_compiler_type=none
+  if test "$am_compiler_list" = ""; then
+     am_compiler_list=`sed -n 's/^#*\([a-zA-Z0-9]*\))$/\1/p' < ./depcomp`
   fi
+  for depmode in $am_compiler_list; do
+    # Setup a source with many dependencies, because some compilers
+    # like to wrap large dependency lists on column 80 (with \), and
+    # we should not choose a depcomp mode which is confused by this.
+    #
+    # We need to recreate these files for each test, as the compiler may
+    # overwrite some of them when testing with obscure command lines.
+    # This happens at least with the AIX C compiler.
+    : > sub/conftest.c
+    for i in 1 2 3 4 5 6; do
+      echo '#include "conftst'$i'.h"' >> sub/conftest.c
+      # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+      # Solaris 8's {/usr,}/bin/sh.
+      touch sub/conftst$i.h
+    done
+    echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
 
-elif test x$enable_mmx = xyes ; then
-    use_mmx_asm=yes
+    case $depmode in
+    nosideeffect)
+      # after this tag, mechanisms are not by side-effect, so they'll
+      # only be used when explicitly requested
+      if test "x$enable_dependency_tracking" = xyes; then
+	continue
+      else
+	break
+      fi
+      ;;
+    none) break ;;
+    esac
+    # We check with `-c' and `-o' for the sake of the "dashmstdout"
+    # mode.  It turns out that the SunPro C++ compiler does not properly
+    # handle `-M -o', and we need to detect this.
+    if depmode=$depmode \
+       source=sub/conftest.c object=sub/conftest.${OBJEXT-o} \
+       depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
+       $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
+         >/dev/null 2>conftest.err &&
+       grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep sub/conftest.${OBJEXT-o} sub/conftest.Po > /dev/null 2>&1 &&
+       ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
+      # icc doesn't choke on unknown options, it will just issue warnings
+      # or remarks (even with -Werror).  So we grep stderr for any message
+      # that says an option was ignored or not supported.
+      # When given -MP, icc 7.0 and 7.1 complain thusly:
+      #   icc: Command line warning: ignoring option '-M'; no argument required
+      # The diagnosis changed in icc 8.0:
+      #   icc: Command line remark: option '-MP' not supported
+      if (grep 'ignoring option' conftest.err ||
+          grep 'not supported' conftest.err) >/dev/null 2>&1; then :; else
+        am_cv_CCAS_dependencies_compiler_type=$depmode
+        break
+      fi
+    fi
+  done
+
+  cd ..
+  rm -rf conftest.dir
 else
-    use_mmx_asm=no
+  am_cv_CCAS_dependencies_compiler_type=none
 fi
 
-if test $use_mmx_asm = yes; then
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_CCAS_dependencies_compiler_type" >&5
+echo "${ECHO_T}$am_cv_CCAS_dependencies_compiler_type" >&6; }
+CCASDEPMODE=depmode=$am_cv_CCAS_dependencies_compiler_type
 
-cat >>confdefs.h <<\_ACEOF
-#define USE_MMX
+ if
+  test "x$enable_dependency_tracking" != xno \
+  && test "$am_cv_CCAS_dependencies_compiler_type" = gcc3; then
+  am__fastdepCCAS_TRUE=
+  am__fastdepCCAS_FALSE='#'
+else
+  am__fastdepCCAS_TRUE='#'
+  am__fastdepCCAS_FALSE=
+fi
+
+
+
+# MMX test duped from kdelibs/kdefx - it should be probably moved to admin/
+
+ksquirrel_asm_defs=
+case $host_cpu in
+  i*86 )
+  { echo "$as_me:$LINENO: checking for assembler support for IA32 extensions" >&5
+echo $ECHO_N "checking for assembler support for IA32 extensions... $ECHO_C" >&6; }
+
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+ __asm__("pxor %mm0, %mm0")
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+
+    echo $ECHO_N "MMX yes$ECHO_C"
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_X86_MMX 1
 _ACEOF
 
-  { echo "$as_me:$LINENO: result: yes" >&5
-echo "${ECHO_T}yes" >&6; }
+    ksquirrel_asm_defs="$ksquirrel_asm_defs -DHAVE_X86_MMX"
+
 else
-  { echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6; }
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	 echo $ECHO_N "MMX no$ECHO_C"
 fi
 
- if test x$use_mmx_asm = xyes; then
-  USE_MMX_TRUE=
-  USE_MMX_FALSE='#'
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+ __asm__("xorps %xmm0, %xmm0")
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+
+    echo $ECHO_N ", SSE yes$ECHO_C"
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_X86_SSE 1
+_ACEOF
+
+    ksquirrel_asm_defs="$ksquirrel_asm_defs -DHAVE_X86_SSE"
+
 else
-  USE_MMX_TRUE='#'
-  USE_MMX_FALSE=
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	 echo $ECHO_N ", SSE no$ECHO_C"
 fi
 
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+ __asm__("xorpd %xmm0, %xmm0")
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+
+    echo $ECHO_N ", SSE2 yes$ECHO_C"
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_X86_SSE2 1
+_ACEOF
+
+    ksquirrel_asm_defs="$ksquirrel_asm_defs -DHAVE_X86_SSE2"
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	 echo $ECHO_N ", SSE2 no$ECHO_C"
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+ __asm__("femms")
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+
+    echo $ECHO_N ", 3DNOW yes$ECHO_C"
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_X86_3DNOW 1
+_ACEOF
+
+    ksquirrel_asm_defs="$ksquirrel_asm_defs -DHAVE_X86_3DNOW"
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	 echo $ECHO_N ", 3DNOW no$ECHO_C"
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  echo
+  ;;
+  powerpc )
+  { echo "$as_me:$LINENO: checking for assembler support for AltiVec instructions" >&5
+echo $ECHO_N "checking for assembler support for AltiVec instructions... $ECHO_C" >&6; }
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+ __asm__("mtspr 256, %0\n\t" "vand %%v0, %%v0, %%v0" : : "r"(-1) )
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+
+    echo $ECHO_N " yes$ECHO_C"
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_PPC_ALTIVEC 1
+_ACEOF
+
+    ksquirrel_asm_defs="$ksquirrel_asm_defs -DHAVE_PPC_ALTIVEC"
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	 echo $ECHO_N ", AltiVec no$ECHO_C"
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  echo
+  ;;
+esac
+
+KSQUIRREL_ASM_DEFS="$ksquirrel_asm_defs"
+
+
+#
 # KIPI
+#
 have_kipi=no
 
 pkg_failed=no
@@ -34376,7 +34720,9 @@ echo "$as_me: WARNING: Can't find KIPI headers, KSquirrel won't be compiled with
 
 fi
 
+#
 # KEXIF
+#
 have_kexif=no
 
 pkg_failed=no
@@ -34699,8 +35045,6 @@ ac_config_files="$ac_config_files ksquirrel/Makefile"
 
 ac_config_files="$ac_config_files ksquirrel/imageedit/Makefile"
 
-ac_config_files="$ac_config_files ksquirrel/libpixops/Makefile"
-
 ac_config_files="$ac_config_files ksquirrel/mime/Makefile"
 
 ac_config_files="$ac_config_files ksquirrel/sidebar/Makefile"
@@ -34857,13 +35201,6 @@ if test -z "${am__fastdepCCAS_TRUE}" && test -z "${am__fastdepCCAS_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCCAS\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCCAS\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${USE_MMX_TRUE}" && test -z "${USE_MMX_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"USE_MMX\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"USE_MMX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -35355,7 +35692,6 @@ do
     "doc/ru/Makefile") CONFIG_FILES="$CONFIG_FILES doc/ru/Makefile" ;;
     "ksquirrel/Makefile") CONFIG_FILES="$CONFIG_FILES ksquirrel/Makefile" ;;
     "ksquirrel/imageedit/Makefile") CONFIG_FILES="$CONFIG_FILES ksquirrel/imageedit/Makefile" ;;
-    "ksquirrel/libpixops/Makefile") CONFIG_FILES="$CONFIG_FILES ksquirrel/libpixops/Makefile" ;;
     "ksquirrel/mime/Makefile") CONFIG_FILES="$CONFIG_FILES ksquirrel/mime/Makefile" ;;
     "ksquirrel/sidebar/Makefile") CONFIG_FILES="$CONFIG_FILES ksquirrel/sidebar/Makefile" ;;
     "pics/Makefile") CONFIG_FILES="$CONFIG_FILES pics/Makefile" ;;
@@ -35750,16 +36086,15 @@ LIB_KUNITTEST!$LIB_KUNITTEST$ac_delim
 LIB_KSYCOCA!$LIB_KSYCOCA$ac_delim
 LIB_KFILE!$LIB_KFILE$ac_delim
 LIB_KFM!$LIB_KFM$ac_delim
+PKG_CONFIG!$PKG_CONFIG$ac_delim
+ksquirrellibs_CFLAGS!$ksquirrellibs_CFLAGS$ac_delim
+ksquirrellibs_LIBS!$ksquirrellibs_LIBS$ac_delim
 CCAS!$CCAS$ac_delim
 CCASFLAGS!$CCASFLAGS$ac_delim
 CCASDEPMODE!$CCASDEPMODE$ac_delim
 am__fastdepCCAS_TRUE!$am__fastdepCCAS_TRUE$ac_delim
 am__fastdepCCAS_FALSE!$am__fastdepCCAS_FALSE$ac_delim
-PKG_CONFIG!$PKG_CONFIG$ac_delim
-ksquirrellibs_CFLAGS!$ksquirrellibs_CFLAGS$ac_delim
-ksquirrellibs_LIBS!$ksquirrellibs_LIBS$ac_delim
-USE_MMX_TRUE!$USE_MMX_TRUE$ac_delim
-USE_MMX_FALSE!$USE_MMX_FALSE$ac_delim
+KSQUIRREL_ASM_DEFS!$KSQUIRREL_ASM_DEFS$ac_delim
 libkipi_CFLAGS!$libkipi_CFLAGS$ac_delim
 libkipi_LIBS!$libkipi_LIBS$ac_delim
 libkexif_CFLAGS!$libkexif_CFLAGS$ac_delim
@@ -35773,7 +36108,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 70; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 69; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

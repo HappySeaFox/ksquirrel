@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>388</width>
+            <width>470</width>
             <height>47</height>
         </rect>
     </property>
@@ -22,14 +22,6 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QPushButton" row="0" column="2">
-            <property name="name">
-                <cstring>pushMask</cstring>
-            </property>
-            <property name="text">
-                <string></string>
-            </property>
-        </widget>
         <widget class="QLabel" row="0" column="0">
             <property name="name">
                 <cstring>textLabel1</cstring>
@@ -63,6 +55,22 @@
                 <bool>false</bool>
             </property>
         </widget>
+        <widget class="QPushButton" row="0" column="3">
+            <property name="name">
+                <cstring>pushMask</cstring>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="2">
+            <property name="name">
+                <cstring>pushEdit</cstring>
+            </property>
+            <property name="text">
+                <string>Edit</string>
+            </property>
+        </widget>
     </grid>
 </widget>
 <connections>
@@ -71,6 +79,12 @@
         <signal>clicked()</signal>
         <receiver>SQ_SelectDeselectGroup</receiver>
         <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>pushEdit</sender>
+        <signal>clicked()</signal>
+        <receiver>SQ_SelectDeselectGroup</receiver>
+        <slot>slotEdit()</slot>
     </connection>
 </connections>
 <tabstops>
@@ -81,6 +95,9 @@
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">sq_selectdeselectgroup.ui.h</include>
 </includes>
+<slots>
+    <slot access="private" specifier="non virtual">slotEdit()</slot>
+</slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>
     <function returnType="int">exec( QString &amp; mask )</function>

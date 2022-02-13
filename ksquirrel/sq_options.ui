@@ -473,6 +473,14 @@
                                         </size>
                                     </property>
                                 </spacer>
+                                <widget class="QCheckBox" row="6" column="0">
+                                    <property name="name">
+                                        <cstring>checkCalc</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Calculate directory size</string>
+                                    </property>
+                                </widget>
                             </grid>
                         </widget>
                         <widget class="QWidget">

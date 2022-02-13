@@ -448,6 +448,8 @@ class SQ_GLWidget : public QGLWidget
 
         void slotAccelActivated();
 
+        void slotCopyJobResult(KIO::Job *job);
+
         /*
          *  Slots for toolbar's actions:
          *  fit width, fit height, zoom+, zoom-, rotate, flip,
@@ -553,6 +555,7 @@ class SQ_GLWidget : public QGLWidget
         bool                   rotate;
         KURL                   m_original;
         QWMatrix               wm;
+        KURL                   lastCopy;
 
         static SQ_GLWidget    *m_instance;
 };
