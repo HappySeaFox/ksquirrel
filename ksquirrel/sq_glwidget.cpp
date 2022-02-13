@@ -72,12 +72,12 @@
 #include "sq_codecsettings.h"
 #include "sq_previewwidget.h"
 #include "sq_glselectionpainter.h"
-
 #include "sq_thumbnailloadjob.h"
 #include "sq_thumbnailsize.h"
 #include "fmt_filters.h"
 #include "sq_imagebcg.h"
 #include "sq_imagefilter.h"
+#include "sq_hloptions.h"
 
 #include <ksquirrel-libs/fileio.h>
 #include <ksquirrel-libs/fmt_codec_base.h>
@@ -340,6 +340,11 @@ void SQ_GLWidget::createToolbar()
 
     pAToolQuick = new SQ_ToolButton(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, 22), i18n("Codec Settings"), this, SLOT(slotShowCodecSettings()), toolbar);
     pAToolQuick->setEnabled(false);
+
+    // let user show navigator when running with file argument
+    // (navigator is hidden in this case)
+    if(!SQ_HLOptions::instance()->path.isEmpty())
+        pAShowNav = new SQ_ToolButton(SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, 22), i18n("Show navigator"), this, SLOT(slotShowNav()), toolbar);
 
     slider_zoom = new QSlider(1, 38, 2, 19, Qt::Horizontal, toolbar);
     slider_zoom->setTickmarks(QSlider::Below);
@@ -886,7 +891,7 @@ void SQ_GLWidget::keyPressEvent(QKeyEvent *e)
         case SQ_KEYSTATES(Qt::Key_X, Qt::NoButton):
         case SQ_KEYSTATES(Qt::Key_Escape, Qt::NoButton):
         case SQ_KEYSTATES(Qt::Key_Return, Qt::NoButton):
-        case SQ_KEYSTATES(Qt::Key_Enter, Qt::Keypad):        KSquirrel::app()->slotCloseGLWidget();         break;
+        case SQ_KEYSTATES(Qt::Key_Enter, Qt::Keypad):        KSquirrel::app()->closeGLWidget();         break;
         case SQ_KEYSTATES(Qt::Key_P, Qt::NoButton):          pAProperties->activate();    break;
         case SQ_KEYSTATES(Qt::Key_Home, Qt::Keypad):
         case SQ_KEYSTATES(Qt::Key_Home, Qt::NoButton):       slotFirst();                 break;
@@ -2810,6 +2815,19 @@ void SQ_GLWidget::slotSelectionClear()
 
     if(!manualBlocked())
         startAnimation();
+}
+
+void SQ_GLWidget::slotShowNav()
+{
+    delete pAShowNav;
+
+    KSquirrel::app()->setDemo(false);
+    KSquirrel::app()->show();
+
+    if(SQ_GLView::window()->isSeparate())
+        KSquirrel::app()->raiseGLWidget();
+    else
+        KSquirrel::app()->closeGLWidget();
 }
 
 #include "sq_glwidget.moc"

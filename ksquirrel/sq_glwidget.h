@@ -446,6 +446,7 @@ class SQ_GLWidget : public QGLWidget
          *  fit width, fit height, zoom+, zoom-, rotate, flip,
          *  first file, last file, reset...
          */
+        void slotShowNav();
         void slotSetZoomPercents(int);
         void slotZoomW();
         void slotZoomH();
@@ -493,7 +494,7 @@ class SQ_GLWidget : public QGLWidget
                                       *pAZoomLast, *pAHideToolbars,
                                       *pASelectionEllipse, *pASelectionRect;
 
-        SQ_ToolButton                *pAToolQuick, *pAToolFull;
+        SQ_ToolButton                *pAToolQuick, *pAToolFull, *pAShowNav;
         SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
 
         KActionCollection     *ac;

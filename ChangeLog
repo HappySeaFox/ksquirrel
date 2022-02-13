@@ -1,3 +1,7 @@
+ksquirrel-0.7.0try5
+*********************
+* navigator is now hidden when running with file argument
+
 ksquirrel-0.7.0try4
 *********************
 * fixed file selection when passing filename through command line

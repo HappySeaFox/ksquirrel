@@ -51,7 +51,7 @@
 #include "sq_progressbox.h"
 #include "sq_filethumbviewitem.h"
 
-SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
+SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name), isPending(false)
 {
     toolTip = 0;
 
@@ -492,6 +492,17 @@ void SQ_FileThumbView::rebuildCachedPixmaps()
 void SQ_FileThumbView::itemRemoved(KFileItem *i)
 {
     thumbJob->itemRemoved(i);
+}
+
+void SQ_FileThumbView::showEvent(QShowEvent *e)
+{
+    KFileIconView::showEvent(e);
+
+    if(isPending)
+    {
+        isPending = false;
+        startThumbnailUpdate();
+    }
 }
 
 #include "sq_filethumbview.moc"

@@ -122,7 +122,7 @@ void SQ_GLView::closeEvent(QCloseEvent *e)
     e->ignore();
 
     // let KSquirrel close SQ_GLView, since it can be built-in
-    KSquirrel::app()->slotCloseGLWidget();
+    KSquirrel::app()->closeGLWidget();
 }
 
 /*

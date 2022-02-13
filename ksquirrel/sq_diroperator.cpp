@@ -467,8 +467,15 @@ void SQ_DirOperator::startOrNotThumbnailUpdate()
     {
         SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(fileview);
 
+        // start thumbnail update only when this
+        // diroperator is visible
         if(tv)
-            tv->startThumbnailUpdate();
+        {
+            if(tv->isVisible())
+                tv->startThumbnailUpdate();
+            else
+                tv->waitForShowEvent();
+        }
     }
 }
 

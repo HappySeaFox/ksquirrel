@@ -88,6 +88,21 @@ class KSquirrel : public KMainWindow, public DCOPObject
         KHistoryCombo* historyCombo();
 
         /*
+         *  Demo mode means that somebody executed smth like
+         *
+         *  $ ksquirrel /mnt/c/1.png
+         *
+         *  In this case navigator will be hidden, and we should close app
+         *  when user closes image viewer (OpenGL widget)
+         */
+        void setDemo(bool b);
+
+        /*
+         *  Close (hide) SQ_GLWidget.
+         */
+        void closeGLWidget();
+
+        /*
          *  Do some actions before exit - show final splash (if needed),
          *  save parameters to config file,
          *  write config file to disk, write cached thumbnails, etc.
@@ -162,8 +177,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
         /*
          *  Catch some events and do specific actions.
          */
-        void closeEvent(QCloseEvent *e);
-        void resizeEvent(QResizeEvent *e);
+        virtual void closeEvent(QCloseEvent *e);
+        virtual void resizeEvent(QResizeEvent *e);
 
     /*
      *  Internal methods
@@ -332,11 +347,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
     public slots:
 
         /*
-         *  Close (hide) SQ_GLWidget.
-         */
-        void slotCloseGLWidget();
-
-        /*
          *  Show SQ_GLWidget.
          */
         void raiseGLWidget();
@@ -499,7 +509,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
     private:
         static KSquirrel     *m_instance;
 
-        bool builtin;
+        bool builtin, m_demo;
 
         KToggleAction *pAInterface;
 
@@ -742,6 +752,12 @@ inline
 bool KSquirrel::separateImageWindow() const
 {
     return builtin;
+}
+
+inline
+void KSquirrel::setDemo(bool b)
+{
+    m_demo = b;
 }
 
 #endif

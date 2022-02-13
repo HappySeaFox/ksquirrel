@@ -102,6 +102,11 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          */
         virtual void insertCdUpItem(const KURL &base);
 
+        /*
+         *  Don't start thumbnail job until thumbnail view is hidden.
+         */
+        void waitForShowEvent();
+
         SQ_ProgressBox* progressBox() const;
 
     protected:
@@ -110,6 +115,11 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          */
         virtual bool eventFilter(QObject *o, QEvent *e);
         virtual void hideEvent(QHideEvent *);
+
+        /*
+         *  Show event. Let's start thumbnail job, if needed.
+         */
+        virtual void showEvent(QShowEvent *);
 
     private:
         /*
@@ -187,7 +197,19 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
 
         QPixmap    directoryCache,  pendingCache;
         QSize    pixelSize;
+
+        /*
+         *  Thumbnail job won't start until isPending
+         *  is false. It means, that thumbnail view currently is hidden.
+         */
+        bool    isPending;
 };
+
+inline
+void SQ_FileThumbView::waitForShowEvent()
+{
+    isPending = true;
+}
 
 inline
 SQ_ProgressBox* SQ_FileThumbView::progressBox() const

@@ -118,6 +118,7 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name)
 
     slideShowStop = true;
     slideShowPaused = false;
+    m_demo = !SQ_HLOptions::instance()->path.isEmpty();
 
     writeDefaultEntries();
 
@@ -157,7 +158,7 @@ KSquirrel::~KSquirrel()
     delete sqFiltersExt;
     delete sqFiltersName;
 
-    if(gl_view->isSeparate())
+    if(!builtin)
         delete gl_view;
 
     delete kconf;
@@ -218,8 +219,14 @@ void KSquirrel::closeEvent(QCloseEvent *ev)
 {
     kconf->setGroup("Main");
 
+    if(m_demo)
+    {
+        finalActions();
+        qApp->quit();
+    }
+
     if(builtin && viewBrowser->id(viewBrowser->visibleWidget()))
-        slotCloseGLWidget();
+        closeGLWidget();
     // Minimize to tray ?
     else if(kconf->readBoolEntry("minimize to tray", false))
     {
@@ -231,9 +238,6 @@ void KSquirrel::closeEvent(QCloseEvent *ev)
     }
     else // No, close app
     {
-        if(gl_view->isSeparate())
-            gl_view->hide();
-
         // do final stuff
         finalActions();
 
@@ -767,7 +771,7 @@ void KSquirrel::slotGotoTray()
     tray->show();
 
     // hide image window if needed
-    if(gl_view->isSeparate())
+    if(!builtin)
         gl_view->hide();
 
     // hide main window
@@ -820,12 +824,20 @@ void KSquirrel::raiseGLWidget()
 }
 
 // Hide image window
-void KSquirrel::slotCloseGLWidget()
+void KSquirrel::closeGLWidget()
 {
+    if(m_demo)
+    {
+        finalActions();
+        qApp->quit();
+    }
+
     if(builtin)
         viewBrowser->raiseWidget(0);
     else
+    {
         gl_view->hide();
+    }
 }
 
 // create bookmarks
@@ -942,7 +954,7 @@ void KSquirrel::applyDefaultSettings()
 // Toggle fullscreen state for image window
 void KSquirrel::slotFullScreen(bool full)
 {
-    WId id = (gl_view->isSeparate()) ? gl_view->winId() : winId();
+    WId id = !builtin ? gl_view->winId() : winId();
 
     kconf->setGroup("GL view");
 
@@ -1067,6 +1079,9 @@ void KSquirrel::slotThumbsHuge()
 // Final actions before exiting
 void KSquirrel::finalActions()
 {
+    if(!builtin)
+        gl_view->hide();
+
     // save parameters to config file
     saveValues();
 
@@ -1225,7 +1240,9 @@ void KSquirrel::continueLoading()
     // set position & size
     handlePositionSize();
 
-    show();
+    // don't show navigator when running with file argument
+    if(SQ_HLOptions::instance()->path.isEmpty() || builtin)
+        show();
 
 #ifdef SQ_HAVE_KIPI
     kipiManager->loadPlugins();
@@ -1271,7 +1288,7 @@ void KSquirrel::slotChangeInterface(bool bin)
 // Set caption to main window or to image window
 void KSquirrel::setCaption(const QString &cap)
 {
-    if(gl_view->isSeparate())
+    if(!builtin)
         gl_view->setCaption(cap);
     else
         KMainWindow::setCaption(cap);
@@ -1755,6 +1772,5 @@ void KSquirrel::configAnime(bool init)
     else if(!init && kconf->readBoolEntry("anime_dont", false) && anim)
         delete anim;
 }
-
 
 #include "ksquirrel.moc"
