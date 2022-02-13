@@ -29,11 +29,20 @@
 #include "ksquirrel.h"
 #include "sq_libraryhandler.h"
 #include <kconfig.h>
+#include <kio/global.h>
+
+#include <math.h>
 
 #include "err.h"
 
 SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(parent, name)
 {
+	isflippedV = 0;
+	isflippedH = 0;
+
+	memset(matrix, 0, sizeof(matrix));
+	matrix[5] = matrix[0] = 1.0f;
+
 	rgba = 0;
 	setZoomFactor(0.10f);
 
@@ -48,13 +57,17 @@ SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(
 	tp = sqConfig->readNumEntry("shade model", 0);
        ShadeModel = ShadeModelArray[tp];
 
-	density = 0.0f;
-
-	setFogColor(1.0, 1.0, 1.0, 1);
-
 	setFocusPolicy(QWidget::WheelFocus);
 	sqConfig->setGroup("GL view");
 	setAcceptDrops(sqConfig->readBoolEntry("enable drop", true));
+
+	pARotateLeft = new KAction("Rotate <=", 0, 0, this, SLOT(slotRotateLeft()), sqApp->actionCollection(), "SQ Rotate picture left");
+	pARotateRight = new KAction("Rotate =>", 0, 0, this, SLOT(slotRotateRight()), sqApp->actionCollection(), "SQ Rotate picture right");
+	pAZoomPlus = new KAction("Zoom+", 0, 0, this, SLOT(slotZoomPlus()), sqApp->actionCollection(), "SQ Zoom+");
+	pAZoomMinus = new KAction("Zoom-", 0, 0, this, SLOT(slotZoomMinus()), sqApp->actionCollection(), "SQ Zoom-");
+	pAFlipV = new KAction("Flip vertically", 0, 0, this, SLOT(slotFlipV()), sqApp->actionCollection(), "SQ flip_v");
+	pAFlipH = new KAction("Flip horizontally", 0, 0, this, SLOT(slotFlipH()), sqApp->actionCollection(), "SQ flip_h");
+	pAReset = new KAction("Normal view", 0, 0, this, SLOT(slotMatrixReset()), sqApp->actionCollection(), "SQ ResetGL");
 }
 
 SQ_GLViewWidget::~SQ_GLViewWidget()
@@ -68,9 +81,6 @@ void SQ_GLViewWidget::initializeGL()
 	glClearColor(sqGLViewBGColor.red()*koeff, sqGLViewBGColor.green()*koeff, sqGLViewBGColor.blue()*koeff, 0.0f);
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_FOG);
-	glFogfv(GL_FOG_COLOR, fogcolor);
-	glFogf(GL_FOG_DENSITY, density);
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -126,68 +136,85 @@ const GLfloat SQ_GLViewWidget::getZoomFactor() const
 	return zoomfactor;
 }
 
-void SQ_GLViewWidget::setFogColor(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat w)
-{
-	fogcolor[0] = r;
-	fogcolor[1] = g;
-	fogcolor[2] = b;
-	fogcolor[3] = w;
-}
-
-const GLfloat* SQ_GLViewWidget::getFogColor() const
-{
-	return fogcolor;
-}
-
 void SQ_GLViewWidget::wheelEvent(QWheelEvent *e)
 {
 	if(e->delta() > 0 && e->state() == Qt::ControlButton)
-		glScalef(2.0f, 2.0f, 1.0f);
+		matrix_zoom(2.0f, width()/2, height()/2);
 	else if(e->delta() < 0 && e->state() == Qt::ControlButton)
-		glScalef(0.50f, 0.50f, 1.0f);
+		matrix_zoom(0.5f, width()/2, height()/2);
 	else if(e->delta() > 0 && e->state() == Qt::ShiftButton)
-		glScalef(1.0f+zoomfactor, 1.0f+zoomfactor, 1.0f);
+		matrix_zoom(0.1f, width()/2, height()/2);
 	else if(e->delta() < 0 && e->state() == Qt::ShiftButton)
-		glScalef(1.0f-zoomfactor, 1.0f-zoomfactor, 1.0f);
+		matrix_zoom(0.90f, width()/2, height()/2);
 	else { e->ignore(); return; }
 
 	updateGL();
 }
 
+void SQ_GLViewWidget::mousePressEvent(QMouseEvent *e)
+{
+	if(e->state() == Qt::LeftButton || e->state() == Qt::NoButton)
+	{
+		xmoveold = e->x();
+		ymoveold = e->y();
+	}
+	else e->ignore();
+}
+
+void SQ_GLViewWidget::mouseMoveEvent(QMouseEvent *e)
+{
+	if(e->state() == Qt::LeftButton)
+	{
+		xmove = e->x();
+		ymove = e->y();
+
+		matrix_move(xmove-xmoveold, -ymove+ymoveold);
+
+		xmoveold = e->x();
+		ymoveold = e->y();
+
+		updateGL();
+	}
+	else
+		e->ignore();
+}
+
 void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 {
 	if(e->key() == Qt::Key_Left && e->state() == Qt::NoButton)
-		glTranslated(1, 0, 0);
+		matrix_move(-1, 0);
 	else if(e->key() == Qt::Key_Right && e->state() == Qt::NoButton)
-		glTranslated(-1, 0, 0);
+		matrix_move(1, 0);
 	else if(e->key() == Qt::Key_Up && e->state() == Qt::NoButton)
-		glTranslated(0, -1, 0);
+		matrix_move(0, -1);
 	else if(e->key() == Qt::Key_Down && e->state() == Qt::NoButton)
-		glTranslated(0, 1, 0);
-	else if(e->key() == Qt::Key_Plus  && ((e->state()&Qt::ControlButton) == 0))
-		glScalef(1.0f+zoomfactor, 1.0f+zoomfactor, 1.0f);
-	else if(e->key() == Qt::Key_Minus  && ((e->state()&Qt::ControlButton) == 0))
-		glScalef(1.0f-zoomfactor, 1.0f-zoomfactor, 1.0f);
-	else if(e->key() == Qt::Key_Plus && ((e->state()&Qt::ControlButton) == Qt::ControlButton))
-		glScalef(2.0f, 2.0f, 1.0f);
-	else if(e->key() == Qt::Key_Minus  && ((e->state()&Qt::ControlButton) == Qt::ControlButton))
-		glScalef(0.50f, 0.50f, 1.0f);
+		matrix_move(0, 1);
+	else if(e->key() == Qt::Key_Plus  && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
+		slotZoomPlus();
+	else if(e->key() == Qt::Key_Minus  && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
+		slotZoomMinus();
+	else if(e->key() == Qt::Key_Plus && (e->state() == Qt::ControlButton|Qt::Keypad || e->state() == Qt::ControlButton))
+		matrix_zoom(2.0f, width()/2, height()/2);
+	else if(e->key() == Qt::Key_Minus && (e->state() == Qt::ControlButton|Qt::Keypad || e->state() == Qt::ControlButton))
+		matrix_zoom(0.5f, width()/2, height()/2);
+	else if(e->key() == Qt::Key_V && e->state() == Qt::NoButton)
+		slotFlipV();
+	else if(e->key() == Qt::Key_H && e->state() == Qt::NoButton)
+		slotFlipH();
 	else if(e->key() == Qt::Key_Left && e->state() == Qt::ControlButton)
-		{ glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(90.0f, 0.0f, 0.0f, 1.0f); }
+		slotRotateLeft();
 	else if(e->key() == Qt::Key_Right && e->state() == Qt::ControlButton)
-		{ glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(-90.0f, 0.0f, 0.0f, 1.0f); }
+		slotRotateRight();
+	else if(e->key() == Qt::Key_R && e->state() == Qt::NoButton)
+		slotMatrixReset();
 	else if(e->key() == Qt::Key_Up && e->state() == Qt::ControlButton)
-		{ glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(180.0f, 0.0f, 0.0f, 1.0f); }
+		matrix_rotate(180.0f);
 	else if(e->key() == Qt::Key_Down && e->state() == Qt::ControlButton)
-		{ glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(-180.0f, 0.0f, 0.0f, 1.0f); }
+		matrix_rotate(-180.0f);
 	else if(e->key() == Qt::Key_Left && e->state() == Qt::ShiftButton)
-		{ glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(1.0f, 0.0f, 0.0f, 1.0f); }
+		matrix_rotate(-1.0f);
 	else if(e->key() == Qt::Key_Right && e->state() == Qt::ShiftButton)
-		{ glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(-1.0f, 0.0f, 0.0f, 1.0f); }
-	else if(e->key() == Qt::Key_F2 && e->state() == Qt::NoButton)
-		{ if(density<1.5f) density += (GLfloat)0.01f; glFogf(GL_FOG_DENSITY, density); }
-	else if(e->key() == Qt::Key_F1 && e->state() == Qt::NoButton)
-		{ if(density>0) density -= (GLfloat)0.01f; glFogf(GL_FOG_DENSITY, density); }
+		matrix_rotate(1.0f);
 	else { e->ignore(); return; }
 
 	updateGL();
@@ -218,11 +245,13 @@ void SQ_GLViewWidget::contextMenuEvent(QContextMenuEvent*)
 
 	KActionSeparator *pASep = new KActionSeparator;
 
-	pARotate = new KAction("Rotate", 0, 0, this, SLOT(slotRotate()), sqApp->actionCollection(), "Rotate picture");
-	pAZoomPlus = new KAction("Zoom+", 0, 0, this, SLOT(slotZoomPlus()), sqApp->actionCollection(), "Zoom+");
-	pAZoomMinus = new KAction("Zoom-", 0, 0, this, SLOT(slotZoomMinus()), sqApp->actionCollection(), "Zoom-");
-
-	pARotate->plug(menu);
+	pAReset->plug(menu);
+	pASep->plug(menu);
+	pARotateLeft->plug(menu);
+	pARotateRight->plug(menu);
+	pASep->plug(menu);
+	pAFlipV->plug(menu);
+	pAFlipH->plug(menu);
 	pASep->plug(menu);
 	pAZoomPlus->plug(menu);
 	pAZoomMinus->plug(menu);
@@ -231,43 +260,150 @@ void SQ_GLViewWidget::contextMenuEvent(QContextMenuEvent*)
 }
 
 //SLOTS
-void SQ_GLViewWidget::slotRotate()
-{
-	glTranslatef(0.0f, 0.0f, 0.0f); glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-	updateGL();
-}
-
 void SQ_GLViewWidget::slotZoomPlus()
 {
-	glScalef(1.0f+zoomfactor, 1.0f+zoomfactor, 1.0f);
-	updateGL();
+	matrix_zoom(1.10f, width()/2, height()/2);
 }
 
 void SQ_GLViewWidget::slotZoomMinus()
 {
-	glScalef(1.0f-zoomfactor, 1.0f-zoomfactor, 1.0f);
-	updateGL();
+	matrix_zoom(0.90f, width()/2, height()/2);
 }
 
-int flip_bmp(RGBA *A, long w, long h)
+void SQ_GLViewWidget::slotRotateLeft()
 {
-	long		i;
-	RGBA	*rgba;
-	int		scanlen = w * sizeof(RGBA);
+	sqConfig->setGroup("GL view");
+	matrix_rotate(-(GLfloat)sqConfig->readNumEntry("angle", 90));
+}
 
-	if((rgba = (RGBA*)calloc(w, sizeof(RGBA))) == 0)
-		return 0;
+void SQ_GLViewWidget::slotRotateRight()
+{
+	sqConfig->setGroup("GL view");
+	matrix_rotate((GLfloat)sqConfig->readNumEntry("angle", 90));
+}
 
-	for(i = 0;i < h/2;i++)
+/*
+	 operations with matrices are taken from GLiv =)
+
+	thanks to Guillaume Chazarian.
+*/
+void SQ_GLViewWidget::flip(int id)
+{
+	matrix[id] *= -1.0;
+	matrix[id + 1] *= -1.0;
+	matrix[id + 3] *= -1.0;
+
+	write_gl_matrix();
+}
+
+void SQ_GLViewWidget::slotFlipH()
+{
+	isflippedH = ~isflippedH;
+	flip(0);
+}
+
+void SQ_GLViewWidget::slotFlipV()
+{
+	isflippedV = ~isflippedV;
+	flip(4);
+}
+
+void SQ_GLViewWidget::slotMatrixReset()
+{
+	matrix_reset();
+}
+
+void SQ_GLViewWidget::write_gl_matrix(void)
+{
+	static GLfloat transposed[16] =
 	{
-		memcpy(rgba, A + i*w, scanlen);
-		memcpy(A + i*w, A + (h-i-1)*w, scanlen);
-		memcpy(A + (h-i-1)*w, rgba, scanlen);
-	}
+		1.0, 0.0, 0.0, 0.0,
+		0.0, 1.0, 0.0, 0.0,
+		0.0, 0.0, 1.0, 0.0,
+		0.0, 0.0, 0.0, 1.0};
 
-	free(rgba);
+	transposed[0] = MATRIX_C1;
+	transposed[5] = MATRIX_C2;
+	transposed[4] = MATRIX_S1;
+	transposed[1] = MATRIX_S2;
+	transposed[12] = MATRIX_X;
+	transposed[13] = MATRIX_Y;
 
-	return 1;
+	glLoadMatrixf(transposed);
+	gluLookAt(0,0,5, 0,0,0, 0,1,0);
+}
+
+void SQ_GLViewWidget::matrix_move(GLfloat x, GLfloat y)
+{
+	MATRIX_X += x;
+	MATRIX_Y += y;
+
+	write_gl_matrix();
+}
+
+void SQ_GLViewWidget::matrix_reset(void)
+{
+	int i;
+
+	for (i = 0; i < 8; i++)
+		matrix[i] = (GLfloat) (i % 5 == 0);
+
+	write_gl_matrix();
+}
+
+void SQ_GLViewWidget::matrix_zoom(GLfloat ratio, GLfloat x, GLfloat y)
+{
+	GLfloat offset_x, offset_y;
+
+	offset_x = width() / 2.0 - x;
+	offset_y = height() / 2.0 - y;
+
+	matrix_move(offset_x, offset_y);
+
+	MATRIX_C1 *= ratio;
+	MATRIX_S1 *= ratio;
+	MATRIX_X *= ratio;
+	MATRIX_S2 *= ratio;
+	MATRIX_C2 *= ratio;
+	MATRIX_Y *= ratio;
+
+	matrix_move(-offset_x, -offset_y);
+
+	write_gl_matrix();
+}
+
+/*
+ * Rotation:         Product:
+ * cos   sin  0  0 | c1*cos+s2*sin   s1*cos+c2*sin   0  x*cos+y*sin
+ * -sin  cos  0  0 | -c1*sin+s2*cos  -s1*sin+c2*cos  0  -x*sin+y*cos
+ * 0     0    1  0 | 0               0               1  0
+ * 0     0    0  1 | 0               0               0  1
+ */
+void SQ_GLViewWidget::matrix_rotate(GLfloat angle)
+{
+	double cosine, sine, rad;
+	GLfloat c1, s1, c2, s2, x, y;
+	const double rad_const = 0.017453;
+
+	rad = angle * rad_const;
+	cosine = cos(rad);
+	sine = sin(rad);
+
+	c1 = MATRIX_C1;
+	c2 = MATRIX_C2;
+	s1 = MATRIX_S1;
+	s2 = MATRIX_S2;
+	x = MATRIX_X;
+	y = MATRIX_Y;
+
+	MATRIX_C1 = c1 * cosine + s2 * sine;
+	MATRIX_S1 = s1 * cosine + c2 * sine;
+	MATRIX_S2 = -c1 * sine + s2 * cosine;
+	MATRIX_C2 = -s1 * sine + c2 * cosine;
+	MATRIX_X = x * cosine + y * sine;
+	MATRIX_Y = -x * sine + y * cosine;
+
+	write_gl_matrix();
 }
 
 bool SQ_GLViewWidget::showIfCan(const QString &file)
@@ -290,13 +426,30 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 	lib->fmt_init(&finfo, name);
 	i = lib->fmt_read_info(finfo);
 
-	if(i == SQERR_BADFILE)
+	if(i != SQERR_OK)
 	{
-		QMessageBox::warning(sqApp, "Decoding", "      File corrupted !      ", QMessageBox::Ok, QMessageBox::NoButton);
+		switch(i)
+		{
+			case SQERR_BADFILE: status = "      File corrupted !      "; break;
+			case SQERR_NOMEMORY: status = "Library couldn't alloc memory for internal usage !"; break;
+
+			default: status = "Library returned unknown error code.";
+		}
+
+		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
 		return false;
 	}
-
+	
 	rgba = (RGBA*)realloc(rgba, finfo->w * finfo->h * sizeof(RGBA));
+
+	if(rgba == NULL)
+	{
+		status.sprintf("Oops! Memory realloc failed.\n\nI tried to realloc memory for image:\n\nwidth: %ld\nheight: %ld\nbpp: %d\nTotal needed: ", finfo->w, finfo->h, finfo->bpp);
+		status = status + KIO::convertSize(finfo->w * finfo->h * sizeof(RGBA)) + " of memory.";
+		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
+		return false;
+	}
+	
 	memset(rgba, 255, finfo->w * finfo->h * sizeof(RGBA));
 
 	w = (GLfloat)finfo->w;
@@ -311,12 +464,10 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 
 	lib->fmt_close(finfo);
 
-	if(fm.extension(false).lower() == "bmp" || fm.extension(false).lower() == "tga" || fm.extension(false).lower() == "rgb")
-		flip_bmp(rgba, finfo->w, finfo->h);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	gluLookAt(0,0,5, 0,0,0, 0,1,0);
+	matrix_reset();
+
+	if(finfo->needflip) slotFlipV();
 
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, finfo->w, finfo->h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 	updateGL();

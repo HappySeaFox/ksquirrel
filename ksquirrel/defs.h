@@ -43,10 +43,18 @@ typedef struct
     unsigned long	w;        /*  width  */
     unsigned long	h;        /*  height */
     unsigned char	bpp;
+    
     BOOL		hasalpha; /* has alpha channel ?  */
+    BOOL		needflip;
+    
+    ushort		images;   /*  how many images  (normally 1) */
+    BOOL		animated;
+
     RGB			*pal;     /*  palette  */
     short		pal_entr; /*  how many elements contains *pal (usually 1<<bpp elements)  */
-    char		*dump;	  /*  dump: "Width: 1024\nHeight: 768\nBPP: 24\n...."  */
+
+				  /* currently is not used  */
+    char		*dump;	  /*  dump: "Width: 1024\nHeight: 768\nBPP: 24\n.... + some more interesting information"  */
 
     FILE		*fptr;
 

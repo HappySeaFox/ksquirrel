@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_options.ui'
 **
-** Created: Чтв Апр 8 19:18:13 2004
+** Created: Втр Апр 13 16:53:50 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -125,6 +125,7 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     buttonGroupViewTypeLayout->addWidget( radioXnview, 4, 0 );
 
     radioButton13 = new QRadioButton( buttonGroupViewType, "radioButton13" );
+    buttonGroupViewType->insert( radioButton13, 5 );
 
     buttonGroupViewTypeLayout->addWidget( radioButton13, 5, 0 );
 
@@ -487,9 +488,9 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     tabWidget2 = new QTabWidget( page_6, "tabWidget2" );
 
     tab_3 = new QWidget( tabWidget2, "tab_3" );
-    tabLayout_3 = new QGridLayout( tab_3, 1, 1, 11, 6, "tabLayout_3"); 
 
     buttonGroup9 = new QButtonGroup( tab_3, "buttonGroup9" );
+    buttonGroup9->setGeometry( QRect( 11, 11, 480, 81 ) );
     buttonGroup9->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroup9->sizePolicy().hasHeightForWidth() ) );
     buttonGroup9->setColumnLayout(0, Qt::Vertical );
     buttonGroup9->layout()->setSpacing( 6 );
@@ -516,9 +517,8 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     QSpacerItem* spacer_19 = new QSpacerItem( 310, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
     buttonGroup9Layout->addItem( spacer_19, 1, 2 );
 
-    tabLayout_3->addWidget( buttonGroup9, 0, 0 );
-
     buttonGroupShadeModel = new QButtonGroup( tab_3, "buttonGroupShadeModel" );
+    buttonGroupShadeModel->setGeometry( QRect( 11, 98, 480, 75 ) );
     buttonGroupShadeModel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroupShadeModel->sizePolicy().hasHeightForWidth() ) );
     buttonGroupShadeModel->setFrameShape( QButtonGroup::GroupBoxPanel );
     buttonGroupShadeModel->setColumnLayout(0, Qt::Vertical );
@@ -537,47 +537,38 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupShadeModelLayout->addWidget( radioFlat, 0, 0 );
 
-    tabLayout_3->addWidget( buttonGroupShadeModel, 1, 0 );
-    QSpacerItem* spacer_20 = new QSpacerItem( 465, 95, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    tabLayout_3->addItem( spacer_20, 3, 0 );
+    textLabel1_6 = new QLabel( tab_3, "textLabel1_6" );
+    textLabel1_6->setGeometry( QRect( 11, 282, 77, 16 ) );
+    textLabel1_6->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel1_6->sizePolicy().hasHeightForWidth() ) );
 
-    buttonGroup10 = new QButtonGroup( tab_3, "buttonGroup10" );
-    buttonGroup10->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroup10->sizePolicy().hasHeightForWidth() ) );
-    buttonGroup10->setFrameShape( QButtonGroup::NoFrame );
-    buttonGroup10->setFrameShadow( QButtonGroup::Plain );
-    buttonGroup10->setColumnLayout(0, Qt::Vertical );
-    buttonGroup10->layout()->setSpacing( 3 );
-    buttonGroup10->layout()->setMargin( 0 );
-    buttonGroup10Layout = new QGridLayout( buttonGroup10->layout() );
-    buttonGroup10Layout->setAlignment( Qt::AlignTop );
+    checkDrawBorder = new QCheckBox( tab_3, "checkDrawBorder" );
+    checkDrawBorder->setGeometry( QRect( 11, 254, 480, 19 ) );
 
-    checkDrop = new QCheckBox( buttonGroup10, "checkDrop" );
+    checkBackgroundTransparent = new QCheckBox( tab_3, "checkBackgroundTransparent" );
+    checkBackgroundTransparent->setGeometry( QRect( 11, 229, 480, 19 ) );
 
-    buttonGroup10Layout->addWidget( checkDrop, 1, 0 );
+    checkDrop = new QCheckBox( tab_3, "checkDrop" );
+    checkDrop->setGeometry( QRect( 11, 204, 480, 19 ) );
 
-    checkBackgroundTransparent = new QCheckBox( buttonGroup10, "checkBackgroundTransparent" );
-
-    buttonGroup10Layout->addWidget( checkBackgroundTransparent, 2, 0 );
-
-    checkStepByStep = new QCheckBox( buttonGroup10, "checkStepByStep" );
+    checkStepByStep = new QCheckBox( tab_3, "checkStepByStep" );
+    checkStepByStep->setGeometry( QRect( 11, 179, 480, 19 ) );
     checkStepByStep->setChecked( TRUE );
 
-    buttonGroup10Layout->addWidget( checkStepByStep, 0, 0 );
-
-    checkDrawBorder = new QCheckBox( buttonGroup10, "checkDrawBorder" );
-
-    buttonGroup10Layout->addWidget( checkDrawBorder, 3, 0 );
-
-    tabLayout_3->addWidget( buttonGroup10, 2, 0 );
+    spinAngle = new QSpinBox( tab_3, "spinAngle" );
+    spinAngle->setGeometry( QRect( 94, 279, 90, 21 ) );
+    spinAngle->setMaxValue( 360 );
+    spinAngle->setMinValue( 0 );
+    spinAngle->setLineStep( 1 );
+    spinAngle->setValue( 0 );
     tabWidget2->insertTab( tab_3, "" );
 
     tab_4 = new QWidget( tabWidget2, "tab_4" );
-    tabLayout_4 = new QGridLayout( tab_4, 1, 1, 11, 6, "tabLayout_4"); 
+    tabLayout_3 = new QGridLayout( tab_4, 1, 1, 11, 6, "tabLayout_3"); 
 
     textLabel1_4 = new QLabel( tab_4, "textLabel1_4" );
     textLabel1_4->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel1_4->sizePolicy().hasHeightForWidth() ) );
 
-    tabLayout_4->addWidget( textLabel1_4, 2, 0 );
+    tabLayout_3->addWidget( textLabel1_4, 2, 0 );
 
     buttonGroupZoomType = new QButtonGroup( tab_4, "buttonGroupZoomType" );
     buttonGroupZoomType->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, buttonGroupZoomType->sizePolicy().hasHeightForWidth() ) );
@@ -600,7 +591,7 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupZoomTypeLayout->addWidget( radioButton20, 1, 0 );
 
-    tabLayout_4->addMultiCellWidget( buttonGroupZoomType, 1, 1, 0, 2 );
+    tabLayout_3->addMultiCellWidget( buttonGroupZoomType, 1, 1, 0, 2 );
 
     buttonGroupZoomModel = new QButtonGroup( tab_4, "buttonGroupZoomModel" );
     buttonGroupZoomModel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroupZoomModel->sizePolicy().hasHeightForWidth() ) );
@@ -622,17 +613,17 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupZoomModelLayout->addWidget( radioNearest, 1, 0 );
 
-    tabLayout_4->addMultiCellWidget( buttonGroupZoomModel, 0, 0, 0, 2 );
-    QSpacerItem* spacer_21 = new QSpacerItem( 475, 173, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    tabLayout_4->addMultiCell( spacer_21, 3, 3, 0, 2 );
+    tabLayout_3->addMultiCellWidget( buttonGroupZoomModel, 0, 0, 0, 2 );
+    QSpacerItem* spacer_20 = new QSpacerItem( 475, 173, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    tabLayout_3->addMultiCell( spacer_20, 3, 3, 0, 2 );
 
     spinZoomFactor = new QSpinBox( tab_4, "spinZoomFactor" );
     spinZoomFactor->setMaxValue( 100 );
     spinZoomFactor->setValue( 25 );
 
-    tabLayout_4->addWidget( spinZoomFactor, 2, 1 );
-    QSpacerItem* spacer_22 = new QSpacerItem( 285, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    tabLayout_4->addItem( spacer_22, 2, 2 );
+    tabLayout_3->addWidget( spinZoomFactor, 2, 1 );
+    QSpacerItem* spacer_21 = new QSpacerItem( 285, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    tabLayout_3->addItem( spacer_21, 2, 2 );
     tabWidget2->insertTab( tab_4, "" );
 
     pageLayout_6->addWidget( tabWidget2, 0, 0 );
@@ -640,7 +631,7 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     SQ_OptionsLayout->addMultiCellWidget( widgetStack1, 0, 0, 1, 3 );
     languageChange();
-    resize( QSize(636, 492).expandedTo(minimumSizeHint()) );
+    resize( QSize(634, 491).expandedTo(minimumSizeHint()) );
 
     // signals and slots connections
     connect( buttonCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
@@ -792,11 +783,14 @@ void SQ_Options::languageChange()
     buttonGroupShadeModel->setTitle( tr2i18n( "Shade Model" ) );
     radioSmooth->setText( tr2i18n( "GL_SMOOTH" ) );
     radioFlat->setText( tr2i18n( "GL_FLAT" ) );
-    buttonGroup10->setTitle( QString::null );
-    checkDrop->setText( tr2i18n( "Enable drop" ) );
-    checkBackgroundTransparent->setText( tr2i18n( "<NI>background for transparent images (usually quads)" ) );
-    checkStepByStep->setText( tr2i18n( "<NI>Step-by-step decoding and displaying" ) );
+    textLabel1_6->setText( tr2i18n( "Rotation angle:" ) );
     checkDrawBorder->setText( tr2i18n( "<NI>Draw a border" ) );
+    checkBackgroundTransparent->setText( tr2i18n( "<NI>background for transparent images (usually quads)" ) );
+    checkDrop->setText( tr2i18n( "Enable drop" ) );
+    checkStepByStep->setText( tr2i18n( "<NI>Step-by-step decoding and displaying" ) );
+    spinAngle->setPrefix( QString::null );
+    spinAngle->setSuffix( tr2i18n( " degrees" ) );
+    spinAngle->setSpecialValueText( tr2i18n( "no rotation" ) );
     tabWidget2->changeTab( tab_3, tr2i18n( "Main" ) );
     textLabel1_4->setText( tr2i18n( "<NI>Zoom increment:" ) );
     buttonGroupZoomType->setTitle( tr2i18n( "<NI>Zoom type" ) );

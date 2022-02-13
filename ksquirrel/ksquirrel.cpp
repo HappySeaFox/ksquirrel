@@ -42,14 +42,12 @@
 #include "sq_glviewwidget.h"
 #include "sq_libraryhandler.h"
 #include "sq_bookmarks.h"
-#include "sq_squirreloptions.h"
 #include "sq_librarylistener.h"
 #include "sq_externaltools.h"
 #include "sq_fileviewfilter.h"
 
 
 Squirrel * Squirrel::App = 0;
-KDockWidget *pdock1;
 
 
 Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent, name), DCOPObject(name), mainSplitter(0L)
@@ -58,22 +56,21 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 
 	sqLibPrefix = "/usr/lib/squirrel/";
 	
-	sqConfig = new KConfig(QString("ksquirrelrc"));
+	sqConfig = kapp->config();
 	sqLoader = new KIconLoader(*(KGlobal::iconLoader()));
 	sqWStack = 0L;
 	sqCurrentURL = 0L;
 	mainSplitter = 0L;
 	tray = 0L;
 
-	sqOptions = new SQ_SquirrelOptions;
-	sqOptions->init(sqConfig);
+	sqConfig->setGroup("Main");
+	bool first_time = sqConfig->readBoolEntry("first_time", true);
 
 	iconSizeList = new QValueVector<int>;
 	iconSizeList->append(16);
 	iconSizeList->append(22);
 	iconSizeList->append(32);
 	iconSizeList->append(48);
-	
 
 	sqConfig->setGroup("Interface");
 	toolbarIconSize = (*iconSizeList)[sqConfig->readNumEntry("toolbar icon size", 0)];
@@ -99,6 +96,7 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
         	case Squirrel::Kuickshow:	createWidgetsLikeKuickshow();break;
         	case Squirrel::WinViewer:	createWidgetsLikeWinViewer();  break;
         	case Squirrel::Xnview:		createWidgetsLikeXnview();  break;
+        	case Squirrel::Browser:		createWidgetsLikeBrowser();  break;
 
         	default:
          		createWidgetsLikeSQuirrel();
@@ -108,6 +106,10 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	resize(QApplication::desktop()->width(), QApplication::desktop()->height());
 
 	show();
+
+	if(first_time)
+		if(QMessageBox::information(sqApp, "Squirrel", "You are running ksquirrel at first time (config file dosn't exist).\nI am using now default values.\n\nPlease visit \"Options\" dialog to adjust appearence.\n\nDo it now ?", QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes)
+			pAConfigure->activate();
 }
 
 Squirrel::~Squirrel()
@@ -159,6 +161,9 @@ void Squirrel::closeEvent(QCloseEvent *ev)
 			sqConfig->setGroup("Filters ext");
 			sqConfig->writeEntry(num, sqFilters->getFilterExt(i));
 		}
+
+		sqConfig->setGroup("Main");
+		sqConfig->writeEntry("first_time", false);
 
 		sqConfig->sync();
 		ev->accept();
@@ -272,7 +277,7 @@ void Squirrel::InitFilterMenu()
 	for(i = 0;i < filterList->count();i++)
 		actionFilterMenu->insertItem(filterList->getFilterName(i), 7000+i);
 
-	slotSetFilter(7000);
+	if(filterList->count()) slotSetFilter(7000);
 	connect(actionFilterMenu, SIGNAL(activated(int)), this, SLOT(slotSetFilter(int)));
 }
 
@@ -500,6 +505,39 @@ void Squirrel::createWidgetsLikeXnview()
 	V->setSizes(l);
 }
 
+void Squirrel::createWidgetsLikeBrowser() // simple hack
+{
+	CreateStatusBar();
+
+	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
+	QSplitter *V = new QSplitter(Qt::Vertical, mainDock);
+	mainDock->setWidget(V);
+	mainDock->setDockSite(KDockWidget::DockCorner);
+	mainDock->setEnableDocking(KDockWidget::DockNone);
+	setView(mainDock);
+	setMainDockWidget(mainDock);
+
+	QSplitter *H = new QSplitter(Qt::Horizontal, V);
+	sqWStack = new SQ_WidgetStack(H);
+	sqWStack->raiseFirst(createFirst);
+
+	SQ_TreeView *pTree = new SQ_TreeView(H);
+	H->moveToFirst(pTree);
+
+	sqGLView = new SQ_GLViewWidget(V);
+
+	CreateToolbar(toolBar());
+	CreateMenu(menuBar());
+
+	// "XnView" specific
+	pAGLView->unplug(toolBar());
+
+	QValueList<int> l;
+	l.append(1);
+	l.append(3);
+	V->setSizes(l);
+}
+
 void Squirrel::CreateStatusBar()
 {
 	sbar = statusBar();
@@ -529,8 +567,6 @@ void Squirrel::CreateStatusBar()
 
 void Squirrel::CreateMenu(KMenuBar *menubar)
 {
-	KAction *pARunMenu = new KAction("Show 'Run ...' menu", "", KShortcut(CTRL+ALT+Key_R), this, SLOT(slotExecuteRunMenu()), actionCollection(), "execute 'Run' menu");
-
 	pop_file = new KPopupMenu(menubar);
 	pop_edit = new KPopupMenu(menubar);
 	pop_view = new KPopupMenu(menubar);
@@ -545,8 +581,6 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	menubar->insertItem("&Filter", actionFilterMenu);
 	menubar->insertItem("&Help", helpMenu());
 
-	pARunMenu->plug(pop_view);
-	pop_view->insertSeparator();
 	sqWStack->pAIconBigger->plug(pop_view);
 	sqWStack->pAIconSmaller->plug(pop_view);
 	pop_view->insertSeparator();
@@ -640,7 +674,7 @@ void Squirrel::control(const QString &str)
 {
 	if(str == "ACTIVATE")
 	{
-		showNormal();
+		this->showNormal();
 	}
 }
 

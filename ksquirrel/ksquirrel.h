@@ -44,7 +44,6 @@ class SQ_RunProcess;
 class SQ_SystemTray;
 class SQ_GLViewWidget;
 class SQ_Bookmarks;
-class SQ_SquirrelOptions;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_FileviewFilter;
@@ -60,7 +59,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 	public:
 		static Squirrel *App;
 
-		enum ViewType{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview};
+		enum ViewType{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview,Browser};
 		ViewType			curViewType;
 
 	private:
@@ -99,6 +98,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void createWidgetsLikeKuickshow();
 		void createWidgetsLikeWinViewer();
 		void createWidgetsLikeXnview();
+		void createWidgetsLikeBrowser();
 
 	public slots:
 		void slotOptions();
@@ -132,7 +132,6 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		SQ_FileviewFilter		*filterList;
 		SQ_LibraryHandler		*sqLibHandlerReal;
 		KStatusBar			*sbar;
-		SQ_SquirrelOptions		*options;
 		SQ_LibraryListener		*libl;
 
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
@@ -149,7 +148,6 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 };
 
 #define	sqApp			(Squirrel::App)
-#define	sqOptions		(Squirrel::App->options)
 #define	sqFilters			(Squirrel::App->filterList)
 #define	sqConfig			(Squirrel::App->kconf)
 #define	sqLibUpdater		(Squirrel::App->libl)

@@ -60,23 +60,12 @@ void SQ_Options::init()
     ((QRadioButton*)(buttonGroupShadeModel->find(tp)))->setChecked(true);
     kColorGLbackground->setColor(sqGLViewBGColor);
     checkDrop->setChecked(sqConfig->readBoolEntry("enable drop", true));
+    tp = sqConfig->readNumEntry("angle", 90);
+    spinAngle->setValue(tp);
+    
     
     checkShowLinks->toggle();
-/*
-    tableLib->addColumn("Library");
-    tableLib->addColumn("Info");
-    tableLib->addColumn("Version");
-    tableLib->addColumn("Extensions");
-    
-    
-    tableLib->setColumnWidthMode(0, QListView::Maximum);
-    tableLib->setColumnWidthMode(1, QListView::Maximum);
-    tableLib->setColumnWidthMode(2, QListView::Maximum);
-    tableLib->setColumnWidthMode(3, QListView::Maximum);
-    
-    for(int i = 0;i < 4;i++)
-        tableLib->setColumnWidth(i, tableLib->columnWidth(i)+20);
-*/    
+
     textPrefix->setText(sqLibPrefix);
     listMain->setSorting(-1);
     itemMain = new QListViewItem(listMain, 0);
@@ -98,8 +87,6 @@ void SQ_Options::init()
     listMain->setCurrentItem(itemMain);
     listMain->setSelected(itemMain, true);
     
-//    listFilters->header()->hide();
-
     listFilters->setSorting(-1);
 
     	int count = sqFilters->count();
@@ -208,6 +195,7 @@ void SQ_Options::start()
 	sqConfig->writeEntry("zoom model", buttonGroupZoomModel->id(buttonGroupZoomModel->selected()));
 	sqConfig->writeEntry("shade model", buttonGroupShadeModel->id(buttonGroupShadeModel->selected()));
 	sqConfig->writeEntry("enable drop", checkDrop->isChecked());
+	sqConfig->writeEntry("angle", spinAngle->value());
 	
 	sqConfig->setGroup("Libraries");
 	sqConfig->writeEntry("monitor", checkMonitor->isChecked());
@@ -223,7 +211,7 @@ void SQ_Options::start()
 		sqFilters->addFilter(tf);
 	}
 	
-	sqConfig->sync();
+//	sqConfig->sync();
     }
 }
 

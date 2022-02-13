@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_about.h  -  description
+                          sq_externaltool.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 12 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,23 +15,30 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef SQ_EXTERNALTOOL_H
+#define SQ_EXTERNALTOOL_H
 
-#ifndef _ABOUT_SQUIRREL_H
-#define _ABOUT_SQUIRREL_H
+#include <qvaluevector.h>
+#include <qstring.h>
 
-#include <kaboutdata.h>
+/**
+  *@author CKulT
+  */
 
-static const char *description = "KSquirrel - image viewer for KDE with dynamic format support.";
+typedef struct
+{
+	QString name;
+	QString command;
+}SQ_EXT_TOOL;
 
-static KAboutData aboutData(
-			"ksquirrel", 
-			"KSquirrel",
-			"0.2.2", 
-			description,
-			KAboutData::License_GPL,
-			"(c) 2004, CKulT", 
-			"",
-			"http://ksquirrel.sourceforge.net",
-			"");
-    
+class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
+{
+	public: 
+		SQ_ExternalTool();
+		~SQ_ExternalTool();
+
+		void addTool(const QString &name, const QString &command);
+		void addTool(const SQ_EXT_TOOL &tool);
+};
+
 #endif

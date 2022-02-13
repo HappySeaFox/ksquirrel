@@ -27,13 +27,6 @@
 
 #include "defs.h"
 
-// thanks to GLiv
-static GLfloat matrix[8] =
-{
-	1.0f, 0.0f, 0.0f, 0.0f,
-	0.0f, 1.0f, 0.0f, 0.0f
-};
-
 #define	MATRIX_C1	matrix[0]
 #define	MATRIX_S1	matrix[1]
 #define	MATRIX_X	matrix[3]
@@ -41,12 +34,13 @@ static GLfloat matrix[8] =
 #define	MATRIX_C2	matrix[5]
 #define	MATRIX_Y	matrix[7]
 
-
 class SQ_GLViewWidget : public QGLWidget
 {
 	Q_OBJECT
 
 	private:
+		GLfloat matrix[8];
+
 		RGBA	*rgba;
 		fmt_info	*finfo;
 
@@ -54,8 +48,8 @@ class SQ_GLViewWidget : public QGLWidget
 		GLfloat	w, h;
 		GLfloat	zoomfactor;
 		GLfloat	density;
-
-		GLfloat fogcolor[4];
+		int		xmoveold, ymoveold, xmove, ymove;
+		unsigned	isflippedV, isflippedH;
 
 	public:
 		SQ_GLViewWidget(QWidget *parent = 0, const char *name = 0);
@@ -64,14 +58,22 @@ class SQ_GLViewWidget : public QGLWidget
 		void setZoomFactor(const GLfloat &newfactor);
 		const GLfloat getZoomFactor() const;
 
-		void setFogColor(const GLfloat,const GLfloat,const GLfloat,const GLfloat);
-		const GLfloat* getFogColor() const;
 		bool showIfCan(const QString &file);
 
 		GLint 			ZoomModel, ShadeModel;
 		GLint			ZoomModelArray[2], ShadeModelArray[2];
 
-		KAction			*pARotate, *pAZoomPlus, *pAZoomMinus;
+		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset;
+
+	public:
+		void matrix_move(GLfloat x, GLfloat y);
+		void matrix_zoom(GLfloat ratio, GLfloat x, GLfloat y);
+		void matrix_reset();
+		void write_gl_matrix(void);
+		void matrix_rotate(GLfloat angle);
+		void flip(int);
+		void flip_h();
+		void flip_v();
 
 	protected:
 		void initializeGL();
@@ -85,10 +87,18 @@ class SQ_GLViewWidget : public QGLWidget
 
 		void contextMenuEvent(QContextMenuEvent *);
 
+		void mousePressEvent(QMouseEvent *);
+		void mouseMoveEvent(QMouseEvent *);
+
 	public slots:
-		void slotRotate();
 		void slotZoomPlus();
 		void slotZoomMinus();
+		void slotRotateLeft();
+		void slotRotateRight();
+		void slotFlipV();
+		void slotFlipH();
+		void slotMatrixReset();
+
 };
 
 #define	sqGLRotate		(SQ_GLViewWidget::pARotate)

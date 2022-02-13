@@ -187,8 +187,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	if(id == 0 && pDirOperatorList == 0L)
 	{
 		pDirOperatorList = new SQ_DirOperator(KURL(((path)?*path:"/")));
-		pDirOperatorList->readConfig(sqConfig, "file browser");
-		pDirOperatorList->setViewConfig(sqConfig, "file browser");
+		pDirOperatorList->readConfig(KGlobal::config(), "squirrel image viewer file browser");
+		pDirOperatorList->setViewConfig(KGlobal::config(), "squirrel image viewer file browser");
 		pDirOperatorList->setMode(KFile::Files);
 		pDirOperatorList->setView(KFile::Simple);
 		pDirOperatorList->view()->actionCollection()->action(2)->activate();
@@ -202,8 +202,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	if(id == 1 && pDirOperatorIcon == 0L)
 	{
 		pDirOperatorIcon = new SQ_DirOperator(KURL("/"));
-		pDirOperatorIcon->readConfig(sqConfig, "file browser");
-		pDirOperatorIcon->setViewConfig(sqConfig, "file browser");
+		pDirOperatorIcon->readConfig(KGlobal::config(), "squirrel image viewer file browser");
+		pDirOperatorIcon->setViewConfig(KGlobal::config(), "squirrel image viewer file browser");
 		pDirOperatorIcon->setMode(KFile::Files);
 		pDirOperatorIcon->setView(KFile::Simple);
 		pDirOperatorIcon->view()->actionCollection()->action(1)->activate();
@@ -217,8 +217,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	else if(id == 2 &&  pDirOperatorDetail == 0L)
 	{
 		pDirOperatorDetail = new SQ_DirOperator(KURL("/"));
-		pDirOperatorDetail->readConfig(sqConfig, "file browser");
-		pDirOperatorDetail->setViewConfig(sqConfig, "file browser");
+		pDirOperatorDetail->readConfig(KGlobal::config(), "squirrel image viewer file browser");
+		pDirOperatorDetail->setViewConfig(KGlobal::config(), "squirrel image viewer file browser");
 		pDirOperatorDetail->setMode(KFile::Files);
 		pDirOperatorDetail->setView(KFile::Detail);
 		if(!path) pDirOperatorDetail->setURL(getURL(), true);
@@ -275,6 +275,6 @@ void SQ_WidgetStack::raiseFirst(int id)
 	pANewDir = dirop->actionCollection()->action("mkdir");
 	pAProp = dirop->actionCollection()->action("properties");
 	pADelete = dirop->actionCollection()->action("delete");
-	pAIconSmaller = new KAction("Smaller icons", sqLoader->loadIcon("viewmag-", KIcon::Desktop, 22), KShortcut(CTRL+Key_Minus), this, SLOT(slotSetIconSmaller()), sqApp->actionCollection(), "Set smaller icons");
-	pAIconBigger = new KAction("Bigger icons", sqLoader->loadIcon("viewmag+", KIcon::Desktop, 22), KShortcut(CTRL+Key_Plus), this, SLOT(slotSetIconBigger()), sqApp->actionCollection(), "Set bigger icons");
+	pAIconSmaller = new KAction("Smaller icons", sqLoader->loadIcon("viewmag-", KIcon::Desktop, 22), 0, this, SLOT(slotSetIconSmaller()), sqApp->actionCollection(), "Set smaller icons");
+	pAIconBigger = new KAction("Bigger icons", sqLoader->loadIcon("viewmag+", KIcon::Desktop, 22), 0, this, SLOT(slotSetIconBigger()), sqApp->actionCollection(), "Set bigger icons");
 }

@@ -10,30 +10,35 @@ sync type=1
 
 [Filters]
 1=All files
-10=PNM
-2=JPEG
-3=PNG
-4=Compuserve GIF
-5=ZSoft PCX
-6=SGI
-7=HTML documents
-8=Audio files
-9=XBM
+10=GIMP layers and brushes
+11=PNM
+12=X Window Dump
+2=Windows BMP
+3=Windows icons, cursors
+4=PNG
+5=JPEG
+6=Compuserve GIF
+7=X Monochrome Bitmaps
+8=X PixMap
+9=ZSoft PCX
 
 [Filters ext]
 1=*
-10=*.pnm *.ppm *.pgm *.pbm
-2=*.jpeg *.jpg *.jpe
-3=*.png
-4=*.gif
-5=*.pcx
-6=*.sgi *.rgb *.rgba *.bw
-7=*.html *.htm *.shtml
-8=*.mp3 *.ogg *.wav *.wma *.it
-9=*.xbm
+10=*.xcf *.gbr
+11=*.pnm *.ppm *.pgm *.pbm
+12=*.xwd
+2=*.bmp *.dib
+3=*.ico *.cur
+4=*.png
+5=*.jpeg *.jpg *.jpe *.jp2
+6=*.gif
+7=*.xbm
+8=*.xpm
+9=*.pcx
 
 [GL view]
 GL view background=#cccccc
+angle=90
 enable drop=true
 shade model=0
 zoom model=1
@@ -49,10 +54,15 @@ show dialog=false
 
 [Main]
 activate another=true
+first_time=false
 minimize to tray=false
 restart=false
 
-[file browser]
+[Open-with settings]
+CompletionMode=5
+History=gimp,xnview
+
+[squirrel image viewer file browser]
 Preview Size=60
 ShowPreviews=false
 ViewMode=SmallColumns

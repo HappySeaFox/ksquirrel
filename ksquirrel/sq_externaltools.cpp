@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_externaltools.ui'
 **
-** Created: Срд Апр 7 18:31:01 2004
+** Created: Втр Апр 13 00:43:14 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
