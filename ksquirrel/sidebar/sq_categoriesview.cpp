@@ -35,7 +35,6 @@
 #include <kfiletreeviewitem.h>
 #include <kpopupmenu.h>
 #include <kmessagebox.h>
-#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_dir.h"
@@ -86,8 +85,6 @@ KFileTreeViewItem* SQ_CategoriesViewBranch::createTreeViewItem(KFileTreeViewItem
 
 SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
-    kdDebug() << "+SQ_CategoriesView" << endl;
-
     setAcceptDrops(true);
 
     SQ_Dir dir(SQ_Dir::Categories);
@@ -122,8 +119,6 @@ SQ_CategoriesView::SQ_CategoriesView(QWidget *parent, const char *name) : KFileT
 SQ_CategoriesView::~SQ_CategoriesView()
 {
     delete menu;
-
-    kdDebug() << "-SQ_CategoriesView" << endl;
 }
 
 void SQ_CategoriesView::slotContextMenu(KListView *, QListViewItem *, const QPoint &p)
@@ -143,8 +138,8 @@ void SQ_CategoriesView::slotItemExecuted(QListViewItem *item)
         QString inpath = SQ_StorageFile::readStorageFIle(cur->path());
 
         if(!inpath.isEmpty())
-            if(SQ_LibraryHandler::instance()->supports(inpath))
-                SQ_GLWidget::window()->slotStartDecoding(inpath, true);
+            if(SQ_LibraryHandler::instance()->libraryForFile(inpath))
+                SQ_GLWidget::window()->startDecoding(inpath);
     }
 }
 
@@ -152,8 +147,6 @@ void SQ_CategoriesView::slotItemExecuted(QListViewItem *item)
 
 SQ_CategoriesBox::SQ_CategoriesBox(QWidget *parent, const char *name) : QVBox(parent, name)
 {
-    kdDebug() << "+SQ_CategoriesBox" << endl;
-
     sing = this;
 
     lastdir = i18n("New Category");
@@ -176,9 +169,7 @@ SQ_CategoriesBox::SQ_CategoriesBox(QWidget *parent, const char *name) : QVBox(pa
 }
 
 SQ_CategoriesBox::~SQ_CategoriesBox()
-{
-    kdDebug() << "-SQ_CategoriesBox" << endl;
-}
+{}
 
 void SQ_CategoriesBox::addToCategory(const QString &path)
 {

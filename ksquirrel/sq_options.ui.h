@@ -30,6 +30,8 @@ void SQ_Options::init()
 
     SQ_Config::instance()->setGroup("Main");
 
+    QColor color;
+
     tp = kconf->readNumEntry("applyto", SQ_CodecSettings::Both);
     buttonGroupCS->setButton(tp);
     checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", false));
@@ -38,7 +40,7 @@ void SQ_Options::init()
 
     KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
-    SQ_Config::instance()->setGroup("Fileview");
+    kconf->setGroup("Fileview");
 
     tp = kconf->readNumEntry("sync type", 0);
     buttonGroupSync->setButton(tp);
@@ -53,7 +55,7 @@ void SQ_Options::init()
     checkDisableDirs->setChecked(kconf->readBoolEntry("disable_dirs", false));
 
 // Init GLView page
-    SQ_Config::instance()->setGroup("GL view");
+    kconf->setGroup("GL view");
 
     QPixmap p1;
     checkStatus->setChecked(kconf->readBoolEntry("hide_sbar", true));    
@@ -94,18 +96,24 @@ void SQ_Options::init()
     sliderMove->setRange(1, 50, 1, true);
     sliderMove->setValue(kconf->readNumEntry("move", 5));
 
-    QColor color;
     color.setNamedColor(kconf->readEntry("GL view background", "#4e4e4e"));
     kColorGLbackground->setColor(color);
 
-    SQ_Config::instance()->setGroup("Sidebar");
+    kconf->setGroup("Sidebar");
+
     tp = kconf->readNumEntry("recursion_type", 0);
     buttonGroupRecurs->setButton(tp);
     checkDevice->setChecked(kconf->readBoolEntry("mount_device", false));
     checkMountOptions->setChecked(kconf->readBoolEntry("mount_options", false));
     checkMountFS->setChecked(kconf->readBoolEntry("mount_fstype", true));
+    color.setNamedColor(kconf->readEntry("preview_background", "#4e4e4e"));
+    previewColor->setColor(color);
+    preview->setChecked(kconf->readBoolEntry("preview", true));
+    previewDont->setChecked(kconf->readBoolEntry("preview_dont", true));
+    previewDelay->setRange(50, 2000, 50, true);
+    previewDelay->setValue(kconf->readNumEntry("preview_delay", 400));
 
-    SQ_Config::instance()->setGroup("Thumbnails");
+    kconf->setGroup("Thumbnails");
 
     spinCacheSize->setRange(0, 104857, 10, true);
     spinMargin->setRange(0, 20, 1, true);
@@ -113,6 +121,7 @@ void SQ_Options::init()
     spinCacheSize->setValue(kconf->readNumEntry("cache", 1024*5));
     checkNoWriteThumbs->setChecked(kconf->readBoolEntry("dont write", false));
     checkExtended->setChecked(kconf->readBoolEntry("extended", false));
+    checkMark->setChecked(kconf->readBoolEntry("mark", false));
 
     if(kconf->readBoolEntry("tooltips", false))
     {
@@ -178,6 +187,7 @@ int SQ_Options::start()
         kconf->writeEntry("extended", checkExtended->isChecked());
         kconf->writeEntry("tooltips", checkTooltips->isChecked());
         kconf->writeEntry("tooltips_inactive", checkInactive->isChecked());
+        kconf->writeEntry("mark", checkMark->isChecked());
 
         kconf->setGroup("GL view");
         kconf->writeEntry("load_pages", buttonGroupPages->selectedId());
@@ -203,6 +213,10 @@ int SQ_Options::start()
         kconf->writeEntry("mount_device", checkDevice->isChecked());
         kconf->writeEntry("mount_options", checkMountOptions->isChecked());
         kconf->writeEntry("mount_fstype", checkMountFS->isChecked());
+        kconf->writeEntry("preview_background", previewColor->color().name());
+        kconf->writeEntry("preview_delay", previewDelay->value());
+        kconf->writeEntry("preview_dont", previewDont->isChecked());
+        kconf->writeEntry("preview", preview->isChecked());
     }
 
     return result;

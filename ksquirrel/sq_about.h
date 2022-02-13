@@ -25,7 +25,7 @@
  *  'About' dialog
  */
 
-#define SQ_VERSION "0.7.0-pre1"
+#define SQ_VERSION "0.7.0-pre2"
 
 static KAboutData aboutData(
             "ksquirrel",

@@ -20,6 +20,7 @@
 #endif
 
 #include "sq_pixmapcache.h"
+#include "sq_thumbnailsize.h"
 #include "sq_dir.h"
 
 SQ_PixmapCache * SQ_PixmapCache::m_instance = 0;
@@ -33,6 +34,10 @@ SQ_PixmapCache::SQ_PixmapCache(QObject *parent, int limit)
     dir = new SQ_Dir(SQ_Dir::Thumbnails);
 
     valid_full = false;
+
+    entrySize = SQ_ThumbnailSize::instance()->biggest()
+                * SQ_ThumbnailSize::instance()->biggest()
+                * 4;
 }
 
 SQ_PixmapCache::~SQ_PixmapCache()
@@ -78,7 +83,7 @@ void SQ_PixmapCache::insert(const QString &key, const SQ_Thumbnail &thumb)
         return;
 
     // calc new cache size
-    last_full += SQ_PixmapCache::entrySize(thumb);
+    last_full += entrySize;
 
     // add new entry
     QMap<QString, SQ_Thumbnail>::insert(key, thumb);
@@ -95,7 +100,7 @@ void SQ_PixmapCache::removeEntry(const QString &key)
     if(it == end())
         return;
 
-    last_full -= SQ_PixmapCache::entrySize(it.data());
+    last_full -= entrySize;
 
     QMap<QString, SQ_Thumbnail>::remove(key);
 }
@@ -138,36 +143,10 @@ int SQ_PixmapCache::totalSize()
     if(valid_full)
         return last_full;
 
-    int total = 0;
-
-    const_iterator itEnd = constEnd();
-
-    // go through rray and calculate total size
-    for(const_iterator it = constBegin();it != itEnd;++it)
-        total += SQ_PixmapCache::entrySize(it.data());
+    int total = entrySize * count();
 
     last_full = total;
     valid_full = true;
-
-    return total;
-}
-
-/*
- *  Calculate cache-related size of given thumbnail (not exactly).
- */
-int SQ_PixmapCache::entrySize(const SQ_Thumbnail &t)
-{
-    int  total = (((t.thumbnail.width() * t.thumbnail.height() * t.thumbnail.depth()) >> 3)
-/*
-                + t.info.bpp.length()
-                + t.info.color.length()
-                + t.info.compression.length()
-                + t.info.dimensions.length()
-                + t.info.frames.length()
-                + t.info.type.length()
-                + t.info.uncompressed.length()
-*/
-                + ((t.info.mime.width() * t.info.mime.height() * t.info.mime.depth()) >> 3));
 
     return total;
 }

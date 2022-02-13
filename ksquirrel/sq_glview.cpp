@@ -31,7 +31,6 @@
 #include <kstandarddirs.h>
 #include <kactioncollection.h>
 #include <klocale.h>
-#include <kdebug.h>
 #include <ksqueezedtextlabel.h>
 
 #include "sq_glview.h"
@@ -48,8 +47,6 @@ SQ_GLView::SQ_GLView(QWidget *parent) : QVBox(parent, "ksquirrel-image-window")
 {
     m_instance = this;
 
-    kdDebug() << "+SQ_GLView" << endl;
-
     separate = parent ? false : true;
 
     createContent();
@@ -58,9 +55,7 @@ SQ_GLView::SQ_GLView(QWidget *parent) : QVBox(parent, "ksquirrel-image-window")
 }
 
 SQ_GLView::~SQ_GLView()
-{
-    kdDebug() << "-SQ_GLView" << endl;
-}
+{}
 
 void SQ_GLView::createContent()
 {
@@ -128,12 +123,6 @@ void SQ_GLView::closeEvent(QCloseEvent *e)
 
     // let KSquirrel close SQ_GLView, since it can be built-in
     KSquirrel::app()->slotCloseGLWidget();
-}
-
-void SQ_GLView::statusBarLikeGQview(bool b)
-{
-    names["SBGLAngle"]->setShown(!b);
-    names["SBFile"]->setShown(!b);
 }
 
 /*
@@ -211,16 +200,12 @@ void SQ_GLView::resetStatusBar()
 
 SQ_ToolBar::SQ_ToolBar(QWidget *parent) : KToolBar(parent)
 {
-    kdDebug() << "+SQ_ToolBar" << endl;
-
     setFixedHeight(SQ_ToolButton::fixedWidth() + 5);
     boxLayout()->setSpacing(0);
 }
 
 SQ_ToolBar::~SQ_ToolBar()
-{
-    kdDebug() << "-SQ_ToolBar" << endl;
-}
+{}
 
 void SQ_ToolBar::mouseReleaseEvent(QMouseEvent *e)
 {

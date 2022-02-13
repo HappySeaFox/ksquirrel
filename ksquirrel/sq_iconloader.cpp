@@ -19,8 +19,6 @@
 #include "config.h"
 #endif
 
-#include <kdebug.h>
-
 #include "sq_iconloader.h"
 #include "sq_iconloader_pixmaps.h"
 
@@ -30,15 +28,11 @@ SQ_IconLoader::SQ_IconLoader(QObject *parent) : QObject(parent), KIconLoader("ks
 {
     m_instance = this;
 
-    kdDebug() << "+SQ_IconLoader" << endl;
-
     fillPixmaps();
 }
 
 SQ_IconLoader::~SQ_IconLoader()
-{
-    kdDebug() << "-SQ_IconLoader" << endl;
-}
+{}
 
 QPixmap SQ_IconLoader::loadIcon(const QString& name, KIcon::Group group, int size) const
 {

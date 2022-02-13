@@ -66,6 +66,11 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         void appendItems(const KFileItemList &items);
 
         /*
+         *  Delete item from thumbnail generating job.
+         */
+        void itemRemoved(KFileItem *i);
+
+        /*
          *  Internal.
          */
         virtual void updateView(const KFileItem *i);
@@ -85,7 +90,7 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         /*
          *  Create job, connect signals and start updating
          */
-        void doStartThumbnailUpdate(const KFileItemList* list);
+        void doStartThumbnailUpdate(const KFileItemList &list);
 
         /*
          *  Is thumbnail job running ?

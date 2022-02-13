@@ -84,7 +84,6 @@ class SQ_TreeView : public KFileTreeView
         static SQ_TreeView* instance() { return m_instance; }
 
     protected:
-
         virtual void customEvent(QCustomEvent *e);
         virtual void startAnimation(KFileTreeViewItem* item, const char*, uint);
         virtual void stopAnimation(KFileTreeViewItem* item);
@@ -98,7 +97,7 @@ class SQ_TreeView : public KFileTreeView
         virtual void showEvent(QShowEvent *);
 
     private:
-
+        void toggle(SQ_TreeViewItem *, bool, bool = false);
         void setRecursion(int);
 
         /*
@@ -112,15 +111,7 @@ class SQ_TreeView : public KFileTreeView
          */
         bool doSearch();
 
-        /*
-         *  Close all last opened items.
-         *
-         *  TODO: create option "[X] Collapse opened"
-         */
-        void collapseOpened();
-
     public slots:
-
         void slotClearChecked();
 
         /*
@@ -134,7 +125,6 @@ class SQ_TreeView : public KFileTreeView
         void slotOpened(KFileTreeViewItem *);
 
     private slots:
-
         /*
          *  Load url.
          */
@@ -147,6 +137,9 @@ class SQ_TreeView : public KFileTreeView
     signals:
         void newURL(const KURL &url);
 
+        void stopUpdate();
+        void startUpdate();
+
         /*
          *  Since 0.7.0 our file manager supports multiple directories.
          *  These signals tell SQ_DirOperator to add or remove some
@@ -158,7 +151,6 @@ class SQ_TreeView : public KFileTreeView
     private:
         SQ_FileTreeViewBranch *root;
         QStringList paths;
-        KFileTreeViewItemList *itemsToClose;
         KURL pendingURL;
         SQ_ThreadDirLister    *lister;
         KFileTreeViewItemList m_mapFolders;

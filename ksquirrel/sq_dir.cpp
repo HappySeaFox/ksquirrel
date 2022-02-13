@@ -90,10 +90,10 @@ bool SQ_Dir::mkdir(const QString &relpath)
 
 void SQ_Dir::setRoot(const QString &name)
 {
-    m_root = QDir::cleanDirPath(homeDirPath() + QString::fromLatin1("/.ksquirrel/"));
+    m_root = QDir::cleanDirPath(homeDirPath() + QDir::separator() + QString::fromLatin1(".ksquirrel"));
     QDir::mkdir(m_root);
 
-    m_root = QDir::cleanDirPath(m_root + QString::fromLatin1("/") + name);
+    m_root = QDir::cleanDirPath(m_root + QDir::separator() + name);
     QDir::mkdir(m_root);
 }
 

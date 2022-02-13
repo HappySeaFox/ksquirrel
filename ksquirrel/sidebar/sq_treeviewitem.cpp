@@ -89,7 +89,7 @@ void SQ_TreeViewItem::setCount(int c1, int c2, bool use_c1, bool use_c2)
     QString s;
 
     if(use_c1 && use_c2) // files + dirs: show these two values anyway
-        s = QString::fromLatin1(" [%1/%2]").arg(count_files).arg(count_dirs);
+        s = QString::fromLatin1(" [%1/%2]").arg(count_dirs).arg(count_files);
     else if(use_c1 && count_files) // files, file count is > 0
         s = QString::fromLatin1(" [%1]").arg(count_files);
     else if(use_c2 && count_dirs) // dirs, dir count is > 0

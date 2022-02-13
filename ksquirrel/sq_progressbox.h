@@ -40,6 +40,7 @@ class SQ_ProgressBox : public QHBox
         void flush();
         void advance(int step = 1);
         void setTotalSteps(int steps);
+        void addSteps(int steps);
 
     private:
         SQ_Progress *p;
@@ -75,6 +76,12 @@ inline
 void SQ_ProgressBox::setTotalSteps(int steps)
 {
     p->setTotalSteps(steps);
+}
+
+inline
+void SQ_ProgressBox::addSteps(int steps)
+{
+    p->addSteps(steps);
 }
 
 #endif

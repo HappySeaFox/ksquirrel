@@ -45,7 +45,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
     Q_OBJECT
 
     public:
-        SQ_ThumbnailLoadJob(const KFileItemList* itemList);
+        SQ_ThumbnailLoadJob(const KFileItemList &itemList);
         virtual ~SQ_ThumbnailLoadJob();
 
         void start();

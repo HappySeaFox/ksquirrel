@@ -86,9 +86,7 @@ class SQ_GLView : public QVBox
         /*
          *  Make widget built-in with reparenting it.
          */
-        void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
-
-        void statusBarLikeGQview(bool b);
+        void reparent(QWidget *parent, const QPoint &p = QPoint(0,0), bool showIt = false);
 
         /*
          *  Save current position and size to config

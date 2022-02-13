@@ -27,6 +27,7 @@
 
 #include "sq_iconloader.h"
 #include "sq_widgetstack.h"
+#include "sq_filethumbview.h"
 #include "sq_config.h"
 #include "sq_treeview.h"
 #include "sq_treeviewitem.h"
@@ -75,8 +76,6 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
     header()->moveSection(1, 0);
     setColumnWidthMode(1, QListView::Manual);
     setColumnWidth(1, 18);
-//    setHScrollBarMode(QScrollView::AlwaysOn);
-//    setResizeMode(QListView::LastColumn);
 
     root = new SQ_FileTreeViewBranch(this, QDir::rootDirPath(), QString::null,
         SQ_IconLoader::instance()->loadIcon("folder_red", KIcon::Desktop, KIcon::SizeSmall));
@@ -114,8 +113,6 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
     connect(this, SIGNAL(newURL(const KURL&)), this, SLOT(slotNewURL(const KURL&)));
     connect(root, SIGNAL(populateFinished(KFileTreeViewItem *)), this, SLOT(slotOpened(KFileTreeViewItem *)));
 
-    itemsToClose = new KFileTreeViewItemList;
-
     setCurrentItem(root->root());
     root->setChildRecurse(false);
 
@@ -123,13 +120,12 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
     int sync_type = SQ_Config::instance()->readNumEntry("sync type", 0);
 
     // load url, if needed
-    if(sync_type == 2 || sync_type == 0)
+    if(sync_type != 1)
         emitNewURL(SQ_WidgetStack::instance()->url());
 }
 
 SQ_TreeView::~SQ_TreeView()
 {
-    delete itemsToClose;
     delete lister;
 }
 
@@ -157,7 +153,9 @@ void SQ_TreeView::setRecursion(int b)
         lister->unlock();
 
         m_recurs = b;
-        scanTimer->start(1, true);
+
+        if(!lister->running())
+            scanTimer->start(1, true);
     }
     else
     {
@@ -247,29 +245,10 @@ void SQ_TreeView::populateItem(KFileTreeViewItem *item)
 }
 
 /*
- *  Close all last opened items.
- */
-void SQ_TreeView::collapseOpened()
-{
-    paths.clear();
-
-    KFileTreeViewItem *item;
-
-    // go through array of items and close them all
-    while((item = itemsToClose->getFirst()) != 0)
-    {
-        item->setOpen(false);
-        itemsToClose->removeFirst();
-    }
-}
-
-/*
  *  Load url.
  */
 void SQ_TreeView::slotNewURL(const KURL &url)
 {
-    collapseOpened();
-
     KURL k(url);
     k.adjustPath(1);
 
@@ -348,9 +327,6 @@ bool SQ_TreeView::doSearch()
     paths.erase(it);
     populateItem(found);
 
-    // save a pointer to this item for collapseOpened()
-    itemsToClose->prepend(found);
-
     // done, but subpaths are pending...
     return true;
 }
@@ -391,14 +367,14 @@ void SQ_TreeView::slotNewTreeViewItems(KFileTreeBranch *, const KFileTreeViewIte
     }
     lister->unlock();
 
-    scanTimer->start(1, true);
+    if(!lister->running())
+        scanTimer->start(1, true);
 }
 
 void SQ_TreeView::slotDelayedScan()
 {
 //    printf("*** START THREAD\n");
-    if(!lister->running())
-        lister->start();
+    lister->start();
 }
 
 void SQ_TreeView::customEvent(QCustomEvent *e)
@@ -421,7 +397,7 @@ void SQ_TreeView::slotAnimation()
     KFileTreeViewItem *it = m_mapFolders.first();
 
     for(;it;it = m_mapFolders.next())
-        it->setPixmap(0, SmallIcon("kalarm"));
+        it->setPixmap(0, SmallIcon("clock"));
 }
 
 void SQ_TreeView::startAnimation(KFileTreeViewItem *item, const char *, uint)
@@ -490,12 +466,39 @@ void SQ_TreeView::contentsMousePressEvent(QMouseEvent *e)
 
         if(m)
         {
-            m->setChecked(!m->checked());
+            int state = e->state();
 
-            if(m->checked())
-                emit urlAdded(m->url());
+            bool thumbnailJob = SQ_WidgetStack::instance()->updateRunning();
+
+            if(thumbnailJob)
+                emit stopUpdate();
+
+            if(!state)
+                toggle(m, true);
             else
-                emit urlRemoved(m->url());
+            {
+                QListViewItemIterator it(this);
+
+                // toggle parent item
+                if(state == Qt::ShiftButton)               toggle(m, true);
+                else if(state == Qt::ControlButton) toggle(m, false, true);
+                else if(state == Qt::AltButton)          toggle(m, false, false);
+
+                SQ_TreeViewItem *tvi = static_cast<SQ_TreeViewItem *>(m->firstChild());
+
+                // toggle all child items
+                while(tvi)
+                {
+                    if(state == Qt::ShiftButton)               toggle(tvi, false, m->checked());
+                    else if(state == Qt::ControlButton) toggle(tvi, false, true);
+                    else if(state == Qt::AltButton)          toggle(tvi, false, false);
+
+                    tvi = static_cast<SQ_TreeViewItem *>(tvi->nextSibling());
+                }
+            }
+
+            if(thumbnailJob)
+                emit startUpdate();
         }
 
         m_ignoreClick = true;
@@ -521,6 +524,19 @@ void SQ_TreeView::setupRecursion()
     SQ_Config::instance()->setGroup("Sidebar");
 
     setRecursion(SQ_Config::instance()->readNumEntry("recursion_type", No));
+}
+
+void SQ_TreeView::toggle(SQ_TreeViewItem *item, bool togg, bool set)
+{
+    if(togg)
+        item->setChecked(!item->checked());
+    else
+        item->setChecked(set);
+
+    if(item->checked())
+        emit urlAdded(item->url());
+    else
+        emit urlRemoved(item->url());
 }
 
 #include "sq_treeview.moc"

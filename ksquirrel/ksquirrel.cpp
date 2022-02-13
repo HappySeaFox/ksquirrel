@@ -40,7 +40,6 @@
 #include <kpopupmenu.h>
 #include <kwin.h>
 #include <kstatusbar.h>
-#include <kpopupmenu.h>
 #include <kmenubar.h>
 #include <ktoolbar.h>
 #include <kaction.h>
@@ -92,12 +91,12 @@
 #include "sq_multibar.h"
 #include "sq_mountview.h"
 #include "sq_glinfo.h"
-#include "sq_splitter.h"
-#include "sq_interfacetype.h"
 #include "sq_categoriesview.h"
 #include "sq_splashscreen.h"
 #include "sq_imagebasket.h"
 #include "sq_converter.h"
+#include "sq_previewwidget.h"
+#include "sq_slideshowwidget.h"
 
 #ifdef SQ_HAVE_KIPI
 #include "sq_kipimanager.h"
@@ -117,22 +116,10 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name, SQ_SplashScreen **splash
 
     kdDebug() << "+KSquirrel" << endl;
 
-    first_time = false;
     slideShowStop = true;
     slideShowPaused = false;
 
-    QString testConf = locateLocal("config", "ksquirrelrc");
-
-    // check if user-depended config file exist. If exist, check
-    // if it has newer version (did user forget to delete old config file ?)
-    if(!QFile::exists(testConf) || checkConfigFileVersion())
-    {
-        // if config doesn't exist or it is out-of-date,
-        // copy newer config
-        QFile::remove(testConf);
-        writeDefaultEntries();
-        first_time = true;
-    }
+    writeDefaultEntries();
 
     // create KConfig instance.
     // It will help us to read and write config entries
@@ -216,6 +203,8 @@ void KSquirrel::slotOptions()
         applyDefaultSettings();
         SQ_MountView::instance()->setupColumns();
         SQ_TreeView::instance()->setupRecursion();
+        SQ_PreviewWidget::instance()->rereadColor();
+        SQ_PreviewWidget::instance()->update();
     }
 }
 
@@ -226,7 +215,7 @@ void KSquirrel::closeEvent(QCloseEvent *ev)
 {
     kconf->setGroup("Main");
 
-    if(viewtype == KSquirrel::BuiltIn && viewBrowser->id(viewBrowser->visibleWidget()))
+    if(builtin && viewBrowser->id(viewBrowser->visibleWidget()))
         slotCloseGLWidget();
     // Minimize to tray ?
     else if(kconf->readBoolEntry("minimize to tray", false))
@@ -443,7 +432,9 @@ void KSquirrel::createWidgets(int createFirst)
 
     // check if location toolbar should be separated
     m_urlbox = kconf->readBoolEntry("has_url", false);
-    viewtype = kconf->readNumEntry("viewtype", 0);
+    builtin = kconf->readBoolEntry("builtin", false);
+
+    pAInterface->setChecked(builtin);
 
     // main QVBox
     viewBrowser = new QWidgetStack(this, QString::fromLatin1("SQ_BROWSER_WIDGET_STACK"));
@@ -462,7 +453,7 @@ void KSquirrel::createWidgets(int createFirst)
     pTLocation->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
     // main splitter
-    SQ_Splitter *mainView = new SQ_Splitter(b1); Q_ASSERT(mainView);
+    mainView = new QSplitter(QSplitter::Horizontal, b1); Q_ASSERT(mainView);
 
     KStatusBar *s = new KStatusBar(b1);
 
@@ -471,29 +462,32 @@ void KSquirrel::createWidgets(int createFirst)
 
     new SQ_NavigatorDropMenu(this);
 
-    // sidebar with tree, actions...
-    ts = new QSplitter(Qt::Vertical);
-    sideBar = new SQ_MultiBar(ts);
-
-    mainView->addWidget(ts);
-
-    rightBox = new QVBox(mainView);
+    sideBar = new SQ_MultiBar(mainView);
 
     SQ_CategoriesBox *cb = new SQ_CategoriesBox;
 
     if(splash_to_delete) splash_to_delete->advance();
 
     // create widgetstack containing views
-    pWidgetStack = new SQ_WidgetStack(0, createFirst);
-    mainView->addWidget(rightBox);
+    pWidgetStack = new SQ_WidgetStack(mainView, createFirst);
+
+    SQ_Config::instance()->setGroup("Interface");
+    QValueList<int> sz = SQ_Config::instance()->readIntListEntry("splitter");
+
+    if(sz.count() != 2)
+    {
+        sz.clear();
+        sz.append(1500);
+        sz.append(3500);
+    }
+
+    mainView->setSizes(sz);
 
     if(splash_to_delete) splash_to_delete->advance();
 
     SQ_MountView *mv = new SQ_MountView;
 
     ptree = new SQ_TreeView;
-
-    ptree->installEventFilter(pWidgetStack->diroperator());
 
     if(splash_to_delete) splash_to_delete->advance();
 
@@ -509,11 +503,11 @@ void KSquirrel::createWidgets(int createFirst)
     connect(ptree, SIGNAL(urlAdded(const KURL &)), pWidgetStack->diroperator(), SLOT(urlAdded(const KURL &)));
     connect(ptree, SIGNAL(urlRemoved(const KURL &)), pWidgetStack->diroperator(), SLOT(urlRemoved(const KURL &)));
     connect(pWidgetStack->diroperator(), SIGNAL(urlEntered(const KURL &)), ptree, SLOT(slotClearChecked()));
+    connect(ptree, SIGNAL(stopUpdate()), pWidgetStack->diroperator(), SLOT(stopThumbnailUpdate()));
+    connect(ptree, SIGNAL(startUpdate()), pWidgetStack->diroperator(), SLOT(startThumbnailUpdate()));
 
     pTLocation->setShown(m_urlbox);
-
     pAURL->setChecked(m_urlbox);
-
     b1->setStretchFactor(mainView, 1);
 
     // connect signals from location toolbar
@@ -522,7 +516,10 @@ void KSquirrel::createWidgets(int createFirst)
 
     b2 = new QVBox(viewBrowser);
 
-    gl_view = new SQ_GLView;
+    if(builtin)
+        gl_view = new SQ_GLView(b2);
+    else
+        gl_view = new SQ_GLView;
 
     if(splash_to_delete) splash_to_delete->advance();
 
@@ -554,8 +551,6 @@ void KSquirrel::createWidgets(int createFirst)
     connect(pADeselectGroup, SIGNAL(activated()), pWidgetStack, SLOT(slotDeselectGroup()));
     connect(pASelectAll, SIGNAL(activated()), pWidgetStack, SLOT(slotSelectAll()));
     connect(pADeselectAll, SIGNAL(activated()), pWidgetStack, SLOT(slotDeselectAll()));
-
-    rebuildInterface(viewtype, true);
 
     if(splash_to_delete) splash_to_delete->advance();
 }
@@ -611,7 +606,7 @@ void KSquirrel::createMenu(KMenuBar *menubar)
     menubar->insertItem(i18n("&Action"), pop_action);
 
 #ifdef SQ_HAVE_KIPI
-    menubar->insertItem(i18n("KIPI Plugins"), kipiManager->popup());
+    menubar->insertItem(i18n("&KIPI Plugins"), kipiManager->popup());
 #endif
 
     bookmarks->plug(menubar);
@@ -667,17 +662,11 @@ void KSquirrel::createMenu(KMenuBar *menubar)
 // Create toolbar
 void KSquirrel::createToolbar(KToolBar *tools)
 {
-    // insert "back", "forward" and "up" actions
-    // from SQ_WidgetStack
-/*
-    tools->insertWidget(0, 0, new QToolButton(SQ_IconLoader::instance()->loadIcon("back", KIcon::Desktop, 22), i18n("Back"), QString::null, pWidgetStack->action("back"), SLOT(activate()), tools));
-    tools->insertWidget(0, 0, new QToolButton(SQ_IconLoader::instance()->loadIcon("forward", KIcon::Desktop, 22), i18n("Forward"), QString::null, pWidgetStack->action("forward"), SLOT(activate()), tools));
-    tools->insertWidget(0, 0, new QToolButton(SQ_IconLoader::instance()->loadIcon("up", KIcon::Desktop, 22), i18n("Up"), QString::null, pWidgetStack->action("up"), SLOT(activate()), tools));
-*/
     pWidgetStack->action("back")->plug(tools);
     pWidgetStack->action("forward")->plug(tools);
     pWidgetStack->action("up")->plug(tools);
     pWidgetStack->action("home")->plug(tools);
+    pASlideShow->plug(tools);
 
     tools->insertLineSeparator();
     pARaiseListView->plug(tools);
@@ -715,8 +704,8 @@ void KSquirrel::createActions()
     pAExtTools = new KAction(i18n("Configure external tools..."), "runprog", 0, this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
     pAFilters = new KAction(i18n("Configure filters..."), "filefind", 0, this, SLOT(slotFilters()), actionCollection(), "SQ filters");
     pAGotoTray = new KAction(i18n("Goto tray"), 0, 0, this, SLOT(slotGotoTray()), actionCollection(), "SQ goto tray");
-    pAOpenAndSet = new KAction(i18n("Open file and change directory"), "fileopen", 0, this, SLOT(slotOpenFileAndSet()), actionCollection(), "SQ open and set");
-    pAOpen = new KAction(i18n("Open file"), "fileopen", 0, this, SLOT(slotOpenFile()), actionCollection(), "SQ open file");
+    pAOpenAndSet = new KAction(i18n("Open file and change directory"), "fileopen", CTRL+ALT+Key_O, this, SLOT(slotOpenFileAndSet()), actionCollection(), "SQ open and set");
+    pAOpen = new KAction(i18n("Open file"), "fileopen", CTRL+Key_O, this, SLOT(slotOpenFile()), actionCollection(), "SQ open file");
     pATCMaster = new KAction(i18n("Thumbnail cache manager..."), "cache", 0, this, SLOT(slotTCMaster()), actionCollection(), "SQ TC Master");
     pASelectAll = KStdAction::selectAll(0, 0, actionCollection(), "SQ Select All");
     pADeselectAll = KStdAction::deselect(0, 0, actionCollection(), "SQ Deselect All");
@@ -728,13 +717,11 @@ void KSquirrel::createActions()
 
     pAURL = new KToggleAction(i18n("Show URL box"), "history", CTRL + Key_U, 0, 0, actionCollection(), "SQ toggle url box");
 
-    pAInterface = new KAction(i18n("Change interface"), "view_choose", CTRL+Key_O, this, SLOT(slotChangeInterface()), actionCollection(), "SQ Change Interface");
+    pAInterface = new KToggleAction(i18n("Built-in image window"), "view_choose", 0, 0, 0, actionCollection(), "SQ Change Interface");
+    connect(pAInterface, SIGNAL(toggled(bool)), this, SLOT(slotChangeInterface(bool)));
 
-    new KAction(QString::null, 0, CTRL+Key_K, SQ_Converter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Convert");
-
-    pASlideShow = new KToggleAction(i18n("Slideshow"), 0, CTRL+Key_S, 0, 0, actionCollection(), "SQ Slideshow");
-    pASlideShowDialog = new KAction(i18n("Slideshow through dialog"), 0, CTRL+ALT+Key_S, this, SLOT(slotSlideShowDialog()), actionCollection(), "SQ SlideShow Dialog");
-    connect(pASlideShow, SIGNAL(toggled(bool)), this, SLOT(slotSlideShowToggle(bool)));
+    pASlideShow = new KAction(i18n("Slideshow"), "folder_video", CTRL+Key_S, this, SLOT(slotSlideShowStart()), actionCollection(), "SQ Slideshow");
+    pASlideShowDialog = new KAction(i18n("Slideshow advanced"), 0, CTRL+ALT+Key_S, this, SLOT(slotSlideShowDialog()), actionCollection(), "SQ SlideShow Dialog");
 
     pAPluginsInfo = new KAction(i18n("Plugins information..."), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
     pAGLInfo = new KAction(i18n("OpenGL information..."), 0, 0, this, SLOT(slotGLInfo()), actionCollection(), "SQ OpenGL Info");
@@ -821,29 +808,23 @@ void KSquirrel::slotExtTools()
 void KSquirrel::raiseGLWidget()
 {
     // if image window is separate, just show and raise it
-    if(viewtype == KSquirrel::Classic)
+    if(builtin)
+        viewBrowser->raiseWidget(1);
+    else
     {
         gl_view->show();
         gl_view->raise();
         KWin::activateWindow(gl_view->winId());
-    }
-    else if(viewtype == KSquirrel::BuiltIn) // raise a widget from widget stack otherwise
-    {
-        viewBrowser->raiseWidget(1);
     }
 }
 
 // Hide image window
 void KSquirrel::slotCloseGLWidget()
 {
-    // stop slideshow, if running.
-    // Thanks JaguarWan.
-    stopSlideShow();
-
-    if(viewtype == KSquirrel::Classic)
-        gl_view->hide();
-    else if(viewtype == KSquirrel::BuiltIn)
+    if(builtin)
         viewBrowser->raiseWidget(0);
+    else
+        gl_view->hide();
 }
 
 // create bookmarks
@@ -874,29 +855,36 @@ void KSquirrel::writeDefaultEntries()
 {
     SQ_Config conf("ksquirrelrc");
 
-    conf.setGroup("Edit tools");
-    conf.writeEntry("altlibrary", "Portable Network Graphics");
+    if(!conf.hasGroup("External tools"))
+    {
+        conf.setGroup("External tools");
+        conf.writeEntry("names", "Run within KDE,View in hexadecimal mode,Print file,Set as wallpaper on desktop,Set as tiled wallpaper on desktop,Open with GIMP,Open with GQview,Open with ShowImg,Open with KuickShow,Open with KView,Open with Opera,Open with Konqueror,Open with KWrite");
+        conf.writeEntry("commands", "kfmclient exec %f,khexedit %f,kprinter %f,dcop kdesktop KBackgroundIface setWallpaper %f 6,dcop kdesktop KBackgroundIface setWallpaper %f 2,gimp %F,gqview %F,showimg %F,kuickshow %F,kview %F,opera %F,konqueror %F,kwrite %F");
+        conf.writeEntry("icons", "kfm,khexedit,kdeprintfax,mac,mac,gimp,gqview,showimg,kuickshow,kview,opera,konqueror,kwrite");
+    }
 
-    conf.setGroup("External tools");
-    conf.writeEntry("names", "Run within KDE,View in hexadecimal mode,Print file,Set as wallpaper on desktop,Set as tiled wallpaper on desktop,Open with GIMP,Open with GQview,Open with ShowImg,Open with KuickShow,Open with KView,Open with Opera,Open with Konqueror,Open with KWrite");
-    conf.writeEntry("commands", "kfmclient exec %f,khexedit %f,kprinter %f,dcop kdesktop KBackgroundIface setWallpaper %f 6,dcop kdesktop KBackgroundIface setWallpaper %f 2,gimp %F,gqview %F,showimg %F,kuickshow %F,kview %F,opera %F,konqueror %F,kwrite %F");
-    conf.writeEntry("icons", "kfm,khexedit,kdeprintfax,mac,mac,gimp,gqview,showimg,kuickshow,kview,opera,konqueror,kwrite");
+    if(!conf.hasGroup("Filters"))
+    {
+        conf.setGroup("Filters");
+        conf.writeEntry("extensions", "*,*.mpg *.mpeg *.avi *.asf *.divx,*.mp3 *.ogg *.wma *.wav *.it");
+        conf.writeEntry("items", "All files,Video tapes,Audio files");
+        conf.writeEntry("last", "*");
+        conf.writeEntry("menuitem both", "false");
+    }
 
-    conf.setGroup("Filters");
-    conf.writeEntry("extensions", "*,*.mpg *.mpeg *.avi *.asf *.divx,*.mp3 *.ogg *.wma *.wav *.it");
-    conf.writeEntry("items", "All files,Video tapes,Audio files");
-    conf.writeEntry("last", "*");
-    conf.writeEntry("menuitem both", "false");
+    if(!conf.hasGroup("Navigator Icons"))
+    {
+        conf.setGroup("Navigator Icons");
+        conf.writeEntry("ShowPreviews", "false");
+        conf.writeEntry("ViewMode", "LargeRows");
+    }
 
-    conf.setGroup("Navigator Icons");
-    conf.writeEntry("Preview Size", "60");
-    conf.writeEntry("ShowPreviews", "false");
-    conf.writeEntry("ViewMode", "LargeRows");
-
-    conf.setGroup("Navigator List");
-    conf.writeEntry("Preview Size", "60");
-    conf.writeEntry("ShowPreviews", "false");
-    conf.writeEntry("ViewMode", "SmallColumns");
+    if(!conf.hasGroup("Navigator List"))
+    {
+        conf.setGroup("Navigator List");
+        conf.writeEntry("ShowPreviews", "false");
+        conf.writeEntry("ViewMode", "SmallColumns");
+    }
 
     conf.setGroup("Main");
     conf.writeEntry("version", SQ_VERSION);
@@ -913,9 +901,7 @@ void KSquirrel::applyDefaultSettings()
 
     // set background color, zoom & move factors
     SQ_GLWidget::window()->setClearColor();
-    SQ_GLWidget::window()->setZoomFactor(kconf->readNumEntry("zoom", 25));
-    SQ_GLWidget::window()->setMoveFactor(kconf->readNumEntry("move", 5));
-    SQ_GLWidget::window()->setRotateFactor(kconf->readNumEntry("angle", 90));
+    SQ_GLWidget::window()->updateFactors();
 
     kconf->setGroup("GL view");
 
@@ -955,9 +941,6 @@ void KSquirrel::applyDefaultSettings()
 // Toggle fullscreen state for image window
 void KSquirrel::slotFullScreen(bool full)
 {
-    if(viewtype == KSquirrel::GQView)
-        gl_view->reparent(0, QPoint(0,0), true);
-
     WId id = (gl_view->isSeparate()) ? gl_view->winId() : winId();
 
     kconf->setGroup("GL view");
@@ -978,41 +961,14 @@ void KSquirrel::slotFullScreen(bool full)
 
     // goto fullscreen
     if(full)
-    {
-        // if the image window is built-in, hide main menubar
-        if(!gl_view->isSeparate())
-            menubar->hide();
-
-        if(viewtype == KSquirrel::GQView)
-        {
-            KWin::forceActiveWindow(id);
-            SQ_GLWidget::window()->setFocus();
-        }
-
         KWin::setState(id, NET::FullScreen);
-    }
     else // leave fullscreen
-    {
         KWin::clearState(id, NET::FullScreen);
-
-        // if the image window is built-in, show main menubar,
-        // because it is hidden
-        if(!gl_view->isSeparate())
-            menubar->show();
-
-        // reparent back
-        if(viewtype == KSquirrel::GQView)
-        {
-            gl_view->reparent(rightBox, QPoint(0,0), true);
-            SQ_GLWidget::window()->setFocus();
-        }
-    }
 }
 
 // Save parameters to config file
 void KSquirrel::saveValues()
 {
-    sideBar->saveConfig();
     extool->writeEntries();
 
     kconf->setGroup("Filters");
@@ -1031,7 +987,7 @@ void KSquirrel::saveValues()
 
     kconf->setGroup("GL view");
 
-    if(viewtype == KSquirrel::Classic)
+    if(!builtin)
         gl_view->saveGeometry();
 
     kconf->writeEntry("statusbar", dynamic_cast<KToggleAction *>(SQ_GLWidget::window()->actionCollection()->action("toggle status"))->isChecked());
@@ -1044,7 +1000,9 @@ void KSquirrel::saveValues()
     kconf->writeEntry("pos", pos());
     kconf->writeEntry("size", size());
     kconf->writeEntry("has_url", pTLocation->isShown());
-    kconf->writeEntry("viewtype", viewtype);
+    kconf->writeEntry("builtin", builtin);
+
+    SQ_PreviewWidget::instance()->saveValues();
 
     kconf->setGroup("Thumbnails");
     kconf->writeEntry("size", thumbSize->value());
@@ -1153,6 +1111,12 @@ void KSquirrel::preCreate()
 
     new SQ_ErrorString(this);
     new SQ_Converter(this);
+    SQ_SlideShowWidget *sls = new SQ_SlideShowWidget(0, "ksquirrel-slideshow");
+
+    connect(sls, SIGNAL(stopSlideShow()), this, SLOT(slotStopSlideShow()));
+    connect(sls, SIGNAL(pause()), this, SLOT(slotPauseSlideShow()));
+    connect(sls, SIGNAL(next()), this, SLOT(slotNextSlideShow()));
+    connect(sls, SIGNAL(previous()), this, SLOT(slotPreviousSlideShow()));
 
     if(splash_to_delete) splash_to_delete->advance();
 
@@ -1167,10 +1131,6 @@ void KSquirrel::preCreate()
     if(splash_to_delete) splash_to_delete->advance();
 
     actionFilterMenu = new KPopupMenu;
-
-    QFont f = actionFilterMenu->font();
-    f.setPointSize(8);
-    actionFilterMenu->setFont(f);
 
     actionViews = new KPopupMenu;
 
@@ -1270,14 +1230,6 @@ void KSquirrel::continueLoading()
     kipiManager->loadPlugins();
 #endif
 
-//    qApp->processEvents();
-
-    if(first_time)
-    {
-        applyDefaultSettings();
-        first_time = false;
-    }
-
     tray = new SQ_Tray(this);
 
     if(splash_to_delete) splash_to_delete->advance();
@@ -1305,90 +1257,25 @@ void KSquirrel::continueLoading()
             v->setSelected(v->currentFileItem(), true);
 
             // if it is known image type - let's load it
-            if(SQ_LibraryHandler::instance()->supports(SQ_HLOptions::instance()->path))
-                SQ_GLWidget::window()->slotStartDecoding(SQ_HLOptions::instance()->path, true);
+            SQ_GLWidget::window()->startDecoding(SQ_HLOptions::instance()->path);
         }
     }
 }
 
-void KSquirrel::slotChangeInterface()
+void KSquirrel::slotChangeInterface(bool bin)
 {
-    SQ_InterfaceType it;
+    builtin = bin;
 
-    it.start();
-}
-
-// Make image window separate ot built-in
-void KSquirrel::rebuildInterface(int type, bool init)
-{
-    if(!init)
+    if(builtin)
     {
-        if(viewtype == KSquirrel::Classic)
-            gl_view->saveGeometry();
-
-        pWidgetStack->reparent(0, QPoint(0,0), false);
-
-        if(viewtype == KSquirrel::Classic)
-            gl_view->saveGeometry();
-
-        gl_view->reparent(0, QPoint(0,0), false);
-    }
-
-    // reparent statusbar
-    if(viewtype == KSquirrel::GQView)
-    {
-        SQ_GLView::window()->statusbar()->hide();
-        sbar->removeWidget(SQ_GLView::window()->statusbar());
-        SQ_GLView::window()->statusbar()->reparent(SQ_GLView::window(), QPoint(0,0), true);
-    }
-
-    if(type == KSquirrel::Classic)
-    {
-        pWidgetStack->reparent(rightBox, QPoint(0,0), true);
-
-        if(!init)
-            gl_view->restoreGeometry();
-
-        if(viewtype == KSquirrel::BuiltIn)
-            viewBrowser->raiseWidget(0);
-        else if(viewtype == KSquirrel::GQView)
-            gl_view->statusBarLikeGQview(true);
-    }
-    else if(type == KSquirrel::BuiltIn)
-    {
-        pWidgetStack->reparent(rightBox, QPoint(0,0), true);
-        gl_view->reparent(b2, QPoint(0,0), false);
-
-        if(viewtype == KSquirrel::GQView)
-            gl_view->statusBarLikeGQview(true);
+        gl_view->saveGeometry();
+        gl_view->reparent(b2);
     }
     else
     {
-        if(viewtype == KSquirrel::BuiltIn)
-            viewBrowser->raiseWidget(0);
-
-        gl_view->statusBarLikeGQview(true);
-
-        gl_view->reparent(rightBox, QPoint(0,0), true);
-        pWidgetStack->reparent(ts, QPoint(0,0), true);
-
-        SQ_GLView::window()->statusbar()->reparent(sbar, QPoint(0,0), true);
-        sbar->addWidget(SQ_GLView::window()->statusbar(), 0, true);
-
-        QValueList<int> sz;
-        sz.append(100);
-        sz.append(100);
-        ts->setSizes(sz);
-
-        // "click" first tab
-        if(sideBar->currentPage() == -1)
-        {
-            sideBar->multiBar()->setTab(0, true);
-            sideBar->raiseWidget(0);
-        }
+        gl_view->reparent(0, QPoint(0,0), false);
+        gl_view->restoreGeometry();
     }
-
-    viewtype = type;
 }
 
 // Set caption to main window or to image window
@@ -1415,12 +1302,12 @@ void KSquirrel::openFile(bool parseURL)
         return;
 
     // if it is known file type
-    if(SQ_LibraryHandler::instance()->supports(name))
+    if(SQ_LibraryHandler::instance()->libraryForFile(name))
     {
         if(parseURL)
             pWidgetStack->setURLForCurrent(f.dirPath(true));
 
-        SQ_GLWidget::window()->slotStartDecoding(name, true);
+        SQ_GLWidget::window()->startDecoding(name);
     }
     else
     {
@@ -1531,16 +1418,16 @@ bool KSquirrel::process(const QCString &fun, const QByteArray &data, QCString& r
             v->setSelected(v->currentFileItem(), true);
 
             // load image
-            if(SQ_LibraryHandler::instance()->supports(arg))
+            if(SQ_LibraryHandler::instance()->libraryForFile(arg))
             {
                 // stop slideshow if running
-                stopSlideShow();
+                slotStopSlideShow();
 
                 // activate this window
                 activate();
 
                 // finally, load the image
-                SQ_GLWidget::window()->slotStartDecoding(arg, true);
+                SQ_GLWidget::window()->startDecoding(arg);
             }
         }
 
@@ -1678,21 +1565,12 @@ void KSquirrel::fillMessages()
 }
 
 // Start/stop slideshow
-void KSquirrel::slotSlideShowToggle(bool go)
+void KSquirrel::slotSlideShowStart()
 {
-    // check/uncheck slideshow button
-    SQ_GLWidget::window()->updateSlideShowButton(go);
+    if(slideShowDir.isEmpty())
+        slideShowDir = SQ_WidgetStack::instance()->url().path();
 
-    // start slideshow
-    if(go)
-    {
-        if(slideShowDir.isEmpty())
-            slideShowDir = SQ_WidgetStack::instance()->url().path();
-
-        slideShowPrivate();
-    }
-    else // stop slideshow
-        stopSlideShow();
+    slideShowPrivate();
 }
 
 // Invoke dialog for advanced slideshow
@@ -1701,7 +1579,7 @@ void KSquirrel::slotSlideShowDialog()
     SQ_SlideShow s(this);
 
     if(s.exec(slideShowDir) == QDialog::Accepted)
-        pASlideShow->activate();
+        slotSlideShowStart();
 }
 
 // Start new slidehsow!
@@ -1730,15 +1608,16 @@ void KSquirrel::slideShowPrivate()
     // No files to show ?
     if(!slideShowTotal)
     {
-        stopSlideShow();
+        slotStopSlideShow();
         return;
     }
 
     // initial setup
     slideShowIndex = 0;
-    slideShowName = slideShowDir + "/" + slideShowItems[slideShowIndex];
+    slideShowName = slideShowDir + QDir::separator() + slideShowItems[slideShowIndex];
 
     // start!
+    SQ_SlideShowWidget::instance()->beginSlideShow(slideShowTotal);
     slideShowTimer->start(1, true);
 }
 
@@ -1749,38 +1628,73 @@ void KSquirrel::slotSlideShowNextImage()
     if(slideShowStop)
         return;
 
-    // if it is known image type - let's load it
-    if(SQ_LibraryHandler::instance()->supports(slideShowName))
-        SQ_GLWidget::window()->slotStartDecoding(slideShowName, true);
+    bool brk = false;
 
-    // goto next file
-    slideShowIndex++;
-
-    // all files loaded ?
-    if(slideShowIndex == slideShowTotal)
+    do
     {
-        // slideshow done
-        if(!slideShowRepeat)
+        // if it is known image type - let's load it
+        if(SQ_LibraryHandler::instance()->libraryForFile(slideShowName))
         {
-            stopSlideShow();
-            return;
+//            printf("SUPPORTS %s\n", slideShowName.ascii());
+            brk = true;
+            SQ_SlideShowWidget::instance()->loadImage(slideShowName, slideShowIndex);
         }
-        // we should repeat slideshow
-        else
-        {
-            slideShowRepeat--;
-            slideShowIndex = 0;
-        }
-    }
 
-    // construct new file name
-    slideShowName = slideShowDir + "/" + slideShowItems[slideShowIndex];
+        // goto next file
+        slideShowIndex++;
+
+        // all files loaded ?
+        if(slideShowIndex == slideShowTotal)
+        {
+            // slideshow done
+            if(!slideShowRepeat)
+            {
+                slotStopSlideShow();
+                return;
+            }
+            // we should repeat slideshow
+            else
+            {
+                slideShowRepeat--;
+                slideShowIndex = 0;
+            }
+        }
+
+        // construct new file name
+        slideShowName = slideShowDir + QDir::separator() + slideShowItems[slideShowIndex];
+
+        if(brk) break;
+
+//        printf("CONTINUE -> %s\n", slideShowName.ascii());
+    }
+    while(!brk);
 
     slideShowTimer->start(slideShowDelay, true);
 }
 
+void KSquirrel::slotNextSlideShow()
+{
+    slideShowTimer->stop();
+    slideShowTimer->start(0, true);
+}
+
+void KSquirrel::slotPreviousSlideShow()
+{
+    slideShowTimer->stop();
+    int delay = slideShowDelay;
+
+    if(slideShowIndex > 1)
+    {
+        slideShowIndex -= 2;
+        slideShowName = slideShowDir + QDir::separator() + slideShowItems[slideShowIndex];
+        delay = 0;
+    }
+
+    slideShowTimer->start(delay, true);
+}
+
 // Stop slideshow, if running
-void KSquirrel::stopSlideShow()
+void KSquirrel::slotStopSlideShow()
 {
     if(!slideShowRunning())
         return;
@@ -1793,15 +1707,7 @@ void KSquirrel::stopSlideShow()
 
     kconf->setGroup("Slideshow");
 
-    // Toggle fullscreen, if needed
-    if(SQ_GLWidget::window()->fullscreen() && kconf->readBoolEntry("fullscreen", true))
-    {
-        SQ_GLWidget::window()->toggleFullScreen();
-        qApp->processEvents();
-    }
-
-    pASlideShow->setChecked(false);
-    SQ_GLWidget::window()->updateSlideShowButton(false);
+    SQ_SlideShowWidget::instance()->endSlideShow();
 }
 
 // Show information on libraries
@@ -1812,7 +1718,7 @@ void KSquirrel::slotPluginsInfo()
     pi.exec();
 }
 
-void KSquirrel::pauseSlideShow()
+void KSquirrel::slotPauseSlideShow()
 {
     if(!slideShowRunning())
         return;
@@ -1829,27 +1735,18 @@ void KSquirrel::pauseSlideShow()
     }
 }
 
-// Create temporary config file object and read
-// its version. Return true on version mismatch. It means,
-// that KSquirrel should copy newer (installed) config file
-// instead of old
-bool KSquirrel::checkConfigFileVersion()
-{
-    SQ_Config tmpconf("ksquirrelrc");
-
-    tmpconf.setGroup("Main");
-
-    QString version = tmpconf.readEntry("version");
-
-    return (version != SQ_VERSION);
-}
-
 // show imformation on OpenGL
 void KSquirrel::slotGLInfo()
 {
     SQ_GLInfo gi(this);
 
     gi.exec();
+}
+
+void KSquirrel::saveLayout()
+{
+    kconf->setGroup("Interface");
+    kconf->writeEntry("splitter", mainView->sizes());
 }
 
 #include "ksquirrel.moc"

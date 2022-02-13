@@ -9,7 +9,7 @@
 
 void SQ_ViewCache::init()
 {
-    textTotal->setText(QString(" %1 ").arg((int)SQ_PixmapCache::instance()->count()));
+    textTotal->setText(QString("<b>%1</b>").arg((int)SQ_PixmapCache::instance()->count()));
 
     if(SQ_PixmapCache::instance()->isEmpty())
         return;

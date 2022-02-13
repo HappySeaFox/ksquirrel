@@ -43,7 +43,7 @@ SQ_LibraryHandler * SQ_LibraryHandler::m_instance = 0;
 
 // SQ_LibraryHandler
 SQ_LibraryHandler::SQ_LibraryHandler(QObject *parent) 
-    : QObject(parent), QValueVector<SQ_LIBRARY>(), latest(0)
+    : QObject(parent), QValueVector<SQ_LIBRARY>()
 {
     m_instance = this;
 
@@ -70,13 +70,18 @@ SQ_LibraryHandler::~SQ_LibraryHandler()
 SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
 {
     // wrong parameter, or file doesn't exist
-    if(full_path.isEmpty() || !QFile::exists(full_path))
+    if(!QFile::exists(full_path))
         return 0;
+
+    SQ_LIBRARY *latest = 0;
 
     QTime tm;
     tm.start();
 
     QFileInfo fi(full_path);
+
+    if(fi.isDir() || !fi.isReadable())
+        return 0;
 
     // Cache support since 0.7.0 :)
     LibCache::iterator it = cache.find(full_path);
@@ -184,16 +189,6 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryForFile(const QString &full_path)
     }
 
     return 0;
-}
-
-/*
- *  Does SQ_LibraryHandler support given file ?
- *
- *  Supports, if libraryForFile(path) is not NULL.
- */
-bool SQ_LibraryHandler::supports(const QString &f)
-{
-    return libraryForFile(f) != 0;
 }
 
 /*
@@ -505,11 +500,6 @@ fmt_codec_base* SQ_LibraryHandler::codecByName(const QString &name)
 
     // return result
     return (lib && lib->codec) ? lib->codec : 0;
-}
-
-fmt_codec_base* SQ_LibraryHandler::latestCodec()
-{
-    return (latest && latest->codec) ? latest->codec : 0;
 }
 
 void SQ_LibraryHandler::writeSettings(SQ_LIBRARY *lib)

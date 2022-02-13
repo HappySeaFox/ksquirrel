@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <qfile.h>
+#include <qfileinfo.h>
 
 #include <kmdcodec.h>
 #include <kfileview.h>
@@ -35,7 +36,7 @@ SQ_ImageBasket::SQ_ImageBasket(QWidget *parent, const char *name) : KDirOperator
 {
         m_inst = this;
 
-        setupMenu(KDirOperator::AllActions ^ KDirOperator::NavActions);
+        setupMenu(KDirOperator::AllActions ^ KDirOperator::NavActions ^ KDirOperator::ViewActions);
 
         connect(this, SIGNAL(dropped(const KFileItem *, QDropEvent*, const KURL::List&)),
                         this, SLOT(slotDropped(const KFileItem *, QDropEvent*, const KURL::List&)));
@@ -98,8 +99,11 @@ void SQ_ImageBasket::add(const KFileItemList &list)
 
         for(KFileItemListIterator it(list); (tmp = it.current()); ++it)
         {
+            if(tmp->isFile())
+            {
                 name = url().path() + QDir::separator() + tmp->name();
                 SQ_StorageFile::writeStorageFile(name, tmp->url().path());
+            }
         }
 }
 
@@ -107,11 +111,17 @@ void SQ_ImageBasket::slotDropped(const KFileItem *, QDropEvent*, const KURL::Lis
 {
         QString name;
         KURL::List::const_iterator itEnd = list.end();
+        QFileInfo fi;
 
         for(KURL::List::const_iterator it = list.begin();it != itEnd;++it)
         {
+            fi.setFile((*it).path());
+
+            if(fi.isFile())
+            {
                 name = url().path() + QDir::separator() + (*it).fileName();
                 SQ_StorageFile::writeStorageFile(name, (*it).path());
+            }
          }
 }
 

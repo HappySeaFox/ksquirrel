@@ -18,6 +18,8 @@
 #ifndef SQ_ICONLISTITEM_H
 #define SQ_ICONLISTITEM_H
 
+#include <qlistbox.h>
+
 class QListBox;
 class QPainter;
 class QPixmap;

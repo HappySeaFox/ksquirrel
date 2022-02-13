@@ -19,7 +19,6 @@
 #ifndef SQ_GLWIDGET_H
 #define SQ_GLWIDGET_H
 
-#include <qgl.h>
 #include <qcursor.h>
 #include <qfileinfo.h>
 #include <qimage.h>
@@ -28,10 +27,13 @@
 
 #include <kurl.h>
 
-#include <ksquirrel-libs/fmt_types.h>
-#include <ksquirrel-libs/fmt_defs.h>
-
 #include <vector>
+
+#include "sq_glparts.h"
+
+struct SQ_ImageFilterOptions;
+struct SQ_ImageBCGOptions;
+struct RGBA;
 
 // parameters in GL matrix
 #define    MATRIX_C1    matrix[0]
@@ -49,10 +51,10 @@ class KPopupMenu;
 class KRadioAction;
 
 class QTimer;
-class QPainter;
 class QPopupMenu;
 class QSlider;
 
+class SQ_GLSelectionPainter;
 class SQ_ToolButtonPopup;
 class SQ_ToolButton;
 class SQ_ToolBar;
@@ -128,18 +130,29 @@ class SQ_GLWidget : public QGLWidget
         ~SQ_GLWidget();
 
         /*
-         *  Set zoom, move and rotate factors.
+         *  Start decoding given image. We can call it from anywhere.
          */
-        void setZoomFactor(const GLfloat &newfactor);
-        void setMoveFactor(const GLfloat &newfactor);
-        void setRotateFactor(const GLfloat &newfactor);
+        void startDecoding(const QString &file);
+        void startDecoding(const KURL &url);
+
+        /*
+         *  Set zoom, move and rotate factors from config.
+         */
+        void updateFactors();
 
         /*
          *  Set clear color for context.
          */
         void setClearColor();
 
+        /*
+         *  Get zoom value, e.g. 1.5, 2.2 ...
+         */
         GLfloat get_zoom() const;
+
+        /*
+         *  Get zoom value in percents, e.g. 150, 220 ...
+         */
         GLfloat get_zoom_pc() const;
 
         KActionCollection* actionCollection() const;
@@ -217,6 +230,8 @@ class SQ_GLWidget : public QGLWidget
         void paintGL();
         void resizeGL(int,int);
 
+        void paintEvent(QPaintEvent *);
+
         /*
          *  Mouse wheel event. Let's load next/previous image, or
          *  zoom in/zoom out (depends on settings).
@@ -250,8 +265,21 @@ class SQ_GLWidget : public QGLWidget
         void mouseMoveEvent(QMouseEvent *);
 
     private:
+        QImage generatePreview();
+        void bcg();
+        void filter();
+        void  editUpdate();
+
+        /*
+         *  Save current image page to clipboard
+         */
         void toClipboard();
+
+        /*
+         *  Save current image page to file
+         */
         void saveAs();
+
         void  enableSettingsButton(bool enab);
 
         /*
@@ -281,7 +309,7 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Cleanup method.
          */
-        void decodeFailedOn0();
+        void decodeFailedOn0(const int err_code);
 
         /*
          *  Create KActions.
@@ -298,10 +326,6 @@ class SQ_GLWidget : public QGLWidget
          */
         void draw_background(void *bits, unsigned int *tex, int dim, GLfloat w, GLfloat h, bool &bind, bool deleteOld);
 
-        /*
-         *  Divide currently decoded image into
-         *  several parts and store them in MemoryPart::m_data.
-         */
         void setupBits(Parts *p, RGBA *buffer, int y, int x);
 
         /*
@@ -375,8 +399,8 @@ class SQ_GLWidget : public QGLWidget
         /*
          *  Find best tile's width and height for given width and height.
          */
-        void findCloserTiles(int w, int h, std::vector<int> &x, std::vector<int> &y);
-        QPair<int, int> calcRealDimensions(Parts &, int y = -1, int x = -1);
+        static void findCloserTiles(int w, int h, std::vector<int> &x, std::vector<int> &y);
+        static QPair<int, int> calcRealDimensions(Parts &, int y = -1, int x = -1);
 
         /*
          *  Prepare decoding. It will find proper library for decoding,
@@ -415,15 +439,8 @@ class SQ_GLWidget : public QGLWidget
         void flip_h();
         void flip_v();
 
-    public slots:
-
-        /*
-         *  Start decoding given image. We can call it from anywhere.
-         */
-        void slotStartDecoding(const QString &file, bool = false);
-        void slotStartDecoding(const KURL &url);
-
     private slots:
+        void decode();
 
         /*
          *  Slots for toolbar's actions:
@@ -445,7 +462,6 @@ class SQ_GLWidget : public QGLWidget
         void slotFlipH();
         void slotMatrixReset();
         void slotProperties(); // show image properties
-        void slotDecode();
         void slotHideToolbars(bool); // show/hide toolbars (with 'T')
         void slotToggleStatus(bool);
         void slotFirst();
@@ -464,58 +480,58 @@ class SQ_GLWidget : public QGLWidget
         void slotShowCodecSettings();
         void slotApplyCodecSettings();
 
-    private:
-        KAction         *pAReset, *pAClose, *pAProperties, *pAHelp;
-        KToggleAction   *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
-                        *pAZoomH, *pAZoomWH, *pAZoom100,
-                        *pAZoomLast, *pAHideToolbars;
+        void slotBCG(SQ_ImageBCGOptions *);
+        void slotFilter(SQ_ImageFilterOptions *fltopt);
 
-        SQ_ToolButton   *pAToolSlideShow, *pAToolQuick, *pAToolFull;
+    private:
+        KAction                *pAReset, *pAProperties, *pAHelp;
+        KToggleAction   *pAFull, *pAIfLess, *pAStatus, *pAZoomW,
+                                      *pAZoomH, *pAZoomWH, *pAZoom100,
+                                      *pAZoomLast, *pAHideToolbars;
+
+        SQ_ToolButton                *pAToolQuick, *pAToolFull;
         SQ_ToolButtonPopup    *pAToolZoom,  *pAToolImages;
 
         KActionCollection     *ac;
         QPopupMenu            *menu, *menuFile, *menuImage;
-        int                                 id_settings, id_saveas;
+        int                                  id_settings, id_saveas;
 
         // popup menu with zoom types (fit width, fit height, zoom 100%...)
         KPopupMenu            *zoom,
 
-                              // popup menu with image pages
-                              *images;
+                                      // popup menu with image pages
+                                      *images;
 
-        QString               File, m_File;
-        QFileInfo             fm;
+        QString                 File, m_File;
+        QFileInfo              fm;
         QImage                BGpixmap, BGquads;
 
-        QTimer                *timer_prev, *timer_next;
-        QTimer                *timer_decode, *timer_anim;
+        QTimer                  *timer_prev, *timer_next;
+        QTimer                  *timer_anim;
 
-        QString               quickImageInfo;
-        QPainter              *pRect;
-        QRect                 lastRect;
-        QImage                mm[4];
+        QString                  quickImageInfo;
+        QImage                 mm[4];
+        SQ_GLSelectionPainter *gls;
 
-        SQ_LIBRARY            *lib;
-        fmt_codec_base        *codeK;
-//        RGBA                  *next;
-        fmt_info              finfo;
+        SQ_LIBRARY      *lib;
+        fmt_codec_base *codeK;
+        fmt_info                  finfo;
         fmt_image             image_broken;
 
-        std::vector<Parts>    parts;
-        Parts                 *parts_broken;
+        std::vector<Parts>parts;
+        Parts                       *parts_broken;
 
-        GLfloat               matrix[12], saved[12], zoomfactor, movefactor, rotatefactor, curangle;
+        GLfloat                    matrix[12], saved[12], zoomfactor, movefactor, rotatefactor, curangle;
 
-        unsigned int          texQuads, texPixmap, mark[4];
-        int                   xmoveold, ymoveold, xmove, ymove, current,
-                              zoom_type, old_id, total, errors, movetype;
-        bool                  reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
-                              changed, crossDrawn, changed2, marks, linear, use_broken;
-        float                 zoomFactor;
-        QWidget               *hack;
-        RGBA                    *buffer;
-        QSlider *slider_zoom;
-        bool messages;
+        unsigned int           texQuads, texPixmap, mark[4];
+        int                             xmoveold, ymoveold, xmove, ymove, current,
+                                         zoom_type, old_id, total, errors, movetype;
+        bool                         reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
+                                         changed, changed2, marks, linear, use_broken;
+        float                         zoomFactor;
+        RGBA                     *buffer;
+        QSlider                   *slider_zoom;
+        bool                        messages;
 
         static SQ_GLWidget    *m_instance;
 };
@@ -538,107 +554,10 @@ bool SQ_GLWidget::isnice()
     return linear;
 }
 
-// Set zoom factor.
-inline
-void SQ_GLWidget::setZoomFactor(const GLfloat &newfactor)
-{
-    zoomfactor = newfactor;
-}
-
-// Set move factor.
-inline
-void SQ_GLWidget::setMoveFactor(const GLfloat &newfactor)
-{
-    movefactor = newfactor;
-}
-
-// Set rotate factor.
-inline
-void SQ_GLWidget::setRotateFactor(const GLfloat &newfactor)
-{
-    rotatefactor = newfactor;
-}
-
 inline
 KActionCollection* SQ_GLWidget::actionCollection() const
 {
     return ac;
-}
-
-/* *************************************************************** */
-
-class memoryPart
-{
-    public:
-        memoryPart(const int sz);
-        ~memoryPart();
-
-        // create/delete memory buffer
-        void create();
-        void del();
-
-        bool valid() const;
-        RGBA *data();
-
-    private:
-        int m_size;
-        RGBA *m_data;
-};
-
-inline
-RGBA* memoryPart::data()
-{
-    return m_data;
-}
-
-inline
-void memoryPart::del()
-{
-    delete [] m_data;
-    m_data = 0;
-}
-
-inline
-bool memoryPart::valid() const
-{
-    return m_data != 0;
-}
-
-/* *************************************************************** */
-
-struct Part
-{
-    Part();
-
-    float           x1, y1, x2, y2, tx1, tx2, ty1, ty2;
-    unsigned int    tex;
-    GLuint          list;
-};
-
-/* *************************************************************** */
-
-// one image page. All pages are stored in SQ_GLWidget::parts
-struct Parts
-{
-    Parts();
-
-    int w, h, realw, realh;
-
-    std::vector<Part> m_parts;
-    std::vector<int> tilesx, tilesy;
-    memoryPart *buffer;
-
-    bool makeParts();
-    void removeParts();
-    void computeCoords();
-    void deleteBuffer();
-};
-
-inline
-void Parts::deleteBuffer()
-{
-    delete buffer;
-    buffer = 0;
 }
 
 #endif

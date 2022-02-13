@@ -107,15 +107,18 @@
                         <cstring>textLabel1</cstring>
                     </property>
                     <property name="text">
-                        <string>Total:</string>
+                        <string>&lt;b&gt;Total:&lt;/b&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter</set>
                     </property>
                 </widget>
                 <widget class="QLabel">
                     <property name="name">
                         <cstring>textTotal</cstring>
                     </property>
-                    <property name="text">
-                        <string></string>
+                    <property name="textFormat">
+                        <enum>RichText</enum>
                     </property>
                     <property name="alignment">
                         <set>AlignCenter</set>

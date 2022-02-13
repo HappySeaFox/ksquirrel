@@ -18,7 +18,7 @@
 #ifndef SQ_WIDGETSTACK_H
 #define SQ_WIDGETSTACK_H
 
-#include <qvbox.h>
+#include <qobject.h>
 #include <qstring.h>
 
 #include <kurl.h>
@@ -37,12 +37,9 @@ class KFileView;
  *
  *  It serves all file actions (Copy, Move, Link to...), thumbnail
  *  updates, selecting/deselecting files with +/-  etc.
- *
- *  Since 0.6.0-final it creates only one SQ_DirOperator (memory and speed
- *  improvement).
  */
 
-class SQ_WidgetStack : public QVBox
+class SQ_WidgetStack : public QObject
 {
     Q_OBJECT
 
@@ -69,6 +66,8 @@ class SQ_WidgetStack : public QVBox
         enum moveToError { moveSuccess = 0, moveFailed } ;
 
         SQ_DirOperator* diroperator() const;
+
+        bool updateRunning() const;
 
         /*
          *  Get current url. Just calls SQ_DirOperator::url().
@@ -97,14 +96,13 @@ class SQ_WidgetStack : public QVBox
         void updateView();
 
         /*
-         *  Quick access to SQ_DirOperator::actionCollection::action
+         *  Quick access to SQ_DirOperator::actionCollection::action()
          */
         KAction *action(const QString &name);
 
         static SQ_WidgetStack* instance() { return m_instance; }
 
     private:
-
         /*
          *  Save currently selected items' paths, if any.
          *
@@ -125,7 +123,6 @@ class SQ_WidgetStack : public QVBox
         void setURL(const KURL &, bool = true);
 
     public slots:
-
         /*
          *  Change view type. See SQ_DirOperator::ViewT for more.
          */
@@ -158,8 +155,6 @@ class SQ_WidgetStack : public QVBox
 
         /*
          *  Used by SQ_FileThumbView to manipulate thumbnail progress.
-         *
-         *  TODO: move to SQ_FileThumbView ?
          */
         void thumbnailsUpdateEnded();
         void thumbnailUpdateStart(int);
@@ -222,11 +217,12 @@ class SQ_WidgetStack : public QVBox
 
     private:
         /*
-         *  Widget, which will manage file viewer
+         *  File manager itself
          */
         SQ_DirOperator    *dirop;
+
         QTimer     *timerShowProgress;
-        KURL::List    files;
+        KURL::List    files; // files to copy, move or link
         FileAction    fileaction;
 
         static SQ_WidgetStack    *m_instance;

@@ -72,13 +72,6 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
         fmt_codec_base* codecByName(const QString &name);
 
         /*
-         *  Does SQ_LibraryHandler support given file ?
-         *
-         *  It supports, if libraryForFile(path) is not NULL.
-         */
-        bool supports(const QString &path);
-
-        /*
          *  Does any of found libraries handle given extension ?
          */
         bool knownExtension(const QString &ext);
@@ -113,17 +106,6 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
          */
         void dump() const;
 
-        /*
-         *  supports() saves last found library.
-         *  You can access it via latestLibrary().
-         */
-        SQ_LIBRARY *latestLibrary();
-
-        /*
-         *  -//- but return codec.
-         */
-        fmt_codec_base *latestCodec();
-
         static SQ_LibraryHandler* instance() { return m_instance; }
 
     private:
@@ -145,11 +127,6 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
         void debugInfo(const QString &symbol, const QString &path, const QString &lib, int);
 
     private:
-        /*
-         *  Last found library by libraryForFile().
-         */
-        SQ_LIBRARY *latest;
-
         struct LibCacheEntry
         {
             LibCacheEntry() : library(0)
@@ -169,11 +146,5 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
 
         static SQ_LibraryHandler *m_instance;
 };
-
-inline
-SQ_LIBRARY* SQ_LibraryHandler::latestLibrary()
-{
-    return latest;
-}
 
 #endif

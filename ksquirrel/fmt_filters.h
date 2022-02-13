@@ -1,6 +1,4 @@
-/*  This file is part of ksquirrel-libs (http://ksquirrel.sf.net)
-
-    Copyright (c) 2005 Dmitry Baryshev <ksquirrel@tut.by>
+/*  Copyright (c) 2005 Dmitry Baryshev <ksquirrel@tut.by>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,6 +16,11 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+
+/*
+ * All methods (except redeye and resize) in this namespace are ported from KDE 3.2.3.
+ * All of them are copyrighted by their authors. See fmt_filters_README for more.
+ */
 
 #ifndef FMT_FILTERS_H
 #define FMT_FILTERS_H

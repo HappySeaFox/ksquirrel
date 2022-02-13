@@ -599,6 +599,7 @@ void fmt_filters::noise(const image &im, NoiseType noise_type)
             destData[x].r = generateNoise(srcData[x].r, noise_type);
             destData[x].g = generateNoise(srcData[x].g, noise_type);
             destData[x].b = generateNoise(srcData[x].b, noise_type);
+            destData[x].a = srcData[x].a;
         }
     }
 
@@ -670,7 +671,7 @@ void fmt_filters::implode(const image &im, double factor, const rgba &background
                                                background);
             }
             else
-                dest[x] = _rgba[x];
+                dest[x] = src[x];
         }
     }
 

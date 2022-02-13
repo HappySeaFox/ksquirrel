@@ -28,7 +28,6 @@
 #include <kactioncollection.h>
 #include <kpopupmenu.h>
 #include <klocale.h>
-#include <kdebug.h>
 
 #include <libkipi/pluginloader.h>
 #include <libkipi/interface.h>
@@ -146,10 +145,7 @@ void SQ_KIPIManager::slotReplug()
             fnd = cmenus.find(category);
 
             if(fnd == cmenus.end())
-            {
-                kdWarning() << "Unknown category '" << category << endl;
                 continue;
-            }
 
             fnd.data()->insert(*actionIt);
         }

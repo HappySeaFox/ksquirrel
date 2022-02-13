@@ -93,13 +93,13 @@ class SQ_DirOperator : public KDirOperator
 
         void execute(KFileItem *);
 
+        void stopPreview();
+
     protected:
         /*
          *  Reimplement createView() to create custom views.
          */
         virtual KFileView* createView(QWidget *parent, KFile::FileView view);
-
-        virtual bool eventFilter(QObject *o, QEvent *e);
 
     private:
         void disableSpecificActions(KFileIconView *);
@@ -130,15 +130,13 @@ class SQ_DirOperator : public KDirOperator
         void urlAdded(const KURL &);
         void urlRemoved(const KURL &);
 
+        void stopThumbnailUpdate();
+        void startThumbnailUpdate();
+
         /*
          *  Invoked, when current directory has been loaded.
          */
         void slotFinishedLoading();
-
-        /*
-         *  Select first supported image in current directory.
-         */
-        void slotDelayedFinishedLoading();
 
         /*
          *  Change thumbnail size.
@@ -152,9 +150,19 @@ class SQ_DirOperator : public KDirOperator
 
     private slots:
         /*
+         *  Connected to dirLister()
+         */
+        void slotNewItems(const KFileItemList &);
+        void slotRefreshItems(const KFileItemList &);
+
+        void slotDelayedFinishedLoading();
+
+        /*
          *  Edit current item's mimetype (Konqueror-related action).
          */
         void slotEditMime();
+
+        void slotPreview();
 
         void slotDropped(const KFileItem *, QDropEvent*, const KURL::List&);
         void slotAddToBasket();
@@ -174,12 +182,6 @@ class SQ_DirOperator : public KDirOperator
          *  URL entered.
          */
         void slotUrlEntered(const KURL&);
-
-        /*
-         *  If user clicked on item, and it is supported image type,
-         *  start decoding with small delay.
-         */
-        void slotDelayedDecode();
 
         /*
          *  Invoked, when some item has been deleted. We should
@@ -204,8 +206,9 @@ class SQ_DirOperator : public KDirOperator
         KActionMenu     *pADirOperatorMenu, *pAFileActions, *pAImageActions;
 
         ViewT     type;
-        QString    tobeDecoded;
-        QTimer    *timer;
+        QTimer    *timer_preview;
+        KURL lasturl;
+        bool usenew;
 };
 
 inline

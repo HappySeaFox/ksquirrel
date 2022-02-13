@@ -53,7 +53,7 @@ class SQ_ImageLoader : public QObject
         /*
          *  Remove any previously saved data.
          */
-        void cleanup();
+        void cleanup(bool del = true);
 
         /*
          *  Direct access to image bits...

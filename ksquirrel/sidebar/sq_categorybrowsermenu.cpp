@@ -40,7 +40,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <klocale.h>
 #include <kapplication.h>
 #include <kprocess.h>
-#include <kdebug.h>
 #include <kiconloader.h>
 #include <ksimpleconfig.h>
 #include <kdesktopfile.h>
@@ -80,14 +79,10 @@ SQ_CategoryBrowserMenu::SQ_CategoryBrowserMenu(QString path, QWidget *parent, co
              this, SLOT(slotClear()) );
     connect( &_dirWatch, SIGNAL(deleted(const QString&)),
              this, SLOT(slotClear()) );
-
-    kdDebug() << "+SQ_CategoryBrowserMenu " << path << endl;
 }
 
 SQ_CategoryBrowserMenu::~SQ_CategoryBrowserMenu()
-{
-    kdDebug() << "-SQ_CategoryBrowserMenu " << path() << endl;
-}
+{}
 
 void SQ_CategoryBrowserMenu::slotClearIfNeeded(const QString& p)
 {

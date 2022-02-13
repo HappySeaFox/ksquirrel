@@ -20,9 +20,14 @@ void SQ_SlideShow::init()
     spinCycle->setValue(SQ_Config::instance()->readNumEntry("repeat", 0));
     pushCurrent->setPixmap(SQ_IconLoader::instance()->loadIcon("folder_green", KIcon::Desktop, 16));
     pushHistory->setPixmap(SQ_IconLoader::instance()->loadIcon("history", KIcon::Desktop, 16));
+    checkMessages->setChecked(SQ_Config::instance()->readBoolEntry("messages", true));
+    checkName->setChecked(SQ_Config::instance()->readBoolEntry("messages_name", true));
+    checkSize->setChecked(SQ_Config::instance()->readBoolEntry("messages_size", false));
+    checkPos->setChecked(SQ_Config::instance()->readBoolEntry("messages_pos", true));
 
-    checkForce->setChecked(SQ_Config::instance()->readBoolEntry("force", true));
-    checkFull->setChecked(SQ_Config::instance()->readBoolEntry("fullscreen", true));
+    QColor col;
+    col.setNamedColor(SQ_Config::instance()->readEntry("background", "#4e4e4e"));
+    bcolor->setColor(col);
 
     QPopupMenu *hist = new QPopupMenu;
     items = SQ_Config::instance()->readListEntry("history");
@@ -53,8 +58,11 @@ int SQ_SlideShow::exec(QString &path)
         SQ_Config::instance()->setGroup("Slideshow");
         SQ_Config::instance()->writeEntry("delay", spinDelay->value());
         SQ_Config::instance()->writeEntry("repeat", spinCycle->value());
-        SQ_Config::instance()->writeEntry("fullscreen", checkFull->isChecked());
-        SQ_Config::instance()->writeEntry("force", checkForce->isChecked());
+        SQ_Config::instance()->writeEntry("background", bcolor->color().name());
+        SQ_Config::instance()->writeEntry("messages", checkMessages->isChecked());
+        SQ_Config::instance()->writeEntry("messages_name", checkName->isChecked());
+        SQ_Config::instance()->writeEntry("messages_size", checkSize->isChecked());
+        SQ_Config::instance()->writeEntry("messages_pos", checkPos->isChecked());
         SQ_Config::instance()->writeEntry("history", items);
         path = kurl->url();
     }
@@ -99,4 +107,14 @@ void SQ_SlideShow::slotCurrent()
 
     setPath(path);
     appendPath(path);
+}
+
+void SQ_SlideShow::slotMessages( bool b)
+{
+    checkName->setEnabled(b);
+    checkPos->setEnabled(b);
+    checkSize->setEnabled(b);
+    textName->setEnabled(b);
+    textSize->setEnabled(b);
+    textPos->setEnabled(b);
 }

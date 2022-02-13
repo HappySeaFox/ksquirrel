@@ -109,13 +109,13 @@ void SQ_ThreadDirLister::appendURL(const KURL &url)
 inline
 void SQ_ThreadDirLister::lock()
 {
-//    mutex.lock();
+    mutex.lock();
 }
 
 inline
 void SQ_ThreadDirLister::unlock()
 {
-//    mutex.unlock();
+    mutex.unlock();
 }
 
 #endif

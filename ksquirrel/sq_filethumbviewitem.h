@@ -24,8 +24,6 @@
 
 #include "sq_thumbnailinfo.h"
 
-class QFontMetrics;
-
 /*
  *  SQ_FileThumbViewItem represents a thumbnail item in SQ_FileThumbView.
  *  Additianally it stores some useful info.
@@ -47,28 +45,20 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
          */
         void setInfo(const SQ_Thumbnail &t);
 
-        virtual void setPixmap(const QPixmap &pixmap);
-
     protected:
         /*
          *  Painting routines.
          */
         virtual void paintItem(QPainter *p, const QColorGroup &cg);
         virtual void paintFocus(QPainter *p, const QColorGroup &cg);
-        void paintPixmap(QPainter *p, const QColorGroup &c);
         void paintText(QPainter *p, const QColorGroup &c);
-
-    private:
-        void calcTmpText();
 
     private:
         /*
          *  Additional information.
          */
         SQ_Thumbnail info;
-        QPixmap selected;
         QString  tmpText;
-        QFontMetrics *fm;
 };
 
 #endif

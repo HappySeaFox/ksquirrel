@@ -24,7 +24,6 @@
 
 #include <kapplication.h>
 #include <kpopupmenu.h>
-#include <kdebug.h>
 #include <kfileitem.h>
 #include <kglobalsettings.h>
 
@@ -53,8 +52,6 @@ void SQ_FileListViewItem::paintFocus(QPainter *, const QColorGroup &, const QRec
 SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
     : KFileDetailView(parent, name)
 {
-    kdDebug() << "+SQ_FileDetailView" << endl;
-
     // pixmap for directory item
     dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
 
@@ -71,9 +68,7 @@ SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
-{
-    kdDebug() << "-SQ_FileDetailView" << endl;
-}
+{}
 
 void SQ_FileDetailView::exec(QListViewItem *i, bool single, bool hl)
 {

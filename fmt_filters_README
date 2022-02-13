@@ -1,16 +1,8 @@
-Notes:
-------
-
-Some filters are ported from KDE's KImageEffect. See fmt_filters.h for more.
-Resize methods are ported from DevIL library. See fmt_filters.h for more.
-
--------------------------------------------------------------------
-
 * fmt_filters is a regular C++ namespace.
 * it is a set of image filters, written on pure C++.
 * it is intended to create platform-independed filters, which can be used anywhere -
     in KDE, GNOME, ... apps.
-* these source files are distributed with ksquirrel-libs from http://ksquirrel.sf.net.
+* these source files are distributed with ksquirrel from http://ksquirrel.sf.net.
 * you can find the latest version of fmt_filters at http://ksquirrel.sf.net/subprojects.php.
 * fmt_filters work with 32-bit image data.
 * to use it in your project, simply add fmt_filters sources to your project.
@@ -49,6 +41,7 @@ Resize methods are ported from DevIL library. See fmt_filters.h for more.
 
 Copyrights:
 
+
 * redeye
 --------
 
@@ -82,8 +75,9 @@ Red-eye removal was taken from "redeye" plugin for GIMP
  * authorization from the Author.
  */
 
+
 * most image processing filters ported from KImageEffect (KDE project, http://kde.org)
---------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
 /* This file is part of the KDE libraries
     Copyright (C) 1998, 1999, 2001, 2002 Daniel M. Duley <mosfet@kde.org>

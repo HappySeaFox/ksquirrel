@@ -76,8 +76,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
     Q_OBJECT
 
     public:
-            enum View { Classic, BuiltIn, GQView };
-
         /*
          *  Constructor & destructor
          */
@@ -110,10 +108,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         void setCaption(const QString &cap);
 
-        /*
-         *  Stop slideshow, if running.
-         */
-        void stopSlideShow();
+        void saveLayout();
 
         /*
          *  Check if slideshow is running.
@@ -152,10 +147,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         bool process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData);
 
-        /*
-         *  Pause or unpause slideshow, if running.
-         */
-        void pauseSlideShow();
+        bool separateImageWindow() const;
 
         /*
          *  Names and extensions of name filters for
@@ -163,16 +155,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         QStringList* filtersNames() const;
         QStringList* filtersExtensions() const;
-
-        /*
-         *  Rebuild interface
-         */
-        void rebuildInterface(int type, bool init = false);
-
-        /*
-         *  Get interface type (see 'viewtype')
-         */
-        int interfaceType() const;
 
         static KSquirrel*     app() { return m_instance; }
 
@@ -189,13 +171,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
     private:
 
         void continueLoading();
-
-        /*
-         *  Check if current config file left from older KSquirrel's
-         *  version. If so, return true, and new config file will be
-         *  copied instead of old.
-         */
-        bool checkConfigFileVersion();
 
         /*
          *  Create a final splash. It will be shown only if SQ_PixmapCache
@@ -368,6 +343,23 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         void slotFullScreen(bool full);
 
+        /*
+         *  Stop slideshow, if running.
+         */
+        void slotStopSlideShow();
+
+        /*
+         *  Pause or unpause slideshow, if running.
+         */
+        void slotPauseSlideShow();
+
+        /*
+         *  Load next or previuos file in slideshow sequence
+         *  without waiting. (coming from SQ_SlideshowWidget's toolbar)
+         */
+        void slotNextSlideShow();
+        void slotPreviousSlideShow();
+
     private slots:
 
         /*
@@ -378,7 +370,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         /*
          *  Change interface, see 'viewtype'
          */
-        void slotChangeInterface();
+        void slotChangeInterface(bool);
 
         /*
          *  Invoke 'Filters' dialog.
@@ -479,10 +471,10 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotSlideShowNextImage();
 
         /*
-         *  Invoked, when user toggled slideshow mode with appropriate button.
+         *  Invoked, when user presses slideshow button.
          *  Will stop or run slideshow.
          */
-        void slotSlideShowToggle(bool);
+        void slotSlideShowStart();
 
         /*
          *  Invoked, when user clicked "Plugins information" button.
@@ -504,18 +496,9 @@ class KSquirrel : public KMainWindow, public DCOPObject
     private:
         static KSquirrel     *m_instance;
 
-        // view type:
-        // 0 - KSquirrel classic
-        // 1 - built-in image window
-        // 2 - like GQview
-        int         viewtype;
+        bool builtin;
 
-        QSplitter   *ts;
-
-        QVBox       *rightBox;
-
-        // change interface (see above)
-        KAction *pAInterface;
+        KToggleAction *pAInterface;
 
         // main toolbar
         KToolBar    *tools;
@@ -589,7 +572,6 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // and SQ_GLView at the second
         QWidgetStack    *viewBrowser;
 
-        // main QVBox, will contain menu, toolbar and 'viewBrowser'
         QVBox    *b2;
 
         // sizes for mainSplitter
@@ -632,15 +614,13 @@ class KSquirrel : public KMainWindow, public DCOPObject
         *pASelectGroup, *pADeselectGroup, *pASelectAll, *pADeselectAll;
 
         // "Slideshow"
-        KToggleAction    *pASlideShow;
+        KAction    *pASlideShow;
 
         /*
-         * Slideshow-specififc members
+         * Slideshow-specififc members.
+         *
+         *  Is slideshow paused by user (with 'Pause') ?
          */
-
-         /*
-          *  Is slideshow paused by user (with 'Pause') ?
-          */
          bool slideShowPaused;
 
         // Directory for slideshow.
@@ -684,6 +664,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // external tools
         SQ_ExternalTool    *extool;
 
+        QSplitter *mainView;
+
         // file tree
         SQ_TreeView    *ptree;
 
@@ -712,7 +694,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         // not interesting ;)
         int     old_id;
-        bool   first_time, old_disable, old_ext,
+        bool   old_disable, old_ext,
                  m_urlbox, old_marks;
 };
 
@@ -754,9 +736,9 @@ KPopupMenu* KSquirrel::menuViews()
 }
 
 inline
-int KSquirrel::interfaceType() const
+bool KSquirrel::separateImageWindow() const
 {
-    return viewtype;
+    return builtin;
 }
 
 #endif

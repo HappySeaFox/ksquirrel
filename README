@@ -37,7 +37,19 @@ Keyboard shortcuts
 ------------------
 
 Image windows understands many hotkeys. You can invoke help window with either pressing
-"/" in image window, or selecting "Hotkeys" item from context menu.
+"/" in image window, or selecting "Hotkeys" from context menu.
+
+***********************************************************************************
+
+Slideshow
+---------
+
+Use the following keys in slideshow:
+
+     *  Return, Escape  = stop slideshow
+     *  Pause, Space    = pause/unpause slideshow
+     *  Page Up         = previous image
+     *  Page Down       = next image
 
 ***********************************************************************************
 

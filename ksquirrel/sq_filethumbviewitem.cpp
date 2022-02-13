@@ -21,7 +21,6 @@
 
 #include <qstring.h>
 #include <qpainter.h>
-#include <qfontmetrics.h>
 
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -33,14 +32,10 @@
 
 SQ_FileThumbViewItem::SQ_FileThumbViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi):
     KFileIconViewItem(parent, text, pixmap, fi)
-{
-    fm = 0;
-}
+{}
 
 SQ_FileThumbViewItem::~SQ_FileThumbViewItem()
-{
-    delete fm;
-}
+{}
 
 /*
  *  Get additional information as QString object.
@@ -70,59 +65,12 @@ void SQ_FileThumbViewItem::setInfo(const SQ_Thumbnail &t)
 
 void SQ_FileThumbViewItem::paintItem(QPainter *p, const QColorGroup &cg)
 {
-    paintPixmap(p, cg);
+    KIconViewItem::paintPixmap(p, cg);
     paintText(p, cg);
-}
-
-void SQ_FileThumbViewItem::paintPixmap(QPainter *p, const QColorGroup &cg)
-{
-    int iconX = pixmapRect(false).x();
-    int iconY = pixmapRect(false).y();
-
-    QPixmap *pxm = pixmap();
-
-    if(pxm && !pxm->isNull())
-    {
-        if(isSelected())
-        {
-            if(selected.isNull())
-                selected = KPixmapEffect::selectedPixmap(KPixmap(*pxm), cg.highlight());
-
-            p->drawPixmap(iconX, iconY, selected);
-        }
-        else
-            p->drawPixmap(iconX, iconY, *pxm);
-    }
-}
-
-void SQ_FileThumbViewItem::calcTmpText()
-{
-    int w = pixmapRect().width();
-
-    if(!fm) fm = new QFontMetrics(iconView()->font());
-
-    QString itemText = text();
-
-    if(fm->width(itemText) < w)
-    {
-        tmpText = itemText;
-        return;
-    }
-
-    tmpText = "...";
-    int i = 0;
-
-    while(fm->width(tmpText + itemText[ i ]) < w)
-        tmpText += itemText[i++];
-
-    tmpText.remove((uint)0, 3);
-    tmpText += "...";
 }
 
 void SQ_FileThumbViewItem::paintText(QPainter *p, const QColorGroup &cg)
 {
-    calcTmpText();
-
     QRect rectText = textRect(false);
     QRect rc = pixmapRect(false);
 
@@ -142,15 +90,8 @@ void SQ_FileThumbViewItem::paintText(QPainter *p, const QColorGroup &cg)
         p->setPen(cg.text());
     }
 
-    p->drawText(rectText, Qt::AlignCenter, tmpText);
+    wordWrap()->drawText(p, textRect(false).x(), textRect(false).y(), AlignCenter);
 }
 
 void SQ_FileThumbViewItem::paintFocus(QPainter *, const QColorGroup &)
 {}
-
-void SQ_FileThumbViewItem::setPixmap(const QPixmap &pixmap)
-{
-    KFileIconViewItem::setPixmap(pixmap);
-
-    selected = QPixmap();
-}

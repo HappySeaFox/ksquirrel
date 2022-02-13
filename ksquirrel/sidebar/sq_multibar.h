@@ -74,10 +74,6 @@ class SQ_MultiBar : public QHBox
 
         void updateLayout();
 
-        void updateWidth(const int w);
-
-        void saveConfig();
-
         KMultiTabBar* multiBar() const;
 
         static SQ_MultiBar* instance() { return m_inst; }

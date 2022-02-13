@@ -21,12 +21,12 @@
 
 #include <qpainter.h>
 
+#include <ktoolbar.h>
+
 #include "sq_glwidget_helpers.h"
 
-int SQ_ToolButtonPopup::id = 10;
-
-SQ_ToolButtonPopup::SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, QWidget *parent)
-    : KToolBarButton(pix, ++SQ_ToolButtonPopup::id, parent, 0, textLabel)
+SQ_ToolButtonPopup::SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, KToolBar *parent)
+    : KToolBarButton(pix, -1, parent, 0, textLabel)
 {
     setFixedWidth(SQ_ToolButton::fixedWidth());
 }
@@ -35,7 +35,7 @@ SQ_ToolButtonPopup::~SQ_ToolButtonPopup()
 {}
 
 SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel,
-    QObject *receiver, const char *slot, QToolBar *parent, const char *name)
+    QObject *receiver, const char *slot, KToolBar *parent, const char *name)
     : QToolButton(iconSet, textLabel, QString::null, receiver, slot, parent, name)
 {
     setFixedWidth(SQ_ToolButton::fixedWidth());

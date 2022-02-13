@@ -100,11 +100,6 @@ class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
          */
         void removeEntryFull(const QString &key);
 
-        /*
-         *  Calculate cache-related size of given thumbnail.
-         */
-        static int entrySize(const SQ_Thumbnail &t);
-
         static SQ_PixmapCache* instance() { return m_instance; }
 
     private:
@@ -113,6 +108,7 @@ class SQ_PixmapCache : public QObject, public QMap<QString, SQ_Thumbnail>
         bool valid_full;
         SQ_Dir *dir;
         static SQ_PixmapCache *m_instance;
+        int entrySize;
 };
 
 inline

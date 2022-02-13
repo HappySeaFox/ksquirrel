@@ -20,22 +20,20 @@
 
 #include <ktoolbarbutton.h>
 
-class QToolBar;
+class KToolBar;
 
 class SQ_ToolButtonPopup : public KToolBarButton
 {
     public:
-        SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, QWidget *parent);
+        SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, KToolBar *parent);
         ~SQ_ToolButtonPopup();
-
-        static int id;
 };
 
 class SQ_ToolButton : public QToolButton
 {
     public:
         SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel, QObject *receiver,
-                        const char *slot, QToolBar *parent, const char *name = 0);
+                        const char *slot, KToolBar *parent, const char *name = 0);
         ~SQ_ToolButton();
 
         static int fixedWidth();

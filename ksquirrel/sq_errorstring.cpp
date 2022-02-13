@@ -19,8 +19,6 @@
 #include "config.h"
 #endif
 
-#include <kdebug.h>
-
 #include "sq_errorstring.h"
 
 #include <ksquirrel-libs/error.h>
@@ -30,8 +28,6 @@ SQ_ErrorString * SQ_ErrorString::m_instance = 0;
 SQ_ErrorString::SQ_ErrorString(QObject *parent) : QObject(parent)
 {
     m_instance = this;
-
-    kdDebug() << "+SQ_ErrorString" << endl;
 
     // fill map with translated messages
     messages.insert(SQE_OK,             QString::fromLatin1("OK"));
@@ -48,11 +44,7 @@ SQ_ErrorString::SQ_ErrorString(QObject *parent) : QObject(parent)
 }
 
 SQ_ErrorString::~SQ_ErrorString()
-{
-    kdDebug() << "-SQ_ErrorString" << endl;
-
-    messages.clear();
-}
+{}
 
 // Get string by error code.
 QString SQ_ErrorString::string(const int code)

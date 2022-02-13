@@ -1,4 +1,4 @@
-/* config.h.in.  Generated from configure.ac by autoheader.  */
+/* config.h.in.  Generated from configure.in by autoheader.  */
 
 /* Define if you have the CoreAudio API */
 #undef HAVE_COREAUDIO
@@ -39,21 +39,11 @@
 /* Define to 1 if you have the <limits.h> header file. */
 #undef HAVE_LIMITS_H
 
-/* Define to 1 if you have the `memcpy' function. */
-#undef HAVE_MEMCPY
-
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
-/* Define to 1 if you have the `memset' function. */
-#undef HAVE_MEMSET
-
 /* Define if your system needs _NSGetEnviron to set up the environment */
 #undef HAVE_NSGETENVIRON
-
-/* Define to 1 if your system has a GNU libc compatible `realloc' function,
-   and to 0 otherwise. */
-#undef HAVE_REALLOC
 
 /* Define if you have the res_init function */
 #undef HAVE_RES_INIT
@@ -63,13 +53,6 @@
 
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
-
-/* Define to 1 if `stat' has the bug that it succeeds when given the
-   zero-length file name argument. */
-#undef HAVE_STAT_EMPTY_STRING_BUG
-
-/* Define to 1 if stdbool.h conforms to C99. */
-#undef HAVE_STDBOOL_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -110,15 +93,8 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
-/* Define to 1 if the system has the type `_Bool'. */
-#undef HAVE__BOOL
-
 /* Suffix for lib directories */
 #undef KDELIBSUFF
-
-/* Define to 1 if `lstat' dereferences a symlink specified with a trailing
-   slash. */
-#undef LSTAT_FOLLOWS_SLASHED_SYMLINK
 
 /* Name of package */
 #undef PACKAGE
@@ -168,9 +144,6 @@
 /* Version number of package */
 #undef VERSION
 
-/* Define to 1 if the X Window System is missing or not being used. */
-#undef X_DISPLAY_MISSING
-
 /*
  * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system
  * headers and I'm too lazy to write a configure test as long as only
@@ -199,11 +172,6 @@
 # define environ (*_NSGetEnviron())
 #endif
 
-
-/* Enable GNU extensions on systems that have them.  */
-#ifndef _GNU_SOURCE
-# undef _GNU_SOURCE
-#endif
 
 
 #if !defined(HAVE_STRLCAT_PROTO)
@@ -258,17 +226,8 @@ int snprintf(char *str, size_t n, char const *fmt, ...);
 #endif
 
 
-/* Define to empty if `const' does not conform to ANSI C. */
-#undef const
-
 /* Compatibility define */
 #undef ksize_t
-
-/* Define to rpl_realloc if the replacement function should be used. */
-#undef realloc
-
-/* Define to `unsigned' if <sys/types.h> does not define. */
-#undef size_t
 
 /* Define the real type of socklen_t */
 #undef socklen_t

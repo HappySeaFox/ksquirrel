@@ -35,7 +35,6 @@
 #include <kio/job.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
-#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -60,11 +59,9 @@
 
 SQ_WidgetStack * SQ_WidgetStack::m_instance = 0;
 
-SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
+SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QObject(parent)
 {
     m_instance = this;
-
-    kdDebug() << "+SQ_WidgetStack" << endl;
 
     SQ_DirOperator::ViewT m_type = static_cast<SQ_DirOperator::ViewT>(id);
 
@@ -92,7 +89,7 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 
     KURL _url = path;
 
-    dirop = new SQ_DirOperator(_url, static_cast<SQ_DirOperator::ViewT>(id), this);
+    dirop = new SQ_DirOperator(_url, static_cast<SQ_DirOperator::ViewT>(id), parent);
 
     raiseWidget(m_type, false);
 
@@ -107,9 +104,7 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 }
 
 SQ_WidgetStack::~SQ_WidgetStack()
-{
-    kdDebug() << "-SQ_WidgetStack" << endl;
-}
+{}
 
 /*
  *  Get current url of visible diroperator.
@@ -122,10 +117,11 @@ KURL SQ_WidgetStack::url() const
 void SQ_WidgetStack::setURL(const KURL &newurl, bool parseTree)
 {
     KURL url = newurl;
-    url.adjustPath(1);
+    url.adjustPath(+1);
 
     // update bookmarks' url
-    if(SQ_BookmarkOwner::instance()) SQ_BookmarkOwner::instance()->setURL(url);
+    if(SQ_BookmarkOwner::instance())
+        SQ_BookmarkOwner::instance()->setURL(url);
 
     // update history combobox
     if(KSquirrel::app()->historyCombo())
@@ -140,7 +136,7 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool parseTree)
         SQ_Config::instance()->setGroup("Fileview");
         int sync_type = SQ_Config::instance()->readNumEntry("sync type", 0);
 
-        if(sync_type == 2 || sync_type == 0)
+        if(sync_type !=1)
             SQ_TreeView::instance()->emitNewURL(url);
     }
 }
@@ -174,7 +170,7 @@ int SQ_WidgetStack::moveTo(Direction direction, KFileItem *it, bool useSupported
         {
             if(item->isFile())
                 // supported image type ?
-                if(SQ_LibraryHandler::instance()->supports(item->url().path()))
+                if(SQ_LibraryHandler::instance()->libraryForFile(item->url().path()))
                     break;
 
             item = (direction == SQ_WidgetStack::Next)?
@@ -231,10 +227,7 @@ void SQ_WidgetStack::raiseWidget(SQ_DirOperator::ViewT id, bool doUpdate)
             if(id == SQ_DirOperator::TypeList)
                 iv->actionCollection()->action("small columns")->activate();
             else
-            {
-//                iv->setIconTextHeight(1);
                 iv->actionCollection()->action("large rows")->activate();
-            }
         }
         break;
 
@@ -251,12 +244,10 @@ void SQ_WidgetStack::raiseWidget(SQ_DirOperator::ViewT id, bool doUpdate)
         {
             SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->preparedView());
             tv->actionCollection()->action("large rows")->activate();
-            tv->setWordWrapIconText(false);
             dirop->setPreparedView();
             action("short view")->activate();
             tv->setSelectionMode(KFile::Extended);
             updateGrid(true);
-//            dirop->actionCollection()->action("reload")->activate();
             if(doUpdate) dirop->startOrNotThumbnailUpdate();
         }
         break;
@@ -285,13 +276,13 @@ const KFileItemList* SQ_WidgetStack::items() const
 void SQ_WidgetStack::emitNextSelected()
 {
     if(moveTo(SQ_WidgetStack::Next) == SQ_WidgetStack::moveSuccess)
-        SQ_GLWidget::window()->slotStartDecoding(dirop->view()->currentFileItem()->url());
+        SQ_GLWidget::window()->startDecoding(dirop->view()->currentFileItem()->url());
 }
 
 void SQ_WidgetStack::emitPreviousSelected()
 {
     if(moveTo(SQ_WidgetStack::Previous) == SQ_WidgetStack::moveSuccess)
-        SQ_GLWidget::window()->slotStartDecoding(dirop->view()->currentFileItem()->url());
+        SQ_GLWidget::window()->startDecoding(dirop->view()->currentFileItem()->url());
 }
 
 void SQ_WidgetStack::tryUnpack(KFileItem *item)
@@ -304,7 +295,7 @@ void SQ_WidgetStack::tryUnpack(KFileItem *item)
         // unpack!
         if(SQ_ArchiveHandler::instance()->unpack())
         {
-            QTimer::singleShot(0, this, SLOT(slotDelayedSetExtractURL()));
+            QTimer::singleShot(1, this, SLOT(slotDelayedSetExtractURL()));
         }
     }
 }
@@ -335,7 +326,7 @@ void SQ_WidgetStack::slotFirstFile()
 
     item = local_view->currentFileItem();
     dirop->setCurrentItem(item);
-    SQ_GLWidget::window()->slotStartDecoding(item->url());
+    SQ_GLWidget::window()->startDecoding(item->url());
 }
 
 // Go to last file
@@ -353,7 +344,7 @@ void SQ_WidgetStack::slotLastFile()
 
     item = local_view->currentFileItem();
     dirop->setCurrentItem(item);
-    SQ_GLWidget::window()->slotStartDecoding(item->url());
+    SQ_GLWidget::window()->startDecoding(item->url());
 }
 
 /*
@@ -412,18 +403,16 @@ void SQ_WidgetStack::slotDelayedShowProgress()
 {
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
-    if(!tv) return;
-
-    tv->progressBox()->show();
+    if(tv)
+        tv->progressBox()->show();
 }
 
 void SQ_WidgetStack::thumbnailProcess()
 {
     SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
 
-    if(!tv) return;
-
-    tv->progressBox()->advance();
+    if(tv)
+        tv->progressBox()->advance();
 }
 
 void SQ_WidgetStack::setURLForCurrent(const QString &path, bool parseTree)
@@ -475,9 +464,7 @@ void SQ_WidgetStack::slotRecreateThumbnail()
 
     tv->progressBox()->show();
 
-    QTimer::singleShot(10, this, SLOT(slotDelayedRecreateThumbnail()));
-
-    qApp->processEvents();
+    QTimer::singleShot(1, this, SLOT(slotDelayedRecreateThumbnail()));
 }
 
 void SQ_WidgetStack::slotDelayedRecreateThumbnail()
@@ -544,7 +531,7 @@ bool SQ_WidgetStack::prepare()
 
     if(!items || items->isEmpty())
     {
-        KMessageBox::information(this, i18n("No files to copy or move"));
+        KMessageBox::information(dirop, i18n("No files to copy or move"));
         return false;
     }
 
@@ -578,7 +565,7 @@ void SQ_WidgetStack::slotFilePaste()
     // No files to copy ?
     if(files.isEmpty() || fileaction == SQ_WidgetStack::Unknown)
     {
-        KMessageBox::information(this, i18n("No files to copy or move"));
+        KMessageBox::information(dirop, i18n("No files to copy or move"));
         return;
     }
 
@@ -603,12 +590,13 @@ void SQ_WidgetStack::slotFileLinkTo()
         return;
 
     // select a directory
-    QString s = KFileDialog::getExistingDirectory(QString::null, this);
+    QString s = KFileDialog::getExistingDirectory(QString::null, dirop);
 
     if(s.isEmpty())
         return;
 
-    KURL url = s;
+    KURL url;
+    url.setPath(s);
 
     // create symlinks
     KIO::link(files, url);
@@ -621,12 +609,13 @@ void SQ_WidgetStack::slotFileCopyTo()
         return;
 
     // select a directory
-    QString s = KFileDialog::getExistingDirectory(QString::null, this);
+    QString s = KFileDialog::getExistingDirectory(QString::null, dirop);
 
     if(s.isEmpty())
         return;
 
-    KURL url = s;
+    KURL url;
+    url.setPath(s);
 
     // copy files to selected directory
     KIO::copy(files, url);
@@ -639,12 +628,13 @@ void SQ_WidgetStack::slotFileMoveTo()
         return;
 
     // select a directory
-    QString s = KFileDialog::getExistingDirectory(QString::null, this);
+    QString s = KFileDialog::getExistingDirectory(QString::null, dirop);
 
     if(s.isEmpty())
         return;
 
-    KURL url = s;
+    KURL url;
+    url.setPath(s);
 
     // move files to selected directory
     KIO::move(files, url);
@@ -739,6 +729,19 @@ void SQ_WidgetStack::slotSelectAll()
 KAction* SQ_WidgetStack::action(const QString &name)
 {
     return dirop->actionCollection()->action(name);
+}
+
+bool SQ_WidgetStack::updateRunning() const
+{
+    if(dirop->viewType() != SQ_DirOperator::TypeThumbs)
+        return false;
+
+    SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(dirop->view());
+
+    if(!tv)
+        return false;
+
+    return tv->updateRunning();
 }
 
 #include "sq_widgetstack.moc"

@@ -28,7 +28,6 @@
 #include <kactioncollection.h>
 #include <kpopupmenu.h>
 #include <kwin.h>
-#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_tray.h"
@@ -36,8 +35,6 @@
 
 SQ_Tray::SQ_Tray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 {
-    kdDebug() << "+SQ_Tray" << endl;
-
     // create popup menu
     rightMenu = new KPopupMenu;
 
@@ -58,8 +55,6 @@ SQ_Tray::SQ_Tray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 
 SQ_Tray::~SQ_Tray()
 {
-    kdDebug() << "-SQ_Tray" << endl;
-
     delete rightMenu;
 }
 

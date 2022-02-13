@@ -30,7 +30,7 @@ void SQ_StorageFile::writeStorageFile(const QString &path, const QString &inpath
 
     if(file.open(IO_WriteOnly))
     {
-        file.writeBlock(inpath, inpath.length());
+        file.writeBlock(inpath.ascii(), inpath.length());
         file.close();
     }
 }

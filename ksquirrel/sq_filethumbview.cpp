@@ -26,6 +26,7 @@
 #include <qlabel.h>
 #include <qtooltip.h>
 #include <qtimer.h>
+#include <qapplication.h>
 
 #include <kurldrag.h>
 #include <kstandarddirs.h>
@@ -34,7 +35,6 @@
 #include <klocale.h>
 #include <kapplication.h>
 #include <kglobal.h>
-#include <kdebug.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
@@ -53,8 +53,6 @@
 
 SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
 {
-    kdDebug() << "+SQ_FileThumbView" << endl;
-
     toolTip = 0;
 
     // create progress bar
@@ -71,7 +69,7 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     setResizeMode(QIconView::Adjust);
 
     // load "pending" pixmaps
-    pending = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending.png"));
+    pending = SQ_IconLoader::instance()->loadIcon("clock", KIcon::Desktop, 32);
 
     // some hacks for tooltip support
     disconnect(this, SIGNAL(onViewport()), this, 0);
@@ -84,8 +82,6 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
 
 SQ_FileThumbView::~SQ_FileThumbView()
 {
-    kdDebug() << "-SQ_FileThumbView" << endl;
-
     slotRemoveToolTip();
 }
 
@@ -120,7 +116,7 @@ void SQ_FileThumbView::insertItem(KFileItem *i)
 
     SQ_FileThumbViewItem *item;
 
-    if(SQ_LibraryHandler::instance()->supports(i->url().path()))
+    if(SQ_Config::instance()->readBoolEntry("mark", false) && SQ_LibraryHandler::instance()->libraryForFile(i->url().path()))
     {
         item = new SQ_FileThumbViewItem(this, i->text(), pendingCache, i);
     }
@@ -240,13 +236,13 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 void SQ_FileThumbView::startThumbnailUpdate()
 {
     stopThumbnailUpdate();
-    doStartThumbnailUpdate(items());
+    doStartThumbnailUpdate(*items());
 }
 
 /*
  *  Create job, connect signals and start updating
  */
-void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList* list)
+void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList &list)
 {
     // create new job
     thumbJob = new SQ_ThumbnailLoadJob(list);
@@ -257,7 +253,7 @@ void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList* list)
     connect(thumbJob, SIGNAL(result(KIO::Job*)), SQ_WidgetStack::instance(), SLOT(thumbnailsUpdateEnded()));
 
     // update progress bar
-    SQ_WidgetStack::instance()->thumbnailUpdateStart(list->count());
+    SQ_WidgetStack::instance()->thumbnailUpdateStart(list.count());
 
     // start!
     thumbJob->start();
@@ -287,12 +283,13 @@ void SQ_FileThumbView::slotThumbnailUpdateToggle()
 void SQ_FileThumbView::appendItems(const KFileItemList &items)
 {
     // job is not running
-    if(thumbJob.isNull())
-        doStartThumbnailUpdate(&items);
-
+    if(thumbJob.isNull()){ //printf("Starting %d\n", items.count());
+        doStartThumbnailUpdate(items); }
     // add new items to running job
-    else 
-    thumbJob->appendItems(items);
+    else { //printf("Appending %d\n", items.count());
+    m_progressBox->addSteps(items.count());
+    QApplication::flush();
+        thumbJob->appendItems(items); }
 }
 
 void SQ_FileThumbView::updateView(const KFileItem *i)
@@ -315,15 +312,12 @@ void SQ_FileThumbView::slotShowToolTip(QIconViewItem *item)
     // remove previous tootip and stop timer
     slotRemoveToolTip();
 
-    if(!item)
-        return;
-
     SQ_FileThumbViewItem* fitem = dynamic_cast<SQ_FileThumbViewItem*>(item);
 
     if(!fitem)
         return;
 
-    if(!SQ_LibraryHandler::instance()->supports(fitem->fileInfo()->url().path()))
+    if(!SQ_LibraryHandler::instance()->libraryForFile(fitem->fileInfo()->url().path()))
         return;
 
     tooltipFor = fitem;
@@ -493,6 +487,11 @@ void SQ_FileThumbView::rebuildCachedPixmaps()
 
     // rebuild directory pixmap
     rebuildPendingPixmap(true);
+}
+
+void SQ_FileThumbView::itemRemoved(KFileItem *i)
+{
+    thumbJob->itemRemoved(i);
 }
 
 #include "sq_filethumbview.moc"

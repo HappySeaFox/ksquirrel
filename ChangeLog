@@ -1,3 +1,53 @@
+ksquirrel-0.7.0-pre2 and ksquirrel-libs-0.7.0-pre2
+********************************************
+
+This is last preview release.
+
+ksquirrel:
+* multiple directory view: Shift+click to recursively toggle current
+  item and all subitems; Ctrl+click to recursively set current
+  item and all subitems on; Alt+click to recursively set current
+  item and all subitems off
+* GQView mode removed till better times
+* added preview widget
+* new slideshow
+* bugfixes in slideshow mechanism
+* bugfix in mouse clicking (in list view and icon view)
+* current image now can be filtered (filetring using current selection will be available in 0.7.0)
+
+ksquirrel-libs:
+* added IFF, MAC, PICT, PI1, XIM, UTAH, LEAF, NEO (via NetPBM package)
+* small fix in configure.ac
+
+ksquirrel-0.7.0-pre1 and ksquirrel-libs-0.7.0-pre1
+********************************************
+ksquirrel:
+* added KIPI support
+* multiple directory view
+* automatic image fit in image window
+* some codecs now have options (DjVu, SVG, CAMERA...). Visit Plugins information dialog.
+* edit tools removed. use KIPI instead :) Convertion tool is still available
+* current image can be placed to clipboard
+* current images can be "saved as..."
+* bugfixes in "GQView" mode
+* mount view now can mount/unmount
+* thumbnail loading now ~15% faster
+* improvements in interface switching
+* sidebar: added image basket
+* sidebar: removed file actions (use context menu in navigator)
+* new DCOP parameters, see README
+* bugfixes
+
+ksquirrel-libs:
+* fixed segfault on GIF and some other libraries on some systems
+* CAMERA codec now uses dcraw 8.61
+* added settings support to CAMERA, SVG
+* added DjVu (just single page via settings).
+* added AutoCAD DXF (+settings)
+* added GIMP XCF (+settings)
+* small fixes in configure script
+* configure output now more informatible
+
 ksquirrel-0.6.3 and ksquirrel-libs-0.6.3
 ********************************************
 

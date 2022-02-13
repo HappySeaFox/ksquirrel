@@ -1,11 +1,9 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = close.png file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png slideshow.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png 
+EXTRA_DIST = file_first.png file_last.png file_next.png file_prev.png flipH.png flipV.png rotateL.png rotateR.png zoom-.png zoom+.png fullscreen.png ifless.png images.png prop.png reload.png zoom100.png zoomH.png zoom_template.png zoomWH.png zoomW.png 
 
 install-data-local:
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
-	$(INSTALL_DATA) $(srcdir)/close.png $(kde_datadir)/ksquirrel/images/actions/close.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/file_first.png $(kde_datadir)/ksquirrel/images/actions/file_first.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
@@ -37,8 +35,6 @@ install-data-local:
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/reload.png $(kde_datadir)/ksquirrel/images/actions/reload.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
-	$(INSTALL_DATA) $(srcdir)/slideshow.png $(kde_datadir)/ksquirrel/images/actions/slideshow.png
-	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/zoom100.png $(kde_datadir)/ksquirrel/images/actions/zoom100.png
 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/actions/
 	$(INSTALL_DATA) $(srcdir)/zoomH.png $(kde_datadir)/ksquirrel/images/actions/zoomH.png
@@ -50,7 +46,6 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/zoomW.png $(kde_datadir)/ksquirrel/images/actions/zoomW.png
 
 uninstall-local:
-	-rm -f $(kde_datadir)/ksquirrel/images/actions/close.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_first.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_last.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/file_next.png
@@ -66,7 +61,6 @@ uninstall-local:
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/images.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/prop.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/reload.png
-	-rm -f $(kde_datadir)/ksquirrel/images/actions/slideshow.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoom100.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoomH.png
 	-rm -f $(kde_datadir)/ksquirrel/images/actions/zoom_template.png

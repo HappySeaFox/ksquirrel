@@ -34,6 +34,8 @@ class SQ_Progress : public QLabel
         ~SQ_Progress();
 
         void setTotalSteps(int totalSteps);
+        void addSteps(int steps);
+
         void setColor(const QColor &c); // alternative progress color
 
         /*
@@ -84,6 +86,13 @@ inline
 void SQ_Progress::setColor(const QColor &c)
 {
     color = c;
+}
+
+inline
+void SQ_Progress::addSteps(int steps)
+{
+    total_steps += steps;
+    setIndicator(step);
 }
 
 #endif

@@ -33,7 +33,6 @@
 #include <kglobal.h>
 
 #include "sq_threaddirlister.h"
-#include "sq_libraryhandler.h"
 
 SQ_ThreadDirLister::SQ_ThreadDirLister(QObject *o) 
     : QThread(), obj(o)

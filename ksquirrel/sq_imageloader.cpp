@@ -19,7 +19,7 @@
 #include "config.h"
 #endif
 
-#include <kdebug.h>
+#include <qfile.h>
 
 #include "sq_imageloader.h"
 #include "sq_libraryhandler.h"
@@ -36,8 +36,6 @@ SQ_ImageLoader::SQ_ImageLoader(QObject *parent) : QObject(parent), m_errors(0)
 {
     m_instance = this;
 
-    kdDebug() << "+SQ_ImageLoader" << endl;
-
     m_image = 0;
     dumbscan = 0;
     finfo = new fmt_info;
@@ -45,8 +43,6 @@ SQ_ImageLoader::SQ_ImageLoader(QObject *parent) : QObject(parent), m_errors(0)
 
 SQ_ImageLoader::~SQ_ImageLoader()
 {
-    kdDebug() << "-SQ_ImageLoader" << endl;
-
     delete finfo;
 
     if(dumbscan) free(dumbscan);
@@ -72,7 +68,7 @@ bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h)
     codeK = lib->codec;
 
     // init...
-    res = codeK->read_init(QString(path.local8Bit()));
+    res = codeK->read_init(QString(QFile::encodeName(path)));
 
     // error in init()!
     if(res != SQE_OK)
@@ -134,7 +130,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomoretha
     codeK = lib->codec;
 
     // init...
-    res = codeK->read_init(QString(pixPath.local8Bit()));
+    res = codeK->read_init(QString(QFile::encodeName(pixPath)));
 
     // error in init()!
     if(res != SQE_OK)
@@ -169,7 +165,7 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomoretha
         // realloc memory
         if(!current)
         {
-            const int S =image->w * image->h * sizeof(RGBA);
+            const int S = image->w * image->h * sizeof(RGBA);
 
             m_image = (RGBA *)realloc(m_image, S);
 
@@ -235,10 +231,10 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, bool multi, int nomoretha
 }
 
 // Delete buffers...
-void SQ_ImageLoader::cleanup()
+void SQ_ImageLoader::cleanup(bool del)
 {
     if(dumbscan) free(dumbscan);
-    if(m_image) free(m_image);
+    if(del && m_image) free(m_image);
 
     dumbscan = 0;
     m_image = 0;
