@@ -47,8 +47,8 @@ class SQ_Bookmarks;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_FileviewFilter;
-
-class KConfig;
+class SQ_Config;
+class SQ_ExternalTool;
 
 template <class T> class QValueVector;
 
@@ -73,7 +73,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 
 		KDockWidget 			*mainDock;
 
-		KAction				*pAGLView, *pAConfigure, *pAExit, *pANextFile, *pAPrevFile, *pARescan, *pAExtTools;
+		KAction				*pAGLView, *pAConfigure, *pAExit, *pANextFile, *pAPrevFile, *pARescan, *pAExtTools, *pAFilters;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView;
 
 		QSplitter				*mainSplitter;
@@ -85,13 +85,16 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 	 	int	 				toolbarIconSize, createFirst;
 		QStringList			strlibFound;
 
-		void InitRunMenu();
 		void CreateLocationToolbar();
 		void CreateStatusBar();
 		void CreateToolbar(KToolBar*);
 		void CreateMenu(KMenuBar*);
 		void CreateActions();
+
+		// init special QValueVector lists from config file.
 		void InitFilterMenu();
+		void InitRunMenu();
+		void InitExternalTools();
 
 		void createWidgetsLikeSQuirrel();
 		void createWidgetsLikeGqview();
@@ -102,6 +105,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 
 	public slots:
 		void slotOptions();
+		void slotFilters();
 		void slotExtTools();
 		void slotExecuteRunMenu();
 
@@ -118,13 +122,13 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void slotNextFile();
 		void slotPreviousFile();
 
-		void slotDoNothing() {}
+		void slotRunCommand(int);
 
 	public:
 		Squirrel(QWidget *parent = 0, const char *name = 0);
 		~Squirrel();
 
-		KConfig				*kconf;
+		SQ_Config			*kconf;
 		KIconLoader			*iconL;
 		SQ_WidgetStack		*pWidgetStack;
 		KHistoryCombo		*pCurrentURL;
@@ -134,9 +138,9 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		KStatusBar			*sbar;
 		SQ_LibraryListener		*libl;
 
-		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
+		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus, *GLreporter;
 		QString				libPrefix;
-		QColor				GLBkGroundColor;
+		SQ_ExternalTool		*extool;
 
 	public slots:
 		QCStringList functions();
@@ -157,16 +161,16 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 #define   sqBookmarks		(Squirrel::App->bookmarks)
 #define   sqWStack			(Squirrel::App->pWidgetStack)
 #define   sqCurrentURL		(Squirrel::App->pCurrentURL)
+#define	sqExternalTool		(Squirrel::App->extool)
 
 #define   sqSBdirInfo		(Squirrel::App->dirInfo)
 #define   sqSBcurFileInfo	(Squirrel::App->curFileInfo)
 #define   sqSBfileIcon		(Squirrel::App->fileIcon)
 #define   sqSBfileName		(Squirrel::App->fileName)
 #define   sqSBDecoded		(Squirrel::App->decodedStatus)
+#define	sqSBGLreport		(Squirrel::App->GLreporter)
 
 #define	sqGLView			(Squirrel::App->glView)
-#define	sqGLViewBGColor	(Squirrel::App->GLBkGroundColor)
-
 #define	sqLibHandler		(Squirrel::App->sqLibHandlerReal)
 #define	sqLibPrefix		(Squirrel::App->libPrefix)
 

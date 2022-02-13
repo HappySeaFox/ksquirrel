@@ -26,7 +26,7 @@ static const char *description = "KSquirrel - image viewer for KDE with dynamic 
 static KAboutData aboutData(
 			"ksquirrel", 
 			"KSquirrel",
-			"0.2.2", 
+			"0.2.3", 
 			description,
 			KAboutData::License_GPL,
 			"(c) 2004, CKulT", 

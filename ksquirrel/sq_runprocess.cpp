@@ -14,16 +14,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "sq_runprocess.h"
-
 #include <qimage.h>
 #include <qmessagebox.h>
-
-#include "ksquirrel.h"
 #include <qvaluevector.h>
+#include <qprocess.h>
 
-SQ_RunProcess::SQ_RunProcess(const int _baseid) : baseid(_baseid),curid(0)
+#include "sq_runprocess.h"
+#include "ksquirrel.h"
+
+SQ_RunProcess::SQ_RunProcess()
 {
     plist = new QValueVector<PROCESSITEM>;
 
@@ -47,12 +46,9 @@ void SQ_RunProcess::AddItem(const QString &_name, const QString &_program)
     
 	item.name =  _name;
 	item.program = _program;
-	item.id = curid;
 	item.px = (im1 == im2)?QPixmap(0):px;
 
 	plist->append(item);
-
-	curid++;
 }
 
 int SQ_RunProcess::GetCount() const
@@ -72,19 +68,13 @@ QString SQ_RunProcess::GetProgName(unsigned int index) const
     return tmp;
 }
 
-void SQ_RunProcess::slotRunCommand(int menu_id)
+void SQ_RunProcess::slotRunCommand(int index)
 {
-	QString program = (*plist)[menu_id-baseid].program;
+	QString program = (*plist)[index].program;
 	QProcess tmp(program);
 
 	if(!tmp.start())
 		QMessageBox::warning(sqApp, "SQuirrel", "Process \""+program+"\"could not be started.\nTry \"whereis "+program+"\" to find it.", QMessageBox::Ok, QMessageBox::NoButton);
-}
-
-int SQ_RunProcess::GetElementId(const int index) const
-{
-    int k = (*plist)[index].id;
-    return k;
 }
 
 QPixmap SQ_RunProcess::GetPixmap(unsigned int index) const

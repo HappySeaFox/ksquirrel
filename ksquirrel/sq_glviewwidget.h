@@ -19,7 +19,11 @@
 #define SQ_GLVIEWWIDGET_H
 
 #include <qgl.h>
-#include <kaction.h>
+#include <qcursor.h>
+#include <kurl.h>
+
+class KAction;
+class SQ_GLHelpWidget;
 
 /**
 @author ckult
@@ -39,17 +43,22 @@ class SQ_GLViewWidget : public QGLWidget
 	Q_OBJECT
 
 	private:
-		GLfloat matrix[8];
+		GLfloat 			matrix[8];
 
-		RGBA	*rgba;
-		fmt_info	*finfo;
+		RGBA			*rgba;
+		fmt_info			*finfo;
 
-		GLuint	texture[1];
-		GLfloat	w, h;
-		GLfloat	zoomfactor;
-		GLfloat	density;
-		int		xmoveold, ymoveold, xmove, ymove;
-		unsigned	isflippedV, isflippedH;
+		GLuint			texture[1];
+		GLfloat			w, h, zoomfactor, movefactor, curangle;
+		int				xmoveold, ymoveold, xmove, ymove;
+		unsigned			isflippedV, isflippedH;
+
+		QCursor			usual, drag;
+		SQ_GLHelpWidget *gl_hw;
+		GLint 			ZoomModel, ShadeModel;
+		GLint			ZoomModelArray[2], ShadeModelArray[2];
+
+		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp;
 
 	public:
 		SQ_GLViewWidget(QWidget *parent = 0, const char *name = 0);
@@ -58,14 +67,12 @@ class SQ_GLViewWidget : public QGLWidget
 		void setZoomFactor(const GLfloat &newfactor);
 		const GLfloat getZoomFactor() const;
 
-		bool showIfCan(const QString &file);
+		void emitShowImage(const QString &file);
+		void emitShowImage(const KURL &url);
 
-		GLint 			ZoomModel, ShadeModel;
-		GLint			ZoomModelArray[2], ShadeModelArray[2];
+		void setClearColor();
+		void setTextureParams();
 
-		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset;
-
-	public:
 		void matrix_move(GLfloat x, GLfloat y);
 		void matrix_zoom(GLfloat ratio, GLfloat x, GLfloat y);
 		void matrix_reset();
@@ -74,6 +81,9 @@ class SQ_GLViewWidget : public QGLWidget
 		void flip(int);
 		void flip_h();
 		void flip_v();
+
+		GLfloat get_zoom() const;
+		GLfloat get_angle() const;
 
 	protected:
 		void initializeGL();
@@ -90,6 +100,10 @@ class SQ_GLViewWidget : public QGLWidget
 		void mousePressEvent(QMouseEvent *);
 		void mouseMoveEvent(QMouseEvent *);
 
+	signals:
+		void matrixChanged();
+		void showImage(const QString &file);
+
 	public slots:
 		void slotZoomPlus();
 		void slotZoomMinus();
@@ -98,11 +112,13 @@ class SQ_GLViewWidget : public QGLWidget
 		void slotFlipV();
 		void slotFlipH();
 		void slotMatrixReset();
-
+		void slotSetMatrixParamsString();
+		void slotShowImage(const QString &file);
+		void slotSomeHelp();
 };
 
 #define	sqGLRotate		(SQ_GLViewWidget::pARotate)
-#define	sqGLZoomPlus	(SQ_GLViewWidget::pAZoomPlus)
+#define	sqGLZoomPlus		(SQ_GLViewWidget::pAZoomPlus)
 #define	sqGLZoomMinus	(SQ_GLViewWidget::pAXoomMinus)
 
 #endif

@@ -15,10 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sq_libraryhandler.h"
-
 #include <qmessagebox.h>
 #include <qvaluevector.h>
+
+#include "sq_libraryhandler.h"
+#include "ksquirrel.h"
+#include "sq_config.h"
 
 SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries, QObject *parent, const char *name) : QObject(parent, name), currentlib(0)
 {
@@ -115,14 +117,16 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 		libtmp.fmt_quickinfo = (char* (*)())(libtmp.lib)->resolve("fmt_quickinfo");
 		libtmp.fmt_extension = (char* (*)())(libtmp.lib)->resolve("fmt_extension");
 		libtmp.fmt_close = (int* (*)(fmt_info*))(libtmp.lib)->resolve("fmt_close");
-		libtmp.sinfo = QString(libtmp.fmt_extension());
 
-		if(libtmp.fmt_init == 0 || libtmp.fmt_read_info == 0 || libtmp.fmt_read_scanline == 0)
-			if(QMessageBox::warning(0, "SQ_LibHandler", "Library \""+libtmp.libpath+"\" doesn't contain one of fmt_* function.", QMessageBox::Ignore, QMessageBox::Abort) == QMessageBox::Abort)
-				break;
-			else;
-      		else
+		if(libtmp.fmt_init == 0 || libtmp.fmt_read_info == 0 || libtmp.fmt_read_scanline == 0 || libtmp.fmt_version == 0 || libtmp.fmt_quickinfo == 0 || libtmp.fmt_extension == 0 || libtmp.fmt_close == 0)
+			if(sqConfig->readBoolEntry("Libraries", "continue", true))
+				;
+			else break;
+		else
+        	{
+	 		libtmp.sinfo = QString(libtmp.fmt_extension());
 			libs->append(libtmp);
+		}
 	}
 }
 

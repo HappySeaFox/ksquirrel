@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_version.h  -  description
+                          sq_glhelpwidget.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 14 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,11 +15,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __APP_VERSION__
-#define __APP_VERSION__
+#include "sq_glhelpwidget.h"
 
-const char APP[] = "Squirrel development build #";
-const int version=4400;
+SQ_GLHelpWidget::SQ_GLHelpWidget(const QString & text, QWidget * parent, const char * name)
+	: QLabel(text, parent, name, Qt::WStyle_Customize|Qt::WStyle_NoBorder)
+{
+	setFrameShape(QFrame::GroupBoxPanel);
+	setFocusPolicy(QWidget::WheelFocus);
+}
 
-#endif
+SQ_GLHelpWidget::~SQ_GLHelpWidget()
+{}
 
+void SQ_GLHelpWidget::keyPressEvent(QKeyEvent *e)
+{
+	hide();
+	e->ignore();
+}
+
+void SQ_GLHelpWidget::mousePressEvent(QMouseEvent *e)
+{
+	hide();
+	e->ignore();
+}
+
+void SQ_GLHelpWidget::focusOutEvent(QFocusEvent *e)
+{
+	hide();
+}

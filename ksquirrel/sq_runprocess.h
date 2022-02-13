@@ -18,7 +18,6 @@
 #ifndef MENU_RUN_PROCESSES
 #define MENU_RUN_PROCESSES
 
-#include <qprocess.h>
 #include <qstring.h>
 #include <qpixmap.h>
 #include <qobject.h>
@@ -32,7 +31,6 @@ typedef struct
     QString name;
     QString program;
     QPixmap	px;
-    int 	id;
 }PROCESSITEM;
 
 
@@ -41,7 +39,7 @@ class SQ_RunProcess : public QObject
     Q_OBJECT
     
     public:
-		SQ_RunProcess(const int = 0);
+		SQ_RunProcess();
 		~SQ_RunProcess();
 
 		void AddItem(const QString&, const QString&);
@@ -50,16 +48,12 @@ class SQ_RunProcess : public QObject
 		QString GetName(unsigned int)		const;
 		QString GetProgName(unsigned int)	const;
 		QPixmap GetPixmap(unsigned int)		const;
-		int 	GetElementId(const int)		const;
 
     public slots:
-		void slotRunCommand(int menu_id);
-
+		void slotRunCommand(int index);
 
     private:
 		QValueVector<PROCESSITEM> *plist;
-		int baseid, curid;
 };
-
 
 #endif

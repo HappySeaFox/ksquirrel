@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_options.ui'
 **
-** Created: Втр Апр 13 16:53:50 2004
+** Created: Птн Апр 16 19:48:08 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -31,7 +31,7 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include "ksquirrel.h"
-#include "sq_fileviewfilter.h"
+#include "sq_config.h"
 #include "sq_libraryhandler.h"
 #include "./sq_options.ui.h"
 
@@ -182,26 +182,20 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     textLabel1_3->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)5, 0, 0, textLabel1_3->sizePolicy().hasHeightForWidth() ) );
 
     pageLayout_2->addWidget( textLabel1_3, 2, 0 );
-    QSpacerItem* spacer_3 = new QSpacerItem( 465, 109, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    pageLayout_2->addMultiCell( spacer_3, 3, 3, 0, 2 );
 
     comboToolbarIconSize = new QComboBox( FALSE, page_2, "comboToolbarIconSize" );
 
     pageLayout_2->addWidget( comboToolbarIconSize, 2, 1 );
-    QSpacerItem* spacer_4 = new QSpacerItem( 280, 16, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    pageLayout_2->addItem( spacer_4, 2, 2 );
+    QSpacerItem* spacer_3 = new QSpacerItem( 320, 16, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    pageLayout_2->addItem( spacer_3, 2, 2 );
+    QSpacerItem* spacer_4 = new QSpacerItem( 90, 181, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    pageLayout_2->addItem( spacer_4, 3, 2 );
     widgetStack1->addWidget( page_2, 1 );
 
     page_3 = new QWidget( widgetStack1, "page_3" );
     pageLayout_3 = new QGridLayout( page_3, 1, 1, 11, 6, "pageLayout_3"); 
 
-    tabWidget3 = new QTabWidget( page_3, "tabWidget3" );
-    tabWidget3->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, 0, 0, tabWidget3->sizePolicy().hasHeightForWidth() ) );
-
-    tab = new QWidget( tabWidget3, "tab" );
-    tabLayout = new QGridLayout( tab, 1, 1, 11, 6, "tabLayout"); 
-
-    buttonGroupSync = new QButtonGroup( tab, "buttonGroupSync" );
+    buttonGroupSync = new QButtonGroup( page_3, "buttonGroupSync" );
     buttonGroupSync->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroupSync->sizePolicy().hasHeightForWidth() ) );
     buttonGroupSync->setMargin( 0 );
     buttonGroupSync->setColumnLayout(0, Qt::Vertical );
@@ -222,14 +216,18 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupSyncLayout->addWidget( radioSyncWStackTree, 2, 0 );
 
-    tabLayout->addMultiCellWidget( buttonGroupSync, 2, 2, 0, 2 );
+    pageLayout_3->addMultiCellWidget( buttonGroupSync, 2, 2, 0, 3 );
 
-    textLabel1_2 = new QLabel( tab, "textLabel1_2" );
-    textLabel1_2->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)5, 0, 0, textLabel1_2->sizePolicy().hasHeightForWidth() ) );
+    textLabel2 = new QLabel( page_3, "textLabel2" );
+    textLabel2->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel2->sizePolicy().hasHeightForWidth() ) );
 
-    tabLayout->addWidget( textLabel1_2, 3, 0 );
+    pageLayout_3->addWidget( textLabel2, 3, 2 );
 
-    buttonGroupSetPath = new QButtonGroup( tab, "buttonGroupSetPath" );
+    checkRunUnknown = new QCheckBox( page_3, "checkRunUnknown" );
+
+    pageLayout_3->addMultiCellWidget( checkRunUnknown, 5, 5, 0, 3 );
+
+    buttonGroupSetPath = new QButtonGroup( page_3, "buttonGroupSetPath" );
     buttonGroupSetPath->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroupSetPath->sizePolicy().hasHeightForWidth() ) );
     buttonGroupSetPath->setFrameShape( QButtonGroup::GroupBoxPanel );
     buttonGroupSetPath->setColumnLayout(0, Qt::Vertical );
@@ -243,16 +241,6 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupSetPathLayout->addWidget( radioSetThis, 2, 0 );
 
-    radioSetLast = new QRadioButton( buttonGroupSetPath, "radioSetLast" );
-    buttonGroupSetPath->insert( radioSetLast, 0 );
-
-    buttonGroupSetPathLayout->addWidget( radioSetLast, 0, 0 );
-
-    radioSetCurrent = new QRadioButton( buttonGroupSetPath, "radioSetCurrent" );
-    buttonGroupSetPath->insert( radioSetCurrent, 1 );
-
-    buttonGroupSetPathLayout->addWidget( radioSetCurrent, 1, 0 );
-
     lineEditCustomDir = new QLineEdit( buttonGroupSetPath, "lineEditCustomDir" );
     lineEditCustomDir->setEnabled( FALSE );
     lineEditCustomDir->setLineWidth( 2 );
@@ -262,13 +250,28 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     pushOpenDir = new QPushButton( buttonGroupSetPath, "pushOpenDir" );
     pushOpenDir->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)1, 0, 0, pushOpenDir->sizePolicy().hasHeightForWidth() ) );
-    pushOpenDir->setFlat( TRUE );
+    pushOpenDir->setMinimumSize( QSize( 0, 0 ) );
+    pushOpenDir->setFlat( FALSE );
 
     buttonGroupSetPathLayout->addWidget( pushOpenDir, 2, 2 );
 
-    tabLayout->addMultiCellWidget( buttonGroupSetPath, 0, 0, 0, 2 );
+    radioSetLast = new QRadioButton( buttonGroupSetPath, "radioSetLast" );
+    buttonGroupSetPath->insert( radioSetLast, 0 );
 
-    buttonGroup7 = new QButtonGroup( tab, "buttonGroup7" );
+    buttonGroupSetPathLayout->addMultiCellWidget( radioSetLast, 0, 0, 0, 1 );
+
+    radioSetCurrent = new QRadioButton( buttonGroupSetPath, "radioSetCurrent" );
+    buttonGroupSetPath->insert( radioSetCurrent, 1 );
+
+    buttonGroupSetPathLayout->addMultiCellWidget( radioSetCurrent, 1, 1, 0, 1 );
+
+    pageLayout_3->addMultiCellWidget( buttonGroupSetPath, 0, 0, 0, 3 );
+
+    checkSaveHistory = new QCheckBox( page_3, "checkSaveHistory" );
+
+    pageLayout_3->addMultiCellWidget( checkSaveHistory, 6, 6, 0, 3 );
+
+    buttonGroup7 = new QButtonGroup( page_3, "buttonGroup7" );
     buttonGroup7->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroup7->sizePolicy().hasHeightForWidth() ) );
     buttonGroup7->setFrameShape( QButtonGroup::GroupBoxPanel );
     buttonGroup7->setColumnLayout(0, Qt::Vertical );
@@ -300,89 +303,27 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroup7Layout->addMultiCellWidget( checkClickSystem, 0, 0, 0, 1 );
 
-    tabLayout->addMultiCellWidget( buttonGroup7, 1, 1, 0, 2 );
+    pageLayout_3->addMultiCellWidget( buttonGroup7, 1, 1, 0, 3 );
 
-    textLabel2 = new QLabel( tab, "textLabel2" );
-    textLabel2->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)5, 0, 0, textLabel2->sizePolicy().hasHeightForWidth() ) );
-
-    tabLayout->addWidget( textLabel2, 4, 0 );
-
-    comboListIndex = new QComboBox( FALSE, tab, "comboListIndex" );
+    comboListIndex = new QComboBox( FALSE, page_3, "comboListIndex" );
     comboListIndex->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, comboListIndex->sizePolicy().hasHeightForWidth() ) );
 
-    tabLayout->addWidget( comboListIndex, 4, 1 );
+    pageLayout_3->addWidget( comboListIndex, 3, 3 );
 
-    comboIconIndex = new QComboBox( FALSE, tab, "comboIconIndex" );
+    textLabel1_2 = new QLabel( page_3, "textLabel1_2" );
+    textLabel1_2->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel1_2->sizePolicy().hasHeightForWidth() ) );
+
+    pageLayout_3->addWidget( textLabel1_2, 3, 0 );
+    QSpacerItem* spacer_6 = new QSpacerItem( 475, 16, QSizePolicy::Expanding, QSizePolicy::Minimum );
+    pageLayout_3->addMultiCell( spacer_6, 4, 4, 0, 3 );
+    QSpacerItem* spacer_7 = new QSpacerItem( 470, 21, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    pageLayout_3->addMultiCell( spacer_7, 7, 7, 0, 3 );
+
+    comboIconIndex = new QComboBox( FALSE, page_3, "comboIconIndex" );
     comboIconIndex->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, comboIconIndex->sizePolicy().hasHeightForWidth() ) );
     comboIconIndex->setMaxCount( 20 );
 
-    tabLayout->addWidget( comboIconIndex, 3, 1 );
-    QSpacerItem* spacer_6 = new QSpacerItem( 205, 45, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    tabLayout->addMultiCell( spacer_6, 3, 4, 2, 2 );
-    QSpacerItem* spacer_7 = new QSpacerItem( 480, 10, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    tabLayout->addMultiCell( spacer_7, 7, 7, 0, 2 );
-
-    checkRunUnknown = new QCheckBox( tab, "checkRunUnknown" );
-
-    tabLayout->addMultiCellWidget( checkRunUnknown, 6, 6, 0, 2 );
-    QSpacerItem* spacer_8 = new QSpacerItem( 20, 6, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    tabLayout->addItem( spacer_8, 5, 0 );
-    tabWidget3->insertTab( tab, "" );
-
-    tab_2 = new QWidget( tabWidget3, "tab_2" );
-    tabLayout_2 = new QGridLayout( tab_2, 1, 1, 11, 6, "tabLayout_2"); 
-    QSpacerItem* spacer_9 = new QSpacerItem( 20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    tabLayout_2->addItem( spacer_9, 0, 3 );
-
-    pushFilterClearAll = new QPushButton( tab_2, "pushFilterClearAll" );
-
-    tabLayout_2->addWidget( pushFilterClearAll, 2, 2 );
-
-    pushFilterClear = new QPushButton( tab_2, "pushFilterClear" );
-
-    tabLayout_2->addWidget( pushFilterClear, 2, 1 );
-
-    pushNewFilter = new QPushButton( tab_2, "pushNewFilter" );
-
-    tabLayout_2->addWidget( pushNewFilter, 2, 0 );
-
-    listFilters = new QListView( tab_2, "listFilters" );
-    listFilters->addColumn( tr2i18n( "Name" ) );
-    listFilters->addColumn( tr2i18n( "Extensions" ) );
-    listFilters->setResizePolicy( QScrollView::Manual );
-    listFilters->setSelectionMode( QListView::Single );
-    listFilters->setAllColumnsShowFocus( TRUE );
-    listFilters->setShowSortIndicator( FALSE );
-    listFilters->setItemMargin( 1 );
-    listFilters->setResizeMode( QListView::AllColumns );
-    listFilters->setDefaultRenameAction( QListView::Reject );
-
-    tabLayout_2->addMultiCellWidget( listFilters, 0, 1, 0, 2 );
-    QSpacerItem* spacer_10 = new QSpacerItem( 30, 25, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    tabLayout_2->addItem( spacer_10, 2, 3 );
-
-    layout4 = new QGridLayout( 0, 1, 1, 0, 6, "layout4"); 
-    QSpacerItem* spacer_11 = new QSpacerItem( 16, 20, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    layout4->addItem( spacer_11, 1, 0 );
-
-    pushFilterUp = new QPushButton( tab_2, "pushFilterUp" );
-    pushFilterUp->setEnabled( TRUE );
-    pushFilterUp->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)3, 0, 0, pushFilterUp->sizePolicy().hasHeightForWidth() ) );
-
-    layout4->addWidget( pushFilterUp, 0, 0 );
-
-    pushFilterDown = new QPushButton( tab_2, "pushFilterDown" );
-    pushFilterDown->setEnabled( TRUE );
-    pushFilterDown->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)3, 0, 0, pushFilterDown->sizePolicy().hasHeightForWidth() ) );
-
-    layout4->addWidget( pushFilterDown, 2, 0 );
-
-    tabLayout_2->addLayout( layout4, 1, 3 );
-    QSpacerItem* spacer_12 = new QSpacerItem( 460, 110, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    tabLayout_2->addMultiCell( spacer_12, 3, 3, 0, 3 );
-    tabWidget3->insertTab( tab_2, "" );
-
-    pageLayout_3->addWidget( tabWidget3, 0, 0 );
+    pageLayout_3->addWidget( comboIconIndex, 3, 1 );
     widgetStack1->addWidget( page_3, 2 );
 
     page_4 = new QWidget( widgetStack1, "page_4" );
@@ -392,33 +333,8 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     textLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel1->sizePolicy().hasHeightForWidth() ) );
 
     pageLayout_4->addWidget( textLabel1, 0, 0 );
-
-    checkShowLinks = new QCheckBox( page_4, "checkShowLinks" );
-    checkShowLinks->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)1, 0, 0, checkShowLinks->sizePolicy().hasHeightForWidth() ) );
-    checkShowLinks->setChecked( FALSE );
-
-    pageLayout_4->addMultiCellWidget( checkShowLinks, 2, 2, 0, 2 );
-    QSpacerItem* spacer_13 = new QSpacerItem( 170, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    pageLayout_4->addItem( spacer_13, 0, 2 );
-
-    textPrefix = new QLabel( page_4, "textPrefix" );
-    textPrefix->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, textPrefix->sizePolicy().hasHeightForWidth() ) );
-
-    pageLayout_4->addWidget( textPrefix, 0, 1 );
-
-    tableLib = new QListView( page_4, "tableLib" );
-    tableLib->addColumn( tr2i18n( "Library" ) );
-    tableLib->addColumn( tr2i18n( "Info" ) );
-    tableLib->addColumn( tr2i18n( "Version" ) );
-    tableLib->addColumn( tr2i18n( "Extensions" ) );
-    tableLib->setFrameShape( QListView::ToolBarPanel );
-    tableLib->setSelectionMode( QListView::Extended );
-    tableLib->setAllColumnsShowFocus( TRUE );
-    tableLib->setResizeMode( QListView::AllColumns );
-
-    pageLayout_4->addMultiCellWidget( tableLib, 3, 3, 0, 2 );
-    QSpacerItem* spacer_14 = new QSpacerItem( 20, 2, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    pageLayout_4->addItem( spacer_14, 4, 1 );
+    QSpacerItem* spacer_8 = new QSpacerItem( 20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed );
+    pageLayout_4->addItem( spacer_8, 5, 2 );
 
     buttonGroup12 = new QButtonGroup( page_4, "buttonGroup12" );
     buttonGroup12->setFrameShape( QButtonGroup::NoFrame );
@@ -431,21 +347,55 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     checkMonitor = new QCheckBox( buttonGroup12, "checkMonitor" );
 
     buttonGroup12Layout->addMultiCellWidget( checkMonitor, 0, 0, 0, 1 );
-    QSpacerItem* spacer_15 = new QSpacerItem( 16, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    buttonGroup12Layout->addItem( spacer_15, 1, 0 );
+    QSpacerItem* spacer_9 = new QSpacerItem( 16, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    buttonGroup12Layout->addItem( spacer_9, 1, 0 );
 
     checkFAMMessage = new QCheckBox( buttonGroup12, "checkFAMMessage" );
     checkFAMMessage->setEnabled( FALSE );
 
     buttonGroup12Layout->addWidget( checkFAMMessage, 1, 1 );
 
-    pageLayout_4->addMultiCellWidget( buttonGroup12, 1, 1, 0, 1 );
+    pageLayout_4->addMultiCellWidget( buttonGroup12, 1, 1, 0, 2 );
+
+    linePrefix = new QLineEdit( page_4, "linePrefix" );
+
+    pageLayout_4->addWidget( linePrefix, 0, 1 );
+
+    pushNewPrefix = new QPushButton( page_4, "pushNewPrefix" );
+
+    pageLayout_4->addWidget( pushNewPrefix, 0, 2 );
+    QSpacerItem* spacer_10 = new QSpacerItem( 100, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    pageLayout_4->addItem( spacer_10, 0, 3 );
+
+    tableLib = new QListView( page_4, "tableLib" );
+    tableLib->addColumn( tr2i18n( "Library" ) );
+    tableLib->addColumn( tr2i18n( "Info" ) );
+    tableLib->addColumn( tr2i18n( "Version" ) );
+    tableLib->addColumn( tr2i18n( "Extensions" ) );
+    tableLib->setFrameShape( QListView::ToolBarPanel );
+    tableLib->setSelectionMode( QListView::Extended );
+    tableLib->setAllColumnsShowFocus( TRUE );
+    tableLib->setResizeMode( QListView::AllColumns );
+
+    pageLayout_4->addMultiCellWidget( tableLib, 4, 4, 0, 3 );
+
+    checkShowLinks = new QCheckBox( page_4, "checkShowLinks" );
+    checkShowLinks->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, checkShowLinks->sizePolicy().hasHeightForWidth() ) );
+    checkShowLinks->setChecked( FALSE );
+
+    pageLayout_4->addMultiCellWidget( checkShowLinks, 3, 3, 0, 3 );
+
+    checkContinue = new QCheckBox( page_4, "checkContinue" );
+    checkContinue->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, checkContinue->sizePolicy().hasHeightForWidth() ) );
+    checkContinue->setAutoRepeat( FALSE );
+
+    pageLayout_4->addMultiCellWidget( checkContinue, 2, 2, 0, 3 );
     widgetStack1->addWidget( page_4, 3 );
 
     page_5 = new QWidget( widgetStack1, "page_5" );
     pageLayout_5 = new QGridLayout( page_5, 1, 1, 11, 6, "pageLayout_5"); 
-    QSpacerItem* spacer_16 = new QSpacerItem( 40, 55, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    pageLayout_5->addItem( spacer_16, 0, 1 );
+    QSpacerItem* spacer_11 = new QSpacerItem( 40, 55, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    pageLayout_5->addItem( spacer_11, 0, 1 );
 
     buttonGroup11 = new QButtonGroup( page_5, "buttonGroup11" );
     buttonGroup11->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroup11->sizePolicy().hasHeightForWidth() ) );
@@ -466,11 +416,11 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     buttonGroup11Layout->addWidget( checkCacheDisk, 1, 0 );
 
     pushOpenCacheDir = new QPushButton( buttonGroup11, "pushOpenCacheDir" );
-    pushOpenCacheDir->setFlat( TRUE );
+    pushOpenCacheDir->setFlat( FALSE );
 
     buttonGroup11Layout->addWidget( pushOpenCacheDir, 1, 3 );
-    QSpacerItem* spacer_17 = new QSpacerItem( 2, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    buttonGroup11Layout->addItem( spacer_17, 1, 2 );
+    QSpacerItem* spacer_12 = new QSpacerItem( 2, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    buttonGroup11Layout->addItem( spacer_12, 1, 2 );
 
     lineCachePath = new QLineEdit( buttonGroup11, "lineCachePath" );
     lineCachePath->setEnabled( FALSE );
@@ -478,8 +428,8 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     buttonGroup11Layout->addWidget( lineCachePath, 1, 1 );
 
     pageLayout_5->addWidget( buttonGroup11, 0, 0 );
-    QSpacerItem* spacer_18 = new QSpacerItem( 40, 265, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    pageLayout_5->addItem( spacer_18, 1, 0 );
+    QSpacerItem* spacer_13 = new QSpacerItem( 40, 265, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    pageLayout_5->addItem( spacer_13, 1, 0 );
     widgetStack1->addWidget( page_5, 4 );
 
     page_6 = new QWidget( widgetStack1, "page_6" );
@@ -487,10 +437,10 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     tabWidget2 = new QTabWidget( page_6, "tabWidget2" );
 
-    tab_3 = new QWidget( tabWidget2, "tab_3" );
+    tab = new QWidget( tabWidget2, "tab" );
+    tabLayout = new QGridLayout( tab, 1, 1, 11, 6, "tabLayout"); 
 
-    buttonGroup9 = new QButtonGroup( tab_3, "buttonGroup9" );
-    buttonGroup9->setGeometry( QRect( 11, 11, 480, 81 ) );
+    buttonGroup9 = new QButtonGroup( tab, "buttonGroup9" );
     buttonGroup9->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroup9->sizePolicy().hasHeightForWidth() ) );
     buttonGroup9->setColumnLayout(0, Qt::Vertical );
     buttonGroup9->layout()->setSpacing( 6 );
@@ -514,11 +464,12 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     kColorGLbackground->setFlat( TRUE );
 
     buttonGroup9Layout->addWidget( kColorGLbackground, 1, 1 );
-    QSpacerItem* spacer_19 = new QSpacerItem( 310, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    buttonGroup9Layout->addItem( spacer_19, 1, 2 );
+    QSpacerItem* spacer_14 = new QSpacerItem( 310, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    buttonGroup9Layout->addItem( spacer_14, 1, 2 );
 
-    buttonGroupShadeModel = new QButtonGroup( tab_3, "buttonGroupShadeModel" );
-    buttonGroupShadeModel->setGeometry( QRect( 11, 98, 480, 75 ) );
+    tabLayout->addMultiCellWidget( buttonGroup9, 0, 0, 0, 2 );
+
+    buttonGroupShadeModel = new QButtonGroup( tab, "buttonGroupShadeModel" );
     buttonGroupShadeModel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroupShadeModel->sizePolicy().hasHeightForWidth() ) );
     buttonGroupShadeModel->setFrameShape( QButtonGroup::GroupBoxPanel );
     buttonGroupShadeModel->setColumnLayout(0, Qt::Vertical );
@@ -537,40 +488,52 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupShadeModelLayout->addWidget( radioFlat, 0, 0 );
 
-    textLabel1_6 = new QLabel( tab_3, "textLabel1_6" );
-    textLabel1_6->setGeometry( QRect( 11, 282, 77, 16 ) );
+    tabLayout->addMultiCellWidget( buttonGroupShadeModel, 1, 1, 0, 2 );
+
+    textLabel1_6 = new QLabel( tab, "textLabel1_6" );
     textLabel1_6->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel1_6->sizePolicy().hasHeightForWidth() ) );
 
-    checkDrawBorder = new QCheckBox( tab_3, "checkDrawBorder" );
-    checkDrawBorder->setGeometry( QRect( 11, 254, 480, 19 ) );
+    tabLayout->addWidget( textLabel1_6, 6, 0 );
 
-    checkBackgroundTransparent = new QCheckBox( tab_3, "checkBackgroundTransparent" );
-    checkBackgroundTransparent->setGeometry( QRect( 11, 229, 480, 19 ) );
+    checkBorder = new QCheckBox( tab, "checkBorder" );
 
-    checkDrop = new QCheckBox( tab_3, "checkDrop" );
-    checkDrop->setGeometry( QRect( 11, 204, 480, 19 ) );
+    tabLayout->addMultiCellWidget( checkBorder, 5, 5, 0, 2 );
 
-    checkStepByStep = new QCheckBox( tab_3, "checkStepByStep" );
-    checkStepByStep->setGeometry( QRect( 11, 179, 480, 19 ) );
-    checkStepByStep->setChecked( TRUE );
+    checkBackgroundTransparent = new QCheckBox( tab, "checkBackgroundTransparent" );
 
-    spinAngle = new QSpinBox( tab_3, "spinAngle" );
-    spinAngle->setGeometry( QRect( 94, 279, 90, 21 ) );
+    tabLayout->addMultiCellWidget( checkBackgroundTransparent, 4, 4, 0, 2 );
+
+    checkDrop = new QCheckBox( tab, "checkDrop" );
+
+    tabLayout->addMultiCellWidget( checkDrop, 3, 3, 0, 2 );
+
+    checkStepByStep = new QCheckBox( tab, "checkStepByStep" );
+    checkStepByStep->setChecked( FALSE );
+
+    tabLayout->addMultiCellWidget( checkStepByStep, 2, 2, 0, 2 );
+    QSpacerItem* spacer_15 = new QSpacerItem( 300, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    tabLayout->addItem( spacer_15, 6, 2 );
+
+    spinAngle = new QSpinBox( tab, "spinAngle" );
     spinAngle->setMaxValue( 360 );
     spinAngle->setMinValue( 0 );
     spinAngle->setLineStep( 1 );
     spinAngle->setValue( 0 );
-    tabWidget2->insertTab( tab_3, "" );
 
-    tab_4 = new QWidget( tabWidget2, "tab_4" );
-    tabLayout_3 = new QGridLayout( tab_4, 1, 1, 11, 6, "tabLayout_3"); 
+    tabLayout->addWidget( spinAngle, 6, 1 );
+    QSpacerItem* spacer_16 = new QSpacerItem( 465, 71, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    tabLayout->addMultiCell( spacer_16, 7, 7, 0, 2 );
+    tabWidget2->insertTab( tab, "" );
 
-    textLabel1_4 = new QLabel( tab_4, "textLabel1_4" );
+    tab_2 = new QWidget( tabWidget2, "tab_2" );
+    tabLayout_2 = new QGridLayout( tab_2, 1, 1, 11, 6, "tabLayout_2"); 
+
+    textLabel1_4 = new QLabel( tab_2, "textLabel1_4" );
     textLabel1_4->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, textLabel1_4->sizePolicy().hasHeightForWidth() ) );
 
-    tabLayout_3->addWidget( textLabel1_4, 2, 0 );
+    tabLayout_2->addWidget( textLabel1_4, 2, 0 );
 
-    buttonGroupZoomType = new QButtonGroup( tab_4, "buttonGroupZoomType" );
+    buttonGroupZoomType = new QButtonGroup( tab_2, "buttonGroupZoomType" );
     buttonGroupZoomType->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, buttonGroupZoomType->sizePolicy().hasHeightForWidth() ) );
     buttonGroupZoomType->setFrameShape( QButtonGroup::GroupBoxPanel );
     buttonGroupZoomType->setColumnLayout(0, Qt::Vertical );
@@ -591,9 +554,9 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupZoomTypeLayout->addWidget( radioButton20, 1, 0 );
 
-    tabLayout_3->addMultiCellWidget( buttonGroupZoomType, 1, 1, 0, 2 );
+    tabLayout_2->addMultiCellWidget( buttonGroupZoomType, 1, 1, 0, 2 );
 
-    buttonGroupZoomModel = new QButtonGroup( tab_4, "buttonGroupZoomModel" );
+    buttonGroupZoomModel = new QButtonGroup( tab_2, "buttonGroupZoomModel" );
     buttonGroupZoomModel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, buttonGroupZoomModel->sizePolicy().hasHeightForWidth() ) );
     buttonGroupZoomModel->setFrameShape( QButtonGroup::GroupBoxPanel );
     buttonGroupZoomModel->setColumnLayout(0, Qt::Vertical );
@@ -613,25 +576,25 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
 
     buttonGroupZoomModelLayout->addWidget( radioNearest, 1, 0 );
 
-    tabLayout_3->addMultiCellWidget( buttonGroupZoomModel, 0, 0, 0, 2 );
-    QSpacerItem* spacer_20 = new QSpacerItem( 475, 173, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    tabLayout_3->addMultiCell( spacer_20, 3, 3, 0, 2 );
+    tabLayout_2->addMultiCellWidget( buttonGroupZoomModel, 0, 0, 0, 2 );
 
-    spinZoomFactor = new QSpinBox( tab_4, "spinZoomFactor" );
-    spinZoomFactor->setMaxValue( 100 );
+    spinZoomFactor = new QSpinBox( tab_2, "spinZoomFactor" );
+    spinZoomFactor->setMaxValue( 300 );
     spinZoomFactor->setValue( 25 );
 
-    tabLayout_3->addWidget( spinZoomFactor, 2, 1 );
-    QSpacerItem* spacer_21 = new QSpacerItem( 285, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    tabLayout_3->addItem( spacer_21, 2, 2 );
-    tabWidget2->insertTab( tab_4, "" );
+    tabLayout_2->addWidget( spinZoomFactor, 2, 1 );
+    QSpacerItem* spacer_17 = new QSpacerItem( 320, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
+    tabLayout_2->addItem( spacer_17, 2, 2 );
+    QSpacerItem* spacer_18 = new QSpacerItem( 70, 199, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    tabLayout_2->addItem( spacer_18, 3, 2 );
+    tabWidget2->insertTab( tab_2, "" );
 
     pageLayout_6->addWidget( tabWidget2, 0, 0 );
     widgetStack1->addWidget( page_6, 5 );
 
     SQ_OptionsLayout->addMultiCellWidget( widgetStack1, 0, 0, 1, 3 );
     languageChange();
-    resize( QSize(634, 491).expandedTo(minimumSizeHint()) );
+    resize( QSize(624, 482).expandedTo(minimumSizeHint()) );
 
     // signals and slots connections
     connect( buttonCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
@@ -641,13 +604,8 @@ SQ_Options::SQ_Options( QWidget* parent, const char* name, bool modal, WFlags fl
     connect( checkMonitor, SIGNAL( toggled(bool) ), checkFAMMessage, SLOT( setEnabled(bool) ) );
     connect( checkShowLinks, SIGNAL( toggled(bool) ), this, SLOT( slotShowLinks(bool) ) );
     connect( checkSystemColor, SIGNAL( toggled(bool) ), kColorGLbackground, SLOT( setDisabled(bool) ) );
-    connect( listFilters, SIGNAL( rightButtonClicked(QListViewItem*,const QPoint&,int) ), this, SLOT( slotFilterRenameRequest(QListViewItem*,const QPoint&,int) ) );
-    connect( pushFilterClear, SIGNAL( clicked() ), this, SLOT( slotClearFilter() ) );
-    connect( pushFilterClearAll, SIGNAL( clicked() ), listFilters, SLOT( clear() ) );
-    connect( pushFilterDown, SIGNAL( clicked() ), this, SLOT( slotFilterDown() ) );
-    connect( pushFilterUp, SIGNAL( clicked() ), this, SLOT( slotFilterUp() ) );
-    connect( pushNewFilter, SIGNAL( clicked() ), this, SLOT( slotNewFilter() ) );
     connect( pushOpenCacheDir, SIGNAL( released() ), this, SLOT( slotDirCache() ) );
+    connect( pushNewPrefix, SIGNAL( clicked() ), this, SLOT( slotNewPrefix() ) );
     connect( radioSetThis, SIGNAL( toggled(bool) ), lineEditCustomDir, SLOT( setEnabled(bool) ) );
     connect( checkClickSystem, SIGNAL( toggled(bool) ), buttonGroupClickPolicy, SLOT( setDisabled(bool) ) );
     connect( pushOpenDir, SIGNAL( clicked() ), this, SLOT( slotOpenDir() ) );
@@ -707,21 +665,23 @@ void SQ_Options::languageChange()
     radioSyncBoth->setText( tr2i18n( "<NI>Sync both" ) );
     radioSyncTreeWStack->setText( tr2i18n( "Tree -> sqWStack" ) );
     radioSyncWStackTree->setText( tr2i18n( "<NI>sqWStack->Tree" ) );
-    textLabel1_2->setText( tr2i18n( "default icon size for \"Icon View\"" ) );
+    textLabel2->setText( tr2i18n( "Default icon size for \"List View\"" ) );
+    checkRunUnknown->setText( tr2i18n( "Run unknown file formats separately (with default application)" ) );
+    QToolTip::add( checkRunUnknown, tr2i18n( "For example, run unsupported \"png\" format in kuickshow" ) );
     buttonGroupSetPath->setTitle( tr2i18n( "Set path ..." ) );
     QToolTip::add( buttonGroupSetPath, QString::null );
     radioSetThis->setText( tr2i18n( "Set this" ) );
-    radioSetLast->setText( tr2i18n( "Set last" ) );
-    radioSetCurrent->setText( tr2i18n( "Set current" ) );
     lineEditCustomDir->setText( QString::null );
     pushOpenDir->setText( tr2i18n( "Open" ) );
+    radioSetLast->setText( tr2i18n( "Set last" ) );
+    radioSetCurrent->setText( tr2i18n( "Set current" ) );
+    checkSaveHistory->setText( tr2i18n( "Save history" ) );
     buttonGroup7->setTitle( tr2i18n( "Clicking policy" ) );
     buttonGroupClickPolicy->setTitle( QString::null );
     radioButton18->setText( tr2i18n( "Use double click policy" ) );
     radioButton17->setText( tr2i18n( "Use single click policy" ) );
     checkClickSystem->setText( tr2i18n( "Use system settings" ) );
     QToolTip::add( checkClickSystem, tr2i18n( "if KDE uses single click to open item, SQuirrel will have too" ) );
-    textLabel2->setText( tr2i18n( "default icon size for \"List View\"" ) );
     comboListIndex->clear();
     comboListIndex->insertItem( tr2i18n( "16" ) );
     comboListIndex->insertItem( tr2i18n( "22" ) );
@@ -733,6 +693,7 @@ void SQ_Options::languageChange()
     comboListIndex->insertItem( tr2i18n( "192" ) );
     comboListIndex->insertItem( tr2i18n( "256" ) );
     comboListIndex->setCurrentItem( 0 );
+    textLabel1_2->setText( tr2i18n( "Default icon size for \"Icon View\"" ) );
     comboIconIndex->clear();
     comboIconIndex->insertItem( tr2i18n( "16" ) );
     comboIconIndex->insertItem( tr2i18n( "22" ) );
@@ -744,55 +705,45 @@ void SQ_Options::languageChange()
     comboIconIndex->insertItem( tr2i18n( "192" ) );
     comboIconIndex->insertItem( tr2i18n( "256" ) );
     comboIconIndex->setCurrentItem( 0 );
-    checkRunUnknown->setText( tr2i18n( "<NI>Run unknown file formats separately" ) );
-    QToolTip::add( checkRunUnknown, tr2i18n( "For example, run unsupported \"png\" format in kuickshow" ) );
-    tabWidget3->changeTab( tab, tr2i18n( "General" ) );
-    pushFilterClearAll->setText( tr2i18n( "Clear All" ) );
-    pushFilterClear->setText( tr2i18n( "Delete filter" ) );
-    pushNewFilter->setText( tr2i18n( "New filter" ) );
-    listFilters->header()->setLabel( 0, tr2i18n( "Name" ) );
-    listFilters->header()->setLabel( 1, tr2i18n( "Extensions" ) );
-    pushFilterUp->setText( QString::null );
-    pushFilterDown->setText( QString::null );
-    tabWidget3->changeTab( tab_2, tr2i18n( "Filters" ) );
-    textLabel1->setText( tr2i18n( "$PREFIX:" ) );
+    textLabel1->setText( tr2i18n( "Libraries here:" ) );
     QToolTip::add( textLabel1, tr2i18n( "Where SQuirrel should search libraries" ) );
-    checkShowLinks->setText( tr2i18n( "show 'symlink' libraries" ) );
-    QToolTip::add( checkShowLinks, tr2i18n( "If not checked, this table will contain only real .so files, not symlinks" ) );
-    textPrefix->setText( QString::null );
-    QToolTip::add( textPrefix, tr2i18n( "Where SQuirrel should search libraries" ) );
+    buttonGroup12->setTitle( QString::null );
+    checkMonitor->setText( tr2i18n( "Monitor directory with libraries" ) );
+    QToolTip::add( checkMonitor, tr2i18n( "Monitor directory with libraries, so new .so files can be dynamically added" ) );
+    checkFAMMessage->setText( tr2i18n( "Show message" ) );
+    QToolTip::add( checkFAMMessage, tr2i18n( "Show dialog with information about new or deleted libraries" ) );
+    pushNewPrefix->setText( tr2i18n( "New" ) );
     tableLib->header()->setLabel( 0, tr2i18n( "Library" ) );
     tableLib->header()->setLabel( 1, tr2i18n( "Info" ) );
     tableLib->header()->setLabel( 2, tr2i18n( "Version" ) );
     tableLib->header()->setLabel( 3, tr2i18n( "Extensions" ) );
     QToolTip::add( tableLib, tr2i18n( "Contains information about all found libraries" ) );
-    buttonGroup12->setTitle( QString::null );
-    checkMonitor->setText( tr2i18n( "Monitor $PREFIX directory" ) );
-    QToolTip::add( checkMonitor, tr2i18n( "Monitor $PREFIX directory, so new .so files can be dynamically added" ) );
-    checkFAMMessage->setText( tr2i18n( "Show message" ) );
-    QToolTip::add( checkFAMMessage, tr2i18n( "Show dialog with information about new or deleted libraries" ) );
+    checkShowLinks->setText( tr2i18n( "show 'symlink' libraries" ) );
+    QToolTip::add( checkShowLinks, tr2i18n( "If not checked, this table will contain only real .so files, not symlinks" ) );
+    checkContinue->setText( tr2i18n( "Continue after resolving errors" ) );
+    QToolTip::add( checkContinue, tr2i18n( "Resolving functions will continue after errors, if checked. Normally library with any error will NOT be handled, and format won't be supported" ) );
     buttonGroup11->setTitle( QString::null );
     checkCacheGL->setText( tr2i18n( "<NI>Cache in OpenGL textures" ) );
     checkCacheDisk->setText( tr2i18n( "<NI>Cache on disk" ) );
     pushOpenCacheDir->setText( tr2i18n( "Open" ) );
     buttonGroup9->setTitle( tr2i18n( "Background color" ) );
     textLabel1_5->setText( tr2i18n( "custom:" ) );
-    checkSystemColor->setText( tr2i18n( "<NI>use system color" ) );
+    checkSystemColor->setText( tr2i18n( "use system color instead" ) );
     kColorGLbackground->setText( QString::null );
     QToolTip::add( kColorGLbackground, tr2i18n( "GLView will have such background color" ) );
     buttonGroupShadeModel->setTitle( tr2i18n( "Shade Model" ) );
     radioSmooth->setText( tr2i18n( "GL_SMOOTH" ) );
     radioFlat->setText( tr2i18n( "GL_FLAT" ) );
     textLabel1_6->setText( tr2i18n( "Rotation angle:" ) );
-    checkDrawBorder->setText( tr2i18n( "<NI>Draw a border" ) );
-    checkBackgroundTransparent->setText( tr2i18n( "<NI>background for transparent images (usually quads)" ) );
+    checkBorder->setText( tr2i18n( "<NI>Draw a border" ) );
+    checkBackgroundTransparent->setText( tr2i18n( "<NI>Background for transparent images (usually quads)" ) );
     checkDrop->setText( tr2i18n( "Enable drop" ) );
     checkStepByStep->setText( tr2i18n( "<NI>Step-by-step decoding and displaying" ) );
     spinAngle->setPrefix( QString::null );
     spinAngle->setSuffix( tr2i18n( " degrees" ) );
     spinAngle->setSpecialValueText( tr2i18n( "no rotation" ) );
-    tabWidget2->changeTab( tab_3, tr2i18n( "Main" ) );
-    textLabel1_4->setText( tr2i18n( "<NI>Zoom increment:" ) );
+    tabWidget2->changeTab( tab, tr2i18n( "General" ) );
+    textLabel1_4->setText( tr2i18n( "Zoom increment:" ) );
     buttonGroupZoomType->setTitle( tr2i18n( "<NI>Zoom type" ) );
     radioButton21->setText( tr2i18n( "Leave previous zoom" ) );
     radioZoomOriginal->setText( tr2i18n( "Zoom to original" ) );
@@ -802,7 +753,7 @@ void SQ_Options::languageChange()
     radioNearest->setText( tr2i18n( "GL_NEAREST" ) );
     spinZoomFactor->setSuffix( tr2i18n( " %" ) );
     spinZoomFactor->setSpecialValueText( tr2i18n( "None" ) );
-    tabWidget2->changeTab( tab_4, tr2i18n( "Zoom" ) );
+    tabWidget2->changeTab( tab_2, tr2i18n( "Zoom" ) );
 }
 
 #include "sq_options.moc"

@@ -15,15 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sq_treeview.h"
-#include "sq_specialpage.h"
-
 #include <qdir.h>
+#include <qheader.h>
 
 #include "ksquirrel.h"
 #include "sq_widgetstack.h"
+#include "sq_config.h"
+#include "sq_treeview.h"
+#include "sq_specialpage.h"
 
-#include <qheader.h>
 
 SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(parent, name)
 {
@@ -47,9 +47,7 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 	connect(this, SIGNAL(returnPressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 
-	sqConfig->setGroup("Fileview");
-
-	if(sqConfig->readNumEntry("sync type", 0) == 1)
+	if(sqConfig->readNumEntry("Fileview", "sync type", 0) == 1)
 		connect(this, SIGNAL(executed(QListViewItem*)), SLOT(slotItemExecuted(QListViewItem*)));
 	
 	header()->hide();

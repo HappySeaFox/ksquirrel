@@ -21,18 +21,26 @@
 #include <ksystemtray.h>
 #include <kpopupmenu.h>
 
+class KAction;
+
 class SQ_SystemTray : public KSystemTray
 {
-    private:
-	QWidget 		*parent;
-	KPopupMenu	*rightMenu;
+	Q_OBJECT
+
+	 private:
+		QWidget 		*parent;
+		KPopupMenu	*rightMenu;
+		KAction *pAOpen, *pAQuit, *pAOptions;
 	
-    public:
-	SQ_SystemTray(QWidget *_parent = 0, const char *name = "");
-	
-    protected:
-	void mousePressEvent(QMouseEvent *);
-	void mouseReleaseEvent(QMouseEvent *);	
+	public:
+		SQ_SystemTray(QWidget *_parent = 0, const char *name = "");
+
+	protected:
+		void mousePressEvent(QMouseEvent *);
+		void mouseReleaseEvent(QMouseEvent *);
+
+	public slots:
+		void slotActivate();
 };
 
 

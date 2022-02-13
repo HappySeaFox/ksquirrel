@@ -28,10 +28,7 @@ class SQ_FileIconView : public KFileIconView
 
 	public:
 		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
-	        ~SQ_FileIconView();
-
-	protected slots:
-//		void slotDrop(QDropEvent*, const QValueList<QIconDragItem>&);
+		~SQ_FileIconView();
 
 	protected:
 		QDragObject *dragObject();

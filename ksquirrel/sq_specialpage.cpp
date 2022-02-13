@@ -14,11 +14,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <qlayout.h>
 
 #include <kglobal.h>
 #include <klocale.h>
-
-#include <qlayout.h>
 
 #include "sq_specialpage.h"
 #include "ksquirrel.h"

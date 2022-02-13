@@ -14,21 +14,18 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "sq_widgetstack.h"
+#include <qlabel.h>
+#include <qbuttongroup.h>
+#include <qvaluevector.h>
 
 #include <kiconloader.h>
 #include <kaction.h>
 
-#include <qlabel.h>
-#include <qbuttongroup.h>
-
 #include "sq_fileiconview.h"
 #include "sq_filedetailview.h"
-
+#include "sq_widgetstack.h"
 #include "ksquirrel.h"
-
-#include <qvaluevector.h>
+#include "sq_config.h"
 
 SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 {
@@ -43,9 +40,8 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 	pIconSizeList->append(192);
 	pIconSizeList->append(256);
 
-	sqConfig->setGroup("Fileview");
-	iCurrentListIndex = sqConfig->readNumEntry("iCurrentListIndex", 0);
-	iCurrentIconIndex = sqConfig->readNumEntry("iCurrentIconIndex", 2);
+	iCurrentListIndex = sqConfig->readNumEntry("Fileview", "iCurrentListIndex", 0);
+	iCurrentIconIndex = sqConfig->readNumEntry("Fileview", "iCurrentIconIndex", 2);
 
 	pDirOperatorList = 0L;
 	pDirOperatorIcon = 0L;
@@ -244,12 +240,11 @@ void SQ_WidgetStack::raiseFirst(int id)
 {
 	path = new QString;
 
-	sqConfig->setGroup("Fileview");
-	switch(sqConfig->readNumEntry("set path", 1))
+	switch(sqConfig->readNumEntry("Fileview", "set path", 1))
 	{
-		case 2: *path = sqConfig->readEntry("custom directory", "/"); break;
+		case 2: *path = sqConfig->readEntry("Fileview", "custom directory", "/"); break;
 		case 1: *path = ""; break;
-		case 0: *path = sqConfig->readEntry("last visited", "/"); break;
+		case 0: *path = sqConfig->readEntry("Fileview", "last visited", "/"); break;
 		default: *path = "/";
 	}
 
@@ -275,6 +270,27 @@ void SQ_WidgetStack::raiseFirst(int id)
 	pANewDir = dirop->actionCollection()->action("mkdir");
 	pAProp = dirop->actionCollection()->action("properties");
 	pADelete = dirop->actionCollection()->action("delete");
-	pAIconSmaller = new KAction("Smaller icons", sqLoader->loadIcon("viewmag-", KIcon::Desktop, 22), 0, this, SLOT(slotSetIconSmaller()), sqApp->actionCollection(), "Set smaller icons");
-	pAIconBigger = new KAction("Bigger icons", sqLoader->loadIcon("viewmag+", KIcon::Desktop, 22), 0, this, SLOT(slotSetIconBigger()), sqApp->actionCollection(), "Set bigger icons");
+	pAIconSmaller = new KAction("Smaller icons", QIconSet(sqLoader->loadIcon("viewmag-", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("viewmag-", KIcon::Desktop, 22)), 0, this, SLOT(slotSetIconSmaller()), sqApp->actionCollection(), "Set smaller icons");
+	pAIconBigger = new KAction("Bigger icons", QIconSet(sqLoader->loadIcon("viewmag+", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("viewmag+", KIcon::Desktop, 22)), 0, this, SLOT(slotSetIconBigger()), sqApp->actionCollection(), "Set bigger icons");
+}
+
+void SQ_WidgetStack::emitNextSelected()
+{
+	SQ_DirOperator *local = (SQ_DirOperator*)visibleWidget();
+
+	local->emitNextSelected();
+}
+
+void SQ_WidgetStack::emitPreviousSelected()
+{
+	SQ_DirOperator *local = (SQ_DirOperator*)visibleWidget();
+
+	local->emitPreviousSelected();
+}
+
+void SQ_WidgetStack::reInitToolsMenu()
+{
+	if(pDirOperatorList)     pDirOperatorList->reInitToolsMenu();
+	if(pDirOperatorIcon)   pDirOperatorIcon->reInitToolsMenu();
+	if(pDirOperatorDetail) pDirOperatorDetail->reInitToolsMenu();
 }

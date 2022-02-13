@@ -1,32 +1,57 @@
+[Colors]
+CurrentPalette=* Recent Colors *
+
+[External tool name]
+1=Open with GIMP
+2=Open with KuickShow
+3=Open with GQview
+4=Open with KView
+5=Set as wallpaper on desktop
+6=Set as tiled wallpaper on desktop
+
+[External tool program]
+1=gimp %s
+2=kuickshow %s
+3=gqview %s
+4=kview %s
+5=dcop kdesktop KBackgroundIface setWallpaper %s 6
+6=dcop kdesktop KBackgroundIface setWallpaper %s 2
+
 [Fileview]
 click policy custom=0
 click policy system=false
 custom directory=/mnt/win_c/images/
+history=false
 iCurrentIconIndex=2
 iCurrentListIndex=0
 last visited=/mnt/win_c/images/
+run unknown=false
 set path=2
 sync type=1
 
 [Filters]
 1=All files
-10=GIMP layers and brushes
+10=TIFF
 11=PNM
 12=X Window Dump
+13=Video tapes
+14=Audio files
 2=Windows BMP
 3=Windows icons, cursors
 4=PNG
 5=JPEG
 6=Compuserve GIF
-7=X Monochrome Bitmaps
-8=X PixMap
+7=X11 Monochrome Bitmaps
+8=X11 PixMap
 9=ZSoft PCX
 
 [Filters ext]
 1=*
-10=*.xcf *.gbr
+10=*.tiff *.tif
 11=*.pnm *.ppm *.pgm *.pbm
 12=*.xwd
+13=*.mpg *.mpeg *.avi *.asf *.divx
+14=*.mp3 *.ogg *.wma *.wav *.it
 2=*.bmp *.dib
 3=*.ico *.cur
 4=*.png
@@ -37,22 +62,39 @@ sync type=1
 9=*.pcx
 
 [GL view]
-GL view background=#cccccc
+GL view background=#a8a8a8
 angle=90
+background=false
+border=false
 enable drop=true
 shade model=0
-zoom model=1
+step-by-step=true
+system color=false
+zoom=10
+zoom model=0
 
 [Interface]
 ViewType=1
 create first=0
 toolbar icon size=1
 
+[KFileDialog Settings]
+Preview Size=60
+Recent Files=/net,/usr/lib/squirrel,/mnt/win_c/images,/var
+ShowPreviews=false
+ViewMode=SmallColumns
+
+[KFileDialog Speedbar]
+Speedbar IconSize=32
+
 [Libraries]
+continue=true
 monitor=true
+prefix=/usr/lib/squirrel/
 show dialog=false
 
 [Main]
+Fileview=last visited
 activate another=true
 first_time=false
 minimize to tray=false
@@ -61,6 +103,18 @@ restart=false
 [Open-with settings]
 CompletionMode=5
 History=gimp,xnview
+
+[Run name]
+1=GQview
+2=GIMP
+3=KuickShow
+4=KView
+
+[Run program]
+1=gqview
+2=gimp
+3=kuickshow
+4=kview
 
 [squirrel image viewer file browser]
 Preview Size=60

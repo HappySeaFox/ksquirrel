@@ -31,6 +31,7 @@
 #include <kpopupmenu.h>
 #include <kurlcompletion.h>
 #include <kconfig.h>
+#include <kwin.h>
 
 #include "ksquirrel.h"
 #include "sq_widgetstack.h"
@@ -43,8 +44,11 @@
 #include "sq_libraryhandler.h"
 #include "sq_bookmarks.h"
 #include "sq_librarylistener.h"
+#include "sq_externaltool.h"
 #include "sq_externaltools.h"
 #include "sq_fileviewfilter.h"
+#include "sq_config.h"
+#include "sq_filters.h"
 
 
 Squirrel * Squirrel::App = 0;
@@ -54,17 +58,21 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 {
 	App = this;
 
-	sqLibPrefix = "/usr/lib/squirrel/";
-	
-	sqConfig = kapp->config();
-	sqLoader = new KIconLoader(*(KGlobal::iconLoader()));
+	sqConfig = new SQ_Config("ksquirrelrc");
+	sqLoader = KGlobal::iconLoader();
 	sqWStack = 0L;
 	sqCurrentURL = 0L;
 	mainSplitter = 0L;
 	tray = 0L;
+	filterList = 0L;
+	actionFilterMenu = 0L;
+	sqExternalTool = 0L;
 
-	sqConfig->setGroup("Main");
-	bool first_time = sqConfig->readBoolEntry("first_time", true);
+	sqLibPrefix = sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
+	if(!sqLibPrefix.endsWith("/"))
+		sqLibPrefix += "/";
+
+	bool first_time = sqConfig->readBoolEntry("Main", "first_time", true);
 
 	iconSizeList = new QValueVector<int>;
 	iconSizeList->append(16);
@@ -72,9 +80,8 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	iconSizeList->append(32);
 	iconSizeList->append(48);
 
-	sqConfig->setGroup("Interface");
-	toolbarIconSize = (*iconSizeList)[sqConfig->readNumEntry("toolbar icon size", 0)];
-	createFirst = sqConfig->readNumEntry("create first", 0);
+	toolbarIconSize = (*iconSizeList)[sqConfig->readNumEntry("Interface", "toolbar icon size", 0)];
+	createFirst = sqConfig->readNumEntry("Interface", "create first", 0);
 
 	// !! Find libraries
 	sqLibHandler = new SQ_LibraryHandler;
@@ -82,12 +89,9 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	sqLibUpdater->openURL(KURL(sqLibPrefix), false, true);
 
 	// create view
-	sqConfig->setGroup("Interface");
-	curViewType = (Squirrel::ViewType)sqConfig->readNumEntry("ViewType",  Squirrel::SQuirrel);
+	curViewType = (Squirrel::ViewType)sqConfig->readNumEntry("Interface", "ViewType",  Squirrel::SQuirrel);
 
-	// set background color for GLview
-	sqConfig->setGroup("GL view");
-	sqGLViewBGColor.setNamedColor(sqConfig->readEntry("GL view background", "#cccccc"));
+	InitExternalTools();
 
 	switch(curViewType)
 	{
@@ -101,7 +105,7 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
         	default:
          		createWidgetsLikeSQuirrel();
 	}
-	
+
 	move(0,0);
 	resize(QApplication::desktop()->width(), QApplication::desktop()->height());
 
@@ -123,16 +127,23 @@ void Squirrel::slotExecuteRunMenu()
 void Squirrel::slotOptions()
 {
 	SQ_Options optd(this, "sq_options", true);
-	optd.start();
+
+	if(optd.start() != QDialog::Accepted)
+		return;
+
+	sqGLView->setClearColor(); // values are taken from sqConfig
+	sqGLView->setTextureParams();
+	sqGLView->setAcceptDrops(sqConfig->readBoolEntry("GL view", "enable drop", true));
+	sqGLView->setZoomFactor(sqConfig->readNumEntry("GL view", "zoom", 25));
+	sqLibUpdater->setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
 }
 
 void Squirrel::closeEvent(QCloseEvent *ev)
 {
-	sqConfig->setGroup("Main");
+	hide();
 
-	if(sqConfig->readBoolEntry("minimize to tray", false))
+	if(sqConfig->readBoolEntry("Main", "minimize to tray", false))
 	{
-		hide();
 		if(!tray)
 		{
 			tray = new SQ_SystemTray;
@@ -144,11 +155,11 @@ void Squirrel::closeEvent(QCloseEvent *ev)
 	}
 	else
 	{
-		sqConfig->setGroup("Fileview");
-		sqConfig->writeEntry("last visited", (sqWStack->getURL()).path());
+		sqConfig->writeEntry("Fileview", "last visited", (sqWStack->getURL()).path());
 
 		sqConfig->deleteGroup("Filters");
 		sqConfig->deleteGroup("Filters ext");
+		sqConfig->deleteGroup("History");
 
 		int count = sqFilters->count(), cur = 1;
 		QString num;
@@ -160,6 +171,35 @@ void Squirrel::closeEvent(QCloseEvent *ev)
 			sqConfig->writeEntry(num, sqFilters->getFilterName(i));
 			sqConfig->setGroup("Filters ext");
 			sqConfig->writeEntry(num, sqFilters->getFilterExt(i));
+		}
+
+		count = sqExternalTool->count();
+		cur = 1;
+		for(int i = 0;i < count;i++,cur++)
+		{
+			sqConfig->setGroup("External tool name");
+			num.sprintf("%d", cur);
+			sqConfig->writeEntry(num, sqExternalTool->getToolName(i));
+			sqConfig->setGroup("External tool program");
+			sqConfig->writeEntry(num, sqExternalTool->getToolCommand(i));
+		}
+
+		if(sqConfig->readBoolEntry("Fileview", "history", true) && sqCurrentURL)
+		{
+			QString tmp;
+			int i = 1;
+			sqConfig->setGroup("History");
+
+			QStringList urls = sqCurrentURL->historyItems();
+
+			QValueList<QString>::iterator   BEGIN = urls.begin();
+			QValueList<QString>::iterator      END = urls.end();
+
+			for(QValueList<QString>::iterator it = BEGIN;it != END;it++)
+			{
+				tmp.sprintf("%d", i++);
+				sqConfig->writeEntry(tmp, *it);
+			}
 		}
 
 		sqConfig->setGroup("Main");
@@ -193,92 +233,109 @@ void Squirrel::InitRunMenu()
 
 	for(int i = 1;;i++)
 	{
-		sqConfig->setGroup("Run program");
-		program = sqConfig->readEntry(QString("%1").arg(i, 0, 10), "");
+		program = sqConfig->readEntry("Run program", QString("%1").arg(i, 0, 10), "");
 
 		if(program == "") break;
 
-		sqConfig->setGroup("Run name");
-		name = sqConfig->readEntry(QString("%1").arg(i, 0, 10), "");
-
+		name = sqConfig->readEntry("Run name", QString("%1").arg(i, 0, 10), "");
 		pMenuProc->AddItem(name, program);
 	}
 
 	pmLaunch = new QPopupMenu;
 
-	int getcount = pMenuProc->GetCount();
+	int i, getcount = pMenuProc->GetCount(), param = 0, id;
 
-	for(int i = 0;i < getcount;i++)
+	for(i = 0;i < getcount;i++)
 		if(pMenuProc->GetName(i) != "SEPARATOR")
-			pmLaunch->insertItem(pMenuProc->GetPixmap(i), pMenuProc->GetName(i), pMenuProc->GetElementId(i));
+		{
+			id = pmLaunch->insertItem(pMenuProc->GetPixmap(i), pMenuProc->GetName(i));
+			pmLaunch->setItemParameter(id, param++);
+		}
 		else
 			pmLaunch->insertSeparator();
 
-	connect(pmLaunch, SIGNAL(activated(int)), pMenuProc, SLOT(slotRunCommand(int)));
+	connect(pmLaunch, SIGNAL(activated(int)), SLOT(slotRunCommand(int)));
 }
 
 void Squirrel::CreateLocationToolbar()
 {
-	QString setNewUrl = QString("/");
+	int 		i;
+	QString	name, tmp;
 
+	sqCurrentURL = new KHistoryCombo(true, 0, "history combobox");
+
+	new QToolButton(sqLoader->loadIcon("button_cancel", KIcon::Desktop, KIcon::SizeSmall), "Clear history", QString::null, sqCurrentURL, SLOT(clearHistory()), pTLocation);
 	new QToolButton(sqLoader->loadIcon("locationbar_erase", KIcon::Desktop, KIcon::SizeSmall), "Clear adress", QString::null, this, SLOT(slotClearAdress()), pTLocation);
 	new QLabel("URL:", pTLocation, "kde toolbar widget");
 
-	sqCurrentURL = new KHistoryCombo(true, pTLocation, "history combobox");
+	sqCurrentURL->reparent(pTLocation, 0, QPoint(0,0));
+
 	pTLocation->setStretchableWidget(pCurrentURL);
 	sqCurrentURL->setDuplicatesEnabled(false);
+	sqCurrentURL->setSizeLimit(30);
 
 	new QToolButton(sqLoader->loadIcon("goto", KIcon::Desktop, KIcon::SizeSmall), "Go!", QString::null, this, SLOT(slotGo()), pTLocation);
 
 	KURLCompletion *pURLCompletion = new KURLCompletion(KURLCompletion::DirCompletion);
-	pURLCompletion->setDir(setNewUrl);
+	pURLCompletion->setDir("/");
 
 	sqCurrentURL->setCompletionObject(pURLCompletion);
 	sqCurrentURL->setAutoDeleteCompletionObject(true);
 	sqCurrentURL->clearHistory();
-	sqCurrentURL->setEditText(setNewUrl);
-	sqCurrentURL->addToHistory(setNewUrl);
+
+	for(i = 1;;i++)
+	{
+		name.sprintf("%d", i);
+		tmp = sqConfig->readEntry("History", name, "");
+
+		if(tmp == "") break;
+
+		sqCurrentURL->addToHistory(tmp);
+	}
 }
 
 void Squirrel::InitFilterMenu()
 {
-	filterList = new SQ_FileviewFilter;
-
 	FILTER tmp_filter;
 	QString ext, tmp;
 	unsigned int i;
-	
-	actionFilterMenu = new KPopupMenu;
-	sqConfig->setGroup("Filters");
-/*
-	tmp_filter.name = "All files";
-	tmp_filter.filter = "*";
-	filterList->addFilter(tmp_filter);
-	tmp_filter.name = "All supported files";
-	tmp_filter.filter = sqLibHandler->allSupportedForFilter();
-	filterList->addFilter(tmp_filter);
-*/
-	for(i = 1;;i ++)
+	bool first = false;
+
+	if(!filterList)
 	{
-		ext.sprintf("%d", i);
+		first = true;
+		filterList = new SQ_FileviewFilter;
+		actionFilterMenu = new KPopupMenu;
+
 		sqConfig->setGroup("Filters");
-		tmp = sqConfig->readEntry(ext, "");
-		
-		if(tmp == "") break;
 
-		tmp_filter.name = tmp;
-		sqConfig->setGroup("Filters ext");
-		tmp = sqConfig->readEntry(ext, "");
-		tmp_filter.filter = tmp;
+		for(i = 1;;i ++)
+		{
+			ext.sprintf("%d", i);
+			tmp = sqConfig->readEntry("Filters", ext, "");
 
-		filterList->addFilter(tmp_filter);
+			if(tmp == "") break;
+
+			tmp_filter.name = tmp;
+			tmp = sqConfig->readEntry("Filters ext", ext, "");
+			tmp_filter.filter = tmp;
+
+			filterList->addFilter(tmp_filter);
+		}
 	}
 
+	actionFilterMenu->clear();
 	for(i = 0;i < filterList->count();i++)
-		actionFilterMenu->insertItem(filterList->getFilterName(i), 7000+i);
-
-	if(filterList->count()) slotSetFilter(7000);
-	connect(actionFilterMenu, SIGNAL(activated(int)), this, SLOT(slotSetFilter(int)));
+	{
+		int id = actionFilterMenu->insertItem(filterList->getFilterName(i));
+		actionFilterMenu->setItemParameter(id, i);
+	}
+/*
+	if(filterList->count() && first)
+		slotSetFilter(7000);
+*/
+	disconnect(actionFilterMenu, SIGNAL(activated(int)), this, SLOT(slotSetFilter(int)));
+	connect(actionFilterMenu, SIGNAL(activated(int)), SLOT(slotSetFilter(int)));
 }
 
 void Squirrel::slotClearAdress()
@@ -293,7 +350,8 @@ void Squirrel::slotGo()
 
 void Squirrel::slotSetFilter(int id)
 {
-	sqWStack->setNameFilter(((*filterList)[id-7000]).filter);
+	int index = actionFilterMenu->itemParameter(id);
+	sqWStack->setNameFilter(((*filterList)[index]).filter);
 }
 
 void Squirrel::slotGLView()
@@ -307,7 +365,6 @@ void Squirrel::createWidgetsLikeSQuirrel()
 	fileTools->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
 	pTLocation = new KToolBar(this, QMainWindow::Top, true, "Location toolbar");
-	pTLocation->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 	CreateLocationToolbar();
 
 	CreateStatusBar();
@@ -380,6 +437,7 @@ void Squirrel::createWidgetsLikeGqview()
 	sqWStack->pANewDir->unplug(pToolbar);
 	pAPrevFile->unplug(pToolbar);
 	pANextFile->unplug(pToolbar);
+	pAFilters->unplug(pToolbar);
 
 	glView = new SQ_GLViewWidget(mainSplitter);
 
@@ -460,6 +518,9 @@ void Squirrel::createWidgetsLikeWinViewer()
 	H->setStretchFactor(ltmp2, 1);
 
 	// WinViewer specific
+	sqWStack->pABack->unplug(pToolbarTools);
+	sqWStack->pAForw->unplug(pToolbarTools);
+	sqWStack->pAUp->unplug(pToolbarTools);
 	pARaiseIconView->setEnabled(false);
 	pARaiseListView->setEnabled(false);
 	pARaiseDetailView->setEnabled(false);
@@ -555,13 +616,14 @@ void Squirrel::CreateStatusBar()
 	sqSBfileName = new QLabel(vb);
 	sqSBDecoded = new QLabel(sbar);
 	sqSBDecoded->setText("No files decoded");
-
+	sqSBGLreport = new QLabel( "zoom: ", sbar);
 	QLabel *levak = new QLabel(sbar);
 
 	sbar->addWidget(sqSBdirInfo, 0, true);
 	sbar->addWidget(sqSBcurFileInfo, 0, true);
 	sbar->addWidget(vb, 0, true);
 	sbar->addWidget(sqSBDecoded, 0, true);
+	sbar->addWidget(sqSBGLreport, 0, true);
 	sbar->addWidget(levak, 1, true);
 }
 
@@ -578,7 +640,7 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	menubar->insertItem("&Edit", pop_edit);
 	menubar->insertItem("&View", pop_view);
 	menubar->insertItem("&Launch", pmLaunch);
-	menubar->insertItem("&Filter", actionFilterMenu);
+	menubar->insertItem("Fi&lter", actionFilterMenu);
 	menubar->insertItem("&Help", helpMenu());
 
 	sqWStack->pAIconBigger->plug(pop_view);
@@ -589,8 +651,9 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	pARaiseDetailView->plug(pop_view);
 	pAExit->plug(pop_file);
 	pARescan->plug(pop_edit);
-	pAConfigure->plug(pop_edit);
 	pAExtTools->plug(pop_edit);
+	pAFilters->plug(pop_edit);
+	pAConfigure->plug(pop_edit);
 }
 
 void Squirrel::CreateToolbar(KToolBar *tools)
@@ -615,8 +678,9 @@ void Squirrel::CreateToolbar(KToolBar *tools)
 	sqWStack->pAIconSmaller->plug(tools);
 
 	pAGLView->plug(tools);
-	pAConfigure->plug(tools);
 	pAExtTools->plug(tools);
+	pAFilters->plug(tools);
+	pAConfigure->plug(tools);
 	pAExit->plug(tools);
 }
 
@@ -628,7 +692,8 @@ void Squirrel::CreateActions()
 	pANextFile = new KAction("Next file", QIconSet(sqLoader->loadIcon("next", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("next", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotNextFile()), actionCollection(), "SQ select next file");
 	pAPrevFile = new KAction("Previous file", QIconSet(sqLoader->loadIcon("previous", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("previous", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotPreviousFile()), actionCollection(), "SQ select previous file");
 	pARescan = new KAction("Rescan libraries", QIconSet(sqLoader->loadIcon("reload", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("reload", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, 0, actionCollection(), "SQ rescan libraries");
-	pAExtTools = new KAction("External tools ...", QIconSet(sqLoader->loadIcon("memory", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("memory", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
+	pAExtTools = new KAction("Configure external tools ...", QIconSet(sqLoader->loadIcon("memory", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("memory", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
+	pAFilters = new KAction("Configure filters ...", QIconSet(sqLoader->loadIcon("filefind", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("filefind", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotFilters()), actionCollection(), "SQ filters");
 
 	pARaiseListView = new KRadioAction("Raise 'list' view", QIconSet(sqLoader->loadIcon("view_icon", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_icon", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseListView()), actionCollection(), "SQ raise list view");
 	pARaiseIconView = new KRadioAction("Raise 'icon' view", QIconSet(sqLoader->loadIcon("view_choose", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("view_choose", KIcon::Desktop, toolbarIconSize)), 0, this, SLOT(slotRaiseIconView()), actionCollection(), "SQ raise icon view");
@@ -672,14 +737,64 @@ QCStringList Squirrel::functions()
 
 void Squirrel::control(const QString &str)
 {
-	if(str == "ACTIVATE")
+	if(str == "SQ_ACTIVATE")
 	{
-		this->showNormal();
+		show();
+		KWin::setActiveWindow(winId());
 	}
+	else
+		printf("control(): unknown parameter: \"%s\"\n", str.ascii());
+}
+
+void Squirrel::slotRunCommand(int id)
+{
+	int index = pmLaunch->itemParameter(id);
+	pMenuProc->slotRunCommand(index);
+}
+
+void Squirrel::InitExternalTools()
+{
+	QString str, tmp;
+	int i;
+	SQ_EXT_TOOL tmp_tool;
+/*
+	if(sqExternalTool)
+	{
+		sqExternalTool->clear();
+		delete sqExternalTool;
+	}
+*/
+	sqExternalTool	 = new SQ_ExternalTool;
+
+	for(i = 1;;i ++)
+	{
+		str.sprintf("%d", i);
+		tmp = sqConfig->readEntry("External tool name", str, "");
+
+         	if(tmp == "") break;
+
+		tmp_tool.name = tmp;
+		tmp = sqConfig->readEntry("External tool program", str, "");
+		tmp_tool.command = tmp;
+
+		sqExternalTool->addTool(tmp_tool);
+	}
+}
+
+void Squirrel::slotFilters()
+{
+	SQ_Filters f(this);
+
+	if(f.start() != QDialog::Accepted) return;
+
+	InitFilterMenu();
 }
 
 void Squirrel::slotExtTools()
 {
 	SQ_ExternalTools etd(this, "sq_exttools", true);
-	etd.exec();
+
+	if(etd.start() != QDialog::Accepted) return;
+
+	sqWStack->reInitToolsMenu();
 }

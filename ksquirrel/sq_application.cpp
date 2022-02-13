@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include "sq_application.h"
-
 #include "ksquirrel.h"
 
 SQ_Application::SQ_Application(bool allowS, bool GUIenabled) : KApplication(allowS, GUIenabled)

@@ -1,7 +1,7 @@
 /***************************************************************************
-                          sq_externaltool.h  -  description
+                          sq_config.h  -  description
                              -------------------
-    begin                : ??? ??? 12 2004
+    begin                : ??? ??? 14 2004
     copyright            : (C) 2004 by CKulT
     email                : squirrel-sf@uandex.ru
  ***************************************************************************/
@@ -15,41 +15,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_EXTERNALTOOL_H
-#define SQ_EXTERNALTOOL_H
+#ifndef SQ_CONFIG_H
+#define SQ_CONFIG_H
 
-#include <qvaluevector.h>
+#include <kconfig.h>
 #include <qstring.h>
-
-class QPopupMenu;
 
 /**
   *@author CKulT
   */
 
-typedef struct
+class SQ_Config : public KConfig
 {
-	QString name;
-	QString command;
-}SQ_EXT_TOOL;
-
-class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
-{
-	private:
-		QPopupMenu *menu;
-
 	public: 
-		SQ_ExternalTool();
-		~SQ_ExternalTool();
+		SQ_Config(const QString& fileName = QString::null);
+		~SQ_Config();
 
-		void addTool(const QString &name, const QString &command);
-		void addTool(const SQ_EXT_TOOL &tool);
+		// Our specific 'read' methods
+		QString readEntry(const QString &sgroup, const QString &key, const QString& aDefault = QString::null);
+		QString readEntry(const char *sgroup, const QString &key, const QString& aDefault = QString::null);
 
-		QString getToolName(const int i);
-		QString getToolCommand(const int i);
+		int readNumEntry(const QString &sgroup, const QString &key, int nDefault = 0);
+		int readNumEntry(const char *sgroup, const QString &key, int nDefault = 0);
 
-		QPopupMenu* getNewPopupMenu();
-		QPopupMenu* getConstPopupMenu() const;
+		bool readBoolEntry(const QString &sgroup, const QString &pKey, const bool bDefault = false);
+		bool readBoolEntry(const char *sgroup, const QString &pKey, const bool bDefault = false);
 };
 
 #endif

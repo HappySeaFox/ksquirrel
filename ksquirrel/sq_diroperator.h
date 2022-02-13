@@ -18,7 +18,6 @@
 #ifndef SQ_DIROPERATOR_H
 #define SQ_DIROPERATOR_H
 
-#include <qwidget.h>
 #include <kurl.h>
 #include <kfileview.h>
 #include <kdiroperator.h>
@@ -38,13 +37,15 @@ class SQ_DirOperator : public KDirOperator
 
 		KActionMenu 			*pADirOperatorMenu;
 		KAction				*pARunSeparately;
+		int					toolsId;
 
 	public:
 		SQ_DirOperator(const KURL &url = KURL(), QWidget *parent = 0, const char *name = "");
 		virtual ~SQ_DirOperator();
 		void setIconSize(int sz);
+                void reInitToolsMenu();
 
-		KFile::FileView getViewType();
+		KFile::FileView 		getViewType();
 		KFileView 			*fileview;
 
 	protected:
@@ -59,7 +60,11 @@ class SQ_DirOperator : public KDirOperator
 	public slots:
 		void setShowHiddenFilesF(bool s);
 		void slotRunSeparately();
+		void slotActivateExternalTool(int index);
 		void slotFinishedLoading();
+
+		void emitNextSelected();
+		void emitPreviousSelected();
 };
 
 #endif

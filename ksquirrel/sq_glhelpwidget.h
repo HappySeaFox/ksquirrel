@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_version.h  -  description
+                          sq_glhelpwidget.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 14 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,11 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __APP_VERSION__
-#define __APP_VERSION__
+#ifndef SQ_GLHELPWIDGET_H
+#define SQ_GLHELPWIDGET_H
 
-const char APP[] = "Squirrel development build #";
-const int version=4400;
+#include <qlabel.h>
+
+/**
+  *@author CKulT
+  */
+
+class SQ_GLHelpWidget : public QLabel
+{
+	public: 
+		SQ_GLHelpWidget(const QString & text, QWidget * parent, const char * name = 0);
+		~SQ_GLHelpWidget();
+
+	protected:
+		virtual void keyPressEvent(QKeyEvent *e);
+		virtual void mousePressEvent(QMouseEvent *e);
+		virtual void focusOutEvent(QFocusEvent *e);
+};
 
 #endif
-

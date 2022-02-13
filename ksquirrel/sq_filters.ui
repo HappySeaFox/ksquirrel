@@ -1,19 +1,19 @@
 <!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>SQ_ExternalTools</class>
+<class>SQ_Filters</class>
 <widget class="QDialog">
     <property name="name">
-        <cstring>SQ_ExternalTools</cstring>
+        <cstring>SQ_Filters</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>555</width>
-            <height>428</height>
+            <width>536</width>
+            <height>404</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Adjust External Tools</string>
+        <string>Adjust Filters</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>
@@ -122,6 +122,54 @@
                         </size>
                     </property>
                 </spacer>
+                <widget class="QListView" row="0" column="0" rowspan="2" colspan="3">
+                    <column>
+                        <property name="text">
+                            <string>Name</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <column>
+                        <property name="text">
+                            <string>Extensions</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <property name="name">
+                        <cstring>listFilters</cstring>
+                    </property>
+                    <property name="resizePolicy">
+                        <enum>Default</enum>
+                    </property>
+                    <property name="selectionMode">
+                        <enum>Single</enum>
+                    </property>
+                    <property name="allColumnsShowFocus">
+                        <bool>true</bool>
+                    </property>
+                    <property name="showSortIndicator">
+                        <bool>false</bool>
+                    </property>
+                    <property name="itemMargin">
+                        <number>1</number>
+                    </property>
+                    <property name="resizeMode">
+                        <enum>AllColumns</enum>
+                    </property>
+                    <property name="defaultRenameAction">
+                        <enum>Reject</enum>
+                    </property>
+                </widget>
                 <spacer row="0" column="3">
                     <property name="name">
                         <cstring>spacer21</cstring>
@@ -141,23 +189,23 @@
                 </spacer>
                 <widget class="QPushButton" row="2" column="0">
                     <property name="name">
-                        <cstring>pushNewTool</cstring>
+                        <cstring>pushNewFilter</cstring>
                     </property>
                     <property name="text">
-                        <string>New tool</string>
+                        <string>New filter</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="2" column="1">
                     <property name="name">
-                        <cstring>pushToolClear</cstring>
+                        <cstring>pushFilterClear</cstring>
                     </property>
                     <property name="text">
-                        <string>Delete tool</string>
+                        <string>Delete filter</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="2" column="2">
                     <property name="name">
-                        <cstring>pushToolClearAll</cstring>
+                        <cstring>pushFilterClearAll</cstring>
                     </property>
                     <property name="text">
                         <string>Clear All</string>
@@ -190,7 +238,7 @@
                         </spacer>
                         <widget class="QPushButton" row="0" column="0">
                             <property name="name">
-                                <cstring>pushToolUp</cstring>
+                                <cstring>pushFilterUp</cstring>
                             </property>
                             <property name="enabled">
                                 <bool>true</bool>
@@ -209,7 +257,7 @@
                         </widget>
                         <widget class="QPushButton" row="2" column="0">
                             <property name="name">
-                                <cstring>pushToolDown</cstring>
+                                <cstring>pushFilterDown</cstring>
                             </property>
                             <property name="enabled">
                                 <bool>true</bool>
@@ -228,130 +276,74 @@
                         </widget>
                     </grid>
                 </widget>
-                <widget class="QListView" row="1" column="0" rowspan="1" colspan="3">
-                    <column>
-                        <property name="text">
-                            <string>Name</string>
-                        </property>
-                        <property name="clickable">
-                            <bool>true</bool>
-                        </property>
-                        <property name="resizable">
-                            <bool>true</bool>
-                        </property>
-                    </column>
-                    <column>
-                        <property name="text">
-                            <string>Extensions</string>
-                        </property>
-                        <property name="clickable">
-                            <bool>true</bool>
-                        </property>
-                        <property name="resizable">
-                            <bool>true</bool>
-                        </property>
-                    </column>
-                    <property name="name">
-                        <cstring>listTools</cstring>
-                    </property>
-                    <property name="resizePolicy">
-                        <enum>Manual</enum>
-                    </property>
-                    <property name="selectionMode">
-                        <enum>Single</enum>
-                    </property>
-                    <property name="allColumnsShowFocus">
-                        <bool>true</bool>
-                    </property>
-                    <property name="showSortIndicator">
-                        <bool>false</bool>
-                    </property>
-                    <property name="itemMargin">
-                        <number>1</number>
-                    </property>
-                    <property name="resizeMode">
-                        <enum>AllColumns</enum>
-                    </property>
-                    <property name="defaultRenameAction">
-                        <enum>Reject</enum>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="0" column="0">
-                    <property name="name">
-                        <cstring>textLabel1</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Hint: %s expands to file name</string>
-                    </property>
-                </widget>
             </grid>
         </widget>
     </grid>
 </widget>
 <connections>
     <connection>
-        <sender>pushNewTool</sender>
+        <sender>pushNewFilter</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotNewTool()</slot>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotNewFilter()</slot>
     </connection>
     <connection>
-        <sender>pushToolClear</sender>
+        <sender>pushFilterClear</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolClear()</slot>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotFilterClear()</slot>
     </connection>
     <connection>
-        <sender>pushToolClearAll</sender>
+        <sender>pushFilterClearAll</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolClearAll()</slot>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotFilterClearAll()</slot>
     </connection>
     <connection>
-        <sender>pushToolUp</sender>
+        <sender>pushFilterUp</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolUp()</slot>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotFilterUp()</slot>
     </connection>
     <connection>
-        <sender>pushToolDown</sender>
+        <sender>pushFilterDown</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolDown()</slot>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotFilterDown()</slot>
     </connection>
     <connection>
-        <sender>listTools</sender>
+        <sender>listFilters</sender>
         <signal>rightButtonClicked(QListViewItem*,const QPoint&amp;,int)</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolRenameRequest(QListViewItem*,const QPoint&amp;,int)</slot>
+        <receiver>SQ_Filters</receiver>
+        <slot>slotFilterRenameRequest(QListViewItem*,const QPoint&amp;,int)</slot>
     </connection>
     <connection>
         <sender>pushOK</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
+        <receiver>SQ_Filters</receiver>
         <slot>accept()</slot>
     </connection>
     <connection>
         <sender>pushCancel</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
+        <receiver>SQ_Filters</receiver>
         <slot>reject()</slot>
     </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
-    <include location="local" impldecl="in implementation">sq_externaltool.h</include>
+    <include location="local" impldecl="in implementation">sq_fileviewfilter.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
-    <include location="local" impldecl="in implementation">sq_externaltools.ui.h</include>
+    <include location="local" impldecl="in implementation">sq_filters.ui.h</include>
 </includes>
 <slots>
-    <slot>slotNewTool()</slot>
-    <slot>slotToolClear()</slot>
-    <slot>slotToolClearAll()</slot>
-    <slot>slotToolUp()</slot>
-    <slot>slotToolDown()</slot>
+    <slot>slotNewFilter()</slot>
+    <slot>slotFilterClear()</slot>
+    <slot>slotFilterClearAll()</slot>
+    <slot>slotFilterUp()</slot>
+    <slot>slotFilterDown()</slot>
     <slot returnType="int">start()</slot>
-    <slot>slotToolRenameRequest( QListViewItem * item, const QPoint &amp; point, int pos )</slot>
+    <slot>slotFilterRenameRequest( QListViewItem * item, const QPoint &amp; point, int pos )</slot>
 </slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>

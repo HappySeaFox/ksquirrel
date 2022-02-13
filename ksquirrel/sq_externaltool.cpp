@@ -14,11 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <qpopupmenu.h>
 
 #include "sq_externaltool.h"
 
 SQ_ExternalTool::SQ_ExternalTool() : QValueVector<SQ_EXT_TOOL>()
-{}
+{
+	menu = 0L;
+}
 
 SQ_ExternalTool::~SQ_ExternalTool()
 {}
@@ -33,4 +36,40 @@ void SQ_ExternalTool::addTool(const QString &name, const QString &command)
 void SQ_ExternalTool::addTool(const SQ_EXT_TOOL &tool)
 {
 	append(tool);
+}
+
+QString SQ_ExternalTool::getToolName(const int i)
+{
+	return (*this)[i].name;
+}
+
+QString SQ_ExternalTool::getToolCommand(const int i)
+{
+	return (*this)[i].command;
+}
+
+QPopupMenu* SQ_ExternalTool::getNewPopupMenu()
+{
+	if(menu)
+	{
+		menu->clear();
+		delete menu;
+	}
+
+	int id;
+
+	menu = new QPopupMenu;
+
+	for(unsigned int i = 0;i < count();i++)
+	{
+		id = menu->insertItem(getToolName(i));
+		menu->setItemParameter(id, i);
+	}
+
+	return menu;
+}
+
+QPopupMenu* SQ_ExternalTool::getConstPopupMenu() const
+{
+	return menu;
 }

@@ -15,9 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sq_filedetailview.h"
-
 #include <kurldrag.h>
+
+#include "sq_filedetailview.h"
 
 SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name) : KFileDetailView(parent, name)
 {

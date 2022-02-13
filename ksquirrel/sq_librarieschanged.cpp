@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_librarieschanged.ui'
 **
-** Created: Втр Апр 13 00:45:00 2004
+** Created: Птн Апр 16 19:42:23 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!

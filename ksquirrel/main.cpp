@@ -45,16 +45,6 @@ int main(int argc, char *argv[])
 	aboutData.addAuthor("CKulT", "Author, first programming, code cleanups,\nfisrt GL viewer.", "squirrel-sf@yandex.ru", "http://ckult.narod.ru");
 	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org.ru");
 	aboutData.addCredit("A great description of various file formats at", 0, 0, "http://www.wotsit.org");
-	aboutData.addCredit("Special thanks to: Axiome, Converter,");
-	aboutData.addCredit("Front Line Assembly, Hocico, Hybrids,");
-	aboutData.addCredit("Hypnoskull, Mlada Fronta, Mono No Aware,");
-	aboutData.addCredit("Shinjuku Thief, Synapscape, Dive,");
-	aboutData.addCredit("Noise Unit, Sonar, Somatic Responses,");
-	aboutData.addCredit("Gods Tower, Dimmu Borgir, Nine Inch Nails,");
-	aboutData.addCredit("Therion, Brujeria, Children of Bodom,");
-	aboutData.addCredit("In Extremo, Rammstein, Fear Factory,");
-	aboutData.addCredit("and other mad industrial & rock'n'roll men.");
-	aboutData.addCredit("Your music is a great support for me.");
 	aboutData.addCredit(" ");
 
 	KCmdLineArgs::init(argc, argv, &aboutData);
@@ -73,7 +63,7 @@ int main(int argc, char *argv[])
 		QCString replyType;
 		QByteArray data, replyData;
 		QDataStream dataStream(data, IO_WriteOnly);
-		dataStream << QString("ACTIVATE");
+		dataStream << QString("SQ_ACTIVATE");
 
 		if(a.dcopClient()->call(App, "KMainWindow", "control(QString)", data, replyType, replyData) == false)
 			printf("\nUnable to send data to old SQuirrel: exiting anyway.\n");

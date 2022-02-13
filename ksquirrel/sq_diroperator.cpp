@@ -14,38 +14,52 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "sq_diroperator.h"
+#include <qmessagebox.h>
+#include <qprocess.h>
+#include <qevent.h>
 
 #include <krun.h>
 #include <kcombiview.h>
-
-#include "sq_fileiconview.h"
-#include "sq_filedetailview.h"
+#include <kstringhandler.h>
+#include <kprocess.h>
+#include <kapp.h>
 
 #include "ksquirrel.h"
+#include "sq_diroperator.h"
+#include "sq_fileiconview.h"
+#include "sq_filedetailview.h"
 #include "sq_glviewwidget.h"
+#include "sq_externaltool.h"
 #include "sq_libraryhandler.h"
+#include "sq_config.h"
 
-#include <qmessagebox.h>
+#define SQ_MAX_WORD_LENGTH 50
 
 SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *name) : KDirOperator(url, parent, name)
 {
-	sqConfig->setGroup("Fileview");
-	if(sqConfig->readBoolEntry("click policy system", true))
+	static KActionSeparator *pASep = new KActionSeparator(actionCollection());
+
+	if(sqConfig->readBoolEntry("Fileview", "click policy system", true))
 		sing = KGlobalSettings::singleClick();
 	else
-		sing = (bool)1 - (bool)sqConfig->readNumEntry("click policy custom", 0);
-	
+		sing = (bool)1 - (bool)sqConfig->readNumEntry("Fileview", "click policy custom", 0);
+
+	setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
 
 	pARunSeparately = new KAction("Run separately", QIconSet(sqLoader->loadIcon("launch", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("launch", KIcon::Desktop, 22)), KShortcut(CTRL+Key_J), this, SLOT(slotRunSeparately()), sqApp->actionCollection(), "Run separately");
 
 	// @todo get rid of kdecore warning
 	pADirOperatorMenu = (KActionMenu*)actionCollection()->action("popupMenu");
 	pADirOperatorMenu->insert(pARunSeparately, 0);
-	pADirOperatorMenu->insert(new KActionSeparator(actionCollection()), 1);
+	pADirOperatorMenu->insert(pASep, 1);
+
+	pADirOperatorMenu->insert(pASep);
+	toolsId = pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getNewPopupMenu());
+
+	printf("%d ",toolsId);
 
 	connect(this, SIGNAL(finishedLoading()), SLOT(slotFinishedLoading()));
+	connect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
 }
 
 SQ_DirOperator::~SQ_DirOperator()
@@ -86,7 +100,7 @@ KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 		{
 			connect((SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*, const QPoint&, int)), (SQ_FileDetailView*)fileview, SLOT(slotSelected(QListViewItem*, const QPoint&, int)));
 			connect((SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
-       	}
+		}
 		else
 			connect((SQ_FileDetailView*)fileview, SIGNAL(doubleClicked(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
 
@@ -126,7 +140,17 @@ void SQ_DirOperator::slotDoubleClicked(QIconViewItem *item)
 		QFileInfo fm(f->fileInfo()->url().path());
 
 		if(f->fileInfo()->isFile())
-			sqGLView->showIfCan(f->fileInfo()->url().path());
+		{
+			if(!sqLibHandler->supports(fm.extension(false).upper()))
+			{
+				sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
+
+				if(sqConfig->readBoolEntry("Fileview", "run unknown", true))
+					pARunSeparately->activate();
+			}
+			else
+				sqGLView->emitShowImage(f->fileInfo()->url().path());
+		}
 		else
 			emit dirActivated((const KFileItem*)f->fileInfo());
 	}
@@ -141,7 +165,17 @@ void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 		QFileInfo fm(f->fileInfo()->url().path());
 
 		if(f->fileInfo()->isFile())
-			sqGLView->showIfCan(f->fileInfo()->url().path());
+		{
+			if(!sqLibHandler->supports(fm.extension(false).upper()))
+			{
+				sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
+
+				if(sqConfig->readBoolEntry("Fileview", "run unknown", true))
+					pARunSeparately->activate();
+			}
+			else
+				sqGLView->emitShowImage(f->fileInfo()->url().path());
+		}
 		else
 			emit dirActivated((const KFileItem*)f->fileInfo());
 	}
@@ -150,17 +184,22 @@ void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 void SQ_DirOperator::slotSelected(QIconViewItem *item)
 {
 	if(!item) return;
-	
+
+	static QString str;
+	static QPixmap px;
+	static KFileItem *fi;
+
 	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
 	{
-		KFileItem *fi = f->fileInfo();
+		fi = f->fileInfo();
 		if(fi->isFile() || fi->isDir())
 		{
-			QString str2 = " " + fi->timeString() + " ";
-			QPixmap px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
-			sqSBcurFileInfo->setText(str2);
+			str = " " + fi->timeString() + " ";
+			px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
+			sqSBcurFileInfo->setText(str);
 			sqSBfileIcon->setPixmap(px);
-			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
+			str = "  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")"));
+			sqSBfileName->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
 		}
 	}
 }
@@ -169,16 +208,21 @@ void SQ_DirOperator::slotSelected(QListViewItem *item)
 {
 	if(!item) return;
 
+	static QString str;
+	static QPixmap px;
+	static KFileItem *fi;
+
 	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
 	{
-		KFileItem *fi = f->fileInfo();
+		fi = f->fileInfo();
 		if(fi->isFile() || fi->isDir())
 		{
-			QString str2 = " " + fi->timeString() + " ";
-			QPixmap px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
-			sqSBcurFileInfo->setText(str2);
+			str = " " + fi->timeString() + " ";
+			px = KMimeType::pixmapForURL(fi->url(), 0, KIcon::Desktop, KIcon::SizeSmall);
+			sqSBcurFileInfo->setText(str);
 			sqSBfileIcon->setPixmap(px);
-			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
+			str = "  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")"));
+			sqSBfileName->setText(KStringHandler::csqueeze(str, SQ_MAX_WORD_LENGTH));
 		}
 	}
 }
@@ -216,6 +260,8 @@ void SQ_DirOperator::slotFinishedLoading()
 	str.sprintf(" Total %d (%d dirs, %d files) ", total, dirs, files);
 	sqSBdirInfo->setText(str);
 
+	view()->clearSelection();
+
 	if(total)
 	{
 		const KFileItemList *list = view()->items();
@@ -228,3 +274,65 @@ void SQ_DirOperator::slotFinishedLoading()
 		sqSBfileName->setText("");
 	}
 }
+
+void SQ_DirOperator::emitNextSelected()
+{
+	KFileItem *item;
+	KFileView *local = view();
+
+	item = local->nextItem(local->currentFileItem());
+
+	if(!item) return;
+
+	local->clearSelection();
+	local->setCurrentItem(item);
+	local->setSelected(local->currentFileItem(), true);
+
+	if(item->isFile())
+		sqGLView->emitShowImage(item->url().path());
+}
+
+void SQ_DirOperator::emitPreviousSelected()
+{
+	KFileItem *item;
+	KFileView *local = view();
+
+	item = local->prevItem(local->currentFileItem());
+
+	if(!item) return;
+
+	local->clearSelection();
+	local->setCurrentItem(item);
+	local->setSelected(local->currentFileItem(), true);
+
+	if(item->isFile())
+		sqGLView->emitShowImage(item->url().path());
+}
+
+void SQ_DirOperator::slotActivateExternalTool(int id)
+{
+	KFileItem *item = view()->currentFileItem();
+
+	if(!item) return;
+
+	int index = sqExternalTool->getConstPopupMenu()->itemParameter(id);
+	QString command = sqExternalTool->getToolCommand(index), final, file;
+	KShellProcess	run;
+
+	file = run.quote(item->url().path());
+	final = command.replace(QRegExp("%s"), file);
+
+	run << final;
+	run.start(KProcess::DontCare);
+}
+
+void SQ_DirOperator::reInitToolsMenu()
+{
+	disconnect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), this, SLOT(slotActivateExternalTool(int)));
+
+	pADirOperatorMenu->popupMenu()->removeItem(toolsId);
+	toolsId = pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getNewPopupMenu());
+
+	connect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
+}
+

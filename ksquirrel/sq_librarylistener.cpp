@@ -14,24 +14,24 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <qstring.h>
 
 #include "sq_librarylistener.h"
 #include "ksquirrel.h"
 #include "sq_libraryhandler.h"
 #include "sq_librarieschanged.h"
-
-#include <qstring.h>
+#include "sq_config.h"
 
 SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {
-       setAutoUpdate(true);
-       setDirOnlyMode(false);
-       setShowingDotFiles(false);
+	setAutoUpdate(true); // we have to init libraries anyway, even if "Monitor" options disabled
+	setDirOnlyMode(false);
+	setShowingDotFiles(false);
 
-       connect(this, SIGNAL(started(const KURL &)), SLOT(slotStarted(const KURL &)));
-       connect(this, SIGNAL(completed()), SLOT(slotCompleted()));
-       connect(this, SIGNAL(newItems(const KFileItemList &)), SLOT(slotNewItems(const KFileItemList &)));
-       connect(this, SIGNAL(deleteItem(KFileItem *)), SLOT(slotDeleteItem(KFileItem *)));
+	connect(this, SIGNAL(started(const KURL &)), SLOT(slotStarted(const KURL &)));
+	connect(this, SIGNAL(completed()), SLOT(slotCompleted()));
+	connect(this, SIGNAL(newItems(const KFileItemList &)), SLOT(slotNewItems(const KFileItemList &)));
+	connect(this, SIGNAL(deleteItem(KFileItem *)), SLOT(slotDeleteItem(KFileItem *)));
 	connect(this, SIGNAL(showInfo(const QStringList &,bool)), SLOT(slotShowInfo(const QStringList &,bool)));
 }
 
@@ -50,10 +50,9 @@ void SQ_LibraryListener::slotCompleted()
 	else
 		sqLibHandler->remove(&list);
 
-	setAutoUpdate(sqConfig->readBoolEntry("monitor", true));
+	setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
 
- 	sqConfig->setGroup("Libraries");
-	if(sqConfig->readBoolEntry("show dialog", true))
+	if(sqConfig->readBoolEntry("Libraries", "show dialog", true))
 		emit showInfo(list, operation);
 	else
 		list.clear();

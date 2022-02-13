@@ -50,6 +50,10 @@ class SQ_WidgetStack : public QWidgetStack
 
 		const KFileItemList* selectedItems() const;
 
+		void emitNextSelected();
+		void emitPreviousSelected();
+
+		void reInitToolsMenu();
 
 	public slots:
 		void raiseWidget(int id);

@@ -14,23 +14,26 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <qapplication.h>
+#include <kwin.h>
+#include <kaction.h>
 
 #include "ksquirrel.h"
 #include "sq_tray.h"
-
-#include <qapplication.h>
 
 SQ_SystemTray::SQ_SystemTray(QWidget *_parent, const char *name) : KSystemTray(_parent,name), parent(_parent)
 {
 	rightMenu = new KPopupMenu;
 
-        KAction *pAOpen = new KAction("Open SQ", sqLoader->loadIcon("ok", KIcon::Desktop, KIcon::SizeSmall), 0, sqApp, SLOT(show()), sqApp->actionCollection(), "Open SQ");
-        KAction *pAQuit = new KAction("Quit SQ", sqLoader->loadIcon("exit", KIcon::Desktop, KIcon::SizeSmall), 0, qApp, SLOT(quit()), sqApp->actionCollection(), "Quit SQ");
-        KAction *pAOptions = new KAction("Options SQ", sqLoader->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall), 0, sqApp, SLOT(slotOptions()), sqApp->actionCollection(), "Options SQ");
+	KActionSeparator *pASep = new KActionSeparator;
+
+	pAOpen = new KAction("Open SQ", sqLoader->loadIcon("ok", KIcon::Desktop, KIcon::SizeSmall), 0, this, SLOT(slotActivate()), sqApp->actionCollection(), "Open SQ");
+	pAQuit = new KAction("Quit SQ", sqLoader->loadIcon("exit", KIcon::Desktop, KIcon::SizeSmall), 0, qApp, SLOT(quit()), sqApp->actionCollection(), "Quit SQ");
+	pAOptions = new KAction("Options SQ", sqLoader->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall), 0, sqApp, SLOT(slotOptions()), sqApp->actionCollection(), "Options SQ");
 
 	pAOpen->plug(rightMenu);
 	pAOptions->plug(rightMenu);
-	(new KActionSeparator)->plug(rightMenu);
+	pASep->plug(rightMenu);
 	pAQuit->plug(rightMenu);
 }
 
@@ -39,16 +42,22 @@ void SQ_SystemTray::mousePressEvent(QMouseEvent *ev)
 	if(ev->button() == Qt::LeftButton)
 	{
 		sqApp->show();
+		KWin::setActiveWindow(winId());
 	}
 	else if(ev->button() == Qt::RightButton)
 	{
 		rightMenu->exec(QCursor::pos());
 	}
-    
-//    KSystemTray::mousePressEvent(ev);
+	else;
 }
 
 void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 {
-    KSystemTray::mouseReleaseEvent(ev);
+	KSystemTray::mouseReleaseEvent(ev);
+}
+
+void SQ_SystemTray::slotActivate()
+{
+	sqApp->show();
+	KWin::setActiveWindow(winId());
 }

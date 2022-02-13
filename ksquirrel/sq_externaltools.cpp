@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_externaltools.ui'
 **
-** Created: Втр Апр 13 00:43:14 2004
+** Created: Птн Апр 16 21:24:10 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -11,15 +11,17 @@
 #include "sq_externaltools.h"
 
 #include <qvariant.h>
-#include <qbuttongroup.h>
+#include <qframe.h>
+#include <qheader.h>
 #include <qlabel.h>
-#include <qlineedit.h>
-#include <qlistbox.h>
+#include <qlistview.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include "ksquirrel.h"
+#include "sq_config.h"
+#include "sq_externaltool.h"
 #include "./sq_externaltools.ui.h"
 
 /* 
@@ -38,76 +40,90 @@ SQ_ExternalTools::SQ_ExternalTools( QWidget* parent, const char* name, bool moda
     setSizeGripEnabled( TRUE );
     SQ_ExternalToolsLayout = new QGridLayout( this, 1, 1, 11, 6, "SQ_ExternalToolsLayout"); 
 
-    listNames = new QListBox( this, "listNames" );
-    listNames->setFrameShape( QListBox::LineEditPanel );
+    pushCancel = new QPushButton( this, "pushCancel" );
+    pushCancel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, pushCancel->sizePolicy().hasHeightForWidth() ) );
 
-    SQ_ExternalToolsLayout->addMultiCellWidget( listNames, 1, 4, 0, 0 );
+    SQ_ExternalToolsLayout->addWidget( pushCancel, 1, 2 );
+    QSpacerItem* spacer = new QSpacerItem( 65, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
+    SQ_ExternalToolsLayout->addItem( spacer, 1, 1 );
+    QSpacerItem* spacer_2 = new QSpacerItem( 185, 35, QSizePolicy::Minimum, QSizePolicy::Fixed );
+    SQ_ExternalToolsLayout->addItem( spacer_2, 1, 0 );
 
-    textLabel1 = new QLabel( this, "textLabel1" );
-    textLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, textLabel1->sizePolicy().hasHeightForWidth() ) );
+    pushOK = new QPushButton( this, "pushOK" );
+    pushOK->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, pushOK->sizePolicy().hasHeightForWidth() ) );
+    pushOK->setDefault( TRUE );
 
-    SQ_ExternalToolsLayout->addWidget( textLabel1, 0, 0 );
+    SQ_ExternalToolsLayout->addWidget( pushOK, 1, 3 );
 
-    textLabel2 = new QLabel( this, "textLabel2" );
-    textLabel2->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)0, 0, 0, textLabel2->sizePolicy().hasHeightForWidth() ) );
+    frame3 = new QFrame( this, "frame3" );
+    frame3->setFrameShape( QFrame::StyledPanel );
+    frame3->setFrameShadow( QFrame::Raised );
+    frame3Layout = new QGridLayout( frame3, 1, 1, 11, 6, "frame3Layout"); 
+    QSpacerItem* spacer_3 = new QSpacerItem( 30, 25, QSizePolicy::Minimum, QSizePolicy::Fixed );
+    frame3Layout->addItem( spacer_3, 2, 3 );
+    QSpacerItem* spacer_4 = new QSpacerItem( 20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed );
+    frame3Layout->addItem( spacer_4, 0, 3 );
 
-    SQ_ExternalToolsLayout->addMultiCellWidget( textLabel2, 0, 0, 1, 2 );
+    pushNewTool = new QPushButton( frame3, "pushNewTool" );
 
-    lineAction = new QLineEdit( this, "lineAction" );
+    frame3Layout->addWidget( pushNewTool, 2, 0 );
 
-    SQ_ExternalToolsLayout->addMultiCellWidget( lineAction, 1, 1, 1, 2 );
+    pushToolClear = new QPushButton( frame3, "pushToolClear" );
 
-    pushTestAll = new QPushButton( this, "pushTestAll" );
+    frame3Layout->addWidget( pushToolClear, 2, 1 );
 
-    SQ_ExternalToolsLayout->addMultiCellWidget( pushTestAll, 2, 2, 1, 2 );
-    QSpacerItem* spacer = new QSpacerItem( 65, 55, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    SQ_ExternalToolsLayout->addMultiCell( spacer, 1, 2, 3, 3 );
-    QSpacerItem* spacer_2 = new QSpacerItem( 215, 56, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    SQ_ExternalToolsLayout->addMultiCell( spacer_2, 3, 3, 1, 3 );
+    pushToolClearAll = new QPushButton( frame3, "pushToolClearAll" );
 
-    buttonGroup1 = new QButtonGroup( this, "buttonGroup1" );
-    buttonGroup1->setColumnLayout(0, Qt::Vertical );
-    buttonGroup1->layout()->setSpacing( 6 );
-    buttonGroup1->layout()->setMargin( 11 );
-    buttonGroup1Layout = new QGridLayout( buttonGroup1->layout() );
-    buttonGroup1Layout->setAlignment( Qt::AlignTop );
+    frame3Layout->addWidget( pushToolClearAll, 2, 2 );
 
-    lineNewName = new QLineEdit( buttonGroup1, "lineNewName" );
+    layout4 = new QGridLayout( 0, 1, 1, 0, 6, "layout4"); 
+    QSpacerItem* spacer_5 = new QSpacerItem( 16, 20, QSizePolicy::Minimum, QSizePolicy::Fixed );
+    layout4->addItem( spacer_5, 1, 0 );
 
-    buttonGroup1Layout->addWidget( lineNewName, 0, 1 );
+    pushToolUp = new QPushButton( frame3, "pushToolUp" );
+    pushToolUp->setEnabled( TRUE );
+    pushToolUp->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)1, 0, 0, pushToolUp->sizePolicy().hasHeightForWidth() ) );
 
-    textLabel1_2 = new QLabel( buttonGroup1, "textLabel1_2" );
+    layout4->addWidget( pushToolUp, 0, 0 );
 
-    buttonGroup1Layout->addWidget( textLabel1_2, 0, 0 );
+    pushToolDown = new QPushButton( frame3, "pushToolDown" );
+    pushToolDown->setEnabled( TRUE );
+    pushToolDown->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)1, 0, 0, pushToolDown->sizePolicy().hasHeightForWidth() ) );
 
-    textLabel2_2 = new QLabel( buttonGroup1, "textLabel2_2" );
+    layout4->addWidget( pushToolDown, 2, 0 );
 
-    buttonGroup1Layout->addWidget( textLabel2_2, 1, 0 );
+    frame3Layout->addLayout( layout4, 1, 3 );
 
-    lineNewProgram = new QLineEdit( buttonGroup1, "lineNewProgram" );
+    listTools = new QListView( frame3, "listTools" );
+    listTools->addColumn( tr2i18n( "Name" ) );
+    listTools->addColumn( tr2i18n( "Extensions" ) );
+    listTools->setResizePolicy( QScrollView::Manual );
+    listTools->setSelectionMode( QListView::Single );
+    listTools->setAllColumnsShowFocus( TRUE );
+    listTools->setShowSortIndicator( FALSE );
+    listTools->setItemMargin( 1 );
+    listTools->setResizeMode( QListView::AllColumns );
+    listTools->setDefaultRenameAction( QListView::Reject );
 
-    buttonGroup1Layout->addWidget( lineNewProgram, 1, 1 );
+    frame3Layout->addMultiCellWidget( listTools, 1, 1, 0, 2 );
 
-    pushAddNew = new QPushButton( buttonGroup1, "pushAddNew" );
+    textLabel1 = new QLabel( frame3, "textLabel1" );
 
-    buttonGroup1Layout->addMultiCellWidget( pushAddNew, 2, 2, 0, 1 );
+    frame3Layout->addWidget( textLabel1, 0, 0 );
 
-    SQ_ExternalToolsLayout->addMultiCellWidget( buttonGroup1, 4, 4, 1, 3 );
-    QSpacerItem* spacer_3 = new QSpacerItem( 145, 16, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    SQ_ExternalToolsLayout->addItem( spacer_3, 5, 0 );
-
-    pushButton3 = new QPushButton( this, "pushButton3" );
-    pushButton3->setDefault( TRUE );
-
-    SQ_ExternalToolsLayout->addMultiCellWidget( pushButton3, 5, 5, 2, 3 );
-    QSpacerItem* spacer_4 = new QSpacerItem( 125, 20, QSizePolicy::Fixed, QSizePolicy::Minimum );
-    SQ_ExternalToolsLayout->addItem( spacer_4, 5, 1 );
+    SQ_ExternalToolsLayout->addMultiCellWidget( frame3, 0, 0, 0, 3 );
     languageChange();
-    resize( QSize(410, 303).expandedTo(minimumSizeHint()) );
+    resize( QSize(555, 428).expandedTo(minimumSizeHint()) );
 
     // signals and slots connections
-    connect( pushTestAll, SIGNAL( clicked() ), this, SLOT( slotTestAll() ) );
-    connect( pushButton3, SIGNAL( clicked() ), this, SLOT( accept() ) );
+    connect( pushNewTool, SIGNAL( clicked() ), this, SLOT( slotNewTool() ) );
+    connect( pushToolClear, SIGNAL( clicked() ), this, SLOT( slotToolClear() ) );
+    connect( pushToolClearAll, SIGNAL( clicked() ), this, SLOT( slotToolClearAll() ) );
+    connect( pushToolUp, SIGNAL( clicked() ), this, SLOT( slotToolUp() ) );
+    connect( pushToolDown, SIGNAL( clicked() ), this, SLOT( slotToolDown() ) );
+    connect( listTools, SIGNAL( rightButtonClicked(QListViewItem*,const QPoint&,int) ), this, SLOT( slotToolRenameRequest(QListViewItem*,const QPoint&,int) ) );
+    connect( pushOK, SIGNAL( clicked() ), this, SLOT( accept() ) );
+    connect( pushCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
     init();
 }
 
@@ -125,19 +141,17 @@ SQ_ExternalTools::~SQ_ExternalTools()
  */
 void SQ_ExternalTools::languageChange()
 {
-    setCaption( tr2i18n( "<NI>Configure external tools" ) );
-    listNames->clear();
-    listNames->insertItem( tr2i18n( "Open with GIMP" ) );
-    listNames->insertItem( tr2i18n( "Open with konqueror" ) );
-    textLabel1->setText( tr2i18n( "Name" ) );
-    textLabel2->setText( tr2i18n( "Action" ) );
-    lineAction->setText( tr2i18n( "gimp-remote %s" ) );
-    pushTestAll->setText( tr2i18n( "Test all" ) );
-    buttonGroup1->setTitle( tr2i18n( "Add new tool" ) );
-    textLabel1_2->setText( tr2i18n( "Name:" ) );
-    textLabel2_2->setText( tr2i18n( "Program:" ) );
-    pushAddNew->setText( tr2i18n( "Add" ) );
-    pushButton3->setText( tr2i18n( "OK" ) );
+    setCaption( tr2i18n( "Adjust External Tools" ) );
+    pushCancel->setText( tr2i18n( "Cancel" ) );
+    pushOK->setText( tr2i18n( " OK " ) );
+    pushNewTool->setText( tr2i18n( "New tool" ) );
+    pushToolClear->setText( tr2i18n( "Delete tool" ) );
+    pushToolClearAll->setText( tr2i18n( "Clear All" ) );
+    pushToolUp->setText( QString::null );
+    pushToolDown->setText( QString::null );
+    listTools->header()->setLabel( 0, tr2i18n( "Name" ) );
+    listTools->header()->setLabel( 1, tr2i18n( "Extensions" ) );
+    textLabel1->setText( tr2i18n( "Hint: %s expands to file name" ) );
 }
 
 #include "sq_externaltools.moc"

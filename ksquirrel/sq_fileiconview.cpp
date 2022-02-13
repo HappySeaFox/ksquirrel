@@ -15,18 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sq_fileiconview.h"
-
 #include <qstrlist.h>
 
 #include <kurldrag.h>
 #include <qdragobject.h>
 
+#include "sq_fileiconview.h"
+
 SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : KFileIconView(parent, name)
 {
 	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
 	setAcceptDrops(true);
-//	connect(this, SIGNAL(dropped(QDropEvent*, const QValueList<QIconDragItem>&)), this, SLOT(slotDrop(QDropEvent*, const QValueList<QIconDragItem>&)));
 	setSorting(QDir::IgnoreCase);
 }
 
