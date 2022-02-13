@@ -1455,8 +1455,8 @@ msgid "Do not write thumbnails on disk"
 msgstr "Не записывать эскизы на диск"
 
 #: sq_options.cpp:780
-msgid "Show tooltips with thumbnail info"
-msgstr "Показывать подсказки с информацией об эскизе"
+msgid "Show tooltips with file information"
+msgstr "Показывать подсказки с информацией о файле"
 
 #: sq_options.cpp:781
 msgid "Margin between thumbnails"
@@ -2159,3 +2159,27 @@ msgstr "Переместить в последнюю папку"
 
 msgid "Message text color:"
 msgstr "Цвет текста сообщений:"
+
+msgid "Total"
+msgstr "Всего"
+
+msgid "Visualize drag operation"
+msgstr "Визуализировать операцию перетаскивания"
+
+msgid "Testing"
+msgstr "Тестирование"
+
+msgid "Lazy thumbnail generation"
+msgstr "Ленивая генерация эскизов"
+
+msgid "Delay"
+msgstr "Задержка"
+
+msgid "Interface"
+msgstr "Внешний вид"
+
+msgid "Number of text lines"
+msgstr "Количество строк текста"
+
+msgid "Show file preview"
+msgstr "Показывать предпросмотр файла"

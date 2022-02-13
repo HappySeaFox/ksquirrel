@@ -47,6 +47,8 @@
 #include "sq_thumbnailsize.h"
 #include "sq_thumbnailsunused.h"
 #include "sq_utils.h"
+#include "sq_filethumbview.h"
+#include "sq_filethumbviewitem.h"
 
 #include <ksquirrel-libs/fmt_defs.h>
 
@@ -56,7 +58,8 @@
 
 #define TM(a) //printf("TM %s %s\n", a, QDateTime::currentDateTime().toString("hh:mm:ss:zzz").ascii());
 
-SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList &items) : KIO::Job(false)
+SQ_ThumbnailLoadJob::SQ_ThumbnailLoadJob(const KFileItemList &items, SQ_FileThumbView *parnt) 
+    : KIO::Job(false), parent(parnt)
 {
     mBrokenThumbnail.thumbnail = KGlobal::iconLoader()->loadIcon("file_broken", KIcon::Desktop, SQ_ThumbnailSize::smallest());
     mItems = items;
@@ -94,18 +97,7 @@ void SQ_ThumbnailLoadJob::itemRemoved(const KFileItem* item)
     //printf("ITEM REMOVED %s\n", item->url().path().ascii());
     mItems.removeRef(item);
 
-    if(item == mCurrentItem)
-    {
-        KIO::Job *j = subjobs.first();
-
-        if(j)
-        {
-            j->kill();
-            subjobs.removeFirst();
-        }
-
-        determineNextIcon();
-    }
+    nextFile(item == mCurrentItem);
 }
 
 void SQ_ThumbnailLoadJob::itemsRemoved(const KFileItemList &items)
@@ -127,7 +119,35 @@ void SQ_ThumbnailLoadJob::itemsRemoved(const KFileItemList &items)
         }
     }
 
-    if(next)
+    nextFile(next);
+}
+
+void SQ_ThumbnailLoadJob::pop(const KFileItemList &items)
+{
+    KFileItem *item;
+    bool next = false;
+    KFileItemList *m_items = const_cast<KFileItemList *>(&items);
+
+    if(!mItems.isEmpty() && !items.isEmpty())
+    {
+        for(item = m_items->first();item;item = m_items->next())
+        {
+            mItems.removeRef(item);
+
+            if(item == mCurrentItem)
+                next = true;
+        }
+
+        for(item = m_items->last();item;item = m_items->prev())
+            mItems.prepend(item);
+    }
+
+    nextFile(next);
+}
+
+void SQ_ThumbnailLoadJob::nextFile(bool b)
+{
+    if(b)
     {
         KIO::Job *j = subjobs.first();
 
@@ -143,8 +163,54 @@ void SQ_ThumbnailLoadJob::itemsRemoved(const KFileItemList &items)
 
 void SQ_ThumbnailLoadJob::determineNextIcon()
 {
-    mState = STATE_DETERMINE;
-    addSubjob(KIO::stat(KURL(), false));
+    KFileItem *item = 0;
+    SQ_FileThumbViewItem *tfi;
+
+    while(true)
+    {
+        item = mItems.first();
+
+        if(!item)
+        {
+            emit result(this);
+            delete this;
+            return;
+        }
+
+        SQ_WidgetStack::instance()->thumbnailProcess();
+
+        tfi = reinterpret_cast<SQ_FileThumbViewItem *>(item->extraData(parent));
+
+        // 1) local urls that are 100% supported, or
+        // 2) remote urls that are 100% supported or _maybe_ supported (application/octet-stream)
+        if(item->isReadable() && SQ_LibraryHandler::instance()->maybeSupported(item->url(), item->mimetype()) != SQ_LibraryHandler::No)
+            break;
+        else
+        {
+            mItems.removeFirst();
+            tfi->setListed(true);
+        }
+    }
+
+    if(mItems.isEmpty() || !item)
+    {
+//        printf("*** RETURN\n");
+        emit result(this);
+        delete this;
+        return;
+    }
+    else
+    {
+        mState = STATE_STATORIG;
+        mCurrentItem = mItems.first();
+        mCurrentURL = mCurrentItem->url();
+        mItems.removeFirst();
+
+        //printf("*** Adding stat %s\n", mCurrentURL.url().ascii());
+        TM("ADD STAT")
+
+        addSubjob(KIO::stat(mCurrentItem->url(), false));
+    }
 }
 
 void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
@@ -158,53 +224,6 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job *job)
 
     switch(mState)
     {
-        case STATE_DETERMINE:
-        {
-            KFileItem *item = 0;
-
-            while(true)
-            {
-                item = mItems.first();
-
-                if(!item) break;
-
-                SQ_WidgetStack::instance()->thumbnailProcess();
-
-                if(item->isDir() || !item->isReadable())
-                    mItems.removeFirst();
-                // 1) local urls that are 100% supported, or
-                // 2) remote urls that are 100% supported or _maybe_ supported (application/octet-stream)
-                else if(SQ_LibraryHandler::instance()->maybeSupported(item->url(), item->mimetype()) != SQ_LibraryHandler::No)
-                    break;
-                else
-                    mItems.removeFirst();
-            }
-
-            if(mItems.isEmpty() || !item)
-            {
-//                printf("*** RETURN\n");
-                emit result(this);
-                deleteLater();
-                return;
-            }
-            else
-            {
-                mState = STATE_STATORIG;
-                mCurrentItem = mItems.first();
-                mCurrentURL = mCurrentItem->url();
-                mItems.removeFirst();
-
-                //printf("*** Adding stat %s\n", mCurrentURL.url().ascii());
-                TM("ADD STAT")
-
-                // start an empty job (this will make small time window
-                // to process user activity, qApp->processEvents()
-                // is too dangerous)
-                addSubjob(KIO::stat(KURL("file:///"), false));
-            }
-        }
-        break;
-
         case STATE_STATORIG:
         {
             //printf("STATE_STATORIG %s\n", mCurrentURL.url().ascii());
@@ -503,7 +522,7 @@ void SQ_ThumbnailLoadJob::prependItems(const KFileItemList &items)
 
     if(!mItems.isEmpty() && !items.isEmpty())
     {
-        for(item = m_items->first();item;item = m_items->next())
+        for(item = m_items->last();item;item = m_items->prev())
             mItems.prepend(item);
     }
 }

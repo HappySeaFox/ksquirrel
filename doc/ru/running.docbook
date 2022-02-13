@@ -24,18 +24,13 @@
 
 <cmdsynopsis>
 <command>ksquirrel</command>
-<group choice="opt"><option>-t</option></group>
-<group choice="opt"><option>-r</option></group>
+<group choice="opt"><option>-d 'каталог'</option></group>
 <group choice="opt"><option>-l</option></group>
 <arg><replaceable>файл</replaceable></arg>
 </cmdsynopsis>
 
 <para>
-Параметр <command>-t</command> заставляет &kappname; запустить процедуру создания эскизов изображений для указанного каталога <filename><replaceable>файл</replaceable></filename>.
-</para>
-
-<para>
-Параметр <command>-r</command> применяется вместе с -t, и указывает &kappname;, что сканирование каталога должно происходить рукурсивно (т.е. и во всех подкаталогах).
+Параметр <command>-d 'каталог'</command> заставляет &kappname; открыть указанный каталог при запуске.
 </para>
 
 <para>
@@ -43,7 +38,7 @@
 </para>
 
 <para>
-Параметр <filename><replaceable>файл</replaceable></filename> должен быть путём к каталогу, когда задан параметр <command>-t</command>. Иначе это путь к файлу или каталогу для открытия.
+Параметр <filename><replaceable>файл</replaceable></filename> заставляет &kappname; открыть указанный файл при запуске.
 </para>
 
 </sect2>
@@ -52,14 +47,6 @@
 <title>Примеры</title>
 
 <itemizedlist>
-
-<listitem><para>
-Рекурсивно создать эскизы изображений, находящихся в каталоге <filename><replaceable>/home/me/images</replaceable></filename>.
-
-<cmdsynopsis>
-<command>ksquirrel -t -r /home/me/images/</command>
-</cmdsynopsis>
-</para></listitem>
 
 <listitem><para>
 Открыть при запуске изображение <filename><replaceable>/home/me/images/foto00054.jpg</replaceable></filename>
@@ -74,7 +61,7 @@
 Перейти при запуске в каталог <filename><replaceable>/home/me/images</replaceable></filename>
 
 <cmdsynopsis>
-<command>ksquirrel /home/me/images</command>
+<command>ksquirrel -d /home/me/images</command>
 </cmdsynopsis>
 
 </para></listitem>

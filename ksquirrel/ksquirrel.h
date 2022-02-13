@@ -352,6 +352,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
          */
         void thumbSizeChanged(const QString&);
 
+        void resetToolTip();
+
     public slots:
 
         /*
@@ -388,6 +390,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotExtendedToggled(bool);
         void slotTrayQuit();
         void slotClose();
+
+        /*
+         *  Reload disk usage information
+         */
+        void slotFireDisk();
 
         /*
          *  Deetrmine next supported image in slideshow

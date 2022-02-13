@@ -1,3 +1,12 @@
+ksquirrel-0.7.1try5
+*********************
+* lazy thumbnail generation (like in DigiKam)
+* single click to highlight file, double click
+  to open
+* drag operation now can show number of dragged files
+  and first two thumbnails
+* fixed problems with file naming in converter and image window
+
 ksquirrel-0.7.1try4
 *********************
 * thumbnail loader now uses EXIF thumbnails if present

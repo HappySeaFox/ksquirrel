@@ -25,6 +25,7 @@
 #include <qapplication.h>
 #include <qtooltip.h>
 
+#include <kapplication.h>
 #include <kstringhandler.h>
 #include <klocale.h>
 #include <kprogress.h>
@@ -41,6 +42,7 @@
 #include "sq_diroperator.h"
 #include "sq_fileiconview.h"
 #include "sq_filethumbview.h"
+#include "sq_filethumbviewitem.h"
 #include "sq_filedetailview.h"
 #include "sq_widgetstack.h"
 #include "sq_config.h"
@@ -235,6 +237,8 @@ void SQ_DirOperator::prepareView(ViewT t)
             fileview = dv = new SQ_FileDetailView(this, "detail view");
 
             connect(dv, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+            connect(dv, SIGNAL(invokeBrowser()), this, SLOT(slotInvokeBrowser()));
+            connect(KSquirrel::app(), SIGNAL(resetToolTip()), dv, SLOT(slotResetToolTip()));
         }
         break;
 
@@ -245,6 +249,8 @@ void SQ_DirOperator::prepareView(ViewT t)
             fileview = iv = new SQ_FileIconView(this, (type == SQ_DirOperator::TypeIcons) ? "icon view":"list view");
 
             connect(iv, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+            connect(iv, SIGNAL(invokeBrowser()), this, SLOT(slotInvokeBrowser()));
+            connect(KSquirrel::app(), SIGNAL(resetToolTip()), iv, SLOT(slotResetToolTip()));
 
             disableSpecificActions(iv);
         }
@@ -256,7 +262,9 @@ void SQ_DirOperator::prepareView(ViewT t)
             fileview = tv = new SQ_FileThumbView(this, "thumb view");
 
             connect(tv, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+            connect(tv, SIGNAL(invokeBrowser()), this, SLOT(slotInvokeBrowser()));
             connect(dirLister(), SIGNAL(canceled()), tv, SLOT(stopThumbnailUpdate()));
+            connect(KSquirrel::app(), SIGNAL(resetToolTip()), tv, SLOT(slotResetToolTip()));
 
             disableSpecificActions(tv);
         }
@@ -312,6 +320,8 @@ void SQ_DirOperator::slotSelectionChanged()
 void SQ_DirOperator::setPreparedView()
 {
     setView(fileview);
+
+    fileview->setOnlyDoubleClickSelectsFiles(true);
 }
 
 void SQ_DirOperator::slotDropped(const KFileItem *i, QDropEvent*, const KURL::List &urls)
@@ -333,13 +343,10 @@ void SQ_DirOperator::setupActionsMy()
 
     actionCollection()->action("mkdir")->setShortcut(KShortcut(CTRL+Qt::Key_N));
 
-    connect(actionCollection()->action("properties"), SIGNAL(enabled(bool)), basketAction, SLOT(setEnabled(bool)));
-    connect(actionCollection()->action("properties"), SIGNAL(enabled(bool)),
-        SQ_ExternalTool::instance()->constPopupMenu(), SLOT(setEnabled(bool)));
-    connect(actionCollection()->action("properties"), SIGNAL(enabled(bool)),
-        SQ_CategoriesBox::instance()->popupMenu(), SLOT(setEnabled(bool)));
-    connect(actionCollection()->action("properties"), SIGNAL(enabled(bool)),
-        file, SLOT(setEnabled(bool)));
+    KAction *prop = actionCollection()->action("properties");
+    connect(prop, SIGNAL(enabled(bool)), basketAction, SLOT(setEnabled(bool)));
+    connect(prop, SIGNAL(enabled(bool)), SQ_ExternalTool::instance()->constPopupMenu(), SLOT(setEnabled(bool)));
+    connect(prop, SIGNAL(enabled(bool)), SQ_CategoriesBox::instance()->popupMenu(), SLOT(setEnabled(bool)));
 
     KAction *sep = actionCollection()->action("separator");
 
@@ -857,14 +864,22 @@ void SQ_DirOperator::slotRefreshItems(const KFileItemList &list)
         {
             KFileItemListIterator it(list);
             KFileItem *fi;
+            SQ_FileThumbViewItem *tfi;
 
             if(tv->updateRunning())
                 tv->itemsRemoved(list);
 
             while((fi = it.current()))
             {
-                 SQ_PixmapCache::instance()->removeEntryFull(fi->url().path());
-                 ++it;
+                // force thumbnail to be updated by setting listed = false
+                tfi = reinterpret_cast<SQ_FileThumbViewItem *>(fi->extraData(tv));
+
+                if(tfi)
+                    tfi->setListed(false);
+
+                // remove thumbnail from pixmap cache and from disk
+                SQ_PixmapCache::instance()->removeEntryFull(fi->url().path());
+                ++it;
             }
 
 //            printf("*** REFRESH_APPEND\n");
@@ -982,6 +997,27 @@ void SQ_DirOperator::saveConfig()
     SQ_Config::instance()->writeEntry("sorting_ignore", KFile::isSortCaseInsensitive(sort));
 
     SQ_Config::instance()->writeEntry("show hidden", showHiddenFiles());
+}
+
+void SQ_DirOperator::setLazy(bool l, int delay)
+{
+    if(type == SQ_DirOperator::TypeThumbs)
+    {
+        SQ_FileThumbView *tv = dynamic_cast<SQ_FileThumbView *>(fileview);
+
+        if(tv && tv->lazy() != l)
+        {
+            tv->setLazy(l, delay);
+
+            if(tv->updateRunning())
+                tv->startThumbnailUpdate();
+        }
+    }
+}
+
+void SQ_DirOperator::slotInvokeBrowser()
+{
+    kapp->invokeBrowser(url().prettyURL());
 }
 
 #include "sq_diroperator.moc"

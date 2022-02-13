@@ -1439,7 +1439,7 @@ void SQ_GLWidget::slotApplyCodecSettings()
     {
         // new settings are already set by SQ_CodecSettingsSkeleton
         lib->codec->set_settings(lib->settings);
-        startDecoding(File);
+        startDecoding(QString(m_File));
     }
 }
 
@@ -2372,7 +2372,7 @@ void  SQ_GLWidget::saveAs()
     opt.compression_scheme = (wlib->opt.compression_scheme & CompressionNo) ? CompressionNo : CompressionInternal;
     opt.compression_level = wlib->opt.compression_def;
 
-    int err = wlib->codec->write_init(path, *im, opt);
+    int err = wlib->codec->write_init(QString(QFile::encodeName(path)), *im, opt);
 
     if(err != SQE_OK)
     {

@@ -34,6 +34,7 @@ class KFileItem;
 class KTempFile;
 
 class SQ_DirThumbs;
+class SQ_FileThumbView;
 
 typedef QPtrList<KFileItem> KFileItemList;
 
@@ -47,8 +48,8 @@ class SQ_ThumbnailLoadJob : public KIO::Job
     Q_OBJECT
 
     public:
-        SQ_ThumbnailLoadJob(const KFileItemList &itemList);
-        virtual ~SQ_ThumbnailLoadJob();
+        SQ_ThumbnailLoadJob(const KFileItemList &itemList, SQ_FileThumbView *parnt);
+        ~SQ_ThumbnailLoadJob();
 
         void start();
         void itemRemoved(const KFileItem* item);
@@ -57,6 +58,8 @@ class SQ_ThumbnailLoadJob : public KIO::Job
         void appendItems(const KFileItemList &items);
         void prependItems(const KFileItemList &items);
 
+        void pop(const KFileItemList &items);
+
     private:
         void determineNextIcon();
         bool statResultThumbnail();
@@ -64,6 +67,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
         void emitThumbnailLoaded(SQ_Thumbnail &);
         void emitThumbnailLoadingFailed();
         void insertOrSync(const KURL &, SQ_Thumbnail &th);
+        void nextFile(bool b);
 
     signals:
         void thumbnailLoaded(const KFileItem* item, const SQ_Thumbnail &t);
@@ -73,7 +77,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
         void slotData(KIO::Job *job, const QByteArray &data);
 
     private:
-        enum { STATE_DETERMINE, STATE_STATORIG, STATE_PREDOWNLOAD, STATE_DOWNLOAD } mState;
+        enum { STATE_STATORIG, STATE_PREDOWNLOAD, STATE_DOWNLOAD } mState;
 
         KFileItemList mItems;
         KFileItem *mCurrentItem;
@@ -88,6 +92,7 @@ class SQ_ThumbnailLoadJob : public KIO::Job
 
         SQ_DirThumbs *dir;
         SQ_Thumbnail mBrokenThumbnail;
+        SQ_FileThumbView *parent;
 };
 
 #endif

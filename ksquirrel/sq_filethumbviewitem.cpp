@@ -27,7 +27,7 @@
 #include "sq_filethumbviewitem.h"
 
 SQ_FileThumbViewItem::SQ_FileThumbViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi):
-    KFileIconViewItem(parent, text, pixmap, fi)
+    KFileIconViewItem(parent, text, pixmap, fi), m_listed(false)
 {}
 
 SQ_FileThumbViewItem::~SQ_FileThumbViewItem()

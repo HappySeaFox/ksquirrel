@@ -24,11 +24,9 @@
 #include <qtoolbar.h>
 #include <qtoolbutton.h>
 #include <qlabel.h>
-#include <qtooltip.h>
 #include <qtimer.h>
 #include <qapplication.h>
 
-#include <kurldrag.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
@@ -50,45 +48,38 @@
 #include "sq_progress.h"
 #include "sq_progressbox.h"
 #include "sq_filethumbviewitem.h"
+#include "sq_dragprovider.h"
 
 SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name), isPending(false)
 {
-    toolTip = 0;
-
     // create progress bar
     m_progressBox = new SQ_ProgressBox(this);
 
-    // create timer 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(slotTooltipDelay()));
+    timerScroll = new QTimer(this);
+    connect(timerScroll, SIGNAL(timeout()), this, SLOT(slotDelayedContentsMoving()));
+
+    timerAdd = new QTimer(this);
+    connect(timerAdd, SIGNAL(timeout()), this, SLOT(slotDelayedAddItems()));
 
     // setup cache limit
     SQ_Config::instance()->setGroup("Thumbnails");
     SQ_PixmapCache::instance()->setCacheLimit(SQ_Config::instance()->readNumEntry("cache", 1024*10));
+    m_lazy = SQ_Config::instance()->readBoolEntry("lazy", true);
+    lazyDelay = SQ_Config::instance()->readNumEntry("lazy_delay", 500);
+    if(lazyDelay <= 0) lazyDelay = 500;
 
     setResizeMode(QIconView::Adjust);
 
     // load "pending" pixmaps
     pending = SQ_IconLoader::instance()->loadIcon("clock", KIcon::Desktop, 32);
 
-    // some hacks for tooltip support
-    disconnect(this, SIGNAL(onViewport()), this, 0);
-    disconnect(this, SIGNAL(onItem(QIconViewItem *)), this, 0);
-    connect(this, SIGNAL(onItem(QIconViewItem *)), this, SLOT(slotShowToolTip(QIconViewItem *)));
-    connect(this, SIGNAL(onViewport()), this, SLOT(slotRemoveToolTip()));
+    connect(this, SIGNAL(contentsMoving(int, int)), this, SLOT(slotContentsMoving(int, int)));
 
     rebuildCachedPixmaps();
 }
 
 SQ_FileThumbView::~SQ_FileThumbView()
-{
-    slotRemoveToolTip();
-}
-
-void SQ_FileThumbView::slotSelected(QIconViewItem *item, const QPoint &point)
-{
-    emit doubleClicked(item, point);
-}
+{}
 
 /*
  *  Reimplement insertItem() to enable/disable inserting
@@ -196,6 +187,7 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
     }
 
     item->setPixmap(newpix);
+    item->setListed(true);
 
     // update item
     item->repaint();
@@ -204,7 +196,70 @@ void SQ_FileThumbView::setThumbnailPixmap(const KFileItem* fileItem, const SQ_Th
 void SQ_FileThumbView::startThumbnailUpdate()
 {
     stopThumbnailUpdate();
-    doStartThumbnailUpdate(*items());
+    doStartThumbnailUpdate(itemsToUpdate());
+}
+
+KFileItemList SQ_FileThumbView::itemsToUpdate(bool fromAll)
+{
+    // non-lazy mode - simply return all items
+    if(!m_lazy)
+        return *items();
+
+    // hehe, lazy mode
+    KFileItemList list;
+
+    QRect rect(contentsX(), contentsY(), viewport()->width(), viewport()->height());
+    //printf("** FIND in %d,%d %dx%d\n", rect.x(), rect.y(), rect.width(), rect.height());
+    QIconViewItem *first = fromAll ? firstItem() : findFirstVisibleItem(rect);
+    QIconViewItem *last  = fromAll ? lastItem()  : findLastVisibleItem(rect);
+
+    if(first && last)
+    {
+        last = last->nextItem(); // next item or 0
+        SQ_FileThumbViewItem *tfi;
+
+        for(QIconViewItem *item = first;(item && item != last);item = item->nextItem())
+        {
+            tfi = dynamic_cast<SQ_FileThumbViewItem *>(item);
+
+            if(tfi && !tfi->listed())
+            {
+                list.append(tfi->fileInfo());
+                //printf("** %s\n", tfi->text().ascii());
+            }
+        }
+    }
+
+    return list;
+}
+
+void SQ_FileThumbView::slotContentsMoving(int, int)
+{
+    timerScroll->start(lazyDelay, true);
+}
+
+void SQ_FileThumbView::slotDelayedContentsMoving()
+{
+    // restart generator in lazy mode
+    if(m_lazy)
+    {
+        stopThumbnailUpdate();
+        doStartThumbnailUpdate(itemsToUpdate());
+    }
+    // make visible items first items in the job
+    else
+    {
+        // force itemsToUpdate() return only visible items
+        // that need update
+        m_lazy = true;
+        KFileItemList visibleItems = itemsToUpdate();
+
+        if(updateRunning())
+            thumbJob->pop(visibleItems);
+
+        // restore lazy mode
+        m_lazy = false;
+    }
 }
 
 /*
@@ -212,11 +267,14 @@ void SQ_FileThumbView::startThumbnailUpdate()
  */
 void SQ_FileThumbView::doStartThumbnailUpdate(const KFileItemList &list)
 {
+    if(list.isEmpty())
+        return;
+
     // update progress bar
     SQ_WidgetStack::instance()->thumbnailUpdateStart(list.count());
 
     // create new job
-    thumbJob = new SQ_ThumbnailLoadJob(list);
+    thumbJob = new SQ_ThumbnailLoadJob(list, this);
 
     connect(thumbJob, SIGNAL(thumbnailLoaded(const KFileItem*, const SQ_Thumbnail &)),
             this, SLOT(setThumbnailPixmap(const KFileItem*, const SQ_Thumbnail&)));
@@ -251,120 +309,57 @@ void SQ_FileThumbView::slotThumbnailUpdateToggle()
  */
 void SQ_FileThumbView::addItemsToJob(const KFileItemList &items, bool append)
 {
-    // job is not running
-    if(thumbJob.isNull()){ //printf("Starting job %d\n", items.count());
-        doStartThumbnailUpdate(items); }
-    // add new items to running job
-    else { //printf("Appending to job %d\n", items.count());
-    m_progressBox->addSteps(items.count());
-//    QApplication::flush();
-        if(append)thumbJob->appendItems(items);else thumbJob->prependItems(items);}
-}
+    newItemsAppend = append;
 
-// Show extended tooltip for item under mouse cursor
-void SQ_FileThumbView::slotShowToolTip(QIconViewItem *item)
-{
-    SQ_Config::instance()->setGroup("Thumbnails");
+    KFileItemListIterator it(items);
+    KFileItem *fi;
 
-    if(!SQ_Config::instance()->readBoolEntry("tooltips", false) ||
-        (!KSquirrel::app()->isActiveWindow() && SQ_Config::instance()->readBoolEntry("tooltips_inactive", true)))
-        return;
-
-    // remove previous tootip and stop timer
-    slotRemoveToolTip();
-
-    SQ_FileThumbViewItem* fitem = dynamic_cast<SQ_FileThumbViewItem*>(item);
-
-    if(!fitem)
-        return;
-
-    if(!SQ_LibraryHandler::instance()->libraryForFile(fitem->fileInfo()->url().path()))
-        return;
-
-    tooltipFor = fitem;
-
-    timer->start(600, true);
-}
-
-/*
- *  Remove tootip and stop timer.
- */
-void SQ_FileThumbView::slotRemoveToolTip()
-{
-    timer->stop();
-
-    delete toolTip;
-    toolTip = 0;
-}
-
-bool SQ_FileThumbView::eventFilter(QObject *o, QEvent *e)
-{
-    if(o == viewport() || o == this)
+    while((fi = it.current()))
     {
-        int type = e->type();
-
-        if(type == QEvent::Leave || type == QEvent::FocusOut)
-            slotRemoveToolTip();
+        newItems.append(fi);
+        ++it;
     }
 
-    return KFileIconView::eventFilter(o, e);
+    // don't confuse user with multiple updates
+    timerAdd->start(500, true);
 }
 
-/*
- *  On "hideEvent()" delete tooltip.
- */
-void SQ_FileThumbView::hideEvent(QHideEvent *e)
+void SQ_FileThumbView::slotDelayedAddItems()
 {
-    slotRemoveToolTip();
+    KFileItemList _newItems = newItems;
+    newItems.clear();
 
-    KFileIconView::hideEvent(e);
-}
+    if(m_lazy)
+    {
+        KFileItemList visItems = itemsToUpdate();
+        KFileItemListIterator it(_newItems);
+        KFileItem *fi;
 
-/*
- *  Delayed tooltip
- */
-void SQ_FileThumbView::slotTooltipDelay()
-{
-    if(!tooltipFor)
-        return;
+        while((fi = it.current()))
+        {
+            if(visItems.findRef(fi) == -1)
+                _newItems.removeRef(fi); // also does ++it
+            else
+                ++it;
+        }
+    }
 
-    KFileItem *f = tooltipFor->fileInfo();
+    // job is not running
+    if(thumbJob.isNull())
+    {
+        //printf("Starting job %d\n", items.count());
+        doStartThumbnailUpdate(_newItems);
+    }
+    // add new items to running job
+    else
+    {
+        m_progressBox->addSteps(_newItems.count());
 
-    if(!f)
-        return;
-
-    toolTip = new QLabel(i18n("<table cellspacing=0><tr><td align=left>File:</td><td align=left><b>%1</b></td></tr><tr><td align=left>Size:</td><td align=left><b>%2</b></td></tr>%3</table>")
-        .arg(KStringHandler::csqueeze(f->name()))
-        .arg(KIO::convertSize(f->size()))
-        .arg(f->isLink() ? i18n("<tr><td align=left>Link destination:</td><td align=left>%1</td></tr>").arg(KStringHandler::csqueeze(f->linkDest())) : QString::null)
-        ,
-        0, "myToolTip", WStyle_StaysOnTop | WStyle_Customize | WStyle_NoBorder
-        | WStyle_Tool | WX11BypassWM);
-
-    // setup tooltip
-    toolTip->setFrameStyle(QFrame::Plain | QFrame::Box);
-    toolTip->setLineWidth(1);
-    toolTip->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    toolTip->move(QCursor::pos() + QPoint(5, 5));
-    toolTip->adjustSize();
-
-    QRect screen = KGlobalSettings::desktopGeometry(KSquirrel::app());
-
-    if(toolTip->x() + toolTip->width() > screen.right())
-        toolTip->move(toolTip->x()+screen.right()-toolTip->x()-toolTip->width(), toolTip->y());
-
-    if(toolTip->y() + toolTip->height() > screen.bottom())
-        toolTip->move(toolTip->x(), screen.bottom()-toolTip->y()-toolTip->height()+toolTip->y());
-
-    toolTip->setFont(QToolTip::font());
-    toolTip->setPaletteBackgroundColor(colorGroup().highlight());
-    toolTip->setPaletteForegroundColor(colorGroup().highlightedText());
-
-    // set original palette
-    toolTip->setPalette(QToolTip::palette());
-
-    // finally, show tootip
-    toolTip->show();
+        if(newItemsAppend)
+            thumbJob->appendItems(_newItems);
+        else
+            thumbJob->prependItems(_newItems);
+    }
 }
 
 /*
@@ -374,6 +369,7 @@ void SQ_FileThumbView::clearView()
 {
     // stop job
     stopThumbnailUpdate();
+    slotRemoveToolTip();
 
     pixelSize = SQ_ThumbnailSize::instance()->extended() ?
             SQ_ThumbnailSize::instance()->extendedSize() : QSize(SQ_ThumbnailSize::instance()->pixelSize()+2,SQ_ThumbnailSize::instance()->pixelSize()+2);
@@ -469,6 +465,44 @@ void SQ_FileThumbView::showEvent(QShowEvent *e)
         isPending = false;
         startThumbnailUpdate();
     }
+}
+
+void SQ_FileThumbView::startDrag()
+{
+    SQ_Config::instance()->setGroup("Fileview");
+
+    if(SQ_Config::instance()->readBoolEntry("drag", true))
+    {
+        SQ_DragProvider::instance()->setParams(this, *KFileView::selectedItems(), SQ_DragProvider::Thumbnails);
+        SQ_DragProvider::instance()->start();
+    }
+    else
+        KFileIconView::startDrag();
+}
+
+void SQ_FileThumbView::setLazy(bool l, int delay)
+{
+    m_lazy = l;
+    lazyDelay = delay <= 0 ? 500 : delay;
+
+    // non-lazy mode requires to update all thumbnails
+    if(!m_lazy)
+    {
+        m_lazy = true;
+
+        stopThumbnailUpdate();
+        doStartThumbnailUpdate(itemsToUpdate(true));
+
+        // restore lazy mode
+        m_lazy = false;
+    }
+}
+
+void SQ_FileThumbView::resizeEvent(QResizeEvent *e)
+{
+    timerScroll->start(lazyDelay, true);
+
+    KFileIconView::resizeEvent(e);
 }
 
 #include "sq_filethumbview.moc"

@@ -22,16 +22,18 @@
 #include <qheader.h>
 #include <qcursor.h>
 
-#include <kapplication.h>
 #include <kpopupmenu.h>
 #include <kfileitem.h>
 #include <kglobalsettings.h>
+#include <konq_filetip.h>
 
+#include "ksquirrel.h"
 #include "sq_config.h"
 #include "sq_iconloader.h"
 #include "sq_filedetailview.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
+#include "sq_dragprovider.h"
 
 SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, KFileItem *fi) : KFileListViewItem(parent, fi)
 {}
@@ -43,21 +45,76 @@ SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, const QString &text,
 SQ_FileListViewItem::~SQ_FileListViewItem()
 {}
 
-/*
- *  Reimplement paintFocus() to ignore painting focus.
- */
-void SQ_FileListViewItem::paintFocus(QPainter *, const QColorGroup &, const QRect &)
-{}
-
 SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
     : KFileDetailView(parent, name)
 {
     // pixmap for directory item
     dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
+
+    toolTip = new KonqFileTip(this);
+    slotResetToolTip();
+
+    disconnect(this, SIGNAL(onViewport()), this, 0);
+    disconnect(this, SIGNAL(onItem(QListViewItem *)), this, 0);
+    connect(this, SIGNAL(onViewport()), this, SLOT(slotRemoveToolTip()));
+    connect(this, SIGNAL(onItem(QListViewItem *)), this, SLOT(slotShowToolTip(QListViewItem *)));
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
-{}
+{
+    slotRemoveToolTip();
+}
+
+void SQ_FileDetailView::slotResetToolTip()
+{
+    SQ_Config::instance()->setGroup("Fileview");
+
+    toolTip->setOptions(true,
+                        SQ_Config::instance()->readBoolEntry("tooltips_preview", false),
+                        SQ_Config::instance()->readNumEntry("tooltips_lines", 6));
+}
+
+// Show extended tooltip for item under mouse cursor
+void SQ_FileDetailView::slotShowToolTip(QListViewItem *item)
+{
+    SQ_Config::instance()->setGroup("Fileview");
+
+    if(!SQ_Config::instance()->readBoolEntry("tooltips", false) ||
+        (!KSquirrel::app()->isActiveWindow() && SQ_Config::instance()->readBoolEntry("tooltips_inactive", true)))
+        return;
+
+    // remove previous tootip and stop timer
+    slotRemoveToolTip();
+
+    KFileListViewItem *fitem = dynamic_cast<KFileListViewItem *>(item);
+
+    if(!fitem) return;
+
+    KFileItem *f = fitem->fileInfo();
+
+    if(f) toolTip->setItem(f, fitem->rect(), fitem->pixmap(0));
+}
+
+bool SQ_FileDetailView::eventFilter(QObject *o, QEvent *e)
+{
+    if(o == viewport() || o == this)
+    {
+        int type = e->type();
+
+        if(type == QEvent::Leave || type == QEvent::FocusOut || type == QEvent::Hide)
+            slotRemoveToolTip();
+    }
+
+    return KFileDetailView::eventFilter(o, e);
+}
+
+/*
+ *  Remove tootip.
+ */
+void SQ_FileDetailView::slotRemoveToolTip()
+{
+    toolTip->setItem(0);
+}
 
 /*
  *  Reimplement insertItem() to enable/disable inserting
@@ -115,7 +172,7 @@ void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
     // double click was in viewport, let's invoke browser
     else
-        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().prettyURL());
+        emit invokeBrowser();
 }
 
 // Accept dragging
@@ -151,6 +208,19 @@ void SQ_FileDetailView::clearView()
 
     // insert ".."
     insertCdUpItem(SQ_WidgetStack::instance()->url());
+}
+
+void SQ_FileDetailView::startDrag()
+{
+    SQ_Config::instance()->setGroup("Fileview");
+
+    if(SQ_Config::instance()->readBoolEntry("drag", true))
+    {
+        SQ_DragProvider::instance()->setParams(this, *KFileView::selectedItems(), SQ_DragProvider::Icons);
+        SQ_DragProvider::instance()->start();
+    }
+    else
+        KFileDetailView::startDrag();
 }
 
 #include "sq_filedetailview.moc"

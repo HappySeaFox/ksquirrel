@@ -41,7 +41,8 @@ class SQ_FileIconViewItem : public KFileIconViewItem
         /*
          *  Reimplement paintFocus() to ignore painting focus.
          */
-        virtual void paintFocus(QPainter *p, const QColorGroup &cg);
+        virtual void paintFocus(QPainter *, const QColorGroup &)
+        {}
 };
 
 class SQ_FileIconView : public SQ_FileIconViewBase
@@ -78,8 +79,8 @@ class SQ_FileIconView : public SQ_FileIconViewBase
          */
         virtual void insertCdUpItem(const KURL &baseurl);
 
-    protected slots:
-        void slotSelected(QIconViewItem *item, const QPoint &point);
+    protected:
+        virtual void startDrag();
 
     private:
         QPixmap    dirPix;

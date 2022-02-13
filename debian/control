@@ -1,0 +1,12 @@
+Source: ksquirrel
+Section: misc
+Priority: extra
+Maintainer: krasu <ksquirrel@tut.by>
+Build-Depends: debhelper (>= 5), autotools-dev, kde-devel
+Standards-Version: 3.7.2
+
+Package: ksquirrel
+Architecture: any
+Depends: ${shlibs:Depends}, libkexif1 (>=  0.2.3-2), libkipi0 (>= 0.1.4-1), kipi-plugins (>= 0.1.2-3), ksquirrel-libs
+Description: KSquirrel - image viewer for KDE
+ implementing OpenGL

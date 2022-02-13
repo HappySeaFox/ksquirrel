@@ -122,7 +122,7 @@ QString SQ_Converter::adjustFileName(const QString &globalprefix, const QString 
         }
     }
 
-    return QFile::encodeName(result);
+    return result;
 }
 
 void SQ_Converter::errorjmp(jmp_buf jmp, const int code)
@@ -215,14 +215,6 @@ void SQ_Converter::decodingCycle()
             {
                 brk = (allpages == 1 && current) || (allpages == 2 && current == pages_num);
 
-//    finfo->image = (fmt_image *)realloc(finfo->image, sizeof(fmt_image) * (finfo->images+1));
-//    memset(&finfo->image[current], 0, sizeof(fmt_image));
-
-//    name = adjustFileName(*it, lw->filter);
-//    printf("name: %s\n", name.ascii());
-
-//                qApp->processEvents();
-
                 i = lr->codec->read_next();
 
                 im = lr->codec->image(current-1);
@@ -268,14 +260,9 @@ void SQ_Converter::decodingCycle()
                     name = adjustFileName(prefix, *it, replace, putto, true, current);
 
                     lastFrame = false;
-//    i = lw->codec->fmt_writeimage(name.ascii(), image, finfo.image[current-1].w, finfo.image[current-1].h, opt);
-                    i = manipAndWriteDecodedImage(tempfile->name(), im);
 
+                    manipAndWriteDecodedImage(tempfile->name(), im);
                     i = copyFile(tempfile->name(), name);
-
-//    emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : messages[i], true);
-//    emit oneFileProcessed();
-//    qApp->processEvents();
                 }
 
                 im = lr->codec->image(current);
@@ -287,8 +274,6 @@ void SQ_Converter::decodingCycle()
                     i = SQE_R_NOMEMORY;
                     errorjmp(jmp, i);
                 }
-
-//                memset(image, 255, im->w * im->h * sizeof(RGBA));
 
                 for(int pass = 0;pass < im->passes;pass++)
                 {

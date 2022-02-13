@@ -20,6 +20,8 @@
 
 #include <kfileiconview.h>
 
+class KonqFileTip;
+
 /*
  *  SQ_FileIconViewBase is a base class for icon view, list view and
  *  thumbnail view with drag-and-drop support.
@@ -54,7 +56,32 @@ class SQ_FileIconViewBase : public KFileIconView
          */
         virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
+        virtual bool eventFilter(QObject *o, QEvent *e);
+
         void initItemMy(KFileIconViewItem *item, const KFileItem *i, bool upd = false);
+
+    signals:
+        void invokeBrowser();
+
+    public slots:
+        void slotResetToolTip();
+
+    protected slots:
+        /*
+         *  Show extended tooltip for 'item'.
+         */
+        void slotShowToolTip(QIconViewItem *item);
+
+        /*
+         *  Remove tootip and stop timer.
+         */
+        void slotRemoveToolTip();
+
+    private:
+        /*
+         *  Tooltip for file item.
+         */
+        KonqFileTip *toolTip;
 };
 
 #endif

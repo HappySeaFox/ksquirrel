@@ -45,6 +45,10 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         SQ_FileThumbView(QWidget *parent = 0, const char *name = "");
         ~SQ_FileThumbView();
 
+        bool lazy() const;
+
+        void setLazy(bool l, int delay);
+
         void rebuildCachedPixmaps();
 
         /*
@@ -103,11 +107,8 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         SQ_ProgressBox* progressBox() const;
 
     protected:
-        /*
-         *  For tooltip support.
-         */
-        virtual bool eventFilter(QObject *o, QEvent *e);
-        virtual void hideEvent(QHideEvent *);
+        virtual void resizeEvent(QResizeEvent *);
+        virtual void startDrag();
 
         /*
          *  Show event. Let's start thumbnail job, if needed.
@@ -120,6 +121,8 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          *  rebuild "pending" thumbnail for supported items
          */
         void rebuildPendingPixmap(bool dir = false);
+
+        KFileItemList itemsToUpdate(bool fromAll = false);
 
     public slots:
         /*
@@ -134,28 +137,16 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
         void setThumbnailPixmap(const KFileItem* fileItem, const SQ_Thumbnail&);
 
     protected slots:
-        void slotSelected(QIconViewItem *item, const QPoint &point);
-
         /*
          *  Start or stop thumbnail update.
          */
         void slotThumbnailUpdateToggle();
 
     private slots:
-        /*
-         *  Show extended tooltip for 'item'.
-         */
-        void slotShowToolTip(QIconViewItem *item);
 
-        /*
-         *  Remove tootip and stop timer.
-         */
-        void slotRemoveToolTip();
-
-        /*
-         *  Delayed tooltip
-         */
-        void slotTooltipDelay();
+        void slotContentsMoving(int, int);
+        void slotDelayedContentsMoving();
+        void slotDelayedAddItems();
 
     public:
         /*
@@ -176,22 +167,21 @@ class SQ_FileThumbView : public SQ_FileIconViewBase
          */
         QPixmap pending;
 
-        /*
-         *  Tooltip for thumbnail item.
-         */
-        QLabel     *toolTip;
-
-        SQ_FileThumbViewItem    *tooltipFor;
-        QTimer     *timer;
+        QTimer      *timerScroll, *timerAdd;
 
         QPixmap    directoryCache,  pendingCache;
         QSize    pixelSize;
+
+        KFileItemList newItems;
+        bool          newItemsAppend;
 
         /*
          *  Thumbnail job won't start until isPending
          *  is false. It means, that thumbnail view currently is hidden.
          */
         bool    isPending;
+        bool    m_lazy;
+        int     lazyDelay;
 };
 
 inline
@@ -204,6 +194,12 @@ inline
 SQ_ProgressBox* SQ_FileThumbView::progressBox() const
 {
     return m_progressBox;
+}
+
+inline
+bool SQ_FileThumbView::lazy() const
+{
+    return m_lazy;
 }
 
 #endif

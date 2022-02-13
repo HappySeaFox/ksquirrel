@@ -20,12 +20,16 @@
 #endif
 
 #include <qpoint.h>
+#include <qdragobject.h>
+#include <qfontmetrics.h>
+#include <qpainter.h>
 
 #include "sq_config.h"
 #include "sq_iconloader.h"
 #include "sq_fileiconview.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
+#include "sq_dragprovider.h"
 
 SQ_FileIconViewItem::SQ_FileIconViewItem(QIconView *parent, const QString &text,
      const QPixmap &pixmap, KFileItem *fi)
@@ -33,9 +37,6 @@ SQ_FileIconViewItem::SQ_FileIconViewItem(QIconView *parent, const QString &text,
 {}
 
 SQ_FileIconViewItem::~SQ_FileIconViewItem()
-{}
-
-void SQ_FileIconViewItem::paintFocus(QPainter *, const QColorGroup &)
 {}
 
 SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
@@ -50,11 +51,6 @@ SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : SQ_FileIco
 
 SQ_FileIconView::~SQ_FileIconView()
 {}
-
-void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
-{
-    emit doubleClicked(item, point);
-}
 
 void SQ_FileIconView::updateView(bool b)
 {
@@ -127,6 +123,19 @@ void SQ_FileIconView::clearView()
 void SQ_FileIconView::listingCompleted()
 {
     arrangeItemsInGrid();
+}
+
+void SQ_FileIconView::startDrag()
+{
+    SQ_Config::instance()->setGroup("Fileview");
+
+    if(SQ_Config::instance()->readBoolEntry("drag", true))
+    {
+        SQ_DragProvider::instance()->setParams(this, *KFileView::selectedItems(), SQ_DragProvider::Icons);
+        SQ_DragProvider::instance()->start();
+    }
+    else
+        KFileIconView::startDrag();
 }
 
 #include "sq_fileiconview.moc"

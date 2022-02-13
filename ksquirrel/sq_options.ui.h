@@ -50,12 +50,18 @@ void SQ_Options::init()
     buttonGroupSetPath->setButton(tp);
     kURLReqOpenCustom->setURL(kconf->readEntry("custom directory", "/"));
 
+    spinLines->setRange(1, 20, 1, true);
+    spinLines->setValue(kconf->readNumEntry("tooltips_lines", 6));
+    checkTooltipPreview->setChecked(kconf->readBoolEntry("tooltips_preview", false));
+    checkTooltips->setChecked(kconf->readBoolEntry("tooltips", false));
+    checkInactive->setChecked(kconf->readBoolEntry("tooltips_inactive", true));
     checkSaveHistory->setChecked(kconf->readBoolEntry("history", true));
     checkRunUnknown->setChecked(kconf->readBoolEntry("run unknown", false));
     checkSupportAr->setChecked(kconf->readBoolEntry("archives", true));
     checkJumpFirst->setChecked(kconf->readBoolEntry("tofirst", true));
     checkDisableDirs->setChecked(kconf->readBoolEntry("disable_dirs", false));
     checkCalc->setChecked(kconf->readBoolEntry("calculate", false));
+    checkDrag->setChecked(kconf->readBoolEntry("drag", true));
 
 // Init GLView page
     kconf->setGroup("GL view");
@@ -124,15 +130,12 @@ void SQ_Options::init()
     spinCacheSize->setValue(kconf->readNumEntry("cache", 1024*5));
     checkNoWriteThumbs->setChecked(kconf->readBoolEntry("dont write", false));
     checkMark->setChecked(kconf->readBoolEntry("mark", false));
+    checkLazy->setChecked(kconf->readBoolEntry("lazy", true));
+    spinLazy->setRange(10, 5000, 100, true);
+    spinLazy->setValue(kconf->readNumEntry("lazy_delay", 500));
 
-    if(kconf->readBoolEntry("tooltips", false))
-    {
-	checkTooltips->toggle();
-	checkInactive->setEnabled(true);
-    }
-    checkInactive->setChecked(kconf->readBoolEntry("tooltips_inactive", true));
 
-	new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, KIcon::SizeMedium), i18n("General"));    
+    new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, KIcon::SizeMedium), i18n("General"));    
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeMedium), i18n("Filing"));
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, KIcon::SizeMedium), i18n("Thumbnails"));
     new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
@@ -178,6 +181,11 @@ int SQ_Options::start()
         kconf->writeEntry("tofirst", checkJumpFirst->isChecked());
         kconf->writeEntry("disable_dirs", checkDisableDirs->isChecked());
         kconf->writeEntry("calculate", checkCalc->isChecked());
+        kconf->writeEntry("drag", checkDrag->isChecked());
+        kconf->writeEntry("tooltips", checkTooltips->isChecked());
+        kconf->writeEntry("tooltips_inactive", checkInactive->isChecked());
+        kconf->writeEntry("tooltips_lines", spinLines->value());
+        kconf->writeEntry("tooltips_preview", checkTooltipPreview->isChecked());
 
         kconf->setGroup("Main");
         kconf->writeEntry("applyto", buttonGroupCS->selectedId());
@@ -192,9 +200,9 @@ int SQ_Options::start()
         kconf->writeEntry("margin", spinMargin->value());
         kconf->writeEntry("cache", spinCacheSize->value());
         kconf->writeEntry("dont write", checkNoWriteThumbs->isChecked());
-        kconf->writeEntry("tooltips", checkTooltips->isChecked());
-        kconf->writeEntry("tooltips_inactive", checkInactive->isChecked());
         kconf->writeEntry("mark", checkMark->isChecked());
+        kconf->writeEntry("lazy", checkLazy->isChecked());
+        kconf->writeEntry("lazy_delay", spinLazy->value());
 
         kconf->setGroup("GL view");
         kconf->writeEntry("load_pages", buttonGroupPages->selectedId());

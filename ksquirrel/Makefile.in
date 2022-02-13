@@ -52,7 +52,8 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_ksquirrel_OBJECTS = sq_utils_scale.$(OBJEXT) sq_utils.$(OBJEXT) \
+am_ksquirrel_OBJECTS = sq_dragprovider.$(OBJEXT) \
+	sq_utils_scale.$(OBJEXT) sq_utils.$(OBJEXT) \
 	sq_thumbnailsunused.$(OBJEXT) sq_dirthumbs.$(OBJEXT) \
 	sq_downloader.$(OBJEXT) sq_glselectionpainter.$(OBJEXT) \
 	sq_slideshowwidget.$(OBJEXT) sq_glwidget.$(OBJEXT) \
@@ -77,9 +78,10 @@ am_ksquirrel_OBJECTS = sq_utils_scale.$(OBJEXT) sq_utils.$(OBJEXT) \
 	ksquirrel.$(OBJEXT) main.$(OBJEXT) \
 	sq_utils_asm_scale.$(OBJEXT)
 #>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
-#>+ 27
+#>+ 28
 ksquirrel_final_OBJECTS = sq_utils_asm_scale.o ksquirrel.all_cpp.o 
-ksquirrel_nofinal_OBJECTS = sq_utils_scale.$(OBJEXT) sq_utils.$(OBJEXT) \
+ksquirrel_nofinal_OBJECTS = sq_dragprovider.$(OBJEXT) \
+	sq_utils_scale.$(OBJEXT) sq_utils.$(OBJEXT) \
 	sq_thumbnailsunused.$(OBJEXT) sq_dirthumbs.$(OBJEXT) \
 	sq_downloader.$(OBJEXT) sq_glselectionpainter.$(OBJEXT) \
 	sq_slideshowwidget.$(OBJEXT) sq_glwidget.$(OBJEXT) \
@@ -430,8 +432,8 @@ xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 
 ####### kdevelop will overwrite this part!!! (end)############
-#>- ksquirrel_SOURCES = sq_utils_scale.cpp sq_utils.cpp \
-#>- 	sq_slideshowlisting.ui sq_thumbnailsunused.cpp \
+#>- ksquirrel_SOURCES = sq_dragprovider.cpp sq_utils_scale.cpp \
+#>- 	sq_utils.cpp sq_slideshowlisting.ui sq_thumbnailsunused.cpp \
 #>- 	sq_dirthumbs.cpp sq_downloader.cpp sq_glselectionpainter.cpp \
 #>- 	sq_slideshowwidget.cpp sq_glwidget.cpp sq_glparts.cpp \
 #>- 	sq_codecsettings.cpp sq_filedialog.cpp \
@@ -453,8 +455,8 @@ xdg_menudir = @xdg_menudir@
 #>- 	sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp \
 #>- 	ksquirrel.cpp main.cpp sq_utils_asm_scale.S
 #>+ 22
-ksquirrel_SOURCES=sq_utils_scale.cpp sq_utils.cpp \
-	 sq_thumbnailsunused.cpp \
+ksquirrel_SOURCES=sq_dragprovider.cpp sq_utils_scale.cpp \
+	sq_utils.cpp  sq_thumbnailsunused.cpp \
 	sq_dirthumbs.cpp sq_downloader.cpp sq_glselectionpainter.cpp \
 	sq_slideshowwidget.cpp sq_glwidget.cpp sq_glparts.cpp \
 	sq_codecsettings.cpp sq_filedialog.cpp \
@@ -516,7 +518,7 @@ EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	sq_dirthumbs.h sq_thumbnailsunused.cpp sq_thumbnailsunused.h \
 	sq_slideshowlisting.ui sq_slideshowlisting.ui.h sq_utils.cpp \
 	sq_utils.h konqksquirrel-dir.desktop sq_utils_asm_scale.S \
-	sq_utils_scale.cpp
+	sq_utils_scale.cpp sq_dragprovider.cpp sq_dragprovider.h
 AM_CCASFLAGS = -I$(srcdir) $(KSQUIRREL_ASM_DEFS)
 INCLUDES = $(all_includes) -I$(srcdir) -I$(top_srcdir)/ksquirrel/sidebar -I$(top_srcdir)/ksquirrel/imageedit
 # ksquirrelpart
@@ -641,6 +643,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_diroperator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_dirthumbs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_downloader.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_dragprovider.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_errorstring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_externaltool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_filedetailview.Po@am__quote@
@@ -1269,11 +1272,11 @@ bcheck-am:
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_utils_scale.cpp $(srcdir)/sq_utils.cpp $(srcdir)/sq_thumbnailsunused.cpp $(srcdir)/sq_dirthumbs.cpp $(srcdir)/sq_downloader.cpp $(srcdir)/sq_glselectionpainter.cpp $(srcdir)/sq_slideshowwidget.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_glparts.cpp $(srcdir)/sq_codecsettings.cpp $(srcdir)/sq_filedialog.cpp $(srcdir)/sq_kipimanager.cpp $(srcdir)/sq_kipiinterface.cpp $(srcdir)/sq_progressbox.cpp $(srcdir)/sq_thumbnailloadjob.cpp $(srcdir)/sq_splashscreen.cpp $(srcdir)/sq_popupmenu.cpp $(srcdir)/sq_glwidget_helpers.cpp $(srcdir)/sq_imageloader.cpp $(srcdir)/sq_iconloader.cpp $(srcdir)/fmt_filters.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/sq_navigatordropmenu.cpp $(srcdir)/sq_fileiconviewbase.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_filethumbviewitem.cpp $(srcdir)/sq_progress.cpp $(srcdir)/sq_thumbnailsize.cpp $(srcdir)/sq_pixmapcache.cpp $(srcdir)/sq_filethumbview.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_iconlistbox.cpp $(srcdir)/sq_iconlistitem.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glu.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_externaltool.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_bookmarkowner.cpp $(srcdir)/sq_archivehandler.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_slideshowlisting.cpp $(srcdir)/sq_codecsettingsskeleton.cpp $(srcdir)/sq_glinfo.cpp $(srcdir)/sq_pluginsinfo.cpp $(srcdir)/sq_slideshow.cpp $(srcdir)/sq_selectdeselectgroup.cpp $(srcdir)/sq_thumbnailcachemaster.cpp $(srcdir)/sq_helpwidget.cpp $(srcdir)/sq_viewcache.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_filters.cpp $(srcdir)/sq_externaltools.cpp  sq_glwidget.moc sq_options.moc sq_viewcache.moc sq_fileiconview.moc sq_externaltool.moc sq_kipimanager.moc sq_selectdeselectgroup.moc sq_fileiconviewbase.moc sq_glinfo.moc sq_pluginsinfo.moc ksquirrel.moc sq_downloader.moc sq_glview.moc sq_codecsettingsskeleton.moc sq_filedetailview.moc sq_slideshowwidget.moc sq_kipiinterface.moc sq_filethumbview.moc sq_bookmarkowner.moc sq_diroperator.moc sq_filters.moc sq_helpwidget.moc sq_externaltools.moc sq_archivehandler.moc sq_slideshowlisting.moc sq_widgetstack.moc sq_thumbnailcachemaster.moc sq_slideshow.moc sq_thumbnailloadjob.moc sq_navigatordropmenu.moc sq_imageproperties.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_dragprovider.cpp $(srcdir)/sq_utils_scale.cpp $(srcdir)/sq_utils.cpp $(srcdir)/sq_thumbnailsunused.cpp $(srcdir)/sq_dirthumbs.cpp $(srcdir)/sq_downloader.cpp $(srcdir)/sq_glselectionpainter.cpp $(srcdir)/sq_slideshowwidget.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_glparts.cpp $(srcdir)/sq_codecsettings.cpp $(srcdir)/sq_filedialog.cpp $(srcdir)/sq_kipimanager.cpp $(srcdir)/sq_kipiinterface.cpp $(srcdir)/sq_progressbox.cpp $(srcdir)/sq_thumbnailloadjob.cpp $(srcdir)/sq_splashscreen.cpp $(srcdir)/sq_popupmenu.cpp $(srcdir)/sq_glwidget_helpers.cpp $(srcdir)/sq_imageloader.cpp $(srcdir)/sq_iconloader.cpp $(srcdir)/fmt_filters.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/sq_navigatordropmenu.cpp $(srcdir)/sq_fileiconviewbase.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_filethumbviewitem.cpp $(srcdir)/sq_progress.cpp $(srcdir)/sq_thumbnailsize.cpp $(srcdir)/sq_pixmapcache.cpp $(srcdir)/sq_filethumbview.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_iconlistbox.cpp $(srcdir)/sq_iconlistitem.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glu.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_externaltool.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_bookmarkowner.cpp $(srcdir)/sq_archivehandler.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_slideshowlisting.cpp $(srcdir)/sq_codecsettingsskeleton.cpp $(srcdir)/sq_glinfo.cpp $(srcdir)/sq_pluginsinfo.cpp $(srcdir)/sq_slideshow.cpp $(srcdir)/sq_selectdeselectgroup.cpp $(srcdir)/sq_thumbnailcachemaster.cpp $(srcdir)/sq_helpwidget.cpp $(srcdir)/sq_viewcache.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_filters.cpp $(srcdir)/sq_externaltools.cpp  sq_glwidget.moc sq_options.moc sq_viewcache.moc sq_fileiconview.moc sq_externaltool.moc sq_kipimanager.moc sq_selectdeselectgroup.moc sq_fileiconviewbase.moc sq_glinfo.moc sq_pluginsinfo.moc ksquirrel.moc sq_downloader.moc sq_glview.moc sq_codecsettingsskeleton.moc sq_filedetailview.moc sq_slideshowwidget.moc sq_kipiinterface.moc sq_filethumbview.moc sq_bookmarkowner.moc sq_diroperator.moc sq_filters.moc sq_helpwidget.moc sq_externaltools.moc sq_archivehandler.moc sq_slideshowlisting.moc sq_widgetstack.moc sq_thumbnailcachemaster.moc sq_slideshow.moc sq_thumbnailloadjob.moc sq_navigatordropmenu.moc sq_imageproperties.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
-	for file in sq_utils_scale.cpp sq_utils.cpp sq_thumbnailsunused.cpp sq_dirthumbs.cpp sq_downloader.cpp sq_glselectionpainter.cpp sq_slideshowwidget.cpp sq_glwidget.cpp sq_glparts.cpp sq_codecsettings.cpp sq_filedialog.cpp sq_kipimanager.cpp sq_kipiinterface.cpp sq_progressbox.cpp sq_thumbnailloadjob.cpp sq_splashscreen.cpp sq_popupmenu.cpp sq_glwidget_helpers.cpp sq_imageloader.cpp sq_iconloader.cpp fmt_filters.cpp sq_errorstring.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_glview.cpp sq_filethumbviewitem.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_libraryhandler.cpp sq_hloptions.cpp sq_glu.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp sq_slideshowlisting.cpp sq_codecsettingsskeleton.cpp sq_glinfo.cpp sq_pluginsinfo.cpp sq_slideshow.cpp sq_selectdeselectgroup.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp ; do \
+	for file in sq_dragprovider.cpp sq_utils_scale.cpp sq_utils.cpp sq_thumbnailsunused.cpp sq_dirthumbs.cpp sq_downloader.cpp sq_glselectionpainter.cpp sq_slideshowwidget.cpp sq_glwidget.cpp sq_glparts.cpp sq_codecsettings.cpp sq_filedialog.cpp sq_kipimanager.cpp sq_kipiinterface.cpp sq_progressbox.cpp sq_thumbnailloadjob.cpp sq_splashscreen.cpp sq_popupmenu.cpp sq_glwidget_helpers.cpp sq_imageloader.cpp sq_iconloader.cpp fmt_filters.cpp sq_errorstring.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_glview.cpp sq_filethumbviewitem.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_libraryhandler.cpp sq_hloptions.cpp sq_glu.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp sq_slideshowlisting.cpp sq_codecsettingsskeleton.cpp sq_glinfo.cpp sq_pluginsinfo.cpp sq_slideshow.cpp sq_selectdeselectgroup.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
 	done; \
@@ -1304,7 +1307,7 @@ no-final-install:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 86
+#>+ 87
 $(srcdir)/sq_thumbnailsize.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_glinfo.h sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 sq_thumbnailloadjob.lo: sq_thumbnailloadjob.moc 
 sq_fileiconviewbase.lo: sq_fileiconviewbase.moc 
@@ -1317,6 +1320,7 @@ $(srcdir)/sq_config.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_gli
 $(srcdir)/sq_diroperator.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_glinfo.h sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 sq_thumbnailloadjob.o: sq_thumbnailloadjob.moc 
 $(srcdir)/sq_imageloader.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_glinfo.h sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_dragprovider.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_glinfo.h sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_glwidget.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_glinfo.h sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_popupmenu.cpp: sq_slideshowlisting.h sq_codecsettingsskeleton.h sq_glinfo.h sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 nmcheck-am: nmcheck

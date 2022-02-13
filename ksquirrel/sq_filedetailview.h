@@ -20,6 +20,8 @@
 
 #include <kfiledetailview.h>
 
+class KonqFileTip;
+
 /*
  *  SQ_FileDetailView represents detailed view in filemanager.
  */
@@ -38,7 +40,8 @@ class SQ_FileListViewItem : public KFileListViewItem
         /*
          *  Reimplement paintFocus() to ignore painting focus.
          */
-        virtual void paintFocus(QPainter *, const QColorGroup &, const QRect &r);
+        virtual void paintFocus(QPainter *, const QColorGroup &, const QRect &)
+        {}
 };
 
 class SQ_FileDetailView : public KFileDetailView
@@ -71,6 +74,10 @@ class SQ_FileDetailView : public KFileDetailView
          */
         void initItem(SQ_FileListViewItem *item, const KFileItem *i);
 
+        virtual void startDrag();
+
+        virtual bool eventFilter(QObject *o, QEvent *e);
+
         /*
          *  On double click execute item or
          *  invoke default browser in current url.
@@ -82,8 +89,30 @@ class SQ_FileDetailView : public KFileDetailView
          */
         virtual void dragEnterEvent(QDragEnterEvent *);
 
+    signals:
+        void invokeBrowser();
+
+    public slots:
+        void slotResetToolTip();
+
+    private slots:
+        /*
+         *  Show extended tooltip for 'item'.
+         */
+        void slotShowToolTip(QListViewItem *item);
+
+        /*
+         *  Remove tootip and stop timer.
+         */
+        void slotRemoveToolTip();
+
     private:
         QPixmap    dirPix;
+
+        /*
+         *  Tooltip for file item.
+         */
+        KonqFileTip *toolTip;
 };
 
 #endif

@@ -127,7 +127,7 @@ configure.gnu это просто обёртка вокруг configure - это
 <sect1 id="install-binary">
 <title>Установка из бинарных пакетов</title>
 <para>
-Чтобы установить &kappname; и &klibname; из бинарных пакетов, вы должны сперва проверить, нет ли их на предложенных Вам дисках Вашего дистрибутива. Если они нашлись, установите их стандартными средствами Вашего дистрибутива (например, apt-get в Debian, или urpmi в Mandriva). Если на дисках их не оказалось, попробуйте поискать в онлайн репозитариях Вашего дистрибутива, а также в <ulink url="http://google.com">http://google.com</ulink>.
+Чтобы установить &kappname; и &klibname; из бинарных пакетов, вы должны сперва проверить, нет ли их на предложенных Вам дисках Вашего дистрибутива. Если они нашлись, установите их стандартными средствами Вашего дистрибутива (например, apt-get в Debian, или urpmi в Mandriva). Если на дисках их не оказалось, попробуйте поискать в онлайн репозитариях Вашего дистрибутива, а также в <ulink url="http://google.com">http://google.com</ulink> и <ulink url="http://ksquirrel.sourceforge.net/download.php">http://ksquirrel.sourceforge.net/download.php</ulink>.
 </para>
 </sect1>
 

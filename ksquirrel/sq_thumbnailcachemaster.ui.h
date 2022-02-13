@@ -18,6 +18,8 @@ void SQ_ThumbnailCacheMaster::init()
     pushCache->setIconSet(SQ_IconLoader::instance()->loadIcon("kcalc", KIcon::Desktop, KIcon::SizeSmall));
     pushCacheMemory->setIconSet(SQ_IconLoader::instance()->loadIcon("kcalc", KIcon::Desktop, KIcon::SizeSmall));
     pushShowCache->setIconSet(SQ_IconLoader::instance()->loadIcon("memory", KIcon::Desktop, KIcon::SizeSmall));
+
+    slotCalcCacheMemory();
 }
 
 void SQ_ThumbnailCacheMaster::slotCalcCache()

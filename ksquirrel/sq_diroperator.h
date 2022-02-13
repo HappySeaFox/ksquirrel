@@ -55,6 +55,10 @@ class SQ_DirOperator : public KDirOperator
 
         ~SQ_DirOperator();
 
+        void fireDiskSize(const KURL &url);
+
+        void setLazy(bool l, int delay);
+
         /*
          *  Deselect all items, set current item, select this item,
          *  and ensure it visible.
@@ -117,8 +121,6 @@ class SQ_DirOperator : public KDirOperator
 
         void disableSpecificActions(KFileIconView *);
 
-        void fireDiskSize(const KURL &url);
-
         /*
          *  SQ_DirOperator has context menu, derived from KDirOperator.
          *  This method will change this menu, insert new actions.
@@ -162,6 +164,7 @@ class SQ_DirOperator : public KDirOperator
 
     private slots:
 
+        void slotInvokeBrowser();
         /*
          *  Since KDE 3.4 (or 3.5 ?) it is neccessary to reimplement this slot
          *  to insert our own actions in context menu.

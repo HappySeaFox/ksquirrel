@@ -35,6 +35,7 @@
 #include <qtimer.h>
 #include <qstylesheet.h>
 #include <qwidgetstack.h>
+#include <qtoolbutton.h>
 
 #include <kapplication.h>
 #include <khelpmenu.h>
@@ -63,6 +64,7 @@
 #include <kio/job.h>
 #include <kinputdialog.h>
 #include <ksystemtray.h>
+#include <ksqueezedtextlabel.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
@@ -106,6 +108,7 @@
 #include "sq_thumbnailsunused.h"
 #include "sq_downloader.h"
 #include "sq_slideshowlisting.h"
+#include "sq_dragprovider.h"
 
 #ifdef SQ_HAVE_KIPI
 #include "sq_kipimanager.h"
@@ -149,6 +152,7 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name)
     new SQ_ArchiveHandler(this);
     new SQ_IconLoader(this);
     new SQ_ImageLoader(this);
+    new SQ_DragProvider(this);
 
     viewBrowser = 0;
     sqFiltersName = 0;
@@ -216,6 +220,7 @@ void KSquirrel::slotOptions()
         SQ_TreeView::instance()->setupRecursion();
         SQ_PreviewWidget::instance()->rereadColor();
         SQ_PreviewWidget::instance()->update();
+        emit resetToolTip();
 
         // create or delete animated logo
         configAnime(false);
@@ -586,10 +591,9 @@ void KSquirrel::createStatusBar(KStatusBar *bar)
     fileIcon->setScaledContents(false);
 
     // name of current file
-    fileName = new QLabel(QString::fromLatin1("----"), vb, "fileName");
+    fileName = new KSqueezedTextLabel(QString::fromLatin1("----"), vb, "fileName");
     fileName->setTextFormat(Qt::RichText);
     fileName->setAlignment(Qt::AlignAuto | Qt::AlignVCenter | Qt::ExpandTabs);
-    QLabel *levak = new QLabel(sbar);
 
     diskSpace = new QLabel(QString::null, sbar, "diskSpace");
 
@@ -602,14 +606,25 @@ void KSquirrel::createStatusBar(KStatusBar *bar)
 
     // finally, add QLabels to statusbar
     sbar->addWidget(dirInfo, 0, true);
-    sbar->addWidget(vb, 0, true);
-    sbar->addWidget(levak, 1, true);
+    sbar->addWidget(vb, 1, true);
+
+    QToolButton *fireDisk = new QToolButton(sbar, "reload disk size");
+    fireDisk->setIconSet(SQ_IconLoader::instance()->loadIcon("reload", KIcon::Desktop, KIcon::SizeSmall));
+    fireDisk->setTextLabel(i18n("Reload"));
+    fireDisk->setUsesTextLabel(false);
+    connect(fireDisk, SIGNAL(clicked()), this, SLOT(slotFireDisk()));
 
     diskProg = new SQ_Progress(sbar, "SQ_Progress [disk space]");
     diskProg->setFixedWidth(150);
 
+    sbar->addWidget(fireDisk, 0, true);
     sbar->addWidget(diskSpace, 0, true);
     sbar->addWidget(diskProg, 0, true);
+}
+
+void KSquirrel::slotFireDisk()
+{
+    pWidgetStack->diroperator()->fireDiskSize(pWidgetStack->diroperator()->url());
 }
 
 // Create menu
@@ -966,10 +981,11 @@ void KSquirrel::applyDefaultSettings()
     kconf->setGroup("Thumbnails");
     thumbSize->setExtended(kconf->readBoolEntry("extended", false));
     pAThumbsE->setChecked(thumbSize->extended());
+    bool lazy = kconf->readBoolEntry("lazy", true);
+    int lazyDelay = kconf->readNumEntry("lazy_delay", 500);
 
     updateThumbs = (old_ext != kconf->readBoolEntry("extended", false));
 
-    // Change clicking policy
     pWidgetStack->updateGrid(!updateThumbs | updateDirs);
 
     // set cache limit for pixmap cache
@@ -979,6 +995,8 @@ void KSquirrel::applyDefaultSettings()
 
     if(kconf->readBoolEntry("sync", false))
         kconf->sync();
+
+    pWidgetStack->diroperator()->setLazy(lazy, lazyDelay);
 
     // reload directory
     if(updateDirs && !updateThumbs)

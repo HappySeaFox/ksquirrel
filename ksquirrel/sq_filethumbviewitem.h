@@ -33,6 +33,10 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
         SQ_FileThumbViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi);
         ~SQ_FileThumbViewItem();
 
+        bool listed() const;
+
+        void setListed(bool l);
+
     protected:
         /*
          *  Painting routines.
@@ -42,10 +46,19 @@ class SQ_FileThumbViewItem : public KFileIconViewItem
         void paintText(QPainter *p, const QColorGroup &c);
 
     private:
-        /*
-         *  Additional information.
-         */
-        QString  tmpText;
+        bool m_listed;
 };
+
+inline
+bool SQ_FileThumbViewItem::listed() const
+{
+    return m_listed;
+}
+
+inline
+void SQ_FileThumbViewItem::setListed(bool l)
+{
+    m_listed = l;
+}
 
 #endif
