@@ -34,6 +34,8 @@
 
 struct SQ_LIBRARY;
 
+class KTempFile;
+
 class SQ_EditBase : public QObject
 {
 	Q_OBJECT
@@ -46,15 +48,20 @@ class SQ_EditBase : public QObject
 		virtual void startEditPrivate() = 0;
 		virtual void setWritingLibrary() = 0;
 		virtual void dialogReset() = 0;
-		virtual void dialogAdditionalInit() = 0;
-		virtual int manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-											const fmt_image &im, const fmt_writeoptions &opt) = 0;
+		virtual int manipDecodedImage(fmt_image *im) = 0;
+
+		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt);
+		virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
+
+		virtual void cycleDone();
+		virtual void dialogAdditionalInit();
 
 		void decodingCycle();
-
 		void errorjmp(jmp_buf jmp, const int code);
 
-		QString adjustFileName(const QString &globalprefix, const QString &name,
+		int copyFile(const QString &src, const QString &dst);
+
+		QString adjustFileName(const QString &globalprefix, const QString &name, bool replace,
 									QString putto, bool paged = false, int page = 0);
 
 	signals:
@@ -68,12 +75,15 @@ class SQ_EditBase : public QObject
 	protected:
 		QStringList			files;
 		QString				err_internal, err_failed;
+		QString				currentFile;
 		int					error_code;
 		SQ_ImageOptions	imageopt;
 		fmt_writeoptions		opt;
 		SQ_LIBRARY		*lr, *lw;
+		RGBA				*image;
 		QString				special_action;
 		bool				ondisk;
+		KTempFile			*tempfile;
 };
 
 #endif

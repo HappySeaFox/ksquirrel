@@ -15,8 +15,8 @@ void SQ_ImageConvert::init()
     
     initLibs();
 
-    pushWriteOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
+    pushWriteOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
+    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "convert_putto", QString::null);
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "convert_prefix", QString::null);
@@ -208,4 +208,15 @@ void SQ_ImageConvert::slotReject()
 {
     if(done)
 	reject();
+}
+
+void SQ_ImageConvert::closeEvent(QCloseEvent *e)
+{
+    if(done)
+	e->accept();
+    else
+    {
+	e->ignore();
+	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+    }
 }

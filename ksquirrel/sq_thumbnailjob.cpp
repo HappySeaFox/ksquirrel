@@ -437,9 +437,9 @@ void SQ_ThumbnailLoadJob::emitThumbnailLoaded(SQ_Thumbnail &t)
 		return;
 	}
 
-	double scale = double(thumbPixelSize)/double(biggestDimension);
+	double scale = double(thumbPixelSize) / double(biggestDimension);
 
-	t.thumbnail = t.thumbnail.smoothScale(t.thumbnail.width() * scale, t.thumbnail.height() * scale);
+	t.thumbnail = t.thumbnail.smoothScale(int(t.thumbnail.width() * scale), int(t.thumbnail.height() * scale));
 
 	emit thumbnailLoaded(mCurrentItem, t);
 }

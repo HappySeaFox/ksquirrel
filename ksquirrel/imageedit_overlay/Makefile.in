@@ -53,18 +53,18 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 libimageedit_overlay_a_AR = $(AR) $(ARFLAGS)
 libimageedit_overlay_a_LIBADD =
-am_libimageedit_overlay_a_OBJECTS = sq_rotater.$(OBJEXT) \
-	sq_resizer.$(OBJEXT) sq_printer.$(OBJEXT) \
+am_libimageedit_overlay_a_OBJECTS = sq_filter.$(OBJEXT) \
+	sq_rotater.$(OBJEXT) sq_resizer.$(OBJEXT) sq_printer.$(OBJEXT) \
 	sq_editbase.$(OBJEXT) sq_converter.$(OBJEXT) \
 	sq_contraster.$(OBJEXT)
 #>- libimageedit_overlay_a_OBJECTS = $(am_libimageedit_overlay_a_OBJECTS)
 #>+ 8
 libimageedit_overlay_a_final_OBJECTS = libimageedit_overlay_a.all_cpp.o 
-libimageedit_overlay_a_nofinal_OBJECTS = sq_rotater.$(OBJEXT) \
-	sq_resizer.$(OBJEXT) sq_printer.$(OBJEXT) \
+libimageedit_overlay_a_nofinal_OBJECTS = sq_filter.$(OBJEXT) \
+	sq_rotater.$(OBJEXT) sq_resizer.$(OBJEXT) sq_printer.$(OBJEXT) \
 	sq_editbase.$(OBJEXT) sq_converter.$(OBJEXT) \
 	sq_contraster.$(OBJEXT)\
-sq_printer.moc.o sq_rotater.moc.o sq_editbase.moc.o sq_resizer.moc.o sq_contraster.moc.o sq_converter.moc.o 
+sq_printer.moc.o sq_rotater.moc.o sq_editbase.moc.o sq_filter.moc.o sq_resizer.moc.o sq_contraster.moc.o sq_converter.moc.o 
 @KDE_USE_FINAL_FALSE@libimageedit_overlay_a_OBJECTS = $(libimageedit_overlay_a_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@libimageedit_overlay_a_OBJECTS = $(libimageedit_overlay_a_final_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -107,6 +107,8 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
+CCAS = @CCAS@
+CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CONF_FILES = @CONF_FILES@
@@ -223,6 +225,8 @@ UIC_TR = @UIC_TR@
 USER_INCLUDES = @USER_INCLUDES@
 USER_LDFLAGS = @USER_LDFLAGS@
 USE_EXCEPTIONS = @USE_EXCEPTIONS@
+USE_MMX_FALSE = @USE_MMX_FALSE@
+USE_MMX_TRUE = @USE_MMX_TRUE@
 USE_RTTI = @USE_RTTI@
 USE_THREADS = @USE_THREADS@
 VERSION = @VERSION@
@@ -320,8 +324,8 @@ noinst_LIBRARIES = libimageedit_overlay.a
 ####### kdevelop will overwrite this part!!! (end)############
 INCLUDES = $(all_includes) -I.. -I../imageedit_dlg
 #>- libimageedit_overlay_a_METASOURCES = AUTO
-libimageedit_overlay_a_SOURCES = sq_rotater.cpp sq_resizer.cpp sq_printer.cpp sq_editbase.cpp sq_converter.cpp sq_contraster.cpp 
-EXTRA_DIST = sq_contraster.cpp sq_contraster.h sq_converter.cpp sq_converter.h sq_editbase.cpp sq_editbase.h sq_imageedit.h sq_printer.cpp sq_printer.h sq_resizer.cpp sq_resizer.h sq_rotater.cpp sq_rotater.h 
+libimageedit_overlay_a_SOURCES = sq_filter.cpp sq_rotater.cpp sq_resizer.cpp sq_printer.cpp sq_editbase.cpp sq_converter.cpp sq_contraster.cpp 
+EXTRA_DIST = sq_contraster.cpp sq_contraster.h sq_converter.cpp sq_converter.h sq_editbase.cpp sq_editbase.h sq_imageedit.h sq_printer.cpp sq_printer.h sq_resizer.cpp sq_resizer.h sq_rotater.cpp sq_rotater.h sq_filter.cpp sq_filter.h 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
@@ -387,6 +391,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_contraster.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_converter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_editbase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_printer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_resizer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_rotater.Po@am__quote@
@@ -626,6 +631,13 @@ sq_editbase.moc.cpp: $(srcdir)/sq_editbase.h
 mocs: sq_editbase.moc.cpp
 
 #>+ 3
+sq_filter.moc.cpp: $(srcdir)/sq_filter.h
+	$(MOC) $(srcdir)/sq_filter.h -o sq_filter.moc.cpp
+
+#>+ 2
+mocs: sq_filter.moc.cpp
+
+#>+ 3
 sq_resizer.moc.cpp: $(srcdir)/sq_resizer.h
 	$(MOC) $(srcdir)/sq_resizer.h -o sq_resizer.moc.cpp
 
@@ -648,10 +660,10 @@ mocs: sq_converter.moc.cpp
 
 #>+ 3
 clean-metasources:
-	-rm -f  sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_resizer.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp
+	-rm -f  sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_filter.moc.cpp sq_resizer.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp
 
 #>+ 2
-KDE_DIST=libimageedit_overlay.a Makefile.in Makefile.am 
+KDE_DIST=Makefile.in Makefile.am 
 
 #>+ 2
 docs-am:
@@ -695,11 +707,11 @@ bcheck-am:
 
 
 #>+ 11
-libimageedit_overlay_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_rotater.cpp $(srcdir)/sq_resizer.cpp $(srcdir)/sq_printer.cpp $(srcdir)/sq_editbase.cpp $(srcdir)/sq_converter.cpp $(srcdir)/sq_contraster.cpp sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_resizer.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp 
+libimageedit_overlay_a.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_filter.cpp $(srcdir)/sq_rotater.cpp $(srcdir)/sq_resizer.cpp $(srcdir)/sq_printer.cpp $(srcdir)/sq_editbase.cpp $(srcdir)/sq_converter.cpp $(srcdir)/sq_contraster.cpp sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_resizer.moc.cpp sq_filter.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp 
 	@echo 'creating libimageedit_overlay_a.all_cpp.cpp ...'; \
 	rm -f libimageedit_overlay_a.all_cpp.files libimageedit_overlay_a.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> libimageedit_overlay_a.all_cpp.final; \
-	for file in sq_rotater.cpp sq_resizer.cpp sq_printer.cpp sq_editbase.cpp sq_converter.cpp sq_contraster.cpp sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_resizer.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp ; do \
+	for file in sq_filter.cpp sq_rotater.cpp sq_resizer.cpp sq_printer.cpp sq_editbase.cpp sq_converter.cpp sq_contraster.cpp sq_printer.moc.cpp sq_rotater.moc.cpp sq_editbase.moc.cpp sq_resizer.moc.cpp sq_filter.moc.cpp sq_contraster.moc.cpp sq_converter.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> libimageedit_overlay_a.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> libimageedit_overlay_a.all_cpp.final; \
 	done; \

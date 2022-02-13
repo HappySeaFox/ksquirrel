@@ -5,10 +5,10 @@ INCLUDES = $(all_includes)
 
 libimageedit_overlay_a_METASOURCES = AUTO
 
-libimageedit_overlay_a_SOURCES = sq_rotater.cpp sq_resizer.cpp sq_printer.cpp sq_editbase.cpp sq_converter.cpp sq_contraster.cpp 
+libimageedit_overlay_a_SOURCES = sq_filter.cpp sq_rotater.cpp sq_resizer.cpp sq_printer.cpp sq_editbase.cpp sq_converter.cpp sq_contraster.cpp 
 
 
-EXTRA_DIST = sq_contraster.cpp sq_contraster.h sq_converter.cpp sq_converter.h sq_editbase.cpp sq_editbase.h sq_imageedit.h sq_printer.cpp sq_printer.h sq_resizer.cpp sq_resizer.h sq_rotater.cpp sq_rotater.h 
+EXTRA_DIST = sq_contraster.cpp sq_contraster.h sq_converter.cpp sq_converter.h sq_editbase.cpp sq_editbase.h sq_imageedit.h sq_printer.cpp sq_printer.h sq_resizer.cpp sq_resizer.h sq_rotater.cpp sq_rotater.h sq_filter.cpp sq_filter.h 
 
 ####### kdevelop will overwrite this part!!! (end)############
 

@@ -19,41 +19,9 @@
 #define SQ_LIBRARY_HANDLER_H
 
 #include <qvaluevector.h>
-#include <qimage.h>
-#include <qregexp.h>
 #include <qstringlist.h>
 
-#include "fmt_types.h"
-#include "fmt_defs.h"
-
-class QLibrary;
-
-class fmt_codec_base;
-
-struct SQ_LIBRARY
-{
-	SQ_LIBRARY() : lib(0), codec(0)
-	{}
-
-	QLibrary	*lib;
-	QString	libpath;
-	QRegExp	regexp;
-	QString	filter;
-	QString	regexp_str;
-	QString	quickinfo;
-	QString	version;
-
-	fmt_codec_base	*codec;
-
-	fmt_codec_base* 	(*fmt_codec_create)();
-	void				(*fmt_codec_destroy)(fmt_codec_base*);
-
-	QImage 	mime;
-	int			mime_len;
-
-	fmt_writeoptionsabs	opt;
-	bool		writable;
-};
+#include "sq_library.h"
 
 class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 {

@@ -19,7 +19,10 @@
 
 #include "ksquirrel.h"
 #include "sq_resizer.h"
+#include "sq_library.h"
 #include "sq_imageresize.h"
+
+#include "libpixops/pixops.h"
 
 SQ_Resizer * SQ_Resizer::sing = NULL;
 
@@ -63,7 +66,7 @@ SQ_Resizer* SQ_Resizer::instance()
 
 void SQ_Resizer::setWritingLibrary()
 {
-	lw = lr;
+	lw = lr->writable ? lr : NULL;
 }
 
 void SQ_Resizer::dialogReset()
@@ -71,13 +74,73 @@ void SQ_Resizer::dialogReset()
 	res->startResizing(files.count());
 }
 
-void SQ_Resizer::dialogAdditionalInit()
+int SQ_Resizer::manipDecodedImage(fmt_image *im)
 {
+	int w = im->w, h = im->h;
 
-}
+	if(resopt.percentage)
+	{
+		if(!resopt.adjust)
+			w = (int)((double)im->w * resopt.pc / 100.0);
+		else if(resopt.adjust == 1)
+			h = (int)((double)im->h * resopt.pc / 100.0);
+		else
+		{
+			w = (int)((double)im->w * resopt.pc / 100.0);
+			h = (int)((double)im->h * resopt.pc / 100.0);
+		}
+	}
+	else
+	{
+		if(resopt.preserve)
+		{
+			double aspect;
 
-int SQ_Resizer::manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt)
-{
+			w = resopt.w;
+			h = resopt.h;
+
+			if(!resopt.adjust)
+			{
+				aspect = (double)resopt.w / im->w;
+				h = int((double)im->h * aspect);
+			}
+			else if(resopt.adjust == 1)
+			{
+				aspect = (double)resopt.h / im->h;
+				h = int((double)im->w * aspect);
+			}
+			else
+			{
+				QSize s(im->w, im->h);
+				s.scale(resopt.w, resopt.h, QSize::ScaleMin);
+
+				w = s.width();
+				h = s.height();
+			}
+		}
+		else
+		{
+			w = resopt.w;
+			h = resopt.h;
+		}
+	}
+
+	RGBA *rgba = new RGBA [w * h];
+
+	if(!rgba)
+		return SQE_W_NOMEMORY;
+
+	pixops_scale((unsigned char *)rgba, 0, 0, w, h, w * 4, 4, true,
+				(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
+				(double)w / im->w, (double)h / im->h,
+				(PixopsInterpType)resopt.method);
+
+	free(image);
+
+	image = rgba;
+
+	im->w = w;
+	im->h = h;
+
 	return SQE_OK;
 }

@@ -12,7 +12,6 @@
 
 void SQ_ImagePrint::init()
 {
-    checkForce->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "print_force", true));
     sliderX->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "print_X", 1));
     sliderY->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "print_Y", 1));
 
@@ -23,6 +22,9 @@ void SQ_ImagePrint::init()
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "print_close", true);
     checkClose->setChecked(imageopt.close);
     slotXYChanged(0);
+
+    buttonGroupSetups->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "print_layout", 0));
+    widgetStackSetups->raiseWidget(buttonGroupSetups->selectedId());
 
     done = true;
 }
@@ -43,11 +45,16 @@ void SQ_ImagePrint::slotNext()
     SQ_Config::instance()->setGroup("Image edit options");
     SQ_Config::instance()->writeEntry("print_X", sliderX->value());
     SQ_Config::instance()->writeEntry("print_Y", sliderY->value());
-    SQ_Config::instance()->writeEntry("print_force", checkForce->isChecked());
     SQ_Config::instance()->writeEntry("print_alignment", printpanel->currentFrame());
     SQ_Config::instance()->writeEntry("print_close", checkClose->isChecked());
+    SQ_Config::instance()->writeEntry("print_layout", buttonGroupSetups->selectedId());
 
     SQ_ImagePrintOptions pr;
+
+    pr.type = buttonGroupSetups->selectedId();
+    pr.in_x = sliderX->value();
+    pr.in_y = sliderY->value();
+    pr.align = printpanel->currentFrame();
 
     emit print(&imageopt, &pr);
 }
@@ -90,4 +97,15 @@ void SQ_ImagePrint::slotReject()
 {
     if(done)
 	reject();
+}
+
+void SQ_ImagePrint::closeEvent(QCloseEvent *e)
+{
+    if(done)
+	e->accept();
+    else
+    {
+	e->ignore();
+	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+    }
 }

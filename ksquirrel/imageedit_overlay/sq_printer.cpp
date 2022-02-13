@@ -15,6 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qpaintdevicemetrics.h>
+#include <qpainter.h>
+
 #include <klocale.h>
 #include <kprinter.h>
 
@@ -24,7 +27,9 @@
 #include "sq_imageprint.h"
 #include "sq_about.h"
 
-SQ_Printer * SQ_Printer::sing = 0;
+#include "libpixops/pixops.h"
+
+SQ_Printer * SQ_Printer::sing = NULL;
 
 SQ_Printer::SQ_Printer() : SQ_EditBase()
 {
@@ -32,10 +37,9 @@ SQ_Printer::SQ_Printer() : SQ_EditBase()
 
 	special_action = i18n("Printing");
 
-	ondisk = true;
+	ondisk = false;
 
-	printer = new KPrinter;
-	printer->setCreator(QString::fromLatin1("KSquirrel %1").arg(SQ_VERSION));
+	painter = new QPainter;
 }
 
 SQ_Printer::~SQ_Printer()
@@ -59,8 +63,17 @@ void SQ_Printer::slotStartPrint(SQ_ImageOptions *o, SQ_ImagePrintOptions *popt)
 	imageopt = *o;
 	prnopt = *popt;
 
+	printer = new KPrinter;
+	printer->setCreator(QString::fromLatin1("KSquirrel %1").arg(SQ_VERSION));
+
 	if(printer->setup(print))
+	{
+		currentPage = -1;
+		painter->begin(printer);
 		decodingCycle();
+	}
+	else
+		print->close();
 }
 
 SQ_Printer* SQ_Printer::instance()
@@ -73,19 +86,123 @@ void SQ_Printer::setWritingLibrary()
 	lw = lr;
 }
 
-int SQ_Printer::manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt)
+int SQ_Printer::manipDecodedImage(fmt_image *)
 {
 	return SQE_OK;
 }
 
 void SQ_Printer::dialogReset()
 {
-	//print->startConvertion(files.count());
 	print->startPrinting(files.count());
 }
 
-void SQ_Printer::dialogAdditionalInit()
+int SQ_Printer::manipAndWriteDecodedImage(const QString &, fmt_image *im, const fmt_writeoptions &)
 {
-	
+	QPaintDeviceMetrics mt(printer);
+	RGBA *rgba;
+
+	const int spacing = 6;
+
+	currentPage++;
+
+	if(prnopt.type == 1)
+	{
+
+	}
+	else if(prnopt.type == 2)
+	{
+
+	}
+	else
+	{
+		int x, y;
+
+		if(im->w > mt.width() || im->h > mt.height())
+		{
+			double asp;
+
+			if(im->w > mt.width() && im->h > mt.height())
+			{
+				double asp1 = (double)im->w / im->h;
+				double asp2 = (double)mt.width() / mt.height();
+
+				asp = (asp1 > asp2) ? asp1 : asp2;
+			}
+			else
+				asp = (im->w > mt.width()) ? ((double)im->w / mt.width()) : ((double)im->h / mt.height());
+
+			int w = int((double)im->w / asp);
+			int h = int((double)im->h / asp);
+
+			rgba = new RGBA [w * h];
+
+			if(!rgba)
+				return SQE_W_NOMEMORY;
+
+			pixops_scale((unsigned char *)rgba, 0, 0, w, h, w * 4, 4, true,
+						(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
+						(double)w / im->w, (double)h / im->h,
+						PIXOPS_INTERP_BILINEAR);
+
+			free(image);
+
+			image = rgba;
+
+			im->w = w;
+			im->h = h;
+		}
+
+		if(prnopt.align == "lefttop")
+		{
+			x = 0;
+			y = 0;
+		}
+		else if(prnopt.align == "righttop")
+		{
+			x = mt.width() - im->w;
+			y = 0;
+		}
+		else if(prnopt.align == "leftbottom")
+		{
+			x = 0;
+			y = mt.height() - im->h;
+		}
+		else if(prnopt.align == "rightbottom")
+		{
+			x = mt.width() - im->w;
+			y = mt.height() - im->h;
+		}
+		else
+		{
+			x = (mt.width() - im->w) / 2;
+			y = (mt.height() - im->h) / 2;
+		}
+
+		QImage img((uchar *)image, im->w, im->h, 32, 0, 0, QImage::LittleEndian);
+		img.setAlphaBuffer(true);
+		img = img.swapRGB();
+
+		int cps = printer->numCopies();
+
+		for(int pages = 0;pages < cps;pages++)
+		{
+			if(currentPage || (!currentPage && pages))
+  				if(!printer->newPage())
+     				{
+					qWarning("KPrinter::newPage() error");
+					return SQE_NOTOK;
+				}
+
+			painter->drawImage(x, y, img);
+		}
+	}
+
+	return SQE_OK;
+}
+
+void SQ_Printer::cycleDone()
+{
+	painter->end();
+
+	delete printer;
 }

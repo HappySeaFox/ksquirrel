@@ -20,6 +20,8 @@
 #include "ksquirrel.h"
 #include "sq_contraster.h"
 #include "sq_imagebcg.h"
+#include "sq_library.h"
+#include "fmt_filters.h"
 
 SQ_Contraster * SQ_Contraster::sing = NULL;
 
@@ -63,7 +65,7 @@ SQ_Contraster* SQ_Contraster::instance()
 
 void SQ_Contraster::setWritingLibrary()
 {
-	lw = lr;
+	lw = lr->writable ? lr : NULL;
 }
 
 void SQ_Contraster::dialogReset()
@@ -71,13 +73,19 @@ void SQ_Contraster::dialogReset()
 	bcg->startBCG(files.count());
 }
 
-void SQ_Contraster::dialogAdditionalInit()
+int SQ_Contraster::manipDecodedImage(fmt_image *im)
 {
+	if(bcgopt.b)
+		fmt_filters::brightness(image, im->w, im->h, bcgopt.b);
 
-}
+	if(bcgopt.c)
+		fmt_filters::contrast(image, im->w, im->h, bcgopt.c);
 
-int SQ_Contraster::manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt)
-{
+	if(bcgopt.g != 100)
+		fmt_filters::gamma(image, im->w, im->h, (double)bcgopt.g / 100.0);
+
+	if(bcgopt.red || bcgopt.green || bcgopt.blue)
+		fmt_filters::colorize(image, im->w, im->h, bcgopt.red, bcgopt.green, bcgopt.blue);
+
 	return SQE_OK;
 }

@@ -112,3 +112,29 @@ bool SQ_ImageEditSplash::event(QEvent *e)
     return QWidget::event(e);
 }
 
+void SQ_ImageEditSplash::keyPressEvent(QKeyEvent *e)
+{
+    e->accept();
+
+    switch(e->key())
+    {
+    case Qt::Key_1:
+	slotConvert();
+	break;
+    case Qt::Key_2:
+	slotResize();
+	break;
+    case Qt::Key_3:
+	slotRotate();
+	break;
+    case Qt::Key_4:
+	slotColorize();
+	break;
+    case Qt::Key_5:
+	slotFilter();
+	break;
+    case Qt::Key_6:
+	slotPrint();
+	break;
+    }
+}

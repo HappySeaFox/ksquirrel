@@ -27,5 +27,4 @@ TGZ  # installpkg ksquirrel-0.6.0.tgz
 ------------------------------------------------------------
 
 Note: You can pass all regular 'configure' options to configure.gnu.
-
 Note: You needn't specify --prefix, it's already done in configure.gnu.

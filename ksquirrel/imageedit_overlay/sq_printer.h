@@ -20,6 +20,8 @@
 
 #include "sq_editbase.h"
 
+class QPainter;
+
 class KPrinter;
 
 class SQ_ImagePrint;
@@ -38,9 +40,9 @@ class SQ_Printer : public SQ_EditBase
 		virtual void startEditPrivate();
 		virtual void setWritingLibrary();
 		virtual void dialogReset();
-		virtual void dialogAdditionalInit();
-		virtual int   manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt);
+		virtual int manipDecodedImage(fmt_image *im);
+		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt);
+		virtual void cycleDone();
 
 	private slots:
 		void slotStartPrint(SQ_ImageOptions*, SQ_ImagePrintOptions*);
@@ -50,6 +52,8 @@ class SQ_Printer : public SQ_EditBase
 		static SQ_Printer		*sing;
 		SQ_ImagePrintOptions prnopt;
 		KPrinter				*printer;
+		QPainter			*painter;
+		int					currentPage;
 };
 
 #endif

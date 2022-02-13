@@ -43,6 +43,8 @@ class SQ_Config : public KConfig
 
 		QRect readRectEntry(const QString &sgroup, const QString &key, const QRect *def = 0L);
 
+		QFont readFontEntry(const QString &sgroup, const QString &key, const QFont *pd = 0);
+
 		static SQ_Config* instance();
 
 	private:

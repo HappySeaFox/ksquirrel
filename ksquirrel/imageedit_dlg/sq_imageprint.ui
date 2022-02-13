@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>481</width>
-            <height>347</height>
+            <width>517</width>
+            <height>375</height>
         </rect>
     </property>
     <property name="caption">
@@ -38,7 +38,7 @@
                 <cstring>pushNext</cstring>
             </property>
             <property name="text">
-                <string>Next &gt;</string>
+                <string>Print setup &gt;</string>
             </property>
             <property name="autoDefault">
                 <bool>false</bool>
@@ -93,17 +93,31 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
                     <widget class="QCheckBox" row="1" column="0">
                         <property name="name">
-                            <cstring>checkForce</cstring>
+                            <cstring>checkClose</cstring>
                         </property>
                         <property name="text">
-                            <string>Force</string>
+                            <string>Auto close</string>
                         </property>
                     </widget>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>spacer13</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>16</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>buttonGroupSetups</cstring>
@@ -132,6 +146,9 @@
                                     <grid>
                                         <property name="name">
                                             <cstring>unnamed</cstring>
+                                        </property>
+                                        <property name="margin">
+                                            <number>0</number>
                                         </property>
                                         <spacer row="0" column="2">
                                             <property name="name">
@@ -212,6 +229,50 @@
                                     <attribute name="id">
                                         <number>1</number>
                                     </attribute>
+                                    <grid>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="SQ_PrintPanel" row="0" column="1">
+                                            <property name="name">
+                                                <cstring>printpanel2</cstring>
+                                            </property>
+                                        </widget>
+                                        <spacer row="0" column="0">
+                                            <property name="name">
+                                                <cstring>spacer15_2</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>41</width>
+                                                    <height>21</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <spacer row="0" column="2">
+                                            <property name="name">
+                                                <cstring>spacer16_2</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>31</width>
+                                                    <height>16</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                    </grid>
                                 </widget>
                                 <widget class="QWidget">
                                     <property name="name">
@@ -224,7 +285,104 @@
                                         <property name="name">
                                             <cstring>unnamed</cstring>
                                         </property>
-                                        <widget class="SQ_PrintPanelBase" row="1" column="2" rowspan="2" colspan="1">
+                                        <widget class="QLayoutWidget" row="1" column="0" rowspan="3" colspan="1">
+                                            <property name="name">
+                                                <cstring>layout3</cstring>
+                                            </property>
+                                            <vbox>
+                                                <property name="name">
+                                                    <cstring>unnamed</cstring>
+                                                </property>
+                                                <widget class="QLabel">
+                                                    <property name="name">
+                                                        <cstring>textLabel1_2_2</cstring>
+                                                    </property>
+                                                    <property name="font">
+                                                        <font>
+                                                            <bold>1</bold>
+                                                        </font>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>Y:</string>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QSlider">
+                                                    <property name="name">
+                                                        <cstring>sliderY</cstring>
+                                                    </property>
+                                                    <property name="backgroundOrigin">
+                                                        <enum>ParentOrigin</enum>
+                                                    </property>
+                                                    <property name="minValue">
+                                                        <number>1</number>
+                                                    </property>
+                                                    <property name="maxValue">
+                                                        <number>200</number>
+                                                    </property>
+                                                    <property name="orientation">
+                                                        <enum>Vertical</enum>
+                                                    </property>
+                                                </widget>
+                                            </vbox>
+                                        </widget>
+                                        <widget class="QLayoutWidget" row="0" column="1" rowspan="1" colspan="3">
+                                            <property name="name">
+                                                <cstring>layout2</cstring>
+                                            </property>
+                                            <hbox>
+                                                <property name="name">
+                                                    <cstring>unnamed</cstring>
+                                                </property>
+                                                <widget class="QLabel">
+                                                    <property name="name">
+                                                        <cstring>textLabel1_2</cstring>
+                                                    </property>
+                                                    <property name="font">
+                                                        <font>
+                                                            <bold>1</bold>
+                                                        </font>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>X:</string>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QSlider">
+                                                    <property name="name">
+                                                        <cstring>sliderX</cstring>
+                                                    </property>
+                                                    <property name="backgroundOrigin">
+                                                        <enum>ParentOrigin</enum>
+                                                    </property>
+                                                    <property name="minValue">
+                                                        <number>1</number>
+                                                    </property>
+                                                    <property name="maxValue">
+                                                        <number>200</number>
+                                                    </property>
+                                                    <property name="orientation">
+                                                        <enum>Horizontal</enum>
+                                                    </property>
+                                                </widget>
+                                            </hbox>
+                                        </widget>
+                                        <spacer row="2" column="1">
+                                            <property name="name">
+                                                <cstring>spacer15</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>16</width>
+                                                    <height>16</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <widget class="SQ_PrintPanelBase" row="2" column="2">
                                             <property name="name">
                                                 <cstring>sQ_PrintPanelBase1</cstring>
                                             </property>
@@ -315,12 +473,12 @@
                                                 </spacer>
                                             </grid>
                                         </widget>
-                                        <spacer row="2" column="3">
+                                        <spacer row="3" column="2">
                                             <property name="name">
-                                                <cstring>spacer9</cstring>
+                                                <cstring>spacer16</cstring>
                                             </property>
                                             <property name="orientation">
-                                                <enum>Horizontal</enum>
+                                                <enum>Vertical</enum>
                                             </property>
                                             <property name="sizeType">
                                                 <enum>Expanding</enum>
@@ -332,89 +490,26 @@
                                                 </size>
                                             </property>
                                         </spacer>
-                                        <widget class="QLayoutWidget" row="1" column="1" rowspan="2" colspan="1">
+                                        <spacer row="1" column="2">
                                             <property name="name">
-                                                <cstring>layout3</cstring>
+                                                <cstring>spacer17</cstring>
                                             </property>
-                                            <vbox>
-                                                <property name="name">
-                                                    <cstring>unnamed</cstring>
-                                                </property>
-                                                <widget class="QLabel">
-                                                    <property name="name">
-                                                        <cstring>textLabel1_2_2</cstring>
-                                                    </property>
-                                                    <property name="font">
-                                                        <font>
-                                                            <bold>1</bold>
-                                                        </font>
-                                                    </property>
-                                                    <property name="text">
-                                                        <string>Y:</string>
-                                                    </property>
-                                                </widget>
-                                                <widget class="QSlider">
-                                                    <property name="name">
-                                                        <cstring>sliderY</cstring>
-                                                    </property>
-                                                    <property name="backgroundOrigin">
-                                                        <enum>ParentOrigin</enum>
-                                                    </property>
-                                                    <property name="minValue">
-                                                        <number>1</number>
-                                                    </property>
-                                                    <property name="maxValue">
-                                                        <number>200</number>
-                                                    </property>
-                                                    <property name="orientation">
-                                                        <enum>Vertical</enum>
-                                                    </property>
-                                                </widget>
-                                            </vbox>
-                                        </widget>
-                                        <widget class="QLayoutWidget" row="0" column="2" rowspan="1" colspan="2">
-                                            <property name="name">
-                                                <cstring>layout2</cstring>
+                                            <property name="orientation">
+                                                <enum>Vertical</enum>
                                             </property>
-                                            <hbox>
-                                                <property name="name">
-                                                    <cstring>unnamed</cstring>
-                                                </property>
-                                                <widget class="QLabel">
-                                                    <property name="name">
-                                                        <cstring>textLabel1_2</cstring>
-                                                    </property>
-                                                    <property name="font">
-                                                        <font>
-                                                            <bold>1</bold>
-                                                        </font>
-                                                    </property>
-                                                    <property name="text">
-                                                        <string>X:</string>
-                                                    </property>
-                                                </widget>
-                                                <widget class="QSlider">
-                                                    <property name="name">
-                                                        <cstring>sliderX</cstring>
-                                                    </property>
-                                                    <property name="backgroundOrigin">
-                                                        <enum>ParentOrigin</enum>
-                                                    </property>
-                                                    <property name="minValue">
-                                                        <number>1</number>
-                                                    </property>
-                                                    <property name="maxValue">
-                                                        <number>200</number>
-                                                    </property>
-                                                    <property name="orientation">
-                                                        <enum>Horizontal</enum>
-                                                    </property>
-                                                </widget>
-                                            </hbox>
-                                        </widget>
-                                        <spacer row="1" column="0">
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>16</width>
+                                                    <height>16</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <spacer row="2" column="3">
                                             <property name="name">
-                                                <cstring>spacer10</cstring>
+                                                <cstring>spacer9</cstring>
                                             </property>
                                             <property name="orientation">
                                                 <enum>Horizontal</enum>
@@ -478,9 +573,6 @@
                                 <property name="text">
                                     <string>One image per one page</string>
                                 </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
                                 <property name="buttonGroupId">
                                     <number>0</number>
                                 </property>
@@ -503,31 +595,6 @@
                                 </property>
                             </spacer>
                         </grid>
-                    </widget>
-                    <spacer row="3" column="0">
-                        <property name="name">
-                            <cstring>spacer3</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>16</width>
-                                <height>10</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="2" column="0">
-                        <property name="name">
-                            <cstring>checkClose</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Auto close</string>
-                        </property>
                     </widget>
                 </grid>
             </widget>
@@ -607,35 +674,19 @@
         <slot>slotReject()</slot>
     </connection>
     <connection>
-        <sender>buttonGroupSetups</sender>
-        <signal>clicked(int)</signal>
-        <receiver>widgetStackSetups</receiver>
-        <slot>raiseWidget(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderX</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImagePrint</receiver>
-        <slot>slotXYChanged(int)</slot>
-    </connection>
-    <connection>
-        <sender>sliderY</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImagePrint</receiver>
-        <slot>slotXYChanged(int)</slot>
-    </connection>
-    <connection>
         <sender>pushNext</sender>
         <signal>clicked()</signal>
         <receiver>SQ_ImagePrint</receiver>
         <slot>slotNext()</slot>
     </connection>
+    <connection>
+        <sender>buttonGroupSetups</sender>
+        <signal>clicked(int)</signal>
+        <receiver>widgetStackSetups</receiver>
+        <slot>raiseWidget(int)</slot>
+    </connection>
 </connections>
 <tabstops>
-    <tabstop>radioButton1</tabstop>
-    <tabstop>sliderX</tabstop>
-    <tabstop>sliderY</tabstop>
-    <tabstop>checkForce</tabstop>
     <tabstop>checkClose</tabstop>
     <tabstop>textResult</tabstop>
     <tabstop>pushNext</tabstop>
@@ -645,6 +696,7 @@
     <include location="local" impldecl="in declaration">sq_imageedit.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="local" impldecl="in implementation">sq_printpanelframe.h</include>
+    <include location="global" impldecl="in implementation">kstandarddirs.h</include>
     <include location="local" impldecl="in implementation">sq_imageprint.ui.h</include>
 </includes>
 <variables>
@@ -667,9 +719,11 @@
 <functions>
     <function access="private" specifier="non virtual">init()</function>
     <function>startPrinting( int count )</function>
+    <function access="protected">closeEvent( QCloseEvent * e )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
+    <includehint>sq_printpanel.h</includehint>
     <includehint>sq_printpanel.h</includehint>
     <includehint>sq_printpanelbase.h</includehint>
     <includehint>kprogress.h</includehint>

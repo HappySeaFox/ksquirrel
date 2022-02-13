@@ -20,6 +20,7 @@
 
 #include <kmessagebox.h>
 #include <kstringhandler.h>
+#include <ktempfile.h>
 #include <klocale.h>
 
 #include "ksquirrel.h"
@@ -35,10 +36,14 @@ SQ_EditBase::SQ_EditBase() : QObject()
 	err_failed = i18n("failed") + "\n";
 
 	special_action = i18n("Editing");
+
+	image = NULL;
 }
 
 SQ_EditBase::~SQ_EditBase()
-{}
+{
+	if(image) free(image);
+}
 
 void SQ_EditBase::slotStartEdit()
 {
@@ -67,15 +72,15 @@ void SQ_EditBase::slotStartEdit()
 		return;
 	}
 
-	if(special_action != i18n("Converting"))
-		KMessageBox::information(KSquirrel::app(), "This tool is working in preview mode. It won't write images on disk.");
-
 	startEditPrivate();
 }
 
-QString SQ_EditBase::adjustFileName(const QString &globalprefix, const QString &name, QString putto, bool paged, int page)
+QString SQ_EditBase::adjustFileName(const QString &globalprefix, const QString &name1, bool replace, QString putto, bool paged, int page)
 {
-	QFileInfo ff(name);
+	QFileInfo ff(name1);
+	QString name = ff.dirPath() + "/" + globalprefix + ff.fileName();
+	ff = QFileInfo(name);
+
 	QString result, inner, filter = lw->filter;
 	QString ext = ff.extension(false);
 	QString prefix, suffix, name2 = name;
@@ -91,23 +96,29 @@ QString SQ_EditBase::adjustFileName(const QString &globalprefix, const QString &
 
 	prefix.truncate(name2.length() - ext.length());
 
-	if(SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.")+ext))
+	if(SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.") + ext))
 		suffix = filter.section("*.", 0, 0, QString::SectionSkipEmpty).stripWhiteSpace();
 	else
 		suffix = ext;
 
-	int f = 1;
-	while(true)
-	{
+	if(replace)
 		result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
+	else
+	{
+		int f = 1;
 
-		if(QFile::exists(result))
+		while(true)
 		{
-			inner = QString::fromLatin1("%1.").arg(f);
-			f++;
+			result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
+
+			if(QFile::exists(result))
+			{
+				inner = QString::fromLatin1("%1.").arg(f);
+				f++;
+			}
+			else
+				break;
 		}
-		else
-			break;
 	}
 
 	return QFile::encodeName(result);
@@ -125,12 +136,25 @@ void SQ_EditBase::decodingCycle()
 	fmt_info			finfo;
 	QString			name;
 	jmp_buf			jmp;
-	static RGBA		*image = NULL;
 	RGBA			*scan;
 	int				errors, gerrors = 0, current;
 	QString 			putto;
 	bool			replace = (imageopt.where_to_put == 1);
 	fmt_image 		im;
+
+	if(ondisk)
+	{
+		tempfile = new KTempFile;
+		tempfile->setAutoDelete(true);
+
+		tempfile->close();
+
+		if(tempfile->status())
+		{
+			fprintf(stderr, "temporary file creation failed\n");
+			return;
+		}
+	}
 
 	QValueList<QString>::iterator   BEGIN = files.begin();
 	QValueList<QString>::iterator   END = files.end();
@@ -140,9 +164,11 @@ void SQ_EditBase::decodingCycle()
 
 	for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
 	{
+		currentFile = *it;
+
 		QFileInfo ff(*it);
 
-		emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + QString(" ... "), false);
+		emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + " ... ", false);
 
 		if(SQ_LibraryHandler::instance()->supports(*it))
 		{
@@ -188,9 +214,9 @@ void SQ_EditBase::decodingCycle()
 //				name = adjustFileName(*it, lw->filter);
 //				printf("name: %s\n", name.ascii());
 
-				i = lr->codec->fmt_read_next();
-
 				qApp->processEvents();
+
+				i = lr->codec->fmt_read_next();
 
 				finfo = lr->codec->information();
 
@@ -204,27 +230,35 @@ void SQ_EditBase::decodingCycle()
 						if(ondisk)
 						{
 							if(current == 1)
-								name = adjustFileName(imageopt.prefix, *it, putto);
+								name = adjustFileName(imageopt.prefix, *it, replace, putto);
 							else
-								name = adjustFileName(imageopt.prefix, *it, putto, true, current);
+								name = adjustFileName(imageopt.prefix, *it, replace, putto, true, current);
 						}
 						else
 							name = QString::null;
 
-						i = manipDecodedImage(lw, name, image, im, opt);
+						if(ondisk)
+							i = manipAndWriteDecodedImage(tempfile->name(), &im, opt);
+						else
+							i = manipAndWriteDecodedImage(QString::null, &im, opt);
 
-						emit convertText((errors) ? (i18n("1 error", "%n errors", errors)+"\n") : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
+						emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
 						emit oneFileProcessed();
+
+						i = SQE_OK;
+
+						if(ondisk)
+							i = copyFile(tempfile->name(), name);
 
 						qApp->processEvents();
 
 						if(replace && ondisk)
 						{
-							emit convertText(i18n("Removing ") + KStringHandler::rsqueeze(ff.fileName()) + QString(" ... "), false);
+							emit convertText(i18n("Removing") + KStringHandler::rsqueeze(ff.fileName()) + QString(" ... "), false);
 
 							bool b = QFile::remove(*it);
 
-							emit convertText((b) ? SQ_ErrorString::instance()->stringSN(SQE_OK) : err_failed, true);
+							emit convertText(b ? SQ_ErrorString::instance()->stringSN(SQE_OK) : err_failed, true);
 							emit oneFileProcessed();
 
 							qApp->processEvents();
@@ -239,14 +273,19 @@ void SQ_EditBase::decodingCycle()
 				if(current)
 				{
 					if(ondisk)
-						name = adjustFileName(imageopt.prefix, *it, putto, true, current);
+						name = adjustFileName(imageopt.prefix, *it, replace, putto, true, current);
 					else
 						name = QString::null;
 
 //					i = lw->codec->fmt_writeimage(name.ascii(), image, finfo.image[current-1].w, finfo.image[current-1].h, opt);
-					i = manipDecodedImage(lw, name, image, im, opt);
+					i = manipAndWriteDecodedImage(tempfile->name(), &im, opt);
 
-//					emit convertText((errors) ? (i18n("1 error", "%n errors", errors)+"\n") : messages[i], true);
+					i = SQE_OK;
+
+					if(ondisk)
+						i = copyFile(tempfile->name(), name);
+
+//					emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : messages[i], true);
 //					emit oneFileProcessed();
 //					qApp->processEvents();
 				}
@@ -305,8 +344,123 @@ void SQ_EditBase::decodingCycle()
 		image = NULL;
 	}
 
+	cycleDone();
+
+	if(ondisk)
+		delete tempfile;
+
 	if(imageopt.close && !gerrors)
 		emit done(true);
 	else
 		emit done(false);
 }
+
+int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt)
+{
+	int 		passes = opt.interlaced ?  lw->opt.passes : 1;
+	int 		s, j, err;
+	RGBA 	*scan = NULL;
+
+//	if(lw->opt.needflip)
+//		fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
+
+	err = manipDecodedImage(im);
+
+	if(err != SQE_OK)
+		goto error_exit;
+
+	scan = new RGBA [im->w];
+
+	if(!scan)
+		return SQE_W_NOMEMORY;
+
+	err = lw->codec->fmt_write_init(name, *im, opt);
+
+	if(err != SQE_OK)
+		goto error_exit;
+
+	err = lw->codec->fmt_write_next();
+
+	if(err != SQE_OK)
+		goto error_exit;
+
+	for(s = 0;s < passes;s++)
+	{
+		err = lw->codec->fmt_write_next_pass();
+
+		if(err != SQE_OK)
+			goto error_exit;
+
+		for(j = 0;j < im->h;j++)
+		{
+			if(lw->opt.needflip)
+				determineNextScan(*im, scan, im->h-j-1);
+			else
+				determineNextScan(*im, scan, j);
+
+			err = lw->codec->fmt_write_scanline(scan);
+
+			if(err != SQE_OK)
+				goto error_exit;
+		}
+	}
+
+	err = SQE_OK;
+
+	error_exit:
+
+	lw->codec->fmt_write_close();
+
+	if(scan) delete scan;
+
+	return err;
+}
+
+int SQ_EditBase::copyFile(const QString &src, const QString &dst)
+{
+	QFile f_src(src), f_dst(dst);
+	Q_LONG read;
+	char data[4096];
+
+	if(!f_src.open(IO_ReadOnly))
+		return SQE_R_NOFILE;
+
+	if(!f_dst.open(IO_WriteOnly))
+	{
+		f_src.close();
+		return SQE_W_NOFILE;
+	}
+
+	while(!f_src.atEnd())
+	{
+		read = f_src.readBlock(data, sizeof(data));
+
+		f_dst.writeBlock(data, read);
+
+		if(f_dst.status() != IO_Ok || f_src.status() != IO_Ok)
+		{
+			f_src.close();
+			f_dst.close();
+
+			return SQE_W_ERROR;
+		}
+	}
+
+	f_src.close();
+	f_dst.close();
+
+	return SQE_OK;
+}
+
+int SQ_EditBase::determineNextScan(const fmt_image &im, RGBA *scan, int y)
+{
+	memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
+
+	return SQE_OK;
+}
+
+void SQ_EditBase::cycleDone()
+{}
+
+void SQ_EditBase::dialogAdditionalInit()
+{}

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>380</width>
-            <height>395</height>
+            <width>378</width>
+            <height>403</height>
         </rect>
     </property>
     <property name="caption">
@@ -555,7 +555,7 @@
                                 <cstring>unnamed</cstring>
                             </property>
                             <property name="margin">
-                                <number>4</number>
+                                <number>6</number>
                             </property>
                             <property name="spacing">
                                 <number>0</number>
@@ -993,6 +993,9 @@
     <tabstop>textResult</tabstop>
 </tabstops>
 <includes>
+    <include location="local" impldecl="in declaration">sq_imageedit.h</include>
+    <include location="global" impldecl="in declaration">qimage.h</include>
+    <include location="global" impldecl="in declaration">qstringlist.h</include>
     <include location="local" impldecl="in implementation">ksquirrel.h</include>
     <include location="global" impldecl="in implementation">kiconloader.h</include>
     <include location="global" impldecl="in implementation">kfiledialog.h</include>
@@ -1003,9 +1006,6 @@
     <include location="local" impldecl="in implementation">fmt_filters.h</include>
     <include location="local" impldecl="in implementation">fmt_types.h</include>
     <include location="local" impldecl="in implementation">fmt_defs.h</include>
-    <include location="local" impldecl="in declaration">sq_imageedit.h</include>
-    <include location="global" impldecl="in declaration">qimage.h</include>
-    <include location="global" impldecl="in declaration">qstringlist.h</include>
     <include location="local" impldecl="in implementation">sq_imagebcg.ui.h</include>
 </includes>
 <variables>
@@ -1047,6 +1047,7 @@
     <function access="private" returnType="int">RGB2Y( int r, int g, int b )</function>
     <function access="private">assignNewImage( const QImage &amp; im )</function>
     <function access="private">changeImage( int b, int c, int g1, int red, int green, int blue )</function>
+    <function access="protected">closeEvent( QCloseEvent * e )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

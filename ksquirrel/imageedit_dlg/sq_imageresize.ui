@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>553</width>
-            <height>326</height>
+            <height>336</height>
         </rect>
     </property>
     <property name="caption">
@@ -52,7 +52,7 @@
                                 <cstring>unnamed</cstring>
                             </property>
                             <property name="margin">
-                                <number>4</number>
+                                <number>6</number>
                             </property>
                             <property name="spacing">
                                 <number>0</number>
@@ -575,6 +575,7 @@
     <include location="local" impldecl="in implementation">sq_imageeditoptions.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="global" impldecl="in implementation">qpopupmenu.h</include>
+    <include location="local" impldecl="in implementation">libpixops/pixops.h</include>
     <include location="local" impldecl="in implementation">sq_imageresize.ui.h</include>
 </includes>
 <forwards>
@@ -605,6 +606,7 @@
 <functions>
     <function access="private" specifier="non virtual">init()</function>
     <function>startResizing( int count )</function>
+    <function access="protected">closeEvent( QCloseEvent * e )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

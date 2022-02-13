@@ -33,17 +33,17 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	tree = this;
 	vis = false;
 
-	QPixmap homePix = KSquirrel::loader()->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
+//	QPixmap homePix = KSquirrel::loader()->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
 	QPixmap rootPix = KSquirrel::loader()->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall);   
 
 	root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
-	home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
+//	home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
 
 	addColumn("Name");
 	header()->hide();
 
 	setDirOnlyMode(root, true);
-	setDirOnlyMode(home, true);
+//	setDirOnlyMode(home, true);
 
 	setRootIsDecorated(true);
 	setShowSortIndicator(true);

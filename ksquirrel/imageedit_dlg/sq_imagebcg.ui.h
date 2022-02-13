@@ -9,7 +9,7 @@
 
 void SQ_ImageBCG::init()
 {
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
+    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_colorize.png")));
     pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
 
@@ -306,4 +306,15 @@ void SQ_ImageBCG::slotPush()
 
     widgetStackParams->raiseWidget(id);
     text->setText(strings[id]);
+}
+
+void SQ_ImageBCG::closeEvent(QCloseEvent *e)
+{
+    if(done)
+	e->accept();
+    else
+    {
+	e->ignore();
+	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+    }
 }

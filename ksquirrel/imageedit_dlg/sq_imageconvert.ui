@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>382</width>
-            <height>440</height>
+            <width>472</width>
+            <height>366</height>
         </rect>
     </property>
     <property name="caption">
@@ -332,6 +332,7 @@
     <function access="private">initLibs()</function>
     <function>startConvertion( int count )</function>
     <function>fillWriteOptions( fmt_writeoptions * opt, const fmt_writeoptionsabs &amp; opt2 )</function>
+    <function access="protected">closeEvent( QCloseEvent * e )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

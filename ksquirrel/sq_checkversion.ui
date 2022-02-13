@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>517</width>
-            <height>218</height>
+            <width>540</width>
+            <height>228</height>
         </rect>
     </property>
     <property name="caption">
@@ -162,6 +162,7 @@
     <include location="global" impldecl="in implementation">qnetwork.h</include>
     <include location="global" impldecl="in implementation">krun.h</include>
     <include location="global" impldecl="in implementation">ktempfile.h</include>
+    <include location="global" impldecl="in implementation">qapplication.h</include>
     <include location="local" impldecl="in implementation">sq_checkversion.ui.h</include>
 </includes>
 <forwards>

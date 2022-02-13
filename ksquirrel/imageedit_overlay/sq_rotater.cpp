@@ -19,6 +19,7 @@
 
 #include "ksquirrel.h"
 #include "sq_rotater.h"
+#include "sq_library.h"
 #include "sq_imagerotate.h"
 
 SQ_Rotater * SQ_Rotater::sing = NULL;
@@ -63,7 +64,7 @@ SQ_Rotater* SQ_Rotater::instance()
 
 void SQ_Rotater::setWritingLibrary()
 {
-	lw = lr;
+	lw = lr->writable ? lr : NULL;
 }
 
 void SQ_Rotater::dialogReset()
@@ -71,13 +72,44 @@ void SQ_Rotater::dialogReset()
 	rotate->startRotation(files.count());
 }
 
-void SQ_Rotater::dialogAdditionalInit()
+int SQ_Rotater::manipDecodedImage(fmt_image *im)
 {
+	if(rotopt.flipv)
+		fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
 
+	if(rotopt.fliph)
+		fmt_utils::fliph((char *)image, im->w, im->h, sizeof(RGBA));
+
+	if(rotopt.angle == 90 || rotopt.angle == 270)
+	{
+		int t;
+		t = im->w;
+		im->w = im->h;
+		im->h = t;
+	}
+
+	return SQE_OK;
 }
 
-int SQ_Rotater::manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt)
+int SQ_Rotater::determineNextScan(const fmt_image &im, RGBA *scan, int y)
 {
+	if(rotopt.angle == 90)
+	{
+		for(int i = im.w-1, j = 0;i >= 0;i--,j++)
+			scan[j] = *(image + i*im.h + y);
+	}
+	else if(rotopt.angle == 180)
+	{
+		for(int i = 0, j = im.w-1;i < im.w;i++,j--)
+			scan[j] = *(image + y*im.w + i);
+	}
+	else if(rotopt.angle == 270)
+	{
+		for(int i = 0, j = im.w-1;i < im.w;i++,j--)
+			scan[i] = *(image + i*im.h + y);
+	}
+	else
+		memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
+
 	return SQE_OK;
 }

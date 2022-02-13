@@ -67,52 +67,6 @@ void SQ_Converter::setWritingLibrary()
 	lw = SQ_LibraryHandler::instance()->libraryByName(convopt.libname);
 }
 
-int SQ_Converter::manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt)
-{
-	int 		passes = opt.interlaced ?  lw->opt.passes : 1;
-	int 		s, i, j;
-	RGBA 	*scan;
-
-	if(lw->opt.needflip)
-		fmt_utils::flipv((char *)image, im.w * sizeof(RGBA), im.h);
-
-	i = lw->codec->fmt_write_init(name, im, opt);
-
-	if(i != SQE_OK) return i;
-
-	i = lw->codec->fmt_write_next();
-
-	if(i != SQE_OK) return i;
-
-	for(s = 0;s < passes;s++)
-	{
-		i = lw->codec->fmt_write_next_pass();
-
-		if(i != SQE_OK)
-		{
-			lw->codec->fmt_write_close();
-			return i;
-		}
-
-		for(j = 0;j < im.h;j++)
-		{
-			scan = image + im.w * j;
-			i = lw->codec->fmt_write_scanline(scan);
-
-			if(i != SQE_OK)
-			{
-				lw->codec->fmt_write_close();
-				return i;
-			}
-		}
-	}
-
-	lw->codec->fmt_write_close();
-
-	return SQE_OK;
-}
-
 void SQ_Converter::dialogReset()
 {
 	convert->startConvertion(files.count());
@@ -121,4 +75,9 @@ void SQ_Converter::dialogReset()
 void SQ_Converter::dialogAdditionalInit()
 {
 	convert->fillWriteOptions(&opt, lw->opt);
+}
+
+int SQ_Converter::manipDecodedImage(fmt_image *)
+{
+	return SQE_OK;
 }

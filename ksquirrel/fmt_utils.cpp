@@ -49,18 +49,20 @@ void fmt_utils::fliph(s8 *image, s32 w, s32 h, s32 bpp)
 {
     s32 x, y, x2;
     s32 bpl = w * bpp;
-    s8 a[bpp];
+    s8 a[bpp], *t;
 
     if(!image)
 	return;
 
     for(y = 0;y < h;y++)
     {
-	for(x = 0, x2 = h-1;x < w/2;++x,--x2)
+	for(x = 0, x2 = w-1;x < w/2;x++,x2--)
 	{
-	    memcpy(a, image + y*bpl + x2*bpp, bpp);
-	    memcpy(image + y*bpl + x2*bpp, image + y*bpl + x*bpp, bpp);
-	    memcpy(image + y*bpl + x*bpp, a, bpp);
+	    t = image + y*bpl;
+
+	    memcpy(a, t + x2*bpp, bpp);
+	    memcpy(t + x2*bpp, t + x*bpp, bpp);
+	    memcpy(t + x*bpp, a, bpp);
 	}
     }
 }

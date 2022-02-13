@@ -1,3 +1,23 @@
+ksquirrel-0.6.0-pre6 and ksquirrel-libs-0.6.0-pre5
+************************************************************
+
+ksquirrel:
+* resize tool now works (four resize methods: nearest, bilinear, tiles, hyper)
+* colorize tool now works
+* rotate tool now works (has some small bugs in algorithm)
+* print tool now works (only "One image per one page")
+
+ksquirrel-libs:
+* added JPEG2000 (reading)
+* added OpenEXR (reading)
+* added Quake2 WAL texture (reading)
+* added HalfLife model (reading)
+* added KOALA (reading)
+* added HDR (reading)
+* added LIF (reading)
+* added SCT (reading)
+* CUT decoder now not-alpha
+
 ksquirrel-0.6.0-pre5
 ************************************************************
 

@@ -818,7 +818,7 @@ msgid "<b>Libraries (ksquirrel-libs)</b>"
 msgstr "<b>Библиотеки (ksquirrel-libs)</b>"
 
 #: sq_options.cpp:816
-msgid "Minimize to tray when close()"
+msgid "Minimize to tray after closing"
 msgstr "Прятаться в трей при выходе"
 
 #: sq_options.cpp:817

@@ -69,6 +69,13 @@ QRect SQ_Config::readRectEntry(const QString &sgroup, const QString &key, const 
 	return KConfig::readRectEntry(key, def);
 }
 
+QFont SQ_Config::readFontEntry(const QString &sgroup, const QString &key, const QFont *pd)
+{
+	if(group() != sgroup) setGroup(sgroup);
+
+	return KConfig::readFontEntry(key, pd);
+}
+
 SQ_Config* SQ_Config::instance()
 {
 	return sing;

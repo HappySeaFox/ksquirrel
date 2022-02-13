@@ -24,10 +24,12 @@ including Photoshop PSD, X cursors, animated GIF, FLI Animation, PGM/PBM/PPM, SV
 The detailed information, format of libraries with examples, screenshots you can find
 visiting page http://ksquirrel.sourceforge.net/
 
------------------------------------------------------------------------------------
+***********************************************************************************
 
 Icons in 'Edit selected images' tool are based on original crystal theme
 by Everaldo.
+
+***********************************************************************************
 
 Since 0.6.0-pre5 you can use DCOP interface to manipulate KSquirrel. Just run
 
@@ -76,6 +78,6 @@ Examples
 * let's zoom currently loaded image:
 [me@localhost /]$ dcop ksquirrel ksquirrel control zoom_plus
 
-* let's see supported paramertes:
-[me@localhost /]$ dcop ksquirrel ksquirrel control params
+* let's load next image in current directory:
+[me@localhost /]$ dcop ksquirrel ksquirrel control image_next
 

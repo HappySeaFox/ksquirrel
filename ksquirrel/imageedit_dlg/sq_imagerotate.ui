@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>395</width>
-            <height>286</height>
+            <width>416</width>
+            <height>294</height>
         </rect>
     </property>
     <property name="caption">
@@ -51,9 +51,6 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <property name="margin">
-                                <number>4</number>
-                            </property>
                             <widget class="QPushButton" row="0" column="3">
                                 <property name="name">
                                     <cstring>pushOptions</cstring>
@@ -65,23 +62,6 @@
                                     <bool>true</bool>
                                 </property>
                             </widget>
-                            <spacer row="1" column="3">
-                                <property name="name">
-                                    <cstring>spacer4</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Vertical</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>21</width>
-                                        <height>100</height>
-                                    </size>
-                                </property>
-                            </spacer>
                             <spacer row="1" column="1">
                                 <property name="name">
                                     <cstring>spacer9</cstring>
@@ -99,154 +79,6 @@
                                     </size>
                                 </property>
                             </spacer>
-                            <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="1">
-                                <property name="name">
-                                    <cstring>layout10</cstring>
-                                </property>
-                                <grid>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <widget class="QPushButton" row="1" column="1">
-                                        <property name="name">
-                                            <cstring>pushFlipH</cstring>
-                                        </property>
-                                        <property name="sizePolicy">
-                                            <sizepolicy>
-                                                <hsizetype>3</hsizetype>
-                                                <vsizetype>3</vsizetype>
-                                                <horstretch>0</horstretch>
-                                                <verstretch>0</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>82</width>
-                                                <height>82</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string></string>
-                                        </property>
-                                        <property name="autoRepeat">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="autoDefault">
-                                            <bool>false</bool>
-                                        </property>
-                                        <property name="flat">
-                                            <bool>true</bool>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="0" column="1">
-                                        <property name="name">
-                                            <cstring>pushRotateR</cstring>
-                                        </property>
-                                        <property name="sizePolicy">
-                                            <sizepolicy>
-                                                <hsizetype>3</hsizetype>
-                                                <vsizetype>3</vsizetype>
-                                                <horstretch>0</horstretch>
-                                                <verstretch>0</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>82</width>
-                                                <height>82</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string></string>
-                                        </property>
-                                        <property name="autoRepeat">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="autoDefault">
-                                            <bool>false</bool>
-                                        </property>
-                                        <property name="flat">
-                                            <bool>true</bool>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
-                                        <property name="name">
-                                            <cstring>pushReset</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string></string>
-                                        </property>
-                                        <property name="autoDefault">
-                                            <bool>false</bool>
-                                        </property>
-                                        <property name="flat">
-                                            <bool>true</bool>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="0" column="0">
-                                        <property name="name">
-                                            <cstring>pushRotateL</cstring>
-                                        </property>
-                                        <property name="sizePolicy">
-                                            <sizepolicy>
-                                                <hsizetype>3</hsizetype>
-                                                <vsizetype>3</vsizetype>
-                                                <horstretch>0</horstretch>
-                                                <verstretch>0</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>82</width>
-                                                <height>82</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string></string>
-                                        </property>
-                                        <property name="autoRepeat">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="autoDefault">
-                                            <bool>false</bool>
-                                        </property>
-                                        <property name="flat">
-                                            <bool>true</bool>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="1" column="0">
-                                        <property name="name">
-                                            <cstring>pushFlipV</cstring>
-                                        </property>
-                                        <property name="sizePolicy">
-                                            <sizepolicy>
-                                                <hsizetype>3</hsizetype>
-                                                <vsizetype>3</vsizetype>
-                                                <horstretch>0</horstretch>
-                                                <verstretch>0</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>82</width>
-                                                <height>82</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string></string>
-                                        </property>
-                                        <property name="autoRepeat">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="autoDefault">
-                                            <bool>false</bool>
-                                        </property>
-                                        <property name="flat">
-                                            <bool>true</bool>
-                                        </property>
-                                    </widget>
-                                </grid>
-                            </widget>
                             <widget class="QLayoutWidget" row="0" column="2" rowspan="2" colspan="1">
                                 <property name="name">
                                     <cstring>layout14</cstring>
@@ -378,6 +210,171 @@
                                     </spacer>
                                 </vbox>
                             </widget>
+                            <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="1">
+                                <property name="name">
+                                    <cstring>layout4</cstring>
+                                </property>
+                                <grid>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
+                                        <property name="name">
+                                            <cstring>pushReset</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="autoDefault">
+                                            <bool>false</bool>
+                                        </property>
+                                        <property name="flat">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QPushButton" row="0" column="1">
+                                        <property name="name">
+                                            <cstring>pushFlipH</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>3</hsizetype>
+                                                <vsizetype>3</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>82</width>
+                                                <height>82</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="autoRepeat">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="autoDefault">
+                                            <bool>false</bool>
+                                        </property>
+                                        <property name="flat">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QPushButton" row="1" column="0">
+                                        <property name="name">
+                                            <cstring>pushRotateL</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>3</hsizetype>
+                                                <vsizetype>3</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>82</width>
+                                                <height>82</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="autoRepeat">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="autoDefault">
+                                            <bool>false</bool>
+                                        </property>
+                                        <property name="flat">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QPushButton" row="1" column="1">
+                                        <property name="name">
+                                            <cstring>pushRotateR</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>3</hsizetype>
+                                                <vsizetype>3</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>82</width>
+                                                <height>82</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="autoRepeat">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="autoDefault">
+                                            <bool>false</bool>
+                                        </property>
+                                        <property name="flat">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QPushButton" row="0" column="0">
+                                        <property name="name">
+                                            <cstring>pushFlipV</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>3</hsizetype>
+                                                <vsizetype>3</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>82</width>
+                                                <height>82</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="autoRepeat">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="autoDefault">
+                                            <bool>false</bool>
+                                        </property>
+                                        <property name="flat">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                </grid>
+                            </widget>
+                            <spacer row="1" column="3">
+                                <property name="name">
+                                    <cstring>spacer4</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>21</width>
+                                        <height>180</height>
+                                    </size>
+                                </property>
+                            </spacer>
                         </grid>
                     </widget>
                 </grid>
@@ -609,6 +606,7 @@
     <function access="private">rotateImage( bool right )</function>
     <function access="private">updateAngle()</function>
     <function access="private">updateFlipping()</function>
+    <function access="protected">closeEvent( QCloseEvent * e )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

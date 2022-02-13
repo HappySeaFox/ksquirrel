@@ -66,7 +66,7 @@ class fmt_codec_base
 	virtual bool	fmt_readable() const = 0;
 
 	// fmt_read_init: do what you need before decoding
-	virtual s32	fmt_read_init(std::string file) = 0;
+	virtual s32	fmt_read_init(const std::string &file) = 0;
 
 	// fmt_read_next: seek to correct file offset, do other initialization stuff.
 	// this method should be (and will be) called before image is about to
@@ -95,7 +95,7 @@ class fmt_codec_base
 	virtual void    fmt_getwriteoptions(fmt_writeoptionsabs *) = 0;
 
 	// fmt_write_init: init writing
-	virtual s32     fmt_write_init(std::string file, const fmt_image &image, const fmt_writeoptions &opt) = 0;
+	virtual s32     fmt_write_init(const std::string &file, const fmt_image &image, const fmt_writeoptions &opt) = 0;
 	
 	virtual s32	fmt_write_next() = 0;
 
@@ -113,14 +113,32 @@ class fmt_codec_base
 	}
 
     protected:
+	// image index in finfo.image
 	s32               currentImage;
+
+	// fmt_info structure
 	fmt_info          finfo;
+
+	// input stream
 	ifstreamK         frs;
+
+	// output stream
 	ofstreamK         fws;
+
+	// some additional erro checkers
 	bool              read_error, write_error;
-	s32               line;
+
+	// line and layer indexes - needed by some
+	// interlaced or layered images
+	s32               line, layer;
+
+	// error code
 	s32               write_error_code;
+
+	// write options
 	fmt_writeoptions  writeopt;
+
+	// saved fmt_image
 	fmt_image         writeimage;
 };
 

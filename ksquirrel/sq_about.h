@@ -23,7 +23,7 @@
 
 static const char *description = I18N_NOOP("KSquirrel - image viewer for KDE");
 
-#define SQ_VERSION "0.6.0-pre5"
+#define SQ_VERSION "0.6.0-pre6"
 
 static KAboutData aboutData(
 			"ksquirrel", 

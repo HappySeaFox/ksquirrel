@@ -97,10 +97,10 @@ sq_glwidget.moc.o sq_fileiconview.moc.o sq_editsplashbutton.moc.o sq_externaltoo
 @KDE_USE_FINAL_TRUE@ksquirrel_OBJECTS = $(ksquirrel_final_OBJECTS)
 am__DEPENDENCIES_1 =
 ksquirrel_DEPENDENCIES = ./imageedit_overlay/libimageedit_overlay.a \
-	./imageedit_dlg/libimageedit_dlg.a $(am__DEPENDENCIES_1) \
+	./imageedit_dlg/libimageedit_dlg.a ./libpixops/libpixops.a \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
 am__depfiles_maybe = depfiles
@@ -155,6 +155,8 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
+CCAS = @CCAS@
+CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CONF_FILES = @CONF_FILES@
@@ -271,6 +273,8 @@ UIC_TR = @UIC_TR@
 USER_INCLUDES = @USER_INCLUDES@
 USER_LDFLAGS = @USER_LDFLAGS@
 USE_EXCEPTIONS = @USE_EXCEPTIONS@
+USE_MMX_FALSE = @USE_MMX_FALSE@
+USE_MMX_TRUE = @USE_MMX_TRUE@
 USE_RTTI = @USE_RTTI@
 USE_THREADS = @USE_THREADS@
 VERSION = @VERSION@
@@ -364,10 +368,10 @@ xdg_menudir = @xdg_menudir@
 #>- ksquirrel_SOURCES = sq_checkversion.ui sq_thumbnailcachemaster.ui sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
 #>+ 1
 ksquirrel_SOURCES=  sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp  sq_glview.cpp sq_locationtoolbar.cpp  sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp  sq_librarylistener.cpp sq_libraryhandler.cpp   sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp  sq_fileiconview.cpp sq_filedetailview.cpp  sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp  sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp
+ksquirrel_LDADD = ./imageedit_overlay/libimageedit_overlay.a ./imageedit_dlg/libimageedit_dlg.a ./libpixops/libpixops.a $(LIB_KIO) $(LIB_KDEPRINT) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET) 
 
 ####### kdevelop will overwrite this part!!! (end)############
-ksquirrel_LDADD = ./imageedit_overlay/libimageedit_overlay.a ./imageedit_dlg/libimageedit_dlg.a $(LIB_KIO) $(LIB_KDEPRINT) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
-SUBDIRS = imageedit_dlg imageedit_overlay 
+SUBDIRS = imageedit_dlg imageedit_overlay libpixops
 EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	hi32-app-ksquirrel.png hi16-app-ksquirrel.png error.h \
 	sq_about.h sq_archivehandler.cpp sq_archivehandler.h \
@@ -396,7 +400,7 @@ EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	fileio.cpp sq_errorstring.cpp sq_errorstring.h fmt_filters.cpp \
 	fmt_filters.h sq_editsplashbutton.cpp sq_editsplashbutton.h \
 	sq_thumbnailcachemaster.ui sq_glwidget_helpers.h \
-	sq_checkversion.ui
+	sq_checkversion.ui sq_library.h
 
 # These paths are KDE specific. Use them:
 # kde_appsdir         Where your application's menu entry (.desktop) should go to.
@@ -1059,7 +1063,7 @@ clean-metasources:
 	-rm -f  sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_editsplashbutton.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_quickbrowser.moc.cpp sq_diroperatorbase.moc.cpp sq_tray.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp
 
 #>+ 2
-KDE_DIST=sq_imageproperties.ui.h sq_version sq_librarieschanged.h fmt_defs.h sq_librarieschanged.ui.h fmt_codec_base.h sq_viewcache.h sq_imageproperties.h sq_externaltools.ui.h fileio.h sq_externaltools.h sq_checkversion.ui.h fmt_utils.h ksquirrel sq_filters.h fmt_types.h sq_options.ui.h sq_viewcache.ui.h sq_checkversion.h Makefile.in sq_thumbnailcachemaster.h sq_options.h sq_helpwidget.h sq_thumbnailcachemaster.ui.h Makefile.am 
+KDE_DIST=sq_imageproperties.ui.h sq_version fmt_defs.h sq_librarieschanged.ui.h fmt_codec_base.h sq_externaltools.ui.h fileio.h sq_checkversion.ui.h fmt_utils.h fmt_types.h sq_options.ui.h sq_viewcache.ui.h Makefile.in sq_thumbnailcachemaster.ui.h Makefile.am 
 
 #>+ 12
 clean-ui:

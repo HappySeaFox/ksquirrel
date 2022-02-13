@@ -89,6 +89,7 @@
 #include "sq_contraster.h"
 #include "sq_rotater.h"
 #include "sq_printer.h"
+#include "sq_filter.h"
 
 #include <unistd.h>
 
@@ -567,6 +568,7 @@ void KSquirrel::createActions()
 	pAImageBCG = new KAction(i18n("Colorize"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/bcg.png")), CTRL+Key_S, SQ_Contraster::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image BCG");
 	pAImageRotate = new KAction(i18n("Rotate"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/rotate.png")), CTRL+Key_J, SQ_Rotater::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Rotate");
 	pAImageFilter = new KAction(i18n("Filter"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/filter.png")), CTRL+Key_D, 0, 0, actionCollection(), "SQ Image Filter");
+//	pAImageFilter = new KAction(i18n("Filter"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/filter.png")), CTRL+Key_D, SQ_Filter::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Filter");
 	pAPrintImages = new KAction(i18n("Print"), QPixmap::fromMimeSource(locate("appdata", "images/imageedit/print.png")), CTRL+Key_P, SQ_Printer::instance(), SLOT(slotStartEdit()), actionCollection(), "SQ Image Print");
 
 	pAThumb0 = new KRadioAction(i18n("Small thumbnails"), QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_small.png")), 0, this, SLOT(slotThumbsSmall()), actionCollection(), "SQ thumbs0");
@@ -580,7 +582,7 @@ void KSquirrel::createActions()
 	pAThumb2->setExclusiveGroup(thumbs_size__);
 	pAThumb3->setExclusiveGroup(thumbs_size__);
 
-	pACheck = new KAction(i18n("Check for newer version"), "network", CTRL+Key_Slash, this, SLOT(slotCheckVersion()), actionCollection(), "SQ Check Version");
+	pACheck = new KAction(i18n("Check for a newer version"), "network", CTRL+Key_Slash, this, SLOT(slotCheckVersion()), actionCollection(), "SQ Check Version");
 
 	switch(thumbSize->value())
 	{
@@ -917,6 +919,7 @@ void KSquirrel::preCreate()
 	new SQ_Rotater;
 	new SQ_Contraster;
 	new SQ_Printer;
+	new SQ_Filter;
 
 	createActions();
 

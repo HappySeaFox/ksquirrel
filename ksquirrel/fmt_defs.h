@@ -33,7 +33,6 @@ struct fmt_metaentry
 {
     std::string	group;
     std::string	data;
-
 };
 
 /* RGBA and RGB pixels */
@@ -125,7 +124,6 @@ struct fmt_info
     
     // animated or static
     bool			animated;
-
 };
 
 /*                                                                Internal cmpression.

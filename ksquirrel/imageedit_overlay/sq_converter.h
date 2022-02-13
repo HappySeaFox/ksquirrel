@@ -43,8 +43,7 @@ class SQ_Converter : public SQ_EditBase
 		virtual void setWritingLibrary();
 		virtual void dialogReset();
 		virtual void dialogAdditionalInit();
-		virtual int   manipDecodedImage(SQ_LIBRARY *lw, const QString &name, RGBA *image,
-												const fmt_image &im, const fmt_writeoptions &opt);
+		virtual int manipDecodedImage(fmt_image *im);
 
 	private slots:
 		void slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*);

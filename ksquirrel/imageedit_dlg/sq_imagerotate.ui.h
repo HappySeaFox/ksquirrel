@@ -11,7 +11,7 @@ void SQ_ImageRotate::init()
 {
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_rotate.png")));
     pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
+    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     pushRotateL->setPixmap(locate("appdata", "images/imageedit/rotateL.png"));
     pushRotateR->setPixmap(locate("appdata", "images/imageedit/rotateR.png"));
     pushFlipV->setPixmap(locate("appdata", "images/imageedit/flipV.png"));
@@ -253,4 +253,15 @@ void SQ_ImageRotate::slotReject()
 {
     if(done)
 	reject();
+}
+
+void SQ_ImageRotate::closeEvent(QCloseEvent *e)
+{
+    if(done)
+	e->accept();
+    else
+    {
+	e->ignore();
+	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+    }
 }

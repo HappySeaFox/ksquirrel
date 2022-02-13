@@ -18,6 +18,8 @@
 #ifndef SQ_IMAGEEDIT_H
 #define SQ_IMAGEEDIT_H
 
+#include <qfont.h>
+
 struct SQ_ImageOptions
 {
 	QString putto;
@@ -34,6 +36,7 @@ struct SQ_ImageResizeOptions
 	int w, h;
 	bool preserve;
 	int adjust;
+	int method;
 };
 
 struct SQ_ImageRotateOptions
@@ -55,7 +58,14 @@ struct SQ_ImageConvertOptions
 
 struct SQ_ImagePrintOptions
 {
-	int fix;
+	int type;
+	int in_x, in_y;
+	QString align;
+};
+
+struct SQ_ImageFilterOptions
+{
+	int dummy;
 };
 
 #endif

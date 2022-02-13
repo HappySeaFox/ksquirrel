@@ -11,10 +11,10 @@ void SQ_ImageResize::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_resize.png")));
     pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
-    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, 16));
+    pushOptions->setPixmap(KSquirrel::loader()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     groupBoxApsect->setEnabled(false);
 
-    method = "NEAREST";
+    method = SQ_Config::instance()->readEntry("Image edit options", "resize_method", "NEAREST");
     methods = new QPopupMenu;
     methods->insertItem(tr2i18n("NEAREST"));
     methods->insertItem(tr2i18n("BILINEAR"));
@@ -24,11 +24,10 @@ void SQ_ImageResize::init()
     pushMethod->setPopup(methods);
 
     widgetStackTypes->setPaletteBackgroundColor(widgetStackTypes->colorGroup().highlight().light(110));
-
     strings.append(tr2i18n("<b>resize&nbsp;in&nbsp;percents</b>"));
     strings.append(tr2i18n("<b>resize&nbsp;in&nbsp;pixels</b>"));
 
-    id = 1;
+    id = SQ_Config::instance()->readNumEntry("Image edit options", "resize_which", 1);
     widgetStackTypes->raiseWidget(id);
     text->setText(strings[id] + QString::fromLatin1("&nbsp;<b>[%1]</b>").arg(method));
 
@@ -54,6 +53,13 @@ void SQ_ImageResize::init()
     imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "resize_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "resize_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "resize_close", true);
+    
+    checkPreserve->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "resize_preserve", true));
+    comboFit->setCurrentItem(SQ_Config::instance()->readNumEntry("Image edit options", "resize_fit", 2));
+    comboApplyTo->setCurrentItem(SQ_Config::instance()->readNumEntry("Image edit options", "resize_applyto", 2));
+    kIntPercent->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_percent", 100));
+    kIntPixW->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_w", 1));
+    kIntPixH->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_h", 1));
 
     done = true;
 }
@@ -99,6 +105,21 @@ void SQ_ImageResize::slotStartResize()
     ropt.preserve = checkPreserve->isChecked();
     ropt.adjust = (ropt.percentage) ? comboApplyTo->currentItem() : comboFit->currentItem();
 
+    if(method == "NEAREST") ropt.method = PIXOPS_INTERP_NEAREST;
+    else if(method == "BILINEAR") ropt.method = PIXOPS_INTERP_BILINEAR;
+    else if(method == "TILES") ropt.method = PIXOPS_INTERP_TILES;
+    else ropt.method = PIXOPS_INTERP_HYPER;
+    
+    SQ_Config::instance()->setGroup("Image edit options");
+    SQ_Config::instance()->writeEntry("resize_w", kIntPixW->value());
+    SQ_Config::instance()->writeEntry("resize_h", kIntPixH->value());
+    SQ_Config::instance()->writeEntry("resize_percent", kIntPercent->value());
+    SQ_Config::instance()->writeEntry("resize_applyto", comboApplyTo->currentItem());
+    SQ_Config::instance()->writeEntry("resize_fit", comboFit->currentItem());
+    SQ_Config::instance()->writeEntry("resize_preserve", checkPreserve->isChecked());
+    SQ_Config::instance()->writeEntry("resize_which", id);
+    SQ_Config::instance()->writeEntry("resize_method", method);
+
     emit _resize(&imageopt, &ropt);
 }
 
@@ -143,4 +164,15 @@ void SQ_ImageResize::slotMethodActivated(int idd)
 {
     method = methods->text(idd);
     text->setText(strings[id] + QString::fromLatin1("&nbsp;<b>[%1]</b>").arg(method));
+}
+
+void SQ_ImageResize::closeEvent(QCloseEvent *e)
+{
+    if(done)
+	e->accept();
+    else
+    {
+	e->ignore();
+	QWhatsThis::display(tr2i18n("Editing process is not finished yet"));
+    }
 }

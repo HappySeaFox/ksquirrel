@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0-pre4], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.0-pre6], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre5)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre6)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -46,6 +46,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
+AM_PROG_AS
 AC_PATH_PROG([PERL], [perl])
 
 AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
@@ -64,7 +65,7 @@ LDFLAGS="$X_PRE_LIBS -lX11 $X_LDFLAGS $X_EXTRA_LIBS $LDFLAGS"
 
 if test "x$sq_ogl" = "xyes"; then
 
-AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h) and GLU (GL/glu.h) headers to be installed."))
+AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h, ...) and GLU (GL/glu.h) headers to be installed."))
 
 SQ_GL_ERROR="OpenGL library is corrupted or not installed."
 
@@ -109,9 +110,67 @@ AC_FUNC_STAT
 
 AC_CHECK_FUNCS([memcpy memset], [], AC_MSG_ERROR("ksquirrel needs memcpy() and memset() functions!"))
 
+##################### from gdk-pixbuf-0.22 #########################
+#
+# Checks to see if we should compile in MMX support (there will be
+# a runtime test when the code is actually run to see if it should
+# be used - this just checks if we can compile it.)
+#
+# This code is partially taken from Mesa
+#
+dnl Let people disable the MMX optimization
+AC_ARG_ENABLE(mmx, [  --disable-mmx     Don't use MMX optimization [default=auto]], enable_mmx="$enableval", enable_mmx=auto)
+
+AC_MSG_CHECKING(for x86 platform)
+  case $host_cpu in
+    i386|i486|i586|i686|i786|k6|k7)
+	use_x86_asm=yes
+	;;
+    *)
+  	use_x86_asm=no
+  esac
+AC_MSG_RESULT($use_x86_asm)
+
+dnl Are we going to use MMX extensions
+use_mmx_asm=no
+
+AC_MSG_CHECKING(compiler support for MMX)
+
+if test x$enable_mmx = xauto ; then
+  if test $use_x86_asm = yes; then
+    save_ac_ext=$ac_ext
+    ac_ext=S
+    
+    cp $srcdir/ksquirrel/libpixops/scale_line_22_33_mmx.S conftest.S
+    if AC_TRY_EVAL(ac_compile); then
+        use_mmx_asm=yes
+    fi
+    dnl rm -f conftest.[oS]
+
+    ac_ext=$save_ac_ext
+  fi
+
+dnl Enforce usage of MMX extensions
+elif test x$enable_mmx = xyes ; then
+    use_mmx_asm=yes
+else
+    use_mmx_asm=no
+fi
+
+if test $use_mmx_asm = yes; then
+  AC_DEFINE([USE_MMX], [], [Use MMX instructions])
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+
+AM_CONDITIONAL(USE_MMX, test x$use_mmx_asm = xyes)
+###################################################
+
 KDE_CREATE_SUBDIRSLIST
 
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([ksquirrel/libpixops/Makefile])
 AC_CONFIG_FILES([ksquirrel/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_dlg/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_overlay/Makefile])

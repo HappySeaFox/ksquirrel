@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>515</width>
-            <height>442</height>
+            <width>613</width>
+            <height>483</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -415,7 +415,7 @@
                                     <cstring>checkMinimize</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Minimize to tray when close()</string>
+                                    <string>Minimize to tray after closing</string>
                                 </property>
                             </widget>
                             <widget class="QCheckBox" row="1" column="0">
