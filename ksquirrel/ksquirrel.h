@@ -1,4 +1,4 @@
-#ifndef SPLITTER_MAIN_WIDGET
+		#ifndef SPLITTER_MAIN_WIDGET
 #define SPLITTER_MAIN_WIDGET
 
 #include <qsplitter.h>
@@ -47,20 +47,25 @@ class Squirrel : public KDockMainWindow
     private:
 	       int build;
 		SQ_SystemTray	*tray;
-		QToolButton		*tbExit, *tbEdit, *tbOptions, *tbRun, *tbNewPage, *tbGrab;
+		QToolButton		*pTBAbstractButton;
 		KMenuBar		*menubar;
 		KToolBar			*fileTools;
+		QPopupMenu		*pmLaunch;
 		KPopupMenu		*pop_file, *pop_view, *pop_edit;
 		QPixmap		fullIcon, unfullIcon;
-		QPopupMenu *pmNewPageMenu;
+
     public slots:
 		void slotEdit();
 		void slotOptions();
 		void slotExit();
-		void slotNewPage(int);
+		void slotNewPageIcon();
+		void slotNewPageList();
+		void slotNewPageDetailed();
+		void slotNewPageKonsole();
 		void slotGrab();
-		void slotDoNothing() {}
 		void slotCloseCurrentPage();
+		void slotExecuteRunMenu();
+		void slotDoNothing() {}
 
     public:
 		Squirrel(QWidget *parent = 0, const char *name = 0);
@@ -74,7 +79,7 @@ class Squirrel : public KDockMainWindow
 
 		KConfig *kconf;
 		KIconLoader *iconL;
-		SQ_MyTabWidget	*tbmain;
+		SQ_MyTabWidget	*pMainTabWidget;
 		QValueList<KURL> *bookmarks;
 
 		KStatusBar	*sbar;
@@ -89,9 +94,8 @@ class Squirrel : public KDockMainWindow
 #define   sqLoader           (Squirrel::App->iconL)
 #define   sqStatus            (Squirrel::App->sbar)
 #define   sqProgress        (Squirrel::App->progress)
-#define   sqTabWidget      (Squirrel::App->tbmain)
 #define   sqBookmarks     (Squirrel::App->bookmarks)
-#define   sqTabWidget      (Squirrel::App->tbmain)
+#define   sqTabWidget      (Squirrel::App->pMainTabWidget)
 
 #define   sqSBdirInfo          (Squirrel::App->dirInfo)
 #define   sqSBcurFileInfo    (Squirrel::App->curFileInfo)

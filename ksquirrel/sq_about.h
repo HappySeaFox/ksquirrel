@@ -13,7 +13,7 @@ static KAboutData aboutData(
 			KAboutData::License_GPL,
 			"(c) 2003, CKulT", 
 			"",
-			"http://squirrel.sourceforge.net",
+			"http://ksquirrel.sourceforge.net",
 			"");
     
 #endif

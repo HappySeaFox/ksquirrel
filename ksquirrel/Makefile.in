@@ -239,12 +239,12 @@ x_libraries = @x_libraries@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = ksquirrel
 
-#>- ksquirrel_SOURCES = sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
+#>- ksquirrel_SOURCES = sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
 #>+ 1
-ksquirrel_SOURCES=sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp  sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp  sq_diroperator.cpp ksquirrel.cpp main.cpp  sq_options.cpp sq_editpicture.cpp
+ksquirrel_SOURCES=sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_page.cpp  sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp  sq_diroperator.cpp ksquirrel.cpp main.cpp  sq_options.cpp sq_editpicture.cpp
 ksquirrel_LDADD = -lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_page.cpp sq_page.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h xdirs.h sq_specialpage.cpp sq_specialpage.h sq_version sq_version.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_options.ui.h sq_page.cpp sq_page.h sq_specialpage.cpp sq_specialpage.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h sq_version sq_version.h xdirs.h 
 
 ####### kdevelop will overwrite this part!!! (end)############
 # These paths are KDE specific. Use them:
@@ -283,16 +283,16 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = ksquirrel$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_ksquirrel_OBJECTS = sq_specialpage.$(OBJEXT) sq_treeview.$(OBJEXT) \
-	sq_tray.$(OBJEXT) sq_splash.$(OBJEXT) sq_page.$(OBJEXT) \
+am_ksquirrel_OBJECTS = sq_treeview.$(OBJEXT) sq_tray.$(OBJEXT) \
+	sq_splash.$(OBJEXT) sq_specialpage.$(OBJEXT) sq_page.$(OBJEXT) \
 	sq_menu_proc.$(OBJEXT) sq_grabwidget.$(OBJEXT) \
 	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
 	sq_diroperator.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT)
 #>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
 #>+ 9
 ksquirrel_final_OBJECTS = ksquirrel.all_cpp.o 
-ksquirrel_nofinal_OBJECTS = sq_specialpage.$(OBJEXT) sq_treeview.$(OBJEXT) \
-	sq_tray.$(OBJEXT) sq_splash.$(OBJEXT) sq_page.$(OBJEXT) \
+ksquirrel_nofinal_OBJECTS = sq_treeview.$(OBJEXT) sq_tray.$(OBJEXT) \
+	sq_splash.$(OBJEXT) sq_specialpage.$(OBJEXT) sq_page.$(OBJEXT) \
 	sq_menu_proc.$(OBJEXT) sq_grabwidget.$(OBJEXT) \
 	sq_fileiconview.$(OBJEXT) sq_filedetailview.$(OBJEXT) \
 	sq_diroperator.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_options.$(OBJEXT) sq_editpicture.$(OBJEXT)\
@@ -520,7 +520,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=ksquirrel sq_options.ui.h squirrelrc Makefile.in sq_options.h sq_editpicture.h 
+KDE_DIST=squirrelrc Makefile.in sq_options.h sq_editpicture.h 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -657,29 +657,11 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(kde_appsdir)/Applications/ksquirrel.desktop
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(DESTDIR)$(kde_appsdir)/Applications/ksquirrel.desktop
-#>- 	$(mkinstalldirs) $(kde_icondir)/locolor/32x32/apps/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/locolor/32x32/apps/
-#>- 	$(INSTALL_DATA) $(srcdir)/lo32-app-ksquirrel.png $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-#>+ 1
-	$(INSTALL_DATA) $(srcdir)/lo32-app-ksquirrel.png $(DESTDIR)$(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-#>- 	$(mkinstalldirs) $(kde_icondir)/locolor/16x16/apps/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/
-#>- 	$(INSTALL_DATA) $(srcdir)/lo16-app-ksquirrel.png $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
-#>+ 1
-	$(INSTALL_DATA) $(srcdir)/lo16-app-ksquirrel.png $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/ksquirrel.png
 
 uninstall-local:
 #>- 	-rm -f $(kde_appsdir)/Applications/ksquirrel.desktop
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_appsdir)/Applications/ksquirrel.desktop
-#>- 	-rm -f $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-#>- 	-rm -f $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_icondir)/locolor/16x16/apps/ksquirrel.png
 
 # Uncomment the following two lines if you add a ui.rc file for your application to make use of
 # KDE?s XML GUI builing
@@ -789,11 +771,11 @@ force-reedit:
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_page.cpp $(srcdir)/sq_menu_proc.cpp $(srcdir)/sq_grabwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp  sq_options.moc sq_editpicture.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_page.cpp $(srcdir)/sq_menu_proc.cpp $(srcdir)/sq_grabwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp  sq_options.moc sq_editpicture.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
-	for file in sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp ksquirrel.cpp main.cpp sq_options.cpp sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp ; do \
+	for file in sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_page.cpp sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp ksquirrel.cpp main.cpp sq_options.cpp sq_editpicture.cpp sq_menu_proc.moc.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_page.moc.cpp sq_grabwidget.moc.cpp sq_treeview.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
 	done; \

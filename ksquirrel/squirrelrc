@@ -4,10 +4,6 @@
 3=/mnt/win_f/
 4=/root/
 
-[Development]
-Progress=true
-Step=2
-
 [Filters]
 1=*
 10=Windows bitmap
@@ -24,14 +20,14 @@ Step=2
 20=C++ files
 21=*.mpeg *.mpg *.avi *.divx *.dat *.asf
 22=Video files
-23=*.mp3 *.ogg *.wav *.mid
+23=*.mp3 *.ogg *.wav *.mid *.wma *.ra
 24=Audio files
 25=*.html *.htm *.shtml
 26=HTML documents
-27=*.rar *.zip *.gz *.bz2
+27=*.rar *.zip *.gz *.bz2 *.tgz *.lha
 28=Archives
-29=*.gz *.bz2
-3=*.png *.pcx *.bmp *.dib *.gif *.tiff *.jpg *.jpeg *.jpe *.xpm *.xbm *.pnm *.tif *.sgi
+29=*.gz *.bz2 *.tgz
+3=*.png *.pcx *.bmp *.dib *.gif *.tiff *.jpg *.jpeg *.jpe *.xpm *.xbm *.pnm *.tif *.sgi *.ppm *.pbm *.pgm
 30=Linux archives
 4=Graphic Files
 5=*.xpm *.pnm *.ppm *.xbm
@@ -43,12 +39,14 @@ default=1
 
 [Interface]
 Activate duplicated=true
+create page=
+load preview=true
 load treeview=true
 
 [KFileDialog Settings]
 Automatic Preview=true
 Preview Size=60
-Recent Files=/home/ckult,/mnt,/mnt/win_e,/sbin,/mnt/win_f/video,/root/MyProjects/dock
+Recent Files=/root/docs/sq/squirrel.png,/mnt/win_f/Light Electronics/Arcana/1996 Dark Age of Reason,/home/ckult,/mnt,/mnt/win_e,/sbin,/mnt/win_f/video,/root/MyProjects/dock
 ShowPreviews=false
 ViewMode=SmallColumns
 
@@ -57,7 +55,7 @@ Speedbar IconSize=32
 
 [Main]
 Minimize to tray=false
-build=1088678880
+build=36332460
 
 [Open-with settings]
 CompletionMode=5
@@ -99,4 +97,4 @@ Sort case insensitively=false
 Sort directories first=true
 Sort reversed=false
 View Style=Simple
-ViewMode=SmallColumns
+ViewMode=LargeRows

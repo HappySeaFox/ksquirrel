@@ -11,19 +11,13 @@
 
 #include <kpopupmenu.h>
 #include <kurl.h>
-#include <kurlrequester.h>
+#include <kcombobox.h>
+#include <kurlcompletion.h>
 #include <kfile.h>
 #include <kfilefiltercombo.h>
 
 #include "sq_diroperator.h"
 #include "ksquirrel.h"
-
-typedef struct
-{
-    KURL url;
-    KFile::FileView View;
-    int type;
-}PAGESETT;
 
 typedef struct
 {
@@ -36,27 +30,25 @@ class SQ_Page : public QWidget
     Q_OBJECT
 
     private:
-	QVBoxLayout *l;
-	SQ_DirOperator *dirop;
-	QToolBar *toolbar, *toolbar2;
-	QString filter;
-	KFileFilterCombo *filterCombo;
-	KURLRequester *curPath;
-	QToolButton *togHidden, *tbUp, *tbBack, *tbForward;
+	QVBoxLayout		*pPageLayout;
+	SQ_DirOperator	*pDirOperator;
+	QToolBar		*pPageToolbar, *pPageToolbar2;
+	KHistoryCombo	*pCurrentURL;
+	QToolButton		*pTBUp, *pTBBack, *pTBForward, *pTBBookmarkAdd, *pFilterButton;
 	KPopupMenu		*menuIconSize;
 	QPopupMenu		*menuBookmarks;
-	int Type;
+	QPixmap		folderPix;
+
 	QValueList<FILTER> *fl;
-	QToolButton *filterButton;
- 	int menuBookmarksID;
-	QPixmap	folderPix;
+
+	int menuBookmarksID;
+  	int Type;
+	
     public:
     
-	SQ_Page(QWidget *parent, PAGESETT *ps);
     	SQ_Page(QWidget *parent = 0, KURL path = KURL("/"), KFile::FileView View = KFile::Simple, int type = 1);
 	~SQ_Page();
 																			
-	PAGESETT* getPageSett();
 	int getType() const;
 	
     public slots:
@@ -74,7 +66,6 @@ class SQ_Page : public QWidget
        void slotDelete();
        void slotProp();
        void slotAddBookmark();
-       void slotDupTab();
 	void slotCloseTab();
 	void slotSetIconSize16();
 	void slotSetIconSize22();

@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_editpicture.ui'
 **
-** Created: Птн Янв 23 15:28:49 2004
+** Created: Сбт Янв 24 15:51:36 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!

@@ -1,6 +1,7 @@
 #include <qsplitter.h>
 #include <qapplication.h>
 #include <qpixmap.h>
+#include <qimage.h>
 #include <qvaluelist.h>
 #include <qkeysequence.h>
 #include <qnamespace.h>
@@ -36,138 +37,104 @@ Squirrel * Squirrel::App = 0;
 
 Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent, name)
 {
-    App = this;
+	App = this;
 
-    kconf = new KConfig(QString("squirrelrc"));
-    iconL = new KIconLoader(*(KGlobal::iconLoader()));
-    bookmarks = new QValueList<KURL>;
+	static const int toolbarIconSize = 22;
 
-    sqConfig->setGroup("Main");
-
-//    tray = new SQ_SystemTray(this);
-//    tray->setPixmap(sqLoader->loadIcon("kalarm", KIcon::Desktop, 22));
-//    tray->show();
+	kconf = new KConfig(QString("squirrelrc"));
+	iconL = new KIconLoader(*(KGlobal::iconLoader()));
+	bookmarks = new QValueList<KURL>;
 
 ///////////////////////////////////
 // Insert toolbar
 
-    this->setUsesBigPixmaps(true);
+	fileTools = toolBar("tools");
+	fileTools->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-    fileTools = toolBar("tools");//new QToolBar("tools", this, this, true);
-    fileTools->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("edit", KIcon::Desktop, toolbarIconSize), "Edit picture", QString::null,  this, SLOT(slotEdit()), fileTools);
+	(new QToolButton(QPixmap(0), QString::null, QString::null,  this, 0, fileTools))->setEnabled(false);
 
-    tbEdit = new QToolButton(sqLoader->loadIcon("edit", KIcon::Desktop, 32), "Edit picture", QString::null,  this, SLOT(slotEdit()), fileTools);
-    tbEdit->setUsesTextLabel(true);
-    tbEdit->setTextLabel(tr2i18n("Edit"), false);
-    tbEdit->setTextPosition(QToolButton::Under);
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("ksnapshot", KIcon::Desktop, toolbarIconSize), "Take screenshot", QString::null, this, SLOT(slotGrab()), fileTools);
+	(new QToolButton(QPixmap(0), QString::null, QString::null,  this, 0, fileTools))->setEnabled(false);
+	
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("penguin", KIcon::Desktop, toolbarIconSize), "Edit options", QString::null, this, SLOT(slotOptions()), fileTools);
+	(new QToolButton(QPixmap(0), QString::null, QString::null,  this, 0, fileTools))->setEnabled(false);
 
-    tbGrab = new QToolButton(sqLoader->loadIcon("ksnapshot", KIcon::Desktop, 32), "Take screenshot", QString::null, this, SLOT(slotGrab()), fileTools);
-    tbGrab->setUsesTextLabel(true);
-    tbGrab->setTextLabel("Screeshot");
-    tbGrab->setTextPosition(QToolButton::Under);
+	SQ_MenuProcess *menuproc = new SQ_MenuProcess;
 
-    tbOptions = new QToolButton(sqLoader->loadIcon("penguin", KIcon::Desktop, 32), "Edit options", QString::null, this, SLOT(slotOptions()), fileTools);
-    tbOptions->setUsesTextLabel(true);
-    tbOptions->setTextLabel("Options", false);
-    tbOptions->setTextPosition(QToolButton::Under);
-
-    SQ_MenuProcess *menuproc = new SQ_MenuProcess;
-
-    sqConfig->setGroup("Run");
-    int number = sqConfig->readNumEntry("number", 1);
+	sqConfig->setGroup("Run");
+	int number = sqConfig->readNumEntry("number", 1);
 
 	for(int i = 1;i <= number;i++)
-	{
-		char str1[5], str2[5];        	
-		sprintf(str1, "%d", i);
-		sprintf(str2, "%da", i);
-		menuproc->AddItem(sqConfig->readEntry(str1), sqConfig->readEntry(str2));
-	}
+		menuproc->AddItem(sqConfig->readEntry(QString("%1").arg(i, 0, 10)), sqConfig->readEntry(QString("%1a").arg(i, 0, 10)));
 
-	QPopupMenu *pmLaunch = new QPopupMenu;
+	pmLaunch = new QPopupMenu;
 
-    int getcount = menuproc->GetCount();
+	int getcount = menuproc->GetCount();
 
-    for(int i = 0;i < getcount;i++)
-    {
-        if(strcmp(menuproc->GetName(i), "SEPARATOR"))
-	        pmLaunch->insertItem(sqLoader->loadIcon(menuproc->GetProgName(i), KIcon::Desktop, 16), menuproc->GetName(i), menuproc->GetElementId(i));
-        else
-            pmLaunch->insertSeparator();
-    }
+	for(int i = 0;i < getcount;i++)
+		if(strcmp(menuproc->GetName(i), "SEPARATOR"))
+		{
+			QPixmap px(sqLoader->loadIcon(menuproc->GetProgName(i), KIcon::Desktop, 16));
+			QImage im1;
+			im1 = px;
+			QImage im2;
+			im2 = sqLoader->loadIcon("unknown", KIcon::Desktop, 16);
+			
+			if(im1 == im2)
+				pmLaunch->insertItem(menuproc->GetName(i), menuproc->GetElementId(i));
+			else
+				pmLaunch->insertItem(px, menuproc->GetName(i), menuproc->GetElementId(i));
+		}
+		else
+			pmLaunch->insertSeparator();
 
-    connect(pmLaunch, SIGNAL(activated(int)), menuproc, SLOT(slotRunCommand(int)));
+	connect(pmLaunch, SIGNAL(activated(int)), menuproc, SLOT(slotRunCommand(int)));
 
-    tbRun = new QToolButton(sqLoader->loadIcon("launch", KIcon::Desktop, 32), "Run external program", QString::null, this, SLOT(slotDoNothing()), fileTools);
-    tbRun->setUsesTextLabel(true);
-    tbRun->setTextLabel("Run ...", false);
-    tbRun->setTextPosition(QToolButton::Under);
-    tbRun->setPopup(pmLaunch);
-    tbRun->setPopupDelay(10);
+	fileTools->addSeparator();
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("view_icon", KIcon::Desktop, toolbarIconSize), "New Page: Icon View", QString::null, this, SLOT(slotNewPageIcon()), fileTools);
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("view_choose", KIcon::Desktop, toolbarIconSize), "New Page: List View", QString::null, this, SLOT(slotNewPageList()), fileTools);
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("view_detailed", KIcon::Desktop, toolbarIconSize), "New Page: Detailed View", QString::null, this, SLOT(slotNewPageDetailed()), fileTools);
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("konsole", KIcon::Desktop, toolbarIconSize), "New Page: Konsole module", QString::null, this, SLOT(slotNewPageKonsole()), fileTools);
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("delslide", KIcon::Desktop, toolbarIconSize), "Close current page", QString::null, this, SLOT(slotCloseCurrentPage()), fileTools);
+	fileTools->addSeparator();
+	(new QToolButton(QPixmap(0), QString::null, QString::null,  this, 0, fileTools))->setEnabled(false);
 
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("launch", KIcon::Desktop, toolbarIconSize), "Run external program", QString::null, this, SLOT(slotDoNothing()), fileTools);
+	pTBAbstractButton->setPopup(pmLaunch);
+	pTBAbstractButton->setPopupDelay(10);
+	(new QToolButton(QPixmap(0), QString::null, QString::null,  this, 0, fileTools))->setEnabled(false);
 
-    tbNewPage = new QToolButton(sqLoader->loadIcon("windows_list", KIcon::Desktop, 32), "New Page in main view", QString::null, this, SLOT(slotDoNothing()), fileTools);
-    tbNewPage->setUsesTextLabel(true);
-    tbNewPage->setTextLabel("New page", false);
-    tbNewPage->setTextPosition(QToolButton::Under);
-
-    pmNewPageMenu = new QPopupMenu;
-
-    pmNewPageMenu->insertItem(sqLoader->loadIcon("view_icon", KIcon::Desktop, 16), "Icon view", 10000);
-    pmNewPageMenu->insertItem(sqLoader->loadIcon("view_choose", KIcon::Desktop, 16), "List view", 10001);
-    pmNewPageMenu->insertItem(sqLoader->loadIcon("view_detailed", KIcon::Desktop, 16), "Detailed view", 10002);
-    pmNewPageMenu->insertSeparator();
-    pmNewPageMenu->insertItem(sqLoader->loadIcon("konsole", KIcon::Desktop, 16), "Konsole", 10003);
-    pmNewPageMenu->insertSeparator();
-    pmNewPageMenu->insertItem(sqLoader->loadIcon("tab_remove", KIcon::Desktop, 16), "Close current", 10004);
-    tbNewPage->setPopup(pmNewPageMenu);
-    tbNewPage->setPopupDelay(10);
-    connect(pmNewPageMenu, SIGNAL(activated(int)), this, SLOT(slotNewPage(int)));
-
-
-    tbExit = new QToolButton(sqLoader->loadIcon("error", KIcon::Desktop, 32), "Close Squirrel", QString::null, this, SLOT(slotExit()), fileTools);
-    tbExit->setUsesTextLabel(true);
-    tbExit->setTextLabel("Quit", false);
-    tbExit->setTextPosition(QToolButton::Under);
-
-
-/////////////////////////////////////////////////////
-// Insert tabwidgets & splitters
-    menubar = menuBar();
-
-    pop_file = new KPopupMenu(menubar);
-    pop_edit = new KPopupMenu(menubar);
-    pop_view = new KPopupMenu(menubar);
-
+	pTBAbstractButton = new QToolButton(sqLoader->loadIcon("exit", KIcon::Desktop, toolbarIconSize), "Close Squirrel", QString::null, this, SLOT(slotExit()), fileTools);
+	(new QToolButton(QPixmap(0), QString::null, QString::null,  this, 0, fileTools))->setEnabled(false);
 
 //////////////////////////////
 // Menu
+	menubar = menuBar();
 
-    menubar->insertItem("&File", pop_file);
-    menubar->insertItem("&Edit", pop_edit);
-    menubar->insertItem("&View", pop_view);
+	pop_file = new KPopupMenu(menubar);
+	pop_edit = new KPopupMenu(menubar);
+	pop_view = new KPopupMenu(menubar);
 
-    aboutData.addAuthor("CKulT", 0, "ckult@yandex.ru");
-    aboutData.addCredit("", "", "", 0);
+	menubar->insertItem("&File", pop_file);
+	menubar->insertItem("&Edit", pop_edit);
+	menubar->insertItem("&View", pop_view);
 
-    KHelpMenu *hlp = new KHelpMenu(this, &aboutData);
-    menubar->insertItem("&Help", hlp->menu());
+	menubar->insertItem("&Help", helpMenu());
 
-    pop_edit->insertItem("Options", this, SLOT(slotOptions()), CTRL+Key_P);
-    pop_file->insertItem("Quit", this, SLOT(slotExit()), ALT+Key_Q);
+	pop_edit->insertItem("Options", this, SLOT(slotOptions()), CTRL+Key_P);
+	pop_file->insertItem("Quit", this, SLOT(slotExit()), ALT+Key_Q);
 
-    sbar = statusBar();
-    sbar->setSizeGripEnabled(true);
-    sbar->show();
+///////////////////////////////
+// StatusBar
 
-    dirInfo = new QLabel(sbar);
-    dirInfo->setFrameShape(QFrame::MenuBarPanel);
+	sbar = statusBar();
+	sbar->setSizeGripEnabled(true);
+	sbar->show();
 
-    curFileInfo = new QLabel(sbar);
-    curFileInfo->setFrameShape(QFrame::MenuBarPanel);
-
-    QHBox *vb = new QHBox(sbar);
-    vb->setFrameShape(QFrame::MenuBarPanel);
+	dirInfo = new QLabel(sbar);
+	curFileInfo = new QLabel(sbar);
+	QHBox *vb = new QHBox(sbar);
     
 	fileIcon = new QLabel(vb);
 	fileIcon->setScaledContents(true);
@@ -181,49 +148,52 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	sbar->addWidget(vb, 0, true);	
 	sbar->addWidget(levak, 2, true);    
 
-/////////////////////////// views
+///////////////////////////
+// Views
 
-    KDockWidget *mainDock;
-    mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
+	KDockWidget *mainDock;
+	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
 
-    QWidget *cw = new QWidget(mainDock);
+	QWidget *cw = new QWidget(mainDock);
     
-    mainDock->setWidget(cw);
-    mainDock->setDockSite(KDockWidget::DockCorner);
-    mainDock->setEnableDocking(KDockWidget::DockNone);
-    setView(mainDock);
-    setMainDockWidget(mainDock);
+	mainDock->setWidget(cw);
+	mainDock->setDockSite(KDockWidget::DockCorner);
+	mainDock->setEnableDocking(KDockWidget::DockNone);
+	setView(mainDock);
+	setMainDockWidget(mainDock);
 
-	KDockWidget* dockTree = 0L;
+	KDockWidget *pdockTree = 0L;
 
-        sqConfig->setGroup("Interface");
-        if(sqConfig->readBoolEntry("load treeview", true))
-        {
-		dockTree = createDockWidget("Tree view", 0L, 0L, "");
-		dockTree->setWidget(new SQ_TreeView);
-		dockTree->manualDock(mainDock, KDockWidget::DockLeft, 23);
-	}
+	pdockTree = createDockWidget("Tree view", 0L, 0L, "");
+	pdockTree->setWidget(new SQ_TreeView);
+	pdockTree->manualDock(mainDock, KDockWidget::DockLeft, 23);
 	
-    KDockWidget* dockTabView;
-    dockTabView = createDockWidget("File browser", 0L, 0L, "");
-    tbmain = new SQ_MyTabWidget;
-    tbmain->setFocusPolicy(QTabWidget::NoFocus);
-    dockTabView->setWidget(tbmain);
-    dockTabView->manualDock(mainDock, KDockWidget::DockLeft, 100);
+	KDockWidget *pdockTabView;
+	pdockTabView = createDockWidget("File browser", 0L, 0L, "");
+	pMainTabWidget = new SQ_MyTabWidget;
+	pMainTabWidget->setFocusPolicy(QTabWidget::NoFocus);
+	pdockTabView->setWidget(pMainTabWidget);
+	pdockTabView->manualDock(mainDock, KDockWidget::DockLeft, 100);
 
-    KDockWidget* dockPreview;
-    dockPreview = createDockWidget("File preview", 0L, 0L, "");
-    QWidget *preview = new QWidget(dockPreview);
-    preview->setPaletteBackgroundColor(QColor(82, 82, 82));
-    dockPreview->setWidget(preview);
-    dockPreview->manualDock(dockTree, KDockWidget::DockBottom, 70);
-
+	KDockWidget* pdockPreview;
+	pdockPreview = createDockWidget("File preview", 0L, 0L, "");
+	QWidget *pwPreview = new QWidget(pdockPreview);
+	pwPreview->setPaletteBackgroundColor(QColor(82, 82, 82));
+	pdockPreview->setWidget(pwPreview);
+	pdockPreview->manualDock(pdockTree, KDockWidget::DockBottom, 70);
     
-    slotNewPage(10001);
+	slotNewPageIcon();
 
-    this->move(0,0);
-    this->resize(QApplication::desktop()->width(), QApplication::desktop()->height());
-    this->show();
+	KAction *pkRunMenu = new KAction("", "", KShortcut(CTRL+Key_M), this, SLOT(slotExecuteRunMenu()), this, "execute 'Run' menu");
+
+	this->move(0,0);
+	this->resize(QApplication::desktop()->width(), QApplication::desktop()->height());
+	this->show();
+}
+
+void Squirrel::slotExecuteRunMenu()
+{
+	pmLaunch->exec(QCursor::pos());
 }
 
 void Squirrel::slotEdit()
@@ -249,33 +219,38 @@ void Squirrel::slotExit()
     close();
 }
 
-void Squirrel::slotNewPage(int id)
+void Squirrel::slotNewPageIcon()
 {
-    SQ_Page *tmpw;
-    QString head = pmNewPageMenu->text(id);
+	SQ_Page *tmpw;
+	QString head("Icon view");
+	tmpw = new SQ_Page(0, "/", KFile::Simple, 1);
+	pMainTabWidget->addTab(tmpw, head);
+	pMainTabWidget->setCurrentPage(pMainTabWidget->indexOf(tmpw));
+}
 
-    if(id == 10000)
-        tmpw = new SQ_Page(0, "/", KFile::Simple, 1);
-    else if(id == 10001)
-        tmpw = new SQ_Page(0, "/", KFile::Simple, 2);
-    else if(id == 10002)
-        tmpw = new SQ_Page(0, "/", KFile::Detail, -1);
-    else if(id == 10003)
-    {
+void Squirrel::slotNewPageList()
+{
+	SQ_Page *tmpw;
+	QString head("List view");
+	tmpw = new SQ_Page(0, "/", KFile::Simple, 2);
+	pMainTabWidget->addTab(tmpw, head);
+	pMainTabWidget->setCurrentPage(pMainTabWidget->indexOf(tmpw));
+}
+
+void Squirrel::slotNewPageDetailed()
+{
+	SQ_Page *tmpw;
+	QString head("Detailed view");
+	tmpw = new SQ_Page(0, "/", KFile::Detail, -1);
+	pMainTabWidget->addTab(tmpw, head);
+	pMainTabWidget->setCurrentPage(pMainTabWidget->indexOf(tmpw));
+}
+
+void Squirrel::slotNewPageKonsole()
+{
 	SQ_SpecialPage *spec = new SQ_SpecialPage(0xff, 0);
-	tbmain->addTab(spec, "konsole");
-	tbmain->setCurrentPage(tbmain->indexOf(spec));
-	return;
-    }
-    else if(id == 10004)
-    {
-      slotCloseCurrentPage();
-      return;
-    }
-    else return;
-
-    tbmain->addTab(tmpw, head);
-    tbmain->setCurrentPage(tbmain->indexOf(tmpw));
+	pMainTabWidget->addTab(spec, "konsole");
+	pMainTabWidget->setCurrentPage(pMainTabWidget->indexOf(spec));
 }
 
 void Squirrel::slotGrab()
@@ -301,10 +276,10 @@ void Squirrel::closeEvent(QCloseEvent *ev)
 
 void Squirrel::slotCloseCurrentPage()
 {
-	if(tbmain->count() > 0)
+	if(pMainTabWidget->count() > 0)
 	{
-		QWidget *cur =(QWidget*)tbmain->currentPage();
-		tbmain->removePage(cur);
+		QWidget *cur =(QWidget*)pMainTabWidget->currentPage();
+		pMainTabWidget->removePage(cur);
 	}
 	else return;
 }

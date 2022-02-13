@@ -71,7 +71,7 @@ KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 		}
 		else
 			connect((SQ_FileIconView*)new_view, SIGNAL(doubleClicked(QIconViewItem*)), this, SLOT(slotDoubleClicked(QIconViewItem*)));
-		
+
 		connect((SQ_FileIconView*)new_view, SIGNAL(currentChanged(QIconViewItem*)), this, SLOT(slotSelected(QIconViewItem*)));
 	}
 

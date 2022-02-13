@@ -13,8 +13,15 @@ class SQ_FileIconView : public KFileIconView
 		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
 	        ~SQ_FileIconView();
 
+	        // virtual methods
+		virtual void insertItem(KFileItem *);
+
 	protected slots:
 		void slotSelected(QIconViewItem *item, const QPoint &point);
+		void slotDrop(QDropEvent*, const QValueList<QIconDragItem>&);
+
+	protected:
+		QDragObject *dragObject();
 };
 
 

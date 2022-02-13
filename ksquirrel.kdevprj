@@ -23,19 +23,19 @@ cflags=
 cppflags=
 cxxflags=\s-O2 -Wall
 ldadd=-lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
-ldflags=\s-s           \s
+ldflags=\s-s \s
 
 [General]
 AMChanged=false
-author=ckult
+author=CKulT
 configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux\s
-email=
+email=squirrel-sf@yandex.ru
 kdevprj_version=1.3
 lfv_open_groups=Headers,Sources
 make_options=\s-j1
 makefiles=Makefile.am,ksquirrel/Makefile.am,doc/Makefile.am,doc/en/Makefile.am,po/Makefile.am
 modifyMakefiles=true
-project_name=KSquirrel
+project_name=Ksquirrel
 project_type=mini_kde2
 short_info=
 sub_dir=ksquirrel/
@@ -49,15 +49,6 @@ install=false
 install_location=
 type=DATA
 
-[KPP]
-kpp_appgrp=
-kpp_bldroot=
-kpp_icon=0
-kpp_license=5
-kpp_summary=
-kpp_url=
-kpp_version=0.1.2
-
 [LFV Groups]
 GNU=AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,NEWS
 Headers=*.h,*.hh,*.hxx,*.hpp,*.H
@@ -68,7 +59,7 @@ User Interface=*.kdevdlg,*.ui,*.rc,*.dlg
 groups=Headers,Sources,User Interface,Translations,GNU,Others
 
 [Makefile.am]
-files=ksquirrel.kdevprj,admin,AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,ksquirrel.lsm,ksquirrel.spec
+files=ksquirrel.kdevprj,admin,AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO
 sub_dirs=ksquirrel,po
 type=normal
 
@@ -104,20 +95,8 @@ install=false
 install_location=
 type=DATA
 
-[ksquirrel.lsm]
-dist=true
-install=false
-install_location=
-type=DATA
-
-[ksquirrel.spec]
-dist=true
-install=false
-install_location=
-type=DATA
-
 [ksquirrel/Makefile.am]
-files=ksquirrel/main.cpp,ksquirrel/ksquirrel.cpp,ksquirrel/ksquirrel.h,ksquirrel/ksquirrel.desktop,ksquirrel/lo32-app-ksquirrel.png,ksquirrel/lo16-app-ksquirrel.png,ksquirrel/sq_about.h,ksquirrel/sq_diroperator.cpp,ksquirrel/sq_diroperator.h,ksquirrel/sq_editpicture.ui,ksquirrel/sq_filedetailview.cpp,ksquirrel/sq_filedetailview.h,ksquirrel/sq_fileiconview.cpp,ksquirrel/sq_fileiconview.h,ksquirrel/sq_grabwidget.cpp,ksquirrel/sq_grabwidget.h,ksquirrel/sq_menu_proc.cpp,ksquirrel/sq_menu_proc.h,ksquirrel/sq_options.ui,ksquirrel/sq_page.cpp,ksquirrel/sq_page.h,ksquirrel/sq_splash.cpp,ksquirrel/sq_splash.h,ksquirrel/sq_tray.cpp,ksquirrel/sq_tray.h,ksquirrel/sq_treeview.cpp,ksquirrel/sq_treeview.h,ksquirrel/xdirs.h,ksquirrel/sq_specialpage.cpp,ksquirrel/sq_specialpage.h,ksquirrel/sq_version,ksquirrel/sq_version.h
+files=ksquirrel/main.cpp,ksquirrel/ksquirrel.cpp,ksquirrel/ksquirrel.h,ksquirrel/ksquirrel.desktop,ksquirrel/sq_about.h,ksquirrel/sq_diroperator.cpp,ksquirrel/sq_diroperator.h,ksquirrel/sq_editpicture.ui,ksquirrel/sq_filedetailview.cpp,ksquirrel/sq_filedetailview.h,ksquirrel/sq_fileiconview.cpp,ksquirrel/sq_fileiconview.h,ksquirrel/sq_grabwidget.cpp,ksquirrel/sq_grabwidget.h,ksquirrel/sq_menu_proc.cpp,ksquirrel/sq_menu_proc.h,ksquirrel/sq_options.ui,ksquirrel/sq_options.ui.h,ksquirrel/sq_page.cpp,ksquirrel/sq_page.h,ksquirrel/sq_specialpage.cpp,ksquirrel/sq_specialpage.h,ksquirrel/sq_splash.cpp,ksquirrel/sq_splash.h,ksquirrel/sq_tray.cpp,ksquirrel/sq_tray.h,ksquirrel/sq_treeview.cpp,ksquirrel/sq_treeview.h,ksquirrel/sq_version,ksquirrel/sq_version.h,ksquirrel/xdirs.h
 sub_dirs=
 type=prog_main
 
@@ -138,18 +117,6 @@ dist=true
 install=false
 install_location=
 type=HEADER
-
-[ksquirrel/lo16-app-ksquirrel.png]
-dist=true
-install=true
-install_location=$$(kde_icondir)/locolor/16x16/apps/ksquirrel.png
-type=DATA
-
-[ksquirrel/lo32-app-ksquirrel.png]
-dist=true
-install=true
-install_location=$$(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-type=DATA
 
 [ksquirrel/main.cpp]
 dist=true
@@ -235,6 +202,12 @@ install=false
 install_location=
 type=SOURCE
 
+[ksquirrel/sq_options.ui.h]
+dist=true
+install=false
+install_location=
+type=HEADER
+
 [ksquirrel/sq_page.cpp]
 dist=true
 install=false
@@ -314,6 +287,5 @@ install_location=
 type=HEADER
 
 [po/Makefile.am]
-files=
 sub_dirs=
 type=po

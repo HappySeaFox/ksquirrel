@@ -15,7 +15,8 @@ class SQ_FileDetailView : public KFileDetailView
     protected slots:
 	void slotSelected(QListViewItem* item, const QPoint &, int c);
 
+	protected:
+		QDragObject *dragObject();
 };
-
 
 #endif

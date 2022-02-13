@@ -3,24 +3,18 @@ bin_PROGRAMS = ksquirrel
 
 ## INCLUDES were found outside kdevelop specific part
 
-ksquirrel_SOURCES = sq_specialpage.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
+ksquirrel_SOURCES = sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_page.cpp sq_options.ui sq_menu_proc.cpp sq_grabwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_editpicture.ui sq_diroperator.cpp ksquirrel.cpp main.cpp 
 ksquirrel_LDADD   = -lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_page.cpp sq_page.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h xdirs.h sq_specialpage.cpp sq_specialpage.h sq_version sq_version.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop sq_about.h sq_diroperator.cpp sq_diroperator.h sq_editpicture.ui sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_grabwidget.cpp sq_grabwidget.h sq_menu_proc.cpp sq_menu_proc.h sq_options.ui sq_options.ui.h sq_page.cpp sq_page.h sq_specialpage.cpp sq_specialpage.h sq_splash.cpp sq_splash.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h sq_version sq_version.h xdirs.h 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Applications/
 	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(kde_appsdir)/Applications/ksquirrel.desktop
-	$(mkinstalldirs) $(kde_icondir)/locolor/32x32/apps/
-	$(INSTALL_DATA) $(srcdir)/lo32-app-ksquirrel.png $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-	$(mkinstalldirs) $(kde_icondir)/locolor/16x16/apps/
-	$(INSTALL_DATA) $(srcdir)/lo16-app-ksquirrel.png $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
 
 uninstall-local:
 	-rm -f $(kde_appsdir)/Applications/ksquirrel.desktop
-	-rm -f $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
-	-rm -f $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
 
 ####### kdevelop will overwrite this part!!! (end)############
 # These paths are KDE specific. Use them:

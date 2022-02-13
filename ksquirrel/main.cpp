@@ -23,6 +23,9 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
+	aboutData.addAuthor("CKulT", 0, "ckult@yandex.ru");
+	aboutData.addCredit("", "", "", 0);
+	
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
 	KApplication a;
@@ -32,8 +35,6 @@ int main(int argc, char *argv[])
 
 	Squirrel *SQ = new Squirrel;
 	SQ->setCaption(name_app);
-
-//    SQ->setIcon(QPixmap::fromMimeSource("images/squirrel.png"));
 
 	a.setMainWidget(SQ);
 
