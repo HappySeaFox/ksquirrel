@@ -1,6 +1,6 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
-SUBDIRS = ksquirrel po 
+SUBDIRS = ksquirrel po pics 
 
 EXTRA_DIST = ksquirrel.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO 
 

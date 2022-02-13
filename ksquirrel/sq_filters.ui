@@ -272,8 +272,8 @@
     <connection>
         <sender>pushFilterClearAll</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_Filters</receiver>
-        <slot>slotFilterClearAll()</slot>
+        <receiver>listFilters</receiver>
+        <slot>clear()</slot>
     </connection>
     <connection>
         <sender>pushFilterUp</sender>
@@ -315,7 +315,6 @@
 <slots>
     <slot>slotNewFilter()</slot>
     <slot>slotFilterClear()</slot>
-    <slot>slotFilterClearAll()</slot>
     <slot>slotFilterUp()</slot>
     <slot>slotFilterDown()</slot>
     <slot returnType="int">start()</slot>

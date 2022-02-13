@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_librarylistener.h  -  description
+                          sq_hloptions.h  -  description
                              -------------------
-    begin                : Fri Mar 26 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 30 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,40 +15,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_LIBRARYLISTENER_H
-#define SQ_LIBRARYLISTENER_H
+#ifndef SQ_HLOPTIONS_H
+#define SQ_HLOPTIONS_H
+
+#include <kurl.h>
 
 #include <qobject.h>
-#include <kdirlister.h>
+
 
 /**
-  *@author ckult
+  *@author CKulT
   */
 
-class SQ_LibraryListener : public KDirLister
+class SQ_HLOptions : public QObject
 {
-	Q_OBJECT
-
-	private:
-		KURL		url;
-		QStringList	list;
-		bool 			operation;
-
 	public: 
-		SQ_LibraryListener(bool = false);
-		~SQ_LibraryListener();
+		SQ_HLOptions();
+		~SQ_HLOptions();
 
-	signals:
-		void showInfo(const QStringList &linfo, bool added);
-		void finishedInit();
-
-	public slots:
-		void slotStarted(const KURL &);
-		void slotCompleted();
-		void slotNewItems(const KFileItemList &);
-		void slotDeleteItem(KFileItem *);
-
-		void slotShowInfo(const QStringList &linfo, bool added);
+	public:
+		KURL	HL_url;
 };
 
 #endif

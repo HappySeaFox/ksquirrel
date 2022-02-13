@@ -21,7 +21,7 @@ void SQ_Options::init()
     a[2] = QPixmap::fromMimeSource(locate("appdata", "images/view_kuickshow.png"));
     a[3] = QPixmap::fromMimeSource(locate("appdata", "images/view_winviewer.png"));
     a[4] = QPixmap::fromMimeSource(locate("appdata", "images/view_xnview.png"));
-    a[5] = QPixmap::fromMimeSource(locate("appdata", "images/view_xnview.png"));
+    a[5] = QPixmap::fromMimeSource(locate("appdata", "images/view_showimg.png"));
     
     checkRestart->setChecked(sqConfig->readBoolEntry("Main", "restart", true));
     checkMinimize->setChecked(sqConfig->readBoolEntry("Main", "minimize to tray", true));
@@ -39,8 +39,6 @@ void SQ_Options::init()
     if(sqConfig->readBoolEntry("Interface", "save pos", true)) checkSavePos->toggle();
     if(sqConfig->readBoolEntry("Interface", "save size", true)) checkSaveSize->toggle();
     
-    comboIconIndex->setCurrentItem(sqConfig->readNumEntry("Fileview", "iCurrentIconIndex", 0));
-    comboListIndex->setCurrentItem(sqConfig->readNumEntry("Fileview", "iCurrentListIndex", 0));
     tp = sqConfig->readNumEntry("Fileview", "sync type", 0);
     ((QRadioButton*)(buttonGroupSync->find(tp)))->setChecked(true);
     tp = sqConfig->readNumEntry("Fileview", "set path", 0);
@@ -65,14 +63,18 @@ void SQ_Options::init()
     kColorGLbackground->setColor(color);
     checkDrop->setChecked(sqConfig->readBoolEntry("GL view", "enable drop", true));
     tp = sqConfig->readNumEntry("GL view", "angle", 90);
-    spinAngle->setValue(tp);
+    sliderAngle->setValue(tp);
     tp = sqConfig->readNumEntry("GL view", "zoom", 25);
     spinZoomFactor->setValue(tp);
     tp = sqConfig->readNumEntry("GL view", "move", 5);
-    spinMoveFactor->setValue(tp);
+    sliderMove->setValue(tp);
+    tp = sqConfig->readNumEntry("GL view", "swap on", 2);
+    spinSwapFactor->setValue(tp);
     if(sqConfig->readBoolEntry("GL view", "system color", true)) checkSystemColor->toggle();
     if(sqConfig->readBoolEntry("GL view", "background", true)) checkBackgroundTransparent->toggle();
     if(sqConfig->readBoolEntry("GL view", "border", true)) checkBorder->toggle();
+    if(sqConfig->readBoolEntry("GL view", "save pos", true)) checkGLSavePos->toggle();
+    if(sqConfig->readBoolEntry("GL view", "save size", true)) checkGLSaveSize->toggle();
     
 // Init cache page
    if(!sqConfig->readBoolEntry("Cache", "enable", true)) checkCacheEnable->toggle();
@@ -83,28 +85,19 @@ void SQ_Options::init()
     spinCacheImageY->setValue(sqConfig->readNumEntry("Cache", "cache image Y", 300));
     spinCacheImageLarger->setValue(sqConfig->readNumEntry("Cache", "cache image larger", 5));
    if(sqConfig->readBoolEntry("Cache", "gzip", true)) checkCacheGZIP->toggle();
+   if(sqConfig->readBoolEntry("Cache", "max", true)) checkCacheMax->toggle();
+    spinCacheMax->setValue(sqConfig->readNumEntry("Cache", "max value", 50));
     
-	    checkShowLinks->toggle();
+    checkShowLinks->toggle();
 
-    listMain->setSorting(-1);
-    itemMain = new QListViewItem(listMain, 0);
-    itemMain->setText(0, tr2i18n("Main" ));
-    itemInterface = new QListViewItem(listMain, itemMain);
-    itemInterface->setOpen(true);
-    itemFileView = new QListViewItem(itemInterface, itemMain);
-    itemFileView->setText( 0, tr2i18n( "FileView" ) );
-    itemGLview = new QListViewItem(itemInterface, itemFileView);
-    itemInterface->setText(0, tr2i18n("Interface"));
-    itemGLview->setText(0, tr2i18n("GL view"));
-    itemLibraries = new QListViewItem(listMain, itemInterface);
-    itemLibraries->setText(0, tr2i18n("Libraries"));
-    itemCache = new QListViewItem(listMain, itemLibraries);
-    itemCache->setText(0, tr2i18n("Caching"));
-    
-    connect(listMain, SIGNAL(currentChanged(QListViewItem *)), this, SLOT(slotClicked(QListViewItem *)));
-    listMain->header()->hide();
-    listMain->setCurrentItem(itemMain);
-    listMain->setSelected(itemMain, true);
+    listMain->insertItem(sqLoader->loadIcon("desktop", KIcon::Desktop, 32), "Main");
+    listMain->insertItem(sqLoader->loadIcon("appearance", KIcon::Desktop, 32), "Interface");
+    listMain->insertItem(sqLoader->loadIcon("fileopen", KIcon::Desktop, 32), "Filing");
+    listMain->insertItem(sqLoader->loadIcon("terminal", KIcon::Desktop, 32), "GL viewer");
+    listMain->insertItem(sqLoader->loadIcon("binary", KIcon::Desktop, 32), "Libraries");
+    listMain->insertItem(sqLoader->loadIcon("hdd_mount", KIcon::Desktop, 32), "Caching");
+    listMain->setCurrentItem(0);
+    listMain->setSelected(0, true);
 }
 
 
@@ -115,30 +108,6 @@ void SQ_Options::slotSetViewPixmap(int id)
 }
 
 
-void SQ_Options::slotClicked( QListViewItem *item )
-{
-	const int count = 6;
-
-	ListViewItemID ListViewItemID_[count] =
-	{
-		{itemMain, 0},
-		{itemInterface,1},
-		{itemFileView,2},
-		{itemGLview,3},
-		{itemLibraries,4},
-		{itemCache,5}
-	};
-
-	for(int i = 0;i < count;i++)
-	{
-		if(ListViewItemID_[i].item == item)
-		{
-			widgetStack1->raiseWidget(ListViewItemID_[i].id);
-			break;
-		}
-	}
-}
-
 
 void SQ_Options::slotOpenDir()
 {
@@ -147,7 +116,6 @@ void SQ_Options::slotOpenDir()
 	if(!s.isEmpty())
 		lineEditCustomDir->setText(s);
 }
-
 
 void SQ_Options::slotDirCache()
 {
@@ -174,7 +142,9 @@ void SQ_Options::slotShowLinks( bool showl )
 	    QFileInfo libfileinfo(path);
 	    if(libfileinfo.isSymLink()) continue;
 	}
-	path.replace(sqLibPrefix, "");
+
+	path.replace(libPrefix, "");
+
 	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.fmt_quickinfo()), QString(tmplib.fmt_version()), QString(tmplib.sinfo)));
     }
 
@@ -186,8 +156,15 @@ void SQ_Options::slotNewPrefix()
     QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");
 
     if(!s.isEmpty())
+    {
 	linePrefix->setText(s);
+	libPrefix = s;
+	if(!libPrefix.endsWith("/")) libPrefix += "/";
 
+	sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
+	sqLibHandler->clear();
+	sqLibUpdater->openURL(KURL(libPrefix), false, true);
+    }
 }
 
 int SQ_Options::start()
@@ -207,8 +184,6 @@ int SQ_Options::start()
 		sqConfig->writeEntry("set path", buttonGroupSetPath->id(buttonGroupSetPath->selected()));
 		sqConfig->writeEntry("custom directory", lineEditCustomDir->text());
 		sqConfig->writeEntry("sync type", buttonGroupSync->id(buttonGroupSync->selected()));
-		sqConfig->writeEntry("iCurrentIconIndex", comboIconIndex->currentItem());
-		sqConfig->writeEntry("iCurrentListIndex", comboListIndex->currentItem());
 		sqConfig->writeEntry("click policy custom", buttonGroupClickPolicy->id(buttonGroupClickPolicy->selected()));
 		sqConfig->writeEntry("click policy system", checkClickSystem->isChecked());
 		sqConfig->writeEntry("history", checkSaveHistory->isChecked());
@@ -225,11 +200,14 @@ int SQ_Options::start()
 		sqConfig->writeEntry("zoom model", buttonGroupZoomModel->id(buttonGroupZoomModel->selected()));
 		sqConfig->writeEntry("shade model", buttonGroupShadeModel->id(buttonGroupShadeModel->selected()));
 		sqConfig->writeEntry("enable drop", checkDrop->isChecked());
-		sqConfig->writeEntry("angle", spinAngle->value());
+		sqConfig->writeEntry("angle", sliderAngle->value());
 		sqConfig->writeEntry("zoom", spinZoomFactor->value());
-		sqConfig->writeEntry("move", spinMoveFactor->value());
+		sqConfig->writeEntry("swap on", spinSwapFactor->value());
+		sqConfig->writeEntry("move", sliderMove->value());
 		sqConfig->writeEntry("border", checkBorder->isChecked());
 		sqConfig->writeEntry("background", checkBackgroundTransparent->isChecked());
+		sqConfig->writeEntry("save pos", checkGLSavePos->isChecked());
+		sqConfig->writeEntry("save size", checkGLSaveSize->isChecked());
 
 		sqConfig->setGroup("Libraries");
 		sqConfig->writeEntry("monitor", checkMonitor->isChecked());
@@ -245,6 +223,8 @@ int SQ_Options::start()
 		sqConfig->writeEntry("cache image Y", spinCacheImageY->value());
 		sqConfig->writeEntry("cache image larger", spinCacheImageLarger->value());
 		sqConfig->writeEntry("gzip", checkCacheGZIP->isChecked());
+		sqConfig->writeEntry("max", checkCacheMax->isChecked());
+		sqConfig->writeEntry("max value", spinCacheMax->value());
 		
 	    }
 

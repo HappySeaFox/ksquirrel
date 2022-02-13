@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_librarylistener.h  -  description
+                          sq_glviewspec.h  -  description
                              -------------------
-    begin                : Fri Mar 26 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 5 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,40 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_LIBRARYLISTENER_H
-#define SQ_LIBRARYLISTENER_H
+#ifndef SQ_GLVIEWSPEC_H
+#define SQ_GLVIEWSPEC_H
 
-#include <qobject.h>
-#include <kdirlister.h>
+#include "sq_glbase.h"
 
 /**
-  *@author ckult
+  *@author CKulT
   */
 
-class SQ_LibraryListener : public KDirLister
+class SQ_GLViewSpec : public SQ_GLBase
 {
-	Q_OBJECT
-
-	private:
-		KURL		url;
-		QStringList	list;
-		bool 			operation;
-
 	public: 
-		SQ_LibraryListener(bool = false);
-		~SQ_LibraryListener();
+		SQ_GLViewSpec(QWidget *parent = 0, const char *name = 0);
+		~SQ_GLViewSpec();
 
-	signals:
-		void showInfo(const QStringList &linfo, bool added);
-		void finishedInit();
+	protected:
+		virtual void create();
 
-	public slots:
-		void slotStarted(const KURL &);
-		void slotCompleted();
-		void slotNewItems(const KFileItemList &);
-		void slotDeleteItem(KFileItem *);
-
-		void slotShowInfo(const QStringList &linfo, bool added);
 };
 
 #endif

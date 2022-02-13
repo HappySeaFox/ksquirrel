@@ -32,6 +32,8 @@
 #include "sq_fileiconview.h"
 #include "sq_filedetailview.h"
 #include "sq_glviewwidget.h"
+#include "sq_glviewgeneral.h"
+#include "sq_glviewspec.h"
 #include "sq_externaltool.h"
 #include "sq_libraryhandler.h"
 #include "sq_widgetstack.h"
@@ -170,7 +172,7 @@ void SQ_DirOperator::slotDoubleClicked(QIconViewItem *item)
 					pARunSeparately->activate();
 			}
 			else
-				sqGLView->emitShowImage(f->fileInfo()->url().path());
+				sqGLView->getGL()->emitShowImage(f->fileInfo()->url().path());
 		}
 		else
 			emit dirActivated((const KFileItem*)f->fileInfo());
@@ -195,7 +197,7 @@ void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 					pARunSeparately->activate();
 			}
 			else
-				sqGLView->emitShowImage(f->fileInfo()->url().path());
+				sqGLView->getGL()->emitShowImage(f->fileInfo()->url().path());
 		}
 		else
 			emit dirActivated((const KFileItem*)f->fileInfo());
@@ -298,38 +300,81 @@ void SQ_DirOperator::slotFinishedLoading()
 	sqBookmarks->setURL(url());
 }
 
+void SQ_DirOperator::emitSelected(const QString &file)
+{
+	KURL url = file;
+	KFileView *local = view();
+
+	if(this->url() != url.directory())
+		setURL(url.directory(), true);
+
+	local->clearSelection();
+	local->setCurrentItem(url.fileName());
+	local->setSelected(local->currentFileItem(), true);
+
+	sqGLView->getGL()->emitShowImage(file);
+}
+
 void SQ_DirOperator::emitNextSelected()
 {
 	KFileItem *item;
 	KFileView *local = view();
+	QString name;
 
 	item = local->nextItem(local->currentFileItem());
-
 	if(!item) return;
+
+	while(1)
+	{
+		if(item->isFile())
+		{
+			name = item->url().path();
+			QFileInfo fm(name);
+
+			if(sqLibHandler->supports(fm.extension(false)))
+				break;
+		}
+
+		item = local->nextItem(item);
+		if(!item) return;
+	}
 
 	local->clearSelection();
 	local->setCurrentItem(item);
 	local->setSelected(local->currentFileItem(), true);
 
-	if(item->isFile())
-		sqGLView->emitShowImage(item->url().path());
+	sqGLView->getGL()->emitShowImage(item->url());
 }
 
 void SQ_DirOperator::emitPreviousSelected()
 {
 	KFileItem *item;
 	KFileView *local = view();
+	QString name;
 
 	item = local->prevItem(local->currentFileItem());
-
 	if(!item) return;
+
+	while(1)
+	{
+		if(item->isFile())
+		{
+			name = item->url().path();
+			QFileInfo fm(name);
+
+			if(sqLibHandler->supports(fm.extension(false)))
+				break;
+		}
+
+		item = local->prevItem(item);
+		if(!item) return;
+	}
 
 	local->clearSelection();
 	local->setCurrentItem(item);
 	local->setSelected(local->currentFileItem(), true);
 
-	if(item->isFile())
-		sqGLView->emitShowImage(item->url().path());
+	sqGLView->getGL()->emitShowImage(item->url());
 }
 
 void SQ_DirOperator::slotActivateExternalTool(int id)

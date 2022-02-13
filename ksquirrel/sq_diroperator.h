@@ -63,6 +63,7 @@ class SQ_DirOperator : public KDirOperator
 		void slotFinishedLoading();
 		void slotShowExternalToolsMenu();
 
+		void emitSelected(const QString &file);
 		void emitNextSelected();
 		void emitPreviousSelected();
 };

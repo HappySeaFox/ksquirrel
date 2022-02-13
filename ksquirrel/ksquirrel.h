@@ -42,6 +42,7 @@ class SQ_WidgetStack;
 class SQ_RunProcess;
 class SQ_SystemTray;
 class SQ_GLViewWidget;
+class SQ_GLBase;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_FileviewFilter;
@@ -50,6 +51,7 @@ class SQ_ExternalTool;
 class SQ_TreeView;
 class SQ_CacheHandler;
 class SQ_BookmarkOwner;
+class SQ_HLOptions;
 
 template <class T> class QValueVector;
 template <class T> class QPtrList;
@@ -61,7 +63,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 	public:
 		static Squirrel *App;
 
-		enum ViewType	{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview,Browser};
+		enum ViewType	{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview,ShowImg,Browser};
 		ViewType			curViewType;
 
 	private:
@@ -100,9 +102,13 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void createWidgetsLikeKuickshow();
 		void createWidgetsLikeWinViewer();
 		void createWidgetsLikeXnview();
+		void createWidgetsLikeShowImg();
 		void createWidgetsLikeBrowser();
 
 		void handlePositionSize();
+		void setSplitterSizes(int s1, int s2);
+
+		int findProtocol(const QString &proc);
 
 	public slots:
 		void slotOptions();
@@ -112,7 +118,6 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void slotRaiseListView();
 		void slotRaiseIconView();
 		void slotRaiseDetailView();
-		void slotClearAdress();
 		void slotGo();
 		void slotSetFilter(int);
 		void slotGLView();
@@ -120,15 +125,17 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void slotPreviousFile();
 		void slotRunCommand(int);
 		void slotGotoTray();
+		void slotSetFile();
 
 	public:
-		Squirrel(QWidget *parent = 0, const char *name = 0);
+		Squirrel(SQ_HLOptions *, QWidget *parent = 0, const char *name = 0);
 		~Squirrel();
 
 		SQ_Config			*kconf;
 		KIconLoader			*iconL;
 		SQ_WidgetStack		*pWidgetStack;
 		KHistoryCombo		*pCurrentURL;
+		SQ_GLBase			*glBase;
 		SQ_GLViewWidget		*glView;
 		SQ_FileviewFilter		*filterList;
 		SQ_LibraryHandler		*sqLibHandlerReal;
@@ -136,11 +143,11 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		SQ_LibraryListener		*libl;
 
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus, *GLreporter;
-		QString				libPrefix;
 		SQ_ExternalTool		*extool;
 		SQ_TreeView			*ptree;
 		SQ_BookmarkOwner 	*bookmarkOwner;
 		SQ_CacheHandler		*hcache;
+		SQ_HLOptions			*highlevel;
 
 		void raiseGLWidget();
 
@@ -159,6 +166,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 #define   sqLoader			(Squirrel::App->iconL)
 #define   sqCache			(Squirrel::App->hcache)
 #define	sqBookmarks		(Squirrel::App->bookmarkOwner)
+#define	sqHighLevel		(Squirrel::App->highlevel)
 
 #define   sqStatus			(Squirrel::App->sbar)
 #define	sqFilters			(Squirrel::App->filterList)
@@ -175,9 +183,8 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 #define   sqSBDecoded		(Squirrel::App->decodedStatus)
 #define	sqSBGLreport		(Squirrel::App->GLreporter)
 
-#define	sqGLView			(Squirrel::App->glView)
+#define	sqGLView			(Squirrel::App->glBase)
 #define	sqLibHandler		(Squirrel::App->sqLibHandlerReal)
-#define	sqLibPrefix		(Squirrel::App->libPrefix)
 
 #define	sqViewType		(Squirrel::App->curViewType)
 #endif

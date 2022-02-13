@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_version.h  -  description
+                          sq_hloptions.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 30 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,11 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __APP_VERSION__
-#define __APP_VERSION__
+#include "sq_hloptions.h"
 
-const char APP[] = "Squirrel development build #";
-const int version=4700;
+SQ_HLOptions::SQ_HLOptions() : QObject()
+{}
 
-#endif
-
+SQ_HLOptions::~SQ_HLOptions()
+{}

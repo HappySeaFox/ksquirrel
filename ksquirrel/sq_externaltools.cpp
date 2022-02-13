@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_externaltools.ui'
 **
-** Created: Втр Апр 27 19:00:38 2004
+** Created: Срд Май 5 19:50:18 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -83,7 +83,7 @@ SQ_ExternalTools::SQ_ExternalTools( QWidget* parent, const char* name, bool moda
 
     listTools = new QListView( frame3, "listTools" );
     listTools->addColumn( tr2i18n( "Name" ) );
-    listTools->addColumn( tr2i18n( "Extensions" ) );
+    listTools->addColumn( tr2i18n( "Command" ) );
     listTools->setResizePolicy( QScrollView::Manual );
     listTools->setSelectionMode( QListView::Single );
     listTools->setAllColumnsShowFocus( TRUE );
@@ -112,7 +112,7 @@ SQ_ExternalTools::SQ_ExternalTools( QWidget* parent, const char* name, bool moda
     // signals and slots connections
     connect( pushNewTool, SIGNAL( clicked() ), this, SLOT( slotNewTool() ) );
     connect( pushToolClear, SIGNAL( clicked() ), this, SLOT( slotToolClear() ) );
-    connect( pushToolClearAll, SIGNAL( clicked() ), this, SLOT( slotToolClearAll() ) );
+    connect( pushToolClearAll, SIGNAL( clicked() ), listTools, SLOT( clear() ) );
     connect( pushToolUp, SIGNAL( clicked() ), this, SLOT( slotToolUp() ) );
     connect( pushToolDown, SIGNAL( clicked() ), this, SLOT( slotToolDown() ) );
     connect( listTools, SIGNAL( rightButtonClicked(QListViewItem*,const QPoint&,int) ), this, SLOT( slotToolRenameRequest(QListViewItem*,const QPoint&,int) ) );
@@ -143,7 +143,7 @@ void SQ_ExternalTools::languageChange()
     pushToolUp->setText( QString::null );
     pushToolDown->setText( QString::null );
     listTools->header()->setLabel( 0, tr2i18n( "Name" ) );
-    listTools->header()->setLabel( 1, tr2i18n( "Extensions" ) );
+    listTools->header()->setLabel( 1, tr2i18n( "Command" ) );
     pushCancel->setText( tr2i18n( "Cancel" ) );
     pushOK->setText( tr2i18n( " OK " ) );
 }

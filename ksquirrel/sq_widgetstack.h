@@ -51,8 +51,7 @@ class SQ_WidgetStack : public QWidgetStack
 
 		const KFileItemList* selectedItems() const;
 
-		void emitNextSelected();
-		void emitPreviousSelected();
+		void emitSelected(const QString &file);
 		void reInitToolsMenu();
 		int count() const;
 
@@ -69,6 +68,8 @@ class SQ_WidgetStack : public QWidgetStack
 
 		void slotPrevious();
 		void slotNext();
+		void emitNextSelected();
+		void emitPreviousSelected();
 
 		void slotShowHidden(bool);
 

@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_filters.ui'
 **
-** Created: Втр Апр 27 19:00:37 2004
+** Created: Срд Май 5 19:50:18 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -112,7 +112,7 @@ SQ_Filters::SQ_Filters( QWidget* parent, const char* name, bool modal, WFlags fl
     // signals and slots connections
     connect( pushNewFilter, SIGNAL( clicked() ), this, SLOT( slotNewFilter() ) );
     connect( pushFilterClear, SIGNAL( clicked() ), this, SLOT( slotFilterClear() ) );
-    connect( pushFilterClearAll, SIGNAL( clicked() ), this, SLOT( slotFilterClearAll() ) );
+    connect( pushFilterClearAll, SIGNAL( clicked() ), listFilters, SLOT( clear() ) );
     connect( pushFilterUp, SIGNAL( clicked() ), this, SLOT( slotFilterUp() ) );
     connect( pushFilterDown, SIGNAL( clicked() ), this, SLOT( slotFilterDown() ) );
     connect( listFilters, SIGNAL( rightButtonClicked(QListViewItem*,const QPoint&,int) ), this, SLOT( slotFilterRenameRequest(QListViewItem*,const QPoint&,int) ) );

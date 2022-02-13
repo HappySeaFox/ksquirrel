@@ -877,7 +877,7 @@ fi
 
 PACKAGE=ksquirrel
 
-VERSION=0.2.4
+VERSION=0.2.8
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
@@ -8798,6 +8798,7 @@ trap 'rm -fr `echo "\
 doc/Makefile \
 doc/en/Makefile \
 ksquirrel/Makefile \
+pics/Makefile \
 po/Makefile \
  config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
@@ -9015,6 +9016,7 @@ CONFIG_FILES=\${CONFIG_FILES-"\
 doc/Makefile \
 doc/en/Makefile \
 ksquirrel/Makefile \
+pics/Makefile \
 po/Makefile \
 "}
 EOF

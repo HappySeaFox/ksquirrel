@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_version.h  -  description
+                          sq_glviewgeneral.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 5 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,11 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __APP_VERSION__
-#define __APP_VERSION__
+#include <qlayout.h>
 
-const char APP[] = "Squirrel development build #";
-const int version=4700;
+#include "sq_glviewgeneral.h"
+#include "sq_glviewwidget.h"
 
-#endif
+SQ_GLViewGeneral::SQ_GLViewGeneral(QWidget *parent, const char *name) : SQ_GLBase(parent, name)
+{
+	separate = false;
+	create();
+}
 
+SQ_GLViewGeneral::~SQ_GLViewGeneral()
+{}
+
+void SQ_GLViewGeneral::create()
+{
+	QGridLayout *l = new QGridLayout(this, 1, 1, 0, 0, "SQ_GLBASE_LAYOUT");
+
+	gl = new SQ_GLViewWidget(this);
+
+	l->addWidget(gl, 0, 0);
+}

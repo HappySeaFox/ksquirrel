@@ -36,7 +36,6 @@
 #define	MATRIX_Y	matrix[7]
 
 class KAction;
-class SQ_GLHelpWidget;
 
 unsigned long findCloserPower2(unsigned long num);
 
@@ -45,23 +44,27 @@ class SQ_GLViewWidget : public QGLWidget
 	Q_OBJECT
 
 	private:
+		unsigned int  	offsetX, offsetY;
+		unsigned long	pict_size, realW, realH, real_size;
+		double 		posX, posY;
+
+	private:
 		GLfloat 			matrix[8];
-
-		RGBA			*rgba, *scan;
-		fmt_info			*finfo;
-
 		GLuint			texture[1];
 		GLfloat			zoomfactor, movefactor;
 		GLfloat			w, h, curangle;
-		int				xmoveold, ymoveold, xmove, ymove;
-		unsigned			isflippedV, isflippedH;
-
-		QCursor			cusual, cdrag;
-		SQ_GLHelpWidget *gl_hw;
 		GLint 			ZoomModel, ShadeModel;
 		GLint			ZoomModelArray[2], ShadeModelArray[2];
 
-		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp, *pARender;
+		RGBA			*rgba, *scan, *rgba_next;
+		fmt_info			*finfo;
+
+		int				xmoveold, ymoveold, xmove, ymove;
+		unsigned			isflippedV, isflippedH;
+		bool				dec;
+
+		QString			dump;
+		QCursor			cusual, cdrag;
 
 	public:
 		SQ_GLViewWidget(QWidget *parent = 0, const char *name = 0);
@@ -82,7 +85,7 @@ class SQ_GLViewWidget : public QGLWidget
 		void matrix_move(GLfloat x, GLfloat y);
 		void matrix_zoom(GLfloat ratio);
 		void matrix_reset();
-		void write_gl_matrix(void);
+		void write_gl_matrix();
 		void matrix_rotate(GLfloat angle);
 		void flip(int);
 		void flip_h();
@@ -90,6 +93,8 @@ class SQ_GLViewWidget : public QGLWidget
 
 		GLfloat get_zoom() const;
 		GLfloat get_angle() const;
+
+		void update() { updateGL(); }
 
 	protected:
 		void initializeGL();
@@ -124,10 +129,10 @@ class SQ_GLViewWidget : public QGLWidget
 		void slotShowImage(const QString &file);
 		void slotSomeHelp();
 		void slotRenderPixmapIntoFile();
-};
+		void slotCloseGLView();
 
-#define	sqGLRotate		(SQ_GLViewWidget::pARotate)
-#define	sqGLZoomPlus		(SQ_GLViewWidget::pAZoomPlus)
-#define	sqGLZoomMinus	(SQ_GLViewWidget::pAXoomMinus)
+	public:
+		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp, *pARender, *pAClose;
+};
 
 #endif

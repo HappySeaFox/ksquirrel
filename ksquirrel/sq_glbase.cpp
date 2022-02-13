@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_version.h  -  description
+                          sq_glbase.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 5 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,11 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __APP_VERSION__
-#define __APP_VERSION__
+#include "sq_glbase.h"
 
-const char APP[] = "Squirrel development build #";
-const int version=4700;
+SQ_GLBase::SQ_GLBase(QWidget *parent, const char *name ) : QWidget(parent,name)
+{
+	setCaption("KSQuirrel: OpenGL viewer");
+}
 
-#endif
+SQ_GLBase::~SQ_GLBase()
+{}
 
+void SQ_GLBase::closeEvent(QCloseEvent *e)
+{
+	e->ignore();
+	hide();
+}

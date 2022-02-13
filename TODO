@@ -12,7 +12,8 @@ GL view (need help)
 	[   ]  background for transparent images (and for all other ;))
 	[ X ]  scroll support (next/prev image)
 	[ X ]  moving image
-	[   ]  status bar
+	[   ]  class SQ_GLViewWidgetBase, and SQ_GLViewWidgetCommon:public SQ_GLViewWidgetBase, SQ_GLViewWidgetToolbar:public SQ_GLViewWidgetBase
+		(GL viewer with toolbar and statusbar, if GLViewWidget is a separate window, and common widget otherwise)
 
 Libraries
 	[   ]  SQ_LibraryHandler::supports : searching should be based on regexp's?

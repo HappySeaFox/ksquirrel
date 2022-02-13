@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_librarieschanged.ui'
 **
-** Created: Втр Апр 27 19:00:37 2004
+** Created: Срд Май 5 19:46:54 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!

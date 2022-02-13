@@ -28,12 +28,12 @@
 #include <qptrlist.h>
 #include <qsplitter.h>
 #include <qtoolbutton.h>
+#include <qcursor.h>
 
 #include <kapp.h>
 #include <khelpmenu.h>
 #include <kpopupmenu.h>
 #include <kurlcompletion.h>
-#include <kconfig.h>
 #include <kwin.h>
 #include <ktoolbar.h>
 #include <kstatusbar.h>
@@ -53,6 +53,8 @@
 #include "sq_runprocess.h"
 #include "sq_options.h"
 #include "sq_about.h"
+#include "sq_glviewgeneral.h"
+#include "sq_glviewspec.h"
 #include "sq_glviewwidget.h"
 #include "sq_libraryhandler.h"
 #include "sq_librarylistener.h"
@@ -63,11 +65,11 @@
 #include "sq_config.h"
 #include "sq_filters.h"
 #include "sq_bookmarkowner.h"
+#include "sq_hloptions.h"
 
 Squirrel * Squirrel::App = 0;
 
-
-Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent, name), DCOPObject(name), mainSplitter(0L)
+Squirrel::Squirrel(SQ_HLOptions *HL_Options, QWidget *parent, const char *name) : KDockMainWindow (parent, name), DCOPObject(name), mainSplitter(0L)
 {
 	App = this;
 
@@ -82,10 +84,10 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	sqExternalTool = 0L;
 	sqTree = 0L;
 	sqBookmarks = 0L;
+	sqHighLevel = HL_Options;
 
-	sqLibPrefix = sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
-	if(!sqLibPrefix.endsWith("/"))
-		sqLibPrefix += "/";
+	QString sqLibPrefix = sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
+	if(!sqLibPrefix.endsWith("/"))	sqLibPrefix += "/";
 
 	bool first_time = sqConfig->readBoolEntry("Main", "first_time", true);
 
@@ -97,11 +99,6 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 
 	toolbarIconSize = (*iconSizeList)[sqConfig->readNumEntry("Interface", "toolbar icon size", 0)];
 	createFirst = sqConfig->readNumEntry("Interface", "create first", 0);
-
-	// !! Find libraries
-	sqLibHandler = new SQ_LibraryHandler;
-	sqLibUpdater = new SQ_LibraryListener;
-	sqLibUpdater->openURL(KURL(sqLibPrefix), false, true);
 
 	// create view
 	sqViewType = (Squirrel::ViewType)sqConfig->readNumEntry("Interface", "ViewType",  Squirrel::SQuirrel);
@@ -117,14 +114,20 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
         	case Squirrel::Kuickshow:	createWidgetsLikeKuickshow();break;
         	case Squirrel::WinViewer:	createWidgetsLikeWinViewer();  break;
         	case Squirrel::Xnview:		createWidgetsLikeXnview();  break;
+        	case Squirrel::ShowImg:		createWidgetsLikeShowImg();  break;
         	case Squirrel::Browser:		createWidgetsLikeBrowser();  break;
 
         	default:
          		createWidgetsLikeSQuirrel();
 	}
 
-	handlePositionSize();
+	// !! Find libraries
+	sqLibHandler = new SQ_LibraryHandler;
+	sqLibUpdater = new SQ_LibraryListener;
+	connect(sqLibUpdater, SIGNAL(finishedInit()), SLOT(slotSetFile()));
+	sqLibUpdater->openURL(KURL(sqLibPrefix), false, true);
 
+	handlePositionSize();
 	show();
 
 	if(first_time)
@@ -174,11 +177,11 @@ void Squirrel::slotOptions()
 	if(optd.start() != QDialog::Accepted)
 		return;
 
-	sqGLView->setClearColor(); // values are taken from sqConfig
-	sqGLView->setTextureParams();
-	sqGLView->setAcceptDrops(sqConfig->readBoolEntry("GL view", "enable drop", true));
-	sqGLView->setZoomFactor(sqConfig->readNumEntry("GL view", "zoom", 25));
-	sqGLView->setMoveFactor(sqConfig->readNumEntry("GL view", "move", 5));
+	sqGLView->getGL()->setClearColor(); // values are taken from sqConfig
+	sqGLView->getGL()->setTextureParams();
+	sqGLView->getGL()->setAcceptDrops(sqConfig->readBoolEntry("GL view", "enable drop", true));
+	sqGLView->getGL()->setZoomFactor(sqConfig->readNumEntry("GL view", "zoom", 25));
+	sqGLView->getGL()->setMoveFactor(sqConfig->readNumEntry("GL view", "move", 5));
 	sqLibUpdater->setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
 }
 
@@ -303,7 +306,7 @@ void Squirrel::CreateLocationToolbar()
 	sqCurrentURL = new KHistoryCombo(true, 0, "history combobox");
 
 	new QToolButton(sqLoader->loadIcon("button_cancel", KIcon::Desktop, KIcon::SizeSmall), "Clear history", QString::null, sqCurrentURL, SLOT(clearHistory()), pTLocation);
-	new QToolButton(sqLoader->loadIcon("locationbar_erase", KIcon::Desktop, KIcon::SizeSmall), "Clear adress", QString::null, this, SLOT(slotClearAdress()), pTLocation);
+	new QToolButton(sqLoader->loadIcon("locationbar_erase", KIcon::Desktop, KIcon::SizeSmall), "Clear adress", QString::null, sqCurrentURL, SLOT(clearEdit()), pTLocation);
 	new QLabel("URL:", pTLocation, "kde toolbar widget");
 
 	sqCurrentURL->reparent(pTLocation, 0, QPoint(0,0));
@@ -383,11 +386,6 @@ void Squirrel::InitFilterMenu()
 	connect(actionFilterMenu, SIGNAL(activated(int)), SLOT(slotSetFilter(int)));
 }
 
-void Squirrel::slotClearAdress()
-{
-	sqCurrentURL->setEditText("");
-}
-
 void Squirrel::slotGo()
 {
 	sqWStack->setURL(pCurrentURL->currentText(), true);
@@ -439,12 +437,9 @@ void Squirrel::createWidgetsLikeSQuirrel()
 	menubar = menuBar();
 	CreateMenu(menubar);
 
-	sqGLView = new SQ_GLViewWidget;
+	sqGLView = new SQ_GLViewSpec;
 
-	QValueList<int> l;
-	l.append(1);
-	l.append(4);
-	mainSplitter->setSizes(l);
+	setSplitterSizes(1, 4);
 }
 
 void Squirrel::createWidgetsLikeGqview()
@@ -485,15 +480,12 @@ void Squirrel::createWidgetsLikeGqview()
 	pANextFile->unplug(pToolbar);
 	pAGotoTray->unplug(pToolbar);
 
-	sqGLView = new SQ_GLViewWidget(mainSplitter);
+	sqGLView = new SQ_GLViewGeneral(mainSplitter);
 
 	connect(sqCurrentURL, SIGNAL(returnPressed(const QString&)), sqWStack, SLOT(setURL(const QString&)));
 	connect(sqCurrentURL, SIGNAL(activated(const QString&)), sqWStack, SLOT(setURL(const QString&)));
 
-	QValueList<int> l;
-	l.append(10);
-	l.append(21);
-	mainSplitter->setSizes(l);
+	setSplitterSizes(10, 21);
 }
 
 void Squirrel::createWidgetsLikeKuickshow()
@@ -522,7 +514,7 @@ void Squirrel::createWidgetsLikeKuickshow()
 	menubar = menuBar();
 	CreateMenu(menubar);
 
-	sqGLView = new SQ_GLViewWidget;
+	sqGLView = new SQ_GLViewSpec;
 }
 
 void Squirrel::createWidgetsLikeWinViewer()
@@ -548,14 +540,25 @@ void Squirrel::createWidgetsLikeWinViewer()
 
 	sqWStack = new SQ_WidgetStack(V);
 	sqWStack->raiseFirst(createFirst);
-	sqGLView = new SQ_GLViewWidget(V);
+	sqGLView = new SQ_GLViewGeneral(V);
 
 	QHBox *H = new QHBox(V);
 	QLabel *ltmp = new QLabel("", H);
 	KToolBar *pToolbarTools = new KToolBar(sqApp, H, true, "WinViewer tools");
 	QLabel *ltmp2 = new QLabel("", H);
 
-	CreateToolbar(pToolbarTools);
+	/* We'll create toolbar manually, w/o call "CreateToolbar()", cause of we have to unplug too many KAction's  */
+	CreateActions();
+	pToolbarTools->setIconSize(toolbarIconSize, true);
+	sqWStack->pAHome->plug(pToolbarTools);
+	sqWStack->pANewDir->plug(pToolbarTools);
+	pAPrevFile->plug(pToolbarTools);
+	pANextFile->plug(pToolbarTools);
+	pAExtTools->plug(pToolbarTools);
+	pAFilters->plug(pToolbarTools);
+	pAConfigure->plug(pToolbarTools);
+	pAGotoTray->plug(pToolbarTools);
+	pAExit->plug(pToolbarTools);
 	CreateMenu(pMenuBar);
 
 	H->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -564,19 +567,9 @@ void Squirrel::createWidgetsLikeWinViewer()
 	H->setStretchFactor(ltmp2, 1);
 
 	// WinViewer specific
-	sqWStack->pABack->unplug(pToolbarTools);
-	sqWStack->pAForw->unplug(pToolbarTools);
-	sqWStack->pAUp->unplug(pToolbarTools);
 	pARaiseIconView->setEnabled(false);
 	pARaiseListView->setEnabled(false);
 	pARaiseDetailView->setEnabled(false);
-	pARaiseIconView->unplug(pToolbarTools);
-	pARaiseListView->unplug(pToolbarTools);
-	pARaiseDetailView->unplug(pToolbarTools);
-	sqWStack->pAIconBigger->unplug(pToolbarTools);
-	sqWStack->pAIconSmaller->unplug(pToolbarTools);
-	pAGLView->unplug(pToolbarTools);
-	pAGotoTray->unplug(pToolbarTools);
 	sqWStack->hide();
 }
 
@@ -585,21 +578,21 @@ void Squirrel::createWidgetsLikeXnview()
 	CreateStatusBar();
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
-	QSplitter *V = new QSplitter(Qt::Vertical, mainDock);
-	mainDock->setWidget(V);
+	mainSplitter = new QSplitter(Qt::Vertical, mainDock);
+	mainDock->setWidget(mainSplitter);
 	mainDock->setDockSite(KDockWidget::DockCorner);
 	mainDock->setEnableDocking(KDockWidget::DockNone);
 	setView(mainDock);
 	setMainDockWidget(mainDock);
 
-	QSplitter *H = new QSplitter(Qt::Horizontal, V);
+	QSplitter *H = new QSplitter(Qt::Horizontal, mainSplitter);
 	sqWStack = new SQ_WidgetStack(H);
 	sqWStack->raiseFirst(createFirst);
 
 	sqTree = new SQ_TreeView(H);
 	H->moveToFirst(sqTree);
 
-	sqGLView = new SQ_GLViewWidget(V);
+	sqGLView = new SQ_GLViewGeneral(mainSplitter);
 
 	CreateToolbar(toolBar());
 	CreateMenu(menuBar());
@@ -607,14 +600,77 @@ void Squirrel::createWidgetsLikeXnview()
 	// "XnView" specific
 	pAGLView->unplug(toolBar());
 
+	setSplitterSizes(1, 3);
+}
+
+void Squirrel::createWidgetsLikeShowImg()
+{
+	CreateStatusBar();
+
+	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
+	mainDock->dockManager()->setSplitterOpaqueResize(true);
+	mainSplitter = new QSplitter(Qt::Horizontal, mainDock);
+	mainDock->setWidget(mainSplitter);
+	mainDock->setDockSite(KDockWidget::DockCorner);
+	mainDock->setEnableDocking(KDockWidget::DockNone);
+	setView(mainDock);
+	setMainDockWidget(mainDock);
+
+	QSplitter *mainSplitterV = new QSplitter(Qt::Vertical, mainSplitter);
+	
+	sqWStack = new SQ_WidgetStack(mainSplitterV);
+
+	QVBox *V = new QVBox(mainSplitterV);
+	V->setMinimumWidth(20);
+
+	KMenuBar *pMenuBar = new KMenuBar(V);
+	KToolBar *pToolbar = new KToolBar(sqApp, V, true, "GQview toolbar");
+
+	pTLocation = new KToolBar(sqApp, V, true, "Location toolbar");
+	pTLocation->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+	CreateLocationToolbar();
+
+	sqTree = new SQ_TreeView(V);
+
+	sqWStack->raiseFirst(createFirst);
+
+	CreateToolbar(pToolbar);
+	CreateMenu(pMenuBar);
+
+	// "GQview" specific
+	sqWStack->pAIconBigger->unplug(pToolbar);
+	sqWStack->pAIconSmaller->unplug(pToolbar);
+	pAGLView->unplug(pToolbar);
+	sqWStack->pANewDir->unplug(pToolbar);
+	pAPrevFile->unplug(pToolbar);
+	pANextFile->unplug(pToolbar);
+	pAGotoTray->unplug(pToolbar);
+
+	sqGLView = new SQ_GLViewGeneral(mainSplitter);
+
+	mainSplitterV->moveToFirst(V);
+
+	connect(sqCurrentURL, SIGNAL(returnPressed(const QString&)), sqWStack, SLOT(setURL(const QString&)));
+	connect(sqCurrentURL, SIGNAL(activated(const QString&)), sqWStack, SLOT(setURL(const QString&)));
+
+	setSplitterSizes(10, 21);
+
 	QValueList<int> l;
-	l.append(1);
-	l.append(3);
-	V->setSizes(l);
+	l.append(2);
+	l.append(2);
+	mainSplitterV->setSizes(l);
 }
 
 void Squirrel::createWidgetsLikeBrowser()
 {
+}
+
+void Squirrel::setSplitterSizes(int s1, int s2)
+{
+	QValueList<int> l;
+	l.append(s1);
+	l.append(s2);
+	mainSplitter->setSizes(l);
 }
 
 void Squirrel::CreateStatusBar()
@@ -662,6 +718,20 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	menubar->insertItem("Fi&lter", actionFilterMenu);
 	menubar->insertItem("&Help", helpMenu());
 
+	sqWStack->pAHome->plug(pop_file);
+	sqWStack->pAUp->plug(pop_file);
+	sqWStack->pABack->plug(pop_file);
+	sqWStack->pAForw->plug(pop_file);
+	sqWStack->pANewDir->plug(pop_file);
+	pop_file->insertSeparator();
+	sqWStack->pAProp->plug(pop_file);
+	sqWStack->pADelete->plug(pop_file);
+	pop_file->insertSeparator();
+	pANextFile->plug(pop_file);
+	pAPrevFile->plug(pop_file);
+	pop_file->insertSeparator();
+	pAExit->plug(pop_file);
+
 	pAGotoTray->plug(pop_view);
 	pop_view->insertSeparator();
 	sqWStack->pAIconBigger->plug(pop_view);
@@ -670,7 +740,6 @@ void Squirrel::CreateMenu(KMenuBar *menubar)
 	pARaiseIconView->plug(pop_view);
 	pARaiseListView->plug(pop_view);
 	pARaiseDetailView->plug(pop_view);
-	pAExit->plug(pop_file);
 	pARescan->plug(pop_edit);
 	pAExtTools->plug(pop_edit);
 	pAFilters->plug(pop_edit);
@@ -740,12 +809,46 @@ void Squirrel::slotGotoTray()
 
 void Squirrel::slotNextFile()
 {
-	sqWStack->slotNext();
+	switch(curViewType)
+	{
+        	case Squirrel::SQuirrel:
+        	case Squirrel::Kuickshow:
+			sqWStack->slotNext();
+		break;
+
+		case Squirrel::Gqview:
+        	case Squirrel::WinViewer:
+        	case Squirrel::Xnview:
+			sqWStack->emitNextSelected();
+		return;
+
+		case Squirrel::Browser:
+		break;
+
+		default: return;
+	}
 }
 
 void Squirrel::slotPreviousFile()
 {
-	sqWStack->slotPrevious();
+	switch(curViewType)
+	{
+        	case Squirrel::SQuirrel:
+        	case Squirrel::Kuickshow:
+			sqWStack->slotPrevious();
+		break;
+
+		case Squirrel::Gqview:
+        	case Squirrel::WinViewer:
+        	case Squirrel::Xnview:
+			sqWStack->emitPreviousSelected();
+		return;
+
+		case Squirrel::Browser:
+		break;
+
+		default: return;
+	}
 }
 
 bool Squirrel::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
@@ -768,23 +871,6 @@ QCStringList Squirrel::functions()
 	QCStringList result = DCOPObject::functions();
 	result << "void control(QString)";
 	return result;
-}
-
-void Squirrel::control(const QString &str)
-{
-	if(str == "SQ_ACTIVATE")
-	{
-		show();
-		KWin::setActiveWindow(winId());
-	}
-	if(str == "SQ_ACTIVATE_WITH_FILE")
-	{
-		show();
-		KWin::setActiveWindow(winId());
-		printf("\"SQ_ACTIVATE_WITH_FILE\": currently not implemented.\n");
-	}
-	else
-		printf("control(): unknown parameter: \"%s\"\n", str.ascii());
 }
 
 void Squirrel::slotRunCommand(int id)
@@ -853,6 +939,7 @@ void Squirrel::raiseGLWidget()
 		case Squirrel::Gqview:
         	case Squirrel::WinViewer:
         	case Squirrel::Xnview:
+         	case Squirrel::ShowImg:
 		return;
 
 		case Squirrel::Browser:
@@ -880,4 +967,63 @@ void Squirrel::InitBookmarks()
 	new KBookmarkMenu(bmanager, bookmarkOwner, bookmarks->popupMenu(), this->actionCollection(), true);
 
 	connect(sqBookmarks, SIGNAL(openURL(const KURL&)), sqWStack, SLOT(setURL(const KURL&)));
+}
+
+void Squirrel::slotSetFile()
+{
+	if(!sqHighLevel->HL_url.isEmpty())
+        {
+		if(!sqHighLevel->HL_url.fileName(false).isEmpty())
+			sqWStack->emitSelected(sqHighLevel->HL_url.path());
+	}
+
+	sqHighLevel->HL_url = "";
+}
+
+int Squirrel::findProtocol(const QString &proc)
+{
+	const int P_NUM = 2;
+
+	static const QString protocols[] = {
+		"SQ_ACTIVATE",
+		"SQ_ACTIVATEWITHFILE"
+		};
+
+	for(int i = 0;i < P_NUM;i++)
+		if(protocols[i].startsWith(proc))
+			return i;
+
+	return -1;
+}
+
+void Squirrel::control(const QString &str)
+{
+	int id = findProtocol(str);
+
+	switch(id)
+	{
+		case 0:
+			show();
+			KWin::setActiveWindow(winId());
+		break;
+		
+		case 1:
+		{
+			show();
+			KWin::setActiveWindow(winId());
+
+			QString path = str.right(str.length() - 19);
+			QFileInfo fm(path);
+			KURL url = path;
+
+			if(url.fileName(false).isEmpty())
+				sqWStack->setURL(url, true);
+			else
+				sqWStack->emitSelected(path);
+		}
+		break;
+
+		default:
+			printf("control(): unknown parameter: \"%s\"\n", str.ascii());
+	}
 }

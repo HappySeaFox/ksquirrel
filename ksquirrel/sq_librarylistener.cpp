@@ -46,7 +46,10 @@ void SQ_LibraryListener::slotStarted(const KURL &_url)
 void SQ_LibraryListener::slotCompleted()
 {
         if(operation)
+        {
 		sqLibHandler->add(&list);
+		emit finishedInit();
+	}
 	else
 		sqLibHandler->remove(&list);
 
@@ -62,8 +65,8 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 {
 	KFileItemListIterator	it(items);
 
-	KFileItem 				*item;
-	QString				stritems = "";
+	KFileItem 		*item;
+	QString		stritems("");
 	
 	while((item = it.current()) != 0)
 	{
@@ -79,7 +82,7 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 
 void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 {
-	QString				stritems = "";
+	QString stritems("");
 
 	if(item->isFile() && item)
 	{

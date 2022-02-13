@@ -188,7 +188,7 @@
                     </column>
                     <column>
                         <property name="text">
-                            <string>Extensions</string>
+                            <string>Command</string>
                         </property>
                         <property name="clickable">
                             <bool>true</bool>
@@ -277,8 +277,8 @@
     <connection>
         <sender>pushToolClearAll</sender>
         <signal>clicked()</signal>
-        <receiver>SQ_ExternalTools</receiver>
-        <slot>slotToolClearAll()</slot>
+        <receiver>listTools</receiver>
+        <slot>clear()</slot>
     </connection>
     <connection>
         <sender>pushToolUp</sender>
@@ -320,7 +320,6 @@
 <slots>
     <slot>slotNewTool()</slot>
     <slot>slotToolClear()</slot>
-    <slot>slotToolClearAll()</slot>
     <slot>slotToolUp()</slot>
     <slot>slotToolDown()</slot>
     <slot returnType="int">start()</slot>

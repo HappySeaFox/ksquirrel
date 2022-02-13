@@ -24,23 +24,28 @@
 #include <qfileinfo.h>
 #include <qdatetime.h>
 #include <qdir.h>
+#include <qlabel.h>
+#include <qwhatsthis.h>
 
 #include <kaction.h>
 #include <kcursor.h>
 #include <kwin.h>
 #include <kstandarddirs.h>
+#include <kiconloader.h>
 #include <kapp.h>
 
 #include <math.h>
 
 #include "ksquirrel.h"
 #include "sq_libraryhandler.h"
-#include "sq_glhelpwidget.h"
 #include "sq_config.h"
 #include "sq_widgetstack.h"
 #include "sq_glviewwidget.h"
+#include "sq_glbase.h"
 #include "err.h"
 
+#include <X11/Xlib.h>
+#include <GL/glx.h>
 
 SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(parent, name)
 {
@@ -71,34 +76,21 @@ SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(
 	setFocusPolicy(QWidget::WheelFocus);
 	setAcceptDrops(sqConfig->readBoolEntry("GL view", "enable drop", true));
 
-	pARotateLeft = new KAction("Rotate <=", 0, 0, this, SLOT(slotRotateLeft()), sqApp->actionCollection(), "SQ Rotate picture left");
-	pARotateRight = new KAction("Rotate =>", 0, 0, this, SLOT(slotRotateRight()), sqApp->actionCollection(), "SQ Rotate picture right");
-	pAZoomPlus = new KAction("Zoom+", 0, 0, this, SLOT(slotZoomPlus()), sqApp->actionCollection(), "SQ Zoom+");
-	pAZoomMinus = new KAction("Zoom-", 0, 0, this, SLOT(slotZoomMinus()), sqApp->actionCollection(), "SQ Zoom-");
+	pARotateLeft = new KAction("Rotate left", QIconSet(sqLoader->loadIcon("undo", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("undo", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotRotateLeft()), sqApp->actionCollection(), "SQ Rotate picture left");
+	pARotateRight = new KAction("Rotate right", QIconSet(sqLoader->loadIcon("redo", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("redo", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotRotateRight()), sqApp->actionCollection(), "SQ Rotate picture right");
+	pAZoomPlus = new KAction("Zoom +", QIconSet(sqLoader->loadIcon("viewmag+", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("viewmag+", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotZoomPlus()), sqApp->actionCollection(), "SQ Zoom+");
+	pAZoomMinus = new KAction("Zoom -", QIconSet(sqLoader->loadIcon("viewmag-", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("viewmag-", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotZoomMinus()), sqApp->actionCollection(), "SQ Zoom-");
 	pAFlipV = new KAction("Flip vertically", 0, 0, this, SLOT(slotFlipV()), sqApp->actionCollection(), "SQ flip_v");
 	pAFlipH = new KAction("Flip horizontally", 0, 0, this, SLOT(slotFlipH()), sqApp->actionCollection(), "SQ flip_h");
-	pAReset = new KAction("Normalize", 0, 0, this, SLOT(slotMatrixReset()), sqApp->actionCollection(), "SQ ResetGL");
-	pAHelp = new KAction("Some help", 0, 0, this, SLOT(slotSomeHelp()), sqApp->actionCollection(), "SQ GL some help");
+	pAReset = new KAction("Normalize", QIconSet(sqLoader->loadIcon("reload", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("reload", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotMatrixReset()), sqApp->actionCollection(), "SQ ResetGL");
+	pAHelp = new KAction("Some help", QIconSet(sqLoader->loadIcon("help", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("help", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotSomeHelp()), sqApp->actionCollection(), "SQ GL some help");
+	pAClose = new KAction("Close", QIconSet(sqLoader->loadIcon("exit", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("exit", KIcon::Desktop, KIcon::SizeMedium)), 0, this, SLOT(slotCloseGLView()), sqApp->actionCollection(), "SQ GL close");
 
 	KCursor::setAutoHideCursor(this, true);
 	KCursor::setHideCursorDelay(3000);
 
-	const QString help = "\
-Shift+\"->\" rotate image for 1 degree right\nShift+\"<-\" rotate image for 1 degree left\n\n\
-Ctrl+\"->\" rotate image for 90 degrees right\nCtrl+\"<-\" rotate image for 90 degrees left\n\
-Ctrl+\"Up Arrow\" rotate image for 180 degrees right\nCtrl+\"Down Arrow\" rotate image for 180 degrees left\n\n\
-\"Left Arrow\" move image for 5 pixels right\n\"Right Arrow\" move image for 5 pixels left\n\n\
-\"Up Arrow\" move image for 5 pixels down\n\"Down Arrow\" move image for 5 pixels up\n\n\
-\"+\" zoom in\n\"-\" zoom out\n\n\
-\"Ctrl + '+'\" zoom in 2x\n\"Ctrl + '-'\" zoom out 2x\n\n\
-\"V\" flip vertically\n\"H\" flip horizontally\n\n\
-\"R\" reset GL view (restore zoom, position, etc.)\
-";
-
-	gl_hw = new SQ_GLHelpWidget(help, 0, "Some text widget");
-
 	pARender = new KAction("Render into file", 0, 0, this, SLOT(slotRenderPixmapIntoFile()), sqApp->actionCollection(), "SQ render GL into file");
-	
+
 	connect(this, SIGNAL(matrixChanged()), SLOT(slotSetMatrixParamsString()));
 	connect(this, SIGNAL(showImage(const QString&)), SLOT(slotShowImage(const QString&)));
 }
@@ -132,23 +124,22 @@ void SQ_GLViewWidget::initializeGL()
 
 void SQ_GLViewWidget::resizeGL(int width, int height)
 {
-	GLfloat w2 = (width+1) / 2.0f, h2 = (height+1) / 2.0f;
-
-	glViewport(0, 0, width, height);
+	glViewport(-width/2, -height/2, width*2, height*2);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-w2, w2, -h2, h2, 0.1f, 100.0f);
+	glOrtho(-width, width, -height, height, 0.1f, 100.0f);
 	gluLookAt(0,0,1, 0,0,0, 0,1,0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
 void SQ_GLViewWidget::paintGL()
 {
+	GLfloat half_w = (GLfloat)w / 2.0f, half_h = (GLfloat)h / 2.0f;
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-	GLfloat half_w = (GLfloat)w / 2.0f, half_h = (GLfloat)h / 2.0f;
 
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(-half_w, half_h);
@@ -156,6 +147,23 @@ void SQ_GLViewWidget::paintGL()
 		glTexCoord2f(1.0f, 1.0f); glVertex2f( half_w, -half_h);
 		glTexCoord2f(0.0f, 1.0f); glVertex2f(-half_w, -half_h);
 	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+/*
+	const GLfloat border = 20.0f;
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-half_w2-border, half_h2+border);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( half_w2+border, half_h2+border);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( half_w2+border, -half_h2-border);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-half_w2-border, -half_h2-border);
+	glEnd();*/
+}
+
+void SQ_GLViewWidget::slotCloseGLView()
+{
+	sqGLView->close();
 }
 
 void SQ_GLViewWidget::slotSetMatrixParamsString()
@@ -201,9 +209,8 @@ void SQ_GLViewWidget::wheelEvent(QWheelEvent *e)
 		slotZoomPlus();
 	else if(e->delta() < 0 && e->state() == Qt::ShiftButton)
 		slotZoomMinus();
-	else { e->accept(); return; }
-
-	updateGL();
+	else
+		e->accept();
 }
 
 void SQ_GLViewWidget::mousePressEvent(QMouseEvent *e)
@@ -285,12 +292,7 @@ void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 	else if(e->key() == Qt::Key_BackSpace && e->state() == Qt::NoButton)
 		sqWStack->emitPreviousSelected();
 	else
-	{
 		e->accept();
-		return;
-	}
-
-	updateGL();
 }
 
 void SQ_GLViewWidget::dropEvent(QDropEvent *e)
@@ -334,15 +336,35 @@ void SQ_GLViewWidget::contextMenuEvent(QContextMenuEvent*)
 	pASep->plug(menu);
 	pAHelp->plug(menu);
 
+	if(sqGLView->isSeparate())
+	{
+		pASep->plug(menu);
+		pAClose->plug(menu);
+	}
+
 	menu->exec(QCursor::pos());
+
+	delete pASep;
+	delete menu;
 }
 
 //SLOTS
 void SQ_GLViewWidget::slotSomeHelp()
 {
-	gl_hw->setFocus();
-	gl_hw->move(QApplication::desktop()->width() / 2 - gl_hw->width() / 2, QApplication::desktop()->height() / 2 - gl_hw->height() / 2);
-	gl_hw->show();
+	static const QString help = "\
+Shift+\"->\" rotate image for 1 degree right\nShift+\"<-\" rotate image for 1 degree left\n\n\
+Ctrl+\"->\" rotate image for 90 degrees right\nCtrl+\"<-\" rotate image for 90 degrees left\n\
+Ctrl+\"Up Arrow\" rotate image for 180 degrees right\nCtrl+\"Down Arrow\" rotate image for 180 degrees left\n\n\
+\"Left Arrow\" move image for 5 pixels right\n\"Right Arrow\" move image for 5 pixels left\n\n\
+\"Up Arrow\" move image for 5 pixels down\n\"Down Arrow\" move image for 5 pixels up\n\n\
+\"+\" zoom in\n\"-\" zoom out\n\n\
+\"Ctrl + '+'\" zoom in 2x\n\"Ctrl + '-'\" zoom out 2x\n\n\
+\"V\" flip vertically\n\"H\" flip horizontally\n\n\
+\"R\" reset GL view (restore zoom, position, etc.)\
+";
+
+	QWhatsThis *gl_tip = new QWhatsThis(this);
+	gl_tip->display(help);
 }
 
 void SQ_GLViewWidget::slotZoomPlus()
@@ -396,7 +418,7 @@ void SQ_GLViewWidget::slotMatrixReset()
 	matrix_reset();
 }
 
-void SQ_GLViewWidget::write_gl_matrix(void)
+void SQ_GLViewWidget::write_gl_matrix()
 {
 	static GLfloat transposed[16] =
 	{
@@ -415,6 +437,8 @@ void SQ_GLViewWidget::write_gl_matrix(void)
 	glLoadMatrixf(transposed);
 
 	emit matrixChanged();
+
+	updateGL();
 }
 
 void SQ_GLViewWidget::matrix_move(GLfloat x, GLfloat y)
@@ -425,7 +449,7 @@ void SQ_GLViewWidget::matrix_move(GLfloat x, GLfloat y)
 	write_gl_matrix();
 }
 
-void SQ_GLViewWidget::matrix_reset(void)
+void SQ_GLViewWidget::matrix_reset()
 {
 	int i;
 
@@ -434,13 +458,12 @@ void SQ_GLViewWidget::matrix_reset(void)
 
 	curangle = 0.0f;
 	isflippedH = isflippedV = 0;
-	
-	write_gl_matrix();
 
 	if(finfo)
 		if(finfo->needflip)
 			slotFlipV();
 
+	write_gl_matrix();
 }
 
 void SQ_GLViewWidget::matrix_zoom(GLfloat ratio)
@@ -516,24 +539,16 @@ void SQ_GLViewWidget::emitShowImage(const QString &file)
 {
 	sqApp->raiseGLWidget();
 
-	setCaption(file);
+	sqGLView->setCaption(file);
 
 	emit showImage(file);
-/*
-	return;
-
-	if(dect.running()) { dect.terminate(); dect.wait(); }
-
-	dect.setFile(file);
-	dect.start();
-*/
 }
 
 void SQ_GLViewWidget::emitShowImage(const KURL &url)
 {
 	sqApp->raiseGLWidget();
 
-	setCaption(url.path());
+	sqGLView->setCaption(url.path());
 
 	emit showImage(url.path());
 }
@@ -568,7 +583,7 @@ void SQ_GLViewWidget::setTextureParams()
 
 void SQ_GLViewWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-	close();
+//	close();
 	e->accept();
 }
 
@@ -604,29 +619,32 @@ void SQ_GLViewWidget::slotShowImage(const QString &file)
 {
 	QFileInfo 					fm(file);
 	const char 				*name = file.ascii();
-	static 		SQ_LIBRARY	*lib;
-	static 		QString		status;
-	unsigned int				i, offsetX, offsetY;
-	unsigned long				pict_size, realW, realH;
-	QString					dump;
+	SQ_LIBRARY				*lib;
+	QString					status;
+	unsigned int				i;
 
+/*
 	// @todo maybe remove it ?
 	if(!sqLibHandler->supports(fm.extension(false)))
 	{
 		sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
 		return;
 	}
-
+*/
 	sqLibHandler->setCurrentLibrary(fm.extension(false));
 	lib = sqLibHandler->getCurrentLibrary();
 
 	lib->fmt_init(&finfo, name);
 	i = lib->fmt_read_info(finfo);
 
-	dump = QString("File: %1\nDirectory: %2\nSize: %3\n\n")
-			.arg(fm.fileName())
+	real_size = finfo->w * finfo->h * 4;
+
+	dump = QString("Directory: %1\nFile: %2\nSize: %3\nUncompressed size: %4\nCompress ratio: %5\n\n")
 			.arg(fm.dirPath(true))
-			.arg(KIO::convertSize(fm.size()));
+			.arg(fm.fileName())
+			.arg(KIO::convertSize(fm.size()))
+			.arg(KIO::convertSize(real_size))
+			.arg((double)real_size / fm.size());
 
 	dump = dump +  finfo->dump;
 
@@ -638,11 +656,12 @@ void SQ_GLViewWidget::slotShowImage(const QString &file)
 		{
 			case SQERR_BADFILE: status = "File corrupted !\n\nTried library: " + lib->libpath + "\nHandled extensions: " + lib->sinfo; break;
 			case SQERR_NOMEMORY: status = "Library couldn't alloc memory for internal usage !"; break;
+			case SQERR_NOTSUPPORTED: status = "This format type is not supported."; break;
 
 			default: status = "Library returned unknown error code.";
 		}
 
-		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
+		QMessageBox::warning(sqGLView, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
 		return;
 	}
 
@@ -660,7 +679,7 @@ void SQ_GLViewWidget::slotShowImage(const QString &file)
 	{
 		status.sprintf("Oops! Memory realloc failed.\n\nI tried to realloc memory for image:\n\nwidth: %ld\nheight: %ld\nbpp: %d\nTotal needed: ", realW, realH, finfo->bpp);
 		status = status + KIO::convertSize(pict_size) + " of memory.";
-		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
+		QMessageBox::warning(sqGLView, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
 		return;
 	}
 /*
@@ -673,6 +692,7 @@ void SQ_GLViewWidget::slotShowImage(const QString &file)
 	}
 */
 	memset(rgba, 0, pict_size);
+//	memset(scan, 0, realW*4);
 
 	w = (GLfloat)realW;
 	h = (GLfloat)realH;
@@ -680,28 +700,30 @@ void SQ_GLViewWidget::slotShowImage(const QString &file)
 	status.sprintf("%ldx%ld@%d bit", finfo->w, finfo->h, finfo->bpp);
 	sqSBDecoded->setText(status);
 
-/*
-	matrix_reset();
+	const int param = offsetX + offsetY*realW;
+
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, realW, realH, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	matrix_reset();
+
+	posX = -(double)finfo->w / 2.0f;
+	posY = (double)finfo->h / 2.0f - 1;
+	rgba_next = rgba + param;
+
+	int swapon = sqConfig->readNumEntry("GL view", "swap on", 2);
 
 	for(i = 0;i < finfo->h;i++)
 	{
-		lib->fmt_read_scanline(finfo, scan);
-		glTexSubImage1D(GL_TEXTURE_1D, 0, offsetX, finfo->w, GL_RGBA, GL_UNSIGNED_BYTE, scan);
-		updateGL();
+		lib->fmt_read_scanline(finfo, rgba_next + realW*i);
+		glRasterPos2d(posX, posY-i);
+		glDrawPixels(realW, 1, GL_RGBA, GL_UNSIGNED_BYTE, rgba_next + realW*i);
+		if(!(i%swapon)) swapBuffers();
 	}
 
-	 lib->fmt_close(finfo);
-*/
-	const int param = offsetX + offsetY*realW;
+	lib->fmt_close(finfo);
 
-	for(i = 0;i < finfo->h;i++)
-		lib->fmt_read_scanline(finfo, rgba + realW*i + param);
-
-	 lib->fmt_close(finfo);
-
-	matrix_reset();
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, realW, realH, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 	updateGL();
-
+	
+	free(rgba);
+	rgba = 0L;
 }

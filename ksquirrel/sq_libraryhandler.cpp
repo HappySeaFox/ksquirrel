@@ -23,6 +23,7 @@
 #include "ksquirrel.h"
 #include "sq_config.h"
 
+/* @todo: inherit SQ_LibraryHandler <- QObject, QValueVector (get rid of 'libs' member) */
 SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries, QObject *parent, const char *name) : QObject(parent, name), currentlib(0)
 {
 	libs = new QValueVector<SQ_LIBRARY>;

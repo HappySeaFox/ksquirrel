@@ -66,11 +66,6 @@ void SQ_ExternalTools::slotToolClear()
 	listTools->takeItem(item);
 }
 
-void SQ_ExternalTools::slotToolClearAll()
-{
-listTools->clear();
-}
-
 void SQ_ExternalTools::slotToolUp()
 {
     QListViewItem *item = listTools->currentItem();

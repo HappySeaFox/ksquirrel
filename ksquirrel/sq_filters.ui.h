@@ -68,11 +68,6 @@ void SQ_Filters::slotFilterClear()
 	listFilters->takeItem(item);
 }
 
-void SQ_Filters::slotFilterClearAll()
-{
-
-}
-
 void SQ_Filters::slotFilterUp()
 {
     QListViewItem *item = listFilters->currentItem();

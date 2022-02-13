@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_externaltools.ui'
 **
-** Created: Втр Апр 27 19:00:36 2004
+** Created: Срд Май 5 19:46:54 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -44,7 +44,6 @@ public:
 public slots:
     virtual void slotNewTool();
     virtual void slotToolClear();
-    virtual void slotToolClearAll();
     virtual void slotToolUp();
     virtual void slotToolDown();
     virtual int start();

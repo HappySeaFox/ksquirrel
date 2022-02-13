@@ -28,6 +28,7 @@
 #include "sq_widgetstack.h"
 #include "sq_externaltool.h"
 #include "sq_treeview.h"
+#include "sq_hloptions.h"
 
 #define SQ_SECTION_NAME ("squirrel image viewer file browser")
 
@@ -201,7 +202,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 	}
 	if(id == 1 && pDirOperatorIcon == 0L)
 	{
-		pDirOperatorIcon = new SQ_DirOperator(KURL("/"));
+		pDirOperatorIcon = new SQ_DirOperator(KURL(((path)?*path:"/")));
 		pDirOperatorIcon->readConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorIcon->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorIcon->setMode(KFile::Files);
@@ -216,7 +217,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 	}
 	else if(id == 2 &&  pDirOperatorDetail == 0L)
 	{
-		pDirOperatorDetail = new SQ_DirOperator(KURL("/"));
+		pDirOperatorDetail = new SQ_DirOperator(KURL(((path)?*path:"/")));
 		pDirOperatorDetail->readConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorDetail->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorDetail->setMode(KFile::Files);
@@ -245,13 +246,16 @@ void SQ_WidgetStack::raiseFirst(int id)
 {
 	path = new QString;
 
-	switch(sqConfig->readNumEntry("Fileview", "set path", 1))
-	{
-		case 2: *path = sqConfig->readEntry("Fileview", "custom directory", "/"); break;
-		case 1: *path = ""; break;
-		case 0: *path = sqConfig->readEntry("Fileview", "last visited", "/"); break;
-		default: *path = "/";
-	}
+	if(sqHighLevel->HL_url.isEmpty())
+		switch(sqConfig->readNumEntry("Fileview", "set path", 1))
+		{
+			case 2: *path = sqConfig->readEntry("Fileview", "custom directory", "/"); break;
+			case 1: *path = ""; break;
+			case 0: *path = sqConfig->readEntry("Fileview", "last visited", "/"); break;
+			default: *path = "/";
+		}
+	else
+		*path = (!sqHighLevel->HL_url.fileName(false).isEmpty()) ? (sqHighLevel->HL_url.directory()) : (sqHighLevel->HL_url.path());
 
 	raiseWidget(id);
 
@@ -305,4 +309,11 @@ void SQ_WidgetStack::reInitToolsMenu()
 int SQ_WidgetStack::count() const
 {
 	return ncount;
+}
+
+void SQ_WidgetStack::emitSelected(const QString &file)
+{
+	SQ_DirOperator *local = (SQ_DirOperator*)visibleWidget();
+
+	local->emitSelected(file);
 }
