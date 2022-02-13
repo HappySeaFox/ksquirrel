@@ -170,7 +170,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="toolTip" stdset="0">
-                                    <string>Convertion options</string>
+                                    <string>Conversion options</string>
                                 </property>
                             </widget>
                         </grid>

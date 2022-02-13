@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Mar 13 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -27,6 +27,7 @@
 #include <kfileitem.h>
 #include <kpopupmenu.h>
 #include <kcolordialog.h>
+#include <kio/global.h>
 
 #include <ksquirrel-libs/fmt_defs.h>
 
@@ -56,13 +57,17 @@ SQ_PreviewWidget::SQ_PreviewWidget(QWidget *parent, const char *name)
 
     down = new SQ_Downloader(this);
     connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloadResult(const KURL &)));
+    connect(down, SIGNAL(percents(int)), this, SLOT(slotDownloadPercents(int)));
 
     popup = new KPopupMenu;
     popup->insertItem(i18n("Background color..."), this, SLOT(slotBackground()));
     popup->insertItem(i18n("Text color..."), this, SLOT(slotText()));
     popup->insertSeparator();
+    popup->insertItem(i18n("Go to first image")+"\tHome", this, SIGNAL(first()));
     popup->insertItem(i18n("Next image")+"\tSpace", this, SIGNAL(next()));
     popup->insertItem(i18n("Previous image")+"\tBackSpace", this, SIGNAL(previous()));
+    popup->insertItem(i18n("Go to last image")+"\tEnd", this, SIGNAL(last()));
+    popup->insertSeparator();
     popup->insertItem(i18n("Execute")+"\tEnter", this, SIGNAL(execute()));
 
     multi_pix = SQ_IconLoader::instance()->loadIcon("kmultiple", KIcon::Desktop, KIcon::SizeSmall);
@@ -82,6 +87,14 @@ void SQ_PreviewWidget::load(const KURL &_url)
 {
     if(SQ_LibraryHandler::instance()->maybeSupported(_url) == SQ_LibraryHandler::No)
         return;
+
+    if(!percentString.isEmpty())
+    {
+        percentString = QString::null;
+        update();
+    }
+
+    down->kill();
 
     if(m_forceignore || m_ignore)
     {
@@ -119,9 +132,19 @@ void SQ_PreviewWidget::paintEvent(QPaintEvent *)
 
     p.fillRect(rect(), color);
 
+    int x = 4;
+
+    if(!percentString.isEmpty())
+    {
+        QFont fnt = p.font();
+        fnt.setBold(true);
+        p.setFont(fnt);
+        p.setPen(colorText);
+        p.drawText(x, 4, width(), height(), Qt::AlignLeft, percentString);
+    }
+
     if(!m_ignore && !pixmap.isNull())
     {
-        int x = 4;
         p.drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
 
         if(multi)
@@ -235,6 +258,7 @@ void SQ_PreviewWidget::loadPending()
 
 void SQ_PreviewWidget::slotDownloadResult(const KURL &url)
 {
+    percentString = QString::null;
     QString path = url.path();
     fmt_info *finfo;
     RGBA *bits;
@@ -303,12 +327,18 @@ void SQ_PreviewWidget::keyPressEvent(QKeyEvent *e)
 {
     e->accept();
 
-    if(e->key() == Qt::Key_PageDown || e->key() == Qt::Key_Space)
+    int key = e->key();
+
+    if(key == Qt::Key_PageDown || key == Qt::Key_Space)
         emit next();
-    else if(e->key() == Qt::Key_PageUp || e->key() == Qt::Key_BackSpace)
+    else if(key == Qt::Key_PageUp || key == Qt::Key_BackSpace)
         emit previous();
-    else if(e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)
+    else if(key == Qt::Key_Return || key == Qt::Key_Enter)
         emit execute();
+    else if(key == Qt::Key_Home)
+        emit first();
+    else if(key == Qt::Key_End)
+        emit last();
 }
 
 void SQ_PreviewWidget::wheelEvent(QWheelEvent *e)
@@ -323,6 +353,12 @@ void SQ_PreviewWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
     e->accept();
     emit execute();
+}
+
+void SQ_PreviewWidget::slotDownloadPercents(int p)
+{
+    percentString = i18n("Downloading...") + ' ' + KIO::convertSize(p);
+    update();
 }
 
 #include "sq_previewwidget.moc"

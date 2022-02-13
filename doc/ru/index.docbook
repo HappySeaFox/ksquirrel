@@ -4,7 +4,7 @@
   <!ENTITY kappname "KSquirrel">
   <!ENTITY klibname "ksquirrel-libs">
   <!ENTITY Dmitry.Baryshev "<firstname>Дмитрий</firstname> <othername>Алексеевич</othername> <surname>Барышев</surname>">
-  <!ENTITY Dmitry.Baryshev.mail "<email>ksquirrel@tut.by</email>">
+  <!ENTITY Dmitry.Baryshev.mail "<email>ksquirrel.iv@gmail.com</email>">
   <!ENTITY intro          SYSTEM "intro.docbook">
   <!ENTITY internals      SYSTEM "internals.docbook">
   <!ENTITY interface      SYSTEM "interface.docbook">
@@ -23,7 +23,7 @@
 <authorgroup>
 <author>
 <firstname>Дмитрий</firstname><surname>Барышев</surname><othername>Алексеевич</othername>
-<affiliation><address><email>ksquirrel@tut.by</email></address></affiliation>
+<affiliation><address><email>ksquirrel.iv@gmail.com</email></address></affiliation>
 </author>
 </authorgroup>
 

@@ -1,13 +1,13 @@
 # translation of ru.po to
-# Baryshev Dmitry <ksquirrel@mail.ru>, 2007.
-# krasu <ksquirrel@mail.ru>, 2007.
+# Baryshev Dmitry <ksquirrel.iv@gmail.com>, 2007.
+# krasu <ksquirrel.iv@gmail.com>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-07 09:45+0200\n"
 "PO-Revision-Date: 2007-08-07 12:26+0300\n"
-"Last-Translator: krasu <ksquirrel@mail.ru>\n"
+"Last-Translator: krasu <ksquirrel.iv@gmail.com>\n"
 "Language-Team:  <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,8 +95,8 @@ msgid "Adjust external tools"
 msgstr "Настроить внешние утилиты"
 
 #: sq_externaltools.cpp:192 sq_filters.cpp:182
-msgid " OK "
-msgstr "OK "
+msgid "OK"
+msgstr "OK"
 
 #: sq_externaltools.cpp:196 sq_externaltools.ui.h:146
 #, c-format
@@ -272,7 +272,7 @@ msgid "Uncompressed size:"
 msgstr "Распакованный размер:"
 
 #: sq_imageproperties.cpp:390
-msgid "Compress ratio:"
+msgid "Compression ratio:"
 msgstr "Степень сжатия:"
 
 #: sq_imageproperties.cpp:391
@@ -313,7 +313,7 @@ msgid "MIME"
 msgstr "MIME"
 
 #: sq_pluginsinfo.cpp:128
-msgid "Codecs information and settings"
+msgid "Codec information and settings"
 msgstr "Информация и настройки кодеков"
 
 #: sq_pluginsinfo.cpp:138
@@ -386,11 +386,11 @@ msgstr "Создать категории по умолчанию"
 
 #: sidebar/sq_categoriesview.cpp:197
 msgid ""
-"It will create default categories: Concerts, Pets, Home, Friends, Free time, "
-"Traveling, Nature. Continue?"
+"This will create default categories: Concerts, Pets, Home, Friends, Free time, "
+"Travelling and Nature. Continue?"
 msgstr ""
 "Данное действие создаст категории по умолчанию: Concerts, Pets, Home, Friends, Free time, "
-"Traveling, Nature. Продолжить?"
+"Travelling and Nature. Продолжить?"
 
 #: sidebar/sq_categoriesview.cpp:218
 msgid "Create new category:"
@@ -470,7 +470,7 @@ msgid "Calculate cache size in memory"
 msgstr "Подсчитать размер кэша в памяти"
 
 #: sq_diroperator.cpp:138
-msgid "non-local filesystem"
+msgid "remote filesystem"
 msgstr "нелокальная  ф.система"
 
 #: sq_diroperator.cpp:158
@@ -580,8 +580,8 @@ msgstr ""
 #: sq_codecsettingsskeleton.ui.h:28
 msgid ""
 "Error loading widget from <b>%1</b>. Please check your installation or "
-"contact <a href=\"mailto:ksquirrel@mail.ru\">ksquirrel@mail.ru</a>"
-msgstr "Ошибка загрузки компонента из <b>%1</b>. Пожалуйста, проверьте правильность установки или сообщите на <a href=\"mailto:ksquirrel@mail.ru\">ksquirrel@mail.ru</a>"
+"contact <a href=\"mailto:ksquirrel.iv@gmail.com\">ksquirrel.iv@gmail.com</a>"
+msgstr "Ошибка загрузки компонента из <b>%1</b>. Пожалуйста, проверьте правильность установки или сообщите на <a href=\"mailto:ksquirrel.iv@gmail.com\">ksquirrel.iv@gmail.com</a>"
 
 #: sq_widgetstack.cpp:473 sq_widgetstack.cpp:507
 msgid "No files to copy or move"
@@ -651,7 +651,7 @@ msgstr "Выберете файлы для редактирования"
 
 #: imageedit/sq_converter.cpp:73
 msgid ""
-"Converter cannot work with non-local files.\n"
+"Converter cannot work with remote files.\n"
 "Sorry"
 msgstr "Конвертер не может работать с нелокальными файлами.\nИзвините"
 
@@ -680,7 +680,7 @@ msgid "New files"
 msgstr "Новые файлы"
 
 #: imageedit/sq_imageeditoptions.cpp:136
-msgid "Put here"
+msgid "Place here"
 msgstr "Поместить сюда"
 
 #: imageedit/sq_imageeditoptions.cpp:137
@@ -688,11 +688,11 @@ msgid "Replace original files"
 msgstr "Заменить оригинальные файлы"
 
 #: imageedit/sq_imageeditoptions.cpp:138
-msgid "Put files to current directory, renaming them if neccessary"
+msgid "Place files in current directory, renaming them if necessary"
 msgstr "Поместить файлы в текущую папку, переименовывая их по необходимости"
 
 #: imageedit/sq_imageeditoptions.cpp:139
-msgid "Put files to current directory, replacing existing files"
+msgid "Place files in current directory, replacing existing files"
 msgstr "Поместить файлы в текущую папку, заменяя существующие файлы"
 
 #: imageedit/sq_imageeditoptions.cpp:140
@@ -797,8 +797,8 @@ msgid "Impulse"
 msgstr "Impulse"
 
 #: imageedit/sq_imagefilter.cpp:497
-msgid "MultiplicativeGaussian"
-msgstr "MultiplicativeGaussian"
+msgid "Multiplicative Gaussian"
+msgstr "Multiplicative Gaussian"
 
 #: imageedit/sq_imagefilter.cpp:498
 msgid "Poisson"
@@ -958,7 +958,7 @@ msgid "Convert"
 msgstr "Преобразовать"
 
 #: imageedit/sq_imageconvert.cpp:172
-msgid "Convertion options"
+msgid "Conversion options"
 msgstr "Опции преобразования"
 
 #: sq_viewcache.cpp:49 sq_viewcache.cpp:107
@@ -1011,7 +1011,7 @@ msgstr "Барышев Дмитрий"
 msgid ""
 "_: EMAIL OF TRANSLATORS\n"
 "Your emails"
-msgstr "ksquirrel@mail.ru"
+msgstr "ksquirrel.iv@gmail.com"
 
 #: sq_glwidget.cpp:233
 msgid "Rectangle"
@@ -1042,7 +1042,7 @@ msgid "Leave previous zoom"
 msgstr "Оставить предыдущее увеличение"
 
 #: sq_glwidget.cpp:244
-msgid "Ignore, if the image is less than window"
+msgid "Ignore, if image is smaller than window"
 msgstr "Игнорировать, если изображение меньше окна"
 
 #: sq_glwidget.cpp:318
@@ -1139,7 +1139,7 @@ msgstr " мс."
 
 #: sq_glwidget.cpp:2363
 msgid ""
-"Sorry, could not perfom write operation\n"
+"Sorry, could not perform write operation\n"
 "for codec \"%1\""
 msgstr ""
 "Извините, не могу начать операцию записи\n"
@@ -1506,8 +1506,8 @@ msgid "Zoom limit"
 msgstr "Предел масштабирования"
 
 #: sq_options.cpp:818
-msgid "Minimum: 1%, maximum: 10'000%"
-msgstr "Минимум: 1%, максимум: 10'000%"
+msgid "Minimum: 1%, maximum: 10,000%"
+msgstr "Минимум: 1%, максимум: 10,000%"
 
 #: sq_options.cpp:819
 msgid "Custom"
@@ -1670,7 +1670,7 @@ msgid "Clear history"
 msgstr "Очистить историю"
 
 #: ksquirrel.cpp:289
-msgid "Clear adress"
+msgid "Clear address"
 msgstr "Очистить адрес"
 
 #: ksquirrel.cpp:294
@@ -1734,7 +1734,7 @@ msgid "Configure filters..."
 msgstr "Настроить фильтры..."
 
 #: ksquirrel.cpp:728
-msgid "Goto tray"
+msgid "Go to tray"
 msgstr "Спрятаться в трей"
 
 #: ksquirrel.cpp:729
@@ -1782,7 +1782,7 @@ msgid "Slideshow advanced"
 msgstr "Слайды продвинуто"
 
 #: ksquirrel.cpp:748
-msgid "Codecs information..."
+msgid "Codec information..."
 msgstr "Информация о кодеках"
 
 #: ksquirrel.cpp:749
@@ -1838,7 +1838,7 @@ msgid "Move filter down"
 msgstr "Переместить фильтр вниз"
 
 #: sq_filters.cpp:198
-msgid "Menuitem contains both name and extension"
+msgid "Menu item contains both name and extension"
 msgstr "Элемент меню содержит и имя и расширение"
 
 #: sq_helpwidget.cpp:175
@@ -1935,7 +1935,7 @@ msgid ""
 "tr><tr><td><p align=right><b>R</b></p></td><td>reset</td></tr><tr><td><p "
 "align=right><b>P</b></p></td><td>image properties</td></tr><tr><td><p "
 "align=right><b>C</b></p></td><td>codec settings</td></tr><tr><td><p "
-"align=right><b>L</b></p></td><td>ignore zoom if the image is less than "
+"align=right><b>L</b></p></td><td>ignore zoom if image is smaller than "
 "window</td></tr><tr><td><p align=right><b>I</b></p></td><td>menu with "
 "images</td></tr><tr><td><p align=right><b>A</b></p></td><td>stop/start "
 "animation</td></tr><tr><td><p align=right><b>B</b></p></td><td>toggle "
@@ -1944,7 +1944,7 @@ msgid ""
 "tr><tr><td><p align=right><b>E</b></p></td><td>show menu with external "
 "tools</td></tr><tr><td><p align=right><b>Y</b></p></td><td>crop</td></tr>"
 "<tr><td><p align=right><b>F1</b></p></td><td>first image in "
-"miltipaged image</td></tr><tr><td><p align=right><b>F2</b></p></"
+"multi-paged image</td></tr><tr><td><p align=right><b>F2</b></p></"
 "td><td>previous</td></tr><tr><td><p align=right><b>F3</b></p></td><td>next</"
 "td></tr><tr><td><p align=right><b>F4</b></p></td><td>last</td></tr></table></"
 "p>"
@@ -2186,3 +2186,12 @@ msgstr "Закрыть вкладку"
 
 msgid "Do nothing"
 msgstr "Не делать ничего"
+
+msgid "Print available DCOP parameters"
+msgstr "Напечатать доступные параметры DCOP"
+
+msgid "Downloading..."
+msgstr "Загрузка..."
+
+msgid "Close all tabs"
+msgstr "Закрыть все вкладки"

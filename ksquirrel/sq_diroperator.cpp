@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -97,8 +97,9 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, co
     fireDiskSize(url);
 
     down = new SQ_Downloader(this, "SQ_Downloader [dirop]");
-
     connect(down, SIGNAL(result(const KURL &)), this, SLOT(slotDownloaderResult(const KURL &)));
+    connect(down, SIGNAL(percents(int)), this, SLOT(slotDownloadPercents(int)));
+
     connect(SQ_ArchiveHandler::instance(), SIGNAL(unpack(const KURL &)), this, SLOT(slotSetURL(const KURL &)));
 
     // read sorting settings
@@ -161,7 +162,7 @@ void SQ_DirOperator::fireDiskSize(const KURL &url)
         KSquirrel::app()->diskProgress()->setTotalSteps(1);
         KSquirrel::app()->diskProgress()->setIndicator(0);
         KSquirrel::app()->diskProgress()->update();
-        KSquirrel::app()->sbarWidget("diskSpace")->setText(i18n("non-local filesystem"));
+        KSquirrel::app()->sbarWidget("diskSpace")->setText(i18n("remote filesystem"));
         QToolTip::remove(KSquirrel::app()->sbarWidget("diskSpace"));
     }
 }
@@ -208,6 +209,8 @@ void SQ_DirOperator::execute(KFileItem *fi)
 
 void SQ_DirOperator::slotDownloaderResult(const KURL &url)
 {
+    SQ_GLWidget::window()->setDownloadPercents(-1);
+
     if(url.isEmpty())
         return;    
 
@@ -1046,6 +1049,11 @@ void SQ_DirOperator::stopThumbnailUpdate()
         if(tv && tv->updateRunning())
             tv->stopThumbnailUpdate();
     }
+}
+
+void SQ_DirOperator::slotDownloadPercents(int p)
+{
+    SQ_GLWidget::window()->setDownloadPercents(p);
 }
 
 #include "sq_diroperator.moc"

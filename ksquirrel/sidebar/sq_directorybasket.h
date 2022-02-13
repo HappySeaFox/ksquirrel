@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Sep 29 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -24,6 +24,8 @@
 #include "sq_treeviewmenu.h"
 
 class QTimer;
+
+class KProgress;
 
 namespace KIO { class Job; }
 
@@ -176,12 +178,14 @@ class SQ_DirectoryBasket : public KFileTreeView
         void slotSort();
         void slotReindex();
         void slotItemRenamedMy(QListViewItem *, int, const QString &);
+        void slotDelayedShowAdd();
 
     private:
         KFileTreeBranch *root;
         SQ_Dir          *dir;
-        QTimer          *timer;
+        QTimer          *timer, *timerAdd;
         SQ_DBMenu       *menu;
+        KProgress       *progressAdd;
 
         static SQ_DirectoryBasket *m_inst;
 };

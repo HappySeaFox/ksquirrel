@@ -633,7 +633,7 @@
                                     <cstring>radioButton1_3</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>MultiplicativeGaussian</string>
+                                    <string>Multiplicative Gaussian</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="1">

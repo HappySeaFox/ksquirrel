@@ -3,7 +3,7 @@
                              -------------------
     begin                : Tue Sep 20 2005
     copyright            : (C) 2005 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -60,11 +60,14 @@ bool SQ_ImageLoader::tasteImage(const QString &path, int *w, int *h, SQ_LIBRARY 
     // determine library for file
     lib = _lib ? _lib : SQ_LibraryHandler::instance()->libraryForFile(path);
 
-    if(!lib || !lib->codec)
+    if(!lib)
         return false;
 
     // determine codec
-    codeK = lib->codec;
+    codeK = lib->codec_il;
+
+    if(!codeK)
+        return false;
 
     // init...
     res = codeK->read_init(QString(QFile::encodeName(path)));
@@ -122,11 +125,14 @@ bool SQ_ImageLoader::loadImage(const QString &pixPath, const SQ_CodecSettings::s
     // determine library for file
     lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath);
 
-    if(!lib || !lib->codec)
+    if(!lib)
         return false;
 
     // determine codec
-    codeK = lib->codec;
+    codeK = lib->codec_il;
+
+    if(!codeK)
+        return false;
 
     if(sett != SQ_CodecSettings::None)
         SQ_CodecSettings::applySettings(lib, sett);

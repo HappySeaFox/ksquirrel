@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Mar 13 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -65,11 +65,14 @@ class SQ_PreviewWidget : public QWidget
         void next();
         void previous();
         void execute();
+        void first();
+        void last();
 
     private slots:
         void slotBackground();
         void slotText();
         void slotDownloadResult(const KURL &);
+        void slotDownloadPercents(int);
 
     protected:
         virtual void resizeEvent(QResizeEvent *);
@@ -95,7 +98,7 @@ class SQ_PreviewWidget : public QWidget
         SQ_Downloader *down;
         bool multi;
         QPixmap multi_pix;
-        QString dimstring;
+        QString dimstring, percentString;
         bool dim;
 
         static SQ_PreviewWidget *m_inst;

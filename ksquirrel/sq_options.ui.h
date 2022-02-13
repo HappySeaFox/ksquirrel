@@ -144,7 +144,6 @@ void SQ_Options::init()
     spinRows->setRange(0, 5, 1, true);
     spinRows->setValue(kconf->readNumEntry("rows", 2));
 
-
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, KIcon::SizeMedium), i18n("General"));    
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeMedium), i18n("Filing"));
     new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("images", KIcon::Desktop, KIcon::SizeMedium), i18n("Thumbnails"));
@@ -167,6 +166,13 @@ void SQ_Options::init()
     connect(listMain, SIGNAL(selectionChanged()), SLOT(slotShowPage()));
 
     kURLReqOpenCustom->setMode(mode);
+
+    // restore selection page
+    kconf->setGroup("Main");
+    listMain->setCurrentItem(kconf->readNumEntry("options_last", 0));    
+    tabNav->setCurrentPage(kconf->readNumEntry("options_last_tabNav", 0));
+    tabGL->setCurrentPage(kconf->readNumEntry("options_last_tabGL", 0));
+    tabSidebar->setCurrentPage(kconf->readNumEntry("options_last_tabSidebar", 0));
 }
 
 int SQ_Options::start()
@@ -205,6 +211,10 @@ int SQ_Options::start()
         kconf->writeEntry("anime_dont", checkAnime->isChecked());
         kconf->writeEntry("kipi_ondemand", checkKIPIDemand->isChecked());
         kconf->writeEntry("treat", checkTreat->isChecked());
+        kconf->writeEntry("options_last", listMain->currentItem());
+        kconf->writeEntry("options_last_tabGL", tabGL->currentPageIndex());
+        kconf->writeEntry("options_last_tabNav", tabNav->currentPageIndex());
+        kconf->writeEntry("options_last_tabSidebar", tabSidebar->currentPageIndex());
 
         kconf->setGroup("Thumbnails");
         kconf->writeEntry("margin", spinMargin->value());

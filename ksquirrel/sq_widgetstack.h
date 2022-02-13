@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -108,13 +108,25 @@ class SQ_WidgetStack : public QObject
          */
         KAction *action(const QString &name);
 
+        /*
+         *  Select first supported image in current directory.
+         *  Used by SQ_GLWidget.
+         */
+        void firstFile();
+
+        /*
+         *  Select last supported image in current directory.
+         *  Used by SQ_GLWidget.
+         */
+        void lastFile();
+
         static SQ_WidgetStack* instance() { return m_instance; }
 
     private:
 
         void emitNewLastURL(const KURL &u);
 
-        void moveToFirstLast(Direction d);
+        void moveToFirstLast(Direction d, bool exec = true);
         /*
          *  Save currently selected items' paths, if any.
          *
@@ -143,17 +155,9 @@ class SQ_WidgetStack : public QObject
          */
         void raiseWidget(SQ_DirOperator::ViewT, bool doUpdate = true);
 
-        /*
-         *  Select first supported image in current directory.
-         *  Used by SQ_GLWidget.
-         */
-        void slotFirstFile();
+        void slotSelectFirstFile();
+        void slotSelectLastFile();
 
-        /*
-         *  Select last supported image in current directory.
-         *  Used by SQ_GLWidget.
-         */
-        void slotLastFile();
         void emitNextSelected();
         void emitPreviousSelected();
 

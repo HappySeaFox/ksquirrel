@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -44,7 +44,6 @@
 #include "sq_thumbnailsize.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
-#include "sq_pixmapcache.h"
 #include "sq_progress.h"
 #include "sq_progressbox.h"
 #include "sq_filethumbviewitem.h"
@@ -63,7 +62,6 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
 
     // setup cache limit
     SQ_Config::instance()->setGroup("Thumbnails");
-    SQ_PixmapCache::instance()->setCacheLimit(SQ_Config::instance()->readNumEntry("cache", 1024*10));
     m_lazy = SQ_Config::instance()->readBoolEntry("lazy", true);
     lazyDelay = SQ_Config::instance()->readNumEntry("lazy_delay", 500);
     if(lazyDelay <= 0) lazyDelay = 500;

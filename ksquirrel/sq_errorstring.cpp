@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? ??? 26 2005
     copyright            : (C) 2005 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -54,5 +54,5 @@ QString SQ_ErrorString::string(const int code)
 
 QString SQ_ErrorString::stringSN(const int code)
 {
-    return messages[code] + "\n";
+    return messages[code] + '\n';
 }

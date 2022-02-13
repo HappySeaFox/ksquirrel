@@ -3,7 +3,7 @@
                              -------------------
     begin                : Feb 10 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -24,6 +24,9 @@
 #include <qmutex.h>
 
 #include <kurl.h>
+
+#include <sys/types.h>
+#include <dirent.h>
 
 class QObject;
 
@@ -91,8 +94,13 @@ class SQ_ThreadDirLister : public QThread
         void lock();
         void unlock();
 
+        void closeDir();
+
     protected:
         virtual void run();
+
+    private:
+        void waitMutex();
 
     private:
         // urls to read
@@ -102,6 +110,7 @@ class SQ_ThreadDirLister : public QThread
         QObject *obj;
         QMutex mutex;
         KConfig *cache;
+        DIR     *dir;
 };
 
 inline
@@ -132,6 +141,13 @@ inline
 void SQ_ThreadDirLister::unlock()
 {
     mutex.unlock();
+}
+
+inline
+void SQ_ThreadDirLister::waitMutex()
+{
+    while(!mutex.tryLock())
+        QThread::msleep(1);
 }
 
 #endif

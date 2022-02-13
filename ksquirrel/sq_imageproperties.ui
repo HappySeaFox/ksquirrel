@@ -564,7 +564,7 @@
                                             </sizepolicy>
                                         </property>
                                         <property name="text">
-                                            <string>Compress ratio:</string>
+                                            <string>Compression ratio:</string>
                                         </property>
                                         <property name="alignment">
                                             <set>AlignTop|AlignRight</set>

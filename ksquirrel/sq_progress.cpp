@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? ??? 29 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -129,9 +129,9 @@ void SQ_Progress::drawProgress()
             // draw percentage value
             painter->setPen(KGlobalSettings::highlightedTextColor());
             painter->setClipRect(0, 0, np, height());
-            painter->drawText(rect(), Qt::AlignCenter | Qt::SingleLine, QString::number(percentage) + "%");
+            painter->drawText(rect(), Qt::AlignCenter | Qt::SingleLine, QString::number(percentage) + '%');
             painter->setPen(KGlobalSettings::textColor());
             painter->setClipRect(np, 0, width()-np, height());
-            painter->drawText(rect(), Qt::AlignCenter | Qt::SingleLine, QString::number(percentage) + "%");
+            painter->drawText(rect(), Qt::AlignCenter | Qt::SingleLine, QString::number(percentage) + '%');
         }
 }

@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? ??? 26 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
   ***************************************************************************/
 
 #ifndef SQ_ARCHIVEHANDLER_H

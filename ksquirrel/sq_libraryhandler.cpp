@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mar 5 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -129,7 +129,7 @@ QString SQ_LibraryHandler::allFiltersString() const
     for(const_iterator it = begin();it != itEnd;++it)
     {
         if(!(*it).filter.isEmpty())
-            ret = ret + (*it).filter + " ";
+            ret = ret + (*it).filter + ' ';
     }
 
     return ret;
@@ -146,10 +146,10 @@ QString SQ_LibraryHandler::allFiltersFileDialogString(bool r, bool allfiles) con
     {
         if(!r)
             if((*it).writestatic)
-                ret = ret + (*it).filter + "|" + (*it).quickinfo + "\n";
+                ret = ret + (*it).filter + '|' + (*it).quickinfo + '\n';
             else;
         else if((*it).readable)
-            ret = ret + (*it).filter + "|" + (*it).quickinfo + "\n";
+            ret = ret + (*it).filter + '|' + (*it).quickinfo + '\n';
     }
 
     return allfiles ? (ret + "*.*|" + i18n("All files")) : ret.left(ret.length() - 1);
@@ -217,8 +217,12 @@ void SQ_LibraryHandler::clear()
 
         // delete temp file
         if((*it).needtempfile)
+        {
+            delete (*it).tmp_il;
             delete (*it).tmp;
+        }
 
+        (*it).codec_destroy((*it).codec_il);
         (*it).codec_destroy((*it).codec);
         delete (*it).lib;
         (*it).lib = 0;
@@ -287,12 +291,19 @@ void SQ_LibraryHandler::add(QStringList &foundLibraries)
                 libtmp.needtempfile = o.needtempfile;
                 libtmp.tmp = 0;
 
+                libtmp.codec_il = libtmp.codec_create();
+
                 if(libtmp.needtempfile)
                 {
                     libtmp.tmp = new KTempFile;
                     libtmp.tmp->setAutoDelete(true);
                     libtmp.tmp->close();
                     codeK->settempfile(libtmp.tmp->name());
+
+                    libtmp.tmp_il = new KTempFile;
+                    libtmp.tmp_il->setAutoDelete(true);
+                    libtmp.tmp_il->close();
+                    libtmp.codec_il->settempfile(libtmp.tmp_il->name());
                 }
 
                 if(libtmp.writestatic)
@@ -400,31 +411,6 @@ SQ_LIBRARY* SQ_LibraryHandler::libraryByName(const QString &name)
     return 0;
 }
 
-/*
- *  Find appropriate codec for given filename. If
- *  not found, return NULL.
- */
-fmt_codec_base* SQ_LibraryHandler::codecForFile(const QString &file)
-{
-    // find SQ_LIBRARY by filename
-    SQ_LIBRARY *lib = libraryForFile(file);
-
-    //  return result
-    return (lib && lib->codec) ? lib->codec : 0;
-}
-
-/*
- *  Find appropriate codec for given library name. If
- *  not found, return NULL.
- */
-fmt_codec_base* SQ_LibraryHandler::codecByName(const QString &name)
-{
-    SQ_LIBRARY *lib = libraryByName(name);
-
-    // return result
-    return (lib && lib->codec) ? lib->codec : 0;
-}
-
 void SQ_LibraryHandler::writeSettings(SQ_LIBRARY *lib)
 {
     // no config - no settings
@@ -489,17 +475,17 @@ void SQ_LibraryHandler::readSettings(SQ_LIBRARY *lib)
         k = mapIt.key();
         d = mapIt.data();
 
-        if(k.startsWith("i"))
+        if(k.startsWith(QChar('i')))
         {
             val.type = settings_value::v_int;
             val.iVal = d.toInt();
         }
-        else if(k.startsWith("d"))
+        else if(k.startsWith(QChar('d')))
         {
             val.type = settings_value::v_double;
             val.dVal = d.toDouble();
         }
-        else if(k.startsWith("b"))
+        else if(k.startsWith(QChar('b')))
         {
             val.type = settings_value::v_bool;
             val.bVal = (d == "true");

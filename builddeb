@@ -5,4 +5,7 @@ vers=`cat B/DEBIAN/control | grep Version | sed s/'Version: '//`
 make install DESTDIR=`pwd`/B &&
 strip B/usr/bin/ksquirrel &&
 dpkg-deb -b B ksquirrel_${vers}_i386.deb &&
-rm -rf B/usr
+rm -rf B/usr &&
+echo
+ls -l ksquirrel_${vers}_i386.deb
+echo

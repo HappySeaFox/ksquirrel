@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -71,12 +71,10 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
     scanTimer = new QTimer(this);
     m_ignoreClick = false;
 
-    dw = new KDirWatch(this);
-    connect(dw, SIGNAL(dirty(const QString &)), this, SLOT(slotDirty(const QString &)));
-
     connect(m_animTimer, SIGNAL(timeout()), this, SLOT(slotAnimation()));
     connect(scanTimer, SIGNAL(timeout()), this, SLOT(slotDelayedScan()));
 
+    dw = 0;
     m_recurs = No;
     lister = new SQ_ThreadDirLister(this);
     setupRecursion();
@@ -153,6 +151,9 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 
 SQ_TreeView::~SQ_TreeView()
 {
+    lister->terminate();
+    lister->wait();
+
     delete lister;
 }
 
@@ -175,8 +176,13 @@ void SQ_TreeView::setRecursion(int b)
     // ignore root item
     ++it;
 
+    // turn recursion on
     if(m_recurs == No && b)
     {
+        dw = new KDirWatch(this);
+        connect(dw, SIGNAL(dirty(const QString &)), this, SLOT(slotDirty(const QString &)));
+
+        dw->blockSignals(true);
         lister->lock();
         while(it.current())
         {
@@ -188,19 +194,25 @@ void SQ_TreeView::setRecursion(int b)
                                (m_recurs == Dirs || m_recurs == FilesDirs));
 
                 lister->appendURL(tvi->url());
+                dw->addDir(tvi->path());
             }
 
             ++it;
         }
         lister->unlock();
+        dw->blockSignals(false);
 
         m_recurs = b;
 
         if(!lister->running())
             scanTimer->start(1, true);
     }
+    // turn recursion off
     else
     {
+        delete dw;
+        dw = 0;
+
         m_recurs = b;
         while(it.current())
         {
@@ -409,19 +421,7 @@ void SQ_TreeView::showEvent(QShowEvent *)
 
 void SQ_TreeView::slotNewTreeViewItems(KFileTreeBranch *, const KFileTreeViewItemList &list)
 {
-    // code dup...
-    {
-        KFileTreeViewItemListIterator it(list);
-        KFileTreeViewItem *item;
-
-        while((item = it.current()))
-        {
-            dw->addDir(item->path());
-            ++it;
-        }
-    }
-
-    if(!m_recurs)
+    if(m_recurs == No)
         return;
 
 //  uuuuuuuggggggghhhhhhh :)
@@ -432,6 +432,7 @@ void SQ_TreeView::slotNewTreeViewItems(KFileTreeBranch *, const KFileTreeViewIte
     while((item = it.current()))
     {
         lister->appendURL(item->url());
+        dw->addDir(item->path());
         ++it;
     }
     lister->unlock();
@@ -442,7 +443,8 @@ void SQ_TreeView::slotNewTreeViewItems(KFileTreeBranch *, const KFileTreeViewIte
 
 void SQ_TreeView::slotDelayedScan()
 {
-    lister->start();
+    if(!lister->running())
+        lister->start();
 }
 
 void SQ_TreeView::customEvent(QCustomEvent *e)
@@ -642,6 +644,7 @@ void SQ_TreeView::slotDirty(const QString &path)
     {
         lister->terminate();
         lister->wait();
+        lister->closeDir();
     }
 
     lister->unlock();
@@ -652,7 +655,8 @@ void SQ_TreeView::slotDirty(const QString &path)
 
 void SQ_TreeView::slotDeleteItemMy(KFileItem *fi)
 {
-    if(fi) dw->removeDir(fi->url().path());
+    if(m_recurs != No && fi)
+        dw->removeDir(fi->url().path());
 }
 
 void SQ_TreeView::slotAddToFolderBasket()

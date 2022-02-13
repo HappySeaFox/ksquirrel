@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -56,6 +56,7 @@ namespace KIO { class Job; }
 class QTimer;
 class QPopupMenu;
 class QSlider;
+class QLabel;
 
 class SQ_ToolButtonPopup;
 class SQ_ToolButton;
@@ -123,6 +124,8 @@ class SQ_GLWidget : public QGLWidget
     public:
         SQ_GLWidget(QWidget *parent = 0, const char *name = 0);
         ~SQ_GLWidget();
+
+        void setDownloadPercents(int);
 
         void removeNonCurrentTabs(int);
 
@@ -258,6 +261,8 @@ class SQ_GLWidget : public QGLWidget
     private:
         QImage generatePreview();
 
+        bool calcSelection();
+
         void changeSlider(GLfloat z = -1.0);
 
         void hackMatrix();
@@ -288,6 +293,9 @@ class SQ_GLWidget : public QGLWidget
          */
         void removeCurrentParts();
         void removeCurrentTabs();
+
+        void closeAllTabs();
+        void closeAllTabsFull();
 
         /*
          *  Since 0.6.0-final KSquirrel doesn't show error messages,
@@ -550,14 +558,10 @@ class SQ_GLWidget : public QGLWidget
         Tab                     tmptab, taborig;
         bool                    hackResizeGL;
 
+        QLabel                  *percentsLabel;
+
         static SQ_GLWidget     *m_instance;
 };
-
-inline
-bool SQ_GLWidget::manualBlocked()
-{
-    return tab->manualBlocked;
-}
 
 inline
 int SQ_GLWidget::zoomType()

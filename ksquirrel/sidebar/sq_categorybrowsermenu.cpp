@@ -403,7 +403,7 @@ void SQ_CategoryBrowserMenu::mouseMoveEvent(QMouseEvent *e)
 
     // start drag
     KURL url;
-    url.setPath(path() + "/" + _filemap[id]);
+    url.setPath(path() + '/' + _filemap[id]);
     KURL::List files(url);
     KURLDrag *d = new KURLDrag(files, this);
     d->setPixmap(iconSet(id)->pixmap());
@@ -432,7 +432,7 @@ void SQ_CategoryBrowserMenu::slotExec(int id)
     if(!_filemap.contains(id)) return;
 
     KURL url;
-    url.setPath(path() + "/" + _filemap[id]);
+    url.setPath(path() + '/' + _filemap[id]);
     new KRun(url, 0, true); // will delete itself
     _lastpress = QPoint(-1, -1);
 }

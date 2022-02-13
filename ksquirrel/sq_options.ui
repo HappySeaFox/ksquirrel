@@ -326,7 +326,7 @@
                     </widget>
                     <widget class="QTabWidget" row="1" column="0">
                         <property name="name">
-                            <cstring>tabWidget4</cstring>
+                            <cstring>tabNav</cstring>
                         </property>
                         <widget class="QWidget">
                             <property name="name">
@@ -806,7 +806,7 @@
                     </property>
                     <widget class="QTabWidget" row="1" column="0">
                         <property name="name">
-                            <cstring>tabWidget2</cstring>
+                            <cstring>tabGL</cstring>
                         </property>
                         <widget class="QWidget">
                             <property name="name">
@@ -1345,7 +1345,7 @@
                                                 <cstring>radioButton27</cstring>
                                             </property>
                                             <property name="text">
-                                                <string>Minimum: 1%, maximum: 10'000%</string>
+                                                <string>Minimum: 1%, maximum: 10,000%</string>
                                             </property>
                                             <property name="buttonGroupId">
                                                 <number>1</number>
@@ -1571,7 +1571,7 @@
                     </property>
                     <widget class="QTabWidget" row="1" column="0">
                         <property name="name">
-                            <cstring>tabWidget4_2</cstring>
+                            <cstring>tabSidebar</cstring>
                         </property>
                         <widget class="QWidget">
                             <property name="name">
@@ -2024,7 +2024,7 @@
 <tabstops>
     <tabstop>checkMinimize</tabstop>
     <tabstop>checkSync</tabstop>
-    <tabstop>tabWidget4</tabstop>
+    <tabstop>tabNav</tabstop>
     <tabstop>radioSetLast</tabstop>
     <tabstop>radioSetCurrent</tabstop>
     <tabstop>radioSetThis</tabstop>
@@ -2037,7 +2037,7 @@
     <tabstop>radioSyncTreeWStack</tabstop>
     <tabstop>radioSyncWStackTree</tabstop>
     <tabstop>checkNoWriteThumbs</tabstop>
-    <tabstop>tabWidget2</tabstop>
+    <tabstop>tabGL</tabstop>
     <tabstop>radioSCRZoom_2</tabstop>
     <tabstop>radioSRCNext_2</tabstop>
     <tabstop>radioColorSystem</tabstop>

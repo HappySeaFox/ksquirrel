@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 5 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,8 +21,6 @@
 #include "sq_library.h"
 #include "sq_config.h"
 
-enum settings { ThumbnailLoader = 0, ImageViewer, Both, RunTume };
-
 void SQ_CodecSettings::applySettings(SQ_LIBRARY *lib, SQ_CodecSettings::settings fromwhere)
 {
     SQ_Config::instance()->setGroup("Main");
@@ -32,7 +30,13 @@ void SQ_CodecSettings::applySettings(SQ_LIBRARY *lib, SQ_CodecSettings::settings
     // thumbnail loader and image viewer will use default settings
     if((fromwhere == SQ_CodecSettings::ThumbnailLoader && (set == SQ_CodecSettings::ThumbnailLoader || set == SQ_CodecSettings::Both))
     || (fromwhere == SQ_CodecSettings::ImageViewer && (set == SQ_CodecSettings::ImageViewer || set == SQ_CodecSettings::Both)))
+    {
         lib->codec->set_settings(lib->settings);
+        lib->codec_il->set_settings(lib->settings);
+    }
     else
+    {
         lib->codec->fill_default_settings();
+        lib->codec_il->fill_default_settings();
+    }
 }

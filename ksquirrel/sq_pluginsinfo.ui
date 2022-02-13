@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Codecs information and settings</string>
+        <string>Codec information and settings</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>

@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -27,6 +27,7 @@
 #include <qtimer.h>
 #include <qdatetime.h>
 #include <qslider.h>
+#include <qlabel.h>
 
 #include <kapplication.h>
 #include <kaction.h>
@@ -120,6 +121,10 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
     hackResizeGL = false;
     lastCopy = KURL::fromPathOrURL("/");
     oldZoom = -1;
+
+    percentsLabel = new QLabel(this);
+    percentsLabel->move(4, 4);
+    percentsLabel->hide();
 
     tabold = tab = &taborig;
 
@@ -237,6 +242,8 @@ void SQ_GLWidget::initializeGL()
 // Resize OpenGL context. Used internally by QGLWidget.
 void SQ_GLWidget::resizeGL(int width, int height)
 {
+    gls->setSourceSize(width, height);
+
     // set new viewport
     glViewport(0, 0, width, height);
 
@@ -307,6 +314,24 @@ void SQ_GLWidget::paintGL()
 
     // clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if(gls->valid())
+    {
+        matrix_push();
+        matrix_pure_reset();
+        QPoint p = gls->center();
+
+        // move to selection center
+        MATRIX_X = p.x();
+        MATRIX_Y = p.y();
+        write_gl_matrix();
+
+        gls->draw();
+
+        matrix_pop();
+        write_gl_matrix();
+    }
+
     glEnable(GL_TEXTURE_2D);
 
     // draw window background ?
@@ -548,10 +573,10 @@ void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
         // update cursor to crosshair
         setCursor(KCursor::crossCursor());
 
-        if(tab->glselection == SQ_GLSelection::Rectangle || tab->glselection == SQ_GLSelection::Ellipse)
-            gls->begin(static_cast<SQ_GLSelection::Type>(tab->glselection), e->x(), e->y());
+        if(tab->glselection == SQ_GLSelectionPainter::Rectangle || tab->glselection == SQ_GLSelectionPainter::Ellipse)
+            gls->begin(static_cast<SQ_GLSelectionPainter::Type>(tab->glselection), e->x(), e->y());
         else
-            gls->begin(SQ_GLSelection::Rectangle, e->x(), e->y());
+            gls->begin(SQ_GLSelectionPainter::Rectangle, e->x(), e->y());
 
         movetype = 2;
     }
@@ -608,43 +633,8 @@ void SQ_GLWidget::mouseReleaseEvent(QMouseEvent *)
         return;
 
     // left button - restore cursor
-    if(movetype == 1)
+    if(movetype == 1 || (movetype == 2 && tab->glselection != -1)) // permanent selection
         setCursor(KCursor::arrowCursor());
-    else if(movetype == 2 && tab->glselection != -1) // permanent selection
-    {
-        setCursor(KCursor::arrowCursor());
-
-        QSize sz = gls->size();
-        QPoint pt = gls->pos();
-
-        float z = getZoom();
-        float x = pt.x(), y = pt.y(), w = sz.width(), h = sz.height();
-        x = x - (float)width()/2 - MATRIX_X + (float)tab->parts[tab->current].w/2 * z;
-        y = y - (float)height()/2 + MATRIX_Y + (float)tab->parts[tab->current].h/2 * z;
-
-        int sx = (int)(x/z + 0.5);
-        int sy = (int)(y/z + 0.5);
-        int sw = (int)(w/z + 0.5);
-        int sh = (int)(h/z + 0.5);
-
-        if(sw <= 1 || sh <= 1)
-        {
-            gls->end();
-        }
-        else
-        {
-            if(!SQ_GLHelpers::normalizeSelection(sx, sy, sw, sh, tab->parts[tab->current].w, tab->parts[tab->current].h, tab->wm, (int)tab->curangle, tab->orient))
-                gls->end();
-            else
-            {
-                tab->srect = QRect(gls->pos(), gls->size());
-                tab->sx = sx;
-                tab->sy = sy;
-                tab->sw = sw;
-                tab->sh = sh;
-            }
-        }
-    }
     // left button + SHIFT - zoom to selected rectangle (if needed)
     else if(movetype == 2 && tab->glselection == -1)
     {
@@ -1226,6 +1216,9 @@ void SQ_GLWidget::startDecoding(const QString &file)
     // show window with image
     KSquirrel::app()->raiseGLWidget();
 
+    if(m_expected.isEmpty())
+        KApplication::eventLoop()->processEvents(QEventLoop::ExcludeUserInput | QEventLoop::ExcludeSocketNotifiers);
+
     decode();
 }
 
@@ -1319,10 +1312,7 @@ bool SQ_GLWidget::prepare()
         if(curindex != -1)
         {
             if(result == 2)
-            {
-                removeCurrentTabs();
-                SQ_GLView::window()->removeTabs();
-            }
+                closeAllTabs();
             else
                 tabs[curindex].removeParts();
         }
@@ -1342,9 +1332,6 @@ bool SQ_GLWidget::prepare()
     }
 
     gls->setVisible(false);
-
-    if(m_expected.isEmpty())
-        KApplication::eventLoop()->processEvents(QEventLoop::ExcludeUserInput | QEventLoop::ExcludeSocketNotifiers);
 
     SQ_CodecSettings::applySettings(tab->lib, SQ_CodecSettings::ImageViewer);
 
@@ -1413,9 +1400,7 @@ void SQ_GLWidget::decode()
 
     if(pages_num < 1) pages_num = 1;
 
-    QFileInfo ff(tab->m_File);
-
-    SQ_GLView::window()->sbarWidget("SBFile")->setText(ff.fileName());
+    SQ_GLView::window()->sbarWidget("SBFile")->setText(tab->m_original.fileName());
 
     tab->current = 0;
 
@@ -1562,9 +1547,7 @@ void SQ_GLWidget::decode()
 
         if(!tab->current)
         {
-            SQ_GLView::window()->sbarWidget("SBDecodedI")->clear();
             SQ_GLView::window()->sbarWidget("SBDecodedI")->setPixmap(tab->lib->mime);
-
             old_id = first_id = id;
         }
 
@@ -1579,6 +1562,7 @@ void SQ_GLWidget::decode()
     tab->codeK->read_close();
     tab->total = tab->finfo.image.size();
     tab->current = 0;
+    frameChanged();
 
     enableSettingsButton(!tab->lib->config.isEmpty());
 
@@ -1618,13 +1602,13 @@ void SQ_GLWidget::paletteChange(const QPalette &oldPalette)
 void SQ_GLWidget::slotFirst()
 {
     if(!reset_mode)
-        SQ_WidgetStack::instance()->slotFirstFile();
+        SQ_WidgetStack::instance()->firstFile();
 }
 
 void SQ_GLWidget::slotLast()
 {
     if(!reset_mode)
-        SQ_WidgetStack::instance()->slotLastFile();
+        SQ_WidgetStack::instance()->lastFile();
 }
 
 void SQ_GLWidget::slotNext()
@@ -1686,7 +1670,7 @@ void SQ_GLWidget::stopAnimation()
 
 void SQ_GLWidget::slotToggleAnimate()
 {
-    if(!tab->finfo.animated) return;
+    if(!tab->finfo.animated || gls->valid()) return;
 
     if(!timer_anim->isActive())
     {
@@ -1899,14 +1883,14 @@ void SQ_GLWidget::updateFactors()
 void SQ_GLWidget::slotSelectionRect()
 {
     stopAnimation();
-    tab->glselection = SQ_GLSelection::Rectangle;
+    tab->glselection = SQ_GLSelectionPainter::Rectangle;
     gls->end();
 }
 
 void SQ_GLWidget::slotSelectionEllipse()
 {
     stopAnimation();
-    tab->glselection = SQ_GLSelection::Ellipse;
+    tab->glselection = SQ_GLSelectionPainter::Ellipse;
     gls->end();
 }
 
@@ -1920,6 +1904,24 @@ void SQ_GLWidget::slotSelectionClear()
 
     if(!manualBlocked())
         startAnimation();
+}
+
+bool SQ_GLWidget::manualBlocked()
+{
+    // selection is also blocks animation
+    return tab->manualBlocked || gls->valid();
+}
+
+void SQ_GLWidget::setDownloadPercents(int p)
+{
+    if(p < 0)
+        percentsLabel->hide();
+    else
+    {
+        percentsLabel->setText(i18n("Downloading...") + ' ' + KIO::convertSize(p));
+        percentsLabel->adjustSize();
+        percentsLabel->show();
+    }
 }
 
 #include "sq_glwidget.moc"

@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Nov 29 2005
     copyright            : (C) 2005 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -116,7 +116,7 @@ void SQ_MountView::reload(bool current)
             mounted.append((*it)->mountPoint());
 
             // filter out /proc, swap etc.
-            if(!(*it)->mountedFrom().startsWith("/") || !(*it)->mountPoint().startsWith("/"))
+            if(!(*it)->mountedFrom().startsWith(QChar('/')) || !(*it)->mountPoint().startsWith(QChar('/')))
                 continue;
 
             fi = new SQ_MountViewItem(this, (*it)->mountPoint());

@@ -44,7 +44,7 @@
                         <cstring>radioPutHere</cstring>
                     </property>
                     <property name="text">
-                        <string>Put here</string>
+                        <string>Place here</string>
                     </property>
                     <property name="buttonGroupId">
                         <number>3</number>
@@ -74,7 +74,7 @@
                         <cstring>radioCurrentDir</cstring>
                     </property>
                     <property name="text">
-                        <string>Put files to current directory, renaming them if neccessary</string>
+                        <string>Place files in current directory, renaming them if necessary</string>
                     </property>
                     <property name="buttonGroupId">
                         <number>1</number>
@@ -85,7 +85,7 @@
                         <cstring>radioCurrentDir_2</cstring>
                     </property>
                     <property name="text">
-                        <string>Put files to current directory, replacing existing files</string>
+                        <string>Place files in current directory, replacing existing files</string>
                     </property>
                     <property name="buttonGroupId">
                         <number>0</number>

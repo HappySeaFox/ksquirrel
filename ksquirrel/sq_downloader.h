@@ -3,7 +3,7 @@
                              -------------------
     begin                : Fri Jun 07 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -19,11 +19,12 @@
 #define SQ_DOWNLOADER_H
 
 #include <qobject.h>
-#include <qcstring.h>
+#include <qdatetime.h>
 
 #include <kurl.h>
 
 class KFileItem;
+class KTempFile;
 
 namespace KIO { class Job; }
 
@@ -45,6 +46,7 @@ class SQ_Downloader : public QObject
 
     signals:
         void result(const KURL &);
+        void percents(int);
 
     private slots:
         void slotData(KIO::Job *job, const QByteArray &data);
@@ -53,11 +55,13 @@ class SQ_Downloader : public QObject
     private:
         KIO::Job *job;
         KURL mEmptyURL, mURL;
-        QString tmp;
+        KTempFile *tmp;
         KIO::filesize_t totalSize, size;
         bool continueDownload;
-        QString mime;
+        bool nomime;
         bool m_error, m_lightmode;
+        QTime startTime;
+        bool emitPercents;
 };
 
 inline

@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Jul 18 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -59,14 +59,14 @@ void SQ_DirThumbs::saveThumbnail(const KURL &url, SQ_Thumbnail &thumb)
         thumb.thumbnail.setText("Software", 0, "KSquirrel");
 
         thumb.thumbnail.save(ab, sqdirThumbFormat, sqdirThumbQuality);
-    }
 
 #ifdef HAVE_UTIME_H
-    struct utimbuf ut;
-    ut.actime = thumb.originalTime;
-    ut.modtime = thumb.originalTime;
-    utime((const char *)ab, &ut);
+        struct utimbuf ut;
+        ut.actime = thumb.originalTime;
+        ut.modtime = thumb.originalTime;
+        utime((const char *)ab, &ut);
 #endif
+    }
 }
 
 QString SQ_DirThumbs::absPath(const KURL &relurl)
@@ -89,7 +89,7 @@ void SQ_DirThumbs::setRoot()
 
 void SQ_DirThumbs::removeFile(const KURL &url)
 {
-    // determine absolute path and remove file and mime icon
+    // determine absolute path and remove file
     QFile::remove(absPath(url));
 }
 

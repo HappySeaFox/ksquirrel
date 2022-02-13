@@ -202,7 +202,7 @@ void SQ_ThumbnailLoadJob::determineNextIcon()
         mCurrentURL = mCurrentItem->url();
         mItems.removeFirst();
 
-        KIO::StatJob *job = KIO::stat(mCurrentItem->url(), false);
+        KIO::StatJob *job = KIO::stat(mCurrentURL, false);
         job->setSide(true);
         job->setDetails(0);
         addSubjob(job);

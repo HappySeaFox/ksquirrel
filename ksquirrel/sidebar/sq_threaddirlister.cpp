@@ -3,7 +3,7 @@
                              -------------------
     begin                : Feb 10 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,9 +18,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#include <sys/types.h>
-#include <dirent.h>
 
 #include <qfile.h>
 #include <qdir.h>
@@ -38,6 +35,7 @@ SQ_ThreadDirLister::SQ_ThreadDirLister(QObject *o)
     : QThread(), obj(o)
 {
     cache = new KConfig("ksquirrel-tree-cache");
+    dir = 0;
 }
 
 SQ_ThreadDirLister::~SQ_ThreadDirLister()
@@ -50,7 +48,6 @@ void SQ_ThreadDirLister::run()
 {
     KURL      url;
     QString   path, name, filepath;
-    DIR      *dir;
     dirent   *file;
     int       count_files, count_dirs;
     QDateTime dt, dt_def;
@@ -62,13 +59,13 @@ void SQ_ThreadDirLister::run()
 
     while(true)
     {
-        lock();
+        waitMutex();
         count_files = todo.count();
         unlock();
 
         if(!count_files) break;
 
-        lock();
+        waitMutex();
         url = todo.first();
         unlock();
 
@@ -115,13 +112,13 @@ void SQ_ThreadDirLister::run()
                     }
                 }
 
-                closedir(dir);
+                closeDir();
             }
             else // opendir() failed, this value won't be cached
                 b_read = false;
         }
 
-        lock();
+        waitMutex();
         todo.pop_front();
         unlock();
 
@@ -136,4 +133,13 @@ void SQ_ThreadDirLister::run()
 
         QApplication::postEvent(obj, new SQ_ItemsEvent(url, count_files, count_dirs));
     }// while
+}
+
+void SQ_ThreadDirLister::closeDir()
+{
+    if(dir)
+    {
+        closedir(dir);
+        dir = 0;
+    }
 }

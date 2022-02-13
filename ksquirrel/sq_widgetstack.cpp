@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -317,19 +317,29 @@ void SQ_WidgetStack::emitPreviousSelected()
     }
 }
 
+void SQ_WidgetStack::slotSelectFirstFile()
+{
+    moveToFirstLast(SQ_WidgetStack::Next, false);
+}
+
+void SQ_WidgetStack::slotSelectLastFile()
+{
+    moveToFirstLast(SQ_WidgetStack::Previous, false);
+}
+
 // Go to first file
-void SQ_WidgetStack::slotFirstFile()
+void SQ_WidgetStack::firstFile()
 {
     moveToFirstLast(SQ_WidgetStack::Next);
 }
 
 // Go to last file
-void SQ_WidgetStack::slotLastFile()
+void SQ_WidgetStack::lastFile()
 {
     moveToFirstLast(SQ_WidgetStack::Previous);
 }
 
-void SQ_WidgetStack::moveToFirstLast(Direction direct)
+void SQ_WidgetStack::moveToFirstLast(Direction direct, bool exec)
 {
     KFileView *local_view = dirop->view();
     KFileItemList *list = const_cast<KFileItemList*>(local_view->items());
@@ -346,7 +356,7 @@ void SQ_WidgetStack::moveToFirstLast(Direction direct)
         if(item)
         {
             dirop->setCurrentItem(item);
-            dirop->execute(item);
+            if(exec) dirop->execute(item);
         }
     }
 }

@@ -3,7 +3,7 @@
                              -------------------
     begin                : Dec 10 2003
     copyright            : (C) 2003 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -88,20 +88,12 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         SQ_Progress* diskProgress();
 
+        void printDCOP();
+
         /*
          *  "history combo"
          */
         KHistoryCombo* historyCombo();
-
-        /*
-         *  Demo mode means that somebody executed smth like
-         *
-         *  $ ksquirrel /mnt/c/1.png
-         *
-         *  In this case navigator will be hidden, and we should close app
-         *  when user closes image viewer (OpenGL widget)
-         */
-        void setDemo(bool b);
 
         bool demo() const;
 
@@ -791,12 +783,6 @@ inline
 KPopupMenu* KSquirrel::menuViews()
 {
     return actionViews;
-}
-
-inline
-void KSquirrel::setDemo(bool b)
-{
-    m_demo = b;
 }
 
 inline

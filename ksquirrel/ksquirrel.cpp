@@ -3,7 +3,7 @@
                              -------------------
     begin                : Dec 10 2003
     copyright            : (C) 2003 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -35,7 +35,6 @@
 #include <qtimer.h>
 #include <qstylesheet.h>
 #include <qwidgetstack.h>
-#include <qtoolbutton.h>
 
 #include <kapplication.h>
 #include <khelpmenu.h>
@@ -73,7 +72,6 @@
 #include "sq_widgetstack.h"
 #include "sq_treeview.h"
 #include "sq_options.h"
-#include "sq_about.h"
 #include "sq_glview.h"
 #include "sq_glwidget.h"
 #include "sq_libraryhandler.h"
@@ -118,6 +116,7 @@
 #endif
 
 #include <cstdlib>
+#include <iostream>
 
 static const int menuParam = 100000;
 
@@ -150,13 +149,6 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name)
     thumbSize = new SQ_ThumbnailSize(this, static_cast<SQ_ThumbnailSize::Size>(kconf->readNumEntry("size",
                             SQ_ThumbnailSize::Large)));
     thumbSize->setExtended(kconf->readBoolEntry("extended", false));
-
-    // Additional setup
-    new SQ_PixmapCache(this);
-    new SQ_ArchiveHandler(this);
-    new SQ_IconLoader(this);
-    new SQ_ImageLoader(this);
-    new SQ_DragProvider(this);
 
     sqFiltersName = 0;
     pCurrentURL = 0;
@@ -232,8 +224,28 @@ bool KSquirrel::eventFilter(QObject *o, QEvent *e)
 {
     if(o == mainPage && e->type() == QEvent::Show)
     {
+        // delayed init, hehe...
         if(waitForShow)
         {
+            kdDebug() << "Creating additional widgets..." << endl;
+
+            kconf->setGroup("Thumbnails");
+            SQ_PixmapCache::instance()->setCacheLimit(kconf->readNumEntry("cache", 1024*10));
+
+#ifdef SQ_HAVE_KIPI
+            kconf->setGroup("Main");
+
+            // load KIPI plugins on demand ?
+            if(!kconf->readBoolEntry("kipi_ondemand", true))
+                kipiManager->loadPlugins();
+#endif
+
+            sideBar->addWidget(new SQ_MountView, i18n("Mount points"), "blockdevice");
+            sideBar->addWidget(new SQ_CategoriesBox, i18n("Categories"), "bookmark");
+            sideBar->addWidget(new SQ_ImageBasket, i18n("Image basket"), "folder_image");
+            sideBar->addWidget(new SQ_DirectoryBasket, i18n("Folder basket"), "folder");
+            connect(SQ_MountView::instance(), SIGNAL(path(const QString &)), pWidgetStack, SLOT(setURLForCurrent(const QString &)));
+
             kconf->setGroup("Interface");
 
             // restore opened page in sidebar
@@ -319,7 +331,7 @@ void KSquirrel::createLocationToolbar(KToolBar *pTLocation)
     // some additional setup
     pTLocation->setFullSize();
     pTLocation->insertButton("button_cancel", 0, SIGNAL(clicked()), pCurrentURL, SLOT(clearHistory()), true, i18n("Clear history"));
-    pTLocation->insertButton("locationbar_erase", 1, SIGNAL(clicked()), pCurrentURL, SLOT(clearEdit()), true, i18n("Clear adress"));
+    pTLocation->insertButton("locationbar_erase", 1, SIGNAL(clicked()), pCurrentURL, SLOT(clearEdit()), true, i18n("Clear address"));
     pTLocation->insertWidget(2, 10, new QLabel("URL:", pTLocation, "kde toolbar widget"));
     pTLocation->setItemAutoSized(2);
     pTLocation->insertWidget(3, 10, pCurrentURL);
@@ -379,7 +391,7 @@ void KSquirrel::initFilterMenu()
     {
         // show both name and extension ?
         if(both)
-            id = actionFilterMenu->insertItem(*it1 + " (" + *it + ")");
+            id = actionFilterMenu->insertItem(*it1 + " (" + *it + ')');
         else
             id = actionFilterMenu->insertItem(*it1);
 
@@ -412,7 +424,7 @@ void KSquirrel::initFilterMenu()
     for(;it_name != nEND;it_name++,it_ext++)
     {
         if(both)
-            id = actionFilterMenu->insertItem(*it_name + "  (" + *it_ext + ")");
+            id = actionFilterMenu->insertItem(*it_name + "  (" + *it_ext + ')');
         else
             id = actionFilterMenu->insertItem(*it_name);
 
@@ -508,8 +520,6 @@ void KSquirrel::createWidgets(int createFirst)
 
     sideBar = new SQ_MultiBar(mainView);
 
-    SQ_CategoriesBox *cb = new SQ_CategoriesBox;
-
     SQ_SplashScreen::advance();
 
     // create widgetstack containing views
@@ -529,24 +539,19 @@ void KSquirrel::createWidgets(int createFirst)
 
     SQ_SplashScreen::advance();
 
-    SQ_MountView *mv = new SQ_MountView;
-
     ptree = new SQ_TreeView;
 
     SQ_SplashScreen::advance();
 
     sideBar->addWidget(ptree, i18n("Folder tree"), "view_tree");
-    sideBar->addWidget(mv, i18n("Mount points"), "blockdevice");
-    sideBar->addWidget(cb, i18n("Categories"), "bookmark");
-    sideBar->addWidget(new SQ_ImageBasket, i18n("Image basket"), "folder_image");
-    sideBar->addWidget(new SQ_DirectoryBasket, i18n("Folder basket"), "folder");
     sideBar->updateLayout();
 
-    connect(mv, SIGNAL(path(const QString &)), pWidgetStack, SLOT(setURLForCurrent(const QString &)));
     connect(ptree, SIGNAL(urlAdded(const KURL &)), pWidgetStack->diroperator(), SLOT(urlAdded(const KURL &)));
     connect(ptree, SIGNAL(urlRemoved(const KURL &)), pWidgetStack->diroperator(), SLOT(urlRemoved(const KURL &)));
     connect(pWidgetStack->diroperator(), SIGNAL(urlEntered(const KURL &)), ptree, SLOT(slotClearChecked()));
     connect(pWidgetStack, SIGNAL(newLastURL(const QString &)), pWidgetStack->action("dirop_repeat"), SLOT(setText(const QString &)));
+    connect(SQ_PreviewWidget::instance(), SIGNAL(first()), pWidgetStack, SLOT(slotSelectFirstFile()));
+    connect(SQ_PreviewWidget::instance(), SIGNAL(last()), pWidgetStack, SLOT(slotSelectLastFile()));
     connect(SQ_PreviewWidget::instance(), SIGNAL(next()), this, SLOT(slotPreviewWidgetNext()));
     connect(SQ_PreviewWidget::instance(), SIGNAL(previous()), this, SLOT(slotPreviewWidgetPrevious()));
     connect(SQ_PreviewWidget::instance(), SIGNAL(execute()), this, SLOT(slotPreviewWidgetExecute()));
@@ -762,7 +767,7 @@ void KSquirrel::createActions()
     pARescan->setText(i18n("Reload codecs from disk"));
     pAExtTools = new KAction(i18n("Configure external tools..."), "launch", 0, this, SLOT(slotExtTools()), actionCollection(), "SQ external tools");
     pAFilters = new KAction(i18n("Configure filters..."), "filefind", 0, this, SLOT(slotFilters()), actionCollection(), "SQ filters");
-    pAGotoTray = new KAction(i18n("Goto tray"), "background", CTRL+Qt::Key_T, this, SLOT(slotGotoTray()), actionCollection(), "SQ goto tray");
+    pAGotoTray = new KAction(i18n("Go to tray"), "background", CTRL+Qt::Key_T, this, SLOT(slotGotoTray()), actionCollection(), "SQ goto tray");
     pAOpenAndSet = new KAction(i18n("Open file and change directory"), "fileopen", CTRL+ALT+Qt::Key_O, this, SLOT(slotOpenFileAndSet()), actionCollection(), "SQ open and set");
     pAOpen = new KAction(i18n("Open file"), "fileopen", CTRL+Qt::Key_O, this, SLOT(slotOpenFile()), actionCollection(), "SQ open file");
     pATCMaster = new KAction(i18n("Thumbnail cache manager..."), "cache", 0, this, SLOT(slotTCMaster()), actionCollection(), "SQ TC Master");
@@ -780,7 +785,7 @@ void KSquirrel::createActions()
 
     pARename = new KAction(i18n("Rename"), "file_move", Qt::Key_F2, this, SLOT(slotRename()), actionCollection(), "SQ Rename");
 
-    pAPluginsInfo = new KAction(i18n("Codecs information..."), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
+    pAPluginsInfo = new KAction(i18n("Codec information..."), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
     pAGLInfo = new KAction(i18n("OpenGL information..."), 0, 0, this, SLOT(slotGLInfo()), actionCollection(), "SQ OpenGL Info");
 
     pAThumb1 = new KRadioAction(i18n("Medium thumbnails"), locate("appdata", "images/thumbs/thumbs_medium.png"), 0, this, SLOT(slotThumbsMedium()), actionCollection(), "SQ thumbs1");
@@ -958,7 +963,7 @@ void KSquirrel::writeDefaultEntries()
     }
 
     conf.setGroup("Main");
-    conf.writeEntry("version", SQ_VERSION);
+    conf.writeEntry("version", VERSION);
 
     conf.sync();
 }
@@ -1056,7 +1061,7 @@ void KSquirrel::saveValues()
 
     kconf->setGroup("Fileview");
     pWidgetStack->saveState();
-    SQ_ImageBasket::instance()->saveConfig();
+    if(!waitForShow) SQ_ImageBasket::instance()->saveConfig();
 
     if(kconf->readBoolEntry("history", true) && pCurrentURL)
     {
@@ -1081,7 +1086,7 @@ void KSquirrel::saveValues()
 
     // splitter sizes are saved automatically
     // only when all sidebar pages are closed
-    if(sideBar->currentPage() != -1)
+    if(sideBar->currentPage() != -1 && !waitForShow)
         saveLayout();
 
     kconf->setGroup("Thumbnails");
@@ -1099,7 +1104,7 @@ void KSquirrel::slotRescan()
 void KSquirrel::createPostSplash()
 {
     QColor cc(255,255,255);
-    QHBox *hbox = new QHBox(0, 0, WStyle_StaysOnTop | WStyle_Customize | WStyle_NoBorder | WX11BypassWM);
+    QHBox *hbox = new QHBox(0, 0, Qt::WStyle_StaysOnTop | Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WX11BypassWM);
     hbox->setFrameShape(QFrame::Box);
 
     QLabel *pp = new QLabel(hbox);
@@ -1158,13 +1163,13 @@ void KSquirrel::finalActions()
 
     kconf->setGroup("Thumbnails");
 
-    bool create_splash = (!kconf->readBoolEntry("dont write", false)) & (!SQ_PixmapCache::instance()->empty());
+    bool create_splash = !waitForShow && !kconf->readBoolEntry("dont write", false) && !SQ_PixmapCache::instance()->empty();
 
     // create post splash
     if(create_splash)
     {
         createPostSplash();
-        qApp->processEvents();
+        KApplication::eventLoop()->processEvents(QEventLoop::ExcludeUserInput | QEventLoop::ExcludeSocketNotifiers);
     }
 
     // write config file to disk (it is currently in memory cache)
@@ -1191,6 +1196,12 @@ void KSquirrel::enableThumbsMenu(bool enable)
  */
 void KSquirrel::preCreate()
 {
+    new SQ_IconLoader(this);
+    new SQ_PixmapCache(this);
+    new SQ_ArchiveHandler(this);
+    new SQ_ImageLoader(this);
+    new SQ_DragProvider(this);
+
     libhandler = new SQ_LibraryHandler(this);
 
     initExternalTools();
@@ -1362,14 +1373,6 @@ void KSquirrel::continueLoading()
         eventFilter(mainPage, &e);
     }
 
-#ifdef SQ_HAVE_KIPI
-    kconf->setGroup("Main");
-
-    // load KIPI plugins on demand ?
-    if(!kconf->readBoolEntry("kipi_ondemand", true))
-        kipiManager->loadPlugins();
-#endif
-
     tray = new KSystemTray(this);
     tray->setPixmap(QPixmap(locate("appdata", "images/tray.png")));
 
@@ -1406,7 +1409,7 @@ void KSquirrel::setCaption(const QString &cap)
 {
     KMainWindow::setCaption(cap);
 
-    gl_view->setCaption(cap.isEmpty() ? "ksquirrel" : cap);
+    gl_view->setCaption(cap.isEmpty() ? "ksquirrel" : kapp->makeStdCaption(cap));
 }
 
 // User selected "Open file" or "Open file #2" from menu.
@@ -1425,7 +1428,7 @@ void KSquirrel::openFile(bool parseURL)
         {
             KURL d = url;
             d.cd("..");
-            pWidgetStack->diroperator()->setPendingFile(url.fileName(false));
+            pWidgetStack->diroperator()->setPendingFile(url.fileName());
             pWidgetStack->setURLForCurrent(d);
         }
 
@@ -1635,6 +1638,8 @@ QCStringList KSquirrel::functions()
 // Activate this instance
 void KSquirrel::activate()
 {
+    m_demo = false;
+
     // just in case
     show();
 
@@ -1642,16 +1647,25 @@ void KSquirrel::activate()
     KWin::forceActiveWindow(winId());
 }
 
+void KSquirrel::printDCOP()
+{
+    navigatorSend("duuummmmyyyyy");
+    control("duuummmmyyyyy");
+
+    std::cerr << "Other:" << std::endl;
+    std::cerr << "*****************************"  << std::endl;
+    std::cerr << "activate"                       << std::endl;
+    std::cerr << "activate_image_window"          << std::endl;
+    std::cerr << "load <file or directory>"       << std::endl;
+    std::cerr << "******************************" << std::endl;
+}
+
 void KSquirrel::navigatorSend(const QString &command)
 {
     if(command == "next")
-    {
         pWidgetStack->moveTo(SQ_WidgetStack::Next, 0, false);
-    }
     else if(command == "previous")
-    {
         pWidgetStack->moveTo(SQ_WidgetStack::Previous, 0, false);
-    }
     else if(command == "execute")
     {
         KFileItem *fi = pWidgetStack->diroperator()->view()->currentFileItem();
@@ -1666,12 +1680,12 @@ void KSquirrel::navigatorSend(const QString &command)
     }
     else // unknown parameter !
     {
-        kdDebug() << "List of available DCOP parameters for navigator() method:" << endl;
-        kdDebug() << "*****************************" << endl;
-        kdDebug() << "next" << endl;
-        kdDebug() << "previous" << endl;
-        kdDebug() << "execute" << endl;
-        kdDebug() << "******************************" << endl;
+        std::cerr << "List of available DCOP parameters for navigator() method:" << std::endl;
+        std::cerr << "*****************************"  << std::endl;
+        std::cerr << "next"                           << std::endl;
+        std::cerr << "previous"                       << std::endl;
+        std::cerr << "execute"                        << std::endl;
+        std::cerr << "******************************" << std::endl;
     }
 }
 
@@ -1698,15 +1712,15 @@ void KSquirrel::control(const QString &command)
     }
     else // unknown parameter !
     {
-        kdDebug() << "List of available DCOP parameters for control() method:" << endl;
-        kdDebug() << "*****************************" << endl;
+        std::cerr << "List of available DCOP parameters for control() method:" << std::endl;
+        std::cerr << "*****************************" << endl;
 
         for(QMap<QString, int>::iterator it = messages.begin();it != messages.end();++it)
         {
-            kdDebug() << it.key() << endl;
+            std::cerr << it.key() << std::endl;
         }
 
-        kdDebug() << "******************************" << endl;
+        std::cerr << "******************************" << std::endl;
     }
 }
 

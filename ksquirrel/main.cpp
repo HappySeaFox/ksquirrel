@@ -3,7 +3,7 @@
                              -------------------
     begin                : Dec 10 2003
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -31,8 +31,11 @@
 
 #include "ksquirrel.h"
 #include "sq_splashscreen.h"
-#include "sq_about.h"
 #include "sq_hloptions.h"
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 /* ****************************************************************** */
 
@@ -41,6 +44,9 @@ static KCmdLineOptions options[] =
 {
     {"+[file to open]", I18N_NOOP("File to be opened at startup."), 0},
     {"l", I18N_NOOP("Print found libraries and exit."), 0},
+    {"d", 0, 0},
+    {"print-dcop", I18N_NOOP("Print available DCOP parameters"), 0},
+
     KCmdLineLastOption
 };
 
@@ -53,16 +59,16 @@ int main(int argc, char *argv[])
     KAboutData aboutData(
             "ksquirrel",
             "KSquirrel",
-            SQ_VERSION,
+            VERSION,
             I18N_NOOP("KSquirrel - image viewer for KDE"),
             KAboutData::License_GPL,
             "(c) 2003-2007 Baryshev Dmitry",
             QString::null,
             "http://ksquirrel.sourceforge.net",
-            "ksquirrel@mail.ru");
+            "ksquirrel.iv@gmail.com");
 
     // setup 'About' dialog
-    aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@mail.ru", QString::null);
+    aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel.iv@gmail.com", QString::null);
     aboutData.addCredit("Andrey Rahmatullin aka wrar", I18N_NOOP("Bug reports, patches"), "wrar@altlinux.ru", QString::null);
     aboutData.addCredit("SeaJey", I18N_NOOP("Testing"), "seajey.serg@gmail.com", QString::null);
     aboutData.addCredit("JaguarWan", I18N_NOOP("Bug reports"), "jaguarwan@gmail.com", QString::null);
@@ -84,6 +90,7 @@ int main(int argc, char *argv[])
         high->param = QFile::decodeName(sq_args->arg(0));
 
     high->showLibsAndExit = sq_args->isSet("l");
+    bool printDCOP = sq_args->isSet("d");
 
     KApplication    a;
 
@@ -155,6 +162,9 @@ int main(int argc, char *argv[])
 
     // create an instance
     SQ = new KSquirrel(0, App);
+
+    if(printDCOP)
+        SQ->printDCOP();
 
     a.setMainWidget(SQ);
 

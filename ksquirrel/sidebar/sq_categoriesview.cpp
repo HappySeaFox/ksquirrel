@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? June 3 2006
     copyright            : (C) 2006 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -201,7 +201,7 @@ void SQ_CategoriesBox::addToCategory(const QString &path)
 void SQ_CategoriesBox::slotDefaultCategories()
 {
     if(KMessageBox::questionYesNo(KSquirrel::app(),
-        i18n("It will create default categories: Concerts, Pets, Home, Friends, Free time, Traveling, Nature. Continue?"),
+        i18n("This will create default categories: Concerts, Pets, Home, Friends, Free time, Travelling and Nature. Continue?"),
         i18n("Create default categories")) == KMessageBox::Yes)
     {
         QStringList list;

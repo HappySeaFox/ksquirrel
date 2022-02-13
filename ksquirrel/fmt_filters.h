@@ -1,4 +1,4 @@
-/*  Copyright (c) 2005 Dmitry Baryshev <ksquirrel@tut.by>
+/*  Copyright (c) 2005 Dmitry Baryshev <ksquirrel.iv@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,7 +18,7 @@
 */
 
 /*
- * All methods (except redeye and resize) in this namespace are ported from KDE 3.2.3.
+ * All methods (except redeye) in this namespace are ported from KDE 3.2.3.
  * All of them are copyrighted by their authors. See fmt_filters_README for more.
  */
 
@@ -31,31 +31,34 @@
 //                                      //
 //////////////////////////////////////////
 
-typedef char            s8;
-typedef unsigned char   u8;
-
-typedef short           s16;
-typedef unsigned short  u16;
-
-typedef int             s32;
-typedef unsigned int    u32;
-
-#define PACKED __attribute__ ((packed))
 
 namespace fmt_filters
 {
+    typedef char            s8;
+    typedef unsigned char   u8;
+
+    typedef short           s16;
+    typedef unsigned short  u16;
+
+    typedef int             s32;
+    typedef unsigned int    u32;
 
 	struct image
 	{
-	    image() : data(0), w(0), h(0)
+	    image() : data(0), w(0), h(0), rw(0), rh(0)
 	    {}
 
-	    image(unsigned char *d, int _w, int _h) : data(d), w(_w), h(_h)
+	    image(unsigned char *d, int _w, int _h) : data(d), w(_w), h(_h), rw(_w), rh(_h)
+	    {}
+
+	    image(unsigned char *d, int _w, int _h, int _rw, int _rh) : data(d), w(_w), h(_h), rw(_rw), rh(_rh)
 	    {}
 
 	    unsigned char *data;
 	    int w;
 	    int h;
+            int rw;
+            int rh;
 	};
 	
 	struct rgb
@@ -160,9 +163,6 @@ namespace fmt_filters
 
         void flatten(const image &im, const rgb &ca, const rgb &cb);
 
-        // amplitude = [0.01; 50.0], wavelength = [0.01; 360.0]
-        void wave(const image &im, double amplitude, double wavelength, const rgba &background, s32 *, rgba **);
-
         // azimuth = [0.0; 90.0], elevation = [0.0; 90.0]
         void shade(const image &im, bool color, double azimuth, double elevation);
 
@@ -193,25 +193,6 @@ namespace fmt_filters
         void redeye(const image &im, const int w, const int h,
                             const int x, const int y,
                             int th);
-
-        /*
-         *  Resize methods ported from DevIL library, which is licensed under LGPL
-         */
-        enum ILUResizeMethod
-        {
-
-            ILU_SCALE_BOX = 0,
-            ILU_SCALE_TRIANGLE,
-            ILU_SCALE_BELL,
-            ILU_SCALE_BSPLINE,
-            ILU_SCALE_LANCZOS3,
-            ILU_SCALE_MITCHELL
-                            
-        };
-
-        // Resize image and store new one in 'result',
-        // return true on success
-        bool resize(image &im, const int new_w, const int new_h, int method, u8 **result);
 
         // Do we need some color definitions ?
         static const rgba white       = rgba(255, 255, 255, 255);

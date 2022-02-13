@@ -482,7 +482,7 @@ ksquirrel_SOURCES=sq_glwidget_stuff.cpp  \
 ksquirrel_LDADD = ./sidebar/libsidebar.a ./imageedit/libimageedit.a $(KDE_LDFLAGS) $(QT_LDFLAGS) $(LIB_KUTILS) $(LIB_KIO) $(ksquirrellibs_LIBS) -lkonq -lqui $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 SUBDIRS = sidebar imageedit mime 
 EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
-	hi32-app-ksquirrel.png hi16-app-ksquirrel.png sq_about.h \
+	hi32-app-ksquirrel.png hi16-app-ksquirrel.png \
 	sq_archivehandler.cpp sq_archivehandler.h sq_bookmarkowner.cpp \
 	sq_bookmarkowner.h sq_config.cpp sq_config.h \
 	sq_diroperator.cpp sq_diroperator.h sq_externaltool.cpp \
@@ -1225,7 +1225,7 @@ clean-metasources:
 	-rm -f  sq_glwidget.moc sq_fileiconview.moc sq_kipimanager.moc sq_externaltool.moc sq_fileiconviewbase.moc sq_downloader.moc ksquirrel.moc sq_glview.moc sq_filedetailview.moc sq_slideshowwidget.moc sq_kipiinterface.moc sq_filethumbview.moc sq_bookmarkowner.moc sq_diroperator.moc sq_archivehandler.moc sq_widgetstack.moc sq_navigatordropmenu.moc sq_thumbnailloadjob.moc
 
 #>+ 2
-KDE_DIST=sq_version sq_slideshowlisting.h sq_glinfo.ui.h sq_externaltools.ui.h sq_filters.ui.h sq_pluginsinfo.h sq_glinfo.h Makefile.in sq_thumbnailcachemaster.h sq_helpwidget.h sq_tabopendialog.h sq_helpwidget.ui.h sq_slideshow.ui.h sq_selectdeselectgroup.ui.h sq_imageproperties.ui.h sq_pluginsinfo.ui.h sq_viewcache.h sq_tabopendialog.ui.h sq_imageproperties.h sq_codecsettingsskeleton.h sq_externaltools.h ksquirrel sq_filters.h sq_slideshow.h sq_options.ui.h sq_viewcache.ui.h sq_selectdeselectgroup.h sq_options.h sq_thumbnailcachemaster.ui.h Makefile.am 
+KDE_DIST=sq_version sq_slideshowlisting.h sq_glinfo.ui.h sq_externaltools.ui.h sq_filters.ui.h sq_pluginsinfo.h sq_glinfo.h Makefile.in sq_thumbnailcachemaster.h sq_helpwidget.h sq_tabopendialog.h sq_helpwidget.ui.h sq_selectdeselectgroup.ui.h sq_slideshow.ui.h sq_imageproperties.ui.h sq_pluginsinfo.ui.h sq_viewcache.h sq_tabopendialog.ui.h sq_imageproperties.h sq_codecsettingsskeleton.h sq_externaltools.h ksquirrel sq_filters.h sq_slideshow.h sq_options.ui.h sq_viewcache.ui.h sq_selectdeselectgroup.h sq_options.h sq_thumbnailcachemaster.ui.h Makefile.am 
 
 #>+ 17
 clean-ui:

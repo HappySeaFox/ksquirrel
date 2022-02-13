@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Mar 30 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -351,7 +351,7 @@ void SQ_SlideShowWidget::constructMessage()
         if(mes_name) s_message += fm.fileName();
 
         if(mes_size)
-            s_message = (mes_name || mes_pos) ? (s_message + " (" + KIO::convertSize(fm.size()) + ")") : KIO::convertSize(fm.size());
+            s_message = (mes_name || mes_pos) ? (s_message + " (" + KIO::convertSize(fm.size()) + ')') : KIO::convertSize(fm.size());
 
         message->setText(s_message);
         message->adjustSize();

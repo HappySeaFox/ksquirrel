@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Mar 3 2005
     copyright            : (C) 2005 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -44,8 +44,8 @@ SQ_Converter::SQ_Converter(QObject *parent) : QObject(parent)
 {
     m_sing = this;
 
-    err_internal = i18n("internal error") + "\n";
-    err_failed = i18n("failed") + "\n";
+    err_internal = i18n("internal error") + '\n';
+    err_failed = i18n("failed") + '\n';
 
     special_action = i18n("Converting");
 
@@ -70,7 +70,7 @@ void SQ_Converter::slotStartEdit()
     }
     else if(!items->first()->url().isLocalFile())
     {
-        KMessageBox::information(KSquirrel::app(), i18n("Converter cannot work with non-local files.\nSorry"));
+        KMessageBox::information(KSquirrel::app(), i18n("Converter cannot work with remote files.\nSorry"));
         return;
     }
 
@@ -88,7 +88,7 @@ void SQ_Converter::slotStartEdit()
 QString SQ_Converter::adjustFileName(const QString &globalprefix, const QString &name1, int replace, QString putto, bool paged, int page)
 {
     QFileInfo ff(name1);
-    QString name = ff.dirPath() + "/" + (replace == 0 ? globalprefix : (replace == 2 ? QString::null : globalprefix)) + ff.fileName();
+    QString name = ff.dirPath() + '/' + (replace == 0 ? globalprefix : (replace == 2 ? QString::null : globalprefix)) + ff.fileName();
     ff = QFileInfo(name);
 
     QString result, inner, filter = lw->filter;
@@ -99,7 +99,7 @@ QString SQ_Converter::adjustFileName(const QString &globalprefix, const QString 
     if(!putto.isEmpty())
     {
         if(QFile::exists(putto))
-            name2 = putto + "/" + ff.fileName();
+            name2 = putto + '/' + ff.fileName();
     }
 
     prefix = name2;
@@ -176,7 +176,7 @@ void SQ_Converter::decodingCycle()
 
         QFileInfo ff(*it);
 
-        emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + "... ", false);
+        emit convertText(special_action + ' ' + KStringHandler::rsqueeze(ff.fileName()) + "... ", false);
 
         if((lr = SQ_LibraryHandler::instance()->libraryForFile(*it)))
         {
@@ -233,7 +233,7 @@ void SQ_Converter::decodingCycle()
 
                         i = manipAndWriteDecodedImage(tempfile->name(), im);
 
-                        emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
+                        emit convertText(errors ? (i18n("1 error", "%n errors", errors)+'\n') : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
                         emit oneFileProcessed();
 
                         i = SQE_OK;

@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Sep 29 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -28,7 +28,10 @@
 #include <kfiledialog.h>
 #include <kinputdialog.h>
 #include <kicondialog.h>
+#include <kio/netaccess.h>
 #include <kio/job.h>
+#include <kprogress.h>
+#include <kglobalsettings.h>
 
 #include "ksquirrel.h"
 #include "sq_directorybasket.h"
@@ -109,7 +112,7 @@ void SQ_DBMenu::slotDirectoryDelete()
     {
         KIO::Job *job = KIO::del(item->KFileTreeViewItem::url());
 
-        connect(job, SIGNAL(result(KIO::Job*)), this, SLOT(slotDirectoryBasketResult(KIO::Job *)));
+        connect(job, SIGNAL(result(KIO::Job*)), this, SLOT(slotDirectoryResult(KIO::Job *)));
     }
 }
 
@@ -201,10 +204,15 @@ SQ_DirectoryBasket::SQ_DirectoryBasket(QWidget *parent, const char *name) : KFil
 {
     m_inst = this;
 
+    progressAdd = new KProgress(0, "progress add", Qt::WStyle_StaysOnTop | Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WX11BypassWM);
+
     menu = new SQ_DBMenu(this);
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(slotSortReal()));
+
+    timerAdd = new QTimer(this);
+    connect(timerAdd, SIGNAL(timeout()), this, SLOT(slotDelayedShowAdd()));
 
     setSorting(-1);
     setAcceptDrops(true);
@@ -275,6 +283,7 @@ SQ_DirectoryBasket::~SQ_DirectoryBasket()
     }
 
     delete dir;
+    delete progressAdd;
 }
 
 void SQ_DirectoryBasket::slotNewDirectory()
@@ -303,7 +312,8 @@ void SQ_DirectoryBasket::slotDropped(QDropEvent *e, QListViewItem *_parent, QLis
     KURL::List list;
     KURLDrag::decode(e, list);
 
-    if(list.first().path().startsWith(dir->root()))
+    // drag'n'drop inside basket
+    if(e->source() == this)
     {
         SQ_DirectoryItem *tomove = static_cast<SQ_DirectoryItem *>(root->findTVIByURL(list.first()));
 
@@ -329,7 +339,30 @@ void SQ_DirectoryBasket::slotDropped(QDropEvent *e, QListViewItem *_parent, QLis
             setSelected(tomove, true);
         }
     }
-    else if(_item != root->root())
+    else if(item == root->root()) // some files were dropped from another source
+    {
+        KURL::List::iterator itEnd = list.end();
+        KFileItemList flist;
+        KIO::UDSEntry entry;
+
+        progressAdd->setTotalSteps(list.count());
+        timerAdd->start(1000, true);
+
+        for(KURL::List::iterator it = list.begin();it != itEnd;++it)
+        {
+            if(KIO::NetAccess::stat(*it, entry, KSquirrel::app()))
+                flist.append(new KFileItem(entry, *it));
+
+            progressAdd->advance(1);
+        }
+
+        timerAdd->stop();
+        progressAdd->hide();
+
+        add(flist);
+        flist.setAutoDelete(true);
+    }
+    else
     {
         SQ_NavigatorDropMenu::instance()->setupFiles(list, item->url());
         SQ_NavigatorDropMenu::instance()->exec(QCursor::pos(), true);
@@ -472,6 +505,16 @@ void SQ_DirectoryBasket::slotItemRenamedMy(QListViewItem *_item, int, const QStr
 
     if(item)
         item->setName(name);
+}
+
+void SQ_DirectoryBasket::slotDelayedShowAdd()
+{
+    int w = 200, h = 32;
+
+    QRect rc = KGlobalSettings::splashScreenDesktopGeometry();
+
+    progressAdd->setGeometry(rc.center().x() - w/2, rc.center().y() - h/2, w, h);
+    progressAdd->show();
 }
 
 #include "sq_directorybasket.moc"

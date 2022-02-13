@@ -3,7 +3,7 @@
                              -------------------
     begin                : Apr 4 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,41 +18,10 @@
 #ifndef SQ_GLSELECTIONPAINTER_H
 #define SQ_GLSELECTIONPAINTER_H
 
-#include <qwidget.h>
 #include <qrect.h>
+#include <qpoint.h>
 
-/*
- *  Selection itself.
- */
-class SQ_GLSelection : public QWidget
-{
-    public:
-        enum Type { Rectangle, Ellipse };
-
-        SQ_GLSelection(QWidget *parent = 0, const char *name = 0, Type typ = Rectangle);
-        ~SQ_GLSelection();
-
-        void setType(Type tp);
-        int type() const;
-
-    protected:
-        virtual void updateMask();
-
-    private:
-        Type m_type;
-};
-
-inline
-void SQ_GLSelection::setType(Type tp)
-{
-    m_type = tp;
-}
-
-inline
-int SQ_GLSelection::type() const
-{
-    return m_type;
-}
+class SQ_GLWidget;
 
 /*
  *  This is a selection painter for SQ_GLWidget.
@@ -65,8 +34,16 @@ int SQ_GLSelection::type() const
 class SQ_GLSelectionPainter
 {
     public:
-        SQ_GLSelectionPainter(QWidget *widget);
+        enum Type { Rectangle, Ellipse };
+
+        SQ_GLSelectionPainter(SQ_GLWidget *widget);
         ~SQ_GLSelectionPainter();
+
+        void setSourceSize(int, int);
+
+        QPoint center() const;
+
+        void draw();
 
         /*
          *  Set selection type - rectangle or ellipse
@@ -74,14 +51,14 @@ class SQ_GLSelectionPainter
         int type() const;
 
         /*
-         *  when selection is drawn, it's valid.
+         *  when selection is drawn and visible, it's valid.
          *  After end() it becomes invalid.
          */
         bool valid() const;
 
         void setVisible(bool vis);
 
-        void begin(SQ_GLSelection::Type tp, int x, int y);
+        void begin(Type tp, int x, int y, bool U = true);
         void move(int x, int y);
         void setGeometry(const QRect &rc);
         void end();
@@ -93,36 +70,82 @@ class SQ_GLSelectionPainter
         QSize size() const;
 
     private:
-        QWidget *w;
-        SQ_GLSelection *selection;
+        void drawEllipse(float xradius, float yradius);
+        void drawRect();
+        void hackXY(int &x, int &y);
 
+    private:
+        SQ_GLWidget *w;
+        int       sourcew, sourceh;
+        int       sw, sh, sx, sy;
+
+        int       angle;
         int       xmoveold, ymoveold;
-        bool      m_valid;
+        bool      m_valid, m_shown;
+        Type      m_type;
 };
 
 inline
 QPoint SQ_GLSelectionPainter::pos() const
 {
-    return selection ? selection->pos() : QPoint();
+    return valid() ? QPoint(sourcew/2 + sx, sourceh/2 - sy) : QPoint();
 }
 
 inline
 QSize SQ_GLSelectionPainter::size() const
 {
-    return selection ? selection->size() : QSize();
+    return valid() ? QSize(sw, sh) : QSize();
 }
 
 inline
 int SQ_GLSelectionPainter::type() const
 {
-    return selection->type();
+    return m_type;
 }
 
 inline
 void SQ_GLSelectionPainter::setGeometry(const QRect &rc)
 {
-    if(selection)
-        selection->setGeometry(rc);
+    int X = rc.x(), Y = rc.y();
+
+    hackXY(X, Y);
+
+    sx = X;
+    sy = Y;
+    sw = rc.width();
+    sh = rc.height();
+}
+
+inline
+void SQ_GLSelectionPainter::setSourceSize(int w, int h)
+{
+    sourcew = w;
+    sourceh = h;
+}
+
+inline
+void SQ_GLSelectionPainter::setVisible(bool vis)
+{
+    if(m_valid) m_shown = vis;
+}
+
+inline
+bool SQ_GLSelectionPainter::valid() const
+{
+    return m_valid && m_shown;
+}
+
+inline
+QPoint SQ_GLSelectionPainter::center() const
+{
+    return QPoint(sx + sw/2, sy - sh/2);
+}
+
+inline
+void SQ_GLSelectionPainter::hackXY(int &x, int &y)
+{
+    x -= sourcew / 2;
+    y =  sourceh / 2 - y;
 }
 
 #endif

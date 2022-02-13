@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mar 5 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -63,18 +63,6 @@ class SQ_LibraryHandler : public QObject, public QValueVector<SQ_LIBRARY>
          *  Name is a string, returned by fmt_quickinfo()
          */
         SQ_LIBRARY* libraryByName(const QString &name);
-
-        /*
-         *  Find appropriate codec for given filename. If
-         *  not found, return NULL.
-         */
-        fmt_codec_base* codecForFile(const QString &path);
-
-        /*
-         *  Find appropriate codec for given library name. If
-         *  not found, return NULL.
-         */
-        fmt_codec_base* codecByName(const QString &name);
 
         /*
          *  Does any of found libraries handle given extension ?

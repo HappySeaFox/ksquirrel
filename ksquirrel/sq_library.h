@@ -3,7 +3,7 @@
                              -------------------
     begin                : ðÎÄ éÀÎ 27 2005
     copyright            : (C) 2005 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -41,7 +41,7 @@ class fmt_codec_base;
 
 struct SQ_LIBRARY
 {
-    SQ_LIBRARY() : lib(0), codec(0), tmp(0)
+    SQ_LIBRARY() : lib(0), codec(0), codec_il(0), tmp(0), tmp_il(0)
     {}
 
     // pointer to library
@@ -75,7 +75,7 @@ struct SQ_LIBRARY
     QString    version;
 
     // pointer to a codec
-    fmt_codec_base    *codec;
+    fmt_codec_base    *codec, *codec_il;
 
     // 'create' and 'destroy' functions.
     // should exist in library!
@@ -90,8 +90,8 @@ struct SQ_LIBRARY
     bool        writestatic, writeanimated;
     bool        readable;
     bool        canbemultiple, needtempfile;
-    
-    KTempFile *tmp;
+
+    KTempFile *tmp, *tmp_il;
 };
 
 #endif

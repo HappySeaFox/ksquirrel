@@ -3,7 +3,7 @@
                              -------------------
     begin                : Apr 4 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,103 +18,128 @@
 #include <qbitmap.h>
 #include <qpainter.h>
 
+#include <cmath>
+
+#include "sq_glwidget.h"
 #include "sq_glselectionpainter.h"
 
-static const int len = 4;
+static const int len  = 4;
+static const int len2 = 10;
+static const int lenc = 2;
+static const int lenc2 = lenc / 2;
+static const double rad_const = 3.14159265358979323846 / 180.0;
 
 /* ******************************************************************* */
 
-SQ_GLSelection::SQ_GLSelection(QWidget *parent, const char *name, Type typ) : QWidget(parent, name), m_type(typ)
-{
-    setAutoMask(true);
-    setPaletteBackgroundColor(Qt::magenta);
-}
-
-SQ_GLSelection::~SQ_GLSelection()
-{}
-
-void SQ_GLSelection::updateMask()
-{
-    QBitmap bm(size());
-
-    bm.fill(Qt::color0);
-
-    QPainter p(&bm);
-
-    p.setPen(Qt::color1);
-
-    if(m_type == Rectangle)
-        p.drawRect(bm.rect());
-    else
-        p.drawEllipse(bm.rect());
-
-    bool crossDrawn = !(width() < len*2 + 2 || height() < len*2 + 2);
-
-    if(crossDrawn)
-    {
-        QPoint Cntr = rect().center();
-        p.drawLine(Cntr.x(), Cntr.y() - len, Cntr.x(), Cntr.y() + len);
-        p.drawLine(Cntr.x() - len, Cntr.y(), Cntr.x() + len, Cntr.y());
-    }
-
-    setMask(bm);
-}
-
-/* ******************************************************************* */
-
-SQ_GLSelectionPainter::SQ_GLSelectionPainter(QWidget *widget) 
-    : w(widget), selection(0), m_valid(false)
+SQ_GLSelectionPainter::SQ_GLSelectionPainter(SQ_GLWidget *widget) 
+    : w(widget), sourcew(1), sourceh(1), sw(0), sh(0), sx(0), sy(0), 
+      angle(0), m_valid(false), m_shown(false)
 {}
 
 SQ_GLSelectionPainter::~SQ_GLSelectionPainter()
 {}
 
-void SQ_GLSelectionPainter::begin(SQ_GLSelection::Type tp, int x, int y)
+void SQ_GLSelectionPainter::begin(Type tp, int x, int y, bool U)
 {
     // end previous drawing if any
     end();
 
-    selection = new SQ_GLSelection(w);
-    selection->setType(tp);
-    selection->resize(1, 1);
-    selection->move(x, y);
-    selection->show();
+    m_type = tp;
 
-    // new painter
-    xmoveold = x;
-    ymoveold = y;
+    hackXY(x, y);
+
+    sx = xmoveold = x;
+    sy = ymoveold = y;
+    sw = 0;
+    sh = 0;
 
     m_valid = true;
+    m_shown = true;
+
+    if(U) w->updateGLA();
 }
 
 void SQ_GLSelectionPainter::move(int x, int y)
 {
-    int X, Y, Xmin, Ymin;
+    hackXY(x, y);
 
-    X = QMAX(x, xmoveold);
-    Y = QMAX(y, ymoveold);
-    Xmin = QMIN(x, xmoveold);
-    Ymin = QMIN(y, ymoveold);
+    int X = QMAX(x, xmoveold);
+    int Y = QMIN(y, ymoveold);
+    int Xmin = QMIN(x, xmoveold);
+    int Ymin = QMAX(y, ymoveold);
 
-    selection->move(Xmin, Ymin);
-    selection->resize(X - Xmin, Y - Ymin);
+    sx = Xmin;
+    sy = Ymin;
+    sw = X - Xmin;
+    sh = Ymin - Y;
+
+    angle += 3;
+
+    if(angle > 360)
+        angle = 0;
+
+    // SQ_GLWidget::paintGL() will call draw()
+    w->updateGLA();
 }
 
 void SQ_GLSelectionPainter::end()
 {
-    delete selection;
-    selection = 0;
-
     m_valid = false;
+    m_shown = false;
+
+    w->updateGLA();
 }
 
-void SQ_GLSelectionPainter::setVisible(bool vis)
+void SQ_GLSelectionPainter::drawEllipse(float xradius, float yradius)
 {
-    if(m_valid)
-        selection->setShown(vis);
+    w->makeCurrent();
+
+    double degInRad;
+
+    glBegin(GL_LINE_LOOP);
+    glColor4f(1,0,1,1);
+
+    for(int i = 0; i < 360; i++)
+    {
+        degInRad = rad_const * i;
+        glVertex2f(cos(degInRad) * xradius, sin(degInRad) * yradius);
+    }
+
+    glColor4f(1,1,1,1);
+    glEnd();
 }
 
-bool SQ_GLSelectionPainter::valid() const
+void SQ_GLSelectionPainter::drawRect()
 {
-    return m_valid && selection->isShown();
+    w->makeCurrent();
+
+    glBegin(GL_LINE_LOOP);
+    glColor4f(1,0,1,1);
+
+    glVertex2f(-sw/2, sh/2);
+    glVertex2f(sw/2,  sh/2);
+    glVertex2f(sw/2,  -sh/2);
+    glVertex2f(-sw/2, -sh/2);
+
+    glColor4f(1,1,1,1);
+    glEnd();
+}
+
+void SQ_GLSelectionPainter::draw()
+{
+    if(!sw || !sh)
+        return;
+
+    if(m_type == Ellipse)
+        drawEllipse(sw/2, sh/2);
+    else
+        drawRect();
+
+    // center rectangle
+    if(sw > lenc && sh > lenc)
+    {
+        glColor4f(1,0,1,1);
+        glRectf(-lenc2, lenc2, lenc2, -lenc2);
+        glColor4f(1,1,1,1);
+    }
 }

@@ -3,7 +3,7 @@
                              -------------------
     begin                : ??? Sep 17 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -135,7 +135,7 @@ void SQ_DragProvider::start()
     {
         QStringList::iterator sEnd = names.end();
         for(QStringList::iterator sit = names.begin();sit != sEnd;++sit)
-            text = text + *sit + "\n";
+            text = text + *sit + '\n';
     }
 
     text += QString::fromLatin1("%1 %2").arg(i18n("Total")).arg(i18n("1 file", "%n files", count));

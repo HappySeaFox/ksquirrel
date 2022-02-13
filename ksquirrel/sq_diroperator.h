@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Mar 15 2004
     copyright            : (C) 2004 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -164,6 +164,8 @@ class SQ_DirOperator : public KDirOperator
         void slotSetThumbSize(const QString&);
 
     private slots:
+
+        void slotDownloadPercents(int);
 
         void slotCopyPath();
         void slotCopyURL();

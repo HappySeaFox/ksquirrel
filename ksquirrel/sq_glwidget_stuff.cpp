@@ -3,7 +3,7 @@
                              -------------------
     begin                : Wed Oct 31 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@mail.ru
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -71,16 +71,16 @@
 // Create actions
 void SQ_GLWidget::createActions()
 {
-    pASelectionRect = new KToggleAction(i18n("Rectangle") + "\tCtrl+R", QPixmap(locate("appdata", "images/actions/glselection_rect.png")), 0, this, SLOT(slotSelectionRect()), ac, "SQ Selection Rect");
-    pASelectionEllipse = new KToggleAction(i18n("Ellipse") + "\tCtrl+E", QPixmap(locate("appdata", "images/actions/glselection_ellipse.png")), 0, this, SLOT(slotSelectionEllipse()), ac, "SQ Selection Ellipse");
-    pASelectionClear = new KAction(i18n("Clear") + "\tCtrl+C", 0, 0, this, SLOT(slotSelectionClear()), ac, "SQ Selection Clear");
+    pASelectionRect = new KToggleAction(i18n("Rectangle"), QPixmap(locate("appdata", "images/actions/glselection_rect.png")), 0, this, SLOT(slotSelectionRect()), ac, "SQ Selection Rect");
+    pASelectionEllipse = new KToggleAction(i18n("Ellipse"), QPixmap(locate("appdata", "images/actions/glselection_ellipse.png")), 0, this, SLOT(slotSelectionEllipse()), ac, "SQ Selection Ellipse");
+    pASelectionClear = new KAction(i18n("Clear"), 0, 0, this, SLOT(slotSelectionClear()), ac, "SQ Selection Clear");
 
     pAZoomW = new KToggleAction(i18n("Fit width"), QPixmap(locate("appdata", "images/actions/zoomW.png")), 0, this, SLOT(slotZoomW()), ac, "SQ ZoomW");
     pAZoomH = new KToggleAction(i18n("Fit height"), QPixmap(locate("appdata", "images/actions/zoomH.png")), 0, this, SLOT(slotZoomH()), ac, "SQ ZoomH");
     pAZoomWH = new KToggleAction(i18n("Fit image"), QPixmap(locate("appdata", "images/actions/zoomWH.png")), 0, this, SLOT(slotZoomWH()), ac, "SQ ZoomWH");
     pAZoom100 = new KToggleAction(i18n("Zoom 100%"), QPixmap(locate("appdata", "images/actions/zoom100.png")), 0, this, SLOT(slotZoom100()), ac, "SQ Zoom100");
     pAZoomLast = new KToggleAction(i18n("Leave previous zoom"), QPixmap(locate("appdata", "images/actions/zoomlast.png")), 0, this, SLOT(slotZoomLast()), ac, "SQ ZoomLast");
-    pAIfLess = new KToggleAction(i18n("Ignore, if the image is less than window"), QPixmap(locate("appdata", "images/actions/ifless.png")), 0, 0, 0, ac, "if less");
+    pAIfLess = new KToggleAction(i18n("Ignore, if image is smaller than window"), QPixmap(locate("appdata", "images/actions/ifless.png")), 0, 0, 0, ac, "if less");
 
     pAFull = new KToggleAction(QString::null, 0, 0, 0, ac, "SQ GL Full");
 
@@ -115,6 +115,11 @@ void SQ_GLWidget::createToolbar()
     pASelectionEllipse->plug(selectionMenu);
     selectionMenu->insertSeparator();
     pASelectionClear->plug(selectionMenu);
+
+    // hack to show accels
+    selectionMenu->changeItem(pASelectionRect->itemId(0), pASelectionRect->text() + "\tCtrl+R");
+    selectionMenu->changeItem(pASelectionEllipse->itemId(0), pASelectionEllipse->text() + "\tCtrl+E");
+    selectionMenu->changeItem(pASelectionClear->itemId(0), pASelectionClear->text() + "\tCtrl+C");
 
     pAZoom100->plug(zoom);
     pAZoomLast->plug(zoom);
@@ -187,6 +192,8 @@ void SQ_GLWidget::createToolbar()
     toolbar->insertWidget(1000, 0, slider_zoom);
     toolbar->setItemAutoSized(1000);
     toolbar->alignItemRight(1000);
+
+    changeSlider(1.0);
 }
 
 // Show image properties.
@@ -465,7 +472,7 @@ void SQ_GLWidget::saveAs()
 
     if(!wlib || !wlib->writestatic)
     {
-        KMessageBox::error(this, i18n("Sorry, could not perfom write operation\nfor codec \"%1\"").arg(d.nameFilter()));
+        KMessageBox::error(this, i18n("Sorry, could not perform write operation\nfor codec \"%1\"").arg(d.nameFilter()));
         return;
     }
 
@@ -585,7 +592,7 @@ void SQ_GLWidget::slotCopyResult(KIO::Job *job)
 {
     if(job->error())
     {
-        if(KMessageBox::questionYesNoCancel(this, job->errorString() + "\n" + i18n("Try another location?")) == KMessageBox::Yes)
+        if(KMessageBox::questionYesNoCancel(this, job->errorString() + '\n' + i18n("Try another location?")) == KMessageBox::Yes)
         {
             SQ_FileDialog d(QString::null, this);
 
@@ -612,6 +619,8 @@ void SQ_GLWidget::toClipboard()
 
     QImage im((uchar *)tab->parts[tab->current].buffer->data(), tab->parts[tab->current].realw, tab->parts[tab->current].realh, 32, 0, 0, QImage::LittleEndian);
 
+    im = im.swapRGB();
+
     // image doesn't have extra regions
     if(tab->parts[tab->current].realw == tab->parts[tab->current].w && tab->parts[tab->current].realh == tab->parts[tab->current].h)
         KApplication::clipboard()->setImage(im, QClipboard::Clipboard);
@@ -625,11 +634,16 @@ void SQ_GLWidget::bcg()
 
     SQ_ImageBCG _bcg(this);
 
+    stopAnimation();
+
     _bcg.setPreviewImage(generatePreview());
 
     connect(&_bcg, SIGNAL(bcg(SQ_ImageBCGOptions *)), this, SLOT(slotBCG(SQ_ImageBCGOptions *)));
 
     _bcg.exec();
+
+    if(!manualBlocked())
+        startAnimation();
 }
 
 void SQ_GLWidget::filter()
@@ -638,11 +652,16 @@ void SQ_GLWidget::filter()
 
     SQ_ImageFilter flt(this);
 
+    stopAnimation();
+
     flt.setPreviewImage(generatePreview());
 
     connect(&flt, SIGNAL(filter(SQ_ImageFilterOptions *)), this, SLOT(slotFilter(SQ_ImageFilterOptions *)));
 
     flt.exec();
+
+    if(!manualBlocked())
+        startAnimation();
 }
 
 void SQ_GLWidget::slotFilter(SQ_ImageFilterOptions *filtopt)
@@ -650,7 +669,9 @@ void SQ_GLWidget::slotFilter(SQ_ImageFilterOptions *filtopt)
     QImage im((uchar *)tab->parts[tab->current].buffer->data(), tab->parts[tab->current].realw, tab->parts[tab->current].realh, 32, 0, 0, QImage::LittleEndian);
     QImage img = gls->valid() ? im.copy(tab->sx, tab->sy, tab->sw, tab->sh) : im;
 
-    fmt_filters::image image((unsigned char *)img.bits(), img.width(), img.height());
+    fmt_filters::image image =
+        gls->valid() ? fmt_filters::image((unsigned char *)img.bits(), img.width(), img.height())
+                     : fmt_filters::image((unsigned char *)img.bits(), tab->parts[tab->current].w, tab->parts[tab->current].h, img.width(), img.height());
 
     fmt_filters::rgba c = fmt_filters::white;
 
@@ -692,8 +713,9 @@ void SQ_GLWidget::slotBCG(SQ_ImageBCGOptions *bcgopt)
     QImage im((uchar *)tab->parts[tab->current].buffer->data(), tab->parts[tab->current].realw, tab->parts[tab->current].realh, 32, 0, 0, QImage::LittleEndian);
     QImage img = gls->valid() ? im.copy(tab->sx, tab->sy, tab->sw, tab->sh) : im;
 
-    fmt_filters::image image((unsigned char *)img.bits(), img.width(), img.height());
-
+    fmt_filters::image image =
+        gls->valid() ? fmt_filters::image((unsigned char *)img.bits(), img.width(), img.height())
+                     : fmt_filters::image((unsigned char *)img.bits(), tab->parts[tab->current].w, tab->parts[tab->current].h, img.width(), img.height());
     if(bcgopt->b)
         fmt_filters::brightness(image, bcgopt->b);
 
@@ -713,20 +735,65 @@ void SQ_GLWidget::slotBCG(SQ_ImageBCGOptions *bcgopt)
     SQ_ImageBCG::instance()->setPreviewImage(generatePreview());
 }
 
+bool SQ_GLWidget::calcSelection()
+{
+    QSize sz = gls->size();
+    QPoint pt = gls->pos();
+
+    float z = getZoom();
+    float x = pt.x(), y = pt.y(), w = sz.width(), h = sz.height();
+    x = x - (float)width()/2 - MATRIX_X + (float)tab->parts[tab->current].w/2 * z;
+    y = y - (float)height()/2 + MATRIX_Y + (float)tab->parts[tab->current].h/2 * z;
+
+    int sx = (int)(x/z + 0.5);
+    int sy = (int)(y/z + 0.5);
+    int sw = (int)(w/z + 0.5);
+    int sh = (int)(h/z + 0.5);
+
+    if(!sw || !sh)
+    {
+        gls->end();
+        return false;
+    }
+    else
+    {
+        if(SQ_GLHelpers::normalizeSelection(sx,
+                                            sy,
+                                            sw,
+                                            sh,
+                                            tab->parts[tab->current].w,
+                                            tab->parts[tab->current].h,
+                                            tab->wm,
+                                            (int)tab->curangle,
+                                            tab->orient))
+        {
+            tab->srect = QRect(pt, sz);
+            tab->sx = sx;
+            tab->sy = sy;
+            tab->sw = sw;
+            tab->sh = sh;
+        }
+        else
+            return false;
+    }
+
+    return true;
+}
+
 QImage SQ_GLWidget::generatePreview()
 {
     QImage im((uchar *)tab->parts[tab->current].buffer->data(), tab->parts[tab->current].realw, tab->parts[tab->current].realh, 32, 0, 0, QImage::LittleEndian);
     QImage img, ret;
 
-    if(!gls->valid())
+    if(gls->valid() && calcSelection())
+        img = im.copy(tab->sx, tab->sy, tab->sw, tab->sh);
+    else
     {
         if(tab->parts[tab->current].realw == tab->parts[tab->current].w && tab->parts[tab->current].realh == tab->parts[tab->current].h)
             img = im;
         else
             img = im.copy(0, 0, tab->parts[tab->current].w, tab->parts[tab->current].h);
     }
-    else
-        img = im.copy(tab->sx, tab->sy, tab->sw, tab->sh);
 
     ret = SQ_Utils::scaleImage((unsigned char *)img.bits(), img.width(), img.height(), 160).swapRGB();
 
@@ -749,7 +816,6 @@ void SQ_GLWidget::editUpdate()
 
 void SQ_GLWidget::slotShowNav()
 {
-    KSquirrel::app()->setDemo(false);
     KSquirrel::app()->activate();
 }
 
@@ -773,7 +839,7 @@ void SQ_GLWidget::initAccelsAndMenu()
 #define SQ_ADD_KACTION(b) \
     (new KAction(QString::null, b, this, SLOT(slotAccelActivated()), ac, QString::fromLatin1("action_%1").arg(b)))
 
-    id_saveas = menuFile->insertItem(SQ_IconLoader::instance()->loadIcon("filesaveas", KIcon::Desktop, KIcon::SizeSmall), i18n("Save As..."), SQ_ADD_KACTION(Qt::Key_S), SLOT(activate()));
+    id_saveas = menuFile->insertItem(SQ_IconLoader::instance()->loadIcon("filesaveas", KIcon::Desktop, KIcon::SizeSmall), i18n("Save As...") + "\tS", SQ_ADD_KACTION(Qt::Key_S), SLOT(activate()));
     menuFile->insertSeparator();
     menuFile->insertItem(QPixmap(locate("appdata", "images/menu/next16.png")), i18n("Next") + "\tPageDown", SQ_ADD_KACTION(Qt::Key_PageDown), SLOT(activate()));
     menuFile->insertItem(QPixmap(locate("appdata", "images/menu/prev16.png")), i18n("Previous") + "\tPageUp", SQ_ADD_KACTION(Qt::Key_PageUp), SLOT(activate()));
@@ -840,6 +906,7 @@ void SQ_GLWidget::initAccelsAndMenu()
     menuWindow->insertItem(i18n("Next tab") + "\tShift+Right", SQ_ADD_KACTION(Qt::Key_Right+SHIFT), SLOT(activate()));
     menuWindow->insertSeparator();
     menuWindow->insertItem(i18n("Close tab") + "\tW", SQ_ADD_KACTION(Qt::Key_W), SLOT(activate()));
+    menuWindow->insertItem(i18n("Close all tabs") + "\tCtrl+W", SQ_ADD_KACTION(Qt::Key_W+CTRL), SLOT(activate()));
 
     menu->insertSeparator();
     menu->insertItem(QPixmap(locate("appdata", "images/menu/reset16.png")), i18n("Reset") + "\tR", SQ_ADD_KACTION(Qt::Key_R), SLOT(activate()));
@@ -905,6 +972,7 @@ void SQ_GLWidget::slotAccelActivated()
     else if(!ks.compare(Qt::Key_Left+SHIFT))  SQ_GLView::window()->leftTab();
     else if(!ks.compare(Qt::Key_Right+SHIFT)) SQ_GLView::window()->rightTab();
     else if(!ks.compare(Qt::Key_W))           slotCloseRequest(SQ_GLView::window()->tabbar()->indexOf(SQ_GLView::window()->tabbar()->currentTab()));
+    else if(!ks.compare(Qt::Key_W+CTRL))      closeAllTabsFull();
     else if(!ks.compare(Qt::Key_N))           updateFilter(!linear);
     else if(!ks.compare(Qt::Key_PageDown) ||
             !ks.compare(Qt::Key_Space))       slotNext();
@@ -1065,6 +1133,7 @@ void SQ_GLWidget::crop()
     if(tab->broken
         || tab->finfo.image.empty()
         || !gls->valid()
+        || !calcSelection()
         || (tab->sw == tab->parts[tab->current].w && tab->sh == tab->parts[tab->current].h))
         return;
 
@@ -1157,30 +1226,39 @@ void SQ_GLWidget::slotChangeTab(int id)
     }
     else
     {
-        // fill menu
-        std::vector<fmt_image>::iterator itEnd = tab->finfo.image.end();
-        std::vector<fmt_image>::iterator it = tab->finfo.image.begin();
-        int mid, i = 0, first_id = 0;
-
-        for(;it != itEnd;++it, ++i)
-        {
-            mid = images->insertItem(QString::fromLatin1("#%1 [%2x%3@%4]").arg(i+1).arg((*it).w).arg((*it).h).arg((*it).bpp));
-            images->setItemParameter(mid, i);
-
-            if(i == tab->current)
-                old_id = first_id = mid;
-        }
-
-        images->setItemChecked(first_id, true);
-        updateCurrentFileInfo();
-        SQ_GLView::window()->sbarWidget("SBFile")->setText(tab->m_original.fileName(false));
+        changeSlider();
         KSquirrel::app()->setCaption(originalURL());
         enableActions(!tab->broken);
 
-        changeSlider();
+        if(!tab->broken)
+        {
+            SQ_GLView::window()->sbarWidget("SBDecodedI")->setPixmap(tab->lib->mime);
 
-        SQ_GLView::window()->sbarWidget("SBLoaded")->setText(
+            // fill menu
+            std::vector<fmt_image>::iterator itEnd = tab->finfo.image.end();
+            std::vector<fmt_image>::iterator it = tab->finfo.image.begin();
+            int mid, i = 0, first_id = 0;
+
+            for(;it != itEnd;++it, ++i)
+            {
+                mid = images->insertItem(QString::fromLatin1("#%1 [%2x%3@%4]").arg(i+1).arg((*it).w).arg((*it).h).arg((*it).bpp));
+                images->setItemParameter(mid, i);
+
+                if(i == tab->current)
+                    old_id = first_id = mid;
+            }
+
+            images->setItemChecked(first_id, true);
+            updateCurrentFileInfo();
+            frameChanged();
+
+            SQ_GLView::window()->sbarWidget("SBFile")->setText(tab->m_original.fileName(false));
+
+            SQ_GLView::window()->sbarWidget("SBLoaded")->setText(
                         KGlobal::locale()->formatLong(tab->elapsed) + i18n(" ms."));
+        }
+        else
+            SQ_GLView::window()->resetStatusBar();
 
         std::vector<Parts>::iterator itp = tab->parts.begin();
         std::vector<Parts>::iterator itpEnd = tab->parts.end();
@@ -1191,7 +1269,7 @@ void SQ_GLWidget::slotChangeTab(int id)
         if(tab->glselection != -1)
         {
             if(!gls->valid())
-                gls->begin(static_cast<SQ_GLSelection::Type>(tab->glselection), 0, 0);
+                gls->begin(static_cast<SQ_GLSelectionPainter::Type>(tab->glselection), 0, 0, false);
 
             gls->setGeometry(tab->srect);
         }
@@ -1494,7 +1572,7 @@ void SQ_GLWidget::changeSlider(GLfloat z1)
 {
     GLfloat z = z1 < 0 ? getZoom() : z1;
 
-    int i_zoom =(int)(z * 100);
+    int i_zoom = (int)(z * 100);
 
     slider_zoom->blockSignals(true);
     slider_zoom->setValue((i_zoom <= 100) ? i_zoom/5 : (19+i_zoom/50));
@@ -1518,4 +1596,34 @@ void SQ_GLWidget::frameChanged()
 {
     SQ_GLView::window()->sbarWidget("SBFrame")->setText(
         QString::fromLatin1("%1/%2").arg(tab->current+1).arg(tab->total));
+}
+
+void SQ_GLWidget::closeAllTabs()
+{
+    removeCurrentTabs();
+    SQ_GLView::window()->removeTabs();
+}
+
+void SQ_GLWidget::closeAllTabsFull()
+{
+    stopAnimation();
+
+    closeAllTabs();
+
+    SQ_GLView::window()->resetStatusBar();
+    SQ_GLView::window()->tabbar()->hide();
+    KSquirrel::app()->setCaption(QString::null);
+
+    decoded = false;
+    m_original = KURL();
+    m_expected = KURL();
+
+    images->clear();
+    old_id = -1;
+
+    enableSettingsButton(false);
+    enableActions(false);
+    changeSlider(1.0);
+
+    updateGL();
 }

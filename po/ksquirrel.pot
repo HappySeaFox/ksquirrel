@@ -92,7 +92,7 @@ msgid "Adjust external tools"
 msgstr ""
 
 #: sq_externaltools.cpp:192 sq_filters.cpp:182
-msgid " OK "
+msgid "OK"
 msgstr ""
 
 #: sq_externaltools.cpp:196 sq_externaltools.ui.h:146
@@ -270,7 +270,7 @@ msgid "Uncompressed size:"
 msgstr ""
 
 #: sq_imageproperties.cpp:390
-msgid "Compress ratio:"
+msgid "Compression ratio:"
 msgstr ""
 
 #: sq_imageproperties.cpp:391
@@ -311,7 +311,7 @@ msgid "MIME"
 msgstr ""
 
 #: sq_pluginsinfo.cpp:128
-msgid "Codecs information and settings"
+msgid "Codec information and settings"
 msgstr ""
 
 #: sq_pluginsinfo.cpp:138
@@ -384,8 +384,8 @@ msgstr ""
 
 #: sidebar/sq_categoriesview.cpp:197
 msgid ""
-"It will create default categories: Concerts, Pets, Home, Friends, Free time, "
-"Traveling, Nature. Continue?"
+"This will create default categories: Concerts, Pets, Home, Friends, Free time, "
+"Travelling and Nature. Continue?"
 msgstr ""
 
 #: sidebar/sq_categoriesview.cpp:218
@@ -466,7 +466,7 @@ msgid "Calculate cache size in memory"
 msgstr ""
 
 #: sq_diroperator.cpp:138
-msgid "non-local filesystem"
+msgid "remote filesystem"
 msgstr ""
 
 #: sq_diroperator.cpp:158
@@ -570,7 +570,7 @@ msgstr ""
 #: sq_codecsettingsskeleton.ui.h:28
 msgid ""
 "Error loading widget from <b>%1</b>. Please check your installation or "
-"contact <a href=\"mailto:ksquirrel@mail.ru\">ksquirrel@mail.ru</a>"
+"contact <a href=\"mailto:ksquirrel.iv@gmail.com\">ksquirrel.iv@gmail.com</a>"
 msgstr ""
 
 #: sq_widgetstack.cpp:473 sq_widgetstack.cpp:507
@@ -638,7 +638,7 @@ msgstr ""
 
 #: imageedit/sq_converter.cpp:73
 msgid ""
-"Converter cannot work with non-local files.\n"
+"Converter cannot work with remote files.\n"
 "Sorry"
 msgstr ""
 
@@ -667,7 +667,7 @@ msgid "New files"
 msgstr ""
 
 #: imageedit/sq_imageeditoptions.cpp:136
-msgid "Put here"
+msgid "Place here"
 msgstr ""
 
 #: imageedit/sq_imageeditoptions.cpp:137
@@ -675,11 +675,11 @@ msgid "Replace original files"
 msgstr ""
 
 #: imageedit/sq_imageeditoptions.cpp:138
-msgid "Put files to current directory, renaming them if neccessary"
+msgid "Place files in current directory, renaming them if necessary"
 msgstr ""
 
 #: imageedit/sq_imageeditoptions.cpp:139
-msgid "Put files to current directory, replacing existing files"
+msgid "Place files in current directory, replacing existing files"
 msgstr ""
 
 #: imageedit/sq_imageeditoptions.cpp:140
@@ -784,7 +784,7 @@ msgid "Impulse"
 msgstr ""
 
 #: imageedit/sq_imagefilter.cpp:497
-msgid "MultiplicativeGaussian"
+msgid "Multiplicative Gaussian"
 msgstr ""
 
 #: imageedit/sq_imagefilter.cpp:498
@@ -945,7 +945,7 @@ msgid "Convert"
 msgstr ""
 
 #: imageedit/sq_imageconvert.cpp:172
-msgid "Convertion options"
+msgid "Conversion options"
 msgstr ""
 
 #: sq_viewcache.cpp:49 sq_viewcache.cpp:107
@@ -1029,7 +1029,7 @@ msgid "Leave previous zoom"
 msgstr ""
 
 #: sq_glwidget.cpp:244
-msgid "Ignore, if the image is less than window"
+msgid "Ignore, if image is smaller than window"
 msgstr ""
 
 #: sq_glwidget.cpp:318
@@ -1126,7 +1126,7 @@ msgstr ""
 
 #: sq_glwidget.cpp:2363
 msgid ""
-"Sorry, could not perfom write operation\n"
+"Sorry, could not perform write operation\n"
 "for codec \"%1\""
 msgstr ""
 
@@ -1491,7 +1491,7 @@ msgid "Zoom limit"
 msgstr ""
 
 #: sq_options.cpp:818
-msgid "Minimum: 1%, maximum: 10'000%"
+msgid "Minimum: 1%, maximum: 10,000%"
 msgstr ""
 
 #: sq_options.cpp:819
@@ -1655,7 +1655,7 @@ msgid "Clear history"
 msgstr ""
 
 #: ksquirrel.cpp:289
-msgid "Clear adress"
+msgid "Clear address"
 msgstr ""
 
 #: ksquirrel.cpp:294
@@ -1719,7 +1719,7 @@ msgid "Configure filters..."
 msgstr ""
 
 #: ksquirrel.cpp:728
-msgid "Goto tray"
+msgid "Go to tray"
 msgstr ""
 
 #: ksquirrel.cpp:729
@@ -1767,7 +1767,7 @@ msgid "Slideshow advanced"
 msgstr ""
 
 #: ksquirrel.cpp:748
-msgid "Codecs information..."
+msgid "Codec information..."
 msgstr ""
 
 #: ksquirrel.cpp:749
@@ -1823,7 +1823,7 @@ msgid "Move filter down"
 msgstr ""
 
 #: sq_filters.cpp:198
-msgid "Menuitem contains both name and extension"
+msgid "Menu item contains both name and extension"
 msgstr ""
 
 #: sq_helpwidget.cpp:175
@@ -1888,15 +1888,16 @@ msgid ""
 "tr><tr><td><p align=right><b>R</b></p></td><td>reset</td></tr><tr><td><p "
 "align=right><b>P</b></p></td><td>image properties</td></tr><tr><td><p "
 "align=right><b>C</b></p></td><td>codec settings</td></tr><tr><td><p "
-"align=right><b>L</b></p></td><td>ignore zoom if the image is less than "
+"align=right><b>L</b></p></td><td>ignore zoom if image is smaller than "
 "window</td></tr><tr><td><p align=right><b>I</b></p></td><td>menu with "
 "images</td></tr><tr><td><p align=right><b>A</b></p></td><td>stop/start "
 "animation</td></tr><tr><td><p align=right><b>B</b></p></td><td>toggle "
 "drawing background for transparent images</td></tr><tr><td><p "
 "align=right><b>K</b></p></td><td>toggle drawing tickmarks</td></"
 "tr><tr><td><p align=right><b>E</b></p></td><td>show menu with external "
-"tools</td></tr><tr><td><p align=right><b>F1</b></p></td><td>first image in "
-"miltipaged image</td></tr><tr><td><p align=right><b>F2</b></p></"
+"tools</td></tr><tr><td><p align=right><b>Y</b></p></td><td>crop</td></tr>"
+"<tr><td><p align=right><b>F1</b></p></td><td>first image in "
+"multi-paged image</td></tr><tr><td><p align=right><b>F2</b></p></"
 "td><td>previous</td></tr><tr><td><p align=right><b>F3</b></p></td><td>next</"
 "td></tr><tr><td><p align=right><b>F4</b></p></td><td>last</td></tr></table></"
 "p>"
@@ -2083,4 +2084,13 @@ msgid "Close tab"
 msgstr ""
 
 msgid "Do nothing"
+msgstr ""
+
+msgid "Print available DCOP parameters"
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close all tabs"
 msgstr ""

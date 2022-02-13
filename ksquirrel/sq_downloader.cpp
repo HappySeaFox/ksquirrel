@@ -3,7 +3,7 @@
                              -------------------
     begin                : Fri Jun 07 2007
     copyright            : (C) 2007 by Baryshev Dmitry
-    email                : ksquirrel@tut.by
+    email                : ksquirrel.iv@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -16,11 +16,10 @@
  ***************************************************************************/
 
 #include <qfile.h>
-#include <qfileinfo.h>
 
 #include <kio/job.h>
 #include <kfileitem.h>
-#include <kstandarddirs.h>
+#include <ktempfile.h>
 
 #include "sq_libraryhandler.h"
 #include "sq_archivehandler.h"
@@ -29,11 +28,17 @@
 #define SQ_PREDOWNLOAD_SIZE 50
 
 SQ_Downloader::SQ_Downloader(QObject *parent, const char *name) : QObject(parent, name), job(0), m_error(false)
-{}
+{
+    tmp = new KTempFile;
+    tmp->setAutoDelete(true);
+    tmp->close();
+}
 
 SQ_Downloader::~SQ_Downloader()
 {
     clean();
+
+    delete tmp;
 }
 
 void SQ_Downloader::start(KFileItem *fi)
@@ -41,44 +46,47 @@ void SQ_Downloader::start(KFileItem *fi)
     m_error = false;
     mURL = fi->url();
 
+    emitPercents = false;
+    startTime = QTime::currentTime();
+    size = 0;
     totalSize = fi->size();
-    mime = fi->mimetype();
+    nomime = SQ_ArchiveHandler::instance()->findProtocolByMime(fi->mimetype()).isEmpty();
 
     job = KIO::get(mURL, false, false);
 
-    QFileInfo fm(mURL.path());
-
     clean();
-
-    tmp = locateLocal("tmp", fm.fileName());
 
     continueDownload = false;
 
-    connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)),
-            this, SLOT(slotData(KIO::Job *, const QByteArray &)));
+    connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(slotData(KIO::Job *, const QByteArray &)));
     connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotDataResult(KIO::Job *)));
 }
 
-void SQ_Downloader::slotData(KIO::Job *job, const QByteArray &data)
+void SQ_Downloader::slotData(KIO::Job *job, const QByteArray &ba)
 {
-    size += data.size();
+    size += ba.size();
 
-    QFile f(tmp);
+    QFile f(tmp->name());
 
     if(f.open(IO_WriteOnly | IO_Append))
     {
-        f.writeBlock(data);
+        f.writeBlock(ba);
         f.close();
+    }
+
+    if(emitPercents || startTime.msecsTo(QTime::currentTime()) > 1000)
+    {
+        emit percents(size);
+        emitPercents = true;
     }
 
     // 50 bytes are enough to determine file type
     if(size >= SQ_PREDOWNLOAD_SIZE && !continueDownload && totalSize != size)
     {
         // cancel download (file type is not supported)
-        SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->libraryForFile(tmp);
+        SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->libraryForFile(tmp->name());
 
-        if(SQ_ArchiveHandler::instance()->findProtocolByMime(mime).isEmpty()
-            && !lib)
+        if(nomime && !lib)
         {
             job->kill(false); // kill job & emit result
         }
@@ -107,14 +115,16 @@ void SQ_Downloader::slotDataResult(KIO::Job *cpjob)
     }
     else // supported image type/archive type (no errors or job killed)
     {
-        emit result(KURL::fromPathOrURL(tmp));
+        emit result(KURL::fromPathOrURL(tmp->name()));
     }
 }
 
 void SQ_Downloader::clean()
 {
-    if(!tmp.isEmpty())
-        QFile::remove(tmp);
+    QFile f(tmp->name());
+
+    if(f.open(IO_WriteOnly))
+        f.close();
 }
 
 void SQ_Downloader::kill()
