@@ -44,7 +44,7 @@ class ifstreamK : public ifstream
 	// read 'size' bytes of binary data and store it into 'data'.
 	// return true if reading was successful, and false otherwise
 	bool readK(void *data, int size);
-	
+
 	// read string from file
 	bool getS(char *, const int);
 	

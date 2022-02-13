@@ -1443,6 +1443,45 @@ bool fmt_filters::resize(image &im, const int new_w, const int new_h, int method
     }
 }
 
+void fmt_filters::redeye(const image &im, const int w, const int h, const int x, const int y, int th)
+{
+#define RED_FACTOR 0.5133333
+#define GREEN_FACTOR 1
+#define BLUE_FACTOR 0.1933333
+
+    if(!checkImage(im))
+        return;
+
+    scaleDown(th, 0, 255);
+
+    int y1, x1;
+    int adjusted_red, adjusted_green, adjusted_blue;
+
+    rgba *src = (rgba *)im.data, *s;
+
+    for(y1 = y;y1 < y+h;++y1)
+    {
+        s = src + im.w*y1 + x;
+
+        for(x1 = x;x1 < x+w;x1++)
+        {
+            adjusted_red = int(s->r * RED_FACTOR);
+            adjusted_green = int(s->g * GREEN_FACTOR);
+            adjusted_blue = int(s->b * BLUE_FACTOR);
+
+            if(adjusted_red >= adjusted_green - th && adjusted_red >= adjusted_blue - th)
+                s->r = (int)(((double)(adjusted_green + adjusted_blue)) / (2.0  * RED_FACTOR));
+
+            s++;
+        }
+    }
+
+#undef RED_FACTOR
+#undef GREEN_FACTOR
+#undef BLUE_FACTOR
+}
+
+
 /*************************************************************************/
 
 /*
@@ -1665,6 +1704,9 @@ static fmt_filters::rgba interpolateColor(const fmt_filters::image &im, double x
     s32 x, y;
     fmt_filters::rgba *_rgba = (fmt_filters::rgba *)im.data;
 
+    if(!checkImage(im))
+        return background;
+
     x = (s32)x_offset;
     y = (s32)y_offset;
 
@@ -1722,10 +1764,10 @@ static fmt_filters::rgba interpolateColor(const fmt_filters::image &im, double x
 
     fmt_filters::rgba _r;
 
-    _r.r = (u8)(beta*(alpha*p.r+x_offset*q.r)+y_offset*(alpha*r.r+x_offset*s.r));
-    _r.g = (u8)(beta*(alpha*p.g+x_offset*q.g)+y_offset*(alpha*r.g+x_offset*s.g));
-    _r.b = (u8)(beta*(alpha*p.b+x_offset*q.b)+y_offset*(alpha*r.b+x_offset*s.b));
-    _r.a = (u8)(beta*(alpha*p.a+x_offset*q.a)+y_offset*(alpha*r.a+x_offset*s.a));
+    _r.r = (u8)(beta * (alpha*p.r + x_offset*q.r) + y_offset * (alpha*r.r + x_offset*s.r));
+    _r.g = (u8)(beta * (alpha*p.g + x_offset*q.g) + y_offset * (alpha*r.g + x_offset*s.g));
+    _r.b = (u8)(beta * (alpha*p.b + x_offset*q.b) + y_offset * (alpha*r.b + x_offset*s.b));
+    _r.a = (u8)(beta * (alpha*p.a + x_offset*q.a) + y_offset * (alpha*r.a + x_offset*s.a));
 
     return _r;
 }

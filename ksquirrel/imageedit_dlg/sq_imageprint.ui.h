@@ -14,32 +14,34 @@ void SQ_ImagePrint::init()
 {
     pixmap->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_print.png")));
     pixmap->setPaletteBackgroundColor(pixmap->colorGroup().background().light(90));
-    
-    sliderX->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "print_X", 1));
-    sliderY->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "print_Y", 1));
 
-    SQ_PrintPanelFrame *fr = (SQ_PrintPanelFrame *)qt_find_obj_child(printpanel, "QFrame", SQ_Config::instance()->readEntry("Image edit options", "print_alignment", QString::null));
+    SQ_Config::instance()->setGroup("Image edit options");
+
+    sliderX->setValue(SQ_Config::instance()->readNumEntry("print_X", 1));
+    sliderY->setValue(SQ_Config::instance()->readNumEntry("print_Y", 1));
+
+    SQ_PrintPanelFrame *fr = (SQ_PrintPanelFrame *)qt_find_obj_child(printpanel, "QFrame", SQ_Config::instance()->readEntry("print_alignment", QString::null));
 
     if(fr) printpanel->toggleCurrentFrameColor(fr);
 
-    checkClose->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "print_close", true));
+    checkClose->setChecked(SQ_Config::instance()->readBoolEntry("print_close", true));
     slotXYChanged(0);
 
-    buttonGroupSetups->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "print_layout", 0));
+    buttonGroupSetups->setButton(SQ_Config::instance()->readNumEntry("print_layout", 0));
     widgetStackSetups->raiseWidget(buttonGroupSetups->selectedId());
 
-    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "print_dontshowhelp", false));
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("print_dontshowhelp", false));
 
-    buttonGroupTR->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "print_transp", 0));
-
-    if(checkDontShow->isChecked())
-	slotNext2();
+    buttonGroupTR->setButton(SQ_Config::instance()->readNumEntry("print_transp", 0));
 
     QColor cc;
-    cc.setNamedColor(SQ_Config::instance()->readEntry("Image edit options", "print_transp_color", "#000000"));
+    cc.setNamedColor(SQ_Config::instance()->readEntry("print_transp_color", "#000000"));
     color->setColor(cc);
 
     done = true;
+
+    if(checkDontShow->isChecked())
+        slotNext2();
 }
 
 void SQ_ImagePrint::slotXYChanged(int /* val */)
@@ -110,23 +112,23 @@ void SQ_ImagePrint::slotDone(bool close)
     done = true;
     
     if(close)
-	reject();
+        reject();
 }
 
 void SQ_ImagePrint::slotReject()
 {
     if(done)
-	reject();
+        reject();
 }
 
 void SQ_ImagePrint::closeEvent(QCloseEvent *e)
 {
     if(done)
-	e->accept();
+        e->accept();
     else
     {
-	e->ignore();
-	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
+        e->ignore();
+        QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
 }
 

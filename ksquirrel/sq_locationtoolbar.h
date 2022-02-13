@@ -28,33 +28,33 @@
 
 class SQ_LocationToolbar : public KToolBar
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_LocationToolbar(QWidget *parent = 0, const char *name = 0);
-		~SQ_LocationToolbar();
+    public: 
+        SQ_LocationToolbar(QWidget *parent = 0, const char *name = 0);
+        ~SQ_LocationToolbar();
 
-		/*
-		 *  Is toolbar visible ?
-		 */
-		bool configVisible() const;
+        /*
+         *  Is toolbar visible ?
+         */
+        bool configVisible() const;
 
-	public slots:
+    public slots:
 
-		/*
-		 *  Reimplement setShown() to let us know, if toolbar
-		 *  shown.
-		 */
-		void setShown(bool shown);
+        /*
+         *  Reimplement setShown() to let us know, if toolbar
+         *  shown.
+         */
+        void setShown(bool shown);
 
-	private:
-		bool vis;
+    private:
+        bool vis;
 };
 
 inline
 bool SQ_LocationToolbar::configVisible() const
 {
-	return vis;
+    return vis;
 }
 
 #endif

@@ -28,12 +28,12 @@ void fmt_utils::flipv(s8 *image, s32 bytes_w, s32 h)
     s32 i;
     
     if(!image)
-	return;
+	    return;
 
     s8 *hptr = new s8 [bytes_w];
 
     if(!hptr)
-	return;
+	    return;
 
     for(i = 0; i < h/2; i++)
     {
@@ -52,18 +52,18 @@ void fmt_utils::fliph(s8 *image, s32 w, s32 h, s32 bpp)
     s8 a[bpp], *t;
 
     if(!image)
-	return;
+	    return;
 
     for(y = 0;y < h;y++)
     {
-	for(x = 0, x2 = w-1;x < w/2;x++,x2--)
-	{
-	    t = image + y*bpl;
+	    for(x = 0, x2 = w-1;x < w/2;x++,x2--)
+	    {
+	        t = image + y*bpl;
 
-	    memcpy(a, t + x2*bpp, bpp);
-	    memcpy(t + x2*bpp, t + x*bpp, bpp);
-	    memcpy(t + x*bpp, a, bpp);
-	}
+	        memcpy(a, t + x2*bpp, bpp);
+	        memcpy(t + x2*bpp, t + x*bpp, bpp);
+	        memcpy(t + x*bpp, a, bpp);
+	    }
     }
 }
 
@@ -137,23 +137,23 @@ std::string fmt_utils::colorSpaceByBpp(const int bpp)
 {
     switch(bpp)
     {
-	case 1:
-	    return std::string("Monochrome");
+	    case 1:
+	        return std::string("Monochrome");
 
-	case 4:
-	case 8:
-	case 15:
-	case 16:
-	    return std::string("Color indexed");
+    	case 4:
+    	case 8:
+    	case 15:
+    	case 16:
+	        return std::string("Color indexed");
 
-	case 24:
-	    return std::string("RGB");
+    	case 24:
+	        return std::string("RGB");
 
-	case 32:
-	    return std::string("RGBA");
-	    
-	default:
-	    return std::string("Unknown");
+    	case 32:
+	        return std::string("RGBA");
+
+    	default:
+	        return std::string("Unknown");
     }
 }
 
@@ -165,10 +165,10 @@ void fmt_utils::expandMono1Byte(const u32 byte, u8 *array)
 
     for(s32 i = 0;i < 8;i++)
     {
-	*p = (b & mask) ? 1 : 0;
+    	*p = (b & mask) ? 1 : 0;
 
-	p++;
-	mask >>= 1;
+	    p++;
+    	mask >>= 1;
     }
 }
 
@@ -180,10 +180,10 @@ void fmt_utils::expandMono2Byte(const u32 byte, u8 *array)
 
     for(s32 i = 0;i < 16;i++)
     {
-	*p = (b & mask) ? 1 : 0;
+    	*p = (b & mask) ? 1 : 0;
 
-	p++;
-	mask >>= 1;
+	    p++;
+    	mask >>= 1;
     }
 }
 
@@ -195,9 +195,9 @@ void fmt_utils::expandMono4Byte(const u32 byte, u8 *array)
 
     for(s32 i = 0;i < 32;i++)
     {
-	*p = (b & mask) ? 1 : 0;
+    	*p = (b & mask) ? 1 : 0;
 
-	p++;
-	mask >>= 1;
+	    p++;
+    	mask >>= 1;
     }
 }

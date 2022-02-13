@@ -29,37 +29,37 @@ class KPopupMenu;
 
 class SQ_SystemTray : public KSystemTray
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		SQ_SystemTray(QWidget *parent = 0, const char *name = 0);
+    public:
+        SQ_SystemTray(QWidget *parent = 0, const char *name = 0);
 
-	protected:
+    protected:
 
-		/*
-		 *  Reimplement mouse events. We need to show
-		 *  popup menu.
-		 */
-		void mousePressEvent(QMouseEvent *);
+        /*
+         *  Reimplement mouse events. We need to show
+         *  popup menu.
+         */
+        void mousePressEvent(QMouseEvent *);
 
-		// TODO: remove ?
-		void mouseReleaseEvent(QMouseEvent *);
+        // TODO: remove ?
+        void mouseReleaseEvent(QMouseEvent *);
 
-	private slots:
+    private slots:
 
-		/*
-		 *  Show main window.
-		 */
-		void slotActivate();
+        /*
+         *  Show main window.
+         */
+        void slotActivate();
 
-		/*
-		 *  Quit...
-		 */
-		void slotClose();
+        /*
+         *  Quit...
+         */
+        void slotClose();
 
-	 private:
-		KPopupMenu	*rightMenu;
-		KAction 	*pAOpen, *pAExit;
+     private:
+        KPopupMenu  *rightMenu;
+        KAction     *pAOpen, *pAExit;
 };
 
 #endif

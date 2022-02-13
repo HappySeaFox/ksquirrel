@@ -21,20 +21,23 @@
 #include "sq_filter.h"
 #include "sq_imagefilter.h"
 #include "fmt_filters.h"
-#include "sq_config.h"
 #include "sq_imageloader.h"
+#include "sq_selector.h"
+#include "sq_canvaswidget.h"
 
 SQ_Filter * SQ_Filter::sing = NULL;
 
+SRect rc;
+
 SQ_Filter::SQ_Filter() : SQ_EditBase()
 {
-	sing = this;
+    sing = this;
 
-	special_action = i18n("Filtering");
+    special_action = i18n("Filtering");
 
-	prefix = "Filtering of ";
+    prefix = "Filtering of ";
 
-	ondisk = true;
+    ondisk = true;
 }
 
 SQ_Filter::~SQ_Filter()
@@ -42,90 +45,104 @@ SQ_Filter::~SQ_Filter()
 
 void SQ_Filter::startEditPrivate()
 {
-        filter = new SQ_ImageFilter(KSquirrel::app());
-        filter->setCaption(i18n("Filter 1 file", "Filter %n files", files.count()));
+    s_all = false;
 
-        connect(filter, SIGNAL(filter(SQ_ImageOptions*, SQ_ImageFilterOptions*)), this, SLOT(slotStartFilter(SQ_ImageOptions*, SQ_ImageFilterOptions*)));
-        connect(this, SIGNAL(convertText(const QString &, bool)), filter, SLOT(slotDebugText(const QString &, bool)));
-        connect(this, SIGNAL(oneFileProcessed()), filter, SLOT(slotOneProcessed()));
-        connect(this, SIGNAL(done(bool)), filter, SLOT(slotDone(bool)));
+    filter = new SQ_ImageFilter(KSquirrel::app());
+    filter->setCaption(i18n("Filter 1 file", "Filter %n files", files.count()));
 
-        bool generate_preview = SQ_Config::instance()->readBoolEntry("Edit tools", "preview", false);
+    connect(filter, SIGNAL(filter(SQ_ImageOptions*, SQ_ImageFilterOptions*)), this, SLOT(slotStartFilter(SQ_ImageOptions*, SQ_ImageFilterOptions*)));
+    connect(this, SIGNAL(convertText(const QString &, bool)), filter, SLOT(slotDebugText(const QString &, bool)));
+    connect(this, SIGNAL(oneFileProcessed()), filter, SLOT(slotOneProcessed()));
+    connect(this, SIGNAL(done(bool)), filter, SLOT(slotDone(bool)));
 
-        if(generate_preview)
-        {
-           filter->setPreviewImage(generatePreview());
-	    SQ_ImageLoader::instance()->cleanup();
-        }
+    filter->setPreviewImage(generatePreview());
+    SQ_ImageLoader::instance()->cleanup();
 
-        filter->exec();
+    filter->exec();
 }
 
 void SQ_Filter::slotStartFilter(SQ_ImageOptions *o, SQ_ImageFilterOptions *fopt)
 {
-	imageopt = *o;
-	filtopt = *fopt;
+    imageopt = *o;
+    filtopt = *fopt;
 
-	decodingCycle();
+    decodingCycle();
 }
 
 SQ_Filter* SQ_Filter::instance()
 {
-	return sing;
+    return sing;
 }
 
 int SQ_Filter::manipDecodedImage(fmt_image *im)
 {
-        fmt_filters::image img((unsigned char *)image, im->w, im->h);
-        fmt_filters::rgba c = fmt_filters::white;
+    fmt_filters::image img((unsigned char *)image, im->w, im->h);
+    fmt_filters::rgba c = fmt_filters::white;
 
-        switch(filtopt.type)
+    switch(filtopt.type)
+    {
+        case F::fblend:      fmt_filters::blend(img, filtopt.rgb1, filtopt._float); break;
+        case F::fblur:       fmt_filters::blur(img, filtopt._double1, filtopt._double2);break;
+        case F::fdesaturate: fmt_filters::desaturate(img, filtopt._float); break;
+        case F::fdespeckle:  fmt_filters::despeckle(img); break;
+        case F::fedge:       fmt_filters::edge(img, filtopt._double1); break;
+        case F::femboss:     fmt_filters::emboss(img, filtopt._double1, filtopt._double2); break;
+        case F::fequalize:   fmt_filters::equalize(img); break;
+        case F::ffade:       fmt_filters::fade(img, filtopt.rgb1, filtopt._float); break;
+        case F::fflatten:    fmt_filters::flatten(img, filtopt.rgb1, filtopt.rgb2); break;
+        case F::fimplode:    fmt_filters::implode(img, filtopt._double1, c); break;
+        case F::fnegative:   fmt_filters::negative(img); break;
+        case F::fnoise:      fmt_filters::noise(img, (fmt_filters::NoiseType)filtopt._uint); break;
+        case F::foil:        fmt_filters::oil(img, filtopt._double1); break;
+        case F::fshade:      fmt_filters::shade(img, filtopt._bool, filtopt._double1, filtopt._double2); break;
+        case F::fsharpen:    fmt_filters::sharpen(img, filtopt._double1, filtopt._double2); break;
+        case F::fsolarize:   fmt_filters::solarize(img, filtopt._double1); break;
+        case F::fspread:     fmt_filters::spread(img, filtopt._uint); break;
+        case F::fswapRGB:    fmt_filters::swapRGB(img, filtopt._uint); break;
+        case F::fswirl:      fmt_filters::swirl(img, filtopt._double1, c); break;
+        case F::fthreshold:  fmt_filters::threshold(img, filtopt._uint); break;
+        case F::fgray:       fmt_filters::gray(img); break;
+        case F::fwave:
         {
-            case 0: fmt_filters::blend(img, filtopt.rgb1, filtopt._float); break;
-            case 1: fmt_filters::blur(img, filtopt._double1, filtopt._double2);break;
-            case 2: fmt_filters::desaturate(img, filtopt._float); break;
-            case 3: fmt_filters::despeckle(img); break;
-            case 4: fmt_filters::edge(img, filtopt._double1); break;
-            case 5: fmt_filters::emboss(img, filtopt._double1, filtopt._double2); break;
-            case 6: fmt_filters::equalize(img); break;
-            case 7: fmt_filters::fade(img, filtopt.rgb1, filtopt._float); break;
-            case 8: fmt_filters::flatten(img, filtopt.rgb1, filtopt.rgb2); break;
-            case 9: fmt_filters::implode(img, filtopt._double1, c); break;
-            case 10: fmt_filters::negative(img); break;
-            case 11: fmt_filters::noise(img, (fmt_filters::NoiseType)filtopt._uint); break;
-            case 12: fmt_filters::oil(img, filtopt._double1); break;
-            case 13: fmt_filters::shade(img, filtopt._bool, filtopt._double1, filtopt._double2); break;
-            case 14: fmt_filters::sharpen(img, filtopt._double1, filtopt._double2); break;
-            case 15: fmt_filters::solarize(img, filtopt._double1); break;
-            case 16: fmt_filters::spread(img, filtopt._uint); break;
-            case 17: fmt_filters::swapRGB(img, filtopt._uint); break;
-            case 18: fmt_filters::swirl(img, filtopt._double1, c); break;
-            case 19: fmt_filters::threshold(img, filtopt._uint); break;
-            case 20: fmt_filters::gray(img); break;
-            case 21:
+            fmt_filters::rgba *rr = NULL;
+            int h;
+            fmt_filters::wave(img, filtopt._double1, filtopt._double2, c, &h, &rr);
+
+            if(rr)
             {
-                fmt_filters::rgba *rr = NULL;
-                int h;
-                fmt_filters::wave(img, filtopt._double1, filtopt._double2, c, &h, &rr);
-
-                if(rr)
-                {
-                    free(image);
-                    image = (RGBA *)rr;
-                    im->h = h;
-                }
+                free(image);
+                image = (RGBA *)rr;
+                im->h = h;
             }
-            break;
         }
+        break;
 
-	return SQE_OK;
+        case F::fredeye:
+        {
+            if(!s_all)
+            {
+                SQ_Selector *s = new SQ_Selector(filter);
+
+                QImage qimg((unsigned char*)image, im->w, im->h, 32, NULL, 0, QImage::LittleEndian);
+                qimg.setAlphaBuffer(true);
+
+                s->setImage(qimg);
+
+                if(s->exec(&rc, &s_all) == QDialog::Accepted)
+                    fmt_filters::redeye(img, rc.width, rc.height, rc.x, rc.y, filtopt._uint);
+                else
+                    return SQE_NOTOK;
+            }
+            else
+                fmt_filters::redeye(img, rc.width, rc.height, rc.x, rc.y, filtopt._uint);
+        }
+        break;
+    }
+
+    return SQE_OK;
 }
 
 void SQ_Filter::dialogReset()
 {
-	filter->startFiltering(files.count());
-}
-
-void SQ_Filter::cycleDone()
-{
+    filter->startFiltering(files.count());
 }

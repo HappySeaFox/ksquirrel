@@ -28,9 +28,9 @@ void SQ_CheckVersion::init()
     f2->close();
 
     if(f1->status() || f2->status())
-	textAction->setText(textAction->text() + tr2i18n("failed"));
+        textAction->setText(textAction->text() + tr2i18n("failed"));
     else
-	slotCheck();
+        slotCheck();
 }
 
 void SQ_CheckVersion::destroy()
@@ -53,46 +53,46 @@ void SQ_CheckVersion::slotFinished(QNetworkOperation *netop)
 {
      QString kresult;
 
-     if(netop->operation() == QNetworkProtocol::OpGet)
-     {
-	 if(netop->state() == QNetworkProtocol::StFailed)
-	     goto S;
+    if(netop->operation() == QNetworkProtocol::OpGet)
+    {
+         if(netop->state() == QNetworkProtocol::StFailed)
+             goto S;
 
-	 return;
+         return;
     }
 
-     if(netop->state() == QNetworkProtocol::StDone)
+    if(netop->state() == QNetworkProtocol::StDone)
     {
-	k = true;
-	
-	QFile f(f1->name());
+        k = true;
+    
+        QFile f(f1->name());
+    
+        if(f.open(IO_ReadOnly))
+        {
+            QString ver;
+            f.readLine(ver, 100);
+            f.close();
 
-	if(f.open(IO_ReadOnly))
-	{
-	    QString ver;
-	    f.readLine(ver, 100);
-	    f.close();
-
-	    if(!ver.startsWith(SQ_VERSION))
-		kv = ver;
-	}
+            if(!ver.startsWith(SQ_VERSION))
+                kv = ver;
+        }
     }
     else
-	k = false;
+        k = false;
 
     S:
     kresult = (tr2i18n("Checking&nbsp;version&nbsp;of&nbsp;KSquirrel...") + "&nbsp;%1%2")
-	      .arg(k ? tr2i18n("<b>ok</b>") : tr2i18n("<font color=red><b>failed</b></font>"))
-	      .arg(k ? (kv.isEmpty() ? "<br>Version&nbsp;not&nbsp;changed" : QString::fromLatin1("<br>New&nbsp;version:&nbsp;<font color=magenta><b>%1</b></font>").arg(kv)) : QString::null);
+      .arg(k ? tr2i18n("<b>ok</b>") : tr2i18n("<font color=red><b>failed</b></font>"))
+      .arg(k ? (kv.isEmpty() ? "<br>Version&nbsp;not&nbsp;changed" : QString::fromLatin1("<br>New&nbsp;version:&nbsp;<font color=magenta><b>%1</b></font>").arg(kv)) : QString::null);
 
     textResultK->setText(kresult);
 
     if(!kv.isEmpty())
     {
-	 kurlLabelK->setURL(tr2i18n("ksquirrel-%1.tar.bz2").arg(kv));
-	 kurlLabelK->setText(tr2i18n("Download ksquirrel-%1.tar.bz2").arg(kv));
-	 kurlLabelK->show();
-     }
+        kurlLabelK->setURL(tr2i18n("ksquirrel-%1.tar.bz2").arg(kv));
+        kurlLabelK->setText(tr2i18n("Download ksquirrel-%1.tar.bz2").arg(kv));
+        kurlLabelK->show();
+    }
 
     textAction->setText(tr2i18n("Checking&nbsp;version&nbsp;of&nbsp;ksquirrel-libs..."));   
 
@@ -107,60 +107,60 @@ void SQ_CheckVersion::slotFinished(QNetworkOperation *netop)
 
 void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
 {
-     QString klresult;
-     QString KL_VER;
+    QString klresult;
+    QString KL_VER;
 
-     if(netop->operation() == QNetworkProtocol::OpGet)
-     {
-	 if(netop->state() == QNetworkProtocol::StFailed)
-	     goto S2;
+    if(netop->operation() == QNetworkProtocol::OpGet)
+    {
+        if(netop->state() == QNetworkProtocol::StFailed)
+            goto S2;
 
-	     return;
+        return;
     }
 
     if(netop->state() == QNetworkProtocol::StDone)
     {
-	kl = true;
+        kl = true;
 
-	QFile f(f2->name());
-	QFile l("/usr/lib/ksquirrel-libs/version");
+        QFile f(f2->name());
+        QFile l("/usr/lib/ksquirrel-libs/version");
 
-	if(l.open(IO_ReadOnly))
-	{
-	    l.readLine(KL_VER, 100);
-	    l.close();
+        if(l.open(IO_ReadOnly))
+        {
+            l.readLine(KL_VER, 100);
+            l.close();
 
-	    if(f.open(IO_ReadOnly))
-	    {
-		QString ver;
-		f.readLine(ver, 100);
-		f.close();
+            if(f.open(IO_ReadOnly))
+            {
+                QString ver;
+                f.readLine(ver, 100);
+                f.close();
 
-		if(!ver.startsWith(KL_VER))
-		    klv = ver;
-	    }
-	    else
-		kl = false;
-	}
-	else
-	    kl = false;
+                if(!ver.startsWith(KL_VER))
+                    klv = ver;
+            }
+            else
+                kl = false;
+        }
+        else
+            kl = false;
     }
     else
-	kl = false;
+        kl = false;
 
     S2:
     textAction->setText(tr2i18n("Done"));
 
     klresult = (tr2i18n("Checking&nbsp;version&nbsp;of&nbsp;ksquirrel-libs...") + "&nbsp;%1%2")
-	       .arg(kl ? tr2i18n("<b>ok</b>") : tr2i18n("<font color=red><b>failed</b></font>"))
-	       .arg(kl ? (klv.isEmpty() ? "<br>Version&nbsp;not&nbsp;changed" : QString::fromLatin1("<br>New&nbsp;version:&nbsp;<font color=magenta><b>%1</b></font>").arg(klv)) : QString::null);
+       .arg(kl ? tr2i18n("<b>ok</b>") : tr2i18n("<font color=red><b>failed</b></font>"))
+       .arg(kl ? (klv.isEmpty() ? "<br>Version&nbsp;not&nbsp;changed" : QString::fromLatin1("<br>New&nbsp;version:&nbsp;<font color=magenta><b>%1</b></font>").arg(klv)) : QString::null);
 
     if(!klv.isEmpty())
     {
-	 kurlLabelKL->setURL(tr2i18n("ksquirrel-libs-%1.tar.bz2").arg(klv));
-	 kurlLabelKL->setText(tr2i18n("Download ksquirrel-libs-%1.tar.bz2").arg(klv));
-	 kurlLabelKL->show();
-     }
+        kurlLabelKL->setURL(tr2i18n("ksquirrel-libs-%1.tar.bz2").arg(klv));
+        kurlLabelKL->setText(tr2i18n("Download ksquirrel-libs-%1.tar.bz2").arg(klv));
+        kurlLabelKL->show();
+    }
 
     textResultKL->setText(klresult);   
 

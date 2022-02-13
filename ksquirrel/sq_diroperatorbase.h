@@ -46,139 +46,139 @@ class SQ_FileThumbView;
 
 class SQ_DirOperatorBase : public KDirOperator
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		enum VV {TypeList = 0, TypeIcon, TypeDetail, TypeThumbs };
+    public:
+        enum VV {TypeList = 0, TypeIcon, TypeDetail, TypeThumbs };
 
-		/*
-		 *  Constructor. Creates diroperator with specified view type. SQ_DirOperatorBase
-		 *  reimplements createView() to create different custom views.
-		 *  View type is determined by 'type_'.
-		 */
-		SQ_DirOperatorBase(const KURL &url = KURL(), VV type_ = SQ_DirOperatorBase::TypeList,
-							QWidget *parent = 0, const char *name = 0);
-		virtual ~SQ_DirOperatorBase();
+        /*
+         *  Constructor. Creates diroperator with specified view type. SQ_DirOperatorBase
+         *  reimplements createView() to create different custom views.
+         *  View type is determined by 'type_'.
+         */
+        SQ_DirOperatorBase(const KURL &url = KURL(), VV type_ = SQ_DirOperatorBase::TypeList,
+        QWidget *parent = 0, const char *name = 0);
+        virtual ~SQ_DirOperatorBase();
 
-		/*
-		 *  Deselect all items, set current item, select this item,
-		 *  and ensure it visible.
-		 */
-		void setCurrentItem(KFileItem *item);
+        /*
+         *  Deselect all items, set current item, select this item,
+         *  and ensure it visible.
+         */
+        void setCurrentItem(KFileItem *item);
 
-		/*
-		 *  Is current diropertor manages thumbnail view ?
-		 */
-		bool isThumbView() const;
+        /*
+         *  Is current diropertor manages thumbnail view ?
+         */
+        bool isThumbView() const;
 
-		/*
-		 *  SQ_DirOperatorBase can activate items by single or double click.
-		 *  This method will connect appropriate signals.
-		 */
-		void reconnectClick(bool firstconnect = false);
+        /*
+         *  SQ_DirOperatorBase can activate items by single or double click.
+         *  This method will connect appropriate signals.
+         */
+        void reconnectClick(bool firstconnect = false);
 
-	private:
-		/*
-		 *  SQ_DirOperatorBase has context menu, derived from KDirOperator.
-		 *  This method will change this menu, insert new actions.
-		 */
-		void setupActions();
+    private:
+        /*
+         *  SQ_DirOperatorBase has context menu, derived from KDirOperator.
+         *  This method will change this menu, insert new actions.
+         */
+        void setupActions();
 
-	protected:
-		/*
-		 *  Reimplement createView() to create custom views.
-		 */
-		KFileView* createView(QWidget *parent, KFile::FileView view);
+    protected:
+        /*
+         *  Reimplement createView() to create custom views.
+         */
+        KFileView* createView(QWidget *parent, KFile::FileView view);
 
-	public slots:
-		/*
-		 *  Invoked, when user selected some external tool in menu.
-		 */
-		void slotActivateExternalTool(int index);
+    public slots:
+        /*
+         *  Invoked, when user selected some external tool in menu.
+         */
+        void slotActivateExternalTool(int index);
 
-	protected slots:
-		/*
-		 *  Invoked, when user pressed 'Return' on item.
-		 */
-		void slotReturnPressed(QIconViewItem *item);
-		void slotReturnPressed(QListViewItem *item);
+    protected slots:
+        /*
+         *  Invoked, when user pressed 'Return' on item.
+         */
+        void slotReturnPressed(QIconViewItem *item);
+        void slotReturnPressed(QListViewItem *item);
 
-		/*
-		 *  Execute item. If current clicking policy is "Single click",
-		 *  single click will execute item, and double click otherwise.
-		 */
-		void slotExecuted(QIconViewItem *item);
-		void slotExecuted(QListViewItem *item);
+        /*
+         *  Execute item. If current clicking policy is "Single click",
+         *  single click will execute item, and double click otherwise.
+         */
+        void slotExecuted(QIconViewItem *item);
+        void slotExecuted(QListViewItem *item);
 
-		/*
-		 *  Item selected.
-		 */
-		void slotSelected(QIconViewItem*);
-		void slotSelected(QListViewItem*);
+        /*
+         *  Item selected.
+         */
+        void slotSelected(QIconViewItem*);
+        void slotSelected(QListViewItem*);
 
-		/*
-		 *  URL entered.
-		 */
-		void slotUrlEntered(const KURL&);
+        /*
+         *  URL entered.
+         */
+        void slotUrlEntered(const KURL&);
 
-		/*
-		 *  If user clicked on item, and it is supported image type,
-		 *  start decoding with small delay.
-		 */
-		void slotDelayedDecode();
+        /*
+         *  If user clicked on item, and it is supported image type,
+         *  start decoding with small delay.
+         */
+        void slotDelayedDecode();
 
-	signals:
-		/*
-		 *  If user clicked on item, and it is archive file,
-		 *  emit this signal. Normally SQ_WidgetStack will catch it.
-		 */
-		void tryUnpack(KFileItem *item);
+    signals:
+        /*
+         *  If user clicked on item, and it is archive file,
+         *  emit this signal. Normally SQ_WidgetStack will catch it.
+         */
+        void tryUnpack(KFileItem *item);
 
-	public:
-		/*
-		 *  Pointer to current view. All view types (such as icon view, list view ...)
-		 *  are derived from KFileView.
-		 */
-		KFileView 				*fileview;
+    public:
+        /*
+         *  Pointer to current view. All view types (such as icon view, list view ...)
+         *  are derived from KFileView.
+         */
+        KFileView     *fileview;
 
-		/*
-		 *  Views.
-		 */
-		SQ_FileThumbView		*tv;
-		SQ_FileIconView			*iv;
-		SQ_FileDetailView		*dv;
+        /*
+         *  Views.
+         */
+        SQ_FileThumbView    *tv;
+        SQ_FileIconView    *iv;
+        SQ_FileDetailView    *dv;
 
-		/*
-		 *  Single click to activate item ?
-		 */
-		bool 					sing;
+        /*
+         *  Single click to activate item ?
+         */
+        bool     sing;
 
-		/*
-		 *  Some additional menus.
-		 */
-		KActionMenu 			*pADirOperatorMenu, *pAFileActions, *pAImageActions;
+        /*
+         *  Some additional menus.
+         */
+        KActionMenu     *pADirOperatorMenu, *pAFileActions, *pAImageActions;
 
-	protected:
-		/*
-		 *  Action, which will run current item with default application.
-		 *  For eample, it can open film "f.avi" in Xine.
-		 */
-		KAction				*pARunSeparately;
+    protected:
+        /*
+         *  Action, which will run current item with default application.
+         *  For eample, it can open film "f.avi" in Xine.
+         */
+        KAction    *pARunSeparately;
 
-		/*
-		 *  View type.
-		 */
-		VV 					type;
+        /*
+         *  View type.
+         */
+        VV     type;
 
-		/*
-		 *  An url of activated item.
-		 */
-		QString				tobeDecoded;
+        /*
+         *  An url of activated item.
+         */
+        QString    tobeDecoded;
 
-		/*
-		 *  Delay timer.
-		 */
-		QTimer				*timer;
+        /*
+         *  Delay timer.
+         */
+        QTimer    *timer;
 };
 
 #endif

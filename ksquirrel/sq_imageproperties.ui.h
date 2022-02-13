@@ -64,15 +64,15 @@ void SQ_ImageProperties::setFileParams()
     textOwner->setText(QString("%1 (id: %2)").arg(fm.owner()).arg(fm.ownerId()));
     textGroup->setText(QString("%1 (id: %2)").arg(fm.group()).arg(fm.groupId()));
     textPermissions->setText(QString("%1%2%3%4%5%6%7%8%9")
-		       .arg(fm.permission(QFileInfo::ReadUser)?"r":"-")
-		       .arg(fm.permission(QFileInfo::WriteUser)?"w":"-")
-		       .arg(fm.permission(QFileInfo::ExeUser)?"x":"-")
-		       .arg(fm.permission(QFileInfo::ReadGroup)?"r":"-")
-		       .arg(fm.permission(QFileInfo::WriteGroup)?"w":"-")
-		       .arg(fm.permission(QFileInfo::ExeGroup)?"x":"-")
-		       .arg(fm.permission(QFileInfo::ReadOther)?"r":"-")
-		       .arg(fm.permission(QFileInfo::WriteOther)?"w":"-")
-		       .arg(fm.permission(QFileInfo::ExeOther)?"x":"-"));
+       .arg(fm.permission(QFileInfo::ReadUser)?"r":"-")
+       .arg(fm.permission(QFileInfo::WriteUser)?"w":"-")
+       .arg(fm.permission(QFileInfo::ExeUser)?"x":"-")
+       .arg(fm.permission(QFileInfo::ReadGroup)?"r":"-")
+       .arg(fm.permission(QFileInfo::WriteGroup)?"w":"-")
+       .arg(fm.permission(QFileInfo::ExeGroup)?"x":"-")
+       .arg(fm.permission(QFileInfo::ReadOther)?"r":"-")
+       .arg(fm.permission(QFileInfo::WriteOther)?"w":"-")
+       .arg(fm.permission(QFileInfo::ExeOther)?"x":"-"));
     
     QDateTime abs = fm.created();
     textCreated->setText(abs.toString("dd/MM/yyyy hh:mm:ss"));
@@ -90,22 +90,22 @@ void SQ_ImageProperties::setMetaInfo(QValueVector<QPair<QString,QString> > meta 
     
     for(QValueVector<QPair<QString,QString> >::iterator it = BEGIN;it != END;++it)
     {
-	if(after)
-	    item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second);
-	else
-	    after = item = new QListViewItem(listMeta, (*it).first+QString::fromLatin1("  "), (*it).second);
-	
-	listMeta->insertItem(item);
+        if(after)
+            item = new QListViewItem(listMeta, after, (*it).first+QString::fromLatin1("  "), (*it).second);
+        else
+            after = item = new QListViewItem(listMeta, (*it).first+QString::fromLatin1("  "), (*it).second);
+    
+        listMeta->insertItem(item);
     }
     
     if(!listMeta->childCount())
     {
-		listMeta->header()->hide();
+        listMeta->header()->hide();
 
-		QWidget *w = tabWidget3->page(2);
+        QWidget *w = tabWidget3->page(2);
 
-		if(w)
-			tabWidget3->changeTab(w, i18n("Metadata (no)"));
+        if(w)
+            tabWidget3->changeTab(w, i18n("Metadata (no)"));
     }
 }
 
@@ -113,9 +113,9 @@ void SQ_ImageProperties::slotContextMenu( QListViewItem *item, const QPoint &p, 
 {
     if(item)
     {
-	data = item;
-	z = z1;
-	menu->exec(p);
+        data = item;
+        z = z1;
+        menu->exec(p);
     }
 }
 
@@ -128,7 +128,7 @@ void SQ_ImageProperties::slotCopyString()
 void SQ_ImageProperties::slotCopyAll()
 {
     if(!data)
-	return;
+        return;
 
     QString app;
     int count = listMeta->childCount();
@@ -136,10 +136,10 @@ void SQ_ImageProperties::slotCopyAll()
     
     for(int i = 0;i < count;i++)
     {
-	if(item)
-	    app.append(item->text(0) + "\n" + item->text(1) + "\n");
-	
-	item = item->itemBelow();
+        if(item)
+            app.append(item->text(0) + "\n" + item->text(1) + "\n");
+    
+        item = item->itemBelow();
     }
     
     QApplication::clipboard()->setText(app, QClipboard::Clipboard);
@@ -148,7 +148,8 @@ void SQ_ImageProperties::slotCopyAll()
 void SQ_ImageProperties::slotCopyEntry()
 {
     if(!data)
-	return;
+        return;
+
     QString app;
     
     app = data->text(0) + "\n" + data->text(1) + "\n";

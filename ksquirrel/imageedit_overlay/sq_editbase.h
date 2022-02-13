@@ -38,56 +38,55 @@ class KTempFile;
 
 class SQ_EditBase : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_EditBase();
-		virtual ~SQ_EditBase();
+    public: 
+        SQ_EditBase();
+        virtual ~SQ_EditBase();
 
-	protected:
-		virtual int manipDecodedImage(fmt_image *im) = 0;
-		virtual void startEditPrivate() = 0;
-		virtual void dialogReset() = 0;
+    protected:
+        virtual int manipDecodedImage(fmt_image *im) = 0;
+        virtual void startEditPrivate() = 0;
+        virtual void dialogReset() = 0;
 
-		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
-		virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
+        virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
+        virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
 
-		virtual void initWriteOptions();
-		virtual void setWritingLibrary();
-		virtual void cycleDone();
+        virtual void initWriteOptions();
+        virtual void setWritingLibrary();
+        virtual void cycleDone();
 
-		void decodingCycle();
+        void decodingCycle();
 
-		QImage generatePreview() const;
+        QImage generatePreview() const;
 
-        private:
-		QString adjustFileName(const QString &globalprefix, const QString &name, int replace,
-					QString putto, bool paged = false, int page = 0);
-		int copyFile(const QString &src, const QString &dst) const;
-		void errorjmp(jmp_buf jmp, const int code);
+    private:
+        QString adjustFileName(const QString &globalprefix, const QString &name, int replace,
+                    QString putto, bool paged = false, int page = 0);
+        int copyFile(const QString &src, const QString &dst) const;
+        void errorjmp(jmp_buf jmp, const int code);
 
-	signals:
-		void convertText(const QString &, bool);
-		void oneFileProcessed();
-		void done(bool);
+    signals:
+        void convertText(const QString &, bool);
+        void oneFileProcessed();
+        void done(bool);
 
-	protected slots:
-		void slotStartEdit();
+    protected slots:
+        void slotStartEdit();
 
-	protected:
-		QStringList			files;
-		QString				err_internal, err_failed;
-		QString				currentFile;
-		int				error_code, current_page;
-		SQ_ImageOptions	                imageopt;
-		fmt_writeoptions		opt;
-		SQ_LIBRARY		        *lr, *lw;
-		RGBA				*image;
-		QString				special_action, prefix;
-		bool				ondisk, multi, last, lastFrame;
-		KTempFile			*tempfile;
-		QString 			altlibrary;
-                fmt_image                       *im;
+    protected:
+        QStringList         files;
+        QString             err_internal, err_failed;
+        QString             currentFile;
+        int                 error_code, current_page;
+        SQ_ImageOptions     imageopt;
+        fmt_writeoptions    opt;
+        SQ_LIBRARY          *lr, *lw, *altw;
+        RGBA                *image;
+        QString             special_action, prefix;
+        bool                ondisk, multi, last, lastFrame;
+        KTempFile           *tempfile;
+        fmt_image           *im;
 };
 
 #endif

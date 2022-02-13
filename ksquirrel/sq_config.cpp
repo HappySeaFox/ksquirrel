@@ -21,71 +21,13 @@ SQ_Config * SQ_Config::sing = NULL;
 
 SQ_Config::SQ_Config(const QString& fileName) : KConfig(fileName)
 {
-	sing = this;
+    sing = this;
 }
 
 SQ_Config::~SQ_Config()
 {}
 
-QString SQ_Config::readEntry(const QString &sgroup, const QString &key, const QString& aDefault)
-{
-	// if current group is not equal to 'sgroup',
-	// change it
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readEntry(key, aDefault);
-}
-
-int SQ_Config::readNumEntry(const QString &sgroup, const QString &key, int nDefault)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readNumEntry(key, nDefault);
-}
-
-bool SQ_Config::readBoolEntry(const QString &sgroup, const QString &pKey, const bool bDefault)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readBoolEntry(pKey, bDefault);
-}
-
-QStringList SQ_Config::readListEntry(const QString &sgroup, const QString &key, char sep)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readListEntry(key, sep);
-}
-
-QValueList<int> SQ_Config::readIntListEntry(const QString &sgroup, const QString &key)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readIntListEntry(key);
-}
-
-QRect SQ_Config::readRectEntry(const QString &sgroup, const QString &key, const QRect *def)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readRectEntry(key, def);
-}
-
-QFont SQ_Config::readFontEntry(const QString &sgroup, const QString &key, const QFont *pd)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readFontEntry(key, pd);
-}
-
-double SQ_Config::readDoubleNumEntry(const QString &sgroup, const QString &key, double nDefault)
-{
-	if(group() != sgroup) setGroup(sgroup);
-
-	return KConfig::readDoubleNumEntry(key, nDefault);
-}
-
 SQ_Config* SQ_Config::instance()
 {
-	return sing;
+    return sing;
 }

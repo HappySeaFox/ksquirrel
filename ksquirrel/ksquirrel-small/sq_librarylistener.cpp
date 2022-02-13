@@ -33,22 +33,22 @@ SQ_LibraryListener * SQ_LibraryListener::listener = NULL;
 
 SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
 {
-	listener = this;
-	operation = true;
+    listener = this;
+    operation = true;
 
-	// some setup ...
-	setAutoUpdate(true);
-	setDirOnlyMode(false);
-	setShowingDotFiles(false);
+    // some setup ...
+    setAutoUpdate(true);
+    setDirOnlyMode(false);
+    setShowingDotFiles(false);
 
-	// connect signals
-	connect(this, SIGNAL(completed()), this, SLOT(slotCompleted()));
-	connect(this, SIGNAL(newItems(const KFileItemList &)), this, SLOT(slotNewItems(const KFileItemList &)));
-	connect(this, SIGNAL(deleteItem(KFileItem *)), this, SLOT(slotDeleteItem(KFileItem *)));
+    // connect signals
+    connect(this, SIGNAL(completed()), this, SLOT(slotCompleted()));
+    connect(this, SIGNAL(newItems(const KFileItemList &)), this, SLOT(slotNewItems(const KFileItemList &)));
+    connect(this, SIGNAL(deleteItem(KFileItem *)), this, SLOT(slotDeleteItem(KFileItem *)));
 
 #ifndef SQ_SMALL
 
-	connect(this, SIGNAL(showInfo(const QStringList &,bool)), this, SLOT(slotShowInfo(const QStringList &,bool)));
+    connect(this, SIGNAL(showInfo(const QStringList &,bool)), this, SLOT(slotShowInfo(const QStringList &,bool)));
 
 #endif
 
@@ -62,30 +62,34 @@ SQ_LibraryListener::~SQ_LibraryListener()
  */
 void SQ_LibraryListener::slotCompleted()
 {
-	// operation == true means, that new items are added
-	if(operation)
-	{
-		if(list.count())
-			SQ_LibraryHandler::instance()->add(&list);
+    // operation == true means, that new items are added
+    if(operation)
+    {
+        if(list.count())
+            SQ_LibraryHandler::instance()->add(&list);
 
-		emit finishedInit();
-	}
-	// some items deleted
-	else
-		if(list.count())
-			SQ_LibraryHandler::instance()->remove(&list);
+        emit finishedInit();
+    }
+    // some items deleted
+    else
+        if(list.count())
+            SQ_LibraryHandler::instance()->remove(&list);
 
 #ifndef SQ_SMALL
 
-	setAutoUpdate(SQ_Config::instance()->readBoolEntry("Libraries", "monitor", true));
+    SQ_Config::instance()->setGroup("Libraries");
 
-	if(SQ_Config::instance()->readBoolEntry("Libraries", "monitor", true))
-		if(SQ_Config::instance()->readBoolEntry("Libraries", "show dialog", true))
-			emit showInfo(list, operation);
+    bool mon = SQ_Config::instance()->readBoolEntry("monitor", true);
+
+    setAutoUpdate(mon);
+
+    if(mon)
+        if(SQ_Config::instance()->readBoolEntry("show dialog", true))
+            emit showInfo(list, operation);
 
 #endif
 
-	list.clear();
+    list.clear();
 }
 
 /*
@@ -93,20 +97,20 @@ void SQ_LibraryListener::slotCompleted()
  */
 void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
 {
-	KFileItemListIterator	it(items);
+    KFileItemListIterator    it(items);
 
-	KFileItem 		*item;
+    KFileItem     *item;
 
-	// append all items to list
-	while((item = it.current()) != 0)
-	{
-		++it;
+    // append all items to list
+    while((item = it.current()) != 0)
+    {
+        ++it;
 
-		if(item && item->isFile())
-			list.append(url().path() + "/" + item->name());
-	}
+        if(item && item->isFile())
+            list.append(url().path() + "/" + item->name());
+    }
 
-	operation = true;
+    operation = true;
 }
 
 /*
@@ -114,24 +118,24 @@ void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
  */
 void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 {
-	QString stritems;
+    QString stritems;
 
-	// append new items to list
-	if(item && item->isFile())
-		list.append(url().path() + "/" + item->name());
+    // append new items to list
+    if(item && item->isFile())
+        list.append(url().path() + "/" + item->name());
 
-	operation = false;
+    operation = false;
 }
 
 #ifndef SQ_SMALL
 
 void SQ_LibraryListener::slotShowInfo(const QStringList &linfo, bool added)
 {
-	SQ_LibrariesChanged cd(KSquirrel::app());
-	cd.setLibsInfo(linfo, added);
-	cd.exec();
+    SQ_LibrariesChanged cd(KSquirrel::app());
+    cd.setLibsInfo(linfo, added);
+    cd.exec();
 
-	list.clear();
+    list.clear();
 }
 
 #else
@@ -146,22 +150,22 @@ void SQ_LibraryListener::slotShowInfo(const QStringList &, bool)
  */
 void SQ_LibraryListener::slotOpenURL(const KURL &url, bool b1, bool b2)
 {
-	// directory doesn't exist!
-	if(!QFile::exists(url.path()))
-	{
-		// clear cached information
-		SQ_LibraryHandler::instance()->clear();
+    // directory doesn't exist!
+    if(!QFile::exists(url.path()))
+    {
+        // clear cached information
+        SQ_LibraryHandler::instance()->clear();
 
-		// all done
-		emit finishedInit();
+        // all done
+        emit finishedInit();
 
-		return;
-	}
+        return;
+    }
 
-	KDirLister::openURL(url, b1, b2);
+    KDirLister::openURL(url, b1, b2);
 }
 
 SQ_LibraryListener* SQ_LibraryListener::instance()
 {
-	return listener;
+    return listener;
 }

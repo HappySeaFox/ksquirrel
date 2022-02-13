@@ -45,17 +45,17 @@ SQ_ArchiveHandler * SQ_ArchiveHandler::ar = NULL;
 
 SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObject(parent, name)
 {
-	ar = this;
-	dir = new SQ_Dir(SQ_Dir::Extracts);
+    ar = this;
+    dir = new SQ_Dir(SQ_Dir::Extracts);
 
-	// fill the map with protocols
-	protocols["application/x-bzip"] = 0;
-	protocols["application/x-bzip2"] = 1;
-	protocols["application/x-gzip"] = 2;
-	protocols["application/x-tar"] = 3;
-	protocols["application/x-tbz"] = 4;
-	protocols["application/x-tgz"] = 5;
-	protocols["application/x-zip"] = 6;
+    // fill the map with protocols
+    protocols["application/x-bzip"] = 0;
+    protocols["application/x-bzip2"] = 1;
+    protocols["application/x-gzip"] = 2;
+    protocols["application/x-tar"] = 3;
+    protocols["application/x-tbz"] = 4;
+    protocols["application/x-tgz"] = 5;
+    protocols["application/x-zip"] = 6;
 }
 
 SQ_ArchiveHandler::~SQ_ArchiveHandler()
@@ -69,11 +69,11 @@ SQ_ArchiveHandler::~SQ_ArchiveHandler()
  */
 int SQ_ArchiveHandler::findProtocolByName(const QString &prot)
 {
-	// find protocol
-	QMap<QString, int>::iterator it = protocols.find(prot);
+    // find protocol
+    QMap<QString, int>::iterator it = protocols.find(prot);
 
-	// return protocol number, if found, and -1 otherwise
-	return (it == protocols.end()) ? (-1) : it.data();
+    // return protocol number, if found, and -1 otherwise
+    return (it == protocols.end()) ? (-1) : it.data();
 }
 
 /*
@@ -81,12 +81,12 @@ int SQ_ArchiveHandler::findProtocolByName(const QString &prot)
  */
 int SQ_ArchiveHandler::findProtocolByFile(KFileItem *item)
 {
-	// determine mimetype
-	QString m = item->mimetype();
+    // determine mimetype
+    QString m = item->mimetype();
 
-	// use findProtocolByName() to find
-	// protocol number
-	return findProtocolByName(m);
+    // use findProtocolByName() to find
+    // protocol number
+    return findProtocolByName(m);
 }
 
 /*
@@ -95,11 +95,11 @@ int SQ_ArchiveHandler::findProtocolByFile(KFileItem *item)
  */
 void SQ_ArchiveHandler::setFile(KFileItem *_item)
 {
-	item = _item;
-	QString _path = item->url().path();
+    item = _item;
+    QString _path = item->url().path();
 
-	// store full path
-	fullpath = _path;
+    // store full path
+    fullpath = _path;
 }
 
 /*
@@ -109,7 +109,7 @@ void SQ_ArchiveHandler::setFile(KFileItem *_item)
  */
 QString SQ_ArchiveHandler::itemPath() const
 {
-	return fullpath;
+    return fullpath;
 }
 
 /*
@@ -120,7 +120,7 @@ QString SQ_ArchiveHandler::itemPath() const
  */
 QString SQ_ArchiveHandler::itemExtractedPath() const
 {
-	return fullextracteddir;
+    return fullextracteddir;
 }
 
 /*
@@ -130,92 +130,92 @@ QString SQ_ArchiveHandler::itemExtractedPath() const
  */
 bool SQ_ArchiveHandler::unpack()
 {
-	QString ss;
-	extracteddir = fullpath;
-	fullextracteddir = dir->absPath(extracteddir);
+    QString ss;
+    extracteddir = fullpath;
+    fullextracteddir = dir->absPath(extracteddir);
 
-	// Check if directory already exists and needs update
-	if(dir->fileExists(extracteddir, ss))
-		if(dir->updateNeeded(extracteddir))
-			clean(ss); // clean it!
-		else
-			return true; // Archive already been unpacked,
-						 // and didn't changed. 
+    // Check if directory already exists and needs update
+    if(dir->fileExists(extracteddir, ss))
+        if(dir->updateNeeded(extracteddir))
+            clean(ss); // clean it!
+        else
+    return true; // Archive already been unpacked,
+     // and didn't changed. 
 
-	// try to create new directory in temporary directory
-	if(!dir->mkdir(extracteddir))
-	{
-		KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to create directory: %1").arg(extracteddir)+("</qt>"), i18n("Archive problem"));
-		return false;
-	}
+    // try to create new directory in temporary directory
+    if(!dir->mkdir(extracteddir))
+    {
+        KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to create directory: %1").arg(extracteddir)+("</qt>"), i18n("Archive problem"));
+        return false;
+    }
 
-	QFile::Offset big = 0x4000000;
-	QFile qfile(fullpath);
+    QFile::Offset big = 0x4000000;
+    QFile qfile(fullpath);
 
-	// ooh, archive file is too big!
-	if(qfile.size() > big)
-	{
-		QString msg = QString(i18n("The size of selected archive seems to be too big;\ncontinue? (size: %1MB)")).arg((qfile.size()) >> 20);
+    // ooh, archive file is too big!
+    if(qfile.size() > big)
+    {
+        QString msg = QString(i18n("The size of selected archive seems to be too big;\ncontinue? (size: %1MB)")).arg((qfile.size()) >> 20);
 
-		if(KMessageBox::warningContinueCancel(0, msg, i18n("Confirm")) == KMessageBox::Cancel)
-			return false;
-	}
+        if(KMessageBox::warningContinueCancel(0, msg, i18n("Confirm")) == KMessageBox::Cancel)
+        return false;
+    }
 
-	KArchive *arc = NULL;
+    KArchive *arc = NULL;
 
-	// find protocol number
-	switch(findProtocolByFile(item))
-	{
-		// archive is ZIP
-		case 6:
-			arc = new KZip(fullpath);
-		break;
+    // find protocol number
+    switch(findProtocolByFile(item))
+    {
+        // archive is ZIP
+        case 6:
+            arc = new KZip(fullpath);
+        break;
 
-		// archive is TAR (.tar.gz, .tgz, ...)
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-			arc = new KTar(fullpath);
-		break;
+        // archive is TAR (.tar.gz, .tgz, ...)
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            arc = new KTar(fullpath);
+        break;
 
-		// protocol not found!
-		default:
-			arc = NULL;
-	}
+        // protocol not found!
+        default:
+            arc = NULL;
+    }
 
-	if(arc)
-	{
-		// try open
-		if(arc->open(IO_ReadOnly))
-		{
-			// show 'busy' cursor
-			QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    if(arc)
+    {
+        // try open
+        if(arc->open(IO_ReadOnly))
+        {
+            // show 'busy' cursor
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-			const KArchiveDirectory *adir = arc->directory();
+            const KArchiveDirectory *adir = arc->directory();
 
-			if(!adir)
-				return false;
+            if(!adir)
+                return false;
 
-			// unpack it!
-			adir->copyTo(fullextracteddir);
+            // unpack it!
+            adir->copyTo(fullextracteddir);
 
-			// restore cursor
-			QApplication::restoreOverrideCursor();
-		}
-		else // can't open archive!
-                    return false;
+            // restore cursor
+            QApplication::restoreOverrideCursor();
+        }
+        else // can't open archive!
+            return false;
 
-		delete arc;
-	}
-	else
-	{
-		KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to open the archive '<b>%1</b>'.").arg(fullpath)+QString::fromLatin1("</qt>"), i18n("Archive problem"));
-		return false;
-	}
+        delete arc;
+    }
+    else
+    {
+        KMessageBox::error(0, QString::fromLatin1("<qt>") + i18n("Unable to open the archive '<b>%1</b>'.").arg(fullpath)+QString::fromLatin1("</qt>"), i18n("Archive problem"));
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 /*
@@ -225,8 +225,8 @@ bool SQ_ArchiveHandler::unpack()
  */
 bool SQ_ArchiveHandler::needClean()
 {
-	// TODO: find items in ~/.ksquirrel/extracts !
-	return dir->exists(dir->root());
+    // TODO: find items in ~/.ksquirrel/extracts !
+    return dir->exists(dir->root());
 }
 
 /*
@@ -237,21 +237,21 @@ bool SQ_ArchiveHandler::needClean()
  */
 void SQ_ArchiveHandler::clean(QString s)
 {
-	// We will use KShellProcess to delete directory recursively
-	KShellProcess   del;
+    // We will use KShellProcess to delete directory recursively
+    KShellProcess   del;
 
-	// hehe, rm -rf
-	del << "rm -rf " << KShellProcess::quote(s) << "/*";
+    // hehe, rm -rf
+    del << "rm -rf " << KShellProcess::quote(s) << "/*";
 
-	kdDebug() << "SQ_ArchiveHandler::clean: cleaning archive... ";
+    kdDebug() << "SQ_ArchiveHandler::clean: cleaning archive... ";
 
-	// start process!
-	bool removed = del.start(KProcess::Block);
+    // start process!
+    bool removed = del.start(KProcess::Block);
 
-	kdDebug() << ((removed)?"OK":"error") << endl;
+    kdDebug() << ((removed)?"OK":"error") << endl;
 }
 
 SQ_ArchiveHandler* SQ_ArchiveHandler::instance()
 {
-	return ar;
+    return ar;
 }

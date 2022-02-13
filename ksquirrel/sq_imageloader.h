@@ -32,48 +32,63 @@ struct RGBA;
 
 class SQ_ImageLoader
 {
-        public:
-                SQ_ImageLoader();
-                ~SQ_ImageLoader();
+    public:
+        SQ_ImageLoader();
+        ~SQ_ImageLoader();
 
-                /*
-                 *  Try to load image and store a pointer to decoded image data in m_image. Aslo
-                 *  store information about the image in finfo.
-		 *
-		 *  If 'multi' is true, read all image pages from file.
-                 */
-                bool loadImage(const QString &path, bool multi = true);
-		
-		/*
-		 *  Remove any previously saved data.
-		 */
-		void cleanup();
+        /*
+         *  Try to load image and store a pointer to decoded image data in m_image. Aslo
+         *  store information about the image in finfo.
+         *
+         *  If 'multi' is true, read all image pages from file.
+         */
+        bool loadImage(const QString &path, bool multi = true);
 
-                RGBA* bits() const;
+        /*
+         *  Try to determine image dimensions.
+         */
+        bool tasteImage(const QString &path, int *w, int *h);
 
-		QImage image() const;
+        /*
+         *  Remove any previously saved data.
+         */
+        void cleanup();
 
-                fmt_info* info() const;
+        /*
+         *  Direct access to image bits...
+         */
+        RGBA* bits() const;
 
-                static SQ_ImageLoader* instance();
+        /*
+         *  Return decoded image as QImage.
+         */
+        QImage image() const;
 
-        private:
-                RGBA *m_image, *dumbscan;
-                fmt_info *finfo;
+        /*
+         *  Get a pointer to structure with information
+         *  on decoded image (number of pages, width, height...)
+         */
+        fmt_info* info() const;
 
-                static SQ_ImageLoader * sing;
+        static SQ_ImageLoader* instance();
+
+    private:
+        RGBA *m_image, *dumbscan;
+        fmt_info *finfo;
+
+        static SQ_ImageLoader * sing;
 };
 
 inline
 RGBA* SQ_ImageLoader::bits() const
 {
-        return m_image;
+    return m_image;
 }
 
 inline
 fmt_info* SQ_ImageLoader::info() const
 {
-        return finfo;
+    return finfo;
 }
 
 #endif

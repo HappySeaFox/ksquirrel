@@ -1,1 +1,34 @@
+Now I have two main subprojects for KSquirrel:
 
+* kdeemu - simple KDE emulator :) The main idea is to replace
+  some KDE classes, which are used in KSquirrel (KFileIconView, KConfig...),
+  with local copies, which won't depend on KDE. It means that these copies
+  won't have some features (like dynamic file loading with KDirLister). When this
+  subproject will be released, KSquirrel won't depend on KDE any more (will
+  have --disable-kde option for "configure").
+
+  Currently I ported the following KDE classes:
+    - KFileIconView
+    - KIconView
+    - KPixmapEffect
+    - KFileItem
+    - KListView
+    - KURL
+    - KFileView
+    - KLocale
+    - KURLDrag
+    - KFileDetailView
+    - KGlobalSettings
+    - KPixmap
+    - KWordWrap
+    - some functions from KIO
+
+* qpixbuf - MIT-SHM widget, which will be alternative to current OpenGL image
+  window. Currently it works only with 24-bit X11 mode. Uses libpixops to scale
+  up/down images. When this subproject will be released, KSquirrel won't depend
+  on OpenGL any more (will have --disable-opengl option for "configure"; now
+  this option exists, but do nothing).
+
+--------------------------------------------------
+
+All these tasks need maintainer. They don't depended on KSquirrel.

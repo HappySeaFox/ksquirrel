@@ -44,39 +44,39 @@ class KPopupMenu;
 
 class SQ_NavigatorDropMenu : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		SQ_NavigatorDropMenu();
-		virtual ~SQ_NavigatorDropMenu();
+    public:
+        SQ_NavigatorDropMenu();
+        virtual ~SQ_NavigatorDropMenu();
 
-		static SQ_NavigatorDropMenu* instance();
+        static SQ_NavigatorDropMenu* instance();
 
-		/*
-		 *  Save destination url and urls of dropped files.
-		 */
-		void setupFiles(const KURL::List &l, const KURL &u);
+        /*
+         *  Save destination url and urls of dropped files.
+         */
+        void setupFiles(const KURL::List &l, const KURL &u);
 
-		/*
-		 *  Show popup menu with available actions.
-		 */
-		void exec(const QPoint &pos);
+        /*
+         *  Show popup menu with available actions.
+         */
+        void exec(const QPoint &pos);
 
-	protected slots:
-		/*
-		 *  These slots will use KIO to
-		 *  copy, move or link files.
-		 */
-		void slotCopy();
-		void slotMove();
-		void slotLink();
+    protected slots:
+        /*
+         *  These slots will use KIO to
+         *  copy, move or link files.
+         */
+        void slotCopy();
+        void slotMove();
+        void slotLink();
 
-	private:
-		KPopupMenu *dropmenu;
-		KURL::List list;
-		KURL url;
+    private:
+        KPopupMenu *dropmenu;
+        KURL::List list;
+        KURL url;
 
-		static SQ_NavigatorDropMenu *app;
+        static SQ_NavigatorDropMenu *app;
 };
 
 #endif

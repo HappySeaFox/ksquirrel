@@ -27,35 +27,14 @@
 
 class SQ_Config : public KConfig
 {
-	public: 
-		SQ_Config(const QString& fileName = QString::null);
-		~SQ_Config();
+    public: 
+        SQ_Config(const QString& fileName = QString::null);
+        ~SQ_Config();
 
-/*
- *  All methods are same to KConfig's methods, except additional parameter -
- *  group name.
- */
+        static SQ_Config* instance();
 
-		QString readEntry(const QString &sgroup, const QString &key, const QString& aDefault = QString::null);
-
-		int readNumEntry(const QString &sgroup, const QString &key, int nDefault = 0);
-
-		double readDoubleNumEntry(const QString &sgroup, const QString &key, double nDefault = 0.0);
-
-		bool readBoolEntry(const QString &sgroup, const QString &pKey, const bool bDefault = false);
-
-		QStringList readListEntry(const QString &sgroup, const QString &key, char sep = ',');
-
-		QValueList<int> readIntListEntry(const QString &sgroup, const QString &key);
-
-		QRect readRectEntry(const QString &sgroup, const QString &key, const QRect *def = 0L);
-
-		QFont readFontEntry(const QString &sgroup, const QString &key, const QFont *pd = 0);
-
-		static SQ_Config* instance();
-
-	private:
-		static SQ_Config *sing;
+    private:
+        static SQ_Config *sing;
 };
 
 #endif

@@ -36,91 +36,91 @@
 
 class SQ_Dir : public QDir
 {
-	public:
-		enum Prefix {
+    public:
+        enum Prefix {
 
-			// thumbnail cache (~/.ksquirrel/thumbnails).
-			Thumbnails,
+            // thumbnail cache (~/.ksquirrel/thumbnails).
+            Thumbnails,
 
-			// SQ_ArchiveHandler cache (~/.ksquirrel/extracts).
-			Extracts,
+            // SQ_ArchiveHandler cache (~/.ksquirrel/extracts).
+            Extracts,
 
-			// .desktop files (~/.ksquirrel/desktop).
-			Desktops,
+            // .desktop files (~/.ksquirrel/desktop).
+            Desktops,
 
-			// temporary usage (~/.ksquirrel/tmp).
-			Tmp };
+            // temporary usage (~/.ksquirrel/tmp).
+            Tmp };
 
-		SQ_Dir(Prefix);
-		~SQ_Dir();
+        SQ_Dir(Prefix);
+        ~SQ_Dir();
 
-		/*
-		 *  Create relative directory in storage.
-		 *
-		 *  For example, if prefix == Thumbnails,
-		 *  mkdir("/mnt/win_c") will create
-		 *  ~/.ksquirrel/thumbnails/mnt/win_c.
-		 *
-		 *  Return true, if operation succeded.
-		 */
-		bool mkdir(const QString &relpath);
+        /*
+         *  Create relative directory in storage.
+         *
+         *  For example, if prefix == Thumbnails,
+         *  mkdir("/mnt/win_c") will create
+         *  ~/.ksquirrel/thumbnails/mnt/win_c.
+         *
+         *  Return true, if operation succeded.
+         */
+        bool mkdir(const QString &relpath);
 
-		/*
-		 *  Change current directory to m_root directory.
-		 *
-		 *  For example, if prefix == Thumbnails, it will
-		 *  cd to "~/.ksquirrel/thumbnails".
-		 */
-		void rewind();
+        /*
+         *  Change current directory to m_root directory.
+         *
+         *  For example, if prefix == Thumbnails, it will
+         *  cd to "~/.ksquirrel/thumbnails".
+         */
+        void rewind();
 
-		/*
-		 *  Get current root directory.
-		 *
-		 *  For example, if prefix == Thumbnails, it will
-		 *  return "/home/krasu/.ksquirrel/thumbnails".
-		 */
-		QString root() const;
+        /*
+         *  Get current root directory.
+         *
+         *  For example, if prefix == Thumbnails, it will
+         *  return "/home/krasu/.ksquirrel/thumbnails".
+         */
+        QString root() const;
 
-		/*
-		 *  Get absolute path for relative path 'relpath'.
-		 */
-		QString absPath(const QString &relpath);
+        /*
+         *  Get absolute path for relative path 'relpath'.
+         */
+        QString absPath(const QString &relpath);
 
-		/*
-		 *  Save thumbnail to storage.
-		 */
-		void saveThumbnail(const QString &path, SQ_Thumbnail &thumb);
+        /*
+         *  Save thumbnail to storage.
+         */
+        void saveThumbnail(const QString &path, SQ_Thumbnail &thumb);
 
-		/*
-		 *  Check if file exists. If exists, set 'fullpath'
-		 *  to its full path.
-		 */
-		bool fileExists(const QString &file, QString &fullpath);
+        /*
+         *  Check if file exists. If exists, set 'fullpath'
+         *  to its full path.
+         */
+        bool fileExists(const QString &file, QString &fullpath);
 
-		/*
-		 *  Check if file needs to be updated.
-		 *
-		 *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
-		 *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
-		 *  archive in it. Today you replaced /opt/arc.zip with newer version. Now
-		 *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
-		 *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack this archive once more.
-		 */
-		bool updateNeeded(const QString &file);
+        /*
+         *  Check if file needs to be updated.
+         *
+         *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
+         *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
+         *  archive in it. Today you replaced /opt/arc.zip with newer version. Now
+         *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
+         *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack this archive once more.
+         */
+        bool updateNeeded(const QString &file);
 
-		/*
-		 *  Remove file from storage
-		 */
-		void removeFile(const QString &file);
+        /*
+         *  Remove file from storage
+         */
+        void removeFile(const QString &file);
 
-	private:
-		/*
-		 *  Internal, used by mkdir().
-		 */
-		void setRoot(const QString &name);
+    private:
+        /*
+         *  Internal, used by mkdir().
+         */
+        void setRoot(const QString &name);
 
 private:
-		QString m_root;
+        QString m_root;
 };
 
 #endif

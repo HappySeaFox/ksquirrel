@@ -22,9 +22,9 @@ SQ_IconLoader* SQ_IconLoader::sing = NULL;
 
 SQ_IconLoader::SQ_IconLoader() : KIconLoader("ksquirrel")
 {
-	sing = this;
+    sing = this;
 
-	fillPixmaps();
+    fillPixmaps();
 }
 
 SQ_IconLoader::~SQ_IconLoader()
@@ -32,32 +32,32 @@ SQ_IconLoader::~SQ_IconLoader()
 
 QPixmap SQ_IconLoader::loadIcon(const QString& name, KIcon::Group group, int size) const
 {
-	// try to load from installed icon theme
-	QPixmap p = KIconLoader::loadIcon(name, group, size, KIcon::DefaultState, NULL, true);
+    // try to load from installed icon theme
+    QPixmap p = KIconLoader::loadIcon(name, group, size, KIcon::DefaultState, NULL, true);
 
-	// requested pixmap not found, let's'
-	// try to find it in our pixmaps
-	if(p.isNull())
-	{
-		if(name == "move_task_up")
-			p = pixmap_up;
-		else if(name == "move_task_down")
-			p = pixmap_down;
-		else if(name == "display" && size == 32)
-			p = pixmap_display;
-		else if(name == "folder" && size == 32)
-			p = pixmap_folder;
-		else if(name == "images" && size == 32)
-			p = pixmap_images;
-		else if(name == "binary" && size == 32)
-			p = pixmap_binary;
-		else if(name == "edit" && size == 32)
-			p = pixmap_edit;
-		else
-			p = KIconLoader::loadIcon("unknown", group, size);
-	}
+    // requested pixmap not found, let's
+    // try to find it in our pixmaps
+    if(p.isNull())
+    {
+        if(name == "move_task_up")
+            p = pixmap_up;
+        else if(name == "move_task_down")
+            p = pixmap_down;
+        else if(name == "display" && size == 32)
+            p = pixmap_display;
+        else if(name == "folder" && size == 32)
+            p = pixmap_folder;
+        else if(name == "images" && size == 32)
+            p = pixmap_images;
+        else if(name == "binary" && size == 32)
+            p = pixmap_binary;
+        else if(name == "edit" && size == 32)
+            p = pixmap_edit;
+        else
+            p = KIconLoader::loadIcon("unknown", group, size);
+    }
 
-	return p;
+    return p;
 }
 
 /*
@@ -65,16 +65,16 @@ QPixmap SQ_IconLoader::loadIcon(const QString& name, KIcon::Group group, int siz
  */
 void SQ_IconLoader::fillPixmaps()
 {
-	pixmap_up      = QPixmap(xpm_up);
-	pixmap_down    = QPixmap(xpm_down);
-	pixmap_display = QPixmap(xpm_display);
-	pixmap_folder  = QPixmap(xpm_folder);
-	pixmap_images  = QPixmap(xpm_images);
-	pixmap_binary  = QPixmap(xpm_binary);
-	pixmap_edit    = QPixmap(xpm_edit);
+    pixmap_up      = QPixmap(xpm_up);
+    pixmap_down    = QPixmap(xpm_down);
+    pixmap_display = QPixmap(xpm_display);
+    pixmap_folder  = QPixmap(xpm_folder);
+    pixmap_images  = QPixmap(xpm_images);
+    pixmap_binary  = QPixmap(xpm_binary);
+    pixmap_edit    = QPixmap(xpm_edit);
 }
 
 SQ_IconLoader* SQ_IconLoader::instance()
 {
-	return sing;
+    return sing;
 }

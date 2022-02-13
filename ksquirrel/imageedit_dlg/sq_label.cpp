@@ -29,47 +29,47 @@ SQ_Label::~SQ_Label()
 
 void SQ_Label::paintEvent(QPaintEvent *)
 {
-	if((single && ltext.isEmpty() && rtext.isEmpty()) || (!single && ltext.isEmpty()))
-		return;
+    if((single && ltext.isEmpty() && rtext.isEmpty()) || (!single && ltext.isEmpty()))
+        return;
 
-	QPainter paint(this);
+    QPainter paint(this);
 
-	QFont font = paint.font();
-	font.setBold(true);
-	font.setPointSize(8);
-	paint.setFont(font);
+    QFont font = paint.font();
+    font.setBold(true);
+    font.setPointSize(8);
+    paint.setFont(font);
 
-	if(!single)
-	{
-	    paint.translate((width() + paint.fontMetrics().height()) / 2, height());
-	    paint.rotate(-90);
-	    paint.drawText(MARGIN, 0, ltext);
+    if(!single)
+    {
+        paint.translate((width() + paint.fontMetrics().height()) / 2, height());
+        paint.rotate(-90);
+        paint.drawText(MARGIN, 0, ltext);
 
-	    paint.translate(height() - paint.fontMetrics().width(rtext), 0);
-	    paint.drawText(-MARGIN, 0, rtext);
-	}
-	else
-	{
-	    paint.translate((width() + paint.fontMetrics().height()) / 2,
-			    (height() + paint.fontMetrics().width(ltext)) / 2);
-	    paint.rotate(-90);
-	    paint.drawText(0, 0, ltext);
-	}
+        paint.translate(height() - paint.fontMetrics().width(rtext), 0);
+        paint.drawText(-MARGIN, 0, rtext);
+    }
+    else
+    {
+        paint.translate((width() + paint.fontMetrics().height()) / 2,
+                        (height() + paint.fontMetrics().width(ltext)) / 2);
+        paint.rotate(-90);
+        paint.drawText(0, 0, ltext);
+    }
 }
 
 void SQ_Label::setText(const QString &lt, const QString &rt)
 {
-	ltext = lt;
-	rtext = rt;
+    ltext = lt;
+    rtext = rt;
 
-	update();
+    update();
 }
 
 void SQ_Label::setText(const QString &lt)
 {
-	ltext = lt;
+    ltext = lt;
 
-	update();
+    update();
 }
 
 void SQ_Label::setSingle(bool s)

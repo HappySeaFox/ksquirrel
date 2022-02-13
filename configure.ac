@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0-pre8], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.0-pre9], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre8)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre9)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -67,7 +67,7 @@ if test "x$sq_ogl" = "xyes"; then
 
 AC_CHECK_HEADERS([GL/gl.h GL/glu.h], [], AC_MSG_ERROR("ksquirrel needs OpenGL (GL/gl.h, ...) and GLU (GL/glu.h) headers to be installed."))
 
-SQ_GL_ERROR="OpenGL library is corrupted or not installed."
+SQ_GL_ERROR="OpenGL library is corrupted or not installed"
 
 AC_CHECK_LIB([GL], [glBegin], [], AC_MSG_ERROR($SQ_GL_ERROR))
 

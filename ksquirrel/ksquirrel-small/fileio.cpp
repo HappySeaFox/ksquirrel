@@ -118,7 +118,7 @@ bool ifstreamK::readCHex(u32 &hex)
 // implement write methods
 ofstreamK::ofstreamK() : ofstream()
 {}
-	
+
 bool ofstreamK::writeK(void *data, int size)
 {
     write((char *)data, size);

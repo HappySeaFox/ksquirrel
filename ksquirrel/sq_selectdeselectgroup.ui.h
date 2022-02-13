@@ -8,7 +8,8 @@
 *****************************************************************************/
 void SQ_SelectDeselectGroup::init()
 {
-    comboMask->insertStringList(SQ_Config::instance()->readListEntry("Fileview", "selectdeselecthistory"));
+    SQ_Config::instance()->setGroup("Fileview");
+    comboMask->insertStringList(SQ_Config::instance()->readListEntry("selectdeselecthistory"));
 }
 
 int SQ_SelectDeselectGroup::exec(QString &mask)
@@ -17,15 +18,15 @@ int SQ_SelectDeselectGroup::exec(QString &mask)
 
     if(result == QDialog::Accepted)
     {
-	QStringList list;
+        QStringList list;
 
-	for(int i = 0;i < comboMask->count();i++)
-	    list.append(comboMask->text(i));
+        for(int i = 0;i < comboMask->count();i++)
+            list.append(comboMask->text(i));
 
-	SQ_Config::instance()->setGroup("Fileview");
-	SQ_Config::instance()->writeEntry("selectdeselecthistory", list);
+        SQ_Config::instance()->setGroup("Fileview");
+        SQ_Config::instance()->writeEntry("selectdeselecthistory", list);
 
-	mask = comboMask->currentText();
+        mask = comboMask->currentText();
     }
 
     return mask.isEmpty() ? QDialog::Rejected : result;

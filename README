@@ -10,24 +10,29 @@ Due to usage OpenGL show and a manipulation the image is characterized by extrem
 Also in the program customized filters, external programs, tree, thumbnails,
 extended thumbnails with the information on the image, flexible options, etc. are available.
 
-There is some history:) 
-In November, 2003, testing long time other programs on my collection of images,
+Here is some history :)
+In November 2003, testing long time other programs on my collection of images,
 I've found an awful thing - any of programs could not show ALL images.
 There was no support 32-bit BMP, TGA, animated GIF, PSD, etc. Any of them does not use the
 most advanced libraries for decoding images, and use either imlib, or QImage::load().
 Having become dissapointed, I've decided to write the image viewer with the flexible
-architecture. Birthday for KSquirrel - on December, 10, 2003. 
+architecture. Birthday for KSquirrel - on December 10, 2003. 
 
 KSquirrel is the first viewer for KDE widely supporting such a quantity of image formats,
-including Photoshop PSD, X cursors, animated GIF, FLI Animation, WMF, SVG ...
+including Photoshop PSD, X cursors, animated GIF, FLI Animation, WMF, SVG, TTF, MNG ...
 
-The detailed information, format of libraries with examples, screenshots you can find
+The detailed information, format of libraries with examples and screenshots you can find
 visiting page http://ksquirrel.sourceforge.net/
 
 ***********************************************************************************
 
-Icons in 'Edit selected images' tool are based on original crystal theme
-by Everaldo.
+- Icons in 'Edit selected images' tool are based on original crystal theme
+by (C) Everaldo.
+
+- Some functions in SQ_GLWidget (see source code for more) are based on
+original code by (C) Guillaume Chazarain <guichaz@yahoo.fr>.
+
+- KSquirrel uses fmt_filters package. See fmt_filters_README for more.
 
 ***********************************************************************************
 
@@ -70,6 +75,17 @@ zoom_10                       zoom 1000%                wrapper for 0
 zoom_minus                    zoom minus                wrapper for -
 zoom_plus                     zoom plus                 wrapper for +
 
+New parameters since 0.6.0-pre8:
+--------------------------------
+
+- load specified image
+
+# dcop ksquirrel ksquirrel load_image <path_to_file>
+
+- activate window
+
+# dcop ksquirrel ksquirrel activate
+
 ----------------------------------------------------------------------------
 
 Examples
@@ -93,4 +109,9 @@ Since 0.6.0-pre6 KSquirrel has additional edit tools:
 - print tool
 
 Since 0.6.0-pre7 KSquirrel has additional edit tools:
-- filter tool
+- filter tool with many filters
+
+***********************************************************************************
+
+See ChangeLog for more
+

@@ -1,6 +1,6 @@
 /*
-	copyright : (C) 2004 by Baryshev Dmitry
-	KSQuirrel - image viewer for KDE
+    copyright : (C) 2004 by Baryshev Dmitry
+    KSQuirrel - image viewer for KDE
 */
 
 /*
@@ -33,40 +33,70 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 class SQ_ThumbnailSize
 {
-	public:
-		enum Size { Small = 0, Medium, Large, Huge };
+    public:
+        enum Size { Small = 0, Medium, Large, Huge };
 
-		SQ_ThumbnailSize(Size value = Huge);
-		SQ_ThumbnailSize(const QString& str);
+        SQ_ThumbnailSize(Size value = Huge);
+        SQ_ThumbnailSize(const QString& str);
 
-		void setExtended(bool);
-		bool extended() const;
+        void setExtended(bool);
+        bool extended() const;
 
-		void setMargin(int);
-		int margin() const;
+        void setMargin(int);
+        int margin() const;
 
-		void setPixelSize(const QString &size);
+        void setPixelSize(const QString &size);
 
-		int pixelSize() const;
-		int extendedPixelSize() const;
+        int pixelSize() const;
+        int extendedPixelSize() const;
 
-		bool operator== (const SQ_ThumbnailSize& size) const { return mValue == size.mValue; }
-		operator const QString&() const;
-		operator Size() const { return mValue; }
+        bool operator== (const SQ_ThumbnailSize& size) const { return mValue == size.mValue; }
+        operator const QString&() const;
+        operator Size() const { return mValue; }
 
-		int value() const;
-		QString stringValue() const;
+        int value() const;
+        QString stringValue() const;
 
-		static int biggest() { return 128; }
+        static int biggest() { return 128; }
 
-		static SQ_ThumbnailSize* instance();
+        static SQ_ThumbnailSize* instance();
 
-	private:
-		Size mValue;
-		bool m_extended;
-		int m_margin;
+    private:
+        Size mValue;
+        bool m_extended;
+        int m_margin;
 
-		static SQ_ThumbnailSize *thumb;
+        static SQ_ThumbnailSize *thumb;
 };
+
+inline
+int SQ_ThumbnailSize::value() const
+{
+    return (int)mValue;
+}
+
+inline
+void SQ_ThumbnailSize::setExtended(bool ex)
+{
+    m_extended = ex;
+}
+
+inline
+bool SQ_ThumbnailSize::extended() const
+{
+    return m_extended;
+}
+
+inline
+void SQ_ThumbnailSize::setMargin(int m)
+{
+    m_margin = m;
+}
+
+inline
+int SQ_ThumbnailSize::margin() const
+{
+    return m_margin;
+}
 
 #endif

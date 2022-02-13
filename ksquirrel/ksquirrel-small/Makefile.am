@@ -1,6 +1,8 @@
 bin_PROGRAMS = ksquirrel-small
 
-ksquirrel_small_SOURCES = sq_imageproperties.ui sq_helpwidget.ui main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp
+ksquirrel_small_SOURCES = sq_imageproperties.ui sq_helpwidget.ui main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp sq_glwidget_helpers.cpp
+
+EXTRA_DIST = sq_imageproperties.ui.h sq_helpwidget.ui.h
 
 ksquirrel_small_LDADD   = $(LIB_KIO) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET) 
 

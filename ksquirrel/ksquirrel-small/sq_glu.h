@@ -40,10 +40,10 @@
 
 namespace SQ_GLU
 {
-		/*
-		 *  Replacement for gluLookAt().
-		 */
-		void gluLookAt(GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble);
+        /*
+         *  Replacement for gluLookAt().
+         */
+        void gluLookAt(GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble);
 };
 
 #endif

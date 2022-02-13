@@ -27,39 +27,39 @@
 
 class SQ_HLOptions : public QObject
 {
-	public: 
-		SQ_HLOptions();
-		~SQ_HLOptions();
+    public: 
+        SQ_HLOptions();
+        ~SQ_HLOptions();
 
-		static SQ_HLOptions* instance();
+        static SQ_HLOptions* instance();
 
-	public:
-		/*
-		 *  Generate thumbnails for given directory ?
-		 */
-		bool 		thumbs;
+    public:
+        /*
+         *  Generate thumbnails for given directory ?
+         */
+        bool         thumbs;
 
-		/*
-		 *  Directory or file to open.
-		 */
-		QString		path;
+        /*
+         *  Directory or file to open.
+         */
+        QString        path;
 
-		/*
-		 *  Starting folder for thumbnail generator.
-		 */
-		QString		thumbs_p;
+        /*
+         *  Starting folder for thumbnail generator.
+         */
+        QString        thumbs_p;
 
-		/*
-		 *  Just show found libraries and exit ?
-		 */
-		bool 		showLibsAndExit;
+        /*
+         *  Just show found libraries and exit ?
+         */
+        bool         showLibsAndExit;
 
-		/*
-		 *  Scan recursively ? (with -t)
-		 */
-		bool		recurs;
+        /*
+         *  Scan recursively ? (with -t)
+         */
+        bool        recurs;
 
-		static SQ_HLOptions *sing;
+        static SQ_HLOptions *sing;
 };
 
 #endif

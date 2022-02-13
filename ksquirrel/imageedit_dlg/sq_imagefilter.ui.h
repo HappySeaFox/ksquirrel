@@ -12,11 +12,13 @@ void SQ_ImageFilter::init()
     pixmapA->setPixmap(QPixmap(locate("appdata", "images/imageedit/squirrels/squirrel_filter.png")));
     pixmapA->setPaletteBackgroundColor(pixmapA->colorGroup().background().light(90));
 
-    imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "filter_putto", QString::null);
-    imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "filter_where_to_put", 0);
-    imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "filter_close", true);
+    SQ_Config::instance()->setGroup("Image edit options");
 
-    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "filter_dontshowhelp", false));
+    imageopt.putto = SQ_Config::instance()->readEntry("filter_putto", QString::null);
+    imageopt.where_to_put = SQ_Config::instance()->readNumEntry("filter_where_to_put", 0);
+    imageopt.close = SQ_Config::instance()->readBoolEntry("filter_close", true);
+
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("filter_dontshowhelp", false));
 
     // restore NumInputs...
     const double sigmaMax = 99.9, sigmaMin = 0.01;
@@ -36,87 +38,90 @@ void SQ_ImageFilter::init()
     blurRadius->setRange(radiusMin, radiusMax, 0.01f, true);
     blurSigma->setRange(sigmaMin, 50.0, 0.01f, true);
     implodeFactor->setRange(0, 100, 1, true);
-    edgeRadius->setRange(radiusMin, 30.0, 0.01f, true);
+    edgeRadius->setRange((int)radiusMin, 30, 1, true);
     embossRadius->setRange(radiusMin, radiusMax, 0.01f, true);
     embossSigma->setRange(sigmaMin, sigmaMax, 0.01f, true);
     sharpenRadius->setRange(radiusMin, radiusMax, 0.01f, true);
     sharpenSigma->setRange(sigmaMin, 30.0, 0.01f, true);
-    oilRadius->setRange(1.0, 5.0, 1, true);
+    oilRadius->setRange(1, 5, 1, true);
+    redeyeValue->setRange(0, 255, 1, true);
 
-    buttonGroupSwapRGB->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "filter_swapRGB", 0));
+    SQ_Config::instance()->setGroup("Image edit options");
 
+    buttonGroupSwapRGB->setButton(SQ_Config::instance()->readNumEntry("filter_swapRGB", 0));
     // blend
     QColor c;
-    c.setNamedColor(SQ_Config::instance()->readEntry("Image edit options", "filter_blend_color", "#00ff00"));
+    c.setNamedColor(SQ_Config::instance()->readEntry("filter_blend_color", "#00ff00"));
     pushBlendColor->setColor(c);
-    blendOpacity->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_blend_opacity", 0.5));
+    blendOpacity->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_blend_opacity", 0.5));
 
     // fade
-    c.setNamedColor(SQ_Config::instance()->readEntry("Image edit options", "filter_flend_color", "#00ff00"));
+    c.setNamedColor(SQ_Config::instance()->readEntry("filter_flend_color", "#00ff00"));
     fadeColor->setColor(c);
-    fadeValue->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_fade_value", 0.5));
+    fadeValue->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_fade_value", 0.5));
 
     // desaturate
-    desaturateValue->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_desaturate_value", 0.5));
+    desaturateValue->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_desaturate_value", 0.5));
 
     // threshold
-    thresholdValue->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "filter_threshold_value", 1));
+    thresholdValue->setValue(SQ_Config::instance()->readNumEntry("filter_threshold_value", 1));
 
     // solarize
-    solarizeValue->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_solarize_value", 0.5));
+    solarizeValue->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_solarize_value", 0.5));
 
     // spread
-    spreadValue->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "filter_spread_value", 1));
+    spreadValue->setValue(SQ_Config::instance()->readNumEntry("filter_spread_value", 1));
 
     // swirl
-    swirlAngle->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_swirl_value", 0.0));
+    swirlAngle->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_swirl_value", 0.0));
 
     // noise
-    buttonGroupNoise->setButton(SQ_Config::instance()->readNumEntry("Image edit options", "filter_noise", 0));
+    buttonGroupNoise->setButton(SQ_Config::instance()->readNumEntry("filter_noise", 0));
 
     // flatten
-    c.setNamedColor(SQ_Config::instance()->readEntry("Image edit options", "filter_flatten_color1", "#00ff00"));
+    c.setNamedColor(SQ_Config::instance()->readEntry("filter_flatten_color1", "#00ff00"));
     flattenColor1->setColor(c);
-    c.setNamedColor(SQ_Config::instance()->readEntry("Image edit options", "filter_flatten_color2", "#00ff00"));
+    c.setNamedColor(SQ_Config::instance()->readEntry("filter_flatten_color2", "#00ff00"));
     flattenColor2->setColor(c);
 
     // wave
-    waveAmpl->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_wave_ampl", 0.1));
-    waveLength->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_wave_length", 0.1));
+    waveAmpl->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_wave_ampl", 0.1));
+    waveLength->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_wave_length", 0.1));
 
     // shade
-    shadeAzim->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_shade_azim", 0.1));
-    shadeElev->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_shade_elev", 0.1));
-    if(SQ_Config::instance()->readBoolEntry("Image edit options", "filter_shade_color", false))
-	shadeColor->toggle();
+    shadeAzim->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_shade_azim", 0.1));
+    shadeElev->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_shade_elev", 0.1));
+
+    if(SQ_Config::instance()->readBoolEntry("filter_shade_color", false))
+        shadeColor->toggle();
 
     // blur
-    blurRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_blur_radius", 0.1));
-    blurSigma->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_blur_sigma", 0.1));
+    blurRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_blur_radius", 0.1));
+    blurSigma->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_blur_sigma", 0.1));
     
     // implode
-    implodeFactor->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "filter_implode_factor", 1));
+    implodeFactor->setValue(SQ_Config::instance()->readNumEntry("filter_implode_factor", 1));
 
     // edge
-    edgeRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_egde_radius", 0.1));
+    edgeRadius->setValue(SQ_Config::instance()->readNumEntry("filter_egde_radius", 1));
 
     // emboss
-    embossRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_emboss_radius", 0.1));
-    embossSigma->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_emboss_sigma", 0.1));
+    embossRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_emboss_radius", 0.1));
+    embossSigma->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_emboss_sigma", 0.1));
 
     // sharpen
-    sharpenRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_sharpen_radius", 0.1));
-    sharpenSigma->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_sharpen_sigma", 0.1));
+    sharpenRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_sharpen_radius", 0.1));
+    sharpenSigma->setValue(SQ_Config::instance()->readDoubleNumEntry("filter_sharpen_sigma", 0.1));
 
     // oil
-    oilRadius->setValue(SQ_Config::instance()->readDoubleNumEntry("Image edit options", "filter_oil_radius", 0.1));
-    
-    if(checkDontShow->isChecked())
-	slotNext();
+    oilRadius->setValue(SQ_Config::instance()->readNumEntry("filter_oil_radius", 1));
+
+    // redeye
+    redeyeValue->setValue(SQ_Config::instance()->readNumEntry("filter_redeye_value", 1));
 
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_blend.png")), i18n("Blend"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_blur.png")), i18n("Blur"));
-    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_desaturate.png")), i18n("Disaturate"));
+    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_desaturate.png")), i18n("Desaturate"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_despeckle.png")), i18n("Despeckle"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_edge.png")), i18n("Edge"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_emboss.png")), i18n("Emboss"));
@@ -127,6 +132,7 @@ void SQ_ImageFilter::init()
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_negative.png")), i18n("Negative"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_noise.png")), i18n("Noise"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_oil.png")), i18n("Oil"));
+    (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_redeye.png")), i18n("Red eyes"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_shade.png")), i18n("Shade"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_sharpen.png")), i18n("Sharpen"));
     (void)new SQ_IconListItem(listMain, QPixmap(locate("appdata", "images/imageedit/filter_solarize.png")), i18n("Solarize"));
@@ -141,7 +147,12 @@ void SQ_ImageFilter::init()
 
     connect(listMain, SIGNAL(selectionChanged()), this, SLOT(slotShowPage()));
 
-    initPreviewImage();
+    listMain->setCurrentItem(SQ_Config::instance()->readNumEntry("filter_filter", 0));
+
+    hackConnect();
+
+    if(checkDontShow->isChecked())
+        slotNext();
 
     done = true;
 }
@@ -204,7 +215,8 @@ void SQ_ImageFilter::slotStartFiltering()
     kconf->writeEntry("filter_sharpen_radius", sharpenRadius->value());
     kconf->writeEntry("filter_sharpen_sigma", sharpenSigma->value());
     kconf->writeEntry("filter_oil_radius", oilRadius->value());
-//    kconf->writeEntry("filter_", ->value());
+    kconf->writeEntry("filter_redeye_value", redeyeValue->value());
+    kconf->writeEntry("filter_filter", listMain->currentItem());
 
     SQ_ImageFilterOptions opt;
  
@@ -212,47 +224,48 @@ void SQ_ImageFilter::slotStartFiltering()
 
     switch(opt.type)
     {
-    case 0:
-	{
-	     QColor c = pushBlendColor->color();
-	     opt.rgb1 = fmt_filters::rgb(c.red(), c.green(), c.blue());
-	     opt._float = blendOpacity->value();
-	}
-	break;
-    case 1: opt._double1 = blurRadius->value(); opt._double2 = blurSigma->value(); break;
-    case 2: opt._float = (float)desaturateValue->value(); break;
-    case 3: break;
-    case 4: opt._double1 = edgeRadius->value(); break;
-    case 5: opt._double1 = embossRadius->value(); opt._double2 = embossSigma->value(); break;
-    case 6: break;
-    case 7: 
-	{
-	     QColor c = fadeColor->color();
-	     opt.rgb1 = fmt_filters::rgb(c.red(), c.green(), c.blue());
-	     opt._float = (float)fadeValue->value();
-	}
-	break;
-    case 8: 
-	{
-	     QColor c = flattenColor1->color();
-	     opt.rgb1 = fmt_filters::rgb(c.red(), c.green(), c.blue());
-	     c = flattenColor2->color();
-	     opt.rgb2 = fmt_filters::rgb(c.red(), c.green(), c.blue());
-	}
-	break;
-    case 9: opt._double1 = implodeFactor->value(); break;
-    case 10: break;
-    case 11: opt._uint = buttonGroupNoise->selectedId(); break;
-    case 12: opt._double1 = oilRadius->value(); break;
-    case 13: opt._bool = shadeColor->isChecked(); opt._double1 = shadeAzim->value(); opt._double2 = shadeElev->value(); break;
-    case 14: opt._double1 = sharpenRadius->value(); opt._double2 = sharpenSigma->value();break;
-    case 15: opt._double1 = solarizeValue->value(); break;
-    case 16: opt._uint = spreadValue->value(); break;
-    case 17: opt._uint = buttonGroupSwapRGB->selectedId(); break;
-    case 18: opt._double1 = swirlAngle->value(); break;
-    case 19: opt._uint = thresholdValue->value(); break;
-    case 20: break;
-    case 21: opt._double1 = waveAmpl->value(); opt._double2 = waveLength->value(); break;
+        case F::fblend:
+        {
+             QColor c = pushBlendColor->color();
+             opt.rgb1 = fmt_filters::rgb(c.red(), c.green(), c.blue());
+             opt._float = blendOpacity->value();
+        }
+        break;
+        case F::fblur: opt._double1 = blurRadius->value(); opt._double2 = blurSigma->value(); break;
+        case F::fdesaturate: opt._float = (float)desaturateValue->value(); break;
+        case F::fdespeckle: break;
+        case F::fedge: opt._double1 = (double)edgeRadius->value(); break;
+        case F::femboss: opt._double1 = embossRadius->value(); opt._double2 = embossSigma->value(); break;
+        case F::fequalize: break;
+        case F::ffade: 
+        {
+            QColor c = fadeColor->color();
+            opt.rgb1 = fmt_filters::rgb(c.red(), c.green(), c.blue());
+            opt._float = (float)fadeValue->value();
+        }
+        break;
+        case F::fflatten: 
+        {
+             QColor c = flattenColor1->color();
+             opt.rgb1 = fmt_filters::rgb(c.red(), c.green(), c.blue());
+             c = flattenColor2->color();
+             opt.rgb2 = fmt_filters::rgb(c.red(), c.green(), c.blue());
+        }
+        break;
+        case F::fimplode: opt._double1 = implodeFactor->value(); break;
+        case F::fnegative: break;
+        case F::fnoise: opt._uint = buttonGroupNoise->selectedId(); break;
+        case F::foil: opt._double1 = (double)oilRadius->value(); break;
+        case F::fshade: opt._bool = shadeColor->isChecked(); opt._double1 = shadeAzim->value(); opt._double2 = shadeElev->value(); break;
+        case F::fsharpen: opt._double1 = sharpenRadius->value(); opt._double2 = sharpenSigma->value();break;
+        case F::fsolarize: opt._double1 = solarizeValue->value(); break;
+        case F::fspread: opt._uint = spreadValue->value(); break;
+        case F::fswapRGB: opt._uint = buttonGroupSwapRGB->selectedId(); break;
+        case F::fswirl: opt._double1 = swirlAngle->value(); break;
+        case F::fthreshold: opt._uint = thresholdValue->value(); break;
+        case F::fgray: break;
+        case F::fwave: opt._double1 = waveAmpl->value(); opt._double2 = waveLength->value(); break;
+        case F::fredeye: opt._uint = redeyeValue->value(); break;
     }
 
     emit filter(&imageopt, &opt);
@@ -277,23 +290,23 @@ void SQ_ImageFilter::slotDone(bool close)
     done = true;
 
     if(close)
-	reject();
+        reject();
 }
 
 void SQ_ImageFilter::slotReject()
 {
     if(done)
-	reject();
+        reject();
 }
 
 void SQ_ImageFilter::closeEvent(QCloseEvent *e)
 {
     if(done)
-	e->accept();
+        e->accept();
     else
     {
-	e->ignore();
-	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
+        e->ignore();
+        QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
 }
 
@@ -322,48 +335,39 @@ void SQ_ImageFilter::slotShowPage()
     
     switch(id)
     {
-    case 0: blend();            break;
-    case 1: blur();             break;
-    case 2: desaturate();       break;
-    case 3: despeckle();        break;
-    case 4: edge();             break;
-    case 5: emboss();           break;
-    case 6: equalize();         break;
-    case 7: fade();             break;
-    case 8: flatten();          break;
-    case 9: implode();         break;
-    case 10: negative();        break;
-    case 11: noise();           break;
-    case 12: oil();             break;
-    case 13: shade();           break;
-    case 14: sharpen();         break;
-    case 15: solarize();        break;
-    case 16: spread();          break;
-    case 17: swapRGB();         break;
-    case 18: swirl();           break;
-    case 19: threshold();       break;
-    case 20: togray();          break;
-    case 21: wave();            break;
+        case F::fblend:       blend();      break;
+        case F::fblur:        blur();       break;
+        case F::fdesaturate:  desaturate(); break;
+        case F::fdespeckle:   despeckle();  break;
+        case F::fedge:        edge();       break;
+        case F::femboss:      emboss();     break;
+        case F::fequalize:    equalize();   break;
+        case F::ffade:        fade();       break;
+        case F::fflatten:     flatten();    break;
+        case F::fimplode:     implode();    break;
+        case F::fnegative:    negative();   break;
+        case F::fnoise:       noise();      break;
+        case F::foil:         oil();        break;
+        case F::fshade:       shade();      break;
+        case F::fsharpen:     sharpen();    break;
+        case F::fsolarize:    solarize();   break;
+        case F::fspread:      spread();     break;
+        case F::fswapRGB:     swapRGB();    break;
+        case F::fswirl:       swirl();      break;
+        case F::fthreshold:   threshold();  break;
+        case F::fgray:        togray();     break;
+        case F::fwave:        wave();       break;
+        case F::fredeye:      redeye();     break;
     }
 
     qApp->processEvents();
-}
-
-void SQ_ImageFilter::initPreviewImage()
-{
-    QImage tmp;
-
-    tmp.load(locate("appdata", "images/imageedit/edit_sample.png"));
-
-    setPreviewImage(tmp);
 }
 
 void SQ_ImageFilter::setPreviewImage(const QImage &im)
 {    
     if(im.isNull()) return;
 
-    sample = im.convertDepth(32);
-    sample.setAlphaBuffer(false);
+    sample = im.copy();
     sample_saved = sample.copy();
 
     QPixmap p;
@@ -385,14 +389,14 @@ void SQ_ImageFilter::assignNewImage(const QImage &im)
 void SQ_ImageFilter::swapRGB()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
     int id = buttonGroupSwapRGB->selectedId();
 
     if(id == -1)
-	return;
+        return;
 
     fmt_filters::image im(sample.bits(), sample.width(), sample.height());
 
@@ -404,7 +408,7 @@ void SQ_ImageFilter::swapRGB()
 void SQ_ImageFilter::negative()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -418,7 +422,7 @@ void SQ_ImageFilter::negative()
 void SQ_ImageFilter::blend()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -436,7 +440,7 @@ void SQ_ImageFilter::blend()
 void SQ_ImageFilter::fade()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -452,7 +456,7 @@ void SQ_ImageFilter::fade()
 void SQ_ImageFilter::togray()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -466,7 +470,7 @@ void SQ_ImageFilter::togray()
 void SQ_ImageFilter::desaturate()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -480,7 +484,7 @@ void SQ_ImageFilter::desaturate()
 void SQ_ImageFilter::threshold()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -494,7 +498,7 @@ void SQ_ImageFilter::threshold()
 void SQ_ImageFilter::solarize()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -508,7 +512,7 @@ void SQ_ImageFilter::solarize()
 void SQ_ImageFilter::spread()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -522,7 +526,7 @@ void SQ_ImageFilter::spread()
 void SQ_ImageFilter::swirl()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -536,7 +540,7 @@ void SQ_ImageFilter::swirl()
 void SQ_ImageFilter::noise()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -550,7 +554,7 @@ void SQ_ImageFilter::noise()
 void SQ_ImageFilter::flatten()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -567,7 +571,7 @@ void SQ_ImageFilter::flatten()
 void SQ_ImageFilter::wave()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     fmt_filters::rgba *n = NULL;
     s32 h;
@@ -592,7 +596,7 @@ void SQ_ImageFilter::wave()
 void SQ_ImageFilter::shade()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -606,7 +610,7 @@ void SQ_ImageFilter::shade()
 void SQ_ImageFilter::equalize()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -620,7 +624,7 @@ void SQ_ImageFilter::equalize()
 void SQ_ImageFilter::blur()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -634,7 +638,7 @@ void SQ_ImageFilter::blur()
 void SQ_ImageFilter::despeckle()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -648,7 +652,7 @@ void SQ_ImageFilter::despeckle()
 void SQ_ImageFilter::implode()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -662,13 +666,13 @@ void SQ_ImageFilter::implode()
 void SQ_ImageFilter::edge()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
     fmt_filters::image im(sample.bits(), sample.width(), sample.height());
 
-    fmt_filters::edge(im, edgeRadius->value());
+    fmt_filters::edge(im, (double)edgeRadius->value());
 
     assignNewImage(sample);
 }
@@ -676,7 +680,7 @@ void SQ_ImageFilter::edge()
 void SQ_ImageFilter::emboss()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -690,7 +694,7 @@ void SQ_ImageFilter::emboss()
 void SQ_ImageFilter::sharpen()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -704,7 +708,7 @@ void SQ_ImageFilter::sharpen()
 void SQ_ImageFilter::oil()
 {
     if(sample.isNull() || sample_saved.isNull())
-	return;
+        return;
 
     sample = sample_saved.copy();
 
@@ -713,4 +717,59 @@ void SQ_ImageFilter::oil()
     fmt_filters::oil(im, oilRadius->value());
 
     assignNewImage(sample);
+}
+
+void SQ_ImageFilter::redeye()
+{
+    if(sample.isNull() || sample_saved.isNull())
+        return;
+
+    sample = sample_saved.copy();
+
+    fmt_filters::image im(sample.bits(), sample.width(), sample.height());
+
+    fmt_filters::redeye(im, im.w, im.h, 0, 0, redeyeValue->value());
+
+    assignNewImage(sample);
+}
+
+void SQ_ImageFilter::hackConnect()
+{
+    connect( blendOpacity, SIGNAL( valueChanged(double) ), this, SLOT( blend() ) );
+    connect( pushBlendColor, SIGNAL( changed(const QColor&) ), this, SLOT( blend() ) );
+    connect( blurRadius, SIGNAL( valueChanged(double) ), this, SLOT( blur() ) );
+    connect( blurSigma, SIGNAL( valueChanged(double) ), this, SLOT( blur() ) );
+    connect( desaturateValue, SIGNAL( valueChanged(double) ), this, SLOT( desaturate() ) );
+    connect( edgeRadius, SIGNAL( valueChanged(int) ), this, SLOT( edge() ) );
+    connect( embossRadius, SIGNAL( valueChanged(double) ), this, SLOT( emboss() ) );
+    connect( embossSigma, SIGNAL( valueChanged(double) ), this, SLOT( emboss() ) );
+    connect( fadeColor, SIGNAL( changed(const QColor&) ), this, SLOT( fade() ) );
+    connect( fadeValue, SIGNAL( valueChanged(double) ), this, SLOT( fade() ) );
+    connect( flattenColor1, SIGNAL( changed(const QColor&) ), this, SLOT( flatten() ) );
+    connect( flattenColor2, SIGNAL( changed(const QColor&) ), this, SLOT( flatten() ) );
+    connect( implodeFactor, SIGNAL( valueChanged(double) ), this, SLOT( implode() ) );
+    connect( buttonGroupNoise, SIGNAL( clicked(int) ), this, SLOT( noise() ) );
+    connect( oilRadius, SIGNAL( valueChanged(int) ), this, SLOT( oil() ) );
+    connect( shadeAzim, SIGNAL( valueChanged(double) ), this, SLOT( shade() ) );
+    connect( shadeColor, SIGNAL( toggled(bool) ), this, SLOT( shade() ) );
+    connect( shadeElev, SIGNAL( valueChanged(double) ), this, SLOT( shade() ) );
+    connect( sharpenRadius, SIGNAL( valueChanged(double) ), this, SLOT( sharpen() ) );
+    connect( sharpenSigma, SIGNAL( valueChanged(double) ), this, SLOT( sharpen() ) );
+    connect( solarizeValue, SIGNAL( valueChanged(double) ), this, SLOT( solarize() ) );
+    connect( spreadValue, SIGNAL( valueChanged(int) ), this, SLOT( spread() ) );
+    connect( buttonGroupSwapRGB, SIGNAL( clicked(int) ), this, SLOT( swapRGB() ) );
+    connect( swirlAngle, SIGNAL( valueChanged(double) ), this, SLOT( swirl() ) );
+    connect( thresholdValue, SIGNAL( valueChanged(int) ), this, SLOT( threshold() ) );
+    connect( waveAmpl, SIGNAL( valueChanged(double) ), this, SLOT( wave() ) );
+    connect( waveLength, SIGNAL( valueChanged(double) ), this, SLOT( wave() ) );
+    connect( redeyeValue, SIGNAL( valueChanged(int) ), this, SLOT( redeye() ) );
+}
+
+void SQ_ImageFilter::slotGoOut(int)
+{
+    if(widgetStackFilters->widget(F::fwave) == widgetStackFilters->visibleWidget())
+    {
+	pixmap1->erase();
+	pixmap1->update();
+    }
 }

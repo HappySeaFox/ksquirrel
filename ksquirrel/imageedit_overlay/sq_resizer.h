@@ -30,26 +30,26 @@ class SQ_ImageResizeOptions;
 
 class SQ_Resizer : public SQ_EditBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		SQ_Resizer();
-		~SQ_Resizer();
+    public:
+        SQ_Resizer();
+        ~SQ_Resizer();
 
-		static SQ_Resizer* instance();
+        static SQ_Resizer* instance();
 
-	protected:
-		virtual void startEditPrivate();
-		virtual void dialogReset();
-		virtual int manipDecodedImage(fmt_image *im);
+    protected:
+        virtual void startEditPrivate();
+        virtual void dialogReset();
+        virtual int manipDecodedImage(fmt_image *im);
 
-	private slots:
-		void slotStartResize(SQ_ImageOptions*, SQ_ImageResizeOptions*);
+    private slots:
+        void slotStartResize(SQ_ImageOptions*, SQ_ImageResizeOptions*);
 
-	private:
-		SQ_ImageResize *res;
-		static SQ_Resizer *sing;
-		SQ_ImageResizeOptions resopt;
+    private:
+        SQ_ImageResize *res;
+        static SQ_Resizer *sing;
+        SQ_ImageResizeOptions resopt;
 };
 
 #endif

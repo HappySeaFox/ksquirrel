@@ -30,24 +30,24 @@
 
 SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(parent, name)
 {
-	// create popup menu
-	rightMenu = new KPopupMenu;
+    // create popup menu
+    rightMenu = new KPopupMenu;
 
-	KActionSeparator *pASep = new KActionSeparator;
+    KActionSeparator *pASep = new KActionSeparator;
 
-	pAOpen = KStdAction::open(this, SLOT(slotActivate()), KSquirrel::app()->actionCollection(), "Open SQ from tray");
-	pAExit = KStdAction::quit(this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ close from tray");
+    pAOpen = KStdAction::open(this, SLOT(slotActivate()), KSquirrel::app()->actionCollection(), "Open SQ from tray");
+    pAExit = KStdAction::quit(this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ close from tray");
 
-	// insert actions to popup menu
-	pAOpen->plug(rightMenu);
-	KSquirrel::app()->pAConfigure->plug(rightMenu);
-	pASep->plug(rightMenu);
-	pAExit->plug(rightMenu);
+    // insert actions to popup menu
+    pAOpen->plug(rightMenu);
+    KSquirrel::app()->pAConfigure->plug(rightMenu);
+    pASep->plug(rightMenu);
+    pAExit->plug(rightMenu);
 
-	// set pixmap
-	//
-	// TODO: load icon "ksquirrel" ?
-	setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/tray.png")));
+    // set pixmap
+    //
+    // TODO: load icon "ksquirrel" ?
+    setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/tray.png")));
 }
 
 /*
@@ -55,23 +55,23 @@ SQ_SystemTray::SQ_SystemTray(QWidget *parent, const char *name) : KSystemTray(pa
  */
 void SQ_SystemTray::mousePressEvent(QMouseEvent *ev)
 {
-	// left button ?
-	if(ev->button() == Qt::LeftButton)
-	{
-		// activate main window
-		slotActivate();
-	}
-	// right button ?
-	else if(ev->button() == Qt::RightButton)
-	{
-		// show popup menu
-		rightMenu->exec(QCursor::pos());
-	}
+    // left button ?
+    if(ev->button() == Qt::LeftButton)
+    {
+        // activate main window
+        slotActivate();
+    }
+    // right button ?
+    else if(ev->button() == Qt::RightButton)
+    {
+        // show popup menu
+        rightMenu->exec(QCursor::pos());
+    }
 }
 
 void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 {
-	KSystemTray::mouseReleaseEvent(ev);
+    KSystemTray::mouseReleaseEvent(ev);
 }
 
 /*
@@ -79,10 +79,10 @@ void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
  */
 void SQ_SystemTray::slotActivate()
 {
-	if(SQ_GLView::window()->isSeparate() && !SQ_GLView::window()->isHidden())
-		SQ_GLView::window()->show();
+    if(SQ_GLView::window()->isSeparate() && !SQ_GLView::window()->isHidden())
+        SQ_GLView::window()->show();
 
-	KSquirrel::app()->show();
+    KSquirrel::app()->show();
 }
 
 /*
@@ -90,9 +90,9 @@ void SQ_SystemTray::slotActivate()
  */
 void SQ_SystemTray::slotClose()
 {
-	// save all parameters...
-	KSquirrel::app()->finalActions();
+    // save all parameters...
+    KSquirrel::app()->finalActions();
 
-	// quit
-	qApp->quit();
+    // quit
+    qApp->quit();
 }

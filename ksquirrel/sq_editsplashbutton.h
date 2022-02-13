@@ -32,53 +32,54 @@
 
 class SQ_EditSplashButton : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_EditSplashButton(QWidget *parent=0, const char *name=0);
-		~SQ_EditSplashButton();
+    public: 
+        SQ_EditSplashButton(QWidget *parent=0, const char *name=0);
+        ~SQ_EditSplashButton();
 
-		/*
-		 *  Set text and pixmap.
-		 */
-		void setText(const QString &_text);
-		void setPixmap(const QPixmap &_pix);
+        /*
+         *  Set text and pixmap.
+         */
+        void setText(const QString &_text);
+        void setPixmap(const QPixmap &_pix);
 
-	protected:
-		/*
-		 *  Reimplement mouse events to handle clicks.
-		 */
-		virtual void mouseReleaseEvent(QMouseEvent *e);
-		virtual void mousePressEvent(QMouseEvent *e);
+    protected:
+        /*
+         *  Reimplement mouse events to handle clicks.
+         */
+        virtual void mouseReleaseEvent(QMouseEvent *e);
+        virtual void mousePressEvent(QMouseEvent *e);
 
-		/*
-		 *  Reimplement enterEvent() and leaveEvent()
-		 *  to make hightlighting possible
-		 */ 
-		virtual void enterEvent(QEvent *);
-		virtual void leaveEvent(QEvent *);
+        /*
+         *  Reimplement enterEvent() and leaveEvent()
+         *  to make hightlighting possible
+         */ 
+        virtual void enterEvent(QEvent *);
+        virtual void leaveEvent(QEvent *);
 
-		/*
-		 *  Draw button
-		 */
-		virtual void paintEvent(QPaintEvent *);
+        /*
+         *  Draw button
+         */
+        virtual void paintEvent(QPaintEvent *);
 
-	signals:
-		/*
-		 *  Emitted, when user clicked on button.
-		 *  Hope, somebody will catch this signal ... :)
-		 */
-		void clicked();
+    signals:
+        /*
+         *  Emitted, when user clicked on button.
+         *  Hope, somebody will catch this signal ... :)
+         */
+        void clicked();
 
-	private:
-		bool on, pressed;
-		QPixmap pix;
-		QString text;
+    private:
+        bool on, pressed;
+        QPixmap pix;
+        QString text;
 };
 
-inline void SQ_EditSplashButton::setText(const QString &_text)
+inline
+void SQ_EditSplashButton::setText(const QString &_text)
 {
-	text = _text;
+    text = _text;
 }
 
 #endif

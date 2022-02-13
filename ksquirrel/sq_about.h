@@ -25,33 +25,31 @@
  *  'About' dialog
  */
 
-static const char *description = I18N_NOOP("KSquirrel - image viewer for KDE");
-
 #ifdef PACKAGE_VERSION
 #define SQ_VERSION PACKAGE_VERSION
 #else
-#define SQ_VERSION "0.6.0-pre8"
+#define SQ_VERSION "0.6.0-pre9"
 #endif
 
 static KAboutData aboutData(
-			"ksquirrel",
+            "ksquirrel",
 
 #ifndef SQ_SMALL
 
-			"KSquirrel",
+            "KSquirrel",
 
 #else
 
-			"KSquirrel (light version)",
+            "KSquirrel (light version)",
 
 #endif
 
-			SQ_VERSION, 
-			description,
-			KAboutData::License_GPL,
-			"(c) 2003-2005 Baryshev Dmitry", 
-			QString::null,
-			"http://ksquirrel.sourceforge.net",
-			QString::null);
+            SQ_VERSION, 
+            I18N_NOOP("KSquirrel - image viewer for KDE"),
+            KAboutData::License_GPL,
+            "(c) 2003-2005 Baryshev Dmitry", 
+            QString::null,
+            "http://ksquirrel.sourceforge.net",
+            QString::null);
     
 #endif

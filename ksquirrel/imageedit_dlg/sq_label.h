@@ -15,22 +15,27 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef SQ_LABEL_H
+#define SQ_LABEL_H
+
 #include <qwidget.h>
 
 class SQ_Label : public QWidget
 {
-	public:
-		SQ_Label(QWidget *parent = 0, const char *name = 0);
-		~SQ_Label();
+    public:
+        SQ_Label(QWidget *parent = 0, const char *name = 0);
+        ~SQ_Label();
 
-		void setText(const QString &lt, const QString &rt);
-		void setText(const QString &lt);
-		void setSingle(bool s);
+        void setText(const QString &lt, const QString &rt);
+        void setText(const QString &lt);
+        void setSingle(bool s);
 
-	protected:
-		void paintEvent(QPaintEvent *);
+    protected:
+        void paintEvent(QPaintEvent *);
 
-	private:
-		QString ltext, rtext;
-		bool single;
+    private:
+        QString ltext, rtext;
+        bool single;
 };
+
+#endif

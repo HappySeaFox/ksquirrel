@@ -1,6 +1,6 @@
 /*
-	copyright            : (C) 2004 by Baryshev Dmitry
-	KSquirrel - image viewer for KDE
+    copyright            : (C) 2004 by Baryshev Dmitry
+    KSquirrel - image viewer for KDE
 */
 
 /*  This file is part of the KDE project
@@ -42,46 +42,46 @@ typedef QPtrList<KFileItem> KFileItemList;
 
 class SQ_ThumbnailLoadJob : public KIO::Job
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		SQ_ThumbnailLoadJob(const KFileItemList* itemList);
-		virtual ~SQ_ThumbnailLoadJob();
+    public:
+        SQ_ThumbnailLoadJob(const KFileItemList* itemList);
+        virtual ~SQ_ThumbnailLoadJob();
 
-		void start();
-		void itemRemoved(const KFileItem* item);
-		void appendItem(const KFileItem* item);
-		void appendItems(const KFileItemList &items);
+        void start();
+        void itemRemoved(const KFileItem* item);
+        void appendItem(const KFileItem* item);
+        void appendItems(const KFileItemList &items);
 
-		static QImage makeBigThumb(QImage *image);
-		static bool loadThumbnail(const QString& pixPath, SQ_Thumbnail&, bool = true);
+        static QImage makeBigThumb(QImage *image);
+        static bool loadThumbnail(const QString& pixPath, SQ_Thumbnail&, bool = true);
 
-	private:
-		void determineNextIcon();
-		bool statResultThumbnail(KIO::StatJob *);
-		void createThumbnail(const QString& path);
-		void emitThumbnailLoaded(SQ_Thumbnail &);
-		void emitThumbnailLoadingFailed();
-		void insertOrSync(const QString &path, SQ_Thumbnail &th);
+    private:
+        void determineNextIcon();
+        bool statResultThumbnail(KIO::StatJob *);
+        void createThumbnail(const QString& path);
+        void emitThumbnailLoaded(SQ_Thumbnail &);
+        void emitThumbnailLoadingFailed();
+        void insertOrSync(const QString &path, SQ_Thumbnail &th);
 
-	signals:
-		void thumbnailLoaded(const KFileItem* item, const SQ_Thumbnail &t);
+    signals:
+        void thumbnailLoaded(const KFileItem* item, const SQ_Thumbnail &t);
 
-	private slots:
-		void slotResult(KIO::Job *job);
+    private slots:
+        void slotResult(KIO::Job *job);
 
-	private:
-		enum { STATE_STATORIG, STATE_STATTHUMB, STATE_DELETETEMP } mState;
+    private:
+        enum { STATE_STATORIG, STATE_STATTHUMB, STATE_DELETETEMP } mState;
 
-		KFileItemList mItems;
-		KFileItem *mCurrentItem;
-		KURL mCurrentURL;
-		time_t mOriginalTime;
-		KURL mThumbURL;
-		KURL mTempURL;
-		QString mCacheDir, mime;
-		SQ_Dir *dir;
-		SQ_Thumbnail mBrokenThumbnail;
+        KFileItemList mItems;
+        KFileItem *mCurrentItem;
+        KURL mCurrentURL;
+        time_t mOriginalTime;
+        KURL mThumbURL;
+        KURL mTempURL;
+        QString mCacheDir, mime;
+        SQ_Dir *dir;
+        SQ_Thumbnail mBrokenThumbnail;
 };
 
 #endif

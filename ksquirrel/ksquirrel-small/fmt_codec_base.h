@@ -99,7 +99,7 @@ class fmt_codec_base
 
 	// fmt_write_init: init writing
 	virtual s32     fmt_write_init(const std::string &file, const fmt_image &image, const fmt_writeoptions &opt) = 0;
-	
+
 	virtual s32	fmt_write_next() = 0;
 
 	virtual s32	fmt_write_next_pass() = 0;
@@ -111,8 +111,10 @@ class fmt_codec_base
 	virtual void	fmt_write_close() = 0;
 
 	fmt_info information() const;
-	
+
 	fmt_image* image(const int index);
+
+        void addMeta(const fmt_metaentry &m);
 
     protected:
 	// image index in finfo.image
@@ -127,7 +129,7 @@ class fmt_codec_base
 	// output stream
 	ofstreamK         fws;
 
-	// some additional erro checkers
+	// some additional error checkers
 	bool              read_error, write_error;
 
 	// line and layer indexes - needed by some
@@ -154,6 +156,12 @@ inline
 fmt_image* fmt_codec_base::image(const int index)
 {
     return &finfo.image[index];
+}
+
+inline
+void fmt_codec_base::addMeta(const fmt_metaentry &m)
+{
+    finfo.meta.push_back(m);
 }
 
 #endif

@@ -28,19 +28,19 @@
 
 class SQ_IconListBox : public KListBox
 {
-	public:
-		SQ_IconListBox(QWidget * = 0, const char * = 0, WFlags = 0);
+    public:
+        SQ_IconListBox(QWidget * = 0, const char * = 0, WFlags = 0);
 
-		void updateAndInstall(QObject *);
+        void updateAndInstall(QObject *);
 
-	private:
-		void updateWidth();
-		void invalidateHeight();
-		void invalidateWidth();
+    private:
+        void updateWidth();
+        void invalidateHeight();
+        void invalidateWidth();
 
-	private:
-		bool mHeightValid;
-		bool mWidthValid;
+    private:
+        bool mHeightValid;
+        bool mWidthValid;
 };
 
 #endif

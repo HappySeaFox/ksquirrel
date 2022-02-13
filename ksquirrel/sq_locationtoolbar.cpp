@@ -29,7 +29,7 @@ SQ_LocationToolbar::~SQ_LocationToolbar()
  */
 void SQ_LocationToolbar::setShown(bool shown)
 {
-	vis = shown;
+    vis = shown;
 
-	KToolBar::setShown(shown);
+    KToolBar::setShown(shown);
 }

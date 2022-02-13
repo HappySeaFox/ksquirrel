@@ -26,15 +26,15 @@
 
 class SQ_PushButton : public QPushButton
 {
-        public: 
-                SQ_PushButton(QWidget *parent, const char *name = 0);
-                SQ_PushButton(const QString &text, QWidget *parent, const char *name = 0);
-                ~SQ_PushButton();
+    public: 
+        SQ_PushButton(QWidget *parent, const char *name = 0);
+        SQ_PushButton(const QString &text, QWidget *parent, const char *name = 0);
+        ~SQ_PushButton();
 
-                void setPopup(QPopupMenu *popup);
+        void setPopup(QPopupMenu *popup);
 
-        private:
-                void init();
+    private:
+        void init();
 };
 
 #endif

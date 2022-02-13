@@ -30,28 +30,28 @@ class SQ_ImageConvertOptions;
 
 class SQ_Converter : public SQ_EditBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_Converter();
-		~SQ_Converter();
+    public: 
+        SQ_Converter();
+        ~SQ_Converter();
 
-		static SQ_Converter* instance();
+        static SQ_Converter* instance();
 
-	protected:
-		virtual void startEditPrivate();
-		virtual void setWritingLibrary();
-		virtual void dialogReset();
-		virtual void initWriteOptions();
-		virtual int manipDecodedImage(fmt_image *im);
+    protected:
+        virtual void startEditPrivate();
+        virtual void setWritingLibrary();
+        virtual void dialogReset();
+        virtual void initWriteOptions();
+        virtual int manipDecodedImage(fmt_image *im);
 
-	private slots:
-		void slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*);
+    private slots:
+        void slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*);
 
-	private:
-		SQ_ImageConvert	*convert;
-		static SQ_Converter	*sing;
-		SQ_ImageConvertOptions convopt;
+    private:
+        SQ_ImageConvert    *convert;
+        static SQ_Converter    *sing;
+        SQ_ImageConvertOptions convopt;
 };
 
 #endif

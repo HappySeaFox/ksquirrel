@@ -539,12 +539,12 @@
                                                 </property>
                                                 <property name="sizeHint">
                                                     <size>
-                                                        <width>11</width>
-                                                        <height>26</height>
+                                                        <width>16</width>
+                                                        <height>90</height>
                                                     </size>
                                                 </property>
                                             </spacer>
-                                            <widget class="KDoubleNumInput" row="0" column="1">
+                                            <widget class="KIntNumInput" row="0" column="1">
                                                 <property name="name">
                                                     <cstring>edgeRadius</cstring>
                                                 </property>
@@ -1012,11 +1012,6 @@
                                                     <string>Radius:</string>
                                                 </property>
                                             </widget>
-                                            <widget class="KDoubleNumInput" row="0" column="1">
-                                                <property name="name">
-                                                    <cstring>oilRadius</cstring>
-                                                </property>
-                                            </widget>
                                             <spacer row="1" column="1">
                                                 <property name="name">
                                                     <cstring>spacer15_2_2</cstring>
@@ -1029,8 +1024,64 @@
                                                 </property>
                                                 <property name="sizeHint">
                                                     <size>
-                                                        <width>10</width>
-                                                        <height>126</height>
+                                                        <width>16</width>
+                                                        <height>132</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                            <widget class="KIntNumInput" row="0" column="1">
+                                                <property name="name">
+                                                    <cstring>oilRadius</cstring>
+                                                </property>
+                                            </widget>
+                                        </grid>
+                                    </widget>
+                                    <widget class="QWidget">
+                                        <property name="name">
+                                            <cstring>WStackPage</cstring>
+                                        </property>
+                                        <attribute name="id">
+                                            <number>13</number>
+                                        </attribute>
+                                        <grid>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QLabel" row="0" column="0">
+                                                <property name="name">
+                                                    <cstring>textLabel5_2_2</cstring>
+                                                </property>
+                                                <property name="sizePolicy">
+                                                    <sizepolicy>
+                                                        <hsizetype>4</hsizetype>
+                                                        <vsizetype>5</vsizetype>
+                                                        <horstretch>0</horstretch>
+                                                        <verstretch>0</verstretch>
+                                                    </sizepolicy>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Threshold:</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="KIntNumInput" row="0" column="1">
+                                                <property name="name">
+                                                    <cstring>redeyeValue</cstring>
+                                                </property>
+                                            </widget>
+                                            <spacer row="1" column="1">
+                                                <property name="name">
+                                                    <cstring>spacer24_2_2</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Vertical</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Expanding</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>16</width>
+                                                        <height>75</height>
                                                     </size>
                                                 </property>
                                             </spacer>
@@ -1041,7 +1092,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>13</number>
+                                            <number>14</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1113,7 +1164,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>14</number>
+                                            <number>15</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1185,7 +1236,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>15</number>
+                                            <number>16</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1236,7 +1287,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>16</number>
+                                            <number>17</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1287,7 +1338,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>17</number>
+                                            <number>18</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1352,7 +1403,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>18</number>
+                                            <number>19</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1403,7 +1454,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>19</number>
+                                            <number>20</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1454,7 +1505,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>20</number>
+                                            <number>21</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1501,7 +1552,7 @@
                                             <cstring>WStackPage</cstring>
                                         </property>
                                         <attribute name="id">
-                                            <number>21</number>
+                                            <number>22</number>
                                         </attribute>
                                         <grid>
                                             <property name="name">
@@ -1528,22 +1579,6 @@
                                                     <cstring>waveAmpl</cstring>
                                                 </property>
                                             </widget>
-                                            <widget class="QLabel" row="1" column="0">
-                                                <property name="name">
-                                                    <cstring>textLabel2_2_2_2_3</cstring>
-                                                </property>
-                                                <property name="sizePolicy">
-                                                    <sizepolicy>
-                                                        <hsizetype>4</hsizetype>
-                                                        <vsizetype>5</vsizetype>
-                                                        <horstretch>0</horstretch>
-                                                        <verstretch>0</verstretch>
-                                                    </sizepolicy>
-                                                </property>
-                                                <property name="text">
-                                                    <string>Length:</string>
-                                                </property>
-                                            </widget>
                                             <widget class="KDoubleNumInput" row="1" column="1">
                                                 <property name="name">
                                                     <cstring>waveLength</cstring>
@@ -1561,11 +1596,27 @@
                                                 </property>
                                                 <property name="sizeHint">
                                                     <size>
-                                                        <width>10</width>
+                                                        <width>16</width>
                                                         <height>100</height>
                                                     </size>
                                                 </property>
                                             </spacer>
+                                            <widget class="QLabel" row="1" column="0">
+                                                <property name="name">
+                                                    <cstring>textLabel2_2_2_2_3</cstring>
+                                                </property>
+                                                <property name="sizePolicy">
+                                                    <sizepolicy>
+                                                        <hsizetype>4</hsizetype>
+                                                        <vsizetype>5</vsizetype>
+                                                        <horstretch>0</horstretch>
+                                                        <verstretch>0</verstretch>
+                                                    </sizepolicy>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Length:</string>
+                                                </property>
+                                            </widget>
                                         </grid>
                                     </widget>
                                 </widget>
@@ -1841,166 +1892,10 @@
         <slot>slotOptions()</slot>
     </connection>
     <connection>
-        <sender>blendOpacity</sender>
-        <signal>valueChanged(double)</signal>
+        <sender>widgetStackFilters</sender>
+        <signal>aboutToShow(int)</signal>
         <receiver>SQ_ImageFilter</receiver>
-        <slot>blend()</slot>
-    </connection>
-    <connection>
-        <sender>pushBlendColor</sender>
-        <signal>changed(const QColor&amp;)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>blend()</slot>
-    </connection>
-    <connection>
-        <sender>blurRadius</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>blur()</slot>
-    </connection>
-    <connection>
-        <sender>blurSigma</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>blur()</slot>
-    </connection>
-    <connection>
-        <sender>desaturateValue</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>desaturate()</slot>
-    </connection>
-    <connection>
-        <sender>edgeRadius</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>edge()</slot>
-    </connection>
-    <connection>
-        <sender>embossRadius</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>emboss()</slot>
-    </connection>
-    <connection>
-        <sender>embossSigma</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>emboss()</slot>
-    </connection>
-    <connection>
-        <sender>fadeColor</sender>
-        <signal>changed(const QColor&amp;)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>fade()</slot>
-    </connection>
-    <connection>
-        <sender>fadeValue</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>fade()</slot>
-    </connection>
-    <connection>
-        <sender>flattenColor1</sender>
-        <signal>changed(const QColor&amp;)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>flatten()</slot>
-    </connection>
-    <connection>
-        <sender>flattenColor2</sender>
-        <signal>changed(const QColor&amp;)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>flatten()</slot>
-    </connection>
-    <connection>
-        <sender>implodeFactor</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>implode()</slot>
-    </connection>
-    <connection>
-        <sender>buttonGroupNoise</sender>
-        <signal>clicked(int)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>noise()</slot>
-    </connection>
-    <connection>
-        <sender>oilRadius</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>oil()</slot>
-    </connection>
-    <connection>
-        <sender>shadeAzim</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>shade()</slot>
-    </connection>
-    <connection>
-        <sender>shadeColor</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>shade()</slot>
-    </connection>
-    <connection>
-        <sender>shadeElev</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>shade()</slot>
-    </connection>
-    <connection>
-        <sender>sharpenRadius</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>sharpen()</slot>
-    </connection>
-    <connection>
-        <sender>sharpenSigma</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>sharpen()</slot>
-    </connection>
-    <connection>
-        <sender>solarizeValue</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>solarize()</slot>
-    </connection>
-    <connection>
-        <sender>spreadValue</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>spread()</slot>
-    </connection>
-    <connection>
-        <sender>buttonGroupSwapRGB</sender>
-        <signal>clicked(int)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>swapRGB()</slot>
-    </connection>
-    <connection>
-        <sender>swirlAngle</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>swirl()</slot>
-    </connection>
-    <connection>
-        <sender>thresholdValue</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>threshold()</slot>
-    </connection>
-    <connection>
-        <sender>waveAmpl</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>wave()</slot>
-    </connection>
-    <connection>
-        <sender>waveLength</sender>
-        <signal>valueChanged(double)</signal>
-        <receiver>SQ_ImageFilter</receiver>
-        <slot>wave()</slot>
+        <slot>slotGoOut(int)</slot>
     </connection>
 </connections>
 <tabstops>
@@ -2063,18 +1958,20 @@
     <slot access="private">emboss()</slot>
     <slot access="private">sharpen()</slot>
     <slot access="private">oil()</slot>
+    <slot access="private">redeye()</slot>
+    <slot access="private">slotGoOut( int )</slot>
 </slots>
 <functions>
     <function access="private" specifier="non virtual">init()</function>
     <function>startFiltering( int count )</function>
     <function access="protected">closeEvent( QCloseEvent * e )</function>
-    <function access="private">initPreviewImage()</function>
     <function>setPreviewImage( const QImage &amp; im )</function>
     <function access="private">assignNewImage( const QImage &amp; im )</function>
     <function access="private">negative()</function>
     <function access="private">togray()</function>
     <function access="private">equalize()</function>
     <function access="private">despeckle()</function>
+    <function access="private">hackConnect()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
@@ -2099,6 +1996,8 @@
     <includehint>knuminput.h</includehint>
     <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>

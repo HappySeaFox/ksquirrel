@@ -32,111 +32,113 @@
 
 class SQ_LibraryHandler : public QValueVector<SQ_LIBRARY>
 {
-	public:
-		SQ_LibraryHandler(QStringList *foundLibraries = 0);
-		~SQ_LibraryHandler();
+    public:
+        SQ_LibraryHandler(QStringList *foundLibraries = 0);
+        ~SQ_LibraryHandler();
 
-		/*
-		 *  Find appropriate SQ_LIBRARY by filename. If
-		 *  not found, return NULL.
-		 */
-		SQ_LIBRARY* libraryForFile(const QString &path);
+        /*
+         *  Find appropriate SQ_LIBRARY by filename. If
+         *  not found, return NULL.
+         */
+        SQ_LIBRARY* libraryForFile(const QString &path);
 
-		/*
-		 *  Find appropriate SQ_LIBRARY by its name. If
-		 *  not found, return NULL.
-		 *
-		 *  Name is a string, returned by fmt_quickinfo()
-		 */
-		SQ_LIBRARY* libraryByName(const QString &name);
+        /*
+         *  Find appropriate SQ_LIBRARY by its name. If
+         *  not found, return NULL.
+         *
+         *  Name is a string, returned by fmt_quickinfo()
+         */
+        SQ_LIBRARY* libraryByName(const QString &name);
 
-		/*
-		 *  Find appropriate codec for given filename. If
-		 *  not found, return NULL.
-		 */
-		fmt_codec_base* codecForFile(const QString &path);
+        /*
+         *  Find appropriate codec for given filename. If
+         *  not found, return NULL.
+         */
+        fmt_codec_base* codecForFile(const QString &path);
 
-		/*
-		 *  Find appropriate codec for given library name. If
-		 *  not found, return NULL.
-		 */
-		fmt_codec_base* codecByName(const QString &name);
+        /*
+         *  Find appropriate codec for given library name. If
+         *  not found, return NULL.
+         */
+        fmt_codec_base* codecByName(const QString &name);
 
-		/*
-		 *  Does SQ_LibraryHandler support given file ?
-		 *
-		 *  It supports, if libraryForFile(path) is not NULL.
-		 */
-		bool supports(const QString &path);
+        /*
+         *  Does SQ_LibraryHandler support given file ?
+         *
+         *  It supports, if libraryForFile(path) is not NULL.
+         */
+        bool supports(const QString &path);
 
-		/*
-		 *  Does any of found libraries handle given extension ?
-		 */
-		bool knownExtension(const QString &ext);
+        /*
+         *  Does any of found libraries handle given extension ?
+         */
+        bool knownExtension(const QString &ext);
 
-		/*
-		 *  Fill 'filters' with all found filters, and
-		 *  'quick' with appropriate information.
-		 */
-		void allFilters(QStringList &filters, QStringList &quick) const;
-		
-		/*
-		 *  Get all filters as one string.
-		 */
-		QString allFiltersString() const;
+        /*
+         *  Fill 'filters' with all found filters, and
+         *  'quick' with appropriate information.
+         */
+        void allFilters(QStringList &filters, QStringList &quick) const;
 
-		/*
-		 *  Remove and unload all libraries.
-		 */
-		void clear();
+        void allWritableFilters(QStringList &filters, QStringList &quick) const;
 
-		/*
-		 *  Print some information on found libraries.
-		 */
-		void dump() const;
+        /*
+         *  Get all filters as one string.
+         */
+        QString allFiltersString() const;
 
-		/*
-		 *  Clear old libraries, and load new.
-		 */
-		void reInit(QStringList *foundLibraries);
+        /*
+         *  Remove and unload all libraries.
+         */
+        void clear();
 
-		/*
-		 *  Add new libraries.
-		 */
-		void add(QStringList *foundLibraries);
+        /*
+         *  Print some information on found libraries.
+         */
+        void dump() const;
 
-		/*
-		 *  Remove given libraries.
-		 */
-		void remove(QStringList *foundLibraries);
+        /*
+         *  Clear old libraries, and load new.
+         */
+        void reInit(QStringList *foundLibraries);
 
-		/*
-		 *  supports() saves last found library.
-		 *  You can access it via latestLibrary().
-		 */
-		SQ_LIBRARY *latestLibrary();
+        /*
+         *  Add new libraries.
+         */
+        void add(QStringList *foundLibraries);
 
-		/*
-		 *  -//- but return codec.
-		 */
-		fmt_codec_base *latestCodec();
+        /*
+         *  Remove given libraries.
+         */
+        void remove(QStringList *foundLibraries);
 
-		static SQ_LibraryHandler* instance();
+        /*
+         *  supports() saves last found library.
+         *  You can access it via latestLibrary().
+         */
+        SQ_LIBRARY *latestLibrary();
 
-	private:
+        /*
+         *  -//- but return codec.
+         */
+        fmt_codec_base *latestCodec();
 
-		/*
-		 *  Is library with name 'quick' already been handled ?
-		 */
-		bool alreadyInMap(const QString &quick) const;
+        static SQ_LibraryHandler* instance();
 
-	private:
-		/*
-		 *  Last found library by libraryForFile().
-		 */
-		SQ_LIBRARY *latest;
+    private:
 
-		static SQ_LibraryHandler *hand;
+        /*
+         *  Is library with name 'quick' already been handled ?
+         */
+        bool alreadyInMap(const QString &quick) const;
+
+    private:
+        /*
+         *  Last found library by libraryForFile().
+         */
+        SQ_LIBRARY *latest;
+
+        static SQ_LibraryHandler *hand;
 };
 
 inline

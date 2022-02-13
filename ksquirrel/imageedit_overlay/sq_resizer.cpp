@@ -28,13 +28,13 @@ SQ_Resizer * SQ_Resizer::sing = NULL;
 
 SQ_Resizer::SQ_Resizer() : SQ_EditBase()
 {
-	sing = this;
+    sing = this;
 
-	special_action = i18n("Resizing");
+    special_action = i18n("Resizing");
 
-	prefix = "Resizing of ";
+    prefix = "Resizing of ";
 
-	ondisk = true;
+    ondisk = true;
 }
 
 SQ_Resizer::~SQ_Resizer()
@@ -42,105 +42,105 @@ SQ_Resizer::~SQ_Resizer()
 
 void SQ_Resizer::startEditPrivate()
 {
-	res = new SQ_ImageResize(KSquirrel::app());
-	res->setCaption(i18n("Resize 1 file", "Resize %n files", files.count()));
+    res = new SQ_ImageResize(KSquirrel::app());
+    res->setCaption(i18n("Resize 1 file", "Resize %n files", files.count()));
 
-	connect(res, SIGNAL(_resize(SQ_ImageOptions*, SQ_ImageResizeOptions*)), this, SLOT(slotStartResize(SQ_ImageOptions*, SQ_ImageResizeOptions*)));
-        connect(this, SIGNAL(convertText(const QString &, bool)), res, SLOT(slotDebugText(const QString &, bool)));
-        connect(this, SIGNAL(oneFileProcessed()), res, SLOT(slotOneProcessed()));
-        connect(this, SIGNAL(done(bool)), res, SLOT(slotDone(bool)));
+    connect(res, SIGNAL(_resize(SQ_ImageOptions*, SQ_ImageResizeOptions*)), this, SLOT(slotStartResize(SQ_ImageOptions*, SQ_ImageResizeOptions*)));
+    connect(this, SIGNAL(convertText(const QString &, bool)), res, SLOT(slotDebugText(const QString &, bool)));
+    connect(this, SIGNAL(oneFileProcessed()), res, SLOT(slotOneProcessed()));
+    connect(this, SIGNAL(done(bool)), res, SLOT(slotDone(bool)));
 
-	res->exec();
+    res->exec();
 }
 
 void SQ_Resizer::slotStartResize(SQ_ImageOptions *o, SQ_ImageResizeOptions *ropt)
 {
-	imageopt = *o;
-	resopt = *ropt;
+    imageopt = *o;
+    resopt = *ropt;
 
-	decodingCycle();
+    decodingCycle();
 }
 
 SQ_Resizer* SQ_Resizer::instance()
 {
-	return sing;
+    return sing;
 }
 
 void SQ_Resizer::dialogReset()
 {
-	res->startResizing(files.count());
+    res->startResizing(files.count());
 }
 
 int SQ_Resizer::manipDecodedImage(fmt_image *im)
 {
-	int w = im->w, h = im->h;
+    int w = im->w, h = im->h;
 
-	if(resopt.percentage)
-	{
-		if(!resopt.adjust)
-			w = (int)((double)im->w * resopt.pc / 100.0);
-		else if(resopt.adjust == 1)
-			h = (int)((double)im->h * resopt.pc / 100.0);
-		else
-		{
-			w = (int)((double)im->w * resopt.pc / 100.0);
-			h = (int)((double)im->h * resopt.pc / 100.0);
-		}
-	}
-	else
-	{
-		if(resopt.preserve)
-		{
-			double aspect;
-
-			w = resopt.w;
-			h = resopt.h;
-
-			if(!resopt.adjust)
-			{
-				aspect = (double)resopt.w / im->w;
-				h = int((double)im->h * aspect);
-			}
-			else if(resopt.adjust == 1)
-			{
-				aspect = (double)resopt.h / im->h;
-				h = int((double)im->w * aspect);
-			}
-			else
-			{
-				QSize s(im->w, im->h);
-				s.scale(resopt.w, resopt.h, QSize::ScaleMin);
-
-				w = s.width();
-				h = s.height();
-			}
-		}
-		else
-		{
-			w = resopt.w;
-			h = resopt.h;
-		}
-	}
-
-	RGBA *rgba;
-/*
-	pixops_scale((unsigned char *)rgba, 0, 0, w, h, w * 4, 4, true,
-				(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
-				(double)w / im->w, (double)h / im->h,
-				(PixopsInterpType)resopt.method);
-*/
-        fmt_filters::image img((unsigned char *)image, im->w, im->h);
-
-        if(fmt_filters::resize(img, w, h, resopt.method, (unsigned char **)&rgba))
+    if(resopt.percentage)
+    {
+        if(!resopt.adjust)
+            w = (int)((double)im->w * resopt.pc / 100.0);
+        else if(resopt.adjust == 1)
+            h = (int)((double)im->h * resopt.pc / 100.0);
+        else
         {
-	    free(image);
+            w = (int)((double)im->w * resopt.pc / 100.0);
+            h = (int)((double)im->h * resopt.pc / 100.0);
+        }
+    }
+    else
+    {
+        if(resopt.preserve)
+        {
+            double aspect;
 
-	    image = rgba;
+            w = resopt.w;
+            h = resopt.h;
 
-	    im->w = w;
-	    im->h = h;
-	    return SQE_OK;
+            if(!resopt.adjust)
+            {
+                aspect = (double)resopt.w / im->w;
+                h = int((double)im->h * aspect);
+            }
+            else if(resopt.adjust == 1)
+            {
+                aspect = (double)resopt.h / im->h;
+                h = int((double)im->w * aspect);
+            }
+            else
+            {
+                QSize s(im->w, im->h);
+                s.scale(resopt.w, resopt.h, QSize::ScaleMin);
+
+                w = s.width();
+                h = s.height();
+            }
         }
         else
-            return SQE_R_NOMEMORY;
+        {
+            w = resopt.w;
+            h = resopt.h;
+        }
+    }
+
+    RGBA *rgba;
+/*
+    pixops_scale((unsigned char *)rgba, 0, 0, w, h, w * 4, 4, true,
+    (unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
+    (double)w / im->w, (double)h / im->h,
+    (PixopsInterpType)resopt.method);
+*/
+    fmt_filters::image img((unsigned char *)image, im->w, im->h);
+
+    if(fmt_filters::resize(img, w, h, resopt.method, (unsigned char **)&rgba))
+    {
+        free(image);
+
+        image = rgba;
+
+        im->w = w;
+        im->h = h;
+        return SQE_OK;
+    }
+    else
+        return SQE_R_NOMEMORY;
 }

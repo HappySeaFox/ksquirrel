@@ -14,25 +14,27 @@ void SQ_SlideShow::init()
     KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
     kurl->setMode(mode);
 
-    spinDelay->setValue(SQ_Config::instance()->readNumEntry("Slideshow", "delay", 1000));
+    SQ_Config::instance()->setGroup("Slideshow");
+
+    spinDelay->setValue(SQ_Config::instance()->readNumEntry("delay", 1000));
     pushCurrent->setPixmap(SQ_IconLoader::instance()->loadIcon("folder_green", KIcon::Desktop, 16));
     pushHistory->setPixmap(SQ_IconLoader::instance()->loadIcon("history", KIcon::Desktop, 16));
 
-    checkForce->setChecked(SQ_Config::instance()->readBoolEntry("Slideshow", "force", true));
-    checkFull->setChecked(SQ_Config::instance()->readBoolEntry("Slideshow", "fullscreen", true));
+    checkForce->setChecked(SQ_Config::instance()->readBoolEntry("force", true));
+    checkFull->setChecked(SQ_Config::instance()->readBoolEntry("fullscreen", true));
 
     QPopupMenu *hist = new QPopupMenu;
-    items = SQ_Config::instance()->readListEntry("Slideshow", "history");
+    items = SQ_Config::instance()->readListEntry("history");
     int i = 0;
 
     setPath(items.last());
 
     for(QStringList::iterator it = items.begin();it != items.end();++it)
     {
-	if(i++ < SQ_HIST_NUMBER)
-	    hist->insertItem(*it);
-	else
-	    break;
+        if(i++ < SQ_HIST_NUMBER)
+            hist->insertItem(*it);
+        else
+            break;
     }
 
     connect(hist, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
@@ -46,12 +48,12 @@ int SQ_SlideShow::exec(QString &path)
 
     if(result == QDialog::Accepted)
     {
-	SQ_Config::instance()->setGroup("Slideshow");
-	SQ_Config::instance()->writeEntry("delay", spinDelay->value());
-	SQ_Config::instance()->writeEntry("fullscreen", checkFull->isChecked());
-	SQ_Config::instance()->writeEntry("force", checkForce->isChecked());
-	SQ_Config::instance()->writeEntry("history", items);
-	path = kurl->url();
+        SQ_Config::instance()->setGroup("Slideshow");
+        SQ_Config::instance()->writeEntry("delay", spinDelay->value());
+        SQ_Config::instance()->writeEntry("fullscreen", checkFull->isChecked());
+        SQ_Config::instance()->writeEntry("force", checkForce->isChecked());
+        SQ_Config::instance()->writeEntry("history", items);
+        path = kurl->url();
     }
 
     return result;
@@ -60,7 +62,7 @@ int SQ_SlideShow::exec(QString &path)
 void SQ_SlideShow::slotDirectory(const QString &dir)
 {
     if(!dir.isEmpty())
-	appendPath(dir);
+        appendPath(dir);
 }
 
 void SQ_SlideShow::setPath(const QString &path)
@@ -73,18 +75,18 @@ void SQ_SlideShow::slotActivated(int id)
     QString dir = pushHistory->popup()->text(id);
 
     if(!dir.isEmpty())
-	setPath(dir);
+        setPath(dir);
 }
 
 void SQ_SlideShow::appendPath(const QString &path)
 {
     if(items.findIndex(path) == -1)
     {
-	items.append(path);
-	pushHistory->popup()->insertItem(path);
+        items.append(path);
+        pushHistory->popup()->insertItem(path);
 
-	if(items.count() > SQ_HIST_NUMBER)
-	    items.pop_front();
+        if(items.count() > SQ_HIST_NUMBER)
+            items.pop_front();
     }
 }
 

@@ -1230,7 +1230,6 @@
     <function access="private">assignNewImage( const QImage &amp; im )</function>
     <function access="private">changeImage( int b, int c, int g1, int red, int green, int blue )</function>
     <function access="protected">closeEvent( QCloseEvent * e )</function>
-    <function access="private">initPreviewImage()</function>
     <function>setPreviewImage( const QImage &amp; im )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>

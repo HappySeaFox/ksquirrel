@@ -37,19 +37,19 @@ class SQ_DirOperatorBase;
  */
 class SQ_Header : public KToolBar
 {
-	public:
-		SQ_Header(QWidget *parent = 0);
-		~SQ_Header();
+    public:
+        SQ_Header(QWidget *parent = 0);
+        ~SQ_Header();
 
-	protected:
-		void mousePressEvent(QMouseEvent *e);
-		void mouseMoveEvent(QMouseEvent *e);
-		void mouseReleaseEvent(QMouseEvent *e);
+    protected:
+        void mousePressEvent(QMouseEvent *e);
+        void mouseMoveEvent(QMouseEvent *e);
+        void mouseReleaseEvent(QMouseEvent *e);
 
-	private:
-		int oldX, oldY, oldParentX, oldParentY;
-		bool inMouse;
-		QWidget *p;
+    private:
+        int oldX, oldY, oldParentX, oldParentY;
+        bool inMouse;
+        QWidget *p;
 };
 
 /*
@@ -61,17 +61,17 @@ class SQ_Header : public KToolBar
  */
 class SQ_SizeGrip : public QSizeGrip
 {
-	public:
-		SQ_SizeGrip(QWidget *top, QWidget *parent = 0, const char *name = 0);
-		~SQ_SizeGrip();
+    public:
+        SQ_SizeGrip(QWidget *top, QWidget *parent = 0, const char *name = 0);
+        ~SQ_SizeGrip();
 
-	protected:
-		virtual void mousePressEvent(QMouseEvent *e);
-		virtual void mouseMoveEvent(QMouseEvent *e);
+    protected:
+        virtual void mousePressEvent(QMouseEvent *e);
+        virtual void mouseMoveEvent(QMouseEvent *e);
 
-	private:
-		QWidget *p;
-		QPoint mother;
+    private:
+        QWidget *p;
+        QPoint mother;
 };
 
 /*
@@ -79,12 +79,12 @@ class SQ_SizeGrip : public QSizeGrip
  */ 
 class SQ_QuickStatus : public QStatusBar
 {
-	public:
-		SQ_QuickStatus(QWidget *parent = 0, const char *name = 0);
-		~SQ_QuickStatus();
+    public:
+        SQ_QuickStatus(QWidget *parent = 0, const char *name = 0);
+        ~SQ_QuickStatus();
 
-	protected:
-		virtual void mousePressEvent(QMouseEvent *e);
+    protected:
+        virtual void mousePressEvent(QMouseEvent *e);
 };
 
 /*
@@ -92,34 +92,34 @@ class SQ_QuickStatus : public QStatusBar
  */
 class SQ_QuickBrowser : public QVBox
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_QuickBrowser(QWidget *parent = 0, const char *name = 0);
-		~SQ_QuickBrowser();
+    public: 
+        SQ_QuickBrowser(QWidget *parent = 0, const char *name = 0);
+        ~SQ_QuickBrowser();
 
-		SQ_DirOperatorBase *quick;
+        SQ_DirOperatorBase *quick;
 
-		static SQ_QuickBrowser* window();
-		static SQ_DirOperatorBase *quickOperator();
+        static SQ_QuickBrowser* window();
+        static SQ_DirOperatorBase *quickOperator();
 
-	public slots:
+    public slots:
 
-		/*
-		 *  Close(hide) SQ_QuickBrowser.
-		 */
-		void slotClose();
+        /*
+         *  Close(hide) SQ_QuickBrowser.
+         */
+        void slotClose();
 
-	protected:
-		/*
-		 *  Reimplement closeEvent() and showEvent()
-		 */
-		void closeEvent(QCloseEvent *);
-		void showEvent(QShowEvent *);
+    protected:
+        /*
+         *  Reimplement closeEvent() and showEvent()
+         */
+        void closeEvent(QCloseEvent *);
+        void showEvent(QShowEvent *);
 
-	private:
-		static SQ_QuickBrowser *view;
-		static SQ_DirOperatorBase *op;
+    private:
+        static SQ_QuickBrowser *view;
+        static SQ_DirOperatorBase *op;
 };
 
 #endif

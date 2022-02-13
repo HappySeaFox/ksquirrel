@@ -18,37 +18,45 @@
 #ifndef SQ_GLWIDGET_HELPERS
 #define SQ_GLWIDGET_HELPERS
 
-#include <ktoolbar.h>
 #include <ktoolbarbutton.h>
+
+class QToolBar;
 
 class SQ_ToolButtonPopup : public KToolBarButton
 {
-	public:
-		SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, QWidget *parent);
-		~SQ_ToolButtonPopup();
+    public:
+        SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, QWidget *parent);
+        ~SQ_ToolButtonPopup();
 
-		static int id;
+        static int id;
 };
 
 class SQ_ToolButton : public QToolButton
 {
-	public:
-		SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel, QObject *receiver,
-						const char *slot, QToolBar *parent, const char *name = 0);
+    public:
+        SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel, QObject *receiver,
+                        const char *slot, QToolBar *parent, const char *name = 0);
+        ~SQ_ToolButton();
 
-		~SQ_ToolButton();
-
-		static int fixedWidth();
+        static int fixedWidth();
 };
 
-class SQ_ToolBar : public KToolBar
+class SQ_ToolButtonPage : public SQ_ToolButton
 {
-	public:
-		SQ_ToolBar(QWidget *parent, const int members);
-		~SQ_ToolBar();
+    public:
+        SQ_ToolButtonPage(QObject *receiver, const char *slot, QToolBar *parent, const char *name = 0);
+        ~SQ_ToolButtonPage();
 
-	protected:
-		void mouseReleaseEvent(QMouseEvent *);
+        void advanceValue();
+        void flush();
+
+        static int fixedWidth();
+
+    private:
+        QPixmap generatePixmap();
+
+    private:
+        int val;
 };
 
 #endif

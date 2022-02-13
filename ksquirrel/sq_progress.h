@@ -26,35 +26,33 @@
 
 class SQ_Progress : public QLabel
 {
-	public:
-		SQ_Progress(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-		~SQ_Progress();
+    public:
+        SQ_Progress(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
+        ~SQ_Progress();
 
-		void setTotalSteps(int totalSteps);
+        void setTotalSteps(int totalSteps);
 
-		/*
-		 *  Add 'step_new' to current step.
-		 */
-		void advance(int step_new);
+        /*
+         *  Add 'step_new' to current step.
+         */
+        void advance(int step_new);
 
-		/*
-		 *  Clear drawing.
-		 */
-		void flush();
+        /*
+         *  Clear drawing.
+         */
+        void flush();
 
-	private:
+    private:
 
-		/*
-		 *  Internal. Set current progress to 'progress'.
-		 */
-		void setIndicator(int progress);
+        /*
+         *  Internal. Set current progress to 'progress'.
+         */
+        void setIndicator(int progress);
 
-	private:
-		int percentage;
-		int total_steps;
-		int step;
+    private:
+        int percentage, total_steps, step;
 
-		QPainter *painter;
+        QPainter *painter;
 };
 
 #endif

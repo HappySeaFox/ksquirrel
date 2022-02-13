@@ -31,25 +31,25 @@
 
 class SQ_ErrorString
 {
-	public: 
-		SQ_ErrorString();
-		~SQ_ErrorString();
+    public: 
+        SQ_ErrorString();
+        ~SQ_ErrorString();
 
-		/*
-		 *  Get string representation of error.
-		 */
-		QString string(const int code);
+        /*
+         *  Get string representation of error.
+         */
+        QString string(const int code);
 
-		/*
-		 *  string() + "\n"
-		 */
-		QString stringSN(const int code);
+        /*
+         *  string() + "\n"
+         */
+        QString stringSN(const int code);
 
-		static SQ_ErrorString* instance();
+        static SQ_ErrorString* instance();
 
-	private:
-		QMap<int, QString> messages;
-		static SQ_ErrorString *sing;
+    private:
+        QMap<int, QString> messages;
+        static SQ_ErrorString *sing;
 };
 
 #endif

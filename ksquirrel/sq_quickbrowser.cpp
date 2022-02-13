@@ -46,43 +46,43 @@ SQ_Header::~SQ_Header()
 
 void SQ_Header::mousePressEvent(QMouseEvent *e)
 {
-	e->accept();
+    e->accept();
 
-	if(e->button() == Qt::LeftButton)
-	{
-		oldParentX = p->x();
-		oldParentY = p->y();
+    if(e->button() == Qt::LeftButton)
+    {
+        oldParentX = p->x();
+        oldParentY = p->y();
 
-		oldX = e->globalX();
-		oldY = e->globalY();
+        oldX = e->globalX();
+        oldY = e->globalY();
 
-		inMouse = true;
-	}
+        inMouse = true;
+    }
 }
 
 void SQ_Header::mouseMoveEvent(QMouseEvent *e)
 {
-	e->accept();
+    e->accept();
 
-	if(!inMouse)
-		return;
+    if(!inMouse)
+        return;
 
-	int offsetX = e->globalX() - oldX;
-	int offsetY = e->globalY() - oldY;
+    int offsetX = e->globalX() - oldX;
+    int offsetY = e->globalY() - oldY;
 
-	parentWidget()->move(oldParentX + offsetX, oldParentY	 + offsetY);
+    parentWidget()->move(oldParentX + offsetX, oldParentY     + offsetY);
 }
 
 void SQ_Header::mouseReleaseEvent(QMouseEvent *e)
 {
-	e->accept();
+    e->accept();
 
-	if(e->button() == Qt::LeftButton)
-		inMouse = false;
+    if(e->button() == Qt::LeftButton)
+        inMouse = false;
 }
 
 SQ_SizeGrip::SQ_SizeGrip(QWidget *top, QWidget *parent, const char *name)
-		: QSizeGrip(parent, name), p(top)
+    : QSizeGrip(parent, name), p(top)
 {}
 
 SQ_SizeGrip::~SQ_SizeGrip()
@@ -90,30 +90,30 @@ SQ_SizeGrip::~SQ_SizeGrip()
 
 void SQ_SizeGrip::mousePressEvent(QMouseEvent *)
 {
-	mother = p->mapToGlobal(p->pos());
+    mother = p->mapToGlobal(p->pos());
 }
 
 void SQ_SizeGrip::mouseMoveEvent(QMouseEvent *e)
 {
-	if(e->state() != Qt::LeftButton)
-		return;
+    if(e->state() != Qt::LeftButton)
+        return;
 
-	int x = e->globalX();
-	int y = e->globalY();
-	int w = x - mother.x();
-	int h = y - mother.y() + 33;
+    int x = e->globalX();
+    int y = e->globalY();
+    int w = x - mother.x();
+    int h = y - mother.y() + 33;
 
-	if(w > 200 && h > 100)
-		p->resize(w, h);
-	else if(w > 200)
-		p->resize(w, p->height());
-	else if(h > 100)
-		p->resize(p->width(), h);
+    if(w > 200 && h > 100)
+        p->resize(w, h);
+    else if(w > 200)
+        p->resize(w, p->height());
+    else if(h > 100)
+        p->resize(p->width(), h);
 }
 
 SQ_QuickStatus::SQ_QuickStatus(QWidget *parent, const char *name) : QStatusBar(parent, name)
 {
-	setCursor(Qt::ArrowCursor);
+    setCursor(Qt::ArrowCursor);
 }
 
 SQ_QuickStatus::~SQ_QuickStatus()
@@ -121,56 +121,57 @@ SQ_QuickStatus::~SQ_QuickStatus()
 
 void SQ_QuickStatus::mousePressEvent(QMouseEvent *e)
 {
-	e->accept();
+    e->accept();
 }
 
 SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(parent, name)
 {
-	view = this;
-	hide();
+    view = this;
+    hide();
 
-	// create toolbar
-	SQ_Header *t = new SQ_Header(this);
+    // create toolbar
+    SQ_Header *t = new SQ_Header(this);
 
-	t->setIconSize(16);
-	t->setPalette(QPalette(QColor(255,255,255), QColor(255,255,255)));
+    t->setIconSize(16);
 
-	// create and setup SQ_DirOperatorBase
-	op = quick = new SQ_DirOperatorBase(SQ_WidgetStack::instance()->url(), SQ_DirOperatorBase::TypeList, this);
-	quick->readConfig(KGlobal::config(), SQ_SECTION_LIST);
-	quick->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
-	quick->setMode(KFile::Files);
-//	quick->iv->setSelectionMode(KFile::Single);
-	quick->iv->setIconSize(16);
+    // create and setup SQ_DirOperatorBase
+    op = quick = new SQ_DirOperatorBase(SQ_WidgetStack::instance()->url(), SQ_DirOperatorBase::TypeList, this);
+    quick->readConfig(KGlobal::config(), SQ_SECTION_LIST);
+    quick->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
+    quick->setMode(KFile::Files);
+//    quick->iv->setSelectionMode(KFile::Single);
+    quick->iv->setIconSize(16);
 
-	quick->iv->setCursor(Qt::ArrowCursor);
+    quick->iv->setCursor(Qt::ArrowCursor);
 
-	// plug actions to toolbar
-	quick->actionCollection()->action("back")->plug(t);
-	quick->actionCollection()->action("forward")->plug(t);
-	quick->actionCollection()->action("up")->plug(t);
-	quick->actionCollection()->action("reload")->plug(t);
-	quick->actionCollection()->action("home")->plug(t);
-	quick->actionCollection()->action("mkdir")->plug(t);
-	quick->actionCollection()->action("delete")->plug(t);
-	(new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ GL THide2"))->plug(t);
+    // plug actions to toolbar
+    quick->actionCollection()->action("back")->plug(t);
+    quick->actionCollection()->action("forward")->plug(t);
+    quick->actionCollection()->action("up")->plug(t);
+    quick->actionCollection()->action("reload")->plug(t);
+    quick->actionCollection()->action("home")->plug(t);
+    quick->actionCollection()->action("mkdir")->plug(t);
+    quick->actionCollection()->action("delete")->plug(t);
+    (new KAction(i18n("Hide"), "exit", 0, this, SLOT(slotClose()), KSquirrel::app()->actionCollection(), "SQ GL THide2"))->plug(t);
 
-	setStretchFactor(quick, 1);
+    setStretchFactor(quick, 1);
 
-	// create statusbar & sizegrip
-	SQ_QuickStatus *status = new SQ_QuickStatus(this);
-	status->setSizeGripEnabled(false);
-	QLabel *fix = new QLabel(status);
-	SQ_SizeGrip *grip = new SQ_SizeGrip(this, status);
+    // create statusbar & sizegrip
+    SQ_QuickStatus *status = new SQ_QuickStatus(this);
+    status->setSizeGripEnabled(false);
+    QLabel *fix = new QLabel(status);
+    SQ_SizeGrip *grip = new SQ_SizeGrip(this, status);
 
-	status->addWidget(fix, 1, true);
-	status->addWidget(grip, 0, true);
+    status->addWidget(fix, 1, true);
+    status->addWidget(grip, 0, true);
 
-	// restore geometry
-	QRect rect(0, 34, 250, 200);
-	QRect r = SQ_Config::instance()->readRectEntry("GL view", "quickGeometry", &rect);
+    SQ_Config::instance()->setGroup("GL view");
 
-	setGeometry(r);
+    // restore geometry
+    QRect rect(0, 34, 250, 200);
+    QRect r = SQ_Config::instance()->readRectEntry("quickGeometry", &rect);
+
+    setGeometry(r);
 }
 
 SQ_QuickBrowser::~SQ_QuickBrowser()
@@ -178,10 +179,10 @@ SQ_QuickBrowser::~SQ_QuickBrowser()
 
 void SQ_QuickBrowser::closeEvent(QCloseEvent *e)
 {
-	// hide SQ_QuickBrowser and ignore
-	// close event
-	hide();
-	e->ignore();
+    // hide SQ_QuickBrowser and ignore
+    // close event
+    hide();
+    e->ignore();
 }
 
 /*
@@ -189,24 +190,23 @@ void SQ_QuickBrowser::closeEvent(QCloseEvent *e)
  */
 void SQ_QuickBrowser::slotClose()
 {
-	SQ_GLWidget::window()->pAToolQuick->animateClick();
+    SQ_GLWidget::window()->pAToolQuick->animateClick();
 }
 
 void SQ_QuickBrowser::showEvent(QShowEvent *)
 {
-	KFileItem *f = quick->iv->currentFileItem();
+    KFileItem *f = quick->iv->currentFileItem();
 
-	if(f)
-		quick->setCurrentItem(f);
+    if(f)
+        quick->setCurrentItem(f);
 }
 
 SQ_QuickBrowser* SQ_QuickBrowser::window()
 {
-	return view;
+    return view;
 }
 
 SQ_DirOperatorBase *SQ_QuickBrowser::quickOperator()
 {
-	return op;
+    return op;
 }
-

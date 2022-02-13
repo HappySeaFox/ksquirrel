@@ -57,15 +57,17 @@ am_ksquirrel_small_OBJECTS = main.$(OBJEXT) sq_hloptions.$(OBJEXT) \
 	sq_glview.$(OBJEXT) sq_glwidget.$(OBJEXT) \
 	sq_libraryhandler.$(OBJEXT) sq_librarylistener.$(OBJEXT) \
 	sq_config.$(OBJEXT) sq_glu.$(OBJEXT) fileio.$(OBJEXT) \
-	sq_errorstring.$(OBJEXT) sq_iconloader.$(OBJEXT)
+	sq_errorstring.$(OBJEXT) sq_iconloader.$(OBJEXT) \
+	sq_glwidget_helpers.$(OBJEXT)
 #>- ksquirrel_small_OBJECTS = $(am_ksquirrel_small_OBJECTS)
-#>+ 9
+#>+ 10
 ksquirrel_small_final_OBJECTS = ksquirrel_small.all_cpp.o 
 ksquirrel_small_nofinal_OBJECTS = main.$(OBJEXT) sq_hloptions.$(OBJEXT) \
 	sq_glview.$(OBJEXT) sq_glwidget.$(OBJEXT) \
 	sq_libraryhandler.$(OBJEXT) sq_librarylistener.$(OBJEXT) \
 	sq_config.$(OBJEXT) sq_glu.$(OBJEXT) fileio.$(OBJEXT) \
-	sq_errorstring.$(OBJEXT) sq_iconloader.$(OBJEXT) sq_imageproperties.$(OBJEXT) sq_helpwidget.$(OBJEXT)\
+	sq_errorstring.$(OBJEXT) sq_iconloader.$(OBJEXT) \
+	sq_glwidget_helpers.$(OBJEXT) sq_imageproperties.$(OBJEXT) sq_helpwidget.$(OBJEXT)\
 sq_glwidget.moc.o sq_librarylistener.moc.o sq_glview.moc.o 
 @KDE_USE_FINAL_FALSE@ksquirrel_small_OBJECTS = $(ksquirrel_small_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@ksquirrel_small_OBJECTS = $(ksquirrel_small_final_OBJECTS)
@@ -323,9 +325,10 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-#>- ksquirrel_small_SOURCES = sq_imageproperties.ui sq_helpwidget.ui main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp
+#>- ksquirrel_small_SOURCES = sq_imageproperties.ui sq_helpwidget.ui main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp sq_glwidget_helpers.cpp
 #>+ 1
-ksquirrel_small_SOURCES=  main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp sq_imageproperties.cpp sq_helpwidget.cpp
+ksquirrel_small_SOURCES=  main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp sq_glwidget_helpers.cpp sq_imageproperties.cpp sq_helpwidget.cpp
+EXTRA_DIST = sq_imageproperties.ui.h sq_helpwidget.ui.h
 ksquirrel_small_LDADD = $(LIB_KIO) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET) 
 ksquirrel_small_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 AM_CPPFLAGS = -DSQ_SMALL
@@ -424,6 +427,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_glu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_glview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_glwidget.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_glwidget_helpers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_hloptions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_iconloader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_libraryhandler.Po@am__quote@
@@ -669,7 +673,7 @@ clean-metasources:
 	-rm -f  sq_glwidget.moc.cpp sq_librarylistener.moc.cpp sq_glview.moc.cpp
 
 #>+ 2
-KDE_DIST=sq_thumbnailinfo.h error.h sq_library.h fmt_utils.cpp sq_hloptions.h sq_helpwidget.ui fileio.h fmt_utils.h sq_iconloader_pixmaps.h sq_about.h sq_errorstring.h fmt_types.h sq_librarylistener.h Makefile.in sq_glview.h sq_helpwidget.h sq_imageproperties.ui.h sq_libraryhandler.h fmt_defs.h sq_config.h fmt_codec_base.h sq_imageproperties.h sq_glwidget.h sq_glwidget_helpers.h sq_iconloader.h sq_imageproperties.ui sq_glu.h Makefile.am 
+KDE_DIST=sq_thumbnailinfo.h error.h sq_library.h fmt_utils.cpp sq_hloptions.h sq_helpwidget.ui fileio.h fmt_utils.h sq_iconloader_pixmaps.h sq_about.h sq_errorstring.h fmt_types.h sq_librarylistener.h Makefile.in sq_glview.h sq_helpwidget.h fmt_defs.h sq_libraryhandler.h sq_config.h fmt_codec_base.h sq_imageproperties.h sq_glwidget.h sq_glwidget_helpers.h sq_iconloader.h sq_imageproperties.ui sq_glu.h Makefile.am 
 
 #>+ 5
 clean-ui:
@@ -719,11 +723,11 @@ bcheck-am:
 
 
 #>+ 11
-ksquirrel_small.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/main.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_glu.cpp $(srcdir)/fileio.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/sq_iconloader.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_helpwidget.cpp sq_librarylistener.moc.cpp sq_glwidget.moc.cpp sq_glview.moc.cpp  sq_helpwidget.moc sq_imageproperties.moc
+ksquirrel_small.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/main.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_glu.cpp $(srcdir)/fileio.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/sq_iconloader.cpp $(srcdir)/sq_glwidget_helpers.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_helpwidget.cpp sq_librarylistener.moc.cpp sq_glwidget.moc.cpp sq_glview.moc.cpp  sq_helpwidget.moc sq_imageproperties.moc
 	@echo 'creating ksquirrel_small.all_cpp.cpp ...'; \
 	rm -f ksquirrel_small.all_cpp.files ksquirrel_small.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel_small.all_cpp.final; \
-	for file in main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp sq_imageproperties.cpp sq_helpwidget.cpp sq_librarylistener.moc.cpp sq_glwidget.moc.cpp sq_glview.moc.cpp ; do \
+	for file in main.cpp sq_hloptions.cpp sq_glview.cpp sq_glwidget.cpp sq_libraryhandler.cpp sq_librarylistener.cpp sq_config.cpp sq_glu.cpp fileio.cpp sq_errorstring.cpp sq_iconloader.cpp sq_glwidget_helpers.cpp sq_imageproperties.cpp sq_helpwidget.cpp sq_librarylistener.moc.cpp sq_glwidget.moc.cpp sq_glview.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel_small.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel_small.all_cpp.final; \
 	done; \
@@ -758,7 +762,8 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 14
+#>+ 15
+$(srcdir)/sq_glwidget_helpers.cpp: sq_imageproperties.h sq_helpwidget.h 
 $(srcdir)/sq_glview.cpp: sq_imageproperties.h sq_helpwidget.h 
 $(srcdir)/sq_config.cpp: sq_imageproperties.h sq_helpwidget.h 
 $(srcdir)/main.cpp: sq_imageproperties.h sq_helpwidget.h 

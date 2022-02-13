@@ -30,27 +30,27 @@ class SQ_ImageRotateOptions;
 
 class SQ_Rotater : public SQ_EditBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_Rotater();
-		~SQ_Rotater();
+    public: 
+        SQ_Rotater();
+        ~SQ_Rotater();
 
-		static SQ_Rotater* instance();
+        static SQ_Rotater* instance();
 
-	protected:
-		virtual void startEditPrivate();
-		virtual void dialogReset();
-		virtual int manipDecodedImage(fmt_image *im);
-		virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
+    protected:
+        virtual void startEditPrivate();
+        virtual void dialogReset();
+        virtual int manipDecodedImage(fmt_image *im);
+        virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
 
-	private slots:
-		void slotStartRotate(SQ_ImageOptions*, SQ_ImageRotateOptions*);
+    private slots:
+        void slotStartRotate(SQ_ImageOptions*, SQ_ImageRotateOptions*);
 
-	private:
-		SQ_ImageRotate	*rotate;
-		static SQ_Rotater	*sing;
-		SQ_ImageRotateOptions rotopt;
+    private:
+        SQ_ImageRotate    *rotate;
+        static SQ_Rotater    *sing;
+        SQ_ImageRotateOptions rotopt;
 };
 
 #endif

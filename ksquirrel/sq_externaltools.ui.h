@@ -11,67 +11,68 @@
 
 void SQ_ExternalTools::init()
 {
-     listTools->setSorting(-1);
+    listTools->setSorting(-1);
 
-    	int count = SQ_ExternalTool::instance()->count();
-	QListViewItem *itemafter = 0L, *item;
+    int count = SQ_ExternalTool::instance()->count();
+    QListViewItem *itemafter = 0L, *item;
 
-	for(int i = 0;i < count;i++)
-	{
-		if(itemafter)
-		    item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
-		else
-		item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
-		item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(item->text(3), KIcon::Desktop, 16));
-	itemafter = item;
+    for(int i = 0;i < count;i++)
+    {
+        if(itemafter)
+            item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
+        else
+            item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
 
-	    item->setRenameEnabled(1, true);
-	    item->setRenameEnabled(2, true);
-	    item->setMultiLinesEnabled(false);
-	    
-	    listTools->insertItem(item);
-	}
+        item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(item->text(3), KIcon::Desktop, 16));
+        itemafter = item;
 
-	pushToolUp->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
-	pushToolDown->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
-	pushNew->setPixmap(SQ_IconLoader::instance()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
-	pushDelete->setPixmap(SQ_IconLoader::instance()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
-	pushClearAll->setPixmap(SQ_IconLoader::instance()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
-	pushHelp->setPixmap(SQ_IconLoader::instance()->loadIcon("help", KIcon::Desktop, KIcon::SizeSmall));
+        item->setRenameEnabled(1, true);
+        item->setRenameEnabled(2, true);
+        item->setMultiLinesEnabled(false);
+    
+        listTools->insertItem(item);
+    }
 
-	listTools->setCurrentItem(listTools->firstChild());
-	listTools->clearSelection();
-	listTools->setSelected(listTools->currentItem(), true);
+    pushToolUp->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_up", KIcon::Desktop, KIcon::SizeSmall));
+    pushToolDown->setPixmap(SQ_IconLoader::instance()->loadIcon("move_task_down", KIcon::Desktop, KIcon::SizeSmall));
+    pushNew->setPixmap(SQ_IconLoader::instance()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
+    pushDelete->setPixmap(SQ_IconLoader::instance()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
+    pushClearAll->setPixmap(SQ_IconLoader::instance()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
+    pushHelp->setPixmap(SQ_IconLoader::instance()->loadIcon("help", KIcon::Desktop, KIcon::SizeSmall));
+
+    listTools->setCurrentItem(listTools->firstChild());
+    listTools->clearSelection();
+    listTools->setSelected(listTools->currentItem(), true);
 }
 
 void SQ_ExternalTools::slotNewTool()
 {
-	QListViewItem *itemafter = listTools->lastItem(), *item;
+    QListViewItem *itemafter = listTools->lastItem(), *item;
 
-	if(itemafter)
-		item = new QListViewItem(listTools, itemafter, "", "Tool name", "tool_executable %f", "");
-	else
-		item = new QListViewItem(listTools,  "", "Tool name", "tool_executable %f", "");
+    if(itemafter)
+        item = new QListViewItem(listTools, itemafter, "", "Tool name", "tool_executable %f", "");
+    else
+        item = new QListViewItem(listTools,  "", "Tool name", "tool_executable %f", "");
 
-	item->setRenameEnabled(1, true);
-	item->setRenameEnabled(2, true);
-	item->setMultiLinesEnabled(false);
-	listTools->insertItem(item);
-	item->startRename(1);
+    item->setRenameEnabled(1, true);
+    item->setRenameEnabled(2, true);
+    item->setMultiLinesEnabled(false);
+    listTools->insertItem(item);
+    item->startRename(1);
 }
 
 void SQ_ExternalTools::slotToolClear()
 {
-	QListViewItem *item = listTools->currentItem();
+    QListViewItem *item = listTools->currentItem();
     
-	if(!item) return;
+    if(!item) return;
     
-	listTools->takeItem(item);
-	
-	item = listTools->currentItem();
+    listTools->takeItem(item);
+    
+    item = listTools->currentItem();
 
-	if(item)
-	    listTools->setSelected(item, true);
+    if(item)
+        listTools->setSelected(item, true);
 }
 
 void SQ_ExternalTools::slotToolUp()
@@ -85,7 +86,6 @@ void SQ_ExternalTools::slotToolUp()
     if(!itemafter) return;
  
     itemafter->moveItem(item);
-
 }
 
 void SQ_ExternalTools::slotToolDown()
@@ -108,14 +108,14 @@ int SQ_ExternalTools::start()
     
     if(result == QDialog::Accepted)
     {
-	QListViewItem *cur = listTools->firstChild();
-	
-	SQ_ExternalTool::instance()->clear();
+        QListViewItem *cur = listTools->firstChild();
+    
+        SQ_ExternalTool::instance()->clear();
 
-	for(;cur;cur = cur->itemBelow())
-	{
-		SQ_ExternalTool::instance()->addTool(cur->text(3), cur->text(1), cur->text(2));
-	}
+        for(;cur;cur = cur->itemBelow())
+        {
+            SQ_ExternalTool::instance()->addTool(cur->text(3), cur->text(1), cur->text(2));
+        }
     }
     
     return result;
@@ -124,23 +124,23 @@ int SQ_ExternalTools::start()
 void SQ_ExternalTools::slotToolRenameRequest( QListViewItem *item, const QPoint &, int pos )
 {
     if(!item || pos == -1)
-	return;
+        return;
     
     if(pos > 0)
-	item->startRename(pos);
+        item->startRename(pos);
     else
     {
-	KIconDialog dialog(SQ_IconLoader::instance());
-	dialog.setup(KIcon::Desktop, KIcon::Application, true, 16);
-	QString result = dialog.openDialog();
-	
-	if(result != QString::null)
-	{
-	    item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(result, KIcon::Desktop, 16));
-	    item->setText(3, result);
-	}
+        KIconDialog dialog(SQ_IconLoader::instance());
+        dialog.setup(KIcon::Desktop, KIcon::Application, true, 16);
+        QString result = dialog.openDialog();
+    
+        if(result != QString::null)
+        {
+            item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(result, KIcon::Desktop, 16));
+        item->setText(3, result);
+        }
     }
- }
+}
 
 void SQ_ExternalTools::slotHelp()
 {

@@ -24,28 +24,28 @@
 #include "sq_dir.h"
 
 // default thumbnail format
-static const QString thumbFormat = "PNG";
+static const QString sqdirThumbFormat = "PNG";
 
 // default quality
 static const int thumbQuality = 85;
 
 SQ_Dir::SQ_Dir(Prefix p) : QDir()
 {
-	switch(p)
-	{
-		case SQ_Dir::Thumbnails:
-			setRoot("thumbnails");
-		break;
-		case SQ_Dir::Extracts:
-			setRoot("extracts");
-		break;
-		case SQ_Dir::Desktops:
-			setRoot("desktop");
-		break;
-		case SQ_Dir::Tmp:
-			setRoot("tmp");
-		break;
-	}
+    switch(p)
+    {
+        case SQ_Dir::Thumbnails:
+            setRoot("thumbnails");
+        break;
+        case SQ_Dir::Extracts:
+            setRoot("extracts");
+        break;
+        case SQ_Dir::Desktops:
+            setRoot("desktop");
+        break;
+        case SQ_Dir::Tmp:
+            setRoot("tmp");
+        break;
+    }
 }
 
 SQ_Dir::~SQ_Dir()
@@ -60,35 +60,35 @@ SQ_Dir::~SQ_Dir()
  */
 bool SQ_Dir::mkdir(const QString &relpath)
 {
-	QString _relpath = QDir::cleanDirPath(relpath);
+    QString _relpath = QDir::cleanDirPath(relpath);
 
-	QStringList paths = QStringList::split('/', _relpath);
+    QStringList paths = QStringList::split('/', _relpath);
 
-	QStringList::iterator BEGIN = paths.begin();
-	QStringList::iterator    END = paths.end();
+    QStringList::iterator BEGIN = paths.begin();
+    QStringList::iterator    END = paths.end();
 
-	cd(m_root);
+    cd(m_root);
 
-	// recursively create directories
-	for(QStringList::iterator it = BEGIN;it != END;++it)
-	{
-		if(!exists(*it, false))
-			if(!QDir::mkdir(*it))
-				return false;
+    // recursively create directories
+    for(QStringList::iterator it = BEGIN;it != END;++it)
+    {
+        if(!exists(*it, false))
+            if(!QDir::mkdir(*it))
+                return false;
 
-		cd(*it);
-	}
+        cd(*it);
+    }
 
-	return true;
+    return true;
 }
 
 void SQ_Dir::setRoot(const QString &name)
 {
-	m_root = QDir::cleanDirPath(homeDirPath() + QString::fromLatin1("/.ksquirrel/"));
-	QDir::mkdir(m_root);
+    m_root = QDir::cleanDirPath(homeDirPath() + QString::fromLatin1("/.ksquirrel/"));
+    QDir::mkdir(m_root);
 
-	m_root = QDir::cleanDirPath(m_root + QString::fromLatin1("/") + name);
-	QDir::mkdir(m_root);
+    m_root = QDir::cleanDirPath(m_root + QString::fromLatin1("/") + name);
+    QDir::mkdir(m_root);
 }
 
 /*
@@ -99,7 +99,7 @@ void SQ_Dir::setRoot(const QString &name)
  */
 void SQ_Dir::rewind()
 {
-	cd(m_root);
+    cd(m_root);
 }
 
 /*
@@ -110,7 +110,7 @@ void SQ_Dir::rewind()
  */
 QString SQ_Dir::root() const
 {
-	return m_root;
+    return m_root;
 }
 
 /*
@@ -118,39 +118,39 @@ QString SQ_Dir::root() const
  */
 void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
 {
-	if(thumb.thumbnail.isNull())
-	{
-		kdDebug() << "SQ_Dir::saveThumbnail: thumbnail is NULL!" << endl;
-		return;
-	}
+    if(thumb.thumbnail.isNull())
+    {
+        kdDebug() << "SQ_Dir::saveThumbnail: thumbnail is NULL!" << endl;
+        return;
+    }
 
-	QString fullpath(m_root + path), s;
-	QFileInfo fpath(path), ffullpath(fullpath);
+    QString fullpath(m_root + path), s;
+    QFileInfo fpath(path), ffullpath(fullpath);
 
-	if(fpath.lastModified() < ffullpath.lastModified())
-	{
-		kdDebug() << "SQ_Dir::saveThumbnail: equal => skipping writing..." << endl;
-		return;
-	}
+    if(fpath.lastModified() < ffullpath.lastModified())
+    {
+        kdDebug() << "SQ_Dir::saveThumbnail: equal => skipping writing..." << endl;
+        return;
+    }
 
-	kdDebug() << "SQ_Dir::saveThumbnail: writing accepted..." << endl;
+    kdDebug() << "SQ_Dir::saveThumbnail: writing accepted..." << endl;
 
-	if(!mkdir(fpath.dirPath(true)))
-	{
-		kdDebug() << "SQ_Dir::saveThumbnail: mkdir() falied" << endl;
-		return;
-	}
+    if(!mkdir(fpath.dirPath(true)))
+    {
+        kdDebug() << "SQ_Dir::saveThumbnail: mkdir() falied" << endl;
+        return;
+    }
 
-	QString k = thumb.info.uncompressed.utf8();
-	thumb.thumbnail.setText("sq_type", 0, thumb.info.type);
-	thumb.thumbnail.setText("sq_dimensions", 0, thumb.info.dimensions);
-	thumb.thumbnail.setText("sq_bpp", 0, thumb.info.bpp);
-	thumb.thumbnail.setText("sq_color", 0, thumb.info.color);
-	thumb.thumbnail.setText("sq_compression", 0, thumb.info.compression);
-	thumb.thumbnail.setText("sq_frames", 0, thumb.info.frames);
-	thumb.thumbnail.setText("sq_uncompressed", 0, k);
+    QString k = thumb.info.uncompressed.utf8();
+    thumb.thumbnail.setText("sq_type", 0, thumb.info.type);
+    thumb.thumbnail.setText("sq_dimensions", 0, thumb.info.dimensions);
+    thumb.thumbnail.setText("sq_bpp", 0, thumb.info.bpp);
+    thumb.thumbnail.setText("sq_color", 0, thumb.info.color);
+    thumb.thumbnail.setText("sq_compression", 0, thumb.info.compression);
+    thumb.thumbnail.setText("sq_frames", 0, thumb.info.frames);
+    thumb.thumbnail.setText("sq_uncompressed", 0, k);
 
-	thumb.thumbnail.save(fullpath, thumbFormat, thumbQuality);
+    thumb.thumbnail.save(fullpath, sqdirThumbFormat, thumbQuality);
 }
 
 /*
@@ -159,16 +159,16 @@ void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
  */
 bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
 {
-	QFileInfo f(m_root + file);
+    QFileInfo f(m_root + file);
 
-	// file exists ?
-	bool b = f.exists();
+    // file exists ?
+    bool b = f.exists();
 
-	// yes!
-	if(b)
-		fullpath = m_root + file;
+    // yes!
+    if(b)
+        fullpath = m_root + file;
 
-	return b;
+    return b;
 }
 
 /*
@@ -176,7 +176,7 @@ bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
  */
 QString SQ_Dir::absPath(const QString &relpath)
 {
-	return m_root + "/" + relpath;
+    return m_root + "/" + relpath;
 }
 
 /*
@@ -190,14 +190,14 @@ QString SQ_Dir::absPath(const QString &relpath)
  */
 bool SQ_Dir::updateNeeded(const QString &file)
 {
-	// file even mot exist in storage, update needed!
-	if(!QFile::exists(absPath(file)))
-		return true;
+    // file even mot exist in storage, update needed!
+    if(!QFile::exists(absPath(file)))
+        return true;
 
-	QFileInfo fpath(file), ffullpath(absPath(file));
+    QFileInfo fpath(file), ffullpath(absPath(file));
 
-	// compare "last modified" time
-	return fpath.lastModified() > ffullpath.lastModified();
+    // compare "last modified" time
+    return fpath.lastModified() > ffullpath.lastModified();
 }
 
 /*
@@ -205,9 +205,9 @@ bool SQ_Dir::updateNeeded(const QString &file)
  */
 void SQ_Dir::removeFile(const QString &file)
 {
-	// get absolute path
-	QString full = absPath(file);
+    // get absolute path
+    QString full = absPath(file);
 
-	// and remove file
-	QFile::remove(full);
+    // and remove file
+    QFile::remove(full);
 }

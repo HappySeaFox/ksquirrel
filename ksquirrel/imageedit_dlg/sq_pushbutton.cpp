@@ -32,15 +32,15 @@ SQ_PushButton::~SQ_PushButton()
 
 void SQ_PushButton::init()
 {
-        setFixedWidth(24);
-        setFixedHeight(24);
+    setFixedWidth(24);
+    setFixedHeight(24);
 }
 
 void SQ_PushButton::setPopup(QPopupMenu *popup)
 {
-        if(popup)
-        {
-                setFixedWidth(36);
-                QPushButton::setPopup(popup);
-        }
+    if(popup)
+    {
+        setFixedWidth(36);
+        QPushButton::setPopup(popup);
+    }
 }

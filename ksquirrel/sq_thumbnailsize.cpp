@@ -1,6 +1,6 @@
 /*
-	copyright            : (C) 2004 by Baryshev Dmitry
-	KSQuirrel - image viewer for KDE
+    copyright            : (C) 2004 by Baryshev Dmitry
+    KSQuirrel - image viewer for KDE
 */
 
 /*
@@ -34,89 +34,64 @@ SQ_ThumbnailSize::SQ_ThumbnailSize(Size value) : mValue(value), m_extended(false
 
 SQ_ThumbnailSize::SQ_ThumbnailSize(const QString& str) : m_extended(false), m_margin(16)
 {
-	QString low = str.lower();
+    QString low = str.lower();
 
-	if(low == "small")
-		mValue = Small;
-	else if(low == "medium")
-		mValue = Medium;
-	else if(low == "large")
-		mValue = Large;
-	else
-		mValue = Huge;
+    if(low == "small")
+        mValue = Small;
+    else if(low == "medium")
+        mValue = Medium;
+    else if(low == "large")
+        mValue = Large;
+    else
+        mValue = Huge;
 }
 
 void SQ_ThumbnailSize::setPixelSize(const QString &size)
 {
-	QString low = size.lower();
+    QString low = size.lower();
 
-	if(low == "small")
-		mValue = Small;
-	else if(low == "medium")
-		mValue = Medium;
-	else if(low == "large")
-		mValue = Large;
-	else
-		mValue = Huge;
+    if(low == "small")
+        mValue = Small;
+    else if(low == "medium")
+        mValue = Medium;
+    else if(low == "large")
+        mValue = Large;
+    else
+        mValue = Huge;
 }
 
 int SQ_ThumbnailSize::pixelSize() const
 {
-	switch (mValue)
-	{
-		case Small:
-			return 48;
-		case Medium:
-			return 64;
-		case Large:
-			return 96;
-		default:
-			return 128;
-	}
+    switch (mValue)
+    {
+        case Small:
+        return 48;
+        case Medium:
+        return 64;
+        case Large:
+        return 96;
+        default:
+        return 128;
+    }
 }
 
 SQ_ThumbnailSize::operator const QString&() const
 {
-	static QString sizeStr[4] = {"small","medium","large","huge"};
+    static QString sizeStr[4] = {"small","medium","large","huge"};
 
-	return sizeStr[int(mValue)];
-}
-
-int SQ_ThumbnailSize::value() const
-{
-	return (int)mValue;
+    return sizeStr[int(mValue)];
 }
 
 QString SQ_ThumbnailSize::stringValue() const
 {
-	static QString sizeStr[4] = {"48","64","96","128"};
+    static QString sizeStr[4] = {"48","64","96","128"};
 
-	return sizeStr[int(mValue)];
+    return sizeStr[int(mValue)];
 }
 
 int SQ_ThumbnailSize::extendedPixelSize() const
 {
-	return pixelSize() + m_margin*2;
-}
-
-void SQ_ThumbnailSize::setExtended(bool ex)
-{
-	m_extended = ex;
-}
-
-bool SQ_ThumbnailSize::extended() const
-{
-	return m_extended;
-}
-
-void SQ_ThumbnailSize::setMargin(int m)
-{
-	m_margin = m;
-}
-
-int SQ_ThumbnailSize::margin() const
-{
-	return m_margin;
+    return pixelSize() + m_margin*2;
 }
 
 SQ_ThumbnailSize* SQ_ThumbnailSize::instance()

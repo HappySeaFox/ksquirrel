@@ -201,7 +201,35 @@
                                 <property name="margin">
                                     <number>0</number>
                                 </property>
-                                <widget class="QGroupBox" row="0" column="0">
+                                <spacer row="1" column="1">
+                                    <property name="name">
+                                        <cstring>spacer4</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Vertical</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>21</width>
+                                            <height>193</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QPushButton" row="0" column="1">
+                                    <property name="name">
+                                        <cstring>pushOptions</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string></string>
+                                    </property>
+                                    <property name="flat">
+                                        <bool>true</bool>
+                                    </property>
+                                </widget>
+                                <widget class="QGroupBox" row="0" column="0" rowspan="2" colspan="1">
                                     <property name="name">
                                         <cstring>groupBox7</cstring>
                                     </property>
@@ -212,18 +240,7 @@
                                         <property name="name">
                                             <cstring>unnamed</cstring>
                                         </property>
-                                        <widget class="QPushButton" row="0" column="3">
-                                            <property name="name">
-                                                <cstring>pushOptions</cstring>
-                                            </property>
-                                            <property name="text">
-                                                <string></string>
-                                            </property>
-                                            <property name="flat">
-                                                <bool>true</bool>
-                                            </property>
-                                        </widget>
-                                        <spacer row="1" column="1">
+                                        <spacer row="0" column="1">
                                             <property name="name">
                                                 <cstring>spacer9</cstring>
                                             </property>
@@ -240,7 +257,7 @@
                                                 </size>
                                             </property>
                                         </spacer>
-                                        <widget class="QLayoutWidget" row="0" column="2" rowspan="2" colspan="1">
+                                        <widget class="QLayoutWidget" row="0" column="2">
                                             <property name="name">
                                                 <cstring>layout14</cstring>
                                             </property>
@@ -357,7 +374,7 @@
                                                 </spacer>
                                             </vbox>
                                         </widget>
-                                        <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="1">
+                                        <widget class="QLayoutWidget" row="0" column="0">
                                             <property name="name">
                                                 <cstring>layout4</cstring>
                                             </property>
@@ -505,23 +522,6 @@
                                                 </widget>
                                             </grid>
                                         </widget>
-                                        <spacer row="1" column="3">
-                                            <property name="name">
-                                                <cstring>spacer4</cstring>
-                                            </property>
-                                            <property name="orientation">
-                                                <enum>Vertical</enum>
-                                            </property>
-                                            <property name="sizeType">
-                                                <enum>Expanding</enum>
-                                            </property>
-                                            <property name="sizeHint">
-                                                <size>
-                                                    <width>21</width>
-                                                    <height>180</height>
-                                                </size>
-                                            </property>
-                                        </spacer>
                                     </grid>
                                 </widget>
                             </grid>
@@ -785,7 +785,6 @@
     <function access="private">updateAngle()</function>
     <function access="private">updateFlipping()</function>
     <function access="protected">closeEvent( QCloseEvent * e )</function>
-    <function access="private">initPreviewImage()</function>
     <function>setPreviewImage( const QImage &amp; im )</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>

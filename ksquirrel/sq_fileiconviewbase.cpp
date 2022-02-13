@@ -30,11 +30,11 @@
 #include "sq_navigatordropmenu.h"
 
 SQ_FileIconViewBase::SQ_FileIconViewBase(QWidget *parent, const char *name)
-		: KFileIconView(parent, name)
+    : KFileIconView(parent, name)
 {
-	setAcceptDrops(true);
+    setAcceptDrops(true);
 
-	connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
+    connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this, SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
 }
 
 SQ_FileIconViewBase::~SQ_FileIconViewBase()
@@ -46,17 +46,17 @@ SQ_FileIconViewBase::~SQ_FileIconViewBase()
  */
 void SQ_FileIconViewBase::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
 {
-	KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
+    KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
 
-	// setup and show popup menu with actions
-	SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
-	SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
+    // setup and show popup menu with actions
+    SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
+    SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
 }
 
 // Accept drag
 void SQ_FileIconViewBase::dragEnterEvent(QDragEnterEvent *e)
 {
-	e->accept(true);
+    e->accept(true);
 }
 
 /*
@@ -64,21 +64,21 @@ void SQ_FileIconViewBase::dragEnterEvent(QDragEnterEvent *e)
  */
 void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
-	QIconView::contentsMouseDoubleClickEvent(e);
+    QIconView::contentsMouseDoubleClickEvent(e);
 
-	QIconViewItem *item = findItem(e->pos());
+    QIconViewItem *item = findItem(e->pos());
 
-	// double click on item
-	if(item)
-	{
-		if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
-			emitExecute(item, e->globalPos());
+    // double click on item
+    if(item)
+    {
+        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
+            emitExecute(item, e->globalPos());
 
-		emit doubleClicked(item, e->globalPos());
-	}
-	// double click in viewport, lets invoke browser
-	else
-	{
-		kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
-	}
+        emit doubleClicked(item, e->globalPos());
+    }
+    // double click in viewport, lets invoke browser
+    else
+    {
+        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
+    }
 }

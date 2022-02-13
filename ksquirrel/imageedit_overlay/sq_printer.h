@@ -30,35 +30,35 @@ class SQ_ImagePrint;
 
 class SQ_Printer : public SQ_EditBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_Printer();
-		~SQ_Printer();
+    public: 
+        SQ_Printer();
+        ~SQ_Printer();
 
-		static SQ_Printer* instance();
+        static SQ_Printer* instance();
 
-	protected:
-		virtual void startEditPrivate();
-		virtual void dialogReset();
-		virtual int manipDecodedImage(fmt_image *im);
-		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
-		virtual void cycleDone();
+    protected:
+        virtual void startEditPrivate();
+        virtual void dialogReset();
+        virtual int manipDecodedImage(fmt_image *im);
+        virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
+        virtual void cycleDone();
 
-	private slots:
-		void slotStartPrint(SQ_ImageOptions*, SQ_ImagePrintOptions*);
+    private slots:
+        void slotStartPrint(SQ_ImageOptions*, SQ_ImagePrintOptions*);
 
-	private:
-		SQ_ImagePrint		*print;
-		SQ_ImagePrintOptions prnopt;
-		KPrinter				*printer;
-		QPainter			*painter;
-		int					currentPage;
-		unsigned char		*pixmap;
-		QPaintDeviceMetrics *mt;
-		int					x, y, w, h;
+    private:
+        SQ_ImagePrint        *print;
+        SQ_ImagePrintOptions prnopt;
+        KPrinter                *printer;
+        QPainter            *painter;
+        int                    currentPage;
+        unsigned char        *pixmap;
+        QPaintDeviceMetrics *mt;
+        int                    x, y, w, h;
 
-		static SQ_Printer		*sing;
+        static SQ_Printer        *sing;
 };
 
 #endif

@@ -21,6 +21,8 @@
 #include <qvbox.h>
 #include <qmap.h>
 
+#include <ktoolbar.h>
+
 class SQ_GLWidget;
 
 #ifdef SQ_SMALL
@@ -35,6 +37,16 @@ class KStatusBar;
 
 class QLabel;
 
+class SQ_ToolBar : public KToolBar
+{
+    public:
+        SQ_ToolBar(QWidget *parent);
+        ~SQ_ToolBar();
+
+    protected:
+        void mouseReleaseEvent(QMouseEvent *);
+};
+
 /*
  *  SQ_GLView represents a widget containing SQ_GLWidget and statusbar.
  *
@@ -44,88 +56,107 @@ class QLabel;
 
 class SQ_GLView : public QVBox
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_GLView(QWidget *parent = 0, const char *name = 0);
-		~SQ_GLView();
-
-#ifndef SQ_SMALL
-
-		/*
-		 *  Is this widget separate ?
-		 *
-		 *  Note: it can be separate, or built-in.
-		 */
-		bool isSeparate() const;
-
-		/*
-		 *  Make widget built-in with reparenting it.
-		 */
-		void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
-
-#endif
-
-		/*
-		 *  Get a pointer to statusbar.
-		 */
-		KStatusBar* statusbar();
-
-		/*
-		 *  Get a pointer to a widget in statusbar by name.
-		 */
-		QLabel* sbarWidget(const QString &name) const;
-
-		static SQ_GLView* window();
-
-	protected:
-		void closeEvent(QCloseEvent *e);
-
-	private:
-		/*
-		 *  Internal.
-		 */
-		void createContent();
+    public: 
+        SQ_GLView(QWidget *parent = 0, const char *name = 0);
+        ~SQ_GLView();
 
 #ifndef SQ_SMALL
 
-		virtual bool eventFilter(QObject *watched, QEvent *e);
+        /*
+         *  Is this widget separate ?
+         *
+         *  Note: it can be separate, or built-in.
+         */
+        bool isSeparate() const;
+
+        /*
+         *  Make widget built-in with reparenting it.
+         */
+        void reparent(QWidget *parent, const QPoint &p, bool showIt = false);
 
 #endif
 
-	private slots:
-		/*
-		 *  All libraries now loaded.
-		 */
-		void slotContinueLoading();
+        /*
+         *  Get a pointer to statusbar.
+         */
+        KStatusBar* statusbar();
 
-		/*
-		 *  Goto fullscreen. If current version is NOT
-		 *  'small', fullscreen state will be managed by KSquirrel.
-		 */
-		void slotFullScreen(bool full);
+
+        /*
+         *  Get a poniter to toolbar with actions (next file, zoom, rotate...)
+         */ 
+        SQ_ToolBar* toolbar();
+
+        /*
+         *  Get a pointer to a widget in statusbar by name.
+         */
+        QLabel* sbarWidget(const QString &name) const;
+
+        static SQ_GLView* window();
+
+    protected:
+        void closeEvent(QCloseEvent *e);
+
+    private:
+        /*
+         *  Internal.
+         */
+        void createContent();
+
+#ifndef SQ_SMALL
+
+        virtual bool eventFilter(QObject *watched, QEvent *e);
+
+#endif
+
+    private slots:
+        /*
+         *  All libraries now loaded.
+         */
+        void slotContinueLoading();
+
+        /*
+         *  Goto fullscreen. If current version is NOT
+         *  'small', fullscreen state will be managed by KSquirrel.
+         */
+        void slotFullScreen(bool full);
 
 #ifdef SQ_SMALL
 
-	private:
-		SQ_LibraryListener *libl;
-		SQ_LibraryHandler  *libh;
-		SQ_Config			*kconf;
+    private:
+        SQ_LibraryListener *libl;
+        SQ_LibraryHandler  *libh;
+        SQ_Config            *kconf;
 
 #endif
 
-	private:
+    private:
 
 #ifndef SQ_SMALL
 
-		bool separate;
+        bool separate;
 
 #endif
-		SQ_GLWidget *gl;
-		KStatusBar *sbar;
-		QMap<QString, QLabel*> names;
+        SQ_GLWidget *gl;
+        KStatusBar *sbar;
+        QMap<QString, QLabel*> names;
+        SQ_ToolBar                *m_toolbar;
 
-		static SQ_GLView *sing;
+        static SQ_GLView *sing;
 };
+
+inline
+SQ_ToolBar* SQ_GLView::toolbar()
+{
+    return m_toolbar;
+}
+
+inline
+QLabel* SQ_GLView::sbarWidget(const QString &name) const
+{
+    return names[name];
+}
 
 #endif

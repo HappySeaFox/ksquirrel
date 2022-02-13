@@ -33,71 +33,70 @@ class QPoint;
  */
 class SQ_FileIconViewItem : public KFileIconViewItem
 {
-	public:
-		SQ_FileIconViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi);
-		~SQ_FileIconViewItem();
+    public:
+        SQ_FileIconViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi);
+        ~SQ_FileIconViewItem();
 
-	protected:
-		/*
-		 *  Reimplement paintFocus() to ignore painting focus.
-		 */
-		virtual void paintFocus(QPainter *p, const QColorGroup &cg);
+    protected:
+        /*
+         *  Reimplement paintFocus() to ignore painting focus.
+         */
+        virtual void paintFocus(QPainter *p, const QColorGroup &cg);
 };
 
 class SQ_FileIconView : public SQ_FileIconViewBase
 {
     Q_OBJECT
 
-	public:
-		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
-		~SQ_FileIconView();
+    public:
+        SQ_FileIconView(QWidget *parent = 0, const char *name = "");
+        ~SQ_FileIconView();
 
-		/*
-		 *  Get SQ_FileIconViewItem by KFileItem. All KFileItems store
-		 *  a pointer to appropriate SQ_FileIconViewItem as extra data.
-		 *  See also KFileItem::setExtraData() and insertItem().
-		 */
-		SQ_FileIconViewItem* viewItem(const KFileItem *item);
+        /*
+         *  Get SQ_FileIconViewItem by KFileItem. All KFileItems store
+         *  a pointer to appropriate SQ_FileIconViewItem as extra data.
+         *  See also KFileItem::setExtraData() and insertItem().
+         */
+        SQ_FileIconViewItem* viewItem(const KFileItem *item);
 
-		/*
-		 *  Internal.
-		 */
-		virtual void updateView(const KFileItem *i);
-		virtual void updateView(bool b);
+        /*
+         *  Internal.
+         */
+        virtual void updateView(const KFileItem *i);
+        virtual void updateView(bool b);
 
-		/*
-		 *  Reimplement insertItem() to enable/disable inserting
-		 *  directories (depends on current settings).
-		 */
-		virtual void insertItem(KFileItem *i);
+        /*
+         *  Reimplement insertItem() to enable/disable inserting
+         *  directories (depends on current settings).
+         */
+        virtual void insertItem(KFileItem *i);
 
-		/*
-		 *  Clear current view and insert "..".
-		 */
-		virtual void clearView();
+        /*
+         *  Clear current view and insert "..".
+         */
+        virtual void clearView();
 
-		/*
-		 *  All files are listed. Do something important.
-		 */
-		virtual void listingCompleted();
+        /*
+         *  All files are listed. Do something important.
+         */
+        virtual void listingCompleted();
 
-		/*
-		 *  Insert ".." item.
-		 */
-		virtual void insertCdUpItem(const KURL &baseurl);
+        /*
+         *  Insert ".." item.
+         */
+        virtual void insertCdUpItem(const KURL &baseurl);
 
-	private:
-		/*
-		 *  Internal. Set item's sorting key.
-		 */
-		void initItem(SQ_FileIconViewItem *item, const KFileItem *i);
+    private:
+        /*
+         *  Internal. Set item's sorting key.
+         */
+        void initItem(SQ_FileIconViewItem *item, const KFileItem *i);
 
-	protected slots:
-		void slotSelected(QIconViewItem *item, const QPoint &point);
+    protected slots:
+        void slotSelected(QIconViewItem *item, const QPoint &point);
 
-	private:
-		QPixmap	dirPix;
+    private:
+        QPixmap    dirPix;
 };
-
 
 #endif

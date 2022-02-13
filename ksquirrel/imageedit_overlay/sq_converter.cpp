@@ -26,11 +26,11 @@ SQ_Converter * SQ_Converter::sing = NULL;
 
 SQ_Converter::SQ_Converter() : SQ_EditBase()
 {
-	sing = this;
+    sing = this;
 
-	special_action = i18n("Converting");
+    special_action = i18n("Converting");
 
-	ondisk = true;
+    ondisk = true;
 }
 
 SQ_Converter::~SQ_Converter()
@@ -38,46 +38,46 @@ SQ_Converter::~SQ_Converter()
 
 void SQ_Converter::startEditPrivate()
 {
-	convert = new SQ_ImageConvert(KSquirrel::app());
-	convert->setCaption(i18n("Convert 1 file", "Convert %n files", files.count()));
+    convert = new SQ_ImageConvert(KSquirrel::app());
+    convert->setCaption(i18n("Convert 1 file", "Convert %n files", files.count()));
 
-	connect(convert, SIGNAL(convert(SQ_ImageOptions*, SQ_ImageConvertOptions*)), this, SLOT(slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*)));
-        connect(this, SIGNAL(convertText(const QString &, bool)), convert, SLOT(slotDebugText(const QString &, bool)));
-        connect(this, SIGNAL(oneFileProcessed()), convert, SLOT(slotOneProcessed()));
-        connect(this, SIGNAL(done(bool)), convert, SLOT(slotDone(bool)));
+    connect(convert, SIGNAL(convert(SQ_ImageOptions*, SQ_ImageConvertOptions*)), this, SLOT(slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*)));
+    connect(this, SIGNAL(convertText(const QString &, bool)), convert, SLOT(slotDebugText(const QString &, bool)));
+    connect(this, SIGNAL(oneFileProcessed()), convert, SLOT(slotOneProcessed()));
+    connect(this, SIGNAL(done(bool)), convert, SLOT(slotDone(bool)));
 
-	convert->exec();
+    convert->exec();
 }
 
 void SQ_Converter::slotStartConvert(SQ_ImageOptions *o, SQ_ImageConvertOptions *copt)
 {
-	imageopt = *o;
-	convopt = *copt;
+    imageopt = *o;
+    convopt = *copt;
 
-	decodingCycle();
+    decodingCycle();
 }
 
 SQ_Converter* SQ_Converter::instance()
 {
-	return sing;
+    return sing;
 }
 
 void SQ_Converter::setWritingLibrary()
 {
-	lw = SQ_LibraryHandler::instance()->libraryByName(convopt.libname);
+    lw = SQ_LibraryHandler::instance()->libraryByName(convopt.libname);
 }
 
 void SQ_Converter::dialogReset()
 {
-	convert->startConvertion(files.count());
+    convert->startConvertion(files.count());
 }
 
 void SQ_Converter::initWriteOptions()
 {
-	convert->fillWriteOptions(&opt, lw->opt);
+    convert->fillWriteOptions(&opt, lw->opt);
 }
 
 int SQ_Converter::manipDecodedImage(fmt_image *)
 {
-	return SQE_OK;
+    return SQE_OK;
 }

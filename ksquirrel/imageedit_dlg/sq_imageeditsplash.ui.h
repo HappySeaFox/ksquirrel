@@ -7,6 +7,8 @@
 ** place of a destructor.
 *****************************************************************************/
 
+static const QColor _cc = QColor(255,205,105);
+
 void SQ_ImageEditSplash::init()
 {
     setAutoMask(true);
@@ -26,17 +28,17 @@ void SQ_ImageEditSplash::init()
     pushPrint->setPixmap(QPixmap(locate("appdata", "images/imageedit/splash_print.png")));
     pushPrint->setText(tr2i18n("Print"));
 
-    setPaletteBackgroundColor(colorGroup().highlight());
+    setPaletteBackgroundColor(_cc);
 
     if(!pix.isNull())
     {
-	setFixedWidth(pix.width());
-	setFixedHeight(pix.height());
+        setFixedWidth(pix.width());
+        setFixedHeight(pix.height());
     }
 
     KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
 
-    textFiles->setPaletteForegroundColor(colorGroup().highlightedText());
+    textFiles->setPaletteForegroundColor(Qt::black);
     textFiles->setText(i18n("Do something with 1 file", "Do something with %n files", items->count()));
 }
 
@@ -48,17 +50,11 @@ void SQ_ImageEditSplash::mousePressEvent(QMouseEvent *)
 void SQ_ImageEditSplash::updateMask()
 {
     if(!pix.mask())
-	return;
+        return;
 
     QBitmap bm = *pix.mask();
 
     setMask(bm);
-}
-
-void SQ_ImageEditSplash::paletteChange(const QPalette &)
-{
-    setPaletteBackgroundColor(colorGroup().highlight());
-    updateMask();
 }
 
 void SQ_ImageEditSplash::slotConvert()
@@ -107,8 +103,8 @@ bool SQ_ImageEditSplash::event(QEvent *e)
 {
     if(e->type() == QEvent::WindowDeactivate)
     {
-	close();
-	return false;
+        close();
+        return false;
     }
 
     return QWidget::event(e);
@@ -120,23 +116,23 @@ void SQ_ImageEditSplash::keyPressEvent(QKeyEvent *e)
 
     switch(e->key())
     {
-    case Qt::Key_1:
-	slotConvert();
-	break;
-    case Qt::Key_2:
-	slotResize();
-	break;
-    case Qt::Key_3:
-	slotRotate();
-	break;
-    case Qt::Key_4:
-	slotColorize();
-	break;
-    case Qt::Key_5:
-	slotFilter();
-	break;
-    case Qt::Key_6:
-	slotPrint();
-	break;
+        case Qt::Key_1:
+            slotConvert();
+        break;
+        case Qt::Key_2:
+            slotResize();
+        break;
+        case Qt::Key_3:
+            slotRotate();
+        break;
+        case Qt::Key_4:
+            slotColorize();
+        break;
+        case Qt::Key_5:
+            slotFilter();
+        break;
+        case Qt::Key_6:
+            slotPrint();
+        break;
     }
 }

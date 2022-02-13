@@ -30,53 +30,54 @@
 
 class SQ_LibraryListener : public KDirLister
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_LibraryListener(bool = false);
-		~SQ_LibraryListener();
+    public: 
+        SQ_LibraryListener(bool = false);
+        ~SQ_LibraryListener();
 
-		static SQ_LibraryListener* instance();
+        static SQ_LibraryListener* instance();
 
-	public slots:
-		/*
-		 *  Start monitor given directory.
-		 */
-		void slotOpenURL(const KURL&, bool, bool);
+    public slots:
+        /*
+         *  Start monitor given directory.
+         */
+        void slotOpenURL(const KURL&, bool, bool);
 
-	private slots:
-		/*
-		 *  All operations completed.
-		 */
-		void slotCompleted();
+    private slots:
+        /*
+         *  All operations completed.
+         */
+        void slotCompleted();
 
-		/*
-		 *  New libraries found!
-		 */
-		void slotNewItems(const KFileItemList &);
+        /*
+         *  New libraries found!
+         */
+        void slotNewItems(const KFileItemList &);
 
-		/*
-		 *  An item deleted.
-		 */
-		void slotDeleteItem(KFileItem *);
-		
-		/*
-		 *  Show dialog with information on new or dleetd libraries.
-		 */
-		void slotShowInfo(const QStringList &linfo, bool added);
+        /*
+         *  An item deleted.
+         */
+        void slotDeleteItem(KFileItem *);
+    
+        /*
+         *  Show dialog with information on new or dleetd libraries.
+         */
+        void slotShowInfo(const QStringList &linfo, bool added);
 
-	signals:
-		void showInfo(const QStringList &linfo, bool added);
+    signals:
+        void showInfo(const QStringList &linfo, bool added);
 
-		/*
-		 *  Done loading/deleting.
-		 */
-		void finishedInit();
+        /*
+         *  Done loading/deleting.
+         */
+        void finishedInit();
 
-	private:
-		QStringList	list;
-		bool 		operation;
-		static SQ_LibraryListener *listener;
+    private:
+        QStringList    list;
+        bool     operation;
+
+        static SQ_LibraryListener *listener;
 };
 
 #endif

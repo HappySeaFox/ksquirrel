@@ -185,6 +185,12 @@ namespace fmt_filters
         // radius = [1.0; 5.0]
         void oil(const image &im, double radius);
 
+        // red-eye removal.
+        // th = [0; 255]
+        void redeye(const image &im, const int w, const int h,
+                            const int x, const int y,
+                            int th);
+
         /*
          *  Resize methods ported from DevIL library, which is licensed under LGPL
          */

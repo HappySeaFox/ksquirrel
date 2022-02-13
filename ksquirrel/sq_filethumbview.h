@@ -40,161 +40,161 @@ class SQ_FileThumbViewItem;
 
 class SQ_FileThumbView : public SQ_FileIconViewBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		SQ_FileThumbView(QWidget *parent = 0, const char *name = "");
-		~SQ_FileThumbView();
+    public:
+        SQ_FileThumbView(QWidget *parent = 0, const char *name = "");
+        ~SQ_FileThumbView();
 
-		/*
-		 *  Get KFileIconViewItem by KFileItem. All KFileItems store
-		 *  a pointer to appropriate KFileIconViewItem as extra data.
-		 *  See also KFileItem::setExtraData() and insertItem().
-		 */
-		KFileIconViewItem* viewItem(const KFileItem *item);
+        /*
+         *  Get KFileIconViewItem by KFileItem. All KFileItems store
+         *  a pointer to appropriate KFileIconViewItem as extra data.
+         *  See also KFileItem::setExtraData() and insertItem().
+         */
+        KFileIconViewItem* viewItem(const KFileItem *item);
 
-		/*
-		 *  Reimplement insertItem() to enable/disable inserting
-		 *  directories (depends on current settings) and inserting thumbnails.
-		 */
-		virtual void insertItem(KFileItem *i);
+        /*
+         *  Reimplement insertItem() to enable/disable inserting
+         *  directories (depends on current settings) and inserting thumbnails.
+         */
+        virtual void insertItem(KFileItem *i);
 
-		/*
-		 *  Append new items to thumbnail generating job.
-		 */
-		void appendItems(const KFileItemList &items);
+        /*
+         *  Append new items to thumbnail generating job.
+         */
+        void appendItems(const KFileItemList &items);
 
-		/*
-		 *  Internal.
-		 */
-		virtual void updateView(const KFileItem *i);
-		virtual void updateView(bool b);
+        /*
+         *  Internal.
+         */
+        virtual void updateView(const KFileItem *i);
+        virtual void updateView(bool b);
 
-		/*
-		 *  Clear current view and insert "..".
-		 */
-		virtual void clearView();
+        /*
+         *  Clear current view and insert "..".
+         */
+        virtual void clearView();
 
-		/*
-		 *  All files are listed. Do something important.
-		 */
-		virtual void listingCompleted();
+        /*
+         *  All files are listed. Do something important.
+         */
+        virtual void listingCompleted();
 
-		/*
-		 *  Create job, connect signals and start updating
-		 */
-		void doStartThumbnailUpdate(const KFileItemList* list);
+        /*
+         *  Create job, connect signals and start updating
+         */
+        void doStartThumbnailUpdate(const KFileItemList* list);
 
-		/*
-		 *  Don't start thumbnail job until thumbnail view is hidden.
-		 */
-		void waitForShowEvent();
+        /*
+         *  Don't start thumbnail job until thumbnail view is hidden.
+         */
+        void waitForShowEvent();
 
-		/*
-		 *  Is thumbnail job running ?
-		 */
-		bool updateRunning() const;
+        /*
+         *  Is thumbnail job running ?
+         */
+        bool updateRunning() const;
 
-		/*
-		 *  Insert ".." item.
-		 */
-		virtual void insertCdUpItem(const KURL &base);
+        /*
+         *  Insert ".." item.
+         */
+        virtual void insertCdUpItem(const KURL &base);
 
-	protected:
-		/*
-		 *  For tooltip support.
-		 */
-		virtual bool eventFilter(QObject *o, QEvent *e);
-		virtual void hideEvent(QHideEvent *);
+    protected:
+        /*
+         *  For tooltip support.
+         */
+        virtual bool eventFilter(QObject *o, QEvent *e);
+        virtual void hideEvent(QHideEvent *);
 
-		/*
-		 *  Show event! Let's start thumbnail job, if needed.
-		 */
-		virtual void showEvent(QShowEvent *);
+        /*
+         *  Show event! Let's start thumbnail job, if needed.
+         */
+        virtual void showEvent(QShowEvent *);
 
-	private:
-		/*
-		 *  Internal. Set item's sorting key.
-		 */
-		void initItem(KFileIconViewItem *item, const KFileItem *i);
+    private:
+        /*
+         *  Internal. Set item's sorting key.
+         */
+        void initItem(KFileIconViewItem *item, const KFileItem *i);
 
-	public slots:
-		/*
-		 *  Start and stop thumbnail update job.
-		 */
-		void startThumbnailUpdate();
-		void stopThumbnailUpdate();
+    public slots:
+        /*
+         *  Start and stop thumbnail update job.
+         */
+        void startThumbnailUpdate();
+        void stopThumbnailUpdate();
 
-		/*
-		 *  One thumbnail is loaded. Let's update KFileItem's pixmap.
-		 */
-		void setThumbnailPixmap(const KFileItem* fileItem, const SQ_Thumbnail&);
+        /*
+         *  One thumbnail is loaded. Let's update KFileItem's pixmap.
+         */
+        void setThumbnailPixmap(const KFileItem* fileItem, const SQ_Thumbnail&);
 
-	protected slots:
-		void slotSelected(QIconViewItem *item, const QPoint &point);
+    protected slots:
+        void slotSelected(QIconViewItem *item, const QPoint &point);
 
-		/*
-		 *  Start or stop thumbnail update.
-		 */
-		void slotThumbnailUpdateToggle();
+        /*
+         *  Start or stop thumbnail update.
+         */
+        void slotThumbnailUpdateToggle();
 
-	private slots:
-		/*
-		 *  Show extended tooltip for 'item'.
-		 */
-		void slotShowToolTip(QIconViewItem *item);
+    private slots:
+        /*
+         *  Show extended tooltip for 'item'.
+         */
+        void slotShowToolTip(QIconViewItem *item);
 
-		/*
-		 *  Remove tootip and stop timer.
-		 */
-		void slotRemoveToolTip();
+        /*
+         *  Remove tootip and stop timer.
+         */
+        void slotRemoveToolTip();
 
-		/*
-		 *  Delayed tooltip
-		 */
-		void slotTooltipDelay();
+        /*
+         *  Delayed tooltip
+         */
+        void slotTooltipDelay();
 
-	public:
-		/*
-		 *  Layout box with progress bar and "stop" button.
-		 */
-		QHBox			*progressBox;
+    public:
+        /*
+         *  Layout box with progress bar and "stop" button.
+         */
+        QHBox    *progressBox;
 
-		/*
-		 *  Progress bar. It uses QPainter to draw progress line,
-		 *  which is MUCH faster, than using QProgressBar.
-		 */
-		SQ_Progress		*progress;
+        /*
+         *  Progress bar. It uses QPainter to draw progress line,
+         *  which is MUCH faster, than using QProgressBar.
+         */
+        SQ_Progress    *progress;
 
-		/*
-		 *  "Stop" button.
-		 */
-		QToolButton		*buttonStop;
+        /*
+         *  "Stop" button.
+         */
+        QToolButton    *buttonStop;
 
-	private:
-		QGuardedPtr<SQ_ThumbnailLoadJob> thumbJob;
+    private:
+        QGuardedPtr<SQ_ThumbnailLoadJob> thumbJob;
 
-		/*
-		 *  "Pending" thumbnails.
-		 */
-		QMap<QString, QPixmap> pending;
+        /*
+         *  "Pending" thumbnails.
+         */
+        QMap<QString, QPixmap> pending;
 
-		/*
-		 *  Tooltip for thumbnail item.
-		 */
-		QLabel 					*toolTip;
+        /*
+         *  Tooltip for thumbnail item.
+         */
+        QLabel     *toolTip;
 
-		SQ_FileThumbViewItem	*tooltipFor;
-		QTimer 					*timer;
+        SQ_FileThumbViewItem    *tooltipFor;
+        QTimer     *timer;
 
-		/*
-		 *  Thumbnail job won't start until isPending
-		 *  is false. It means, that thumbnail view currently is hidden.
-		 */
-		bool						isPending;
+        /*
+         *  Thumbnail job won't start until isPending
+         *  is false. It means, that thumbnail view currently is hidden.
+         */
+        bool    isPending;
 
-		QPixmap					dirPix;
-		int							pixelSize;
+        QPixmap    dirPix;
+        int    pixelSize;
 };
 
 

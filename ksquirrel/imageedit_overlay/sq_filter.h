@@ -24,27 +24,27 @@ class SQ_ImageFilter;
 
 class SQ_Filter : public SQ_EditBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_Filter();
-		~SQ_Filter();
+    public: 
+        SQ_Filter();
+        ~SQ_Filter();
 
-		static SQ_Filter* instance();
+        static SQ_Filter* instance();
 
-	protected:
-		virtual void startEditPrivate();
-		virtual void dialogReset();
-		virtual int manipDecodedImage(fmt_image *im);
-		virtual void cycleDone();
+    protected:
+        virtual void startEditPrivate();
+        virtual void dialogReset();
+        virtual int manipDecodedImage(fmt_image *im);
 
-	private slots:
-		void slotStartFilter(SQ_ImageOptions*, SQ_ImageFilterOptions*);
+    private slots:
+        void slotStartFilter(SQ_ImageOptions*, SQ_ImageFilterOptions*);
 
-	private:
-		SQ_ImageFilter		*filter;
-		static SQ_Filter		*sing;
-		SQ_ImageFilterOptions filtopt;
+    private:
+        SQ_ImageFilter        *filter;
+        static SQ_Filter        *sing;
+        SQ_ImageFilterOptions filtopt;
+        bool s_all;
 };
 
 #endif

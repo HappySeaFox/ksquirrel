@@ -27,31 +27,31 @@
 
 class SQ_FileIconViewBase : public KFileIconView
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_FileIconViewBase(QWidget *parent = 0, const char *name = 0);
-		virtual ~SQ_FileIconViewBase();
+    public: 
+        SQ_FileIconViewBase(QWidget *parent = 0, const char *name = 0);
+        virtual ~SQ_FileIconViewBase();
 
-		virtual void insertCdUpItem(const KURL &base) = 0;
+        virtual void insertCdUpItem(const KURL &base) = 0;
 
-	protected:
-		/*
-		 *  Accept dragging.
-		 */
-		virtual void dragEnterEvent(QDragEnterEvent *);
+    protected:
+        /*
+         *  Accept dragging.
+         */
+        virtual void dragEnterEvent(QDragEnterEvent *);
 
-		/*
-		 *  Handle double clicks.
-		 */
-		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+        /*
+         *  Handle double clicks.
+         */
+        virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
-	protected slots:
-		/*
-		 *  Somebody dropped urls in viewport. Let's execute popup menu with
-		 *  file actions.
-		 */
-		void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
+    protected slots:
+        /*
+         *  Somebody dropped urls in viewport. Let's execute popup menu with
+         *  file actions.
+         */
+        void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
 };
 
 #endif

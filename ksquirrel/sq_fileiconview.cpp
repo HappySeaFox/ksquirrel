@@ -24,8 +24,8 @@
 #include "sq_diroperator.h"
 
 SQ_FileIconViewItem::SQ_FileIconViewItem(QIconView *parent, const QString &text,
-										 const QPixmap &pixmap, KFileItem *fi)
-			: KFileIconViewItem(parent, text, pixmap, fi)
+     const QPixmap &pixmap, KFileItem *fi)
+    : KFileIconViewItem(parent, text, pixmap, fi)
 {}
 
 SQ_FileIconViewItem::~SQ_FileIconViewItem()
@@ -36,11 +36,11 @@ void SQ_FileIconViewItem::paintFocus(QPainter *, const QColorGroup &)
 
 SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : SQ_FileIconViewBase(parent, name)
 {
-	QString n = name;
-	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
-	setSorting(QDir::IgnoreCase);
-	dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, (n == "icon view")
-		? KIcon::SizeMedium : KIcon::SizeSmall);
+    QString n = name;
+    disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
+    setSorting(QDir::IgnoreCase);
+    dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, (n == "icon view")
+    ? KIcon::SizeMedium : KIcon::SizeSmall);
 }
 
 SQ_FileIconView::~SQ_FileIconView()
@@ -48,7 +48,7 @@ SQ_FileIconView::~SQ_FileIconView()
 
 void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
 {
-	emit doubleClicked(item, point);
+    emit doubleClicked(item, point);
 }
 
 /*
@@ -58,32 +58,32 @@ void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
  */
 SQ_FileIconViewItem* SQ_FileIconView::viewItem(const KFileItem *item)
 {
-	return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : NULL;
+    return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : NULL;
 }
 
 void SQ_FileIconView::updateView(bool b)
 {
-	if(!b)
-		return;
+    if(!b)
+        return;
 
-	SQ_FileIconViewItem *item = static_cast<SQ_FileIconViewItem*>(QIconView::firstItem());
+    SQ_FileIconViewItem *item = static_cast<SQ_FileIconViewItem*>(QIconView::firstItem());
 
-	if(item)
-	{
-		do
-		{
-			item->setPixmap((item->fileInfo())->pixmap(iconSize()));
-			item = static_cast<SQ_FileIconViewItem*>(item->nextItem());
-		}while(item);
-	}
+    if(item)
+    {
+        do
+        {
+            item->setPixmap((item->fileInfo())->pixmap(iconSize()));
+            item = static_cast<SQ_FileIconViewItem*>(item->nextItem());
+        }while(item);
+    }
 }
 
 void SQ_FileIconView::updateView(const KFileItem *i)
 {
-	SQ_FileIconViewItem *item = viewItem(i);
+    SQ_FileIconViewItem *item = viewItem(i);
 
-	if(item)
-		initItem(item, i);
+    if(item)
+        initItem(item, i);
 }
 
 /*
@@ -91,15 +91,15 @@ void SQ_FileIconView::updateView(const KFileItem *i)
  */
 void SQ_FileIconView::initItem(SQ_FileIconViewItem *item, const KFileItem *i)
 {
-	// determine current sorting type
-	QDir::SortSpec spec = KFileView::sorting();
+    // determine current sorting type
+    QDir::SortSpec spec = KFileView::sorting();
 
-	if(spec & QDir::Time)
-		item->setKey(sortingKey((unsigned long)i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
-	else if(spec & QDir::Size)
-		item->setKey(sortingKey(i->size(), i->isDir(), spec));
-	else
-		item->setKey(sortingKey(i->text(), i->isDir(), spec));
+    if(spec & QDir::Time)
+        item->setKey(sortingKey((unsigned long)i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
+    else if(spec & QDir::Size)
+        item->setKey(sortingKey(i->size(), i->isDir(), spec));
+    else
+        item->setKey(sortingKey(i->text(), i->isDir(), spec));
 }
 
 /*
@@ -108,18 +108,20 @@ void SQ_FileIconView::initItem(SQ_FileIconViewItem *item, const KFileItem *i)
  */
 void SQ_FileIconView::insertItem(KFileItem *i)
 {
-	// directores disabled ?
-	if(i->isDir() && SQ_Config::instance()->readBoolEntry("Fileview", "disable_dirs", false))
-		return;
+    SQ_Config::instance()->setGroup("Fileview");
 
-	SQ_FileIconViewItem *item;
+    // directores disabled ?
+    if(i->isDir() && SQ_Config::instance()->readBoolEntry("disable_dirs", false))
+        return;
 
-	// add new item
-	item = new SQ_FileIconViewItem((QIconView*)this, i->text(), i->pixmap(iconSize()), i);
+    SQ_FileIconViewItem *item;
 
-	initItem(item, i);
+    // add new item
+    item = new SQ_FileIconViewItem((QIconView*)this, i->text(), i->pixmap(iconSize()), i);
 
-	i->setExtraData(this, item);
+    initItem(item, i);
+
+    i->setExtraData(this, item);
 }
 
 /*
@@ -127,14 +129,14 @@ void SQ_FileIconView::insertItem(KFileItem *i)
  */
 void SQ_FileIconView::insertCdUpItem(const KURL &base)
 {
-	KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+    KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
 
-	// create ".." item
-	SQ_FileIconViewItem *item = new SQ_FileIconViewItem(this, QString::fromLatin1(".."), dirPix, fi);
+    // create ".." item
+    SQ_FileIconViewItem *item = new SQ_FileIconViewItem(this, QString::fromLatin1(".."), dirPix, fi);
 
-	item->setSelectable(false);
+    item->setSelectable(false);
 
-	fi->setExtraData(this, item);
+    fi->setExtraData(this, item);
 }
 
 /*
@@ -142,25 +144,14 @@ void SQ_FileIconView::insertCdUpItem(const KURL &base)
  */
 void SQ_FileIconView::clearView()
 {
-	// call default clearing method
-	KIconView::clear();
+    // call default clearing method
+    KIconView::clear();
 
-	// insert ".."
-	insertCdUpItem(SQ_WidgetStack::instance()->url());
+    // insert ".."
+    insertCdUpItem(SQ_WidgetStack::instance()->url());
 }
 
 void SQ_FileIconView::listingCompleted()
 {
-/*	printf("LISTING, items: ");
-
-	KFileItem *f = firstFileItem();
-
-	while(f)
-	{
-		printf("%s, ", f->name().ascii());
-
-		f = nextItem(f);
-	}printf("\n\n");*/
-
-	arrangeItemsInGrid();
+    arrangeItemsInGrid();
 }

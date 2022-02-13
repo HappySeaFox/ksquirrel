@@ -32,8 +32,8 @@ SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, KFileItem *fi) : KFi
 {}
 
 SQ_FileListViewItem::SQ_FileListViewItem(QListView *parent, const QString &text,
-										 const QPixmap &icon, KFileItem *fi)
-		: KFileListViewItem(parent, text, icon, fi)
+     const QPixmap &icon, KFileItem *fi)
+    : KFileListViewItem(parent, text, icon, fi)
 {}
 
 SQ_FileListViewItem::~SQ_FileListViewItem()
@@ -46,15 +46,15 @@ void SQ_FileListViewItem::paintFocus(QPainter *, const QColorGroup &, const QRec
 {}
 
 SQ_FileDetailView::SQ_FileDetailView(QWidget* parent, const char* name)
-		: KFileDetailView(parent, name)
+    : KFileDetailView(parent, name)
 {
-	// drag & drop support
-	setAcceptDrops(true);
-	connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this,
-		SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
+    // drag & drop support
+    setAcceptDrops(true);
+    connect(this, SIGNAL(dropped(QDropEvent *, const KURL::List &, const KURL &)), this,
+    SLOT(slotDropped(QDropEvent *, const KURL::List &, const KURL &)));
 
-	// pixmap for directory item
-	dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
+    // pixmap for directory item
+    dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, KIcon::SizeSmall);
 }
 
 SQ_FileDetailView::~SQ_FileDetailView()
@@ -66,16 +66,18 @@ SQ_FileDetailView::~SQ_FileDetailView()
  */
 void SQ_FileDetailView::insertItem(KFileItem *i)
 {
-	// directores disabled ?
-	if(i->isDir() && SQ_Config::instance()->readBoolEntry("Fileview", "disable_dirs", false))
-		return;
+    SQ_Config::instance()->setGroup("Fileview");
 
-	// add new item
-	SQ_FileListViewItem *item = new SQ_FileListViewItem(this, i);
+    // directores disabled ?
+    if(i->isDir() && SQ_Config::instance()->readBoolEntry("disable_dirs", false))
+        return;
 
-	initItem(item, i);
+    // add new item
+    SQ_FileListViewItem *item = new SQ_FileListViewItem(this, i);
 
-	i->setExtraData(this, item);
+    initItem(item, i);
+
+    i->setExtraData(this, item);
 }
 
 /*
@@ -83,15 +85,15 @@ void SQ_FileDetailView::insertItem(KFileItem *i)
  */
 void SQ_FileDetailView::initItem(SQ_FileListViewItem *item, const KFileItem *i)
 {
-	// determine current sorting type
-	QDir::SortSpec spec = KFileView::sorting();
+    // determine current sorting type
+    QDir::SortSpec spec = KFileView::sorting();
 
-	if(spec & QDir::Time)
-		item->setKey(sortingKey(i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
-	else if(spec & QDir::Size)
-		item->setKey(sortingKey(i->size(), i->isDir(), spec));
-	else
-		item->setKey(sortingKey(i->text(), i->isDir(), spec));
+    if(spec & QDir::Time)
+        item->setKey(sortingKey(i->time(KIO::UDS_MODIFICATION_TIME), i->isDir(), spec));
+    else if(spec & QDir::Size)
+        item->setKey(sortingKey(i->size(), i->isDir(), spec));
+    else
+        item->setKey(sortingKey(i->text(), i->isDir(), spec));
 }
 
 /*
@@ -100,27 +102,27 @@ void SQ_FileDetailView::initItem(SQ_FileListViewItem *item, const KFileItem *i)
  */
 void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
-	QPoint vp = contentsToViewport(e->pos());
+    QPoint vp = contentsToViewport(e->pos());
 
-	QListViewItem *item = itemAt(vp);
+    QListViewItem *item = itemAt(vp);
 
-	emit QListView::doubleClicked(item);
+    emit QListView::doubleClicked(item);
 
-	int col = item ? header()->mapToLogical(header()->cellAt(vp.x())) : -1;
+    int col = item ? header()->mapToLogical(header()->cellAt(vp.x())) : -1;
 
-	// double click on item
-	if(item)
-	{
-		if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
-			emitExecute(item, e->globalPos(), col);
+    // double click on item
+    if(item)
+    {
+        if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
+            emitExecute(item, e->globalPos(), col);
 
-		emit doubleClicked(item, e->globalPos(), col);
-	}
-	// double click was in viewport, let's invoke browser
-	else
-	{
-		kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
-	}
+        emit doubleClicked(item, e->globalPos(), col);
+    }
+    // double click was in viewport, let's invoke browser
+    else
+    {
+        kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
+    }
 }
 
 /*
@@ -129,17 +131,17 @@ void SQ_FileDetailView::contentsMouseDoubleClickEvent(QMouseEvent *e)
  */
 void SQ_FileDetailView::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
 {
-	KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
+    KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
 
-	// setup and execute menu with file actions
-	SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
-	SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
+    // setup and execute menu with file actions
+    SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
+    SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
 }
 
 // Accept dragging
 void SQ_FileDetailView::dragEnterEvent(QDragEnterEvent *e)
 {
-	e->accept(true);
+    e->accept(true);
 }
 
 /*
@@ -147,14 +149,14 @@ void SQ_FileDetailView::dragEnterEvent(QDragEnterEvent *e)
  */
 void SQ_FileDetailView::insertCdUpItem(const KURL &base)
 {
-	KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
+    KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
 
-	SQ_FileListViewItem *item = new SQ_FileListViewItem(this, QString::fromLatin1(".."), dirPix, fi);
+    SQ_FileListViewItem *item = new SQ_FileListViewItem(this, QString::fromLatin1(".."), dirPix, fi);
 
-	item->setSelectable(false);
-	item->setKey(sortingKey("..", true, QDir::Name|QDir::DirsFirst));
+    item->setSelectable(false);
+    item->setKey(sortingKey("..", true, QDir::Name|QDir::DirsFirst));
 
-	fi->setExtraData(this, item);
+    fi->setExtraData(this, item);
 }
 
 /*
@@ -162,9 +164,9 @@ void SQ_FileDetailView::insertCdUpItem(const KURL &base)
  */
 void SQ_FileDetailView::clearView()
 {
-	// call default clearing method
-	KListView::clear();
+    // call default clearing method
+    KListView::clear();
 
-	// insert ".."
-	insertCdUpItem(SQ_WidgetStack::instance()->url());
+    // insert ".."
+    insertCdUpItem(SQ_WidgetStack::instance()->url());
 }

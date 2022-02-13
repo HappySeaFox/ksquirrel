@@ -18,21 +18,21 @@ void SQ_ImageRotate::init()
     pushFlipH->setPixmap(locate("appdata", "images/imageedit/flipH.png"));
     pushReset->setPixmap(locate("appdata", "images/imageedit/reset_value.png"));
 
-    imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "rotate_putto", QString::null);
-    imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "rotate_where_to_put", 0);
-    imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "rotate_close", true);
+    SQ_Config::instance()->setGroup("Image edit options");
 
-    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "rotate_dontshowhelp", false));
+    imageopt.putto = SQ_Config::instance()->readEntry("rotate_putto", QString::null);
+    imageopt.where_to_put = SQ_Config::instance()->readNumEntry("rotate_where_to_put", 0);
+    imageopt.close = SQ_Config::instance()->readBoolEntry("rotate_close", true);
+
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("rotate_dontshowhelp", false));
 
     flipv = fliph = false;
     angle = 0;
 
-    if(checkDontShow->isChecked())
-	slotNext();
-
-    initPreviewImage();
-
     done = true;
+
+    if(checkDontShow->isChecked())
+        slotNext();
 }
 
 void SQ_ImageRotate::slotStartRotate()
@@ -53,24 +53,24 @@ void SQ_ImageRotate::slotStartRotate()
     
     if(flipv && fliph)
     {
-	if(angle == 180)
-	{
-	    ropt.angle = 0;
-	    ropt.flipv = false;
-	    ropt.fliph = false;
-	}
-	else if(angle == 90)
-	{
-	    ropt.angle = 270;
-	    ropt.flipv = false;
-	    ropt.fliph = false;
-	}
-	else if(angle == 270)
-	{
-	    ropt.angle = 90;
-	    ropt.flipv = false;
-	    ropt.fliph = false;
-	}
+        if(angle == 180)
+        {
+            ropt.angle = 0;
+            ropt.flipv = false;
+            ropt.fliph = false;
+        }
+        else if(angle == 90)
+        {
+            ropt.angle = 270;
+            ropt.flipv = false;
+            ropt.fliph = false;
+        }
+        else if(angle == 270)
+        {
+            ropt.angle = 90;
+            ropt.flipv = false;
+            ropt.fliph = false;
+        }
     }
 
     SQ_Config::instance()->writeEntry("rotate_dontshowhelp", checkDontShow->isChecked());
@@ -144,10 +144,10 @@ void SQ_ImageRotate::slotRotateSampleL()
     
     if(angle < 0)
     {
-	angle = -angle;
+        angle = -angle;
 
-	if(angle == 360) angle = 0;
-	else angle = 360 - angle;
+        if(angle == 360) angle = 0;
+        else angle = 360 - angle;
     }
     
     updateAngle();
@@ -158,14 +158,15 @@ void SQ_ImageRotate::slotRotateSampleR()
     rotateImage(true);
 
     angle += 90;
+
     if(angle == 360) angle = 0;
-    updateAngle();
+        updateAngle();
 }
 
 void SQ_ImageRotate::setImage(const QImage &im)
 {
     if(im.isNull())
-	return;
+        return;
 
     QPixmap pix;
     pix.convertFromImage(im);
@@ -210,23 +211,23 @@ void SQ_ImageRotate::slotDone(bool close)
     done = true;
     
     if(close)
-	reject();
+        reject();
 }
 
 void SQ_ImageRotate::slotReject()
 {
     if(done)
-	reject();
+        reject();
 }
 
 void SQ_ImageRotate::closeEvent(QCloseEvent *e)
 {
     if(done)
-	e->accept();
+        e->accept();
     else
     {
-	e->ignore();
-	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
+        e->ignore();
+        QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
 }
 
@@ -247,21 +248,11 @@ void SQ_ImageRotate::slotBack()
     widgetStackWizard->raiseWidget(0);
 }
 
-void SQ_ImageRotate::initPreviewImage()
-{
-    QImage tmp;
-
-    tmp.load(locate("appdata", "images/imageedit/edit_sample.png"));
-
-    setPreviewImage(tmp);
-}
-
 void SQ_ImageRotate::setPreviewImage(const QImage &im)
 {    
     if(im.isNull()) return;
 
-    sample = im.convertDepth(32);
-    sample.setAlphaBuffer(false);
+    sample = im.copy();
     sample_saved = sample.copy();
 
     QPixmap p;

@@ -29,69 +29,69 @@
  */
 class SQ_FileListViewItem : public KFileListViewItem
 {
-	public:
-		SQ_FileListViewItem(QListView *parent, KFileItem *fi);
-		SQ_FileListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi);
-		~SQ_FileListViewItem();
+    public:
+        SQ_FileListViewItem(QListView *parent, KFileItem *fi);
+        SQ_FileListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi);
+        ~SQ_FileListViewItem();
 
-	protected:
-		/*
-		 *  Reimplement paintFocus() to ignore painting focus.
-		 */
-		virtual void paintFocus(QPainter *, const QColorGroup &, const QRect &r);
+    protected:
+        /*
+         *  Reimplement paintFocus() to ignore painting focus.
+         */
+        virtual void paintFocus(QPainter *, const QColorGroup &, const QRect &r);
 };
 
 class SQ_FileDetailView : public KFileDetailView
 {
     Q_OBJECT
 
-	public:
-		SQ_FileDetailView(QWidget* parent, const char* name);
-		~SQ_FileDetailView();
+    public:
+        SQ_FileDetailView(QWidget* parent, const char* name);
+        ~SQ_FileDetailView();
 
-		/*
-		 *  Reimplement insertItem() to enable/disable inserting
-		 *  directories (depends on current settings).
-		 */
-		virtual void insertItem(KFileItem *i);
+        /*
+         *  Reimplement insertItem() to enable/disable inserting
+         *  directories (depends on current settings).
+         */
+        virtual void insertItem(KFileItem *i);
 
-		/*
-		 *  Clear current view and insert "..".
-		 */
-		virtual void clearView();
+        /*
+         *  Clear current view and insert "..".
+         */
+        virtual void clearView();
 
-		/*
-		 *  Insert ".." item.
-		 */
-		void insertCdUpItem(const KURL &baseurl);
+        /*
+         *  Insert ".." item.
+         */
+        void insertCdUpItem(const KURL &baseurl);
 
-	protected:
-		/*
-		 *  Internal. Set item's sorting key.
-		 */
-		void initItem(SQ_FileListViewItem *item, const KFileItem *i);
+    protected:
+        /*
+         *  Internal. Set item's sorting key.
+         */
+        void initItem(SQ_FileListViewItem *item, const KFileItem *i);
 
-		/*
-		 *  On double click execute item or
-		 *  invoke default browser in current url.
-		 */
-		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+        /*
+         *  On double click execute item or
+         *  invoke default browser in current url.
+         */
+        virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
-		/*
-		 *  Accept dragging.
-		 */
-		virtual void dragEnterEvent(QDragEnterEvent *);
+        /*
+         *  Accept dragging.
+         */
+        virtual void dragEnterEvent(QDragEnterEvent *);
 
-	protected slots:
+    protected slots:
 
-		/*
-		 *  Somebody dropped urls in viewport. Let's execute popup menu with
-		 *  file actions.
-		 */
-		void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
+        /*
+         *  Somebody dropped urls in viewport. Let's execute popup menu with
+         *  file actions.
+         */
+        void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
 
-	private:
-		QPixmap	dirPix;
+    private:
+        QPixmap    dirPix;
 };
 
 #endif

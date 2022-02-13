@@ -31,44 +31,44 @@
 
 class SQ_BookmarkOwner : public QObject, public KBookmarkOwner
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_BookmarkOwner(QWidget *parent = 0);
-		~SQ_BookmarkOwner();
+    public: 
+        SQ_BookmarkOwner(QWidget *parent = 0);
+        ~SQ_BookmarkOwner();
 
-		/*
-		 *  User selected some bookmark. It will emit 'openURL' signal,
-		 *  and SQ_WidgetStack will catch it.
-		 */
-		virtual void openBookmarkURL(const QString &);
+        /*
+         *  User selected some bookmark. It will emit 'openURL' signal,
+         *  and SQ_WidgetStack will catch it.
+         */
+        virtual void openBookmarkURL(const QString &);
 
-		/*
-		 *  Current url. If user selected "Add bookmark", this
-		 *  url will be added to bookmarks. See also SQ_BookmarkOwner::setURL()
-		 */
-		virtual QString currentURL() const;
-		
-		static SQ_BookmarkOwner* instance();
+        /*
+         *  Current url. If user selected "Add bookmark", this
+         *  url will be added to bookmarks. See also SQ_BookmarkOwner::setURL()
+         */
+        virtual QString currentURL() const;
+    
+        static SQ_BookmarkOwner* instance();
 
-		/*
-		 *  Set current url
-		 */
-	public slots:
-		void setURL(const KURL &);
+        /*
+         *  Set current url
+         */
+    public slots:
+        void setURL(const KURL &);
 
-		/*
-		 *  Signal to open some url. SQ_WidgetStack will catch it
-		 *  and change current directory.
-		 */
-	signals:
-		void openURL(const KURL &);
+        /*
+         *  Signal to open some url. SQ_WidgetStack will catch it
+         *  and change current directory.
+         */
+    signals:
+        void openURL(const KURL &);
 
-	private:
-		KURL URL;
+    private:
+        KURL URL;
 
-		// singleton
-		static SQ_BookmarkOwner *sing;
+        // singleton
+        static SQ_BookmarkOwner *sing;
 };
 
 #endif

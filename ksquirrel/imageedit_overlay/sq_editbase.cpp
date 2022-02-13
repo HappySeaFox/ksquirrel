@@ -24,6 +24,7 @@
 
 #include <kmessagebox.h>
 #include <kstringhandler.h>
+#include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <klocale.h>
 
@@ -39,451 +40,449 @@
 
 SQ_EditBase::SQ_EditBase() : QObject()
 {
-	err_internal = i18n("internal error") + "\n";
-	err_failed = i18n("failed") + "\n";
+    err_internal = i18n("internal error") + "\n";
+    err_failed = i18n("failed") + "\n";
 
-	special_action = i18n("Editing");
+    special_action = i18n("Editing");
 
-	image = NULL;
+    image = NULL;
 }
 
 SQ_EditBase::~SQ_EditBase()
 {
-	if(image) free(image);
+    if(image) free(image);
 }
 
 void SQ_EditBase::slotStartEdit()
 {
-	files.clear();
+    files.clear();
 
-	KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
+    KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
 
-	if(!items) return;
-	if(!items->count())
-	{
-		KMessageBox::information(KSquirrel::app(), i18n("Select files to edit"));
-		return;
-	}
+    if(!items) return;
 
-	KFileItem *i = items->first();
+    if(!items->count())
+    {
+        KMessageBox::information(KSquirrel::app(), i18n("Select files to edit"));
+        return;
+    }
 
-	for(;i;i = items->next())
-	{
-		if(i->isFile())
-		    files.append(i->url().path());
-	}
+    KFileItem *i = items->first();
 
-	if(!files.count())
-	{
-		KMessageBox::information(KSquirrel::app(), i18n("Select files to edit"));
-		return;
-	}
+    for(;i;i = items->next())
+    {
+        if(i->isFile())
+            files.append(i->url().path());
+    }
 
-	startEditPrivate();
+    if(!files.count())
+    {
+        KMessageBox::information(KSquirrel::app(), i18n("Select files to edit"));
+            return;
+    }
+
+    startEditPrivate();
 }
 
 QString SQ_EditBase::adjustFileName(const QString &globalprefix, const QString &name1, int replace, QString putto, bool paged, int page)
 {
-	QFileInfo ff(name1);
-	QString name = ff.dirPath() + "/" + (replace == 0 ? globalprefix : (replace == 2 ? QString::null : globalprefix)) + ff.fileName();
-	ff = QFileInfo(name);
+    QFileInfo ff(name1);
+    QString name = ff.dirPath() + "/" + (replace == 0 ? globalprefix : (replace == 2 ? QString::null : globalprefix)) + ff.fileName();
+    ff = QFileInfo(name);
 
-	QString result, inner, filter = lw->filter;
-	QString ext = ff.extension(false);
-	QString prefix, suffix, name2 = name;
-	QString spage = QString::fromLatin1("page_%1.").arg((QString::fromLatin1("%1").arg(page)).rightJustify(3, '0'));
+    QString result, inner, filter = lw->filter;
+    QString ext = ff.extension(false);
+    QString prefix, suffix, name2 = name;
+    QString spage = QString::fromLatin1("page_%1.").arg((QString::fromLatin1("%1").arg(page)).rightJustify(3, '0'));
 
-	if(!putto.isEmpty())
-	{
-		if(QFile::exists(putto))
-			name2 = putto + "/" + ff.fileName();
-	}
+    if(!putto.isEmpty())
+    {
+        if(QFile::exists(putto))
+            name2 = putto + "/" + ff.fileName();
+    }
 
-	prefix = name2;
+    prefix = name2;
 
-	prefix.truncate(name2.length() - ext.length());
+    prefix.truncate(name2.length() - ext.length());
 
-	suffix = (SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.") + ext))
+    suffix = (SQ_LibraryHandler::instance()->knownExtension(QString::fromLatin1("*.") + ext))
 
 #ifndef QT_NO_STL
 
-            ? QString(lw->codec->fmt_extension(32)) : ext;
+        ? QString(lw->codec->fmt_extension(32)) : ext;
 
 #else
 
-            ? QString(lw->codec->fmt_extension(32).c_str()) : ext;
+        ? QString(lw->codec->fmt_extension(32).c_str()) : ext;
 
 #endif
 
-	if(replace == 0 || replace == 2)
-		result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
-	else
-	{
-		int f = 1;
+    if(replace == 0 || replace == 2)
+        result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
+    else
+    {
+        int f = 1;
 
-		while(true)
-		{
-			result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
+        while(true)
+        {
+            result = (!paged) ? (prefix + inner + suffix) : (prefix + spage + inner + suffix);
 
-			if(QFile::exists(result))
-			{
-				inner = QString::fromLatin1("%1.").arg(f);
-				f++;
-			}
-			else
-				break;
-		}
-	}
+            if(QFile::exists(result))
+            {
+                inner = QString::fromLatin1("%1.").arg(f);
+                f++;
+            }
+            else
+                break;
+        }
+    }
 
-	return QFile::encodeName(result);
+    return QFile::encodeName(result);
 }
 
 void SQ_EditBase::errorjmp(jmp_buf jmp, const int code)
 {
-	error_code = code;
-	longjmp(jmp, 1);
+    error_code = code;
+    longjmp(jmp, 1);
 }
 
 void SQ_EditBase::decodingCycle()
 {
-	int 				i, j;
-	QString			name;
-	jmp_buf			jmp;
-	RGBA			*scan;
-	int			errors, gerrors = 0, current;
-	QString 		putto;
-	int			replace = imageopt.where_to_put;
+    int     i, j;
+    QString    name;
+    jmp_buf    jmp;
+    RGBA    *scan;
+    int    errors, gerrors = 0, current;
+    QString     putto;
+    int    replace = imageopt.where_to_put;
 
-	altlibrary = 	SQ_Config::instance()->readEntry("Edit tools", "altlibrary", "Portable Network Graphics");
-	multi = SQ_Config::instance()->readBoolEntry("Edit tools", "multi", true);
+    SQ_Config::instance()->setGroup("Edit tools");
 
-	if(ondisk)
-	{
-		tempfile = new KTempFile;
-		tempfile->setAutoDelete(true);
+    altw = SQ_LibraryHandler::instance()->libraryByName(SQ_Config::instance()->readEntry("altlibrary", "Portable Network Graphics"));
+    multi = SQ_Config::instance()->readBoolEntry("multi", true);
 
-		tempfile->close();
+    if(ondisk)
+    {
+        tempfile = new KTempFile;
+        tempfile->setAutoDelete(true);
 
-		if(tempfile->status())
-		{
-//			fprintf(stderr, "temporary file creation failed\n");
-			return;
-		}
-	}
+        tempfile->close();
 
-	QValueList<QString>::iterator last_it = files.fromLast();
-	QValueList<QString>::iterator   BEGIN = files.begin();
-	QValueList<QString>::iterator   END   = files.end();
+        if(tempfile->status())
+        {
+//    fprintf(stderr, "temporary file creation failed\n");
+        return;
+        }
+    }
 
-	dialogReset();
+    QValueList<QString>::iterator last_it = files.fromLast();
+    QValueList<QString>::iterator   BEGIN = files.begin();
+    QValueList<QString>::iterator   END   = files.end();
 
-	putto = imageopt.putto;
+    dialogReset();
 
-	for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
-	{
-		currentFile = *it;
-		last = (it == last_it);
+    putto = imageopt.putto;
 
-		QFileInfo ff(*it);
+    for(QValueList<QString>::iterator it = BEGIN;it != END;++it)
+    {
+        currentFile = *it;
+        last = (it == last_it);
 
-		emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + "... ", false);
+        QFileInfo ff(*it);
 
-		if(SQ_LibraryHandler::instance()->supports(*it))
-		{
-			lr = SQ_LibraryHandler::instance()->latestLibrary();
-			setWritingLibrary();
+        emit convertText(special_action + " " + KStringHandler::rsqueeze(ff.fileName()) + "... ", false);
 
-			if(!lr || !lw)
-			{
-				gerrors++;
-				emit convertText(err_internal, true);
-				emit oneFileProcessed();
-				continue;
-			}
+        if(SQ_LibraryHandler::instance()->supports(*it))
+        {
+            lr = SQ_LibraryHandler::instance()->latestLibrary();
+            setWritingLibrary();
 
-			name = QFile::encodeName(*it);
-			const char *s = name.ascii();
+            if(!lr || !lw)
+            {
+                gerrors++;
+                emit convertText(err_internal, true);
+                emit oneFileProcessed();
+                continue;
+            }
 
-			i = lr->codec->fmt_read_init(s);
+            name = QFile::encodeName(*it);
+            const char *s = name.ascii();
 
-			if(setjmp(jmp))
-			{
-				gerrors++;
+            i = lr->codec->fmt_read_init(s);
 
-				lr->codec->fmt_read_close();
+            if(setjmp(jmp))
+            {
+                gerrors++;
 
-				emit convertText(SQ_ErrorString::instance()->stringSN(error_code), true);
-				emit oneFileProcessed();
+                lr->codec->fmt_read_close();
 
-				continue;
-			}
+                emit convertText(SQ_ErrorString::instance()->stringSN(error_code), true);
+                emit oneFileProcessed();
 
-			if(i != SQE_OK)
-				errorjmp(jmp, i);
+                continue;
+            }
 
-			errors = 0;
-			current = 0;
+            if(i != SQE_OK)
+                errorjmp(jmp, i);
 
-			while(true)
-			{
-//				finfo->image = (fmt_image *)realloc(finfo->image, sizeof(fmt_image) * (finfo->images+1));
-//				memset(&finfo->image[current], 0, sizeof(fmt_image));
+            errors = 0;
+            current = 0;
 
-//				name = adjustFileName(*it, lw->filter);
-//				printf("name: %s\n", name.ascii());
+            while(true)
+            {
+//    finfo->image = (fmt_image *)realloc(finfo->image, sizeof(fmt_image) * (finfo->images+1));
+//    memset(&finfo->image[current], 0, sizeof(fmt_image));
 
-				qApp->processEvents();
+//    name = adjustFileName(*it, lw->filter);
+//    printf("name: %s\n", name.ascii());
 
-				i = lr->codec->fmt_read_next();
+                qApp->processEvents();
 
-				im = lr->codec->image(current-1);
+                i = lr->codec->fmt_read_next();
 
-				if(i != SQE_OK)
-				{
-					if(i == SQE_NOTOK)
-					{
-						if(ondisk)
-						{
-							if(current == 1)
-								name = adjustFileName(prefix, *it, replace, putto);
-							else
-								name = adjustFileName(prefix, *it, replace, putto, true, current);
-						}
-						else
-							name = QString::null;
+                im = lr->codec->image(current-1);
 
-						lastFrame = last ? true : false;
+                if(i != SQE_OK)
+                {
+                    if(i == SQE_NOTOK)
+                    {
+                        if(ondisk)
+                        {
+                            if(current == 1)
+                                name = adjustFileName(prefix, *it, replace, putto);
+                            else
+                                name = adjustFileName(prefix, *it, replace, putto, true, current);
+                        }
+                        else
+                            name = QString::null;
 
-						if(ondisk)
-							i = manipAndWriteDecodedImage(tempfile->name(), im);
-						else
-							i = manipAndWriteDecodedImage(QString::null, im);
+                        lastFrame = last ? true : false;
 
-						emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
-						emit oneFileProcessed();
+                        if(ondisk)
+                            i = manipAndWriteDecodedImage(tempfile->name(), im);
+                        else
+                            i = manipAndWriteDecodedImage(QString::null, im);
 
-						i = SQE_OK;
+                        emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : SQ_ErrorString::instance()->stringSN(SQE_OK), true);
+                        emit oneFileProcessed();
 
-						if(replace == 2 && ondisk)
-						{
-							emit convertText(i18n("Removing") + KStringHandler::rsqueeze(ff.fileName()) + QString("... "), false);
+                        i = SQE_OK;
 
-							bool b = QFile::remove(*it);
+                        if(replace == 2 && ondisk)
+                        {
+                            emit convertText(i18n("Removing") + KStringHandler::rsqueeze(ff.fileName()) + QString("... "), false);
 
-							emit convertText(b ? SQ_ErrorString::instance()->stringSN(SQE_OK) : err_failed, true);
-							emit oneFileProcessed();
-						}
+                            bool b = QFile::remove(*it);
 
-						if(ondisk)
-							i = copyFile(tempfile->name(), name);
+                            emit convertText(b ? SQ_ErrorString::instance()->stringSN(SQE_OK) : err_failed, true);
+                            emit oneFileProcessed();
+                        }
 
-						qApp->processEvents();
+                        if(ondisk)
+                            i = copyFile(tempfile->name(), name);
 
-						break;
-					}
-					else
-						errorjmp(jmp, i);
-				}
+                        qApp->processEvents();
 
-				if(current)
-				{
-					if(ondisk)
-						name = adjustFileName(prefix, *it, replace, putto, true, current);
-					else
-						name = QString::null;
+                        break;
+                    }
+                    else
+                        errorjmp(jmp, i);
+                }
 
-					lastFrame = false;
-//					i = lw->codec->fmt_writeimage(name.ascii(), image, finfo.image[current-1].w, finfo.image[current-1].h, opt);
-					if(ondisk)
-						i = manipAndWriteDecodedImage(tempfile->name(), im);
-					else
-						i = manipAndWriteDecodedImage(QString::null, im);
+                if(current)
+                {
+                    if(ondisk)
+                        name = adjustFileName(prefix, *it, replace, putto, true, current);
+                    else
+                        name = QString::null;
 
-					i = SQE_OK;
+                    lastFrame = false;
+//    i = lw->codec->fmt_writeimage(name.ascii(), image, finfo.image[current-1].w, finfo.image[current-1].h, opt);
+                    if(ondisk)
+                        i = manipAndWriteDecodedImage(tempfile->name(), im);
+                    else
+                        i = manipAndWriteDecodedImage(QString::null, im);
 
-					if(ondisk)
-						i = copyFile(tempfile->name(), name);
+                    i = SQE_OK;
 
-//					emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : messages[i], true);
-//					emit oneFileProcessed();
-//					qApp->processEvents();
-				}
+                    if(ondisk)
+                        i = copyFile(tempfile->name(), name);
 
-				im = lr->codec->image(current);
+//    emit convertText(errors ? (i18n("1 error", "%n errors", errors)+"\n") : messages[i], true);
+//    emit oneFileProcessed();
+//    qApp->processEvents();
+                }
 
-//				printf("%dx%d@%d...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
-				image = (RGBA *)realloc(image, im->w * im->h * sizeof(RGBA));
+                im = lr->codec->image(current);
 
-				if(!image)
-				{
-					i = SQE_R_NOMEMORY;
-					errorjmp(jmp, i);
-				}
+//    printf("%dx%d@%d...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
+                image = (RGBA *)realloc(image, im->w * im->h * sizeof(RGBA));
 
-				memset(image, 255, im->w * im->h * sizeof(RGBA));
+                if(!image)
+                {
+                    i = SQE_R_NOMEMORY;
+                    errorjmp(jmp, i);
+                }
 
-//				printf("FOR: %dx%d@%d\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
-//				printf("passes: %d\n", finfo.image[0].passes);
+                memset(image, 255, im->w * im->h * sizeof(RGBA));
 
-				for(int pass = 0;pass < im->passes;pass++)
-				{
-					lr->codec->fmt_read_next_pass();
+//    printf("FOR: %dx%d@%d\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
+//    printf("passes: %d\n", finfo.image[0].passes);
 
-					for(j = 0;j < im->h;j++)
-					{
-						scan = image + j * im->w;
-						i = lr->codec->fmt_read_scanline(scan);
-						errors += (int)(i != SQE_OK);
-					}
-				}
+                for(int pass = 0;pass < im->passes;pass++)
+                {
+                    lr->codec->fmt_read_next_pass();
 
-				if(im->needflip)
-					fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
+                    for(j = 0;j < im->h;j++)
+                    {
+                        scan = image + j * im->w;
+                        i = lr->codec->fmt_read_scanline(scan);
+                        errors += (int)(i != SQE_OK);
+                    }
+                }
 
-				initWriteOptions();
+                if(im->needflip)
+                    fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
 
-				opt.alpha = im->hasalpha;
+                initWriteOptions();
 
-				current++;
-			}
+                opt.alpha = im->hasalpha;
 
-			lr->codec->fmt_read_close();
-		}
-		else
-		{
-			emit convertText(SQ_ErrorString::instance()->stringSN(SQE_R_NOTSUPPORTED), true);
-			emit oneFileProcessed();
-		}
-	}
+                current++;
+            }
 
-	if(image)
-	{
-		free(image);
-		image = NULL;
-	}
+            lr->codec->fmt_read_close();
+        }
+        else
+        {
+            emit convertText(SQ_ErrorString::instance()->stringSN(SQE_R_NOTSUPPORTED), true);
+            emit oneFileProcessed();
+        }
+    }
 
-	cycleDone();
+    if(image)
+    {
+        free(image);
+        image = NULL;
+    }
 
-	if(ondisk)
-		delete tempfile;
+    cycleDone();
 
-	if(imageopt.close && !gerrors)
-		emit done(true);
-	else
-		emit done(false);
+    if(ondisk)
+        delete tempfile;
+
+    if(imageopt.close && !gerrors)
+        emit done(true);
+    else
+        emit done(false);
 }
 
 int SQ_EditBase::manipAndWriteDecodedImage(const QString &name, fmt_image *im)
 {
-	int 	passes = opt.interlaced ?  lw->opt.passes : 1;
-	int 	s, j, err;
-	RGBA 	*scan = NULL;
+    int     passes = opt.interlaced ?  lw->opt.passes : 1;
+    int     s, j, err;
+    RGBA     *scan = NULL;
 
-//	if(lw->opt.needflip)
-//		fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
+//    if(lw->opt.needflip)
+//    fmt_utils::flipv((char *)image, im->w * sizeof(RGBA), im->h);
 
-	err = manipDecodedImage(im);
+    err = manipDecodedImage(im);
 
-	if(err != SQE_OK)
-		goto error_exit;
+    if(err != SQE_OK)
+        return err;
 
-	scan = new RGBA [im->w];
+    scan = new RGBA [im->w];
 
-	if(!scan)
-		return SQE_W_NOMEMORY;
-
+    if(!scan)
+        return SQE_W_NOMEMORY;
 
 #ifndef QT_NO_STL
-
-        err = lw->codec->fmt_write_init(name, *im, opt);
-
+    err = lw->codec->fmt_write_init(name, *im, opt);
 #else
-
-	err = lw->codec->fmt_write_init(name.ascii(), *im, opt);
-
+    err = lw->codec->fmt_write_init(name.ascii(), *im, opt);
 #endif
 
-	if(err != SQE_OK)
-		goto error_exit;
+    if(err != SQE_OK)
+        goto error_exit;
 
-	err = lw->codec->fmt_write_next();
+    err = lw->codec->fmt_write_next();
 
-	if(err != SQE_OK)
-		goto error_exit;
+    if(err != SQE_OK)
+        goto error_exit;
 
-	for(s = 0;s < passes;s++)
-	{
-		err = lw->codec->fmt_write_next_pass();
+    for(s = 0;s < passes;s++)
+    {
+        err = lw->codec->fmt_write_next_pass();
 
-		if(err != SQE_OK)
-			goto error_exit;
+        if(err != SQE_OK)
+            goto error_exit;
 
-		for(j = 0;j < im->h;j++)
-		{
-			if(lw->opt.needflip)
-				determineNextScan(*im, scan, im->h-j-1);
-			else
-				determineNextScan(*im, scan, j);
+        for(j = 0;j < im->h;j++)
+        {
+            if(lw->opt.needflip)
+                determineNextScan(*im, scan, im->h-j-1);
+            else
+                determineNextScan(*im, scan, j);
 
-			err = lw->codec->fmt_write_scanline(scan);
+            err = lw->codec->fmt_write_scanline(scan);
 
-			if(err != SQE_OK)
-				goto error_exit;
-		}
-	}
+            if(err != SQE_OK)
+                goto error_exit;
+        }
+    }
 
-	err = SQE_OK;
+    err = SQE_OK;
 
-	error_exit:
+    error_exit:
 
-	lw->codec->fmt_write_close();
+    lw->codec->fmt_write_close();
 
-	if(scan) delete scan;
+    if(scan) delete scan;
 
-	return err;
+    return err;
 }
 
 int SQ_EditBase::copyFile(const QString &src, const QString &dst) const
 {
-	QFile f_src(src), f_dst(dst);
-	Q_LONG read;
-	char data[4096];
+    QFile f_src(src), f_dst(dst);
+    Q_LONG read;
+    char data[4096];
 
-	if(!f_src.open(IO_ReadOnly))
-		return SQE_R_NOFILE;
+    if(!f_src.open(IO_ReadOnly))
+    return SQE_R_NOFILE;
 
-	if(!f_dst.open(IO_WriteOnly))
-	{
-		f_src.close();
-		return SQE_W_NOFILE;
-	}
+    if(!f_dst.open(IO_WriteOnly))
+    {
+        f_src.close();
+        return SQE_W_NOFILE;
+    }
 
-	while(!f_src.atEnd())
-	{
-		read = f_src.readBlock(data, sizeof(data));
+    while(!f_src.atEnd())
+    {
+        read = f_src.readBlock(data, sizeof(data));
 
-		f_dst.writeBlock(data, read);
+        f_dst.writeBlock(data, read);
 
-		if(f_dst.status() != IO_Ok || f_src.status() != IO_Ok)
-		{
-			f_src.close();
-			f_dst.close();
+        if(f_dst.status() != IO_Ok || f_src.status() != IO_Ok)
+        {
+            f_src.close();
+            f_dst.close();
 
-			return SQE_W_ERROR;
-		}
-	}
+            return SQE_W_ERROR;
+        }
+    }
 
-	f_src.close();
-	f_dst.close();
+    f_src.close();
+    f_dst.close();
 
-	return SQE_OK;
+    return SQE_OK;
 }
 
 int SQ_EditBase::determineNextScan(const fmt_image &im, RGBA *scan, int y)
 {
-	memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
+    memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
 
-	return SQE_OK;
+    return SQE_OK;
 }
 
 void SQ_EditBase::cycleDone()
@@ -502,28 +501,51 @@ void SQ_EditBase::initWriteOptions()
 
 void SQ_EditBase::setWritingLibrary()
 {
-	lw = lr->writable ? lr : SQ_LibraryHandler::instance()->libraryByName(altlibrary);
+    lw = lr->writable ? lr : altw;
 }
 
 QImage SQ_EditBase::generatePreview() const
 {
-        fmt_info *finfo;
+    fmt_info *finfo;
+    bool b;
 
-        bool b = SQ_ImageLoader::instance()->loadImage(files.first(), false);
+    SQ_Config::instance()->setGroup("Edit tools");
+
+    bool generate_preview = SQ_Config::instance()->readBoolEntry("preview", false);
+
+    QImage kisa;
+
+    kisa.load(locate("appdata", "images/imageedit/edit_sample.png"));
+
+    if(!generate_preview)
+    {
+        return kisa;
+    }
+
+    SQ_Config::instance()->setGroup("Edit tools");
+
+    if(SQ_Config::instance()->readBoolEntry("preview_dont", true))
+    {
+        int w1, h1;
+
+        b = SQ_ImageLoader::instance()->tasteImage(files.first(), &w1, &h1);
 
         if(!b)
-                return QImage();
+            return kisa;
 
-        finfo = SQ_ImageLoader::instance()->info();
-	
-	if(SQ_Config::instance()->readBoolEntry("Edit tools", "preview_dont", true))
-	{
-	    int w = SQ_Config::instance()->readNumEntry("Edit tools", "preview_larger_w", 1024);
-	    int h = SQ_Config::instance()->readNumEntry("Edit tools", "preview_larger_h", 768);
-	    
-	    if(finfo->image[0].w > w || finfo->image[0].h > h)
-		return QImage();
-	}
+        int w = SQ_Config::instance()->readNumEntry("preview_larger_w", 1024);
+        int h = SQ_Config::instance()->readNumEntry("preview_larger_h", 768);
 
-	return SQ_ImageLoader::instance()->image().smoothScale(SQ_BCGLabel::fixedWidth(), SQ_BCGLabel::fixedWidth(), QImage::ScaleMin);
+        if(w1 > w || h1 > h)
+            return kisa;
+    }
+
+    b = SQ_ImageLoader::instance()->loadImage(files.first(), false);
+
+    if(!b)
+        return kisa;
+
+    finfo = SQ_ImageLoader::instance()->info();
+
+    return SQ_ImageLoader::instance()->image().smoothScale(SQ_BCGLabel::fixedWidth(), SQ_BCGLabel::fixedWidth(), QImage::ScaleMin);
 }

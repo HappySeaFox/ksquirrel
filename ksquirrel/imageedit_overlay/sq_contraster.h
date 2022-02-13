@@ -30,26 +30,26 @@ class SQ_ImageBCGOptions;
 
 class SQ_Contraster : public SQ_EditBase
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public: 
-		SQ_Contraster();
-		~SQ_Contraster();
+    public: 
+        SQ_Contraster();
+        ~SQ_Contraster();
 
-		static SQ_Contraster* instance();
+        static SQ_Contraster* instance();
 
-	protected:
-		virtual void startEditPrivate();
-		virtual void dialogReset();
-		virtual int manipDecodedImage(fmt_image *im);
+    protected:
+        virtual void startEditPrivate();
+        virtual void dialogReset();
+        virtual int manipDecodedImage(fmt_image *im);
 
-	private slots:
-		void slotStartContrast(SQ_ImageOptions*, SQ_ImageBCGOptions*);
+    private slots:
+        void slotStartContrast(SQ_ImageOptions*, SQ_ImageBCGOptions*);
 
-	private:
-		SQ_ImageBCG		*bcg;
-		static SQ_Contraster	*sing;
-		SQ_ImageBCGOptions bcgopt;
+    private:
+        SQ_ImageBCG        *bcg;
+        static SQ_Contraster    *sing;
+        SQ_ImageBCGOptions bcgopt;
 };
 
 #endif

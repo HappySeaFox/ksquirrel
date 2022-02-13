@@ -32,20 +32,20 @@ class QPixmap;
 
 class SQ_IconListItem : public QListBoxItem
 {
-	public:
-		SQ_IconListItem(QListBox *listbox, const QPixmap &pixmap, const QString &text);
+    public:
+        SQ_IconListItem(QListBox *listbox, const QPixmap &pixmap, const QString &text);
 
-		virtual int height(const QListBox *lb) const;
-		virtual int width(const QListBox *lb) const;
-		int expandMinimumWidth(int width);
+        virtual int height(const QListBox *lb) const;
+        virtual int width(const QListBox *lb) const;
+        int expandMinimumWidth(int width);
 
-	protected:
-		const QPixmap& defaultPixmap();
-		void paint(QPainter *painter);
+    protected:
+        const QPixmap& defaultPixmap();
+        void paint(QPainter *painter);
 
-	private:
-		QPixmap mPixmap;
-		int mMinimumWidth;
+    private:
+        QPixmap mPixmap;
+        int mMinimumWidth;
 };
 
 #endif

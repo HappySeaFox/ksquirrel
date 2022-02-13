@@ -24,7 +24,7 @@
 #include <kapplication.h>
 #include <dcopclient.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "ksquirrel.h"
 #include "sq_about.h"
@@ -35,98 +35,98 @@
 // Our command line options
 static KCmdLineOptions options[] =
 {
-	{"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
-	{"l", I18N_NOOP("Print found libraries and exit."), 0},
-	{"t <starting folder>", I18N_NOOP("Find all supported images on disk and create thumbnails."), "/"},
-	{"r", I18N_NOOP("Recursively scan (with -t option)."), "/"},
-	KCmdLineLastOption
+    {"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
+    {"l", I18N_NOOP("Print found libraries and exit."), 0},
+    {"t <starting folder>", I18N_NOOP("Find all supported images on disk and create thumbnails."), "/"},
+    {"r", I18N_NOOP("Recursively scan (with -t option)."), "/"},
+    KCmdLineLastOption
 };
 
 int main(int argc, char *argv[])
 {
-	KSquirrel 			*SQ;
-	SQ_HLOptions		*high;
-	const QCString App = "ksquirrel";
+    KSquirrel             *SQ;
+    SQ_HLOptions        *high;
+    const QCString App = "ksquirrel";
 
-	// setup 'About' dialog
-	aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
-	aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
-	aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Great artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");
-	aboutData.addCredit(I18N_NOOP("OpenGL forum at"), 0, 0, "http://opengl.org");
-	aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
-	aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
+    // setup 'About' dialog
+    aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
+    aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
+    aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Great artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");
+    aboutData.addCredit(I18N_NOOP("OpenGL forum at"), 0, 0, "http://opengl.org");
+    aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
+    aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
 
-	// parse command line
-	KCmdLineArgs::init(argc, argv, &aboutData);
-	KCmdLineArgs::addCmdLineOptions(options);
-	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
+    // parse command line
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
-	//create high level options
-	high = new SQ_HLOptions;
+    //create high level options
+    high = new SQ_HLOptions;
 
-	if(sq_args->count())
-		high->path = sq_args->url(0).path();
+    if(sq_args->count())
+        high->path = sq_args->url(0).path();
 
-	KApplication		a;
+    KApplication    a;
 
-	if(!QGLFormat::hasOpenGL())
-	{
-		qWarning("KSquirrel: this system has no OpenGL support. Exiting." );
-		exit(1);
-	}
+    if(!QGLFormat::hasOpenGL())
+    {
+        qWarning("KSquirrel: this system has no OpenGL support. Exiting." );
+        exit(1);
+    }
 
-	bool reg = a.dcopClient()->isApplicationRegistered(App);
+    bool reg = a.dcopClient()->isApplicationRegistered(App);
 
-	// Check if KSquirrel already registered.
-	// If registered, send an url to it.
-	if(reg && !high->path.isEmpty())
-	{
-		// Yes, it is registered. Let's send a message to it.
-		QCString replyType;
-		QByteArray data, replyData;
-		QDataStream dataStream(data, IO_WriteOnly);
+    // Check if KSquirrel already registered.
+    // If registered, send an url to it.
+    if(reg && !high->path.isEmpty())
+    {
+        // Yes, it is registered. Let's send a message to it.
+        QCString replyType;
+        QByteArray data, replyData;
+        QDataStream dataStream(data, IO_WriteOnly);
 
-		dataStream << high->path;
+        dataStream << high->path;
 
-		if(!a.dcopClient()->call(App, App, "load_image(QString)", data, replyType, replyData))
-			qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+        if(!a.dcopClient()->call(App, App, "load_image(QString)", data, replyType, replyData))
+            qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
 
-		sq_args->clear();
-		delete high;
+        sq_args->clear();
+        delete high;
 
-		exit(0);
-	}
-	// If registered, but no url was specified in command line
-	else if(reg)
-	{
-		QString data;
+        exit(0);
+    }
+    // If registered, but no url was specified in command line
+    else if(reg)
+    {
+        QString data;
 
-		if(!a.dcopClient()->send(App, App, "activate()", data))
-			qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+        if(!a.dcopClient()->send(App, App, "activate()", data))
+            qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
 
-		sq_args->clear();
-		delete high;
+        sq_args->clear();
+        delete high;
 
-		exit(0);
-	}
+        exit(0);
+    }
 
-	high->showLibsAndExit = sq_args->isSet("l");
-	high->thumbs = sq_args->isSet("t");
-	high->recurs = (high->thumbs) ? sq_args->isSet("r") : false;
+    high->showLibsAndExit = sq_args->isSet("l");
+    high->thumbs = sq_args->isSet("t");
+    high->recurs = (high->thumbs) ? sq_args->isSet("r") : false;
 
-	if(high->thumbs)
-		high->thumbs_p = sq_args->getOption("t");
+    if(high->thumbs)
+        high->thumbs_p = sq_args->getOption("t");
 
-	// create instance
-	SQ = new KSquirrel(NULL, App);
+    // create instance
+    SQ = new KSquirrel(NULL, App);
 
-	a.setMainWidget(SQ);
+    a.setMainWidget(SQ);
 
-	sq_args->clear();
+    sq_args->clear();
 
-	// Attach to DCOP server
+    // Attach to DCOP server
     if(a.dcopClient()->attach())
         a.dcopClient()->registerAs(App, false);
 
-	return a.exec();
+    return a.exec();
 }

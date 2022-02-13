@@ -28,28 +28,28 @@
 
 class SQ_IconLoader : public KIconLoader
 {
-	public: 
-		SQ_IconLoader();
-		~SQ_IconLoader();
+    public: 
+        SQ_IconLoader();
+        ~SQ_IconLoader();
 
-		QPixmap loadIcon(const QString& name, KIcon::Group group, int size) const;
+        QPixmap loadIcon(const QString& name, KIcon::Group group, int size) const;
 
-	private:
-		static SQ_IconLoader *sing;
+    private:
+        static SQ_IconLoader *sing;
 
-		/*
-		 *  Internal. Load all pixmaps.
-		 */
-		void fillPixmaps();
+        /*
+         *  Internal. Load all pixmaps.
+         */
+        void fillPixmaps();
 
-	public:
-		static SQ_IconLoader* instance();
+    public:
+        static SQ_IconLoader* instance();
 
-	private:
-		QPixmap pixmap_up, pixmap_down,
-			pixmap_display, pixmap_folder,
-			pixmap_images, pixmap_binary,
-			pixmap_edit;
+    private:
+        QPixmap pixmap_up, pixmap_down,
+        pixmap_display, pixmap_folder,
+        pixmap_images, pixmap_binary,
+        pixmap_edit;
 };
 
 #endif

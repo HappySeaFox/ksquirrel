@@ -14,7 +14,9 @@ void SQ_ImageResize::init()
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     groupBoxApsect->setEnabled(false);
 
-    method = SQ_Config::instance()->readEntry("Image edit options", "resize_method", "BOX");
+    SQ_Config::instance()->setGroup("Image edit options");
+
+    method = SQ_Config::instance()->readEntry("resize_method", "BOX");
     methods = new QPopupMenu;
     methods->insertItem("BOX");
     methods->insertItem("TRIANGLE");
@@ -30,7 +32,7 @@ void SQ_ImageResize::init()
     strings.append(tr2i18n("<b>resize&nbsp;in&nbsp;percents</b>"));
     strings.append(tr2i18n("<b>resize&nbsp;in&nbsp;pixels</b>"));
 
-    id = SQ_Config::instance()->readNumEntry("Image edit options", "resize_which", 1);
+    id = SQ_Config::instance()->readNumEntry("resize_which", 1);
     widgetStackTypes->raiseWidget(id);
     text->setText(strings[id] + QString::fromLatin1("&nbsp;<b>[%1]</b>").arg(method));
 
@@ -52,22 +54,22 @@ void SQ_ImageResize::init()
     kIntPixW->setRange(1, 10000, 1, show_sl);
     kIntPercent->setValue(100);
 
-    imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "resize_putto", QString::null);
-    imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "resize_where_to_put", 0);
-    imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "resize_close", true);
+    imageopt.putto = SQ_Config::instance()->readEntry("resize_putto", QString::null);
+    imageopt.where_to_put = SQ_Config::instance()->readNumEntry("resize_where_to_put", 0);
+    imageopt.close = SQ_Config::instance()->readBoolEntry("resize_close", true);
 
-    checkPreserve->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "resize_preserve", true));
-    comboFit->setCurrentItem(SQ_Config::instance()->readNumEntry("Image edit options", "resize_fit", 2));
-    comboApplyTo->setCurrentItem(SQ_Config::instance()->readNumEntry("Image edit options", "resize_applyto", 2));
-    kIntPercent->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_percent", 100));
-    kIntPixW->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_w", 1));
-    kIntPixH->setValue(SQ_Config::instance()->readNumEntry("Image edit options", "resize_h", 1));
-    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "resize_dontshowhelp", false));
-
-    if(checkDontShow->isChecked())
-	slotNext();
+    checkPreserve->setChecked(SQ_Config::instance()->readBoolEntry("resize_preserve", true));
+    comboFit->setCurrentItem(SQ_Config::instance()->readNumEntry("resize_fit", 2));
+    comboApplyTo->setCurrentItem(SQ_Config::instance()->readNumEntry("resize_applyto", 2));
+    kIntPercent->setValue(SQ_Config::instance()->readNumEntry("resize_percent", 100));
+    kIntPixW->setValue(SQ_Config::instance()->readNumEntry("resize_w", 1));
+    kIntPixH->setValue(SQ_Config::instance()->readNumEntry("resize_h", 1));
+    checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("resize_dontshowhelp", false));
 
     done = true;
+
+    if(checkDontShow->isChecked())
+        slotNext();
 }
 
 void SQ_ImageResize::startResizing(int count)
@@ -82,7 +84,7 @@ void SQ_ImageResize::slotOneProcessed()
 {
     progress->advance(1);
     paragraph++;
- }
+}
 
 void SQ_ImageResize::slotDebugText(const QString &text, bool bold)
 {
@@ -148,19 +150,19 @@ void SQ_ImageResize::slotDone(bool close)
     done = true;
     
     if(close)
-	reject();
+        reject();
 }
 
 void SQ_ImageResize::slotReject()
 {
     if(done)
-	reject();
+        reject();
 }
 
 void SQ_ImageResize::slotPush()
 {
-    if(!id)	id = 1;
-    else 	id = 0;
+    if(!id)    id = 1;
+    else     id = 0;
 
     widgetStackTypes->raiseWidget(id);
     text->setText(strings[id] + QString::fromLatin1("&nbsp;<b>[%1]</b>").arg(method));
@@ -175,11 +177,11 @@ void SQ_ImageResize::slotMethodActivated(int idd)
 void SQ_ImageResize::closeEvent(QCloseEvent *e)
 {
     if(done)
-	e->accept();
+        e->accept();
     else
     {
-	e->ignore();
-	QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
+        e->ignore();
+        QWhatsThis::display(SQ_ErrorString::instance()->string(SQE_NOTFINISHED));
     }
 }
 

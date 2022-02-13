@@ -1,3 +1,44 @@
+ksquirrel-0.6.0-pre9 and ksquirrel-libs 0.6.0-pre9
+************************************************************
+
+ksquirrel:
+* small fixes in manual pages
+* library loader now doesn't check +x permissions
+* --enable-final for configure now works
+* ksquirrel-small: bugfixes
+* filter tool: added red-eye removal
+* filter tool: small fix in pixmap updating
+* edit tools: improvements in preview image
+* edit tools: small fix with alpha channel for preview image
+* experimental "Nice zoom" ('N' to toggle)
+* new toolbar in image window
+* improvements in loading mechanism, now KSquirrel will store only ONE frame in video memory. Is doesn't depend on whether image is animated or not
+* ksquirrel-small now doesn't share settings with KSquirrel, but some settings (like zoom limit, background color etc. are still shared (and read-only))
+* fixed small memory leak
+* code cleanups
+
+ksquirrel-libs:
+* XCUR: fixed segfault
+* PNM: small fix (on pgm images)
+* SGI: small improvements
+* CAMERA: new file extensions added
+* added font support (ttf, pfa, pfb...)
+* added MNG, JNG (reading)
+* added PXR (reading)
+* added JBIG (slow, reading))
+* code cleanups
+* no more static libraries. Now SVG, GIF, OPENEXR, WMF and JPEG2000 are optional.
+[from 0.6.0-pre8 u1 + new ones]
+* new options for configure script:
+     --disable-gif
+     --disable-camera
+     --disable-wmf
+     --disable-svg
+     --disable-openexr
+     --disable-jpeg2000
+     --disable-mng
+     --disable-ttf
+
 ksquirrel-0.6.0-pre8 and ksquirrel-libs 0.6.0-pre7
 ************************************************************
 
@@ -11,7 +52,8 @@ ksquirrel:
 * code cleanups
 * source code now hardly commented
 * added man page
-* added new binary: ksquirrel-small. It is "light" version of KSquirrel - without filemanager, External tools, Filters, Edit tools etc. It takes only one command line argument - path to file. For example:
+* added new binary: ksquirrel-small. It is "light" version of KSquirrel - without filemanager, External tools, Filters,
+  Edit tools etc. It takes only one command line argument - path to file. For example:
 
 [localhost@krasu]$ ksquirrel-small /mnt/c/images/cat.png
 
