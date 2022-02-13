@@ -22,9 +22,15 @@
 #include <qpopupmenu.h>
 #include <qcursor.h>
 #include <qfileinfo.h>
+#include <qdatetime.h>
+#include <qdir.h>
 
 #include <kaction.h>
 #include <kcursor.h>
+#include <kwin.h>
+#include <kstandarddirs.h>
+#include <kapp.h>
+
 #include <math.h>
 
 #include "ksquirrel.h"
@@ -43,13 +49,19 @@ SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(
 	memset(matrix, 0, sizeof(matrix));
 	matrix[5] = matrix[0] = 1.0f;
 	rgba = 0;
-	zoomfactor = sqConfig->readNumEntry("GL view", "zoom", 25);
-	movefactor = 5.0f;
 	curangle = 0.0f;
 	ZoomModelArray[0] = GL_LINEAR;
 	ZoomModelArray[1] = GL_NEAREST;
 	ShadeModelArray[0] = GL_FLAT;
 	ShadeModelArray[1] = GL_SMOOTH;
+
+	zoomfactor = sqConfig->readNumEntry("GL view", "zoom", 25);
+	movefactor = sqConfig->readNumEntry("GL view", "move", 5);
+
+	cusual = QCursor(QPixmap::fromMimeSource(locate("appdata", "cursors/usual.png")));
+	cdrag = QCursor(QPixmap::fromMimeSource(locate("appdata", "cursors/drag.png")));
+
+	setCursor(cusual);
 
 	int tp = sqConfig->readNumEntry("GL view", "zoom model", 1);
 	ZoomModel = ZoomModelArray[tp];
@@ -85,6 +97,8 @@ Ctrl+\"Up Arrow\" rotate image for 180 degrees right\nCtrl+\"Down Arrow\" rotate
 
 	gl_hw = new SQ_GLHelpWidget(help, 0, "Some text widget");
 
+	pARender = new KAction("Render into file", 0, 0, this, SLOT(slotRenderPixmapIntoFile()), sqApp->actionCollection(), "SQ render GL into file");
+	
 	connect(this, SIGNAL(matrixChanged()), SLOT(slotSetMatrixParamsString()));
 	connect(this, SIGNAL(showImage(const QString&)), SLOT(slotShowImage(const QString&)));
 }
@@ -124,6 +138,7 @@ void SQ_GLViewWidget::resizeGL(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-w2, w2, -h2, h2, 0.1f, 100.0f);
+	gluLookAt(0,0,1, 0,0,0, 0,1,0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -162,21 +177,31 @@ const GLfloat SQ_GLViewWidget::getZoomFactor() const
 	return zoomfactor;
 }
 
+void SQ_GLViewWidget::setMoveFactor(const GLfloat &newfactor)
+{
+	movefactor = newfactor;
+}
+
+const GLfloat SQ_GLViewWidget::getMoveFactor() const
+{
+	return movefactor;
+}
+
 void SQ_GLViewWidget::wheelEvent(QWheelEvent *e)
 {
-	if(e->delta() > 0 && e->state() == Qt::ControlButton)
-		matrix_zoom(2.0f, width()/2, height()/2);
+	if(e->delta() < 0 && e->state() == Qt::NoButton)
+		sqWStack->emitNextSelected();
+	else if(e->delta() > 0 && e->state() == Qt::NoButton)
+		sqWStack->emitPreviousSelected();
+	else if(e->delta() > 0 && e->state() == Qt::ControlButton)
+		matrix_zoom(2.0f);
 	else if(e->delta() < 0 && e->state() == Qt::ControlButton)
-		matrix_zoom(0.5f, width()/2, height()/2);
+		matrix_zoom(0.5f);
 	else if(e->delta() > 0 && e->state() == Qt::ShiftButton)
 		slotZoomPlus();
 	else if(e->delta() < 0 && e->state() == Qt::ShiftButton)
 		slotZoomMinus();
-	else if(e->delta() < 0 && e->state() == Qt::NoButton)
-		sqWStack->emitNextSelected();
-	else if(e->delta() > 0 && e->state() == Qt::NoButton)
-		sqWStack->emitPreviousSelected();
-	else { e->ignore(); return; }
+	else { e->accept(); return; }
 
 	updateGL();
 }
@@ -185,10 +210,12 @@ void SQ_GLViewWidget::mousePressEvent(QMouseEvent *e)
 {
 	if(e->state() == Qt::LeftButton || e->state() == Qt::NoButton)
 	{
+		setCursor(cdrag);
+
 		xmoveold = e->x();
 		ymoveold = e->y();
 	}
-	else e->ignore();
+	else e->accept();
 }
 
 void SQ_GLViewWidget::mouseMoveEvent(QMouseEvent *e)
@@ -206,27 +233,33 @@ void SQ_GLViewWidget::mouseMoveEvent(QMouseEvent *e)
 		updateGL();
 	}
 	else
-		e->ignore();
+		e->accept();
+}
+
+void SQ_GLViewWidget::mouseReleaseEvent(QMouseEvent *e)
+{
+	setCursor(cusual);
+	e->accept();
 }
 
 void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 {
-	if(e->key() == Qt::Key_Left && e->state() == Qt::NoButton)
+	if(e->key() == Qt::Key_Left && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
 		matrix_move(movefactor, 0);
-	else if(e->key() == Qt::Key_Right && e->state() == Qt::NoButton)
+	else if(e->key() == Qt::Key_Right && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
 		matrix_move(-movefactor, 0);
-	else if(e->key() == Qt::Key_Up && e->state() == Qt::NoButton)
+	else if(e->key() == Qt::Key_Up && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
 		matrix_move(0, -movefactor);
-	else if(e->key() == Qt::Key_Down && e->state() == Qt::NoButton)
+	else if(e->key() == Qt::Key_Down && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
 		matrix_move(0, movefactor);
 	else if(e->key() == Qt::Key_Plus  && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
 		pAZoomPlus->activate();
 	else if(e->key() == Qt::Key_Minus  && (e->state() == Qt::Keypad || e->state() == Qt::NoButton))
 		pAZoomMinus->activate();
 	else if(e->key() == Qt::Key_Plus && (e->state() == Qt::ControlButton|Qt::Keypad || e->state() == Qt::ControlButton))
-		matrix_zoom(2.0f, width()/2, height()/2);
+		matrix_zoom(2.0f);
 	else if(e->key() == Qt::Key_Minus && (e->state() == Qt::ControlButton|Qt::Keypad || e->state() == Qt::ControlButton))
-		matrix_zoom(0.5f, width()/2, height()/2);
+		matrix_zoom(0.5f);
 	else if(e->key() == Qt::Key_V && e->state() == Qt::NoButton)
 		pAFlipV->activate();
 	else if(e->key() == Qt::Key_H && e->state() == Qt::NoButton)
@@ -237,6 +270,8 @@ void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 		pARotateRight->activate();
 	else if(e->key() == Qt::Key_R && e->state() == Qt::NoButton)
 		pAReset->activate();
+	else if(e->key() == Qt::Key_R && e->state() == Qt::ControlButton)
+		pARender->activate();
 	else if(e->key() == Qt::Key_Up && e->state() == Qt::ControlButton)
 		matrix_rotate(180.0f);
 	else if(e->key() == Qt::Key_Down && e->state() == Qt::ControlButton)
@@ -245,7 +280,15 @@ void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 		matrix_rotate(-1.0f);
 	else if(e->key() == Qt::Key_Right && e->state() == Qt::ShiftButton)
 		matrix_rotate(1.0f);
-	else { e->ignore(); return; }
+	else if(e->key() == Qt::Key_Space && e->state() == Qt::NoButton)
+		sqWStack->emitNextSelected();
+	else if(e->key() == Qt::Key_BackSpace && e->state() == Qt::NoButton)
+		sqWStack->emitPreviousSelected();
+	else
+	{
+		e->accept();
+		return;
+	}
 
 	updateGL();
 }
@@ -253,12 +296,13 @@ void SQ_GLViewWidget::keyPressEvent(QKeyEvent *e)
 void SQ_GLViewWidget::dropEvent(QDropEvent *e)
 {
 	QStringList files;
-	QString m = "";
+	QString m;
 
 	if(QUriDrag::decodeLocalFiles(e, files))
 	{
 		QStringList::Iterator i=files.begin();
-		m = m + *i;
+
+		m = *i;
 
 		emitShowImage(m);
 	}
@@ -275,6 +319,8 @@ void SQ_GLViewWidget::contextMenuEvent(QContextMenuEvent*)
 
 	KActionSeparator *pASep = new KActionSeparator;
 
+	pARender->plug(menu);
+	pASep->plug(menu);
 	pAReset->plug(menu);
 	pASep->plug(menu);
 	pARotateLeft->plug(menu);
@@ -301,12 +347,12 @@ void SQ_GLViewWidget::slotSomeHelp()
 
 void SQ_GLViewWidget::slotZoomPlus()
 {
-	matrix_zoom(1.0f+(GLfloat)zoomfactor/100.0f, width()/2, height()/2);
+	matrix_zoom(1.0f+(GLfloat)zoomfactor/100.0f);
 }
 
 void SQ_GLViewWidget::slotZoomMinus()
 {
-	matrix_zoom(1.0f/(1.0f+(GLfloat)zoomfactor/100.0f), width()/2, height()/2);
+	matrix_zoom(1.0f/(1.0f+(GLfloat)zoomfactor/100.0f));
 }
 
 void SQ_GLViewWidget::slotRotateLeft()
@@ -367,7 +413,6 @@ void SQ_GLViewWidget::write_gl_matrix(void)
 	transposed[13] = MATRIX_Y;
 
 	glLoadMatrixf(transposed);
-	gluLookAt(0,0,5, 0,0,0, 0,1,0);
 
 	emit matrixChanged();
 }
@@ -398,14 +443,9 @@ void SQ_GLViewWidget::matrix_reset(void)
 
 }
 
-void SQ_GLViewWidget::matrix_zoom(GLfloat ratio, GLfloat x, GLfloat y)
+void SQ_GLViewWidget::matrix_zoom(GLfloat ratio)
 {
-	GLfloat offset_x, offset_y;
-
-	offset_x = width() / 2.0 - x;
-	offset_y = height() / 2.0 - y;
-
-	matrix_move(offset_x, offset_y);
+	matrix_move(0, 0);
 
 	MATRIX_C1 *= ratio;
 	MATRIX_S1 *= ratio;
@@ -414,7 +454,7 @@ void SQ_GLViewWidget::matrix_zoom(GLfloat ratio, GLfloat x, GLfloat y)
 	MATRIX_C2 *= ratio;
 	MATRIX_Y *= ratio;
 
-	matrix_move(-offset_x, -offset_y);
+	matrix_move(-0, -0);
 
 	write_gl_matrix();
 }
@@ -474,80 +514,28 @@ void SQ_GLViewWidget::matrix_rotate(GLfloat angle)
 
 void SQ_GLViewWidget::emitShowImage(const QString &file)
 {
+	sqApp->raiseGLWidget();
+
+	setCaption(file);
+
 	emit showImage(file);
+/*
+	return;
+
+	if(dect.running()) { dect.terminate(); dect.wait(); }
+
+	dect.setFile(file);
+	dect.start();
+*/
 }
 
 void SQ_GLViewWidget::emitShowImage(const KURL &url)
 {
+	sqApp->raiseGLWidget();
+
+	setCaption(url.path());
+
 	emit showImage(url.path());
-}
-
-void SQ_GLViewWidget::slotShowImage(const QString &file)
-{
-	QFileInfo fm(file);
-	const char *name = file.ascii();
-	static SQ_LIBRARY *lib;
-	static QString status;
-	unsigned int i;
-	unsigned long pict_size;
-
-	// @todo maybe remove it ?
-	if(!sqLibHandler->supports(fm.extension(false).upper()))
-	{
-		sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
-		return;
-	}
-
-	sqLibHandler->setCurrentLibrary(fm.extension(false));
-	lib = sqLibHandler->getCurrentLibrary();
-
-	lib->fmt_init(&finfo, name);
-	i = lib->fmt_read_info(finfo);
-
-	if(i != SQERR_OK)
-	{
-		switch(i)
-		{
-			case SQERR_BADFILE: status = "      File corrupted !      "; break;
-			case SQERR_NOMEMORY: status = "Library couldn't alloc memory for internal usage !"; break;
-
-			default: status = "Library returned unknown error code.";
-		}
-
-		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
-		return;
-	}
-
-	pict_size = finfo->w * finfo->h * sizeof(RGBA);
-	rgba = (RGBA*)realloc(rgba, pict_size);
-
-	if(rgba == NULL)
-	{
-		status.sprintf("Oops! Memory realloc failed.\n\nI tried to realloc memory for image:\n\nwidth: %ld\nheight: %ld\nbpp: %d\nTotal needed: ", finfo->w, finfo->h, finfo->bpp);
-		status = status + KIO::convertSize(pict_size) + " of memory.";
-		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
-		return;
-	}
-	
-	memset(rgba, 255, pict_size);
-
-	w = (GLfloat)finfo->w;
-	h = (GLfloat)finfo->h;
-
-	status.sprintf("%ldx%ld@%d bit", finfo->w, finfo->h, finfo->bpp);
-	sqSBDecoded->setText(status);
-
-	// step-by-step decoding & displaying is <NI>, so we can only decode a file like ver.0.1.3
-	for(i = 0;i < finfo->h;i++)
-		lib->fmt_read_scanline(finfo, rgba + i*finfo->w);
-
-	lib->fmt_close(finfo);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	matrix_reset();
-
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, finfo->w, finfo->h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-	updateGL();
 }
 
 void SQ_GLViewWidget::setClearColor()
@@ -576,4 +564,144 @@ void SQ_GLViewWidget::setTextureParams()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, SQ_GLViewWidget::ZoomModel);
 
 	updateGL();
+}
+
+void SQ_GLViewWidget::mouseDoubleClickEvent(QMouseEvent *e)
+{
+	close();
+	e->accept();
+}
+
+void SQ_GLViewWidget::slotRenderPixmapIntoFile()
+{
+	QString file, final;
+	QImage im_rendered = grabFrameBuffer(true);
+	QPixmap px_rendered;
+	QTime time = QTime::currentTime(Qt::LocalTime);
+	QDate date = QDate::currentDate(Qt::LocalTime);
+
+	px_rendered.convertFromImage(im_rendered, AvoidDither);
+
+	file.sprintf("ksquirrel GL pixmap - %d.%d.%d - %d.%d.%d.png", date.day(), date.month(), date.year(), time.hour(), time.minute(), time.second());
+	final = QDir::homeDirPath() + "/" + file;
+
+	px_rendered.save(final, "PNG");
+}
+
+unsigned long findCloserPower2(unsigned long num)
+{
+	unsigned long i = 1;
+
+	do
+	{
+		i <<= 1;
+	}while(num >= i);
+
+	return i;
+}
+
+void SQ_GLViewWidget::slotShowImage(const QString &file)
+{
+	QFileInfo 					fm(file);
+	const char 				*name = file.ascii();
+	static 		SQ_LIBRARY	*lib;
+	static 		QString		status;
+	unsigned int				i, offsetX, offsetY;
+	unsigned long				pict_size, realW, realH;
+	QString					dump;
+
+	// @todo maybe remove it ?
+	if(!sqLibHandler->supports(fm.extension(false)))
+	{
+		sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
+		return;
+	}
+
+	sqLibHandler->setCurrentLibrary(fm.extension(false));
+	lib = sqLibHandler->getCurrentLibrary();
+
+	lib->fmt_init(&finfo, name);
+	i = lib->fmt_read_info(finfo);
+
+	dump = QString("File: %1\nDirectory: %2\nSize: %3\n\n")
+			.arg(fm.fileName())
+			.arg(fm.dirPath(true))
+			.arg(KIO::convertSize(fm.size()));
+
+	dump = dump +  finfo->dump;
+
+//	QMessageBox::warning(sqApp, "Decoding", dump, QMessageBox::Ok, QMessageBox::NoButton);
+
+	if(i != SQERR_OK)
+	{
+		switch(i)
+		{
+			case SQERR_BADFILE: status = "File corrupted !\n\nTried library: " + lib->libpath + "\nHandled extensions: " + lib->sinfo; break;
+			case SQERR_NOMEMORY: status = "Library couldn't alloc memory for internal usage !"; break;
+
+			default: status = "Library returned unknown error code.";
+		}
+
+		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
+		return;
+	}
+
+	realW = findCloserPower2(finfo->w);
+	realH = findCloserPower2(finfo->h);
+
+	offsetX = (realW - finfo->w) / 2;
+	offsetY = (realH - finfo->h) / 2;
+
+	pict_size = realW * realH * 4;
+	rgba = (RGBA*)realloc(rgba, pict_size);
+//	scan = (RGBA*)realloc(scan, realW * 4);
+
+	if(rgba == NULL)
+	{
+		status.sprintf("Oops! Memory realloc failed.\n\nI tried to realloc memory for image:\n\nwidth: %ld\nheight: %ld\nbpp: %d\nTotal needed: ", realW, realH, finfo->bpp);
+		status = status + KIO::convertSize(pict_size) + " of memory.";
+		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
+		return;
+	}
+/*
+	if(scan == NULL)
+	{
+		status.sprintf("Oops! Memory realloc failed.\n\nI tried to realloc memory for one scanline:\n\nwidth: %ld\nTotal needed: ", realW);
+		status = status + KIO::convertSize(realW * 4) + " of memory.";
+		QMessageBox::warning(sqApp, "Decoding", status, QMessageBox::Ok, QMessageBox::NoButton);
+		return;
+	}
+*/
+	memset(rgba, 0, pict_size);
+
+	w = (GLfloat)realW;
+	h = (GLfloat)realH;
+
+	status.sprintf("%ldx%ld@%d bit", finfo->w, finfo->h, finfo->bpp);
+	sqSBDecoded->setText(status);
+
+/*
+	matrix_reset();
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, realW, realH, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+
+	for(i = 0;i < finfo->h;i++)
+	{
+		lib->fmt_read_scanline(finfo, scan);
+		glTexSubImage1D(GL_TEXTURE_1D, 0, offsetX, finfo->w, GL_RGBA, GL_UNSIGNED_BYTE, scan);
+		updateGL();
+	}
+
+	 lib->fmt_close(finfo);
+*/
+	const int param = offsetX + offsetY*realW;
+
+	for(i = 0;i < finfo->h;i++)
+		lib->fmt_read_scanline(finfo, rgba + realW*i + param);
+
+	 lib->fmt_close(finfo);
+
+	matrix_reset();
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, realW, realH, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	updateGL();
+
 }

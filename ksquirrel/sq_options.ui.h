@@ -16,12 +16,12 @@ void SQ_Options::slotSelectPage(int page)
 void SQ_Options::init()
 {
     int tp;
-    a[0] = QPixmap::fromMimeSource("images/view_squirrel.png");
-    a[1] = QPixmap::fromMimeSource("images/view_gqview.png");
-    a[2] = QPixmap::fromMimeSource("images/view_kuickshow.png");
-    a[3] = QPixmap::fromMimeSource("images/view_winviewer.png");
-    a[4] = QPixmap::fromMimeSource("images/view_xnview.png");
-    a[5] = QPixmap::fromMimeSource("images/view_xnview.png");
+    a[0] = QPixmap::fromMimeSource(locate("appdata", "images/view_squirrel.png"));
+    a[1] = QPixmap::fromMimeSource(locate("appdata", "images/view_gqview.png"));
+    a[2] = QPixmap::fromMimeSource(locate("appdata", "images/view_kuickshow.png"));
+    a[3] = QPixmap::fromMimeSource(locate("appdata", "images/view_winviewer.png"));
+    a[4] = QPixmap::fromMimeSource(locate("appdata", "images/view_xnview.png"));
+    a[5] = QPixmap::fromMimeSource(locate("appdata", "images/view_xnview.png"));
     
     checkRestart->setChecked(sqConfig->readBoolEntry("Main", "restart", true));
     checkMinimize->setChecked(sqConfig->readBoolEntry("Main", "minimize to tray", true));
@@ -36,6 +36,8 @@ void SQ_Options::init()
     comboToolbarIconSize->setCurrentItem(sqConfig->readNumEntry("Interface", "toolbar icon size", 0));
     tp = sqConfig->readNumEntry("Interface", "create first", 0);
     ((QRadioButton*)(buttonGroupCreateFirst->find(tp)))->setChecked(true);
+    if(sqConfig->readBoolEntry("Interface", "save pos", true)) checkSavePos->toggle();
+    if(sqConfig->readBoolEntry("Interface", "save size", true)) checkSaveSize->toggle();
     
     comboIconIndex->setCurrentItem(sqConfig->readNumEntry("Fileview", "iCurrentIconIndex", 0));
     comboListIndex->setCurrentItem(sqConfig->readNumEntry("Fileview", "iCurrentListIndex", 0));
@@ -50,10 +52,10 @@ void SQ_Options::init()
     if(sqConfig->readBoolEntry("Fileview", "history", true)) checkSaveHistory->toggle();
     if(sqConfig->readBoolEntry("Fileview", "run unknown", true)) checkRunUnknown->toggle();
 
+// Init GLView page
     tp = sqViewType;
     pixmapShowView->setPixmap(a[tp]);
     ((QRadioButton*)(buttonGroupViewType->find(tp)))->setChecked(true);
-
     tp = sqConfig->readNumEntry("GL view", "zoom model", 0);
     ((QRadioButton*)(buttonGroupZoomModel->find(tp)))->setChecked(true);
     tp = sqConfig->readNumEntry("GL view", "shade model", 0);
@@ -66,12 +68,23 @@ void SQ_Options::init()
     spinAngle->setValue(tp);
     tp = sqConfig->readNumEntry("GL view", "zoom", 25);
     spinZoomFactor->setValue(tp);
+    tp = sqConfig->readNumEntry("GL view", "move", 5);
+    spinMoveFactor->setValue(tp);
     if(sqConfig->readBoolEntry("GL view", "system color", true)) checkSystemColor->toggle();
     if(sqConfig->readBoolEntry("GL view", "background", true)) checkBackgroundTransparent->toggle();
     if(sqConfig->readBoolEntry("GL view", "border", true)) checkBorder->toggle();
-    if(sqConfig->readBoolEntry("GL view", "step-by-step", true)) checkStepByStep->toggle();
-        
-    checkShowLinks->toggle();
+    
+// Init cache page
+   if(!sqConfig->readBoolEntry("Cache", "enable", true)) checkCacheEnable->toggle();
+   lineCachePath->setText(sqConfig->readEntry("Cache", "place", ""));
+    tp = sqConfig->readNumEntry("Cache", "cache policy", 0);
+    ((QRadioButton*)(buttonGroupCachePolicy->find(tp)))->toggle();
+    spinCacheImageX->setValue(sqConfig->readNumEntry("Cache", "cache image X", 300));
+    spinCacheImageY->setValue(sqConfig->readNumEntry("Cache", "cache image Y", 300));
+    spinCacheImageLarger->setValue(sqConfig->readNumEntry("Cache", "cache image larger", 5));
+   if(sqConfig->readBoolEntry("Cache", "gzip", true)) checkCacheGZIP->toggle();
+    
+	    checkShowLinks->toggle();
 
     listMain->setSorting(-1);
     itemMain = new QListViewItem(listMain, 0);
@@ -104,41 +117,44 @@ void SQ_Options::slotSetViewPixmap(int id)
 
 void SQ_Options::slotClicked( QListViewItem *item )
 {
-    const int count = 6;
+	const int count = 6;
 
-    ListViewItemID ListViewItemID_[count] = {
-	{itemMain, 0},
-	{itemInterface,1},
-	{itemFileView,2},
-	{itemGLview,5},
-	{itemLibraries,3},
-	{itemCache,4}};
-
-    for(int i = 0;i < count;i++)
-    {
-	if(ListViewItemID_[i].item == item)
+	ListViewItemID ListViewItemID_[count] =
 	{
-	    widgetStack1->raiseWidget(ListViewItemID_[i].id);
-	    break;
+		{itemMain, 0},
+		{itemInterface,1},
+		{itemFileView,2},
+		{itemGLview,3},
+		{itemLibraries,4},
+		{itemCache,5}
+	};
+
+	for(int i = 0;i < count;i++)
+	{
+		if(ListViewItemID_[i].item == item)
+		{
+			widgetStack1->raiseWidget(ListViewItemID_[i].id);
+			break;
+		}
 	}
-    }
 }
 
 
 void SQ_Options::slotOpenDir()
 {
-    QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");
-    if(!s.isEmpty())
-	lineEditCustomDir->setText(s);
+	QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");
+
+	if(!s.isEmpty())
+		lineEditCustomDir->setText(s);
 }
 
 
 void SQ_Options::slotDirCache()
 {
-    QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");
+	QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");
     
-    if(!s.isEmpty())
-	lineCachePath->setText(s);
+	if(!s.isEmpty())
+		lineCachePath->setText(s);
 }
 
 void SQ_Options::slotShowLinks( bool showl )
@@ -184,7 +200,9 @@ int SQ_Options::start()
 		sqConfig->writeEntry("ViewType", buttonGroupViewType->id(buttonGroupViewType->selected()));
 		sqConfig->writeEntry("toolbar icon size", comboToolbarIconSize->currentItem());
 		sqConfig->writeEntry("create first", buttonGroupCreateFirst->id(buttonGroupCreateFirst->selected()));
-
+		sqConfig->writeEntry("save pos", checkSavePos->isChecked());
+		sqConfig->writeEntry("save size", checkSaveSize->isChecked());
+		
 		sqConfig->setGroup("Fileview");
 		sqConfig->writeEntry("set path", buttonGroupSetPath->id(buttonGroupSetPath->selected()));
 		sqConfig->writeEntry("custom directory", lineEditCustomDir->text());
@@ -209,16 +227,26 @@ int SQ_Options::start()
 		sqConfig->writeEntry("enable drop", checkDrop->isChecked());
 		sqConfig->writeEntry("angle", spinAngle->value());
 		sqConfig->writeEntry("zoom", spinZoomFactor->value());
+		sqConfig->writeEntry("move", spinMoveFactor->value());
 		sqConfig->writeEntry("border", checkBorder->isChecked());
 		sqConfig->writeEntry("background", checkBackgroundTransparent->isChecked());
-		sqConfig->writeEntry("step-by-step", checkStepByStep->isChecked());
 
 		sqConfig->setGroup("Libraries");
 		sqConfig->writeEntry("monitor", checkMonitor->isChecked());
 		sqConfig->writeEntry("show dialog", checkFAMMessage->isChecked());
 		sqConfig->writeEntry("prefix", linePrefix->text());
 		sqConfig->writeEntry("continue", checkContinue->isChecked());
-	}
+		
+		sqConfig->setGroup("Cache");
+		sqConfig->writeEntry("enable", checkCacheEnable->isChecked());
+		sqConfig->writeEntry("cache policy", buttonGroupCachePolicy->id(buttonGroupCachePolicy->selected()));
+		sqConfig->writeEntry("place", lineCachePath->text());
+		sqConfig->writeEntry("cache image X", spinCacheImageX->value());
+		sqConfig->writeEntry("cache image Y", spinCacheImageY->value());
+		sqConfig->writeEntry("cache image larger", spinCacheImageLarger->value());
+		sqConfig->writeEntry("gzip", checkCacheGZIP->isChecked());
+		
+	    }
 
 	return result;
 }

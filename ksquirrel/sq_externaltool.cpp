@@ -17,6 +17,8 @@
 #include <qpopupmenu.h>
 
 #include "sq_externaltool.h"
+#include "ksquirrel.h"
+#include "sq_config.h"
 
 SQ_ExternalTool::SQ_ExternalTool() : QValueVector<SQ_EXT_TOOL>()
 {
@@ -72,4 +74,19 @@ QPopupMenu* SQ_ExternalTool::getNewPopupMenu()
 QPopupMenu* SQ_ExternalTool::getConstPopupMenu() const
 {
 	return menu;
+}
+
+void SQ_ExternalTool::writeEntries()
+{
+	int ncount = count(), cur = 1;
+	QString num;
+
+	for(int i = 0;i < ncount;i++,cur++)
+	{
+		sqConfig->setGroup("External tool name");
+		num.sprintf("%d", cur);
+		sqConfig->writeEntry(num, getToolName(i));
+		sqConfig->setGroup("External tool program");
+		sqConfig->writeEntry(num, getToolCommand(i));
+	}
 }

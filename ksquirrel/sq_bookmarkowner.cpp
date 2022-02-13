@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_about.h  -  description
+                          sq_bookmarkowner.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 27 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,23 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "sq_bookmarkowner.h"
 
-#ifndef _ABOUT_SQUIRREL_H
-#define _ABOUT_SQUIRREL_H
+SQ_BookmarkOwner::SQ_BookmarkOwner(QWidget *parent) : QObject(parent)
+{}
 
-#include <kaboutdata.h>
+SQ_BookmarkOwner::~SQ_BookmarkOwner()
+{}
 
-static const char *description = "KSquirrel - image viewer for KDE with dynamic format support.";
+void SQ_BookmarkOwner::openBookmarkURL(const QString &url)
+{
+	emit openURL(KURL(url));
+}
 
-static KAboutData aboutData(
-			"ksquirrel", 
-			"KSquirrel",
-			"0.2.4", 
-			description,
-			KAboutData::License_GPL,
-			"(c) 2004, CKulT", 
-			"",
-			"http://ksquirrel.sourceforge.net",
-			"");
-    
-#endif
+QString SQ_BookmarkOwner::currentURL() const
+{
+	return URL.path();
+}
+
+void SQ_BookmarkOwner::setURL(const KURL &new_url)
+{
+	URL = new_url;
+}

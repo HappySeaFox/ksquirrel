@@ -19,6 +19,8 @@
 #include <qvaluevector.h>
 #include <qprocess.h>
 
+#include <kiconloader.h>
+
 #include "sq_runprocess.h"
 #include "ksquirrel.h"
 

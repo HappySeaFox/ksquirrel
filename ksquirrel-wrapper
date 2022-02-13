@@ -1,0 +1,7 @@
+#!/bin/sh
+
+exists=`dcop|grep ksquirrel`
+
+if [ "$exists" = "" ]; then (ksquirrel&); 
+else dcop ksquirrel KMainWindow control SQ_ACTIVATE; 
+fi

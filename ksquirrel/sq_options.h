@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_options.ui'
 **
-** Created: Птн Апр 16 19:42:22 2004
+** Created: Втр Апр 27 19:00:37 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -44,11 +44,11 @@ public:
     QPushButton* buttonOk;
     QPushButton* buttonCancel;
     QWidgetStack* widgetStack1;
-    QWidget* page;
+    QWidget* pageMain;
     QCheckBox* checkOneInstance;
     QCheckBox* checkRestart;
     QCheckBox* checkMinimize;
-    QWidget* page_2;
+    QWidget* pageInterface;
     QButtonGroup* buttonGroupViewType;
     QRadioButton* radioWinViewer;
     QRadioButton* radioXnview;
@@ -62,8 +62,10 @@ public:
     QRadioButton* radioButton14;
     QRadioButton* radioButton15;
     QLabel* textLabel1_3;
+    QCheckBox* checkSavePos;
+    QCheckBox* checkSaveSize;
     QComboBox* comboToolbarIconSize;
-    QWidget* page_3;
+    QWidget* pageFileview;
     QButtonGroup* buttonGroupSync;
     QRadioButton* radioSyncBoth;
     QRadioButton* radioSyncTreeWStack;
@@ -85,23 +87,7 @@ public:
     QComboBox* comboListIndex;
     QLabel* textLabel1_2;
     QComboBox* comboIconIndex;
-    QWidget* page_4;
-    QLabel* textLabel1;
-    QButtonGroup* buttonGroup12;
-    QCheckBox* checkMonitor;
-    QCheckBox* checkFAMMessage;
-    QLineEdit* linePrefix;
-    QPushButton* pushNewPrefix;
-    QListView* tableLib;
-    QCheckBox* checkShowLinks;
-    QCheckBox* checkContinue;
-    QWidget* page_5;
-    QButtonGroup* buttonGroup11;
-    QCheckBox* checkCacheGL;
-    QCheckBox* checkCacheDisk;
-    QPushButton* pushOpenCacheDir;
-    QLineEdit* lineCachePath;
-    QWidget* page_6;
+    QWidget* pageGL;
     QTabWidget* tabWidget2;
     QWidget* tab;
     QButtonGroup* buttonGroup9;
@@ -115,8 +101,9 @@ public:
     QCheckBox* checkBorder;
     QCheckBox* checkBackgroundTransparent;
     QCheckBox* checkDrop;
-    QCheckBox* checkStepByStep;
     QSpinBox* spinAngle;
+    QSpinBox* spinMoveFactor;
+    QLabel* textLabel1_7;
     QWidget* tab_2;
     QLabel* textLabel1_4;
     QButtonGroup* buttonGroupZoomType;
@@ -127,6 +114,31 @@ public:
     QRadioButton* radioLinear;
     QRadioButton* radioNearest;
     QSpinBox* spinZoomFactor;
+    QWidget* pageLibraries;
+    QLabel* textLabel1;
+    QButtonGroup* buttonGroup12;
+    QCheckBox* checkMonitor;
+    QCheckBox* checkFAMMessage;
+    QLineEdit* linePrefix;
+    QPushButton* pushNewPrefix;
+    QListView* tableLib;
+    QCheckBox* checkShowLinks;
+    QCheckBox* checkContinue;
+    QWidget* pageCaching;
+    QCheckBox* checkCacheEnable;
+    QButtonGroup* buttonGroup13;
+    QLabel* textLabel1_8;
+    QPushButton* pushOpenCacheDir;
+    QLineEdit* lineCachePath;
+    QButtonGroup* buttonGroupCachePolicy;
+    QSpinBox* spinCacheImageLarger;
+    QLabel* textLabel3;
+    QSpinBox* spinCacheImageX;
+    QLabel* textLabel2_2;
+    QSpinBox* spinCacheImageY;
+    QRadioButton* radioCacheWhichLarger;
+    QRadioButton* radioCacheWhichTakeMore;
+    QCheckBox* checkCacheGZIP;
 
     virtual int start();
 
@@ -145,25 +157,28 @@ protected:
     bool showlinks;
 
     QGridLayout* SQ_OptionsLayout;
-    QGridLayout* pageLayout;
-    QGridLayout* pageLayout_2;
+    QGridLayout* pageMainLayout;
+    QGridLayout* pageInterfaceLayout;
     QGridLayout* buttonGroupViewTypeLayout;
     QGridLayout* buttonGroupCreateFirstLayout;
-    QGridLayout* pageLayout_3;
+    QGridLayout* pageFileviewLayout;
     QGridLayout* buttonGroupSyncLayout;
     QGridLayout* buttonGroupSetPathLayout;
     QGridLayout* buttonGroup7Layout;
-    QGridLayout* pageLayout_4;
-    QGridLayout* buttonGroup12Layout;
-    QGridLayout* pageLayout_5;
-    QGridLayout* buttonGroup11Layout;
-    QGridLayout* pageLayout_6;
+    QGridLayout* pageGLLayout;
     QGridLayout* tabLayout;
     QGridLayout* buttonGroup9Layout;
     QGridLayout* buttonGroupShadeModelLayout;
     QGridLayout* tabLayout_2;
     QGridLayout* buttonGroupZoomTypeLayout;
     QGridLayout* buttonGroupZoomModelLayout;
+    QGridLayout* pageLibrariesLayout;
+    QGridLayout* buttonGroup12Layout;
+    QGridLayout* pageCachingLayout;
+    QGridLayout* buttonGroup13Layout;
+    QGridLayout* buttonGroupCachePolicyLayout;
+    QHBoxLayout* layout2;
+    QHBoxLayout* layout1;
 
 protected slots:
     virtual void languageChange();

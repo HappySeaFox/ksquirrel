@@ -16,9 +16,12 @@
  ***************************************************************************/
 
 #include "sq_fileviewfilter.h"
+#include "ksquirrel.h"
+#include "sq_config.h"
 
 SQ_FileviewFilter::SQ_FileviewFilter() : QValueVector<FILTER> ()
 {
+	both = sqConfig->readBoolEntry("Filters", "menuitem both", true);
 }
 
 SQ_FileviewFilter::~SQ_FileviewFilter()
@@ -44,4 +47,32 @@ QString SQ_FileviewFilter::getFilterName(const int i)
 QString SQ_FileviewFilter::getFilterExt(const int i)
 {
 	return (*this)[i].filter;
+}
+
+void SQ_FileviewFilter::writeEntries()
+{
+	int ncount = count(), cur = 1;
+	QString num;
+
+	sqConfig->deleteGroup("Filters");
+	sqConfig->deleteGroup("Filters ext");
+
+	for(int i = 0;i < ncount;i++,cur++)
+	{
+		sqConfig->setGroup("Filters");
+		num.sprintf("%d", cur);
+		sqConfig->writeEntry(num, getFilterName(i));
+		sqConfig->setGroup("Filters ext");
+		sqConfig->writeEntry(num, getFilterExt(i));
+	}
+}
+
+void SQ_FileviewFilter::setShowBoth(bool newboth)
+{
+	both = newboth;
+}
+
+bool SQ_FileviewFilter::getShowBoth()
+{
+	return both;
 }

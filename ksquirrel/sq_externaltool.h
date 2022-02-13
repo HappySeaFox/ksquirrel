@@ -50,6 +50,8 @@ class SQ_ExternalTool : public QValueVector<SQ_EXT_TOOL>
 
 		QPopupMenu* getNewPopupMenu();
 		QPopupMenu* getConstPopupMenu() const;
+
+		void writeEntries();
 };
 
 #endif

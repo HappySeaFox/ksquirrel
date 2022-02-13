@@ -21,13 +21,17 @@
 #include <kiconloader.h>
 #include <kaction.h>
 
+#include "ksquirrel.h"
+#include "sq_config.h"
 #include "sq_fileiconview.h"
 #include "sq_filedetailview.h"
 #include "sq_widgetstack.h"
-#include "ksquirrel.h"
-#include "sq_config.h"
+#include "sq_externaltool.h"
+#include "sq_treeview.h"
 
-SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
+#define SQ_SECTION_NAME ("squirrel image viewer file browser")
+
+SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent), ncount(0)
 {
 	pIconSizeList = new QValueVector<int>;
 	pIconSizeList->append(16);
@@ -65,12 +69,7 @@ KURL SQ_WidgetStack::getURL() const
 
 void SQ_WidgetStack::setURL(const QString &newpath, bool cl)
 {
-	KURL url(newpath);
-	if(sqCurrentURL) sqCurrentURL->setEditText(newpath);
-	if(sqCurrentURL) sqCurrentURL->addToHistory(newpath);
-	if(pDirOperatorList) pDirOperatorList->setURL(url, cl);
-	if(pDirOperatorIcon) pDirOperatorIcon->setURL(url, cl);
-	if(pDirOperatorDetail) pDirOperatorDetail->setURL(url, cl);
+	setURL(KURL(newpath), cl);
 }
 
 void SQ_WidgetStack::setURL(const KURL &newurl, bool cl)
@@ -80,6 +79,11 @@ void SQ_WidgetStack::setURL(const KURL &newurl, bool cl)
 	if(pDirOperatorList) pDirOperatorList->setURL(newurl, cl);
 	if(pDirOperatorIcon) pDirOperatorIcon->setURL(newurl, cl);
 	if(pDirOperatorDetail) pDirOperatorDetail->setURL(newurl, cl);
+
+	if(!sqTree) return;
+
+	if(sqConfig->readNumEntry("Fileview", "sync type", 0) == 2)
+		sqTree->emitNewURL(newurl);
 }
 
 void SQ_WidgetStack::setURL(const QString &newpath)
@@ -183,8 +187,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	if(id == 0 && pDirOperatorList == 0L)
 	{
 		pDirOperatorList = new SQ_DirOperator(KURL(((path)?*path:"/")));
-		pDirOperatorList->readConfig(KGlobal::config(), "squirrel image viewer file browser");
-		pDirOperatorList->setViewConfig(KGlobal::config(), "squirrel image viewer file browser");
+		pDirOperatorList->readConfig(KGlobal::config(), SQ_SECTION_NAME);
+		pDirOperatorList->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorList->setMode(KFile::Files);
 		pDirOperatorList->setView(KFile::Simple);
 		pDirOperatorList->view()->actionCollection()->action(2)->activate();
@@ -198,8 +202,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	if(id == 1 && pDirOperatorIcon == 0L)
 	{
 		pDirOperatorIcon = new SQ_DirOperator(KURL("/"));
-		pDirOperatorIcon->readConfig(KGlobal::config(), "squirrel image viewer file browser");
-		pDirOperatorIcon->setViewConfig(KGlobal::config(), "squirrel image viewer file browser");
+		pDirOperatorIcon->readConfig(KGlobal::config(), SQ_SECTION_NAME);
+		pDirOperatorIcon->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorIcon->setMode(KFile::Files);
 		pDirOperatorIcon->setView(KFile::Simple);
 		pDirOperatorIcon->view()->actionCollection()->action(1)->activate();
@@ -213,8 +217,8 @@ void SQ_WidgetStack::raiseWidget(int id)
 	else if(id == 2 &&  pDirOperatorDetail == 0L)
 	{
 		pDirOperatorDetail = new SQ_DirOperator(KURL("/"));
-		pDirOperatorDetail->readConfig(KGlobal::config(), "squirrel image viewer file browser");
-		pDirOperatorDetail->setViewConfig(KGlobal::config(), "squirrel image viewer file browser");
+		pDirOperatorDetail->readConfig(KGlobal::config(), SQ_SECTION_NAME);
+		pDirOperatorDetail->setViewConfig(KGlobal::config(), SQ_SECTION_NAME);
 		pDirOperatorDetail->setMode(KFile::Files);
 		pDirOperatorDetail->setView(KFile::Detail);
 		if(!path) pDirOperatorDetail->setURL(getURL(), true);
@@ -224,6 +228,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 	}
 
 	// and raise widget
+	ncount++;
 	QWidgetStack::raiseWidget(id);
 }
 
@@ -290,7 +295,14 @@ void SQ_WidgetStack::emitPreviousSelected()
 
 void SQ_WidgetStack::reInitToolsMenu()
 {
+	sqExternalTool->getNewPopupMenu();
+
 	if(pDirOperatorList)     pDirOperatorList->reInitToolsMenu();
 	if(pDirOperatorIcon)   pDirOperatorIcon->reInitToolsMenu();
 	if(pDirOperatorDetail) pDirOperatorDetail->reInitToolsMenu();
+}
+
+int SQ_WidgetStack::count() const
+{
+	return ncount;
 }

@@ -7,6 +7,7 @@
 ** place of a destructor.
 *****************************************************************************/
 
+#include <kiconloader.h>
 
 void SQ_Filters::init()
 {
@@ -37,7 +38,8 @@ void SQ_Filters::init()
 	listFilters->setCurrentItem(listFilters->firstChild());
 	listFilters->clearSelection();
 	listFilters->setSelected(listFilters->currentItem(), true);
-   
+ 
+	checkBoth->setChecked(sqConfig->readBoolEntry("Filters", "menuitem both", true));
 }
 
 void SQ_Filters::slotNewFilter()
@@ -113,6 +115,10 @@ int SQ_Filters::start()
 		FILTER tf = {cur->text(0), cur->text(1)};
 		sqFilters->addFilter(tf);
 	}
+	
+	sqConfig->setGroup("Filters");
+	sqConfig->writeEntry("menuitem both", checkBoth->isChecked());
+	sqFilters->setShowBoth(checkBoth->isChecked());
     }
     
     return result;

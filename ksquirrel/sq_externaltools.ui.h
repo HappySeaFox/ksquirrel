@@ -7,6 +7,7 @@
 ** place of a destructor.
 *****************************************************************************/
 
+#include <kiconloader.h>
 
 void SQ_ExternalTools::init()
 {

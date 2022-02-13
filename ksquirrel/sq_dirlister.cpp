@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_bookmarks.h  -  description
+                          sq_dirlister.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 27 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,20 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SQ_BOOKMARKS_H
-#define SQ_BOOKMARKS_H
+#include "sq_dirlister.h"
 
-#include <qobject.h>
+SQ_DirLister::SQ_DirLister(bool delayed) : KDirLister(delayed)
+{}
 
-/**
-  *@author ckult
-  */
+SQ_DirLister::~SQ_DirLister()
+{}
 
-class SQ_Bookmarks : public QObject
+bool SQ_DirLister::openURL(const KURL &url, bool _keep, bool _reload)
 {
-	public: 
-		SQ_Bookmarks();
-		~SQ_Bookmarks();
-};
+	_reload = true; // I want KDirLister to reload directory every time.
 
-#endif
+	KDirLister::openURL(url, _keep, _reload);
+}

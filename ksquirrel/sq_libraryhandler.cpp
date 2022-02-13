@@ -17,6 +17,7 @@
 
 #include <qmessagebox.h>
 #include <qvaluevector.h>
+#include <qregexp.h>
 
 #include "sq_libraryhandler.h"
 #include "ksquirrel.h"
@@ -64,8 +65,10 @@ bool SQ_LibraryHandler::supports(const QString &format) const
 	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
 	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
 
+	QString f = "*." + format;
+	
 	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
-		if(((*it).sinfo).find(format, 0, false) > 0)
+		if(((*it).sinfo).find(f, 0, false) != -1)
 			return true;
 
 	return false;
@@ -132,12 +135,14 @@ void SQ_LibraryHandler::add(QStringList *foundLibraries)
 
 void SQ_LibraryHandler::remove(QStringList *foundLibraries)
 {
+/*
 	QValueList<QString>::iterator   BEGIN = foundLibraries->begin();
 	QValueList<QString>::iterator      END = foundLibraries->end();
 
 	QValueVector<SQ_LIBRARY>::iterator   vBEGIN = libs->begin();
 	QValueVector<SQ_LIBRARY>::iterator      vEND = libs->end();
 
+*/
 }
 
 int SQ_LibraryHandler::count() const

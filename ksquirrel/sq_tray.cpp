@@ -15,8 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 #include <qapplication.h>
+#include <qcursor.h>
+
 #include <kwin.h>
 #include <kaction.h>
+#include <kiconloader.h>
 
 #include "ksquirrel.h"
 #include "sq_tray.h"
@@ -42,7 +45,7 @@ void SQ_SystemTray::mousePressEvent(QMouseEvent *ev)
 	if(ev->button() == Qt::LeftButton)
 	{
 		sqApp->show();
-		KWin::setActiveWindow(winId());
+		KWin::setActiveWindow(sqApp->winId());
 	}
 	else if(ev->button() == Qt::RightButton)
 	{
@@ -59,5 +62,5 @@ void SQ_SystemTray::mouseReleaseEvent(QMouseEvent *ev)
 void SQ_SystemTray::slotActivate()
 {
 	sqApp->show();
-	KWin::setActiveWindow(winId());
+	KWin::setActiveWindow(sqApp->winId());
 }

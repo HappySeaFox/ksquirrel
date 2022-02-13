@@ -26,7 +26,6 @@
 class QIconViewItem;
 class QListViewItem;
 
-
 class SQ_DirOperator : public KDirOperator
 {
 	Q_OBJECT
@@ -36,7 +35,7 @@ class SQ_DirOperator : public KDirOperator
 		bool sing;
 
 		KActionMenu 			*pADirOperatorMenu;
-		KAction				*pARunSeparately;
+		KAction				*pARunSeparately, *pAShowEMenu;
 		int					toolsId;
 
 	public:
@@ -62,6 +61,7 @@ class SQ_DirOperator : public KDirOperator
 		void slotRunSeparately();
 		void slotActivateExternalTool(int index);
 		void slotFinishedLoading();
+		void slotShowExternalToolsMenu();
 
 		void emitNextSelected();
 		void emitPreviousSelected();

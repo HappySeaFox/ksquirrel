@@ -2,7 +2,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file './sq_filters.ui'
 **
-** Created: Птн Апр 16 19:42:23 2004
+** Created: Втр Апр 27 19:00:37 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -11,6 +11,7 @@
 #include "sq_filters.h"
 
 #include <qvariant.h>
+#include <qcheckbox.h>
 #include <qframe.h>
 #include <qheader.h>
 #include <qlistview.h>
@@ -39,32 +40,42 @@ SQ_Filters::SQ_Filters( QWidget* parent, const char* name, bool modal, WFlags fl
     setSizeGripEnabled( TRUE );
     SQ_FiltersLayout = new QGridLayout( this, 1, 1, 11, 6, "SQ_FiltersLayout"); 
 
-    pushCancel = new QPushButton( this, "pushCancel" );
-    pushCancel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, pushCancel->sizePolicy().hasHeightForWidth() ) );
-
-    SQ_FiltersLayout->addWidget( pushCancel, 1, 2 );
-    QSpacerItem* spacer = new QSpacerItem( 65, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
-    SQ_FiltersLayout->addItem( spacer, 1, 1 );
-    QSpacerItem* spacer_2 = new QSpacerItem( 185, 35, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    SQ_FiltersLayout->addItem( spacer_2, 1, 0 );
-
     pushOK = new QPushButton( this, "pushOK" );
     pushOK->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, pushOK->sizePolicy().hasHeightForWidth() ) );
     pushOK->setDefault( TRUE );
 
-    SQ_FiltersLayout->addWidget( pushOK, 1, 3 );
+    SQ_FiltersLayout->addWidget( pushOK, 1, 2 );
+
+    pushCancel = new QPushButton( this, "pushCancel" );
+    pushCancel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, pushCancel->sizePolicy().hasHeightForWidth() ) );
+
+    SQ_FiltersLayout->addWidget( pushCancel, 1, 3 );
+    QSpacerItem* spacer = new QSpacerItem( 155, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
+    SQ_FiltersLayout->addItem( spacer, 1, 1 );
+    QSpacerItem* spacer_2 = new QSpacerItem( 185, 35, QSizePolicy::Minimum, QSizePolicy::Fixed );
+    SQ_FiltersLayout->addItem( spacer_2, 1, 0 );
 
     frame3 = new QFrame( this, "frame3" );
     frame3->setFrameShape( QFrame::StyledPanel );
     frame3->setFrameShadow( QFrame::Raised );
     frame3Layout = new QGridLayout( frame3, 1, 1, 11, 6, "frame3Layout"); 
-    QSpacerItem* spacer_3 = new QSpacerItem( 30, 25, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    frame3Layout->addItem( spacer_3, 2, 3 );
+
+    pushNewFilter = new QPushButton( frame3, "pushNewFilter" );
+
+    frame3Layout->addWidget( pushNewFilter, 3, 0 );
+
+    pushFilterClear = new QPushButton( frame3, "pushFilterClear" );
+
+    frame3Layout->addWidget( pushFilterClear, 3, 1 );
+
+    pushFilterClearAll = new QPushButton( frame3, "pushFilterClearAll" );
+
+    frame3Layout->addWidget( pushFilterClearAll, 3, 2 );
 
     listFilters = new QListView( frame3, "listFilters" );
     listFilters->addColumn( tr2i18n( "Name" ) );
     listFilters->addColumn( tr2i18n( "Extensions" ) );
-    listFilters->setResizePolicy( QListView::Default );
+    listFilters->setResizePolicy( QScrollView::Manual );
     listFilters->setSelectionMode( QListView::Single );
     listFilters->setAllColumnsShowFocus( TRUE );
     listFilters->setShowSortIndicator( FALSE );
@@ -72,43 +83,31 @@ SQ_Filters::SQ_Filters( QWidget* parent, const char* name, bool modal, WFlags fl
     listFilters->setResizeMode( QListView::AllColumns );
     listFilters->setDefaultRenameAction( QListView::Reject );
 
-    frame3Layout->addMultiCellWidget( listFilters, 0, 1, 0, 2 );
-    QSpacerItem* spacer_4 = new QSpacerItem( 20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    frame3Layout->addItem( spacer_4, 0, 3 );
-
-    pushNewFilter = new QPushButton( frame3, "pushNewFilter" );
-
-    frame3Layout->addWidget( pushNewFilter, 2, 0 );
-
-    pushFilterClear = new QPushButton( frame3, "pushFilterClear" );
-
-    frame3Layout->addWidget( pushFilterClear, 2, 1 );
-
-    pushFilterClearAll = new QPushButton( frame3, "pushFilterClearAll" );
-
-    frame3Layout->addWidget( pushFilterClearAll, 2, 2 );
-
-    layout4 = new QGridLayout( 0, 1, 1, 0, 6, "layout4"); 
-    QSpacerItem* spacer_5 = new QSpacerItem( 16, 20, QSizePolicy::Minimum, QSizePolicy::Fixed );
-    layout4->addItem( spacer_5, 1, 0 );
-
-    pushFilterUp = new QPushButton( frame3, "pushFilterUp" );
-    pushFilterUp->setEnabled( TRUE );
-    pushFilterUp->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)1, 0, 0, pushFilterUp->sizePolicy().hasHeightForWidth() ) );
-
-    layout4->addWidget( pushFilterUp, 0, 0 );
+    frame3Layout->addMultiCellWidget( listFilters, 0, 2, 0, 2 );
 
     pushFilterDown = new QPushButton( frame3, "pushFilterDown" );
     pushFilterDown->setEnabled( TRUE );
-    pushFilterDown->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)1, 0, 0, pushFilterDown->sizePolicy().hasHeightForWidth() ) );
+    pushFilterDown->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, pushFilterDown->sizePolicy().hasHeightForWidth() ) );
+    pushFilterDown->setMinimumSize( QSize( 22, 22 ) );
 
-    layout4->addWidget( pushFilterDown, 2, 0 );
+    frame3Layout->addWidget( pushFilterDown, 1, 3 );
 
-    frame3Layout->addLayout( layout4, 1, 3 );
+    pushFilterUp = new QPushButton( frame3, "pushFilterUp" );
+    pushFilterUp->setEnabled( TRUE );
+    pushFilterUp->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, pushFilterUp->sizePolicy().hasHeightForWidth() ) );
+    pushFilterUp->setMinimumSize( QSize( 22, 22 ) );
+
+    frame3Layout->addWidget( pushFilterUp, 0, 3 );
+    QSpacerItem* spacer_3 = new QSpacerItem( 30, 180, QSizePolicy::Minimum, QSizePolicy::Expanding );
+    frame3Layout->addMultiCell( spacer_3, 2, 3, 3, 3 );
+
+    checkBoth = new QCheckBox( frame3, "checkBoth" );
+
+    frame3Layout->addMultiCellWidget( checkBoth, 4, 4, 0, 1 );
 
     SQ_FiltersLayout->addMultiCellWidget( frame3, 0, 0, 0, 3 );
     languageChange();
-    resize( QSize(536, 404).expandedTo(minimumSizeHint()) );
+    resize( QSize(536, 428).expandedTo(minimumSizeHint()) );
 
     // signals and slots connections
     connect( pushNewFilter, SIGNAL( clicked() ), this, SLOT( slotNewFilter() ) );
@@ -137,15 +136,16 @@ SQ_Filters::~SQ_Filters()
 void SQ_Filters::languageChange()
 {
     setCaption( tr2i18n( "Adjust Filters" ) );
-    pushCancel->setText( tr2i18n( "Cancel" ) );
     pushOK->setText( tr2i18n( " OK " ) );
-    listFilters->header()->setLabel( 0, tr2i18n( "Name" ) );
-    listFilters->header()->setLabel( 1, tr2i18n( "Extensions" ) );
+    pushCancel->setText( tr2i18n( "Cancel" ) );
     pushNewFilter->setText( tr2i18n( "New filter" ) );
     pushFilterClear->setText( tr2i18n( "Delete filter" ) );
     pushFilterClearAll->setText( tr2i18n( "Clear All" ) );
-    pushFilterUp->setText( QString::null );
+    listFilters->header()->setLabel( 0, tr2i18n( "Name" ) );
+    listFilters->header()->setLabel( 1, tr2i18n( "Extensions" ) );
     pushFilterDown->setText( QString::null );
+    pushFilterUp->setText( QString::null );
+    checkBoth->setText( tr2i18n( "Menuitem contains both name and extension" ) );
 }
 
 #include "sq_filters.moc"

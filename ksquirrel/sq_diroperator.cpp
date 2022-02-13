@@ -17,26 +17,34 @@
 #include <qmessagebox.h>
 #include <qprocess.h>
 #include <qevent.h>
+#include <qlabel.h>
 
 #include <krun.h>
 #include <kcombiview.h>
 #include <kstringhandler.h>
 #include <kprocess.h>
 #include <kapp.h>
+#include <kpopupmenu.h>
 
 #include "ksquirrel.h"
+#include "sq_treeview.h"
 #include "sq_diroperator.h"
 #include "sq_fileiconview.h"
 #include "sq_filedetailview.h"
 #include "sq_glviewwidget.h"
 #include "sq_externaltool.h"
 #include "sq_libraryhandler.h"
+#include "sq_widgetstack.h"
 #include "sq_config.h"
+#include "sq_dirlister.h"
+#include "sq_bookmarkowner.h"
 
 #define SQ_MAX_WORD_LENGTH 50
 
 SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *name) : KDirOperator(url, parent, name)
 {
+	setDirLister(new SQ_DirLister);
+
 	static KActionSeparator *pASep = new KActionSeparator(actionCollection());
 
 	if(sqConfig->readBoolEntry("Fileview", "click policy system", true))
@@ -46,7 +54,16 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *nam
 
 	setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
 
-	pARunSeparately = new KAction("Run separately", QIconSet(sqLoader->loadIcon("launch", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("launch", KIcon::Desktop, 22)), KShortcut(CTRL+Key_J), this, SLOT(slotRunSeparately()), sqApp->actionCollection(), "Run separately");
+	if(!sqWStack->count())
+	{
+		pARunSeparately = new KAction("Run separately", QIconSet(sqLoader->loadIcon("launch", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("launch", KIcon::Desktop, 22)), KShortcut(CTRL+Key_J), this, SLOT(slotRunSeparately()), sqApp->actionCollection(), "SQ Run files separately");
+		pAShowEMenu = new KAction("Show 'External tools' menu", 0, KShortcut(CTRL+Key_E), this, SLOT(slotShowExternalToolsMenu()), sqApp->actionCollection(), "SQ SETM");
+	}
+	else
+	{
+		pARunSeparately = sqApp->actionCollection()->action("SQ Run files separately");
+		pAShowEMenu = sqApp->actionCollection()->action("SQ SETM");
+	}
 
 	// @todo get rid of kdecore warning
 	pADirOperatorMenu = (KActionMenu*)actionCollection()->action("popupMenu");
@@ -54,12 +71,16 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *nam
 	pADirOperatorMenu->insert(pASep, 1);
 
 	pADirOperatorMenu->insert(pASep);
-	toolsId = pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getNewPopupMenu());
 
-	printf("%d ",toolsId);
-
+	if(!sqWStack->count())
+	{
+		toolsId = pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getNewPopupMenu());
+		connect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
+	}
+	else
+		pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getConstPopupMenu());
+	
 	connect(this, SIGNAL(finishedLoading()), SLOT(slotFinishedLoading()));
-	connect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
 }
 
 SQ_DirOperator::~SQ_DirOperator()
@@ -141,7 +162,7 @@ void SQ_DirOperator::slotDoubleClicked(QIconViewItem *item)
 
 		if(f->fileInfo()->isFile())
 		{
-			if(!sqLibHandler->supports(fm.extension(false).upper()))
+			if(!sqLibHandler->supports(fm.extension(false)))
 			{
 				sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
 
@@ -166,7 +187,7 @@ void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 
 		if(f->fileInfo()->isFile())
 		{
-			if(!sqLibHandler->supports(fm.extension(false).upper()))
+			if(!sqLibHandler->supports(fm.extension(false)))
 			{
 				sqSBDecoded->setText("Format \""+ fm.extension(false)+"\" not supported");
 
@@ -273,6 +294,8 @@ void SQ_DirOperator::slotFinishedLoading()
 		sqSBfileIcon->setPixmap(QPixmap(0));
 		sqSBfileName->setText("");
 	}
+
+	sqBookmarks->setURL(url());
 }
 
 void SQ_DirOperator::emitNextSelected()
@@ -311,7 +334,9 @@ void SQ_DirOperator::emitPreviousSelected()
 
 void SQ_DirOperator::slotActivateExternalTool(int id)
 {
-	KFileItem *item = view()->currentFileItem();
+	// we have only one 'External tools' menu, duplicated from first created diroperator to
+	// all other, so we need to know wich diroperator is currently active (visible).
+	KFileItem *item = ((SQ_DirOperator*)sqWStack->visibleWidget())->view()->currentFileItem();
 
 	if(!item) return;
 
@@ -326,13 +351,18 @@ void SQ_DirOperator::slotActivateExternalTool(int id)
 	run.start(KProcess::DontCare);
 }
 
+//@warning: must be called from sqWStack
 void SQ_DirOperator::reInitToolsMenu()
 {
 	disconnect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), this, SLOT(slotActivateExternalTool(int)));
 
 	pADirOperatorMenu->popupMenu()->removeItem(toolsId);
-	toolsId = pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getNewPopupMenu());
+	toolsId = pADirOperatorMenu->popupMenu()->insertItem("External Tools", sqExternalTool->getConstPopupMenu());
 
 	connect(sqExternalTool->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
 }
 
+void SQ_DirOperator::slotShowExternalToolsMenu()
+{
+	sqExternalTool->getConstPopupMenu()->exec(QCursor::pos());
+}

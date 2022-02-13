@@ -35,6 +35,7 @@ class SQ_WidgetStack : public QWidgetStack
 		int					iCurrentListIndex, iCurrentIconIndex;
 		SQ_DirOperator		*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail;
 		QString				*path;
+		int					ncount;
 
 	public:
     		SQ_WidgetStack(QWidget *parent = 0);
@@ -52,8 +53,8 @@ class SQ_WidgetStack : public QWidgetStack
 
 		void emitNextSelected();
 		void emitPreviousSelected();
-
 		void reInitToolsMenu();
+		int count() const;
 
 	public slots:
 		void raiseWidget(int id);

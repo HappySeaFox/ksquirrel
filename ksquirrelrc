@@ -1,3 +1,12 @@
+[Cache]
+cache image X=301
+cache image Y=300
+cache image larger=10
+cache policy=0
+enable=true
+gzip=true
+place=/home/ckult/
+
 [Colors]
 CurrentPalette=* Recent Colors *
 
@@ -6,16 +15,19 @@ CurrentPalette=* Recent Colors *
 2=Open with KuickShow
 3=Open with GQview
 4=Open with KView
-5=Set as wallpaper on desktop
-6=Set as tiled wallpaper on desktop
+5=Open with KWrite
+6=Set as wallpaper on desktop
+7=Set as tiled wallpaper on desktop
 
 [External tool program]
 1=gimp %s
 2=kuickshow %s
 3=gqview %s
 4=kview %s
-5=dcop kdesktop KBackgroundIface setWallpaper %s 6
-6=dcop kdesktop KBackgroundIface setWallpaper %s 2
+5=kwrite %s
+6=dcop kdesktop KBackgroundIface setWallpaper %s 6
+7=dcop kdesktop KBackgroundIface setWallpaper %s 2
+Fileview=last visited
 
 [Fileview]
 click policy custom=0
@@ -44,6 +56,7 @@ sync type=1
 7=X11 Monochrome Bitmaps
 8=X11 PixMap
 9=ZSoft PCX
+menuitem both=false
 
 [Filters ext]
 1=*
@@ -67,20 +80,26 @@ angle=90
 background=false
 border=false
 enable drop=true
+move=5
 shade model=0
-step-by-step=true
 system color=false
 zoom=10
-zoom model=0
+zoom model=1
 
 [Interface]
-ViewType=1
+ViewType=0
 create first=0
+posX=0
+posY=0
+save pos=true
+save size=true
+sizeX=1024
+sizeY=739
 toolbar icon size=1
 
 [KFileDialog Settings]
 Preview Size=60
-Recent Files=/net,/usr/lib/squirrel,/mnt/win_c/images,/var
+Recent Files=/home/ckult,/,/usr/lib/squirrel,/net,/mnt/win_c/images,/var
 ShowPreviews=false
 ViewMode=SmallColumns
 
@@ -102,7 +121,7 @@ restart=false
 
 [Open-with settings]
 CompletionMode=5
-History=gimp,xnview
+History=gnumeric,gimp,xnview
 
 [Run name]
 1=GQview

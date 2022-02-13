@@ -26,6 +26,7 @@
 #include "sq_version.h"
 #include "sq_application.h"
 
+#include <X11/Xlib.h>
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +40,8 @@ int main(int argc, char *argv[])
 {
 	const QCString App = "ksquirrel";
 
+	XInitThreads();
+	
 	QString			name_app;
 	Squirrel 			*SQ;
 

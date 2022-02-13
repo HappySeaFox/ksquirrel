@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_bookmarks.cpp  -  description
+                          sq_cachehandler.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 26 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,10 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sq_bookmarks.h"
+#include "sq_cachehandler.h"
 
-SQ_Bookmarks::SQ_Bookmarks() : QObject()
+SQ_CacheHandler::SQ_CacheHandler()
 {}
 
-SQ_Bookmarks::~SQ_Bookmarks()
+SQ_CacheHandler::~SQ_CacheHandler()
 {}
+
+QString SQ_CacheHandler::getPath() const
+{
+	return path;
+}
+
+void SQ_CacheHandler::setPath(const QString &new_path)
+{
+	path = new_path;
+}

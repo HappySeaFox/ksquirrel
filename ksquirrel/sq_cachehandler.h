@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_runprocess.h  -  description
+                          sq_cachehandler.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 26 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,45 +15,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MENU_RUN_PROCESSES
-#define MENU_RUN_PROCESSES
+#ifndef SQ_CACHEHANDLER_H
+#define SQ_CACHEHANDLER_H
 
 #include <qstring.h>
-#include <qpixmap.h>
-#include <qobject.h>
 
-#include <stdio.h>
+#include "sq_zfstream.h"
 
-template <class T> class QValueVector;
+/**
+  *@author CKulT
+  */
 
-typedef struct
+class SQ_CacheHandler
 {
-    QString name;
-    QString program;
-    QPixmap	px;
-}PROCESSITEM;
+	private:
+		QString		path;
+		gzofstream	outf;
+		gzifstream	inf;
 
+	public: 
+		SQ_CacheHandler();
+		~SQ_CacheHandler();
 
-class SQ_RunProcess : public QObject
-{
-    Q_OBJECT
-    
-    public:
-		SQ_RunProcess();
-		~SQ_RunProcess();
-
-		void AddItem(const QString&, const QString&);
-	
-		int  GetCount() const;
-		QString GetName(unsigned int) const;
-		QString GetProgName(unsigned int) const;
-		QPixmap GetPixmap(unsigned int) const;
-
-    public slots:
-		void slotRunCommand(int index);
-
-    private:
-		QValueVector<PROCESSITEM> *plist;
+		QString getPath() const;
+		void setPath(const QString &new_path);
 };
 
 #endif

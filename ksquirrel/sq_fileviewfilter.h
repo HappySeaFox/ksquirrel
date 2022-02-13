@@ -35,6 +35,7 @@ typedef struct
 class SQ_FileviewFilter : public QValueVector<FILTER>
 {
 	private:
+		bool both;
 
 	public: 
 		SQ_FileviewFilter();
@@ -45,6 +46,10 @@ class SQ_FileviewFilter : public QValueVector<FILTER>
 
 		QString getFilterName(const int i);
 		QString getFilterExt(const int i);
+
+		void writeEntries();
+		void setShowBoth(bool newboth);
+		bool getShowBoth();
 };
 
 #endif

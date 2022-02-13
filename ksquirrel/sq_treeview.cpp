@@ -18,6 +18,8 @@
 #include <qdir.h>
 #include <qheader.h>
 
+#include <kiconloader.h>
+
 #include "ksquirrel.h"
 #include "sq_widgetstack.h"
 #include "sq_config.h"
@@ -30,8 +32,8 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	QPixmap homePix = sqLoader->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
 	QPixmap rootPix = sqLoader->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall);   
 
-	KFileTreeBranch *root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
-	KFileTreeBranch *home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
+	root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
+	home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
 
 	addColumn("Name");
 
@@ -49,7 +51,9 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 
 	if(sqConfig->readNumEntry("Fileview", "sync type", 0) == 1)
 		connect(this, SIGNAL(executed(QListViewItem*)), SLOT(slotItemExecuted(QListViewItem*)));
-	
+
+	connect(this, SIGNAL(newURL(const KURL&)), SLOT(slotNewURL(const KURL&)));
+		
 	header()->hide();
 }
 
@@ -64,4 +68,18 @@ void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 	KURL Curl = cur->url();
 
 	sqWStack->setURLfromtree(Curl);
+}
+
+void SQ_TreeView::emitNewURL(const KURL &url)
+{
+	emit newURL(url);
+}
+
+void SQ_TreeView::slotNewURL(const KURL &url)
+{
+//	KFileTreeViewItem *item = sqTree->findItem(root, url.path());
+
+//	if(!item) return;
+
+	root->populate(url, root->root());
 }

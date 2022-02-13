@@ -18,39 +18,41 @@
 #ifndef KSQUIRREL_H
 #define KSQUIRREL_H
 
-#include <qsplitter.h>
-#include <qtoolbutton.h>
-#include <qtabwidget.h>
-#include <qdockwindow.h>
-#include <qwhatsthis.h>
-#include <qpushbutton.h>
 #include <qstringlist.h>
 
-#include <ktoolbar.h>
-#include <kstatusbar.h>
-#include <ksystemtray.h>
-#include <kiconloader.h>
 #include <kurl.h>
-#include <kdockwidget.h>
-#include <kpopupmenu.h>
-#include <kmenubar.h>
 #include <kcombobox.h>
-#include <kaction.h>
 #include <kprocess.h>
+#include <kdockwidget.h>
 #include <dcopobject.h>
+
+class KMenuBar;
+class KIconLoader;
+class KToolBar;
+class KStatusBar;
+class KSystemTray;
+class KAction;
+class KRadioAction;
+class KActionMenu;
+
+class QSplitter;
+class QLabel;
 
 class SQ_WidgetStack;
 class SQ_RunProcess;
 class SQ_SystemTray;
 class SQ_GLViewWidget;
-class SQ_Bookmarks;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
 class SQ_FileviewFilter;
 class SQ_Config;
 class SQ_ExternalTool;
+class SQ_TreeView;
+class SQ_CacheHandler;
+class SQ_BookmarkOwner;
 
 template <class T> class QValueVector;
+template <class T> class QPtrList;
 
 class Squirrel : public KDockMainWindow, public DCOPObject
 {
@@ -59,31 +61,27 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 	public:
 		static Squirrel *App;
 
-		enum ViewType{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview,Browser};
+		enum ViewType	{SQuirrel=0,Gqview,Kuickshow,WinViewer,Xnview,Browser};
 		ViewType			curViewType;
 
 	private:
 		QValueVector<int>		*iconSizeList;
-		SQ_SystemTray		*tray;
-		QToolButton			*pTBAbstractButton, *pTBBookmarksButton;
 		KMenuBar			*menubar;
 		KToolBar				*fileTools, *pTLocation;
 		QPopupMenu			*pmLaunch;
 		QPixmap				 fullIcon, unfullIcon;
-
 		KDockWidget 			*mainDock;
-
-		KAction				*pAGLView, *pAConfigure, *pAExit, *pANextFile, *pAPrevFile, *pARescan, *pAExtTools, *pAFilters;
+		KAction				*pAGLView, *pAConfigure, *pAExit, *pANextFile, *pAPrevFile, *pARescan, *pAExtTools, *pAFilters, *pAGotoTray;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView;
-
 		QSplitter				*mainSplitter;
-
-		SQ_RunProcess		*pMenuProc;
-
 		KPopupMenu			*pop_file, *pop_view, *pop_edit;
 		KPopupMenu			*actionFilterMenu;
+		KActionMenu 			*bookmarks;
 	 	int	 				toolbarIconSize, createFirst;
 		QStringList			strlibFound;
+
+		SQ_RunProcess		*pMenuProc;
+		SQ_SystemTray		*tray;
 
 		void CreateLocationToolbar();
 		void CreateStatusBar();
@@ -95,6 +93,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void InitFilterMenu();
 		void InitRunMenu();
 		void InitExternalTools();
+		void InitBookmarks();
 
 		void createWidgetsLikeSQuirrel();
 		void createWidgetsLikeGqview();
@@ -103,26 +102,24 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void createWidgetsLikeXnview();
 		void createWidgetsLikeBrowser();
 
+		void handlePositionSize();
+
 	public slots:
 		void slotOptions();
 		void slotFilters();
 		void slotExtTools();
 		void slotExecuteRunMenu();
-
 		void slotRaiseListView();
 		void slotRaiseIconView();
 		void slotRaiseDetailView();
-
 		void slotClearAdress();
 		void slotGo();
-
 		void slotSetFilter(int);
 		void slotGLView();
-
 		void slotNextFile();
 		void slotPreviousFile();
-
 		void slotRunCommand(int);
+		void slotGotoTray();
 
 	public:
 		Squirrel(QWidget *parent = 0, const char *name = 0);
@@ -141,6 +138,11 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus, *GLreporter;
 		QString				libPrefix;
 		SQ_ExternalTool		*extool;
+		SQ_TreeView			*ptree;
+		SQ_BookmarkOwner 	*bookmarkOwner;
+		SQ_CacheHandler		*hcache;
+
+		void raiseGLWidget();
 
 	public slots:
 		QCStringList functions();
@@ -152,16 +154,19 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 };
 
 #define	sqApp			(Squirrel::App)
-#define	sqFilters			(Squirrel::App->filterList)
 #define	sqConfig			(Squirrel::App->kconf)
 #define	sqLibUpdater		(Squirrel::App->libl)
 #define   sqLoader			(Squirrel::App->iconL)
+#define   sqCache			(Squirrel::App->hcache)
+#define	sqBookmarks		(Squirrel::App->bookmarkOwner)
+
 #define   sqStatus			(Squirrel::App->sbar)
+#define	sqFilters			(Squirrel::App->filterList)
 #define   sqProgress		(Squirrel::App->progress)
-#define   sqBookmarks		(Squirrel::App->bookmarks)
 #define   sqWStack			(Squirrel::App->pWidgetStack)
 #define   sqCurrentURL		(Squirrel::App->pCurrentURL)
 #define	sqExternalTool		(Squirrel::App->extool)
+#define	sqTree			(Squirrel::App->ptree)
 
 #define   sqSBdirInfo		(Squirrel::App->dirInfo)
 #define   sqSBcurFileInfo	(Squirrel::App->curFileInfo)

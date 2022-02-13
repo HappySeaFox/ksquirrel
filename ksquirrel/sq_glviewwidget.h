@@ -15,19 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
+/**
+	@author ckult
+*/
+
 #ifndef SQ_GLVIEWWIDGET_H
 #define SQ_GLVIEWWIDGET_H
 
 #include <qgl.h>
 #include <qcursor.h>
 #include <kurl.h>
-
-class KAction;
-class SQ_GLHelpWidget;
-
-/**
-@author ckult
-*/
 
 #include "defs.h"
 
@@ -38,6 +35,11 @@ class SQ_GLHelpWidget;
 #define	MATRIX_C2	matrix[5]
 #define	MATRIX_Y	matrix[7]
 
+class KAction;
+class SQ_GLHelpWidget;
+
+unsigned long findCloserPower2(unsigned long num);
+
 class SQ_GLViewWidget : public QGLWidget
 {
 	Q_OBJECT
@@ -45,20 +47,21 @@ class SQ_GLViewWidget : public QGLWidget
 	private:
 		GLfloat 			matrix[8];
 
-		RGBA			*rgba;
+		RGBA			*rgba, *scan;
 		fmt_info			*finfo;
 
 		GLuint			texture[1];
-		GLfloat			w, h, zoomfactor, movefactor, curangle;
+		GLfloat			zoomfactor, movefactor;
+		GLfloat			w, h, curangle;
 		int				xmoveold, ymoveold, xmove, ymove;
 		unsigned			isflippedV, isflippedH;
 
-		QCursor			usual, drag;
+		QCursor			cusual, cdrag;
 		SQ_GLHelpWidget *gl_hw;
 		GLint 			ZoomModel, ShadeModel;
 		GLint			ZoomModelArray[2], ShadeModelArray[2];
 
-		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp;
+		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp, *pARender;
 
 	public:
 		SQ_GLViewWidget(QWidget *parent = 0, const char *name = 0);
@@ -67,6 +70,9 @@ class SQ_GLViewWidget : public QGLWidget
 		void setZoomFactor(const GLfloat &newfactor);
 		const GLfloat getZoomFactor() const;
 
+		void setMoveFactor(const GLfloat &newfactor);
+		const GLfloat getMoveFactor() const;
+
 		void emitShowImage(const QString &file);
 		void emitShowImage(const KURL &url);
 
@@ -74,7 +80,7 @@ class SQ_GLViewWidget : public QGLWidget
 		void setTextureParams();
 
 		void matrix_move(GLfloat x, GLfloat y);
-		void matrix_zoom(GLfloat ratio, GLfloat x, GLfloat y);
+		void matrix_zoom(GLfloat ratio);
 		void matrix_reset();
 		void write_gl_matrix(void);
 		void matrix_rotate(GLfloat angle);
@@ -98,7 +104,9 @@ class SQ_GLViewWidget : public QGLWidget
 		void contextMenuEvent(QContextMenuEvent *);
 
 		void mousePressEvent(QMouseEvent *);
+		void mouseReleaseEvent(QMouseEvent *);
 		void mouseMoveEvent(QMouseEvent *);
+		void mouseDoubleClickEvent(QMouseEvent *);
 
 	signals:
 		void matrixChanged();
@@ -115,6 +123,7 @@ class SQ_GLViewWidget : public QGLWidget
 		void slotSetMatrixParamsString();
 		void slotShowImage(const QString &file);
 		void slotSomeHelp();
+		void slotRenderPixmapIntoFile();
 };
 
 #define	sqGLRotate		(SQ_GLViewWidget::pARotate)

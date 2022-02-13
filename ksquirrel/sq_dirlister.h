@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_about.h  -  description
+                          sq_dirlister.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 27 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,23 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef SQ_DIRLISTER_H
+#define SQ_DIRLISTER_H
 
-#ifndef _ABOUT_SQUIRREL_H
-#define _ABOUT_SQUIRREL_H
+#include <kdirlister.h>
 
-#include <kaboutdata.h>
+/**
+  *@author CKulT
+  */
 
-static const char *description = "KSquirrel - image viewer for KDE with dynamic format support.";
+class SQ_DirLister : public KDirLister
+{
+	public:
+		SQ_DirLister(bool = false);
+		virtual ~SQ_DirLister();
 
-static KAboutData aboutData(
-			"ksquirrel", 
-			"KSquirrel",
-			"0.2.4", 
-			description,
-			KAboutData::License_GPL,
-			"(c) 2004, CKulT", 
-			"",
-			"http://ksquirrel.sourceforge.net",
-			"");
-    
+		virtual bool openURL(const KURL &url, bool _keep = false, bool _reload = true);
+};
+
 #endif

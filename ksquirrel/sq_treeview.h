@@ -19,20 +19,27 @@
 #define SQ_TREEVIEW_H
 
 #include <kfiletreeview.h>
-
+#include <kurl.h>
 
 class SQ_TreeView : public KFileTreeView
 {
     Q_OBJECT
 
 	private:
-        
+		KFileTreeBranch *root, *home;
+                
 	public:
 		SQ_TreeView(QWidget *parent = 0, const char *name = 0);
 		~SQ_TreeView();
 
+		void emitNewURL(const KURL &url);
+
+	signals:
+		void newURL(const KURL &url);
+
 	public slots:
 		void slotItemExecuted(QListViewItem*);
+		void slotNewURL(const KURL &url);
 };
 
 #endif

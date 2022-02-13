@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_externaltools.ui'
 **
-** Created: Птн Апр 16 21:24:09 2004
+** Created: Втр Апр 27 19:00:36 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -30,16 +30,16 @@ public:
     SQ_ExternalTools( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
     ~SQ_ExternalTools();
 
-    QPushButton* pushCancel;
-    QPushButton* pushOK;
     QFrame* frame3;
     QPushButton* pushNewTool;
     QPushButton* pushToolClear;
     QPushButton* pushToolClearAll;
+    QLabel* textLabel1;
     QPushButton* pushToolUp;
     QPushButton* pushToolDown;
     QListView* listTools;
-    QLabel* textLabel1;
+    QPushButton* pushCancel;
+    QPushButton* pushOK;
 
 public slots:
     virtual void slotNewTool();
@@ -53,7 +53,6 @@ public slots:
 protected:
     QGridLayout* SQ_ExternalToolsLayout;
     QGridLayout* frame3Layout;
-    QGridLayout* layout4;
 
 protected slots:
     virtual void languageChange();
