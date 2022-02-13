@@ -38,16 +38,6 @@ dnl
 dnl Single-module modifications are best placed in configure.in for kdelibs
 dnl and kdebase or configure.in.in if present.
 
-dnl ------------------------------------------------------------------------
-dnl Forward compatibility macros (make autoconf 2.13 look like 2.50),
-dnl thanks to Raja R Harinath.
-dnl ------------------------------------------------------------------------
-dnl
-ifdef([_AC_PATH_X_XMKMF],[],
-   [AC_DEFUN([_AC_PATH_X_XMKMF],[AC_PATH_X_XMKMF])])
-ifdef([AC_OUTPUT_SUBDIRS],[],
-   [AC_DEFUN([AC_OUTPUT_SUBDIRS],[subdirs=$1; _AC_OUTPUT_SUBDIRS])])
-
 # KDE_PATH_X_DIRECT
 dnl Internal subroutine of AC_PATH_X.
 dnl Set ac_x_includes and/or ac_x_libraries.
@@ -421,8 +411,10 @@ AC_DEFUN(KDE_SET_PATHS,
 	kde_servicesdir=\"$kde_servicesdir\" \
 	kde_servicetypesdir=\"$kde_servicetypesdir\" \
 	kde_moduledir=\"$kde_moduledir\" \
-   kde_styledir=\"$kde_styledir\" \
+	kde_styledir=\"$kde_styledir\" \
 	kde_widgetdir=\"$kde_widgetdir\" \
+	xdg_appsdir=\"$xdg_appsdir\" \
+	xdg_directorydir=\"$xdg_directorydir\" \
 	kde_result=$1"
 ])
 
@@ -488,6 +480,12 @@ if test "$1" = "default"; then
   if test -z "$kde_widgetdir"; then
     kde_widgetdir='\${libdir}/kde3/plugins/designer'
   fi
+  if test -z "$xdg_appsdir"; then
+    xdg_appsdir='\${datadir}/applications'
+  fi
+  if test -z "$xdg_directorydir"; then
+    xdg_directorydir='\${datadir}/desktop-directories'
+  fi
 
   KDE_SET_PATHS(defaults)
 
@@ -512,7 +510,8 @@ AC_DEFUN(KDE_CHECK_PATHS_FOR_COMPLETENESS,
    test -z "$kde_wallpaperdir" || test -z "$kde_templatesdir" ||
    test -z "$kde_bindir" || test -z "$kde_servicesdir" ||
    test -z "$kde_servicetypesdir" || test -z "$kde_moduledir" ||
-   test -z "$kde_styledir" || test -z "kde_widgetdir" 
+   test -z "$kde_styledir" || test -z "kde_widgetdir" ||
+   test -z "$xdg_appsdir" || test -z "xdg_directorydir" 
    test "x$kde_have_all_paths" != "xyes"; then
      kde_have_all_paths=no
   fi
@@ -534,6 +533,12 @@ Please check whether you installed aRts correctly.
 
 AC_DEFUN(KDE_SUBST_PROGRAMS,
 [
+    AC_ARG_WITH(arts,
+        [  --without-arts        build without aRts [default=detect] ],
+        [build_arts=$withval],
+        [build_arts=yes]
+    )
+    AM_CONDITIONAL(include_ARTS, test "$build_arts" != "no")
 
         kde_default_bindirs="/usr/bin /usr/local/bin /opt/local/bin /usr/X11R6/bin /opt/kde/bin /opt/kde3/bin /usr/kde/bin /usr/local/kde/bin"
         test -n "$KDEDIR" && kde_default_bindirs="$KDEDIR/bin $kde_default_bindirs"
@@ -548,11 +553,13 @@ AC_DEFUN(KDE_SUBST_PROGRAMS,
         kde_default_bindirs="$exec_prefix/bin $prefix/bin $kde_default_bindirs"
         KDE_FIND_PATH(dcopidl, DCOPIDL, [$kde_default_bindirs], [KDE_MISSING_PROG_ERROR(dcopidl)])
         KDE_FIND_PATH(dcopidl2cpp, DCOPIDL2CPP, [$kde_default_bindirs], [KDE_MISSING_PROG_ERROR(dcopidl2cpp)])
-        KDE_FIND_PATH(mcopidl, MCOPIDL, [$kde_default_bindirs], [KDE_MISSING_ARTS_ERROR(mcopidl)])
-        KDE_FIND_PATH(artsc-config, ARTSCCONFIG, [$kde_default_bindirs], [KDE_MISSING_ARTS_ERROR(artsc-config)])
+        if test "$build_arts" != "no"; then
+          KDE_FIND_PATH(mcopidl, MCOPIDL, [$kde_default_bindirs], [KDE_MISSING_ARTS_ERROR(mcopidl)])
+          KDE_FIND_PATH(artsc-config, ARTSCCONFIG, [$kde_default_bindirs], [KDE_MISSING_ARTS_ERROR(artsc-config)])
+        fi
         KDE_FIND_PATH(kde-config, KDECONFIG, [$kde_default_bindirs])
         KDE_FIND_PATH(meinproc, MEINPROC, [$kde_default_bindirs])
-      
+
         if test -n "$MEINPROC" && test ! "$MEINPROC" = "compiled"; then  
  	    kde_sharedirs="/usr/share/kde /usr/local/share /usr/share /opt/kde3/share /opt/kde/share $prefix/share"
             test -n "$KDEDIR" && kde_sharedirs="$KDEDIR/share $kde_sharedirs"
@@ -571,6 +578,7 @@ AC_DEFUN(KDE_SUBST_PROGRAMS,
         AC_SUBST(MCOPIDL)
         AC_SUBST(ARTSCCONFIG)
         AC_SUBST(KDECONFIG)
+        AC_SUBST(BROCKENBORING)
 	AC_SUBST(MEINPROC)
  	AC_SUBST(KDE_XSL_STYLESHEET)
 
@@ -615,6 +623,7 @@ if test "$kde_have_all_paths" = "no" && test "$kde_cached_paths" = "yes"; then
   kde_have_all_paths=
   kde_styledir=
   kde_widgetdir=
+  xdg_appsdir = xdg_directorydir=
   KDE_SET_DEFAULT_PATHS($1)
   eval "$kde_cv_all_paths"
   KDE_CHECK_PATHS_FOR_COMPLETENESS
@@ -650,11 +659,15 @@ AC_SUBST(kde_confdir)
 AC_SUBST(kde_mimedir)
 AC_SUBST(kde_wallpaperdir)
 AC_SUBST(kde_bindir)
+dnl X Desktop Group standards
+AC_SUBST(xdg_appsdir)
+AC_SUBST(xdg_directorydir)
 dnl for KDE 2
 AC_SUBST(kde_templatesdir)
 AC_SUBST(kde_servicesdir)
 AC_SUBST(kde_servicetypesdir)
 AC_SUBST(kde_moduledir)
+AC_SUBST(kdeinitdir, '$(kde_moduledir)')
 AC_SUBST(kde_styledir)
 AC_SUBST(kde_widgetdir)
 if test "$kde_qtver" = 1; then
@@ -715,10 +728,6 @@ support])
    AC_CHECK_FUNC(shmat, ,
      AC_CHECK_LIB(ipc, shmat, X_EXTRA_LIBS="$X_EXTRA_LIBS -lipc"))
    
-   # darwin needs this to initialize the environment
-   AC_CHECK_HEADERS(crt_externs.h)
-   AC_CHECK_FUNC(_NSGetEnviron, [AC_DEFINE(HAVE_NSGETENVIRON, 1, [Define if your system needs _NSGetEnviron to set up the environment])])
- 
    # more headers that need to be explicitly included on darwin
    AC_CHECK_HEADERS(sys/types.h stdint.h)
 
@@ -728,7 +737,7 @@ support])
    # CoreAudio framework
    AC_CHECK_HEADER(CoreAudio/CoreAudio.h, [
      AC_DEFINE(HAVE_COREAUDIO, 1, [Define if you have the CoreAudio API])
-     FRAMEWORK_COREAUDIO="-framework CoreAudio"
+     FRAMEWORK_COREAUDIO="-Xlinker -framework -Xlinker CoreAudio"
    ])
 
    AC_CHECK_RES_INIT
@@ -751,6 +760,20 @@ support])
 
    KDE_CHECK_TYPES
    KDE_CHECK_LIBDL
+   KDE_CHECK_STRLCPY
+
+# darwin needs this to initialize the environment
+AC_CHECK_HEADERS(crt_externs.h)
+AC_CHECK_FUNC(_NSGetEnviron, [AC_DEFINE(HAVE_NSGETENVIRON, 1, [Define if your system needs _NSGetEnviron to set up the environment])])
+ 
+AH_VERBATIM(_DARWIN_ENVIRON,
+[
+#if defined(HAVE_NSGETENVIRON) && defined(HAVE_CRT_EXTERNS_H)
+# include <sys/time.h>
+# include <crt_externs.h>
+# define environ (*_NSGetEnviron())
+#endif
+])
 
 AH_VERBATIM(_AIX_STRINGS_H_BZERO,
 [
@@ -815,7 +838,14 @@ AC_ARG_ENABLE(
   kde_use_qt_emb_palm=no
 )
 
-if test "$kde_use_qt_emb" = "no"; then
+AC_ARG_ENABLE(
+  mac,
+  [  --enable-mac       link to Qt/Mac (don't use X)],
+  kde_use_qt_mac=$enableval,
+  kde_use_qt_mac=no
+)
+
+if test "$kde_use_qt_emb" = "no" && test "$kde_use_qt_mac" = "no"; then
 
 AC_MSG_CHECKING(for X)
 AC_LANG_SAVE
@@ -913,11 +943,6 @@ fi
 all_includes="$X_INCLUDES"
 all_libraries="$X_LDFLAGS"
 
-AC_SUBST(X_INCLUDES)
-AC_SUBST(X_LDFLAGS)
-AC_SUBST(x_libraries)
-AC_SUBST(x_includes)
-
 # Check for libraries that X11R6 Xt/Xaw programs need.
 ac_save_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $X_LDFLAGS"
@@ -929,13 +954,9 @@ LDFLAGS="$LDFLAGS $X_LDFLAGS"
 #  --interran@uluru.Stanford.EDU, kb@cs.umb.edu.
 AC_CHECK_LIB(ICE, IceConnectionNumber,
   [LIBSM="-lSM -lICE"], , $X_EXTRA_LIBS)
-AC_SUBST(LIBSM)
 LDFLAGS="$ac_save_LDFLAGS"
 
-AC_SUBST(X_PRE_LIBS)
-
 LIB_X11='-lX11 $(LIBSOCKET)'
-AC_SUBST(LIB_X11)
 
 AC_MSG_CHECKING(for libXext)
 AC_CACHE_VAL(kde_cv_have_libXext,
@@ -957,11 +978,11 @@ printf("hello Xext\n");
 ],
 kde_cv_have_libXext=yes,
 kde_cv_have_libXext=no
-   )
+)
 
 LDFLAGS=$kde_ldflags_safe
 LIBS=$kde_libs_safe
- ])
+])
 
 AC_MSG_RESULT($kde_cv_have_libXext)
 
@@ -971,57 +992,10 @@ can't find it itself, we stop here assuming that make wouldn't find
 them either.])
 fi
 
-AC_MSG_CHECKING(for Xinerama)
-
- AC_ARG_WITH(xinerama,
-  [  --with-xinerama         enable support for Xinerama ],
-  [
-    no_xinerama=no
-  ], [
-    no_xinerama=yes
-  ]
-)
-
-kde_save_LDFLAGS="$LDFLAGS"
-kde_save_CFLAGS="$CFLAGS"
-kde_save_LIBS="$LIBS"
-LDFLAGS="$LDFLAGS $X_LDFLAGS $USER_LDFLAGS"
-CFLAGS="$CFLAGS -I$x_includes"
-LIBS="-lXinerama -lXext"
-
-if test "x$no_xinerama" = "xno"; then
-
-  AC_CACHE_VAL(ac_cv_have_xinerama,
-  [
-	  AC_TRY_LINK([#include <X11/Xlib.h>
-  			#include <X11/extensions/Xinerama.h>],
-	  	  [XineramaIsActive(NULL);],
-		  [ac_cv_have_xinerama="yes"],
-		  [ac_cv_have_xinerama="no"])
-  ])
-else
-  ac_cv_have_xinerama=no;
-fi
-
-AC_MSG_RESULT($ac_cv_have_xinerama)
-
-LIBXINERAMA=""
-
-if test "$ac_cv_have_xinerama" = "yes"; then
-  AC_DEFINE(HAVE_XINERAMA, 1, [Define if you want Xinerama support])
-  LIBXINERAMA="-lXinerama"
-fi
-
-AC_SUBST(LIBXINERAMA)
-
-LDFLAGS="$kde_save_LDFLAGS"
-CFLAGS="$kde_save_CFLAGS"
-LIBS="$kde_save_LIBS"
-
 LIB_XEXT="-lXext"
 QTE_NORTTI=""
 
-else
+elif test "$kde_use_qt_emb" = "yes"; then
   dnl We're using QT Embedded
   CPPFLAGS=-DQWS
   CXXFLAGS="$CXXFLAGS -fno-rtti"
@@ -1029,22 +1003,37 @@ else
   X_PRE_LIBS=""
   LIB_X11=""
   LIB_XEXT=""
+  LIB_XRENDER=""
   LIBSM=""
   X_INCLUDES=""
   X_LDFLAGS=""
   x_includes=""
   x_libraries=""
-  AC_SUBST(X_PRE_LIBS)
-  AC_SUBST(LIB_X11)
-  AC_SUBST(LIBSM)
-  AC_SUBST(X_INCLUDES)
-  AC_SUBST(X_LDFLAGS)
-  AC_SUBST(x_includes)
-  AC_SUBST(x_libraries)
+elif test "$kde_use_qt_mac" = "yes"; then
+  dnl We're using QT/Mac (I use QT_MAC so that qglobal.h doesn't *have* to
+  dnl be included to get the information) --Sam
+  CXXFLAGS="$CXXFLAGS -DQT_MAC -no-cpp-precomp"
+  CFLAGS="$CFLAGS -DQT_MAC -no-cpp-precomp"
+  X_PRE_LIBS=""
+  LIB_X11=""
+  LIB_XEXT=""
+  LIB_XRENDER=""
+  LIBSM=""
+  X_INCLUDES=""
+  X_LDFLAGS=""
+  x_includes=""
+  x_libraries=""
 fi
+AC_SUBST(X_PRE_LIBS)
+AC_SUBST(LIB_X11)
+AC_SUBST(LIB_XRENDER)
+AC_SUBST(LIBSM)
+AC_SUBST(X_INCLUDES)
+AC_SUBST(X_LDFLAGS)
+AC_SUBST(x_includes)
+AC_SUBST(x_libraries)
 AC_SUBST(QTE_NORTTI)
 AC_SUBST(LIB_XEXT)
-
 
 AC_LANG_RESTORE
 
@@ -1176,7 +1165,7 @@ else
 fi
 
 if test $kde_qtver = 3; then
-  kde_qt_dirs="$QTDIR /usr/lib/qt3 /usr/lib/qt"
+  kde_qt_dirs="$QTDIR /usr/lib/qt3 /usr/lib/qt /usr/share/qt3"
 fi
 if test $kde_qtver = 2; then
    kde_qt_dirs="$QTDIR /usr/lib/qt2 /usr/lib/qt"
@@ -1202,7 +1191,7 @@ ac_libs_safe="$LIBS"
 
 CXXFLAGS="$CXXFLAGS -I$qt_includes"
 LDFLAGS="$LDFLAGS $X_LDFLAGS"
-if test "x$kde_use_qt_emb" != "xyes"; then
+if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
 LIBS="$LIBQT -lXext -lX11 $LIBSOCKET"
 else
 LIBS="$LIBQT $LIBSOCKET"
@@ -1369,7 +1358,7 @@ fi
 
 AC_MSG_CHECKING([for Qt])
 
-if test "x$kde_use_qt_emb" != "xyes"; then
+if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
 LIBQT="$LIBQT $X_PRE_LIBS -lXext -lX11 $LIBSM $LIBSOCKET"
 fi
 ac_qt_includes=NO ac_qt_libraries=NO ac_qt_bindir=NO
@@ -1403,7 +1392,7 @@ qt_incdirs=""
 for dir in $kde_qt_dirs; do
    qt_incdirs="$qt_incdirs $dir/include $dir"
 done
-qt_incdirs="$QTINC $qt_incdirs /usr/local/qt/include /usr/include/qt /usr/include /usr/X11R6/include/X11/qt /usr/X11R6/include/qt /usr/X11R6/include/qt2 $x_includes"
+qt_incdirs="$QTINC $qt_incdirs /usr/local/qt/include /usr/include/qt /usr/include /usr/X11R6/include/X11/qt /usr/X11R6/include/qt /usr/X11R6/include/qt2 /usr/include/qt3 $x_includes"
 if test ! "$ac_qt_includes" = "NO"; then
    qt_incdirs="$ac_qt_includes $qt_incdirs"
 fi
@@ -1433,6 +1422,12 @@ else
     if test -n "`$try 2> /dev/null`"; then qt_libdir=$dir; break; else echo "tried $dir" >&AC_FD_CC ; fi
   done
 fi
+for a in $qt_libdir/lib`echo ${kde_int_qt} | sed 's,^-l,,'`_incremental.*; do
+  if test -e "$a"; then
+    LIBQT="$LIBQT ${kde_int_qt}_incremental"
+    break
+  fi
+done
 
 ac_qt_libraries="$qt_libdir"
 
@@ -1530,12 +1525,18 @@ AC_PATH_QT_MOC_UIC
 
 KDE_CHECK_QT_JPEG
 
-if test "x$kde_use_qt_emb" != "xyes"; then
-LIB_QT="$kde_int_qt $LIBJPEG_QT "'$(LIBPNG) -lXext $(LIB_X11) $(LIBSM)'
+if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
+LIB_QT="$kde_int_qt $LIBJPEG_QT "'$(LIBZ) $(LIBPNG) -lXext $(LIB_X11) $(LIBSM)'
 else
-LIB_QT="$kde_int_qt $LIBJPEG_QT "'$(LIBPNG)'
+LIB_QT="$kde_int_qt $LIBJPEG_QT "'$(LIBZ) $(LIBPNG)'
 fi
 test -z "$KDE_MT_LIBS" || LIB_QT="$LIB_QT $KDE_MT_LIBS"
+for a in $qt_libdir/lib`echo ${kde_int_qt} | sed 's,^-l,,'`_incremental.*; do
+  if test -e "$a"; then
+     LIB_QT="$LIB_QT ${kde_int_qt}_incremental"
+     break
+  fi
+done
 
 AC_SUBST(LIB_QT)
 AC_SUBST(LIB_QPE)
@@ -1586,10 +1587,9 @@ fi
 rm -f actest.ui actest.cpp
 ])
 
-if test "$kde_cv_uic_plugins" = yes; then
-	AC_MSG_RESULT([yes])
-else
-	AC_MSG_ERROR([not found - you need to install kdelibs first.])
+AC_MSG_RESULT([$kde_cv_uic_plugins])
+if test "$kde_cv_uic_plugins" != yes; then
+	AC_MSG_ERROR([you need to install kdelibs first.])
 fi
 fi
 ])
@@ -1599,7 +1599,6 @@ AC_DEFUN(KDE_CHECK_FINAL,
   AC_ARG_ENABLE(final, [  --enable-final          build size optimized apps (experimental - needs lots of memory)],
 	kde_use_final=$enableval, kde_use_final=no)
 
-  KDE_COMPILER_REPO
   if test "x$kde_use_final" = "xyes"; then
       KDE_USE_FINAL_TRUE=""
       KDE_USE_FINAL_FALSE="#"
@@ -1609,10 +1608,14 @@ AC_DEFUN(KDE_CHECK_FINAL,
   fi
   AC_SUBST(KDE_USE_FINAL_TRUE)
   AC_SUBST(KDE_USE_FINAL_FALSE)
+])
 
+AC_DEFUN(KDE_CHECK_CLOSURE,
+[
   AC_ARG_ENABLE(closure, [  --disable-closure       don't delay template instantiation],
   	kde_use_closure=$enableval, kde_use_closure=yes)
 
+  KDE_NO_UNDEFINED=""
   if test "x$kde_use_closure" = "xyes"; then
        KDE_USE_CLOSURE_TRUE=""
        KDE_USE_CLOSURE_FALSE="#"
@@ -1620,10 +1623,33 @@ AC_DEFUN(KDE_CHECK_FINAL,
   else
        KDE_USE_CLOSURE_TRUE="#"
        KDE_USE_CLOSURE_FALSE=""
+       KDE_CHECK_COMPILER_FLAG([Wl,--no-undefined],
+            [KDE_CHECK_COMPILER_FLAG([Wl,--allow-shlib-undefined],
+		[KDE_NO_UNDEFINED="-Wl,--no-undefined -Wl,--allow-shlib-undefined"],
+		[KDE_NO_UNDEFINED=""])],
+	    [KDE_NO_UNDEFINED=""])
   fi
   AC_SUBST(KDE_USE_CLOSURE_TRUE)
   AC_SUBST(KDE_USE_CLOSURE_FALSE)
+  AC_SUBST(KDE_NO_UNDEFINED)
 ])
+
+AC_DEFUN(KDE_CHECK_NMCHECK,
+[
+  AC_ARG_ENABLE(nmcheck, [  --enable-nmcheck        enable automatic namespace cleanness check],
+	kde_use_nmcheck=$enableval, kde_use_nmcheck=no)
+
+  if test "$kde_use_nmcheck" = "yes"; then
+      KDE_USE_NMCHECK_TRUE=""
+      KDE_USE_NMCHECK_FALSE="#"
+   else
+      KDE_USE_NMCHECK_TRUE="#"
+      KDE_USE_NMCHECK_FALSE=""
+  fi
+  AC_SUBST(KDE_USE_NMCHECK_TRUE)
+  AC_SUBST(KDE_USE_NMCHECK_FALSE)
+])
+
 
 dnl ------------------------------------------------------------------------
 dnl Now, the same with KDE
@@ -1763,6 +1789,8 @@ else
  KDE_INCLUDES="-I$kde_includes"
  all_includes="$KDE_INCLUDES $all_includes"
 fi
+
+KDE_DEFAULT_CXXFLAGS="-DQT_CLEAN_NAMESPACE -DQT_NO_ASCII_CAST -DQT_NO_STL -DQT_NO_COMPAT -DQT_NO_TRANSLATION"
  
 KDE_LDFLAGS="-L$kde_libraries"
 if test ! "$kde_libraries" = "$x_libraries" && test ! "$kde_libraries" = "$qt_libraries" ; then 
@@ -1878,6 +1906,8 @@ int main() {
     printf("kde_moduledir=\\"/tmp/dummy\\"\n");
     printf("kde_styledir=\\"/tmp/dummy\\"\n");
     printf("kde_widgetdir=\\"/tmp/dummy\\"\n");
+    printf("xdg_appsdir=\\"/tmp/dummy\\"\n");
+    printf("xdg_directorydir=\\"/tmp/dummy\\"\n");
     return 0;
     }
 EOF
@@ -1937,6 +1967,7 @@ AC_DEFUN(KDE_CHECK_KIMGIO,
    AC_REQUIRE([AC_FIND_TIFF])
    AC_REQUIRE([AC_FIND_JPEG])
    AC_REQUIRE([AC_FIND_PNG])
+   AC_REQUIRE([AC_FIND_JASPER])
    AC_REQUIRE([KDE_CREATE_LIBS_ALIASES])
 
    if test "$1" = "existance"; then
@@ -2037,7 +2068,7 @@ save_CXXFLAGS="$CXXFLAGS"
 kde_safe_LIBS="$LIBS"
 LIBS="$LIBS $X_EXTRA_LIBS"
 if test "$GXX" = "yes"; then
-  CXXFLAGS="$CXXFLAGS -pedantic-errors"
+CXXFLAGS="$CXXFLAGS -pedantic-errors"
 fi
 AC_TRY_COMPILE([
 $2
@@ -2048,7 +2079,7 @@ $3
 kde_cv_func_$1=yes,
 kde_cv_func_$1=no)
 CXXFLAGS="$save_CXXFLAGS"
-LIBS=$kde_safe_LIBS
+LIBS="$kde_safe_LIBS"
 AC_LANG_RESTORE
 ])
 
@@ -2061,7 +2092,7 @@ if test "x$kde_cv_func_$1" = xyes; then
   kde_cv_proto_$1=no
 else
   case "$1" in
-	setenv|unsetenv|usleep|getdomainname|random|srandom|seteuid|mkstemps|mkstemp|revoke|vsnprintf|strlcpy|strlcat)
+	setenv|unsetenv|usleep|random|srandom|seteuid|mkstemps|mkstemp|revoke|vsnprintf|strlcpy|strlcat)
 		kde_cv_proto_$1="yes - in libkdefakes"
 		;;
 	*)
@@ -2144,7 +2175,7 @@ AC_DEFUN(AC_CHECK_GETDOMAINNAME,
 char buffer[200];
 getdomainname(buffer, 200);
 ], 	
-	        [int getdomainname (char *, unsigned int)],
+	        [int getdomainname (char *, size_t)],
 		[GETDOMAINNAME])
 ])
 
@@ -2212,18 +2243,6 @@ initgroups(buffer, 27);
 	[INITGROUPS])
 ])
 
-AC_DEFUN(AC_CHECK_MKSTEMP,
-[
-	KDE_CHECK_FUNC_EXT(mkstemp, [
-#include <stdlib.h>
-],
-	[
-mkstemp("/tmp/aaaXXXXXX");
-],
-	[int mkstemp(char *)],
-	[MKSTEMP])
-])
-
 AC_DEFUN(AC_CHECK_MKSTEMPS,
 [
 	KDE_CHECK_FUNC_EXT(mkstemps, [
@@ -2236,6 +2255,20 @@ mkstemps("/tmp/aaaXXXXXX", 6);
 	[int mkstemps(char *, int)],
 	[MKSTEMPS])
 ])
+
+AC_DEFUN(AC_CHECK_MKDTEMP,
+[
+	KDE_CHECK_FUNC_EXT(mkdtemp, [
+#include <stdlib.h>
+#include <unistd.h>
+],
+	[
+mkdtemp("/tmp/aaaXXXXXX");
+],
+	[char *mkdtemp(char *)],
+	[MKDTEMP])
+])
+
 
 AC_DEFUN(AC_CHECK_RES_INIT,
 [
@@ -2310,7 +2343,7 @@ AC_DEFUN(AC_FIND_GIF,
    [AC_MSG_CHECKING([for giflib])
 AC_CACHE_VAL(ac_cv_lib_gif,
 [ac_save_LIBS="$LIBS"
-if test "x$kde_use_qt_emb" != "xyes"; then
+if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
 LIBS="$all_libraries -lgif -lX11 $LIBSOCKET"
 else
 LIBS="$all_libraries -lgif"
@@ -2437,6 +2470,7 @@ AH_VERBATIM(_AC_CHECK_JPEG,
 
 AC_DEFUN(KDE_CHECK_QT_JPEG,
 [
+if test -n "$LIBJPEG"; then
 AC_MSG_CHECKING([if Qt needs $LIBJPEG])
 AC_CACHE_VAL(kde_cv_qt_jpeg,
 [
@@ -2458,6 +2492,7 @@ AC_TRY_LINK(
 LIBS="$ac_save_LIBS"
 CXXFLAGS="$ac_save_CXXFLAGS"
 AC_LANG_RESTORE
+fi
 ])
 
 if eval "test ! \"`echo $kde_cv_qt_jpeg`\" = no"; then
@@ -2485,7 +2520,14 @@ AC_TRY_LINK(dnl
 [
 #include<zlib.h>
 ],
-            [return (zlibVersion() == ZLIB_VERSION); ],
+[
+  char buf[42];
+  gzFile f = (gzFile) 0;
+  /* this would segfault.. but we only link, don't run */
+  (void) gzgets(f, buf, sizeof(buf));
+
+  return (zlibVersion() == ZLIB_VERSION); 
+],
             eval "ac_cv_lib_z='-lz'",
             eval "ac_cv_lib_z=no")
 LIBS="$kde_save_LIBS"
@@ -2494,13 +2536,16 @@ CFLAGS="$kde_save_CFLAGS"
 if test ! "$ac_cv_lib_z" = no; then
   AC_DEFINE_UNQUOTED(HAVE_LIBZ, 1, [Define if you have libz])
   LIBZ="$ac_cv_lib_z"
-  AC_SUBST(LIBZ)
   AC_MSG_RESULT($ac_cv_lib_z)
 else
-  AC_MSG_ERROR(not found. Check your installation and look into config.log)
+  AC_MSG_ERROR(not found. 
+          Possibly configure picks up an outdated version
+          installed by XFree86. Remove it from your system.
+
+          Check your installation and look into config.log)
   LIBZ=""
-  AC_SUBST(LIBZ)
 fi
+AC_SUBST(LIBZ)
 ])
 
 AC_DEFUN(KDE_TRY_TIFFLIB,
@@ -2512,7 +2557,7 @@ AC_CACHE_VAL(kde_cv_libtiff_$1,
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 kde_save_LIBS="$LIBS"
-if test "x$kde_use_qt_emb" != "xyes"; then
+if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
 LIBS="$all_libraries $USER_LDFLAGS -l$1 $LIBJPEG $LIBZ -lX11 $LIBSOCKET -lm"
 else
 LIBS="$all_libraries $USER_LDFLAGS -l$1 $LIBJPEG $LIBZ -lm"
@@ -2571,7 +2616,7 @@ AC_MSG_CHECKING([for libpng])
 AC_CACHE_VAL(ac_cv_lib_png,
 [
 kde_save_LIBS="$LIBS"
-if test "x$kde_use_qt_emb" != "xyes"; then
+if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
 LIBS="$LIBS $all_libraries $USER_LDFLAGS -lpng $LIBZ -lm -lX11 $LIBSOCKET"
 else
 LIBS="$LIBS $all_libraries $USER_LDFLAGS -lpng $LIBZ -lm"
@@ -2604,6 +2649,43 @@ else
   LIBPNG=""
   AC_SUBST(LIBPNG)
 fi
+])
+
+
+AC_DEFUN(AC_FIND_JASPER,
+[
+AC_REQUIRE([KDE_CHECK_EXTRA_LIBS])
+AC_REQUIRE([AC_FIND_JPEG])
+AC_MSG_CHECKING([for jasper])
+AC_CACHE_VAL(ac_cv_jasper,
+[
+kde_save_LIBS="$LIBS"
+LIBS="$LIBS $all_libraries $USER_LDFLAGS -ljasper $LIBJPEG -lm"
+kde_save_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS $all_includes $USER_INCLUDES"
+AC_LANG_C
+AC_TRY_LINK(dnl
+    [
+    #include<jasper/jasper.h>
+    ],
+    [
+    return( jas_init() );
+    ],
+    eval "ac_cv_jasper='-ljasper $LIBJPEG -lm'",
+    eval "ac_cv_jasper=no"
+)
+LIBS="$kde_save_LIBS"
+CFLAGS="$kde_save_CFLAGS"
+])dnl
+if eval "test ! \"`echo $ac_cv_jasper`\" = no"; then
+  AC_DEFINE_UNQUOTED(HAVE_JASPER, 1, [Define if you have jasper])
+  LIB_JASPER="$ac_cv_jasper"
+  AC_MSG_RESULT($ac_cv_jasper)
+else
+  AC_MSG_RESULT(no)
+  LIB_JASPER=""
+fi
+AC_SUBST(LIB_JASPER)
 ])
 
 AC_DEFUN(AC_CHECK_BOOL,
@@ -2641,8 +2723,8 @@ fi
 
 AC_DEFUN(KDE_CHECK_COMPILER_FLAG,
 [
-AC_MSG_CHECKING(whether $CXX supports -$1)
-kde_cache=`echo $1 | sed 'y% .=/+-%____p_%'`
+AC_MSG_CHECKING([whether $CXX supports -$1])
+kde_cache=`echo $1 | sed 'y% .=/+-,%____p__%'`
 AC_CACHE_VAL(kde_cv_prog_cxx_$kde_cache,
 [
   AC_LANG_SAVE
@@ -2763,7 +2845,7 @@ AC_DEFUN(AC_CHECK_COMPILERS,
   if test "$GCC" = "yes"; then
     if test "$kde_use_debug_code" != "no"; then
       if test $kde_use_debug_code = "full"; then
-        CFLAGS="-g3 $CFLAGS"
+        CFLAGS="-g3 -fno-inline $CFLAGS"
       else
         CFLAGS="-g -O2 $CFLAGS"
       fi
@@ -2793,10 +2875,10 @@ AC_DEFUN(AC_CHECK_COMPILERS,
   if test "$GXX" = "yes" || test "$CXX" = "KCC"; then
     if test "$kde_use_debug_code" != "no"; then
       if test "$CXX" = "KCC"; then
-        CXXFLAGS="+K0 -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings $CXXFLAGS"
+        CXXFLAGS="+K0 -Wall -pedantic -W -Wpointer-arith -Wwrite-strings $CXXFLAGS"
       else
         if test "$kde_use_debug_code" = "full"; then
-          CXXFLAGS="-g3 $CXXFLAGS"
+          CXXFLAGS="-g3 -fno-inline $CXXFLAGS"
         else
           CXXFLAGS="-g -O2 $CXXFLAGS"
         fi
@@ -2831,24 +2913,26 @@ AC_DEFUN(AC_CHECK_COMPILERS,
       if test "$GCC" = "yes"; then
         case $host in
           *-*-linux-gnu)	
-            CFLAGS="-ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE $CFLAGS"
-            CXXFLAGS="-ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion $CXXFLAGS"
+            CFLAGS="-ansi -W -Wall -pedantic -Wchar-subscripts -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE $CFLAGS"
+            CXXFLAGS="-ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion -Wchar-subscripts $CXXFLAGS"
+            KDE_CHECK_COMPILER_FLAG(Wmissing-format-attribute, [CXXFLAGS="$CXXFLAGS -Wformat-security -Wmissing-format-attribute"; CFLAGS="$CFLAGS -Wformat-security -Wmissing-format-attribute"])
           ;;
         esac
-        CXXFLAGS="-Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings $CXXFLAGS"
+        CXXFLAGS="-Wall -pedantic -W -Wpointer-arith -Wwrite-strings $CXXFLAGS"
         KDE_CHECK_COMPILER_FLAG(Wundef,[CXXFLAGS="-Wundef $CXXFLAGS"])
         KDE_CHECK_COMPILER_FLAG(Wno-long-long,[CXXFLAGS="-Wno-long-long $CXXFLAGS"])
         KDE_CHECK_COMPILER_FLAG(Wnon-virtual-dtor,[CXXFLAGS="-Wnon-virtual-dtor $CXXFLAGS"])
      fi
   fi
 
-  if test "$GCC" = "yes" && test "$kde_use_strict_options" = "yes"; then
+  if test "$GXX" = "yes" && test "$kde_use_strict_options" = "yes"; then
     CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
   fi
     
   if test "$GXX" = "yes"; then
     KDE_CHECK_COMPILER_FLAG(fno-exceptions,[CXXFLAGS="$CXXFLAGS -fno-exceptions"])
     KDE_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+    KDE_CHECK_COMPILER_FLAG(fno-common, [CXXFLAGS="$CXXFLAGS -fno-common"])
     KDE_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS=	)
   fi
   if test "$CXX" = "KCC"; then
@@ -2912,14 +2996,16 @@ AC_DEFUN(AC_CHECK_COMPILERS,
   AC_PROG_CXXCPP
 
   if test "$GCC" = yes; then
-     NOOPT_CXXFLAGS=-O0
      NOOPT_CFLAGS=-O0
   fi
+  KDE_CHECK_COMPILER_FLAG(O0,[NOOPT_CXXFLAGS=-O0])
 
   AC_SUBST(NOOPT_CXXFLAGS)
   AC_SUBST(NOOPT_CFLAGS)
 
   KDE_CHECK_FINAL
+  KDE_CHECK_CLOSURE
+  KDE_CHECK_NMCHECK
 
   ifdef([AM_DEPENDENCIES], AC_REQUIRE([KDE_ADD_DEPENDENCIES]), [])
 ])
@@ -2951,7 +3037,7 @@ AC_LIBTOOL_CXX
 
 LIBTOOL_SHELL="/bin/sh ./libtool"
 #  LIBTOOL="$LIBTOOL --silent"
-KDE_PLUGIN="-avoid-version -module -no-undefined \$(KDE_RPATH) \$(KDE_MT_LDFLAGS)"
+KDE_PLUGIN="-avoid-version -module -no-undefined \$(KDE_NO_UNDEFINED) \$(KDE_RPATH) \$(KDE_MT_LDFLAGS)"
 AC_SUBST(KDE_PLUGIN)
 
 AC_ARG_ENABLE(objprelink, [  --enable-objprelink     prelink apps using objprelink (obsolete)],
@@ -2973,14 +3059,12 @@ AC_DEFUN(KDE_CHECK_LIB64,
     kdelibsuff=none
     AC_ARG_ENABLE(libsuffix,
         AC_HELP_STRING([--enable-libsuffix],
-            [/lib directory suffix (64,32,none)]),
+            [/lib directory suffix (64,32,none[=default])]),
             kdelibsuff=$enableval)
+    # TODO: add an auto case that compiles a little C app to check
+    # where the glibc is
     if test "$kdelibsuff" = "none"; then
-        if test -d /lib64 ; then
-            kdelibsuff=64
-        else
-            kdelibsuff=
-        fi
+       kdelibsuff=
     fi
     if test -z "$kdelibsuff"; then
         AC_MSG_RESULT([not using lib directory suffix])
@@ -2999,7 +3083,6 @@ AC_DEFUN(KDE_CHECK_TYPES,
 [  AC_CHECK_SIZEOF(int, 4)dnl
   AC_CHECK_SIZEOF(long, 4)dnl
   AC_CHECK_SIZEOF(char *, 4)dnl
-  AC_CHECK_SIZEOF(char, 1)dnl
 ])dnl
 
 AC_DEFUN(KDE_DO_IT_ALL,
@@ -3031,7 +3114,8 @@ if test -z "$KDE_RPATH" && test "$USE_RPATH" = "yes"; then
   fi
   dnl $x_libraries is set to /usr/lib in case
   if test -n "$X_LDFLAGS"; then
-    KDE_RPATH="$KDE_RPATH -R \$(x_libraries)"
+    X_RPATH="-R \$(x_libraries)" 
+    KDE_RPATH="$KDE_RPATH $X_RPATH"
   fi
   if test -n "$KDE_EXTRA_RPATH"; then
     KDE_RPATH="$KDE_RPATH \$(KDE_EXTRA_RPATH)"
@@ -3039,6 +3123,7 @@ if test -z "$KDE_RPATH" && test "$USE_RPATH" = "yes"; then
 fi
 AC_SUBST(KDE_EXTRA_RPATH)
 AC_SUBST(KDE_RPATH)
+AC_SUBST(X_RPATH)
 AC_MSG_RESULT($USE_RPATH)
 ])
 
@@ -3243,7 +3328,7 @@ __argz_count __argz_stringify __argz_next])
    AC_CACHE_VAL(kde_cv_func_stpcpy,
    [
    kde_safe_cxxflags=$CXXFLAGS
-   CXXFLAGS="-Wmissing-prototypes -Werror"
+   CXXFLAGS="-Werror"
    AC_LANG_SAVE
    AC_LANG_CPLUSPLUS
    AC_TRY_COMPILE([
@@ -3306,7 +3391,7 @@ AC_DEFUN(AC_HAVE_XPM,
     AC_LANG_C
     ac_save_ldflags="$LDFLAGS"
     ac_save_cflags="$CFLAGS"
-    if test "x$kde_use_qt_emb" != "xyes"; then
+    if test "x$kde_use_qt_emb" != "xyes" && test "x$kde_use_qt_mac" != "xyes"; then
       LDFLAGS="$LDFLAGS $X_LDFLAGS $USER_LDFLAGS $LDFLAGS $XPM_LDFLAGS $all_libraries -lXpm -lX11 -lXext $LIBZ $LIBSOCKET"
     else
       LDFLAGS="$LDFLAGS $X_LDFLAGS $USER_LDFLAGS $LDFLAGS $XPM_LDFLAGS $all_libraries -lXpm $LIBZ $LIBSOCKET"
@@ -3362,7 +3447,7 @@ AC_DEFUN(AC_HAVE_DPMS,
    dnl 'yes' means DPMS_LIB="", '-lXdpms' means DPMS_LIB="-lXdpms".
    AC_CACHE_VAL(ac_cv_have_dpms,
    [
-    if test "x$kde_use_qt_emb" = "xyes"; then
+    if test "x$kde_use_qt_emb" = "xyes" || test "x$kde_use_qt_mac" = "xyes"; then
       AC_MSG_RESULT(no)
       ac_cv_have_dpms="no"
     else
@@ -3455,7 +3540,7 @@ AC_DEFUN(AC_HAVE_GL,
     ac_save_ldflags="$LDFLAGS"
     ac_save_cxxflags="$CXXFLAGS"
     LDFLAGS="$LDFLAGS $GL_LDFLAGS $X_LDFLAGS $all_libraries -lMesaGL -lMesaGLU"
-    test "x$kde_use_qt_emb" != xyes && LDFLAGS="$LDFLAGS -lX11"
+    test "x$kde_use_qt_mac" != xyes && test "x$kde_use_qt_emb" != xyes && LDFLAGS="$LDFLAGS -lX11"
     LDFLAGS="$LDFLAGS $LIB_XEXT -lm $LIBSOCKET"
     CXXFLAGS="$CFLAGS $X_INCLUDES"
     test -n "$GL_INCLUDE" && CFLAGS="-I$GL_INCLUDE $CFLAGS"
@@ -3465,7 +3550,7 @@ AC_DEFUN(AC_HAVE_GL,
 	ac_cv_have_gl="mesa", ac_cv_have_gl="no")
     if test "x$ac_cv_have_gl" = "xno"; then
       LDFLAGS="$ac_save_ldflags $X_LDFLAGS $GL_LDFLAGS $all_libraries -lGLU -lGL"
-      test "x$kde_use_qt_emb" != xyes && LDFLAGS="$LDFLAGS -lX11"
+      test "x$kde_use_qt_mac" != xyes && test "x$kde_use_qt_emb" != xyes && LDFLAGS="$LDFLAGS -lX11"
       LDFLAGS="$LDFLAGS $LIB_XEXT -lm $LIBSOCKET"
       CXXFLAGS="$ac_save_cflags $X_INCLUDES"
       test -n "$GL_INCLUDE" && CFLAGS="-I$GL_INCLUDE $CFLAGS"
@@ -3534,14 +3619,23 @@ AC_DEFUN(KDE_PAM, [
       AC_CACHE_VAL(ac_cv_path_pam,
         [ use_pam=no
           AC_CHECK_LIB(pam, pam_start,
-            [ AC_CHECK_HEADER(security/pam_appl.h,
-                [ use_pam=yes
-                  pam_service=kde ]) 
+            [ use_pam=yes
+              pam_service=kde
             ], , $LIBDL)
-          ac_cv_path_pam="use_pam=$use_pam pam_service=$pam_service"
         ])
     ])
   eval "$ac_cv_path_pam"
+
+  pam_header=
+
+  AC_CHECK_HEADER(security/pam_appl.h,
+  [ pam_header="security/pam_appl.h"
+  ],
+  [ AC_CHECK_HEADER(pam/pam_appl.h,
+    [ pam_header="pam/pam_appl.h"
+    ], [ use_pam=no
+    ])
+  ])
 
   AC_MSG_CHECKING(for PAM)
   if test "x$use_pam" = xno; then
@@ -3554,8 +3648,8 @@ AC_DEFUN(KDE_PAM, [
 
     dnl test whether struct pam_message is const (Linux) or not (Sun)
     AC_MSG_CHECKING(for const pam_message)
-    AC_EGREP_HEADER([struct pam_message], security/pam_appl.h,
-      [ AC_EGREP_HEADER([const struct pam_message], security/pam_appl.h,
+    AC_EGREP_HEADER([struct pam_message], $pam_header,
+      [ AC_EGREP_HEADER([const struct pam_message], $pam_header,
                         [AC_MSG_RESULT([const: Linux-type PAM])],
                         [AC_MSG_RESULT([nonconst: Sun-type PAM])
                         AC_DEFINE(PAM_MESSAGE_NONCONST, 1, [Define if your PAM support takes non-const arguments (Solaris)])]
@@ -4166,9 +4260,10 @@ else
   KDE_TRY_LINK_PYTHON(pthread_and_db3, [$LIBPTHREAD -ldb-3])
   KDE_TRY_LINK_PYTHON(m_and_thread_and_db, [$LIBPTHREAD -lm -ldb -ltermcap -lutil])
   KDE_TRY_LINK_PYTHON(pthread_and_dl, [$LIBPTHREAD $LIBDL -lutil -lreadline -lncurses -lm])
+  KDE_TRY_LINK_PYTHON(pthread_and_panel_curses, [$LIBPTHREAD $LIBDL -lm -lpanel -lcurses])
   KDE_TRY_LINK_PYTHON(m_and_thread_and_db_special, [$LIBPTHREAD -lm -ldb -lutil], [],
 	[AC_MSG_WARN([it seems, Python depends on another library.
-    Pleae set LIBPYTHON to '-lpython$version -lotherlib' before calling configure to fix this
+    Please set LIBPYTHON to '-lpython$version -lotherlib' before calling configure to fix this
     and contact the authors to let them know about this problem])
 	])
 
@@ -4185,10 +4280,14 @@ fi
 
 AC_DEFUN(KDE_CHECK_PYTHON,
 [
-  KDE_CHECK_PYTHON_INTERN("2.2", 
-    [KDE_CHECK_PYTHON_INTERN("2.1", 
-      [KDE_CHECK_PYTHON_INTERN("2.0", [ KDE_CHECK_PYTHON_INTERN($1, $2) ])
-  ])])
+  KDE_CHECK_PYTHON_INTERN("2.3", 
+   [KDE_CHECK_PYTHON_INTERN("2.2", 
+     [KDE_CHECK_PYTHON_INTERN("2.1", 
+       [KDE_CHECK_PYTHON_INTERN("2.0", 
+         [KDE_CHECK_PYTHON_INTERN($1, $2) ])
+       ])
+     ])
+   ])
 ])
 
 AC_DEFUN(KDE_CHECK_STL_SGI,
@@ -4512,45 +4611,13 @@ AC_MSG_RESULT($ac_cv_maxpathlen)
 AC_DEFINE_UNQUOTED(KDEMAXPATHLEN,$ac_cv_maxpathlen, [Define a safe value for MAXPATHLEN] )
 ])
 
-dnl -------------------------------------------------------------------------
-dnl See if the compiler supports a template repository         bero@redhat.de
-dnl -------------------------------------------------------------------------
-AC_DEFUN(KDE_COMPILER_REPO,
-[
-  REPO=""
-  NOREPO=""
-
-  KDE_CHECK_COMPILER_FLAG(frepo,
-   [
-     REPO="-frepo"
-     NOREPO="-fno-repo"
-   ])
-
-  if test -z "$REPO"; then
-  KDE_CHECK_COMPILER_FLAG(instances=explicit,
-  [
-     REPO="-instances=explicit"
-     NOREPO="-instances=extern"
-  ])
-  fi
-
-  if test -n "$REPO"; then
-     AC_DEFINE_UNQUOTED(HAVE_TEMPLATE_REPOSITORY, 1,
-		[C++ compiler supports template repository])
-     $1
-  fi
-
-  AC_SUBST(REPO)
-  AC_SUBST(NOREPO)
-])
-
 AC_DEFUN(KDE_CHECK_HEADER,
 [
    AC_LANG_SAVE
    kde_safe_cppflags=$CPPFLAGS
    CPPFLAGS="$CPPFLAGS $all_includes"
    AC_LANG_CPLUSPLUS
-   AC_CHECK_HEADER($1, $2, $3)
+   AC_CHECK_HEADER($1, $2, $3, $4)
    CPPFLAGS=$kde_safe_cppflags
    AC_LANG_RESTORE
 ])
@@ -4770,6 +4837,8 @@ else
       KDE_JAVA_PREFIX(/opt/j*sdk*)
       KDE_JAVA_PREFIX(/usr/lib/java*)
       KDE_JAVA_PREFIX(/usr/java*)
+      KDE_JAVA_PREFIX(/usr/java/j*dk*)
+      KDE_JAVA_PREFIX(/usr/java/j*re*)
       KDE_JAVA_PREFIX(/usr/lib/SunJava2*)
       KDE_JAVA_PREFIX(/usr/lib/SunJava*)
       KDE_JAVA_PREFIX(/usr/lib/IBMJava2*)
@@ -4914,7 +4983,18 @@ if test "x$kde_java_bindir" != "xno"; then
       AC_DEFINE_UNQUOTED(PATH_JAVA, "$kde_java_bindir/java", [Define where your java executable is])
       AC_MSG_RESULT([java JRE in $kde_java_bindir])
   fi
-else # no
+elif test -d "/Library/Java/Home"; then
+  kde_java_bindir="/Library/Java/Home/bin"
+  jni_includes="-I/Library/Java/Home/include"
+
+  JAVAC=$kde_java_bindir/javac
+  JAVAH=$kde_java_bindir/javah
+  JAR=$kde_java_bindir/jar
+  JVMLIBS="-Xlinker -framework -Xlinker JavaVM"
+
+  AC_DEFINE_UNQUOTED(PATH_JAVA, "$kde_java_bindir/java", [Define where your java executable is])
+  AC_MSG_RESULT([Apple Java Framework])
+else
   AC_MSG_RESULT([none found])
 fi
 
@@ -4939,9 +5019,9 @@ m4_define([mm_car], [[$1]])
 m4_define([mm_car2], [[$@]])
 m4_define([_mm_foreach],
 [m4_if(m4_quote($2), [], [],
-       [m4_define([$1], [mm_car($2)])$3[]_mm_foreach([$1],
-                                                     mm_car2(m4_shift($2)),
-                                                     [$3])])])
+       [m4_define([$1], mm_car($2))$3[]_mm_foreach([$1],
+                                                   mm_car2(m4_shift($2)),
+                                                   [$3])])])
 m4_define([AC_FOREACH],
 [mm_foreach([$1], m4_split(m4_normalize([$2])), [$3])])
 
@@ -5069,7 +5149,7 @@ if test "${with_qt_dir+set}" = set; then
   kde_qtdir="$with_qt_dir"
 fi
 
-AC_FIND_FILE(qsql.html, [ $kde_qtdir/doc/html $QTDIR/doc/html /usr/share/doc/packages/qt3/html /usr/lib/qt/doc /usr/lib/qt3/doc /usr/lib/qt3/doc/html /usr/doc/qt3/html /usr/doc/qt3 /usr/share/doc/qt3-doc], QTDOCDIR)
+AC_FIND_FILE(qsql.html, [ $kde_qtdir/doc/html $QTDIR/doc/html /usr/share/doc/packages/qt3/html /usr/lib/qt/doc /usr/lib/qt3/doc /usr/lib/qt3/doc/html /usr/doc/qt3/html /usr/doc/qt3 /usr/share/doc/qt3-doc /usr/share/qt3/doc/html /usr/X11R6/share/doc/qt/html ], QTDOCDIR)
 AC_MSG_RESULT($QTDOCDIR)
 
 AC_SUBST(QTDOCDIR)
@@ -5129,19 +5209,23 @@ if test ! "$ac_cv_lib_bzip2" = no; then
 
 else
 
-   cxx_shared_flags=
+   cxx_shared_flag=
+   ld_shared_flag=
    KDE_CHECK_COMPILER_FLAG(shared, [
-	cxx_shared_flag="-shared"
+	ld_shared_flag="-shared"
+   ])
+   KDE_CHECK_COMPILER_FLAG(fPIC, [
+        cxx_shared_flag="-fPIC"
    ])
 
    AC_MSG_CHECKING([for BZ2_bzDecompress in (shared) libbz2])
    AC_CACHE_VAL(ac_cv_lib_bzip2_prefix,
    [
-   AC_LANG_C
+   AC_LANG_CPLUSPLUS
    kde_save_LIBS="$LIBS"
-   LIBS="$all_libraries $USER_LDFLAGS $cxx_shared_flag -lbz2 $LIBSOCKET"
-   kde_save_CFLAGS="$CFLAGS"
-   CFLAGS="$CFLAGS $all_includes $USER_INCLUDES"
+   LIBS="$all_libraries $USER_LDFLAGS $ld_shared_flag -lbz2 $LIBSOCKET"
+   kde_save_CXXFLAGS="$CXXFLAGS"
+   CXXFLAGS="$CFLAGS $cxx_shared_flag $all_includes $USER_INCLUDES"
 
    AC_TRY_LINK(dnl
    [
@@ -5152,7 +5236,7 @@ else
                eval "ac_cv_lib_bzip2_prefix='-lbz2'",
                eval "ac_cv_lib_bzip2_prefix=no")
    LIBS="$kde_save_LIBS"
-   CFLAGS="$kde_save_CFLAGS"
+   CXXFLAGS="$kde_save_CXXFLAGS"
    ])dnl
 
    AC_MSG_RESULT($ac_cv_lib_bzip2_prefix)
@@ -5366,25 +5450,59 @@ AC_SUBST(LIBSSL)
 
 AC_DEFUN(KDE_CHECK_STRLCPY,
 [
-  AC_CHECK_STRLCPY
-  AC_CHECK_STRLCAT
+  AC_REQUIRE([AC_CHECK_STRLCAT])
+  AC_REQUIRE([AC_CHECK_STRLCPY])
   AC_CHECK_SIZEOF(size_t)
   AC_CHECK_SIZEOF(unsigned long)
 
-  AC_MSG_CHECKING([sizeof(size_t) == sizeof(unsigned long)])
+  AC_MSG_CHECKING([sizeof size_t == sizeof unsigned long])
   AC_TRY_COMPILE(,[
     #if SIZEOF_SIZE_T != SIZEOF_UNSIGNED_LONG
        choke me
     #endif
-    ],[AC_MSG_RESULT([yes])],[
-      AC_MSG_RESULT([no])
+    ],AC_MSG_RESULT([yes]),[
+      AC_MSG_RESULT(no)
       AC_MSG_ERROR([
-       Apparently on your system our assumption sizeof(size_t) == sizeof(unsigned long)
+       Apparently on your system our assumption sizeof size_t == sizeof unsigned long 
        does not apply. Please mail kde-devel@kde.org with a description of your system!
       ])
   ])
 ])
 
+AC_DEFUN(KDE_CHECK_BINUTILS,
+[
+  AC_MSG_CHECKING([if ld supports unversioned version maps])
+
+  kde_save_LDFLAGS="$LDFLAGS"
+  LDFLAGS="$LDFLAGS -Wl,--version-script=conftest.map"
+  echo "{ local: extern \"C++\" { foo }; };" > conftest.map
+  AC_TRY_LINK([int foo;],
+[
+#ifdef __INTEL_COMPILER
+icc apparently does not support libtools version-info and version-script
+at the same time. Dunno where the bug is, but until somebody figured out,
+better disable the optional version scripts.
+#endif
+
+  foo = 42;
+], kde_supports_versionmaps=yes, kde_supports_versionmaps=no)
+  LDFLAGS="$kde_save_LDFLAGS"
+  rm -f conftest.map
+  AM_CONDITIONAL(include_VERSION_SCRIPT, 
+    [test "$kde_supports_versionmaps" = "yes" && test "$kde_use_debug_code" = "no"])
+
+  AC_MSG_RESULT($kde_supports_versionmaps)
+])
+
+AC_DEFUN([AM_PROG_OBJC],[
+AC_CHECK_PROGS(OBJC, gcc, gcc)
+test -z "$OBJC" && AC_MSG_ERROR([no acceptable objective-c gcc found in \$PATH])
+if test "x${OBJCFLAGS-unset}" = xunset; then
+   OBJCFLAGS="-g -O2"
+fi
+AC_SUBST(OBJCFLAGS)
+_AM_IF_OPTION([no-dependencies],, [_AM_DEPENDENCIES(OBJC)])
+])
 # libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 
 # serial 47 AC_PROG_LIBTOOL
@@ -6385,6 +6503,7 @@ aix3*)
 
 aix4* | aix5*)
   version_type=linux
+  hardcode_into_libs=yes
   if test "$host_cpu" = ia64; then
     # AIX 5 supports IA64
     library_names_spec='${libname}${release}.so$major ${libname}${release}.so$versuffix $libname.so'
@@ -7335,6 +7454,9 @@ linux*)
   case $host_cpu in
   alpha* | hppa* | i*86 | ia64* | m68* | mips | mipsel | powerpc* | sparc* | s390* | sh* | x86_64* )
     lt_cv_deplibs_check_method=pass_all ;;
+  # the debian people say, arm and glibc 2.3.1 works for them with pass_all
+  arm* )
+    lt_cv_deplibs_check_method=pass_all ;;
   *)
     # glibc up to 2.1.1 does not perform some relocations on ARM
     lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[LM]]SB (shared object|dynamic lib )' ;;
@@ -8076,6 +8198,16 @@ case $host_os in
 	# Archives containing C++ object files must be created using
 	# "CC -Bstatic", where "CC" is the KAI C++ compiler.
 	_LT_AC_TAGVAR(old_archive_cmds, $1)='$CC -Bstatic -o $oldlib $oldobjs'
+	;;
+      icpc)
+	# Intel C++
+	with_gnu_ld=yes
+	_LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
+	_LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
+	_LT_AC_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+	_LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
+	_LT_AC_TAGVAR(export_dynamic_flag_spec, $1)='${wl}--export-dynamic'
+	_LT_AC_TAGVAR(whole_archive_flag_spec, $1)='${wl}--whole-archive$convenience ${wl}--no-whole-archive'
 	;;
       cxx)
 	# Compaq C++
@@ -9392,6 +9524,12 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 	    _LT_AC_TAGVAR(lt_prog_compiler_wl, $1)='--backend -Wl,'
 	    _LT_AC_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC'
 	    ;;
+	  icpc)
+	    # Intel C++
+	    _LT_AC_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	    _LT_AC_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	    _LT_AC_TAGVAR(lt_prog_compiler_static, $1)='-static'
+	    ;;
 	  cxx)
 	    # Compaq C++
 	    # Make sure the PIC flag is empty.  It appears that all Alpha
@@ -9599,6 +9737,14 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
     newsos6)
       _LT_AC_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
       _LT_AC_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
+      ;;
+
+    linux*)
+      if test "$CC" = "icc"; then
+	_LT_AC_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+	_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)='-KPIC'
+	_LT_AC_TAGVAR(lt_prog_compiler_static, $1)='-static'
+      fi
       ;;
 
     osf3* | osf4* | osf5*)
@@ -9856,7 +10002,7 @@ EOF
       # If the export-symbols file already is a .def file (1st line
       # is EXPORTS), use it as is.
       # If DATA tags from a recent dlltool are present, honour them!
-      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='if test "x`head -1 $export_symbols`" = xEXPORTS; then
+      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='if test "x`head -n 1 $export_symbols`" = xEXPORTS; then
 	  cp $export_symbols $output_objdir/$soname-def;
 	else
 	  echo EXPORTS > $output_objdir/$soname-def;
@@ -10749,6 +10895,50 @@ $debug ||
 AC_MSG_RESULT([$SED])
 ])
 
+# AM_CONDITIONAL                                              -*- Autoconf -*-
+
+# Copyright 1997, 2000, 2001 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+
+# serial 5
+
+AC_PREREQ(2.52)
+
+# AM_CONDITIONAL(NAME, SHELL-CONDITION)
+# -------------------------------------
+# Define a conditional.
+AC_DEFUN([AM_CONDITIONAL],
+[ifelse([$1], [TRUE],  [AC_FATAL([$0: invalid condition: $1])],
+        [$1], [FALSE], [AC_FATAL([$0: invalid condition: $1])])dnl
+AC_SUBST([$1_TRUE])
+AC_SUBST([$1_FALSE])
+if $2; then
+  $1_TRUE=
+  $1_FALSE='#'
+else
+  $1_TRUE='#'
+  $1_FALSE=
+fi
+AC_CONFIG_COMMANDS_PRE(
+[if test -z "${$1_TRUE}" && test -z "${$1_FALSE}"; then
+  AC_MSG_ERROR([conditional "$1" was never defined.
+Usually this means the macro was only invoked conditionally.])
+fi])])
+
 # Do all the work for Automake.                            -*- Autoconf -*-
 
 # This macro actually does too much some checks are only needed if
@@ -11526,50 +11716,6 @@ AC_SUBST([am__quote])
 AC_MSG_RESULT([$_am_result])
 rm -f confinc confmf
 ])
-
-# AM_CONDITIONAL                                              -*- Autoconf -*-
-
-# Copyright 1997, 2000, 2001 Free Software Foundation, Inc.
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-# 02111-1307, USA.
-
-# serial 5
-
-AC_PREREQ(2.52)
-
-# AM_CONDITIONAL(NAME, SHELL-CONDITION)
-# -------------------------------------
-# Define a conditional.
-AC_DEFUN([AM_CONDITIONAL],
-[ifelse([$1], [TRUE],  [AC_FATAL([$0: invalid condition: $1])],
-        [$1], [FALSE], [AC_FATAL([$0: invalid condition: $1])])dnl
-AC_SUBST([$1_TRUE])
-AC_SUBST([$1_FALSE])
-if $2; then
-  $1_TRUE=
-  $1_FALSE='#'
-else
-  $1_TRUE='#'
-  $1_FALSE=
-fi
-AC_CONFIG_COMMANDS_PRE(
-[if test -z "${$1_TRUE}" && test -z "${$1_FALSE}"; then
-  AC_MSG_ERROR([conditional "$1" was never defined.
-Usually this means the macro was only invoked conditionally.])
-fi])])
 
 
 # Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
