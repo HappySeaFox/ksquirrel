@@ -34,6 +34,9 @@
 #include <kcursor.h>
 #include <ktempfile.h>
 #include <kmessagebox.h>
+#include <kfileitem.h>
+
+#include <algorithm>
 
 #include "ksquirrel.h"
 #include "sq_config.h"
@@ -385,7 +388,20 @@ void SQ_GLWidget::slotShowHelp()
 
 void SQ_GLWidget::showExternalTools()
 {
+    bool v_ogorogde_buzina_a_v_kieve_dzyadka = SQ_ExternalTool::instance()->constPopupMenu()->isEnabled();
+    SQ_ExternalTool::instance()->constPopupMenu()->setEnabled(true);
+
+    KFileItemList items;
+    KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, tab->m_original);
+
+    if(!tab->m_original.isEmpty())
+    {
+        items.append(&fi);
+        SQ_ExternalTool::instance()->setItems(items);
+    }
+
     SQ_ExternalTool::instance()->constPopupMenu()->exec(QCursor::pos());
+    SQ_ExternalTool::instance()->constPopupMenu()->setEnabled(v_ogorogde_buzina_a_v_kieve_dzyadka);
 }
 
 // Delete current image (user pressed 'Delete' key).
@@ -395,7 +411,8 @@ void SQ_GLWidget::deleteWrapper()
         return;
 
     KFileItemList list;
-    list.append(new KFileItem(tab->m_original, QString::null, KFileItem::Unknown));
+    KFileItem fi(KFileItem::Unknown, KFileItem::Unknown, tab->m_original);
+    list.append(&fi);
 
     SQ_WidgetStack::instance()->diroperator()->del(list, this);
 }
@@ -411,19 +428,37 @@ void SQ_GLWidget::saveAs()
     if(!tab->lib || tab->finfo.image.empty()) // nothing to save
         return;
 
-    SQ_FileDialog d(QString::null, this);
+    SQ_Config::instance()->setGroup("GL view");
+    QString lastPath = SQ_Config::instance()->readEntry("saveasPath");
+    QString lastFilt = SQ_Config::instance()->readEntry("saveasFilter");
+
+    if(lastPath.isEmpty())
+    {
+        KURL u = tab->m_original;
+        u.cd("..");
+        lastPath = u.prettyURL();
+    }
+
+    SQ_FileDialog d(lastPath, this);
 
     // set filter: writable codecs without *.*
     d.setFilter(SQ_LibraryHandler::instance()->allFiltersFileDialogString(false, false));
     d.setOperationMode(KFileDialog::Saving);
+    d.setSelection(tab->m_original.fileName());
+    d.setCurrentFilter(lastFilt);
     d.updateCombo(false);
 
-    int result = d.exec();
-
-    if(result == QDialog::Rejected || d.selectedURL().isEmpty())
+    if(d.exec() == QDialog::Rejected || d.selectedURL().isEmpty())
         return;
 
     KURL url = d.selectedURL();
+
+    // cut off file name
+    KURL u = url;
+    u.cd("..");
+    SQ_Config::instance()->writeEntry("saveasPath", u.prettyURL());
+    SQ_Config::instance()->writeEntry("saveasFilter", d.nameFilter());
+
     QString path = url.isLocalFile() ? url.path() : tmp->name();
 
     SQ_LIBRARY *wlib = SQ_LibraryHandler::instance()->libraryByName(d.nameFilter());
@@ -434,18 +469,68 @@ void SQ_GLWidget::saveAs()
         return;
     }
 
-    RGBA *buf = tab->parts[tab->current].buffer->data();
+    SQ_GLHelpers::scanLineGetter scgetter;
+    int flp = 0;
+    int curangle = SQ_GLHelpers::roundAngle((int)tab->curangle);
 
-    fmt_image *im = &tab->finfo.image[tab->current];
+    fmt_image im = tab->finfo.image[tab->current];
+
+/*
+ *  The easiest way to rotate image is to use QImage + QImage::xForm(),
+ *  but this method is VERY memory inefficient. We will use our own tranformation
+ *  routins... Yes, they will be a little bit slower, but they require only
+ *  one scaline in stack.
+ */
+
+    int w = im.w, h = im.h;
+    int rw = tab->parts[tab->current].realw;
+
+#ifdef SQ_HAVE_KEXIF
+    switch(tab->orient)
+    {
+        case KExifData::HFLIP:
+        case KExifData::ROT_90_HFLIP:
+            flp = 1;
+        break;
+
+        case KExifData::VFLIP:
+        case KExifData::ROT_90_VFLIP:
+            flp = 2;
+        break;
+
+        default: ;
+    }
+#endif
+
+    switch(curangle)
+    {
+        case -270:
+        case 90:  scgetter = SQ_GLHelpers::scanLine90;  std::swap(w, h); break;
+
+        case -180:
+        case 180: scgetter = SQ_GLHelpers::scanLine180; break;
+
+        case -90:
+        case 270: scgetter = SQ_GLHelpers::scanLine270; std::swap(w, h); break;
+
+        default: scgetter = SQ_GLHelpers::scanLine0;
+    }
+
+    RGBA scan[w];
+    RGBA *data = tab->parts[tab->current].buffer->data();
+
+    fmt_image im2 = im;
+    im2.w = w;
+    im2.h = h;
 
     fmt_writeoptions opt;
     opt.interlaced = false;
-    opt.alpha = im->hasalpha;
-    opt.bitdepth = im->bpp;
+    opt.alpha = im.hasalpha;
+    opt.bitdepth = im.bpp;
     opt.compression_scheme = (wlib->opt.compression_scheme & CompressionNo) ? CompressionNo : CompressionInternal;
     opt.compression_level = wlib->opt.compression_def;
 
-    int err = wlib->codec->write_init(QString(QFile::encodeName(path)), *im, opt);
+    int err = wlib->codec->write_init(QString(QFile::encodeName(path)), im2, opt);
 
     if(err != SQE_OK)
     {
@@ -463,7 +548,7 @@ void SQ_GLWidget::saveAs()
 
     wlib->codec->write_next_pass();
 
-    int H = tab->parts[tab->current].h, W = tab->parts[tab->current].realw;
+    int H = im2.h;
     int Y0 = wlib->opt.needflip ? (-H+1):0;
     int Y = wlib->opt.needflip ? 1:H;
     int f;
@@ -472,7 +557,9 @@ void SQ_GLWidget::saveAs()
     {
         f = (j < 0) ? -j : j;
 
-        err = wlib->codec->write_scanline(buf + W*f);
+        scgetter(data, scan, rw, im.w, im.h, f, flp);
+
+        err = wlib->codec->write_scanline(scan);
 
         if(err != SQE_OK)
         {
@@ -487,7 +574,7 @@ void SQ_GLWidget::saveAs()
     // copy to non-local directory
     if(!url.isLocalFile())
     {
-        //             src   dst  perm  overwrite resume  progress
+        //                           src   dst  perm  overwrite resume  progress
         KIO::Job *j = KIO::file_copy(path, url, -1,   true,     false,  false);
 
         connect(j, SIGNAL(result(KIO::Job *)), this, SLOT(slotCopyResult(KIO::Job *)));
@@ -1066,6 +1153,7 @@ void SQ_GLWidget::slotChangeTab(int id)
         SQ_GLView::window()->resetStatusBar();
         KSquirrel::app()->setCaption(QString::null);
         decoded = false;
+        changeSlider(1.0);
     }
     else
     {
@@ -1088,6 +1176,11 @@ void SQ_GLWidget::slotChangeTab(int id)
         SQ_GLView::window()->sbarWidget("SBFile")->setText(tab->m_original.fileName(false));
         KSquirrel::app()->setCaption(originalURL());
         enableActions(!tab->broken);
+
+        changeSlider();
+
+        SQ_GLView::window()->sbarWidget("SBLoaded")->setText(
+                        KGlobal::locale()->formatLong(tab->elapsed) + i18n(" ms."));
 
         std::vector<Parts>::iterator itp = tab->parts.begin();
         std::vector<Parts>::iterator itpEnd = tab->parts.end();
@@ -1129,6 +1222,13 @@ void SQ_GLWidget::slotCloseRequest(int index)
         return;
 
     SQ_GLView::window()->tabbar()->blockSignals(true);
+
+    // prevent matrix from changing. When tab count == 1,
+    // SQ_GLView will hide tabbar and SQ_GLWIdget will be resized.
+    // We don't want it.
+    if(SQ_GLView::window()->tabbar()->count() == 2)
+        hackResizeGL = true;
+
     SQ_GLView::window()->removePage(index);
     emit tabCountChanged();
     SQ_GLView::window()->tabbar()->blockSignals(false);
@@ -1152,6 +1252,8 @@ void SQ_GLWidget::slotCloseRequest(int index)
     (*it).clearParts();
     tabs.erase(it);
     tab = 0;
+
+    gls->setVisible(false);
 
     slotChangeTab(SQ_GLView::window()->tabbar()->currentTab());
 }
@@ -1386,4 +1488,34 @@ void SQ_GLWidget::toogleTickmarks()
     SQ_Config::instance()->writeEntry("marks", b);
 
     updateGL();
+}
+
+void SQ_GLWidget::changeSlider(GLfloat z1)
+{
+    GLfloat z = z1 < 0 ? getZoom() : z1;
+
+    int i_zoom =(int)(z * 100);
+
+    slider_zoom->blockSignals(true);
+    slider_zoom->setValue((i_zoom <= 100) ? i_zoom/5 : (19+i_zoom/50));
+    slider_zoom->blockSignals(false);
+}
+
+void SQ_GLWidget::calcFrameLabelWidth()
+{
+    SQ_GLView::window()->sbarWidget("SBFrame")->setFixedWidth(
+            SQ_GLView::window()->sbarWidget("SBFrame")->fontMetrics()
+            .boundingRect(QString::fromLatin1("0%1/0%2").arg(tab->total).arg(tab->total)).width());
+}
+
+/*
+ *  Show current page number in multipaged images.
+ *
+ *  For example: "3/11" means that current page is the third in current image,
+ *  which has 11 pages.
+ */
+void SQ_GLWidget::frameChanged()
+{
+    SQ_GLView::window()->sbarWidget("SBFrame")->setText(
+        QString::fromLatin1("%1/%2").arg(tab->current+1).arg(tab->total));
 }

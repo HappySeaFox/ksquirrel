@@ -39,7 +39,7 @@ project_name=KSquirrel
 project_type=mini_kde2
 short_info=KSquirrel - image viewer for KDE >= 3.5
 sub_dir=ksquirrel/
-version=0.7.3
+version=0.7.4
 version_control=CVS
 workspace=1
 

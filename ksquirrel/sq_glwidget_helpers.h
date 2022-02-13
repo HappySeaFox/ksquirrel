@@ -24,6 +24,8 @@ class QWMatrix;
 
 class KToolBar;
 
+struct RGBA;
+
 class SQ_ToolButtonPopup : public KToolBarButton
 {
     public:
@@ -47,11 +49,26 @@ int SQ_ToolButton::fixedWidth()
     return 26;
 }
 
-/*
- * normalize selection rectangle
- * sx,sy are X and Y coordinates
- * sw x sh is a selection geometry
-*/
-bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const QWMatrix &);
+namespace SQ_GLHelpers
+{
+    //                                                                               0, 1, 2
+    typedef void (* scanLineGetter)(RGBA *data, RGBA *, int rw, int w, int h, int y, int flip);
+
+    void scanLine0(RGBA *, RGBA *, int, int, int, int, int);
+    void scanLine90(RGBA *, RGBA *, int, int, int, int, int);
+    void scanLine180(RGBA *, RGBA *, int, int, int, int, int);
+    void scanLine270(RGBA *, RGBA *, int, int, int, int, int);
+
+    int roundAngle(int ang);
+
+    void subRotation(QWMatrix &wm, int curangle, int orient);
+
+    /*
+     * normalize selection rectangle
+     * sx,sy are X and Y coordinates
+     * sw x sh is a selection geometry
+     */
+    bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const QWMatrix&, int curangle, int orient);
+}
 
 #endif

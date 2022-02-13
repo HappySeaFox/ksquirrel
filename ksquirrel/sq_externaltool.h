@@ -22,6 +22,8 @@
 #include <qobject.h>
 #include <qvaluevector.h>
 
+#include <kfileitem.h>
+
 class SQ_PopupMenu;
 
 struct Tool
@@ -53,6 +55,8 @@ class SQ_ExternalTool : public QObject, public QValueVector<Tool>
         QString toolName(const int i);
         QString toolCommand(const int i);
 
+        void setItems(const KFileItemList &);
+
         /*
          *  Recreate current popop menu.
          */
@@ -77,9 +81,7 @@ class SQ_ExternalTool : public QObject, public QValueVector<Tool>
          *  This slot will do some useful stuff.
          */
         void slotAboutToShowMenu();
-
-    public:
-        static void aboutToShowMenu(SQ_PopupMenu *);
+        void slotActivateTool(int);
 
     private:
         /*
@@ -87,7 +89,15 @@ class SQ_ExternalTool : public QObject, public QValueVector<Tool>
          */
         SQ_PopupMenu *menu;
 
+        KFileItemList items;
+
         static SQ_ExternalTool *m_instance;
 };
+
+inline
+void SQ_ExternalTool::setItems(const KFileItemList &itms)
+{
+    items = itms;
+}
 
 #endif

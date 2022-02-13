@@ -19,10 +19,6 @@
 #ifndef SQ_ABOUT_KSQUIRREL_H
 #define SQ_ABOUT_KSQUIRREL_H
 
-/*
- *  'About' dialog
- */
-
-#define SQ_VERSION "0.7.3"
+#define SQ_VERSION "0.7.4"
 
 #endif

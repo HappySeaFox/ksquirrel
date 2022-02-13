@@ -119,12 +119,6 @@ int SQ_GLSelectionPainter::type() const
 }
 
 inline
-bool SQ_GLSelectionPainter::valid() const
-{
-    return m_valid;
-}
-
-inline
 void SQ_GLSelectionPainter::setGeometry(const QRect &rc)
 {
     if(selection)

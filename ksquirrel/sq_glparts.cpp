@@ -194,6 +194,9 @@ void Tab::empty()
     curangle = 0;
     total = 0;
     sx = sy = sw = sh = 0;
+    elapsed = 0;
+
+    wm = QWMatrix();
 
     glselection = -1;
     srect = QRect();

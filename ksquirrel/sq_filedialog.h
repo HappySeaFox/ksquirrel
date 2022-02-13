@@ -32,6 +32,8 @@ class SQ_FileDialog : public KFileDialog
 
         QString nameFilter() const;
         void updateCombo(bool enable);
+
+        void setCurrentFilter(const QString &);
 };
 
 #endif

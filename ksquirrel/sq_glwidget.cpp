@@ -77,7 +77,6 @@
 
 #ifdef SQ_HAVE_KEXIF
 #include <libkexif/kexifdata.h>
-#include <libexif/exif-data.h>
 #endif
 
 // is it enough ?
@@ -452,11 +451,6 @@ void SQ_GLWidget::matrixChanged()
     float m = getZoom();
     float zoom = m * 100.0;
     float z = (m < 1.0) ? 1.0/m : m;
-    int i_zoom = (int)zoom;
-
-    slider_zoom->blockSignals(true);
-    slider_zoom->setValue((i_zoom <= 100) ? i_zoom/5 : (19+i_zoom/50));
-    slider_zoom->blockSignals(false);
 
     // construct zoom
     str = QString::fromLatin1("%1% [%2:%3]")
@@ -523,14 +517,12 @@ void SQ_GLWidget::mousePressEvent(QMouseEvent *e)
     {
         QTime t = QTime::currentTime();
 
-        if(clickTime.isValid() && clickTime.msecsTo(t) <= KApplication::doubleClickInterval())
-        {
-            SQ_Config::instance()->setGroup("GL view");
-            int dc = SQ_Config::instance()->readNumEntry("double_click", 0);
+        SQ_Config::instance()->setGroup("GL view");
+        int dc = SQ_Config::instance()->readNumEntry("double_click", 0);
 
-            if(!dc)
-                return;
-            else if(dc == 1)
+        if(dc && clickTime.isValid() && clickTime.msecsTo(t) <= KApplication::doubleClickInterval())
+        {
+            if(dc == 1)
                 KSquirrel::app()->closeGLWidget();
             else
                 toggleFullScreen();
@@ -641,7 +633,7 @@ void SQ_GLWidget::mouseReleaseEvent(QMouseEvent *)
         }
         else
         {
-            if(!normalizeSelection(sx, sy, sw, sh, tab->parts[tab->current].w, tab->parts[tab->current].h, tab->wm))
+            if(!SQ_GLHelpers::normalizeSelection(sx, sy, sw, sh, tab->parts[tab->current].w, tab->parts[tab->current].h, tab->wm, (int)tab->curangle, tab->orient))
                 gls->end();
             else
             {
@@ -1041,6 +1033,8 @@ bool SQ_GLWidget::matrix_zoom(GLfloat ratio)
     oldZoom = -1;
     write_gl_matrix();
 
+    changeSlider(z);
+
     if(!reset_mode)
         updateGL();
 
@@ -1347,6 +1341,8 @@ bool SQ_GLWidget::prepare()
         SQ_GLView::window()->tabbar()->blockSignals(false);
     }
 
+    gls->setVisible(false);
+
     if(m_expected.isEmpty())
         KApplication::eventLoop()->processEvents(QEventLoop::ExcludeUserInput | QEventLoop::ExcludeSocketNotifiers);
 
@@ -1361,8 +1357,7 @@ bool SQ_GLWidget::prepare()
     // oops, error...
     if(i != SQE_OK)
     {
-        tab->codeK->read_close();
-        useBrokenImage(i);
+        decodeFailedOn0(i);
         m_expected = KURL();
         return false;
     }
@@ -1575,6 +1570,7 @@ void SQ_GLWidget::decode()
 
         tab->parts.push_back(pp);
 
+        calcFrameLabelWidth();
         frameChanged();
         tab->current++;
     }
@@ -1588,13 +1584,13 @@ void SQ_GLWidget::decode()
 
     decoded = true;
     reset_mode = false;
-    frameChanged();
     updateGL();
 
     tab->quickImageInfo = tab->lib->quickinfo;
+    tab->elapsed = started.elapsed();
 
     SQ_GLView::window()->sbarWidget("SBLoaded")->setText(
-                        KGlobal::locale()->formatLong(started.elapsed()) + i18n(" ms."));
+                        KGlobal::locale()->formatLong(tab->elapsed) + i18n(" ms."));
 
     images->setItemChecked(first_id, true);
 
@@ -1771,23 +1767,6 @@ void SQ_GLWidget::initMarks()
     }
 }
 
-/*
- *  Show current page number in multipaged images.
- *
- *  For example: "3/11" means that current page is the third in current image,
- *  which has 11 pages.
- */
-void SQ_GLWidget::frameChanged()
-{
-    QString s = QString::fromLatin1("%1/%2").arg(tab->current+1).arg(tab->total);
-
-    SQ_GLView::window()->sbarWidget("SBFrame")->setFixedWidth(
-            SQ_GLView::window()->sbarWidget("SBFrame")->fontMetrics()
-            .boundingRect(QString::fromLatin1("0%1/0%2").arg(tab->total).arg(tab->total)).width());
-
-    SQ_GLView::window()->sbarWidget("SBFrame")->setText(s);
-}
-
 void SQ_GLWidget::internalZoom(const GLfloat &zF)
 {
     tab->curangle = 0.0;
@@ -1836,11 +1815,11 @@ void SQ_GLWidget::decodeFailedOn0(const int err_code)
     tab->codeK->read_close();
     tab->finfo.image.clear();
     tab->finfo.meta.clear();
-    reset_mode = false;
     tab->total = 0;
-    tab->lib = 0;
     decoded = (bool)tabs.size();
-    SQ_GLView::window()->resetStatusBar();
+    reset_mode = false;
+    tab->broken = true;
+    tab->lib = 0;
 
     useBrokenImage(err_code);
 }
@@ -1851,11 +1830,6 @@ void SQ_GLWidget::decodeFailedOn0(const int err_code)
  */
 void SQ_GLWidget::useBrokenImage(const int err_index)
 {
-    // some init
-    reset_mode = false;
-    tab->broken = true;
-    decoded = true;
-    tab->lib = 0;
     enableSettingsButton(false);
     enableActions(false);
 
@@ -1871,8 +1845,10 @@ void SQ_GLWidget::useBrokenImage(const int err_index)
     KSquirrel::app()->setCaption(QString::null);
 
     matrix_pure_reset();
-    tab->curangle = 0.0;
+    tab->curangle = 0;
     tab->isflippedH = tab->isflippedV = false;
+
+    changeSlider(1.0);
 
     // update context and show "broken" image
     updateGL();

@@ -163,11 +163,6 @@ class SQ_DirOperator : public KDirOperator
          */
         void slotSetThumbSize(const QString&);
 
-        /*
-         *  Invoked, when user selected some external tool in menu.
-         */
-        void slotActivateExternalTool(int index);
-
     private slots:
 
         void slotCopyPath();

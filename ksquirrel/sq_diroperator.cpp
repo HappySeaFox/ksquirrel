@@ -31,9 +31,7 @@
 #include <klocale.h>
 #include <kprogress.h>
 #include <kglobal.h>
-#include <kprocess.h>
 #include <kstdaccel.h>
-#include <kmessagebox.h>
 #include <kdiskfreesp.h>
 #include <konq_operations.h>
 #include <kiconeffect.h>
@@ -84,7 +82,6 @@ SQ_DirOperator::SQ_DirOperator(const KURL &url, ViewT type_, QWidget *parent, co
             this, SLOT(slotDropped(const KFileItem *, QDropEvent*, const KURL::List&)));
     connect(this, SIGNAL(fileSelected(const KFileItem *)), this, SLOT(slotExecutedConst(const KFileItem *)));
 
-    connect(SQ_ExternalTool::instance()->constPopupMenu(), SIGNAL(activated(int)), this, SLOT(slotActivateExternalTool(int)));
     connect(dirLister(), SIGNAL(deleteItem(KFileItem *)), this, SLOT(slotItemDeleted(KFileItem *)));
     connect(dirLister(), SIGNAL(newItems(const KFileItemList &)), this, SLOT(slotNewItems(const KFileItemList &)));
     connect(dirLister(), SIGNAL(refreshItems(const KFileItemList &)), this, SLOT(slotRefreshItems(const KFileItemList &)));
@@ -703,68 +700,6 @@ void SQ_DirOperator::startOrNotThumbnailUpdate()
     }
 }
 
-/*
- *  Invoked, when user selected some external tool in menu.
- */
-void SQ_DirOperator::slotActivateExternalTool(int id)
-{
-    // get currently selected items
-    KFileItemList *items = const_cast<KFileItemList *>(selectedItems());
-    QStringList list;
-
-    if(!items || items->isEmpty()) return;
-
-    int index = SQ_ExternalTool::instance()->constPopupMenu()->itemParameter(id);
-
-    KFileItem *f = items->first();
-
-    while(f)
-    {
-        list.append(f->url().path());
-        f = items->next();
-    }
-
-    if(list.empty()) return;
-
-    KShellProcess proc;
-
-    // get appropriate desktop file
-    Tool *tool = &SQ_ExternalTool::instance()->at(index);
-    QString comm = tool->command;
-
-    int per_f = comm.contains("%f");
-    int per_F = comm.contains("%F");
-
-    // %f = single file
-    // %F = multiple files
-    if(per_f && per_F)
-    {
-        KMessageBox::error(this, i18n("Command cannot contain both \"%f\" and \"%F\""), i18n("Error processing command"));
-        return;
-    }
-    else if(!per_f && !per_F)
-    {
-        KMessageBox::error(this, i18n("Command should contain \"%f\" or \"%F\""), i18n("Error processing command"));
-        return;
-    }
-    else if(per_f)
-    {
-        comm.replace("%f", "");
-        proc << comm << KShellProcess::quote(list.first());
-    }
-    else
-    {
-        comm.replace("%F", "");
-        proc << comm;
-
-        for(QStringList::iterator it = list.begin();it != list.end();++it)
-            proc << KShellProcess::quote(*it);
-    }
-
-    // start process
-    proc.start(KProcess::DontCare);
-}
-
 void SQ_DirOperator::clearListers()
 {
     SQ_Listers::iterator itEnd = listers.end();
@@ -1023,6 +958,11 @@ void SQ_DirOperator::activatedMenu(const KFileItem *, const QPoint &pos)
     pADirOperatorMenu->popupMenu()->insertItem(i18n("File actions"), dynamic_cast<KActionMenu *>(actionCollection()->action("dirop_file_menu"))->popupMenu(), -1, 0);
     pADirOperatorMenu->popupMenu()->insertItem(i18n("&External tools"), SQ_ExternalTool::instance()->constPopupMenu(), -1, 1);
     pADirOperatorMenu->popupMenu()->insertSeparator(2);
+
+    KFileItemList *items = const_cast<KFileItemList *>(selectedItems());
+
+    if(items)
+        SQ_ExternalTool::instance()->setItems(*items);
 
     pADirOperatorMenu->popup(pos);
 }

@@ -20,19 +20,21 @@
 #endif
 
 #include <qwmatrix.h>
+#include <qrect.h>
+#include <qpoint.h>
+#include <qpointarray.h>
+
+#include <algorithm>
 
 #include <ktoolbar.h>
 
-#include "sq_glwidget_helpers.h"
+#include <ksquirrel-libs/fmt_defs.h>
 
 #ifdef SQ_HAVE_KEXIF
 #include <libkexif/kexifdata.h>
-#include <qrect.h>
-#include <qpoint.h>
-#include <qwmatrix.h>
-#include <qpointarray.h>
-#include <algorithm>
 #endif
+
+#include "sq_glwidget_helpers.h"
 
 SQ_ToolButtonPopup::SQ_ToolButtonPopup(const QPixmap &pix, const QString &textLabel, KToolBar *parent)
     : KToolBarButton(pix, -1, parent, 0, textLabel)
@@ -53,9 +55,63 @@ SQ_ToolButton::SQ_ToolButton(const QIconSet &iconSet, const QString &textLabel,
 SQ_ToolButton::~SQ_ToolButton()
 {}
 
-bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const QWMatrix &wm)
+int SQ_GLHelpers::roundAngle(int curangle)
 {
+    int sign = (curangle < 0 ? -1 : 1);
+    curangle = std::abs(curangle);
+
+    if((curangle > 0 && curangle < 45) || (curangle >= 315 && curangle < 360))
+        curangle = 0;
+    else if(curangle >= 45 && curangle < 135)
+        curangle = 90;
+    else if(curangle >= 135 && curangle < 225)
+        curangle = 180;
+    else if(curangle >= 225 && curangle < 315)
+        curangle = 270;
+
+    curangle *= sign;
+
+    return curangle;
+}
+
+void SQ_GLHelpers::subRotation(QWMatrix &wm, int curangle, int orient)
+{
+    curangle = SQ_GLHelpers::roundAngle(curangle);
+
 #ifdef SQ_HAVE_KEXIF
+    switch(orient)
+    {
+        case KExifData::ROT_180:      curangle -= 180; break;
+        case KExifData::ROT_90_HFLIP:
+        case KExifData::ROT_90:
+        case KExifData::ROT_90_VFLIP: curangle -= 90; break;
+        case KExifData::ROT_270:      curangle -= 270; break;
+
+        default: ;
+    }
+#endif
+
+    switch(curangle)
+    {
+        case -180:
+        case 180: wm.rotate(180); break;
+
+        case -270:
+        case 90:  wm.rotate(90);  break;
+
+        case -90:
+        case 270: wm.rotate(270); break;
+
+        default: ;
+    }
+}
+
+bool SQ_GLHelpers::normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const QWMatrix &matr, int curangle, int orient)
+{
+    QWMatrix wm = matr;
+
+    SQ_GLHelpers::subRotation(wm, curangle, orient);
+
     if(!wm.isIdentity())
     {
         int ax = -w/2 + sx;
@@ -85,7 +141,6 @@ bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const 
         sx += w/2;
         sy = h/2-sy;
     }
-#endif
 
     if(sx > w || sy > h || sx + sw < 0 || sy + sh < 0)
         return false;
@@ -97,4 +152,112 @@ bool normalizeSelection(int &sx, int &sy, int &sw, int &sh, int w, int h, const 
     if(sy + sh > h) sh = h - sy;
 
     return (sw && sh);
+}
+
+void SQ_GLHelpers::scanLine0(RGBA *data, RGBA *scan, int rw, int w, int h, int y, int flip)
+{
+    if(flip == 1)
+    {
+        data = data + rw*y + w-1;
+
+        for(int i = 0;i < w;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data--;
+        }
+    }
+    else if(flip == 2)
+    {
+        data = data + rw*(h-1-y);
+
+        for(int i = 0;i < w;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data++;
+        }
+    }
+    else
+        memcpy(scan, data + rw*y, w * sizeof(RGBA));
+}
+
+void SQ_GLHelpers::scanLine90(RGBA *data, RGBA *scan, int rw, int w, int h, int y, int flip)
+{
+    if(flip == 2)
+    {
+        data = data + y;
+
+        for(int i = 0;i < h;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data += rw;
+        }
+    }
+    else
+    {
+        data = flip == 1 ? (data + rw*(h-1) + w-y-1) : (data + rw*(h-1) + y);
+
+        for(int i = 0;i < h;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data -= rw;
+        }
+    }
+}
+
+void SQ_GLHelpers::scanLine180(RGBA *data, RGBA *scan, int rw, int w, int h, int y, int flip)
+{
+    if(flip == 1)
+    {
+        data = data + rw*(h-1-y);
+
+        memcpy(scan, data, w * sizeof(RGBA));
+    }
+    else
+    {
+        data = flip == 2 ? (data + rw*y + w-1) : (data + rw*(h-1-y) + w-1);
+
+        for(int i = 0;i < w;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data--;
+        }
+    }
+}
+
+void SQ_GLHelpers::scanLine270(RGBA *data, RGBA *scan, int rw, int w, int h, int y, int flip)
+{
+    if(flip == 2)
+    {
+        data = data + rw*(h-1) + w-y-1;
+
+        for(int i = 0;i < h;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data -= rw;
+        }
+    }
+    else
+    {
+        data = flip == 1 ? (data + y) : (data + w-y-1);
+
+        for(int i = 0;i < h;i++)
+        {
+            *scan = *data;
+
+            scan++;
+            data += rw;
+        }
+    }
 }

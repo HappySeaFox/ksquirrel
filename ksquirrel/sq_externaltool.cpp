@@ -25,11 +25,11 @@
 #include <klocale.h>
 #include <kicontheme.h>
 #include <kstandarddirs.h>
+#include <kprocess.h>
+#include <kmessagebox.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
-#include "sq_widgetstack.h"
-#include "sq_diroperator.h"
 #include "sq_externaltool.h"
 #include "sq_popupmenu.h"
 #include "sq_config.h"
@@ -52,6 +52,7 @@ SQ_ExternalTool::SQ_ExternalTool(QObject *parent) : QObject(parent), QValueVecto
     menu = new SQ_PopupMenu(0, "External tools");
 
     connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotAboutToShowMenu()));
+    connect(menu, SIGNAL(activated(int)), this, SLOT(slotActivateTool(int)));
 
     QString str, tmp;
 
@@ -151,23 +152,19 @@ void SQ_ExternalTool::writeEntries()
  *  Invoked, when user executed popup menu with external tools.
  *  This slot will do some useful stuff.
  */
-
-void SQ_ExternalTool::aboutToShowMenu(SQ_PopupMenu *m)
+void SQ_ExternalTool::slotAboutToShowMenu()
 {
-    // get selected items in filemanager
-    KFileItemList *items = const_cast<KFileItemList *>(SQ_WidgetStack::instance()->selectedItems());
-
-    if(!items || !items->count())
+    if(!items.count())
     {
-        m->changeTitle(i18n("No file selected"));
+        menu->changeTitle(i18n("No file selected"));
         return;
     }
 
-    KFileItem *item = items->first();
+    KFileItem *item = items.first();
 
     if(!item)
     {
-        m->changeTitle(i18n("No file selected"));
+        menu->changeTitle(i18n("No file selected"));
         return;
     }
 
@@ -175,18 +172,74 @@ void SQ_ExternalTool::aboutToShowMenu(SQ_PopupMenu *m)
     QString file = KStringHandler::rsqueeze(item->name(), 30);
 
     // finally, change title
-    if(items)
-    {
-        QString final = (items->count() == 1 || items->count() == 0) ? file : (file + QString::fromLatin1(" (+%1)").arg(items->count()-1));
-        m->changeTitle(final);
-    }
-    else
-        m->changeTitle(file);
+    QString final = (items.count() == 1 || items.count() == 0) ? file : (file + QString::fromLatin1(" (+%1)").arg(items.count()-1));
+    menu->changeTitle(final);
 }
 
-void SQ_ExternalTool::slotAboutToShowMenu()
+void SQ_ExternalTool::slotActivateTool(int id)
 {
-    SQ_ExternalTool::aboutToShowMenu(menu);
+    QStringList list;
+
+    if(items.isEmpty()) return;
+
+    int index = menu->itemParameter(id);
+
+    KFileItem *f = items.first();
+
+    while(f)
+    {
+        list.append(f->url().prettyURL());
+        f = items.next();
+    }
+
+    items.clear();
+
+    if(list.empty()) return;
+
+    KShellProcess proc;
+
+    // get appropriate tool
+    Tool *tool = &at(index);
+    QString comm = tool->command;
+
+    int per_f = comm.contains("%f");
+    int per_F = comm.contains("%F");
+
+    // %f = single file
+    // %F = multiple files
+    if(per_f && per_F)
+    {
+        KMessageBox::error(0, i18n("Command cannot contain both \"%f\" and \"%F\""), i18n("Error processing command"));
+        return;
+    }
+    else if(!per_f && !per_F)
+    {
+        KMessageBox::error(0, i18n("Command should contain \"%f\" or \"%F\""), i18n("Error processing command"));
+        return;
+    }
+    else if(per_f)
+    {
+        comm.replace("%f", KShellProcess::quote(list.first()));
+        proc << comm;
+    }
+    else
+    {
+        QString files;
+
+        QStringList::iterator itEnd = list.end();
+
+        for(QStringList::iterator it = list.begin();it != itEnd;++it)
+        {
+            files.append(KShellProcess::quote(*it));
+            files.append(" ");
+        }
+
+        comm.replace("%F", files);
+        proc << comm;
+    }
+
+    // start process
+    proc.start(KProcess::DontCare);
 }
 
 #include "sq_externaltool.moc"

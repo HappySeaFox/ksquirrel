@@ -135,6 +135,7 @@ struct Tab
     int                 total;
     int                 glselection;
     int                 sx, sy, sw, sh;
+    int                 elapsed;
 
     bool                rotate;
     bool                manualBlocked;

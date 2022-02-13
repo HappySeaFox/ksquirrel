@@ -1,3 +1,14 @@
+ksquirrel-0.7.4 (bugfix release)
+********************************
+* filtering and color balance in image window doesn't loose rotation angle
+* saving in image window doesn't loose rotation angle (flipping is still lost)
+* prevent autoresizing when tab count is 1
+* external tools for non-local URLs now work
+  (but not all programs accepts URLs, GQview for example)
+* external tools in image window now don't depend on navigator
+* navigator now has focus at startup
+* slider is changed when switching between tabs
+
 ksquirrel-0.7.3 and ksquirrel-libs-0.7.3
 *****************************************
 * command line arguments now work better

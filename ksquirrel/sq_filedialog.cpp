@@ -29,9 +29,16 @@ SQ_FileDialog::~SQ_FileDialog()
 void SQ_FileDialog::updateCombo(bool enable)
 {
     filterWidget->setEditable(enable);
+
+    slotFilterChanged();
 }
 
 QString SQ_FileDialog::nameFilter() const
 {
     return filterWidget->currentText();
+}
+
+void SQ_FileDialog::setCurrentFilter(const QString &f)
+{
+    filterWidget->setCurrentFilter(f);
 }

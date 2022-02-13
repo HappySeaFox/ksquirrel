@@ -1392,6 +1392,8 @@ void KSquirrel::continueLoading()
         }
     }
 
+    pWidgetStack->diroperator()->setFocus();
+
     // show tray icon when restored
     if(kapp->isRestored())
         slotGotoTray();

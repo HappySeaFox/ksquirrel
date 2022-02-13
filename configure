@@ -2637,7 +2637,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=ksquirrel
- VERSION=0.7.3
+ VERSION=0.7.4
 
 
 cat >>confdefs.h <<_ACEOF

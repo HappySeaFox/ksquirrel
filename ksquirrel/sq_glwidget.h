@@ -258,6 +258,8 @@ class SQ_GLWidget : public QGLWidget
     private:
         QImage generatePreview();
 
+        void changeSlider(GLfloat z = -1.0);
+
         void hackMatrix();
 
         void enableActions(bool U);
@@ -385,6 +387,7 @@ class SQ_GLWidget : public QGLWidget
          *  which has 11 pages.
          */
         void frameChanged();
+        void calcFrameLabelWidth();
 
         /*
          *  Set current zoom to 'z'.
