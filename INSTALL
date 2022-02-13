@@ -10,6 +10,7 @@
    b) from binary packages
 RPM  # rpm -ihv ksquirrel-libs-0.6.0.rpm
 TGZ  # installpkg ksquirrel-libs-0.6.0.tgz
+DEB  # dpkg -i ksquirrel-libs-0.6.0.deb
 
 2. Now install KSquirrel:
 
@@ -23,6 +24,7 @@ TGZ  # installpkg ksquirrel-libs-0.6.0.tgz
    b) from binary packages
 RPM  # rpm -ihv ksquirrel-0.6.0.rpm
 TGZ  # installpkg ksquirrel-0.6.0.tgz
+DEB  # dpkg -i ksquirrel-0.6.0.deb
 
 ------------------------------------------------------------
 

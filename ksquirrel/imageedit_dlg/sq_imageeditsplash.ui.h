@@ -35,6 +35,8 @@ void SQ_ImageEditSplash::init()
     }
 
     KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
+
+    textFiles->setPaletteForegroundColor(colorGroup().highlightedText());
     textFiles->setText(i18n("Do something with 1 file", "Do something with %n files", items->count()));
 }
 

@@ -801,9 +801,8 @@ dist-hook:
 .NOEXPORT:
 
 
-
 #>+ 2
-KDE_DIST=stamp-h.in autoscan.log subdirs configure.ac Makefile.in config.h.in reconfigure configure.gnu aclocal.m4 Makefile.dist ksquirrel.kdevses configure Makefile.am acinclude.m4 start 
+KDE_DIST=stamp-h.in autoscan.log subdirs configure.ac Makefile.in config.h.in reconfigure configure.gnu aclocal.m4 Makefile.dist ksquirrel.kdevses Doxyfile configure Makefile.am acinclude.m4 start 
 
 #>+ 2
 docs-am:

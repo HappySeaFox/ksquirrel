@@ -21,8 +21,16 @@
 #include "sq_fileiconviewbase.h"
 
 #include <qwidget.h>
-#include <qpoint.h>
 
+class QPoint;
+
+/*
+ *  SQ_FileIconView represents icon view and list view in filemanager.
+ */
+
+/*
+ *  SQ_FileIconViewItem represents one item in icon/list view.
+ */
 class SQ_FileIconViewItem : public KFileIconViewItem
 {
 	public:
@@ -30,6 +38,9 @@ class SQ_FileIconViewItem : public KFileIconViewItem
 		~SQ_FileIconViewItem();
 
 	protected:
+		/*
+		 *  Reimplement paintFocus() to ignore painting focus.
+		 */
 		virtual void paintFocus(QPainter *p, const QColorGroup &cg);
 };
 
@@ -41,17 +52,44 @@ class SQ_FileIconView : public SQ_FileIconViewBase
 		SQ_FileIconView(QWidget *parent = 0, const char *name = "");
 		~SQ_FileIconView();
 
+		/*
+		 *  Get SQ_FileIconViewItem by KFileItem. All KFileItems store
+		 *  a pointer to appropriate SQ_FileIconViewItem as extra data.
+		 *  See also KFileItem::setExtraData() and insertItem().
+		 */
 		SQ_FileIconViewItem* viewItem(const KFileItem *item);
 
+		/*
+		 *  Internal.
+		 */
 		virtual void updateView(const KFileItem *i);
 		virtual void updateView(bool b);
+
+		/*
+		 *  Reimplement insertItem() to enable/disable inserting
+		 *  directories (depends on current settings).
+		 */
 		virtual void insertItem(KFileItem *i);
+
+		/*
+		 *  Clear current view and insert "..".
+		 */
 		virtual void clearView();
+
+		/*
+		 *  All files are listed. Do something important.
+		 */
 		virtual void listingCompleted();
 
+		/*
+		 *  Insert ".." item.
+		 */
 		virtual void insertCdUpItem(const KURL &baseurl);
 
 	private:
+		/*
+		 *  Internal. Set item's sorting key.
+		 */
 		void initItem(SQ_FileIconViewItem *item, const KFileItem *i);
 
 	protected slots:

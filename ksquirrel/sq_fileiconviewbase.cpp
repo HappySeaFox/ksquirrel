@@ -40,25 +40,35 @@ SQ_FileIconViewBase::SQ_FileIconViewBase(QWidget *parent, const char *name)
 SQ_FileIconViewBase::~SQ_FileIconViewBase()
 {}
 
+/*
+ *  Somebody dropped urls in viewport. Let's execute popup menu with
+ *  file actions.
+ */
 void SQ_FileIconViewBase::slotDropped(QDropEvent *, const KURL::List &urls, const KURL &_url)
 {
-	KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->getURL() : _url;
+	KURL url = (_url.isEmpty()) ? SQ_WidgetStack::instance()->url() : _url;
 
+	// setup and show popup menu with actions
 	SQ_NavigatorDropMenu::instance()->setupFiles(urls, url);
 	SQ_NavigatorDropMenu::instance()->exec(QCursor::pos());
 }
 
+// Accept drag
 void SQ_FileIconViewBase::dragEnterEvent(QDragEnterEvent *e)
 {
 	e->accept(true);
 }
 
+/*
+ *  Handle double clicks.
+ */
 void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
 	QIconView::contentsMouseDoubleClickEvent(e);
 
 	QIconViewItem *item = findItem(e->pos());
 
+	// double click on item
 	if(item)
 	{
 		if(e->button() == Qt::LeftButton && !SQ_WidgetStack::instance()->visibleWidget()->sing)
@@ -66,8 +76,9 @@ void SQ_FileIconViewBase::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
 		emit doubleClicked(item, e->globalPos());
 	}
+	// double click in viewport, lets invoke browser
 	else
 	{
-		kapp->invokeBrowser(SQ_WidgetStack::instance()->getURL().path());
+		kapp->invokeBrowser(SQ_WidgetStack::instance()->url().path());
 	}
 }

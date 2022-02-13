@@ -23,11 +23,10 @@ SQ_LocationToolbar::SQ_LocationToolbar(QWidget *parent, const char *name) : KToo
 SQ_LocationToolbar::~SQ_LocationToolbar()
 {}
 
-bool SQ_LocationToolbar::configVisible() const
-{
-	return vis;
-}
-
+/*
+ *  Reimplement setShown() to let us know, if toolbar
+ *  shown.
+ */
 void SQ_LocationToolbar::setShown(bool shown)
 {
 	vis = shown;

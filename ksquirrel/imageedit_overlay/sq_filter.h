@@ -36,7 +36,7 @@ class SQ_Filter : public SQ_EditBase
 		virtual void startEditPrivate();
 		virtual void dialogReset();
 		virtual int manipDecodedImage(fmt_image *im);
-		virtual void setPreviewImage(const QImage &im);
+		virtual void cycleDone();
 
 	private slots:
 		void slotStartFilter(SQ_ImageOptions*, SQ_ImageFilterOptions*);

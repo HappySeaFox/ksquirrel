@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0-pre7], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.0-pre8], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre7)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.0-pre8)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -170,8 +170,9 @@ AM_CONDITIONAL(USE_MMX, test x$use_mmx_asm = xyes)
 KDE_CREATE_SUBDIRSLIST
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([ksquirrel/libpixops/Makefile])
 AC_CONFIG_FILES([ksquirrel/Makefile])
+AC_CONFIG_FILES([ksquirrel/libpixops/Makefile])
+AC_CONFIG_FILES([ksquirrel/ksquirrel-small/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_dlg/Makefile])
 AC_CONFIG_FILES([ksquirrel/imageedit_overlay/Makefile])
 AC_CONFIG_FILES([desktop/Makefile])

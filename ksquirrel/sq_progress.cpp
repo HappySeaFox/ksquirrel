@@ -48,10 +48,14 @@ void SQ_Progress::setTotalSteps(int totalSteps)
 	painter->setPen(c);
 }
 
+/*
+ *  Internal. Set current progress to 'progress'.
+ */
 void SQ_Progress::setIndicator(int progress)
 {
 	int totalSteps = total_steps;
 
+	// scale down...
 	if(totalSteps > INT_MAX/1000)
 	{
 		progress /= 1000;
@@ -60,6 +64,7 @@ void SQ_Progress::setIndicator(int progress)
 
 	int np = progress * 192 / totalSteps;
 
+	// draw progress if needed
 	if(np != percentage)
 	{
 		percentage = np;
@@ -69,11 +74,17 @@ void SQ_Progress::setIndicator(int progress)
 	step++;
 }
 
+/*
+ *  Add 'step_new' to current step.
+ */
 void SQ_Progress::advance(int step_new)
 {
 	setIndicator(step + step_new);
 }
 
+/*
+ *  Clear drawing.
+ */
 void SQ_Progress::flush()
 {
 	update();

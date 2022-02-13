@@ -20,9 +20,11 @@
 
 #include <ktoolbar.h>
 
-/**
-  *@author Baryshev Dmitry
-  */
+/*
+ *  SQ_LocationToolbar is a simple wrapper of KToolBar.
+ *
+ *  Used by KSquirrel.
+ */
 
 class SQ_LocationToolbar : public KToolBar
 {
@@ -32,13 +34,27 @@ class SQ_LocationToolbar : public KToolBar
 		SQ_LocationToolbar(QWidget *parent = 0, const char *name = 0);
 		~SQ_LocationToolbar();
 
+		/*
+		 *  Is toolbar visible ?
+		 */
 		bool configVisible() const;
 
 	public slots:
+
+		/*
+		 *  Reimplement setShown() to let us know, if toolbar
+		 *  shown.
+		 */
 		void setShown(bool shown);
 
 	private:
 		bool vis;
 };
+
+inline
+bool SQ_LocationToolbar::configVisible() const
+{
+	return vis;
+}
 
 #endif

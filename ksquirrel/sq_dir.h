@@ -24,27 +24,103 @@
 
 #include "sq_thumbnailinfo.h"
 
+/*
+ *  Class for managing application-specific data. It takes care
+ *  of storing thumbnails, unpacked archives, .desktop files.
+ *
+ *  All data stored in ~/.ksquirrel (called 'storage').
+ *
+ *  Objects of this class are used by SQ_Archivehandler, SQ_PixmapCache,
+ *  SQ_ThumbnailJob etc.
+ */
+
 class SQ_Dir : public QDir
 {
-	public: 
-		enum Prefix { Thumbnails, Extracts, Desktops, Tmp };
+	public:
+		enum Prefix {
+
+			// thumbnail cache (~/.ksquirrel/thumbnails).
+			Thumbnails,
+
+			// SQ_ArchiveHandler cache (~/.ksquirrel/extracts).
+			Extracts,
+
+			// .desktop files (~/.ksquirrel/desktop).
+			Desktops,
+
+			// temporary usage (~/.ksquirrel/tmp).
+			Tmp };
 
 		SQ_Dir(Prefix);
 		~SQ_Dir();
 
+		/*
+		 *  Create relative directory in storage.
+		 *
+		 *  For example, if prefix == Thumbnails,
+		 *  mkdir("/mnt/win_c") will create
+		 *  ~/.ksquirrel/thumbnails/mnt/win_c.
+		 *
+		 *  Return true, if operation succeded.
+		 */
 		bool mkdir(const QString &relpath);
-		void setRoot(const QString &name);
+
+		/*
+		 *  Change current directory to m_root directory.
+		 *
+		 *  For example, if prefix == Thumbnails, it will
+		 *  cd to "~/.ksquirrel/thumbnails".
+		 */
 		void rewind();
+
+		/*
+		 *  Get current root directory.
+		 *
+		 *  For example, if prefix == Thumbnails, it will
+		 *  return "/home/krasu/.ksquirrel/thumbnails".
+		 */
 		QString root() const;
-		QString getAbsPath(const QString relpath);
+
+		/*
+		 *  Get absolute path for relative path 'relpath'.
+		 */
+		QString absPath(const QString &relpath);
+
+		/*
+		 *  Save thumbnail to storage.
+		 */
 		void saveThumbnail(const QString &path, SQ_Thumbnail &thumb);
-		bool fileExists(const QString &file, QString &file);
+
+		/*
+		 *  Check if file exists. If exists, set 'fullpath'
+		 *  to its full path.
+		 */
+		bool fileExists(const QString &file, QString &fullpath);
+
+		/*
+		 *  Check if file needs to be updated.
+		 *
+		 *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
+		 *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
+		 *  archive in it. Today you replaced /opt/arc.zip with newer version. Now
+		 *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
+		 *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack this archive once more.
+		 */
 		bool updateNeeded(const QString &file);
+
+		/*
+		 *  Remove file from storage
+		 */
 		void removeFile(const QString &file);
 
 	private:
+		/*
+		 *  Internal, used by mkdir().
+		 */
+		void setRoot(const QString &name);
+
+private:
 		QString m_root;
-		QString def_prot;
 };
 
 #endif

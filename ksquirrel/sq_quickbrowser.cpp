@@ -81,7 +81,8 @@ void SQ_Header::mouseReleaseEvent(QMouseEvent *e)
 		inMouse = false;
 }
 
-SQ_SizeGrip::SQ_SizeGrip(QWidget *top, QWidget *parent, const char *name) : QSizeGrip(parent, name), p(top)
+SQ_SizeGrip::SQ_SizeGrip(QWidget *top, QWidget *parent, const char *name)
+		: QSizeGrip(parent, name), p(top)
 {}
 
 SQ_SizeGrip::~SQ_SizeGrip()
@@ -127,12 +128,15 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 {
 	view = this;
 	hide();
+
+	// create toolbar
 	SQ_Header *t = new SQ_Header(this);
 
 	t->setIconSize(16);
 	t->setPalette(QPalette(QColor(255,255,255), QColor(255,255,255)));
 
-	op = quick = new SQ_DirOperatorBase(SQ_WidgetStack::instance()->getURL(), SQ_DirOperatorBase::TypeList, this);
+	// create and setup SQ_DirOperatorBase
+	op = quick = new SQ_DirOperatorBase(SQ_WidgetStack::instance()->url(), SQ_DirOperatorBase::TypeList, this);
 	quick->readConfig(KGlobal::config(), SQ_SECTION_LIST);
 	quick->setViewConfig(KGlobal::config(), SQ_SECTION_LIST);
 	quick->setMode(KFile::Files);
@@ -141,6 +145,7 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 
 	quick->iv->setCursor(Qt::ArrowCursor);
 
+	// plug actions to toolbar
 	quick->actionCollection()->action("back")->plug(t);
 	quick->actionCollection()->action("forward")->plug(t);
 	quick->actionCollection()->action("up")->plug(t);
@@ -152,6 +157,7 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 
 	setStretchFactor(quick, 1);
 
+	// create statusbar & sizegrip
 	SQ_QuickStatus *status = new SQ_QuickStatus(this);
 	status->setSizeGripEnabled(false);
 	QLabel *fix = new QLabel(status);
@@ -160,10 +166,9 @@ SQ_QuickBrowser::SQ_QuickBrowser(QWidget *parent, const char *name) : QVBox(pare
 	status->addWidget(fix, 1, true);
 	status->addWidget(grip, 0, true);
 
-	QRect r = SQ_Config::instance()->readRectEntry("GL view", "quickGeometry");
-
-	if(r.isNull())
-		r = QRect(0, 34, 250, 200);
+	// restore geometry
+	QRect rect(0, 34, 250, 200);
+	QRect r = SQ_Config::instance()->readRectEntry("GL view", "quickGeometry", &rect);
 
 	setGeometry(r);
 }
@@ -173,10 +178,15 @@ SQ_QuickBrowser::~SQ_QuickBrowser()
 
 void SQ_QuickBrowser::closeEvent(QCloseEvent *e)
 {
+	// hide SQ_QuickBrowser and ignore
+	// close event
 	hide();
 	e->ignore();
 }
 
+/*
+ *  Close(hide) SQ_QuickBrowser.
+ */
 void SQ_QuickBrowser::slotClose()
 {
 	SQ_GLWidget::window()->pAToolQuick->animateClick();

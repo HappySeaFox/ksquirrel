@@ -1118,7 +1118,6 @@ uninstall-local:
 .NOEXPORT:
 
 
-
 #>+ 2
 KDE_DIST=Makefile.in Makefile.am 
 

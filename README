@@ -91,3 +91,6 @@ Since 0.6.0-pre6 KSquirrel has additional edit tools:
 - rotate tool
 - colorize tool
 - print tool
+
+Since 0.6.0-pre7 KSquirrel has additional edit tools:
+- filter tool

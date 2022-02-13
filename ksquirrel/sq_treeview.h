@@ -23,6 +23,12 @@
 #include <kfiletreeview.h>
 #include <kurl.h>
 
+/*
+ *  SQ_TreeView represents a file tree.
+ *
+ *  TODO: calculate subpaths.
+ */
+
 class SQ_TreeView : public KFileTreeView
 {
     Q_OBJECT
@@ -31,24 +37,69 @@ class SQ_TreeView : public KFileTreeView
 		SQ_TreeView(QWidget *parent = 0, const char *name = 0);
 		~SQ_TreeView();
 
+		/*
+		 *  Load new url, if tree is visible. Save url and do nothing
+		 *  otherwise.
+		 */
 		void emitNewURL(const KURL &url);
+
+		/*
+		 *  Is tree visisble ?
+		 */
 		bool configVisible() const;
 
 		static SQ_TreeView* instance();
 
 	protected:
+
+		/*
+		 *  On show event load saved url, if any. See emitNewURL().
+		 */
 		void showEvent(QShowEvent *);
 
 	private:
+
+		/*
+		 *  Set given item visible, current, and populate it.
+		 */
 		void populateItem(KFileTreeViewItem *);
-		bool doSearch(KFileTreeBranch *);
+
+		/*
+		 *  Search first available url in variable 'paths'. Open found item.
+		 *  If item was found return true.
+		 */
+		bool doSearch();
+
+		/*
+		 *  Close all last opened items.
+		 *
+		 *  TODO: create option "[X] Collapse opened"
+		 */
 		void collapseOpened();
 
 	public slots:
+
+		/*
+		 *  Item executed. Let's pass its url to SQ_WidgetStack (if needed).
+		 */
 		void slotItemExecuted(QListViewItem*);
-		void slotNewURL(const KURL &url);
+
+		/*
+		 *  New item is opened. Try to continue loading url.
+		 */
 		void slotOpened(KFileTreeViewItem *);
+
+		/*
+		 *  Set tree shown/hidden.
+		 */
 		void setShown(bool shown);
+
+	private slots:
+
+		/*
+		 *  Load url.
+		 */
+		void slotNewURL(const KURL &url);
 
 	signals:
 		void newURL(const KURL &url);
@@ -61,5 +112,11 @@ class SQ_TreeView : public KFileTreeView
 		KURL pendingURL;
 		static SQ_TreeView *tree;
 };
+
+inline
+bool SQ_TreeView::configVisible() const
+{
+	return vis;
+}
 
 #endif

@@ -32,11 +32,19 @@ SQ_NavigatorDropMenu::SQ_NavigatorDropMenu() : QObject()
 
 	dropmenu = new KPopupMenu(NULL);
 
+	// "copy" action
 	KAction *pACopy = new KAction(i18n("Copy here"), "editpaste", 0, this, SLOT(slotCopy()), ac, "sq_copy");
+
+	// "move" action
 	KAction *pAMove = new KAction(i18n("Move here"), "editpaste", 0, this, SLOT(slotMove()), ac, "sq_move");
+
+	// "link" action
 	KAction *pALink = new KAction(i18n("Link here"), "www", 0, this, SLOT(slotLink()), ac, "sq_link");
+
+	// "cancel" action, this action will do nothing - just close popup menu
 	KAction *pACancel = new KAction(i18n("Cancel"), "cancel", 0, 0, 0, ac, "sq_cancel");
 
+	// plug all actions to popup menu
 	pACopy->plug(dropmenu);
 	pAMove->plug(dropmenu);
 	pALink->plug(dropmenu);
@@ -49,16 +57,19 @@ SQ_NavigatorDropMenu::~SQ_NavigatorDropMenu()
 
 void SQ_NavigatorDropMenu::slotCopy()
 {
+	// use KIO
 	KIO::copy(list, url);
 }
 
 void SQ_NavigatorDropMenu::slotMove()
 {
+	// use KIO
 	KIO::move(list, url);
 }
 
 void SQ_NavigatorDropMenu::slotLink()
 {
+	// use KIO
 	KIO::link(list, url);
 }
 
@@ -67,12 +78,18 @@ SQ_NavigatorDropMenu* SQ_NavigatorDropMenu::instance()
 	return app;
 }
 
+/*
+ *  Save destination url and urls of dropped files.
+ */
 void SQ_NavigatorDropMenu::setupFiles(const KURL::List &l, const KURL &u)
 {
 	list = l;
 	url = u;
 }
 
+/*
+ *  Show popup menu with available actions.
+ */
 void SQ_NavigatorDropMenu::exec(const QPoint &pos)
 {
 	dropmenu->exec(pos);

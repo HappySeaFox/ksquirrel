@@ -42,7 +42,7 @@ class SQ_Printer : public SQ_EditBase
 		virtual void startEditPrivate();
 		virtual void dialogReset();
 		virtual int manipDecodedImage(fmt_image *im);
-		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt);
+		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
 		virtual void cycleDone();
 
 	private slots:

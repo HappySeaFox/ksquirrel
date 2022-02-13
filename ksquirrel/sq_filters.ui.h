@@ -17,7 +17,7 @@ void SQ_Filters::init()
 	QValueList<QString>::iterator it_name = KSquirrel::app()->sqFiltersName->begin();
 	QValueList<QString>::iterator it_ext = KSquirrel::app()->sqFiltersExt->begin();
 
-	for(;it_name != nEND;it_name++,it_ext++)
+	for(;it_name != nEND;++it_name,++it_ext)
 	{
 		if(itemafter)
 		    item = new QListViewItem(listFilters, itemafter, *it_name, *it_ext);

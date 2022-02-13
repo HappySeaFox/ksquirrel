@@ -14,16 +14,19 @@ void SQ_ImageResize::init()
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     groupBoxApsect->setEnabled(false);
 
-    method = SQ_Config::instance()->readEntry("Image edit options", "resize_method", "NEAREST");
+    method = SQ_Config::instance()->readEntry("Image edit options", "resize_method", "BOX");
     methods = new QPopupMenu;
-    methods->insertItem(tr2i18n("NEAREST"));
-    methods->insertItem(tr2i18n("BILINEAR"));
-    methods->insertItem(tr2i18n("TILES"));
-    methods->insertItem(tr2i18n("HYPER"));
+    methods->insertItem("BOX");
+    methods->insertItem("TRIANGLE");
+    methods->insertItem("BELL");
+    methods->insertItem("BSPLINE");
+    methods->insertItem("LANCZOS3");
+    methods->insertItem("MITCHELL");
     connect(methods, SIGNAL(activated(int)), this, SLOT(slotMethodActivated(int)));
     pushMethod->setPopup(methods);
 
-    widgetStackTypes->setPaletteBackgroundColor(widgetStackTypes->colorGroup().highlight().light(110));
+//    widgetStackTypes->setPaletteBackgroundColor(widgetStackTypes->colorGroup().highlight().light(110));
+
     strings.append(tr2i18n("<b>resize&nbsp;in&nbsp;percents</b>"));
     strings.append(tr2i18n("<b>resize&nbsp;in&nbsp;pixels</b>"));
 
@@ -50,7 +53,6 @@ void SQ_ImageResize::init()
     kIntPercent->setValue(100);
 
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "resize_putto", QString::null);
-    imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "resize_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "resize_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "resize_close", true);
 
@@ -109,11 +111,13 @@ void SQ_ImageResize::slotStartResize()
     ropt.preserve = checkPreserve->isChecked();
     ropt.adjust = (ropt.percentage) ? comboApplyTo->currentItem() : comboFit->currentItem();
 
-    if(method == "NEAREST") ropt.method = PIXOPS_INTERP_NEAREST;
-    else if(method == "BILINEAR") ropt.method = PIXOPS_INTERP_BILINEAR;
-    else if(method == "TILES") ropt.method = PIXOPS_INTERP_TILES;
-    else ropt.method = PIXOPS_INTERP_HYPER;
-    
+    if(method == "BOX") ropt.method = fmt_filters::ILU_SCALE_BOX;
+    else if(method == "TRIANGLE") ropt.method = fmt_filters::ILU_SCALE_TRIANGLE;
+    else if(method == "BELL") ropt.method = fmt_filters::ILU_SCALE_BELL;
+    else if(method == "BSPLINE") ropt.method = fmt_filters::ILU_SCALE_BSPLINE;
+    else if(method == "MITCHELL") ropt.method = fmt_filters::ILU_SCALE_MITCHELL;
+    else ropt.method = fmt_filters::ILU_SCALE_LANCZOS3;
+
     SQ_Config::instance()->setGroup("Image edit options");
     SQ_Config::instance()->writeEntry("resize_w", kIntPixW->value());
     SQ_Config::instance()->writeEntry("resize_h", kIntPixH->value());

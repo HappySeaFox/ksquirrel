@@ -21,6 +21,8 @@
 #include "sq_rotater.h"
 #include "sq_library.h"
 #include "sq_imagerotate.h"
+#include "sq_config.h"
+#include "sq_imageloader.h"
 
 SQ_Rotater * SQ_Rotater::sing = NULL;
 
@@ -29,6 +31,8 @@ SQ_Rotater::SQ_Rotater() : SQ_EditBase()
 	sing = this;
 
 	special_action = i18n("Rotating");
+
+	prefix = "Rotating of ";
 
 	ondisk = true;
 }
@@ -50,11 +54,17 @@ void SQ_Rotater::startEditPrivate()
 	rotate->setCaption(i18n("Rotate or flip 1 file", "Rotate or flip %n files", files.count()));
 
 	connect(rotate, SIGNAL(rotate(SQ_ImageOptions*, SQ_ImageRotateOptions*)), this, SLOT(slotStartRotate(SQ_ImageOptions*, SQ_ImageRotateOptions*)));
-	connect(this, SIGNAL(convertText(const QString &, bool)), rotate, SLOT(slotDebugText(const QString &, bool)));
-	connect(this, SIGNAL(oneFileProcessed()), rotate, SLOT(slotOneProcessed()));
-	connect(this, SIGNAL(done(bool)), rotate, SLOT(slotDone(bool)));
+        connect(this, SIGNAL(convertText(const QString &, bool)), rotate, SLOT(slotDebugText(const QString &, bool)));
+        connect(this, SIGNAL(oneFileProcessed()), rotate, SLOT(slotOneProcessed()));
+        connect(this, SIGNAL(done(bool)), rotate, SLOT(slotDone(bool)));
 
-	preview = true;
+        bool generate_preview = SQ_Config::instance()->readBoolEntry("Edit tools", "preview", false);
+
+        if(generate_preview)
+        {
+            rotate->setPreviewImage(generatePreview());
+            SQ_ImageLoader::instance()->cleanup();
+        }
 
 	rotate->exec();
 }
@@ -109,9 +119,4 @@ int SQ_Rotater::determineNextScan(const fmt_image &im, RGBA *scan, int y)
 		memcpy(scan, image + y * im.w, im.w * sizeof(RGBA));
 
 	return SQE_OK;
-}
-
-void SQ_Rotater::setPreviewImage(const QImage &)
-{
-
 }

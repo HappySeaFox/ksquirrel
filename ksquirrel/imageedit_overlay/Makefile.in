@@ -609,7 +609,6 @@ messages:
 .NOEXPORT:
 
 
-
 #>+ 3
 sq_printer.moc.cpp: $(srcdir)/sq_printer.h
 	$(MOC) $(srcdir)/sq_printer.h -o sq_printer.moc.cpp

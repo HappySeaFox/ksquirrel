@@ -22,7 +22,7 @@
 #include "sq_library.h"
 #include "sq_imageresize.h"
 
-#include "libpixops/pixops.h"
+#include "fmt_filters.h"
 
 SQ_Resizer * SQ_Resizer::sing = NULL;
 
@@ -31,6 +31,8 @@ SQ_Resizer::SQ_Resizer() : SQ_EditBase()
 	sing = this;
 
 	special_action = i18n("Resizing");
+
+	prefix = "Resizing of ";
 
 	ondisk = true;
 }
@@ -44,11 +46,9 @@ void SQ_Resizer::startEditPrivate()
 	res->setCaption(i18n("Resize 1 file", "Resize %n files", files.count()));
 
 	connect(res, SIGNAL(_resize(SQ_ImageOptions*, SQ_ImageResizeOptions*)), this, SLOT(slotStartResize(SQ_ImageOptions*, SQ_ImageResizeOptions*)));
-	connect(this, SIGNAL(convertText(const QString &, bool)), res, SLOT(slotDebugText(const QString &, bool)));
-	connect(this, SIGNAL(oneFileProcessed()), res, SLOT(slotOneProcessed()));
-	connect(this, SIGNAL(done(bool)), res, SLOT(slotDone(bool)));
-
-	preview = false;
+        connect(this, SIGNAL(convertText(const QString &, bool)), res, SLOT(slotDebugText(const QString &, bool)));
+        connect(this, SIGNAL(oneFileProcessed()), res, SLOT(slotOneProcessed()));
+        connect(this, SIGNAL(done(bool)), res, SLOT(slotDone(bool)));
 
 	res->exec();
 }
@@ -122,22 +122,25 @@ int SQ_Resizer::manipDecodedImage(fmt_image *im)
 		}
 	}
 
-	RGBA *rgba = new RGBA [w * h];
-
-	if(!rgba)
-		return SQE_W_NOMEMORY;
-
+	RGBA *rgba;
+/*
 	pixops_scale((unsigned char *)rgba, 0, 0, w, h, w * 4, 4, true,
 				(unsigned char *)image, im->w, im->h, im->w * 4, 4, true,
 				(double)w / im->w, (double)h / im->h,
 				(PixopsInterpType)resopt.method);
+*/
+        fmt_filters::image img((unsigned char *)image, im->w, im->h);
 
-	free(image);
+        if(fmt_filters::resize(img, w, h, resopt.method, (unsigned char **)&rgba))
+        {
+	    free(image);
 
-	image = rgba;
+	    image = rgba;
 
-	im->w = w;
-	im->h = h;
-
-	return SQE_OK;
+	    im->w = w;
+	    im->h = h;
+	    return SQE_OK;
+        }
+        else
+            return SQE_R_NOMEMORY;
 }

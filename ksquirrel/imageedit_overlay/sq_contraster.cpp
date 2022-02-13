@@ -22,6 +22,8 @@
 #include "sq_imagebcg.h"
 #include "sq_library.h"
 #include "fmt_filters.h"
+#include "sq_config.h"
+#include "sq_imageloader.h"
 
 SQ_Contraster * SQ_Contraster::sing = NULL;
 
@@ -30,6 +32,8 @@ SQ_Contraster::SQ_Contraster() : SQ_EditBase()
 	sing = this;
 
 	special_action = i18n("Colorizing");
+
+	prefix = "Colorizing of ";
 
 	ondisk = true;
 }
@@ -43,9 +47,17 @@ void SQ_Contraster::startEditPrivate()
 	bcg->setCaption(i18n("Colorize 1 file", "Edit %n files", files.count()));
 
 	connect(bcg, SIGNAL(bcg(SQ_ImageOptions*,SQ_ImageBCGOptions*)), this, SLOT(slotStartContrast(SQ_ImageOptions*,SQ_ImageBCGOptions*)));
-	connect(this, SIGNAL(convertText(const QString &, bool)), bcg, SLOT(slotDebugText(const QString &, bool)));
-	connect(this, SIGNAL(oneFileProcessed()), bcg, SLOT(slotOneProcessed()));
-	connect(this, SIGNAL(done(bool)), bcg, SLOT(slotDone(bool)));
+        connect(this, SIGNAL(convertText(const QString &, bool)), bcg, SLOT(slotDebugText(const QString &, bool)));
+        connect(this, SIGNAL(oneFileProcessed()), bcg, SLOT(slotOneProcessed()));
+        connect(this, SIGNAL(done(bool)), bcg, SLOT(slotDone(bool)));
+
+	bool generate_preview = SQ_Config::instance()->readBoolEntry("Edit tools", "preview", false);
+
+	if(generate_preview)
+	{
+	    bcg->setPreviewImage(generatePreview());
+	    SQ_ImageLoader::instance()->cleanup();
+	}
 
 	bcg->exec();
 }
@@ -71,21 +83,16 @@ void SQ_Contraster::dialogReset()
 int SQ_Contraster::manipDecodedImage(fmt_image *im)
 {
 	if(bcgopt.b)
-		fmt_filters::brightness((unsigned char *)image, im->w, im->h, bcgopt.b);
+		fmt_filters::brightness(fmt_filters::image((unsigned char *)image, im->w, im->h), bcgopt.b);
 
 	if(bcgopt.c)
-		fmt_filters::contrast((unsigned char *)image, im->w, im->h, bcgopt.c);
+		fmt_filters::contrast(fmt_filters::image((unsigned char *)image, im->w, im->h), bcgopt.c);
 
 	if(bcgopt.g != 100)
-		fmt_filters::gamma((unsigned char *)image, im->w, im->h, (double)bcgopt.g / 100.0);
+		fmt_filters::gamma(fmt_filters::image((unsigned char *)image, im->w, im->h), (double)bcgopt.g / 100.0);
 
 	if(bcgopt.red || bcgopt.green || bcgopt.blue)
-		fmt_filters::colorize((unsigned char *)image, im->w, im->h, bcgopt.red, bcgopt.green, bcgopt.blue);
+		fmt_filters::colorize(fmt_filters::image((unsigned char *)image, im->w, im->h), bcgopt.red, bcgopt.green, bcgopt.blue);
 
 	return SQE_OK;
-}
-
-void SQ_Contraster::setPreviewImage(const QImage &)
-{
-
 }

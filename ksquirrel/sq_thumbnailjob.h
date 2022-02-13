@@ -35,6 +35,11 @@ class SQ_Dir;
 
 typedef QPtrList<KFileItem> KFileItemList;
 
+/*
+ *  SQ_ThumbnailLoadJob is a job for loading thumbnails
+ *  in given directory.
+ */
+
 class SQ_ThumbnailLoadJob : public KIO::Job
 {
 	Q_OBJECT

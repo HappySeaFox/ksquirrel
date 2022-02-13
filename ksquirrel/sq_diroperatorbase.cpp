@@ -51,17 +51,18 @@
 
 #define SQ_MAX_WORD_LENGTH 50
 
-const int timer_value = 10;
+static const int timer_value = 10;
 
 SQ_DirOperatorBase::SQ_DirOperatorBase(const KURL &url, VV type_, QWidget *parent, const char *name) :
 	KDirOperator(url, parent, name)
 {
 	type = type_;
 
+	// create and insert new actions in context menu
 	setupActions();
 
 	if(!SQ_WidgetStack::instance()->count())
-		connect(SQ_ExternalTool::instance()->getConstPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
+		connect(SQ_ExternalTool::instance()->constPopupMenu(), SIGNAL(activated(int)), SLOT(slotActivateExternalTool(int)));
 
 	connect(this, SIGNAL(urlEntered(const KURL&)), this, SLOT(slotUrlEntered(const KURL&)));
 
@@ -192,20 +193,24 @@ void SQ_DirOperatorBase::slotExecuted(QIconViewItem *item)
 	QString fullpath = fi->url().path();
 	QFileInfo fm(fullpath);
 
+	// if selected item points to file, not directory
 	if(!fi->isDir())
 	{
 		tobeDecoded = fi->url().path();
 
+		// it is supported image type, let's decode and show it
 		if(SQ_LibraryHandler::instance()->supports(tobeDecoded))
 			timer->start(timer_value, true);
 		else
 		{
 			SQ_GLView::window()->sbarWidget("SBDecoded")->setText(i18n("Format \"%1\" not supported").arg(fm.extension(false)));
 
+			// if it is supported archive file
 			if(SQ_ArchiveHandler::instance()->findProtocolByFile(fi) != -1)
 				if(SQ_Config::instance()->readBoolEntry("Fileview", "archives", true))
 					emit tryUnpack(fi);
 				else;
+			// run with default application, if needed
 			else if(SQ_Config::instance()->readBoolEntry("Fileview", "run unknown", true))
 				pARunSeparately->activate();
 		}
@@ -249,15 +254,19 @@ void SQ_DirOperatorBase::slotExecuted(QListViewItem *item)
 	}
 }
 
+/*
+ *  Invoked, when user selected some external tool in menu.
+ */
 void SQ_DirOperatorBase::slotActivateExternalTool(int id)
 {
+	// get currently selected items
 	KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->selectedItems();
 	KURL::List list;
 
 	if(!items) return;
 	if(items->isEmpty()) return;
 
-	int index = SQ_ExternalTool::instance()->getConstPopupMenu()->itemParameter(id);
+	int index = SQ_ExternalTool::instance()->constPopupMenu()->itemParameter(id);
 
 	KFileItem *f = items->first();
 
@@ -267,20 +276,31 @@ void SQ_DirOperatorBase::slotActivateExternalTool(int id)
 		f = items->next();
 	}
 
+	// get appropriate desktop file
 	KDesktopFile *kd = SQ_ExternalTool::instance()->at(index);
+
+	// create KService instance
 	KService ks(kd);
 
+	// create argument for KService. If multiple files
+	// allowed, return entire list, and first item otherwise.
 	QStringList args = (ks.allowMultipleFiles()) ?
 								KRun::processDesktopExec(ks, list, true) :
 								KRun::processDesktopExec(ks, list.first(), true);
 
+	// finally, open items with selected application
 	KRun::runCommand(args.join(" "), ks.name(), ks.icon());
 }
 
+/*
+ *  SQ_DirOperatorBase can activate items by single or double click.
+ *  This method will connect appropriate signals.
+ */
 void SQ_DirOperatorBase::reconnectClick(bool firstconnect)
 {
 	bool old_sing = sing;
 
+	// determine clicking policy
 	switch(SQ_Config::instance()->readNumEntry("Fileview", "click policy", 0))
 	{
 		case 0: sing = KGlobalSettings::singleClick(); break;
@@ -295,6 +315,7 @@ void SQ_DirOperatorBase::reconnectClick(bool firstconnect)
 		if(sing == old_sing)
 			return;
 
+	// finally, connect signals
 	switch(type)
 	{
 		case SQ_DirOperatorBase::TypeIcon:
@@ -354,12 +375,20 @@ void SQ_DirOperatorBase::reconnectClick(bool firstconnect)
 	}
 }
 
+/*
+ *  Deselect all items, set current item, select this item,
+ *  and ensure it visible.
+ */
 void SQ_DirOperatorBase::setCurrentItem(KFileItem *item)
 {
+	// clear selection
 	fileview->clearSelection();
+
+	// set current item and select it
 	fileview->setCurrentItem(item);
 	fileview->setSelected(item, true);
 
+	// make this item visible
 	fileview->ensureItemVisible(item);
 }
 
@@ -383,6 +412,8 @@ void SQ_DirOperatorBase::slotSelected(QIconViewItem *item)
 	if(KFileIconViewItem* f = dynamic_cast<KFileIconViewItem*>(item))
 	{
 		fi = f->fileInfo();
+
+		// let SQ_WidgetStack to select this file in all other views
 		SQ_WidgetStack::instance()->selectFile(fi, this);
 	}
 }
@@ -397,6 +428,8 @@ void SQ_DirOperatorBase::slotSelected(QListViewItem *item)
 	if(KFileListViewItem* f = dynamic_cast<KFileListViewItem*>(item))
 	{
 		fi = f->fileInfo();
+
+		// let SQ_WidgetStack to select this file in all other views
 		SQ_WidgetStack::instance()->selectFile(fi, this);
 	}
 }
@@ -406,12 +439,15 @@ void SQ_DirOperatorBase::slotDelayedDecode()
 	SQ_GLWidget::window()->slotStartDecoding(tobeDecoded, true);
 }
 
+// Insert new actions in context menu.
 void SQ_DirOperatorBase::setupActions()
 {
+	// create new separator
 	KActionSeparator *pASep = new KActionSeparator(actionCollection());
 
 	actionCollection()->action("mkdir")->setShortcut(KShortcut(CTRL+Qt::Key_N));
 
+	// remove "View" submenu, since we will insert our's one.
 	setupMenu(KDirOperator::SortActions | KDirOperator::NavActions | KDirOperator::FileActions);
 
 	pARunSeparately = new KAction(i18n("Run separately"), "launch", KShortcut(CTRL+Key_J), SQ_WidgetStack::instance(), SLOT(slotRunSeparately()), (KActionCollection*)0, "Run separately");
@@ -420,6 +456,7 @@ void SQ_DirOperatorBase::setupActions()
 
 	pAFileActions = new KActionMenu(i18n("File actions"), "edit");
 
+	// create file actions - copy, move, paste ...
 	pAFileActions->insert(new KAction(i18n("Copy"), "editcopy", KStdAccel::copy(), SQ_WidgetStack::instance(), SLOT(slotFileCopy()), actionCollection(), "SQ Menu File Copy"));
 	pAFileActions->insert(new KAction(i18n("Cut"), "editcut", KStdAccel::cut(), SQ_WidgetStack::instance(), SLOT(slotFileCut()), actionCollection(), "SQ Menu File Cut"));
 	pAFileActions->insert(new KAction(i18n("Paste"), "editpaste", KStdAccel::paste(), SQ_WidgetStack::instance(), SLOT(slotFilePaste()), actionCollection(), "SQ Menu File Paste"));
@@ -430,6 +467,7 @@ void SQ_DirOperatorBase::setupActions()
 	pAFileActions->insert(pASep);
 	pAFileActions->insert(pARunSeparately);
 
+	// insert edit actions - Convert, Rotate, Resize ...
 	pAImageActions = new KActionMenu(i18n("Image actions"), "images");
 	pAImageActions->insert(KSquirrel::app()->pAImageToolbar);
 	pAImageActions->insert(pASep);
@@ -451,7 +489,7 @@ void SQ_DirOperatorBase::setupActions()
 	pADirOperatorMenu->insert(pASep);
 	pADirOperatorMenu->popupMenu()->insertItem(i18n("View"), KSquirrel::app()->menuViews());
 	pADirOperatorMenu->insert(pASep);
-	pADirOperatorMenu->popupMenu()->insertItem(i18n("External Tools"), SQ_ExternalTool::instance()->getConstPopupMenu());
+	pADirOperatorMenu->popupMenu()->insertItem(i18n("External Tools"), SQ_ExternalTool::instance()->constPopupMenu());
 	pADirOperatorMenu->insert(pASep);
 	pADirOperatorMenu->popupMenu()->insertItem(i18n("Fi&lter"), KSquirrel::app()->menuFilters());
 }

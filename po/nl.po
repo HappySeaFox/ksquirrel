@@ -53,8 +53,8 @@ msgid "External Tools"
 msgstr "Externe hulpmiddelen"
 
 #: sq_diroperatorbase.cpp:438 ksquirrel.cpp:458
-msgid "Fi&lter"
-msgstr "Fi&lter"
+msgid "Filter"
+msgstr "Filter"
 
 #: sq_diroperatorbase.cpp:448
 msgid "Select files to edit"

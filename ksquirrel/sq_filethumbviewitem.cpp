@@ -34,7 +34,10 @@ SQ_FileThumbViewItem::SQ_FileThumbViewItem(QIconView *parent, const QString &tex
 SQ_FileThumbViewItem::~SQ_FileThumbViewItem()
 {}
 
-QString SQ_FileThumbViewItem::getFullInfo() const
+/*
+ *  Get additional information as QString object.
+ */
+QString SQ_FileThumbViewItem::fullInfo() const
 {
 	QString s = i18n("Type: %1\nDimensions: %2\nBits per pixel: %3\nColor space: %4\nCompression: %5\nNumber of frames: %6\nUncompressed size: %7")
 			.arg(info.info.type)
@@ -48,6 +51,9 @@ QString SQ_FileThumbViewItem::getFullInfo() const
 	return s;
 }
 
+/*
+ *  Set additional information.
+ */
 void SQ_FileThumbViewItem::setInfo(const SQ_Thumbnail &t)
 {
 	info = t;

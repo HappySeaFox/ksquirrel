@@ -19,9 +19,9 @@ void SQ_ExternalTools::init()
 	for(int i = 0;i < count;i++)
 	{
 		if(itemafter)
-		    item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->getToolName(i), SQ_ExternalTool::instance()->getToolCommand(i), SQ_ExternalTool::instance()->getToolPixmap(i));
+		    item = new QListViewItem(listTools, itemafter, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
 		else
-		item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->getToolName(i), SQ_ExternalTool::instance()->getToolCommand(i), SQ_ExternalTool::instance()->getToolPixmap(i));
+		item = new QListViewItem(listTools, "", SQ_ExternalTool::instance()->toolName(i), SQ_ExternalTool::instance()->toolCommand(i), SQ_ExternalTool::instance()->toolPixmap(i));
 		item->setPixmap(0, SQ_IconLoader::instance()->loadIcon(item->text(3), KIcon::Desktop, 16));
 	itemafter = item;
 

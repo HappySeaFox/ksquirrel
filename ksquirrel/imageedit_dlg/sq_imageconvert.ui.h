@@ -22,7 +22,6 @@ void SQ_ImageConvert::init()
     pushOptions->setPixmap(SQ_IconLoader::instance()->loadIcon("configure", KIcon::Desktop, KIcon::SizeSmall));
     
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "convert_putto", QString::null);
-    imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "convert_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "convert_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "convert_close", true);
 

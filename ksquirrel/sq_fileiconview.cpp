@@ -15,14 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qpoint.h>
+
 #include "sq_config.h"
 #include "sq_iconloader.h"
 #include "sq_fileiconview.h"
 #include "sq_widgetstack.h"
 #include "sq_diroperator.h"
 
-SQ_FileIconViewItem::SQ_FileIconViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi):
-		KFileIconViewItem(parent, text, pixmap, fi)
+SQ_FileIconViewItem::SQ_FileIconViewItem(QIconView *parent, const QString &text,
+										 const QPixmap &pixmap, KFileItem *fi)
+			: KFileIconViewItem(parent, text, pixmap, fi)
 {}
 
 SQ_FileIconViewItem::~SQ_FileIconViewItem()
@@ -36,7 +39,8 @@ SQ_FileIconView::SQ_FileIconView(QWidget *parent, const char *name) : SQ_FileIco
 	QString n = name;
 	disconnect(this, SIGNAL(clicked(QIconViewItem*, const QPoint&)), this, 0);
 	setSorting(QDir::IgnoreCase);
-	dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, (n == "icon view") ? KIcon::SizeMedium : KIcon::SizeSmall);
+	dirPix = SQ_IconLoader::instance()->loadIcon("folder", KIcon::Desktop, (n == "icon view")
+		? KIcon::SizeMedium : KIcon::SizeSmall);
 }
 
 SQ_FileIconView::~SQ_FileIconView()
@@ -47,6 +51,11 @@ void SQ_FileIconView::slotSelected(QIconViewItem *item, const QPoint &point)
 	emit doubleClicked(item, point);
 }
 
+/*
+ *  Get SQ_FileIconViewItem by KFileItem. All KFileItems store
+ *  a pointer to appropriate SQ_FileIconViewItem as extra data.
+ *  See also KFileItem::setExtraData() and insertItem().
+ */
 SQ_FileIconViewItem* SQ_FileIconView::viewItem(const KFileItem *item)
 {
 	return item ? ((SQ_FileIconViewItem*)item->extraData(this)) : NULL;
@@ -77,8 +86,12 @@ void SQ_FileIconView::updateView(const KFileItem *i)
 		initItem(item, i);
 }
 
+/*
+ *  Internal. Set item's sorting key.
+ */
 void SQ_FileIconView::initItem(SQ_FileIconViewItem *item, const KFileItem *i)
 {
+	// determine current sorting type
 	QDir::SortSpec spec = KFileView::sorting();
 
 	if(spec & QDir::Time)
@@ -89,13 +102,19 @@ void SQ_FileIconView::initItem(SQ_FileIconViewItem *item, const KFileItem *i)
 		item->setKey(sortingKey(i->text(), i->isDir(), spec));
 }
 
+/*
+ *  Reimplement insertItem() to enable/disable inserting
+ *  directories (depends on current settings).
+ */
 void SQ_FileIconView::insertItem(KFileItem *i)
 {
+	// directores disabled ?
 	if(i->isDir() && SQ_Config::instance()->readBoolEntry("Fileview", "disable_dirs", false))
 		return;
 
 	SQ_FileIconViewItem *item;
 
+	// add new item
 	item = new SQ_FileIconViewItem((QIconView*)this, i->text(), i->pixmap(iconSize()), i);
 
 	initItem(item, i);
@@ -103,10 +122,14 @@ void SQ_FileIconView::insertItem(KFileItem *i)
 	i->setExtraData(this, item);
 }
 
+/*
+ *  Insert ".." item.
+ */
 void SQ_FileIconView::insertCdUpItem(const KURL &base)
 {
 	KFileItem *fi = new KFileItem(base.upURL(), QString::null, KFileItem::Unknown);
 
+	// create ".." item
 	SQ_FileIconViewItem *item = new SQ_FileIconViewItem(this, QString::fromLatin1(".."), dirPix, fi);
 
 	item->setSelectable(false);
@@ -114,11 +137,16 @@ void SQ_FileIconView::insertCdUpItem(const KURL &base)
 	fi->setExtraData(this, item);
 }
 
+/*
+ *  Clear current view and insert "..".
+ */
 void SQ_FileIconView::clearView()
 {
+	// call default clearing method
 	KIconView::clear();
 
-	insertCdUpItem(SQ_WidgetStack::instance()->getURL());
+	// insert ".."
+	insertCdUpItem(SQ_WidgetStack::instance()->url());
 }
 
 void SQ_FileIconView::listingCompleted()

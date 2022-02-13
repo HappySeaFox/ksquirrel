@@ -26,6 +26,15 @@
 
 class SQ_DirOperatorBase;
 
+/*
+ *  SQ_QuickBrowser is a simpe filemanager with toolbar and statusbar.
+ *
+ *  It used by SQ_GLWidget.
+ */
+
+/*
+ *  Toolbar for SQ_QuickBrowser.
+ */
 class SQ_Header : public KToolBar
 {
 	public:
@@ -43,6 +52,13 @@ class SQ_Header : public KToolBar
 		QWidget *p;
 };
 
+/*
+ *  SizeGrip for SQ_QuickBrowser's statusbar.
+ *
+ *  QSizeGrip by itself resizing toplevel widget,
+ *  we want it to resize our SQ_QuickBrowser (which
+ *  is not toplevel)
+ */
 class SQ_SizeGrip : public QSizeGrip
 {
 	public:
@@ -58,6 +74,9 @@ class SQ_SizeGrip : public QSizeGrip
 		QPoint mother;
 };
 
+/*
+ *  Statusbar for SQ_QuickBrowser.
+ */ 
 class SQ_QuickStatus : public QStatusBar
 {
 	public:
@@ -68,6 +87,9 @@ class SQ_QuickStatus : public QStatusBar
 		virtual void mousePressEvent(QMouseEvent *e);
 };
 
+/*
+ *  SQ_QuickBrowser itself :)
+ */
 class SQ_QuickBrowser : public QVBox
 {
 	Q_OBJECT
@@ -82,9 +104,16 @@ class SQ_QuickBrowser : public QVBox
 		static SQ_DirOperatorBase *quickOperator();
 
 	public slots:
+
+		/*
+		 *  Close(hide) SQ_QuickBrowser.
+		 */
 		void slotClose();
 
 	protected:
+		/*
+		 *  Reimplement closeEvent() and showEvent()
+		 */
 		void closeEvent(QCloseEvent *);
 		void showEvent(QShowEvent *);
 

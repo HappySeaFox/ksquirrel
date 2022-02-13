@@ -22,22 +22,40 @@
 
 #include "sq_thumbnailinfo.h"
 
+/*
+ *  SQ_FileThumbViewItem represents a thumbnail item in SQ_FileThumbView.
+ *  Additianally it stores some useful info.
+ */
+
 class SQ_FileThumbViewItem : public KFileIconViewItem
 {
 	public: 
 		SQ_FileThumbViewItem(QIconView *parent, const QString &text, const QPixmap &pixmap, KFileItem *fi);
 		~SQ_FileThumbViewItem();
 
-		QString getFullInfo() const;
+		/*
+		 *  Get additional information as QString object.
+		 */
+		QString fullInfo() const;
+
+		/*
+		 *  Set additional information.
+		 */
 		void setInfo(const SQ_Thumbnail &t);
 
 	protected:
+		/*
+		 *  Painting routines.
+		 */
 		virtual void paintItem(QPainter *p, const QColorGroup &cg);
 		virtual void paintFocus(QPainter *p, const QColorGroup &cg);
 		void paintPixmap(QPainter *p, const QColorGroup &c);
 		void paintText(QPainter *p, const QColorGroup &c);
 
 	private:
+		/*
+		 *  Additional information.
+		 */
 		SQ_Thumbnail info;
 };
 

@@ -23,7 +23,7 @@ void SQ_ViewCache::init()
 
 	QListViewItem *itemafter = 0L, *item;
    
-	for(SQ_PixmapCache::cache_iterator it = BEGIN;it != END;it++)
+	for(SQ_PixmapCache::cache_iterator it = BEGIN;it != END;++it)
 	{
 		if(itemafter)
 			item = new QListViewItem(listCache, itemafter, it.key(), "", it.data().info.dimensions + "x" + it.data().info.bpp);

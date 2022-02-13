@@ -20,6 +20,10 @@
 
 #include <qlabel.h>
 
+/*
+ *  SQ_Progress is a simple replacement for QProgressBar
+ */
+
 class SQ_Progress : public QLabel
 {
 	public:
@@ -27,9 +31,23 @@ class SQ_Progress : public QLabel
 		~SQ_Progress();
 
 		void setTotalSteps(int totalSteps);
-		void setIndicator(int progress);
+
+		/*
+		 *  Add 'step_new' to current step.
+		 */
 		void advance(int step_new);
+
+		/*
+		 *  Clear drawing.
+		 */
 		void flush();
+
+	private:
+
+		/*
+		 *  Internal. Set current progress to 'progress'.
+		 */
+		void setIndicator(int progress);
 
 	private:
 		int percentage;

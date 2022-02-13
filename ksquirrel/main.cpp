@@ -32,6 +32,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 
+// Our command line options
 static KCmdLineOptions options[] =
 {
 	{"+[file or folder to open]", I18N_NOOP("File or folder to be opened at startup."), 0},
@@ -47,6 +48,7 @@ int main(int argc, char *argv[])
 	SQ_HLOptions		*high;
 	const QCString App = "ksquirrel";
 
+	// setup 'About' dialog
 	aboutData.addAuthor("Dmitry Baryshev aka Krasu", "Author", "ksquirrel@tut.by", QString::null);
 	aboutData.addCredit("NightGoblin", I18N_NOOP("Translation help"), 0, "http://nightgoblin.info");
 	aboutData.addCredit(I18N_NOOP("TiamaT"), I18N_NOOP("Great artwork for edit tools"), "plasticfantasy@tut.by", "http://www.livejournal.com/users/tiamatik/");
@@ -54,10 +56,12 @@ int main(int argc, char *argv[])
 	aboutData.addCredit(I18N_NOOP("GameDev forum at"), 0, 0, "http://gamedev.ru");
 	aboutData.addCredit(I18N_NOOP("A great description of various file formats at"), 0, 0, "http://www.wotsit.org");
 
+	// parse command line
 	KCmdLineArgs::init(argc, argv, &aboutData);
 	KCmdLineArgs::addCmdLineOptions(options);
 	KCmdLineArgs *sq_args = KCmdLineArgs::parsedArgs();
 
+	//create high level options
 	high = new SQ_HLOptions;
 
 	if(sq_args->count())
@@ -71,8 +75,13 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	if(a.dcopClient()->isApplicationRegistered(App) && !high->path.isEmpty())
+	bool reg = a.dcopClient()->isApplicationRegistered(App);
+
+	// Check if KSquirrel already registered.
+	// If registered, send an url to it.
+	if(reg && !high->path.isEmpty())
 	{
+		// Yes, it is registered. Let's send a message to it.
 		QCString replyType;
 		QByteArray data, replyData;
 		QDataStream dataStream(data, IO_WriteOnly);
@@ -80,6 +89,19 @@ int main(int argc, char *argv[])
 		dataStream << high->path;
 
 		if(!a.dcopClient()->call(App, App, "load_image(QString)", data, replyType, replyData))
+			qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
+
+		sq_args->clear();
+		delete high;
+
+		exit(0);
+	}
+	// If registered, but no url was specified in command line
+	else if(reg)
+	{
+		QString data;
+
+		if(!a.dcopClient()->send(App, App, "activate()", data))
 			qDebug("\nUnable to send data to old instance of KSquirrel: exiting.\n");
 
 		sq_args->clear();
@@ -95,14 +117,16 @@ int main(int argc, char *argv[])
 	if(high->thumbs)
 		high->thumbs_p = sq_args->getOption("t");
 
+	// create instance
 	SQ = new KSquirrel(NULL, App);
 
 	a.setMainWidget(SQ);
 
 	sq_args->clear();
 
-        if(a.dcopClient()->attach())
-            a.dcopClient()->registerAs(App, false);
+	// Attach to DCOP server
+    if(a.dcopClient()->attach())
+        a.dcopClient()->registerAs(App, false);
 
 	return a.exec();
 }

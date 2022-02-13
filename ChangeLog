@@ -1,3 +1,23 @@
+ksquirrel-0.6.0-pre8 and ksquirrel-libs 0.6.0-pre7
+************************************************************
+
+ksquirrel:
+* edit tools: fixed bug in writing images
+* edit tools: preview image now works
+* edit tools: new writing options
+* filter tool: added 20 filters
+* resize tool: removed all previous resize methods, added new ones: Box, Triangle, Bell, B-Spline, Lanczos3, Mitchell
+* some interface changes in filter tool
+* code cleanups
+* source code now hardly commented
+* added man page
+* added new binary: ksquirrel-small. It is "light" version of KSquirrel - without filemanager, External tools, Filters, Edit tools etc. It takes only one command line argument - path to file. For example:
+
+[localhost@krasu]$ ksquirrel-small /mnt/c/images/cat.png
+
+ksquirrel-libs:
+* internal changes
+
 ksquirrel-0.6.0-pre7 and ksquirrel-libs-0.6.0-pre6
 ************************************************************
 

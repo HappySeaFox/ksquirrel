@@ -42,7 +42,7 @@ class SQ_Converter : public SQ_EditBase
 		virtual void startEditPrivate();
 		virtual void setWritingLibrary();
 		virtual void dialogReset();
-		virtual void dialogAdditionalInit();
+		virtual void initWriteOptions();
 		virtual int manipDecodedImage(fmt_image *im);
 
 	private slots:

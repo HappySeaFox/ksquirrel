@@ -27,16 +27,27 @@ SQ_BookmarkOwner::SQ_BookmarkOwner(QWidget *parent) : QObject(parent)
 SQ_BookmarkOwner::~SQ_BookmarkOwner()
 {}
 
+/*
+ *  User selected some bookmark. It will emit 'openURL' signal,
+ *  and SQ_WidgetStack will catch it.
+ */
 void SQ_BookmarkOwner::openBookmarkURL(const QString &url)
 {
 	emit openURL(KURL(url));
 }
 
+/*
+ *  Current url. If user selected "Add bookmark", this
+ *  url will be added to bookmarks. See also KBookmarkOwner::setURL()
+ */
 QString SQ_BookmarkOwner::currentURL() const
 {
 	return URL.path();
 }
 
+/*
+ *  Set current url
+ */
 void SQ_BookmarkOwner::setURL(const KURL &new_url)
 {
 	URL = new_url;

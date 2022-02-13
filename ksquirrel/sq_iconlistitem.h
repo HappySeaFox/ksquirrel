@@ -18,12 +18,17 @@
 #ifndef SQ_ICONLISTITEM_H
 #define SQ_ICONLISTITEM_H
 
-#include <qpainter.h>
-#include <qbitmap.h>
-#include <qpixmap.h>
-#include <klistview.h>
-
 class QListBox;
+class QPainter;
+class QPixmap;
+
+/* 
+ *  SQ_IconListItem represents a listbox item.
+ *
+ *  With SQ_IconListBox it is used in SQ_Options.
+ *
+ *  Taken from kdelibs.
+ */
 
 class SQ_IconListItem : public QListBoxItem
 {
@@ -35,7 +40,7 @@ class SQ_IconListItem : public QListBoxItem
 		int expandMinimumWidth(int width);
 
 	protected:
-		const QPixmap &defaultPixmap();
+		const QPixmap& defaultPixmap();
 		void paint(QPainter *painter);
 
 	private:

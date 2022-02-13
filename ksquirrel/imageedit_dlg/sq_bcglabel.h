@@ -29,6 +29,8 @@ class SQ_BCGLabel : public QLabel
 	public: 
 		SQ_BCGLabel(QWidget *parent, const char *name = 0, WFlags f = 0);
 		~SQ_BCGLabel();
+
+                static int fixedWidth();
 };
 
 #endif

@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>SQ_ImageResize</class>
 <widget class="QDialog">
     <property name="name">
@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>414</width>
+            <width>430</width>
             <height>370</height>
         </rect>
     </property>
@@ -114,19 +114,20 @@
                         <property name="text">
                             <string>Resize tool will help you resize your images.
 
-&lt;p&gt;It can use four resize methods:
+&lt;p&gt;It can use six resize methods:
 
 &lt;ol&gt;
-&lt;li&gt;&lt;i&gt;NEAREST&lt;/i&gt; - Nearest neighbor sampling;
-this is the fastest and lowest quality mode.
+&lt;li&gt;&lt;i&gt;BOX&lt;/i&gt; - This is the fastest and lowest quality mode.
 
-&lt;li&gt;&lt;i&gt;TILES&lt;/i&gt; - This is an accurate simulation of the
-PostScript image operator without any interpolation enabled.
+&lt;li&gt;&lt;i&gt;TRIANGLE&lt;/i&gt; -
 
-&lt;li&gt;&lt;i&gt;BILINEAR&lt;/i&gt; - Best quality/speed balance.
+&lt;li&gt;&lt;i&gt;BELL&lt;/i&gt; -
 
-&lt;li&gt;&lt;i&gt;HYPER&lt;/i&gt; - This is the slowest and highest quality
-reconstruction function.
+&lt;li&gt;&lt;i&gt;BSPLINE&lt;/i&gt; - 
+
+&lt;li&gt;&lt;i&gt;LANCZOS3&lt;/i&gt; - 
+
+&lt;li&gt;&lt;i&gt;MITCHELL&lt;/i&gt; - 
 &lt;/ol&gt;</string>
                         </property>
                         <property name="textFormat">
@@ -766,8 +767,8 @@ reconstruction function.
     <include location="local" impldecl="in implementation">sq_imageeditoptions.h</include>
     <include location="local" impldecl="in implementation">sq_config.h</include>
     <include location="global" impldecl="in implementation">qpopupmenu.h</include>
-    <include location="local" impldecl="in implementation">libpixops/pixops.h</include>
     <include location="local" impldecl="in implementation">sq_errorstring.h</include>
+    <include location="local" impldecl="in implementation">fmt_filters.h</include>
     <include location="local" impldecl="in implementation">sq_imageresize.ui.h</include>
 </includes>
 <forwards>

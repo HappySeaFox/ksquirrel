@@ -3,4 +3,4 @@
 tst=`cat ./ksquirrel/sq_version`
 tst=`expr $tst + 1`
 echo $tst > ./ksquirrel/sq_version
-gmake $*
+make $*

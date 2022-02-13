@@ -20,9 +20,10 @@
 
 #include <kfileiconview.h>
 
-/**
-  *@author Baryshev Dmitry
-  */
+/*
+ *  SQ_FileIconViewBase is a base class for icon view, list view and
+ *  thumbnail view with drag-and-drop support.
+ */
 
 class SQ_FileIconViewBase : public KFileIconView
 {
@@ -35,10 +36,21 @@ class SQ_FileIconViewBase : public KFileIconView
 		virtual void insertCdUpItem(const KURL &base) = 0;
 
 	protected:
+		/*
+		 *  Accept dragging.
+		 */
 		virtual void dragEnterEvent(QDragEnterEvent *);
+
+		/*
+		 *  Handle double clicks.
+		 */
 		virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
 	protected slots:
+		/*
+		 *  Somebody dropped urls in viewport. Let's execute popup menu with
+		 *  file actions.
+		 */
 		void slotDropped(QDropEvent *e, const KURL::List &urls, const KURL &url);
 };
 

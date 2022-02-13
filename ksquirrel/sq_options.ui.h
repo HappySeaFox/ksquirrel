@@ -73,6 +73,9 @@ void SQ_Options::init()
 	if(SQ_Config::instance()->readBoolEntry("Thumbnails", "tooltips", false)) checkTooltips->toggle();
 
 	if(SQ_Config::instance()->readBoolEntry("Edit tools", "preview", false)) checkPreview->toggle();
+	if(SQ_Config::instance()->readBoolEntry("Edit tools", "preview_dont", true)) checkDontGenerate->toggle();
+	spinLargerW->setValue(SQ_Config::instance()->readNumEntry("Edit tools", "preview_larger_w", 1024));
+	spinLargerH->setValue(SQ_Config::instance()->readNumEntry("Edit tools", "preview_larger_h", 768));
 	if(SQ_Config::instance()->readBoolEntry("Edit tools", "multi", true)) checkMultiPaged->toggle();
 
 	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("display", KIcon::Desktop, 32), i18n("Main"));	
@@ -81,17 +84,9 @@ void SQ_Options::init()
 	(void)new SQ_IconListItem(listMain, QPixmap::fromMimeSource(locate("appdata", "images/listbox/image_win.png")), i18n("Image window"));
 	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("binary", KIcon::Desktop, 32), i18n("Libraries"));
 	(void)new SQ_IconListItem(listMain, SQ_IconLoader::instance()->loadIcon("edit", KIcon::Desktop, 32), i18n("Edit tools"));
-	listMain->invalidateHeight();
-	listMain->invalidateWidth();
-	listMain->updateWidth();
 
-	QFont listFont(listMain->font());
-	listFont.setBold(true);
-	listMain->setFont(listFont);
-	listMain->verticalScrollBar()->installEventFilter(this);
-	listMain->setCurrentItem(0);
-	listMain->setSelected(0, true);
-    
+	listMain->updateAndInstall(this);
+
 	connect(listMain, SIGNAL(selectionChanged()), SLOT(slotShowPage()));
     
 	kURLReqOpenCustom->setMode(mode);
@@ -135,52 +130,57 @@ int SQ_Options::start()
 
 	if(result == QDialog::Accepted)
 	{
-		SQ_Config::instance()->setGroup("Fileview");
-		SQ_Config::instance()->writeEntry("set path", buttonGroupSetPath->selectedId());
-		SQ_Config::instance()->writeEntry("custom directory", kURLReqOpenCustom->url());
-		SQ_Config::instance()->writeEntry("sync type", buttonGroupSync->selectedId());
-		SQ_Config::instance()->writeEntry("click policy", buttonGroupClick->selectedId());
-		SQ_Config::instance()->writeEntry("history", checkSaveHistory->isChecked());
-		SQ_Config::instance()->writeEntry("run unknown", checkRunUnknown->isChecked());
-		SQ_Config::instance()->writeEntry("archives", checkSupportAr->isChecked());
-		SQ_Config::instance()->writeEntry("tofirst", checkJumpFirst->isChecked());
-		SQ_Config::instance()->writeEntry("disable_dirs", checkDisableDirs->isChecked());
+		SQ_Config *kconf = SQ_Config::instance();
 
-		SQ_Config::instance()->setGroup("Main");
-		SQ_Config::instance()->writeEntry("minimize to tray", checkMinimize->isChecked());
-		SQ_Config::instance()->writeEntry("sync", checkSync->isChecked());
+		kconf->setGroup("Fileview");
+		kconf->writeEntry("set path", buttonGroupSetPath->selectedId());
+		kconf->writeEntry("custom directory", kURLReqOpenCustom->url());
+		kconf->writeEntry("sync type", buttonGroupSync->selectedId());
+		kconf->writeEntry("click policy", buttonGroupClick->selectedId());
+		kconf->writeEntry("history", checkSaveHistory->isChecked());
+		kconf->writeEntry("run unknown", checkRunUnknown->isChecked());
+		kconf->writeEntry("archives", checkSupportAr->isChecked());
+		kconf->writeEntry("tofirst", checkJumpFirst->isChecked());
+		kconf->writeEntry("disable_dirs", checkDisableDirs->isChecked());
 
-		SQ_Config::instance()->setGroup("Thumbnails");
-		SQ_Config::instance()->writeEntry("margin", spinMargin->value());
-		SQ_Config::instance()->writeEntry("cache", spinCacheSize->value());
-		SQ_Config::instance()->writeEntry("disable_mime", checkMime->isChecked());
-		SQ_Config::instance()->writeEntry("dont write", checkNoWriteThumbs->isChecked());
-		SQ_Config::instance()->writeEntry("extended", checkExtended->isChecked());
-		SQ_Config::instance()->writeEntry("tooltips", checkTooltips->isChecked());
+		kconf->setGroup("Main");
+		kconf->writeEntry("minimize to tray", checkMinimize->isChecked());
+		kconf->writeEntry("sync", checkSync->isChecked());
+
+		kconf->setGroup("Thumbnails");
+		kconf->writeEntry("margin", spinMargin->value());
+		kconf->writeEntry("cache", spinCacheSize->value());
+		kconf->writeEntry("disable_mime", checkMime->isChecked());
+		kconf->writeEntry("dont write", checkNoWriteThumbs->isChecked());
+		kconf->writeEntry("extended", checkExtended->isChecked());
+		kconf->writeEntry("tooltips", checkTooltips->isChecked());
 		
-		SQ_Config::instance()->setGroup("GL view");
-		SQ_Config::instance()->writeEntry("GL view background", (kColorGLbackground->color()).name());
-		SQ_Config::instance()->writeEntry("GL view custom texture", custpixmap);
-		SQ_Config::instance()->writeEntry("GL view background type", buttonGroupColor->selectedId());
-		SQ_Config::instance()->writeEntry("zoom limit", buttonGroupZoomLimit->selectedId());
-		SQ_Config::instance()->writeEntry("alpha_bkgr", checkDrawQuads->isChecked());
-		SQ_Config::instance()->writeEntry("marks", checkMarks->isChecked());
-		SQ_Config::instance()->writeEntry("hide_sbar", checkStatus->isChecked());
-		SQ_Config::instance()->writeEntry("scroll", buttonGroupScrolling->selectedId());
-		SQ_Config::instance()->writeEntry("angle", sliderAngle->value());
-		SQ_Config::instance()->writeEntry("zoom", spinZoomFactor->value());
-		SQ_Config::instance()->writeEntry("zoom_min", spinZoomMin->value());
-		SQ_Config::instance()->writeEntry("zoom_max", spinZoomMax->value());
-		SQ_Config::instance()->writeEntry("move", sliderMove->value());
+		kconf->setGroup("GL view");
+		kconf->writeEntry("GL view background", (kColorGLbackground->color()).name());
+		kconf->writeEntry("GL view custom texture", custpixmap);
+		kconf->writeEntry("GL view background type", buttonGroupColor->selectedId());
+		kconf->writeEntry("zoom limit", buttonGroupZoomLimit->selectedId());
+		kconf->writeEntry("alpha_bkgr", checkDrawQuads->isChecked());
+		kconf->writeEntry("marks", checkMarks->isChecked());
+		kconf->writeEntry("hide_sbar", checkStatus->isChecked());
+		kconf->writeEntry("scroll", buttonGroupScrolling->selectedId());
+		kconf->writeEntry("angle", sliderAngle->value());
+		kconf->writeEntry("zoom", spinZoomFactor->value());
+		kconf->writeEntry("zoom_min", spinZoomMin->value());
+		kconf->writeEntry("zoom_max", spinZoomMax->value());
+		kconf->writeEntry("move", sliderMove->value());
 
-		SQ_Config::instance()->setGroup("Libraries");
-		SQ_Config::instance()->writeEntry("monitor", checkMonitor->isChecked());
-		SQ_Config::instance()->writeEntry("show dialog", checkFAMMessage->isChecked());
+		kconf->setGroup("Libraries");
+		kconf->writeEntry("monitor", checkMonitor->isChecked());
+		kconf->writeEntry("show dialog", checkFAMMessage->isChecked());
 
-		SQ_Config::instance()->setGroup("Edit tools");
-		SQ_Config::instance()->writeEntry("preview", checkPreview->isChecked());
-		SQ_Config::instance()->writeEntry("altlibrary", comboAlt->currentText());
-		SQ_Config::instance()->writeEntry("multi", checkMultiPaged->isChecked());
+		kconf->setGroup("Edit tools");
+		kconf->writeEntry("preview", checkPreview->isChecked());
+		kconf->writeEntry("preview_dont", checkDontGenerate->isChecked());
+		kconf->writeEntry("preview_larger_w", spinLargerW->value());
+		kconf->writeEntry("preview_larger_h", spinLargerH->value());
+		kconf->writeEntry("altlibrary", comboAlt->currentText());
+		kconf->writeEntry("multi", checkMultiPaged->isChecked());
 	}
 
 	return result;

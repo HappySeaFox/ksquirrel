@@ -55,11 +55,9 @@ void SQ_Printer::startEditPrivate()
 	print->setCaption(i18n("Print 1 file", "Print %n files", files.count()));
 
 	connect(print, SIGNAL(print(SQ_ImageOptions*, SQ_ImagePrintOptions*)), this, SLOT(slotStartPrint(SQ_ImageOptions*, SQ_ImagePrintOptions*)));
-	connect(this, SIGNAL(convertText(const QString &, bool)), print, SLOT(slotDebugText(const QString &, bool)));
-	connect(this, SIGNAL(oneFileProcessed()), print, SLOT(slotOneProcessed()));
-	connect(this, SIGNAL(done(bool)), print, SLOT(slotDone(bool)));
-
-	preview = false;
+        connect(this, SIGNAL(convertText(const QString &, bool)), print, SLOT(slotDebugText(const QString &, bool)));
+        connect(this, SIGNAL(oneFileProcessed()), print, SLOT(slotOneProcessed()));
+        connect(this, SIGNAL(done(bool)), print, SLOT(slotDone(bool)));
 
 	print->exec();
 }
@@ -115,7 +113,7 @@ void SQ_Printer::dialogReset()
 	print->startPrinting(files.count());
 }
 
-int SQ_Printer::manipAndWriteDecodedImage(const QString &, fmt_image *im, const fmt_writeoptions &)
+int SQ_Printer::manipAndWriteDecodedImage(const QString &, fmt_image *im)
 {
 	unsigned char *rgba;
 

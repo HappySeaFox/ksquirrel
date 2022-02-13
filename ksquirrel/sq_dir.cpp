@@ -23,7 +23,10 @@
 
 #include "sq_dir.h"
 
+// default thumbnail format
 static const QString thumbFormat = "PNG";
+
+// default quality
 static const int thumbQuality = 85;
 
 SQ_Dir::SQ_Dir(Prefix p) : QDir()
@@ -48,6 +51,13 @@ SQ_Dir::SQ_Dir(Prefix p) : QDir()
 SQ_Dir::~SQ_Dir()
 {}
 
+/*
+ *  Create relative directory in storage.
+ *
+ *  For example, if prefix == Thumbnails,
+ *  mkdir("/mnt/win_c") will create
+ *  ~/.ksquirrel/thumbnails/mnt/win_c.
+ */
 bool SQ_Dir::mkdir(const QString &relpath)
 {
 	QString _relpath = QDir::cleanDirPath(relpath);
@@ -59,7 +69,8 @@ bool SQ_Dir::mkdir(const QString &relpath)
 
 	cd(m_root);
 
-	for(QStringList::iterator it = BEGIN;it != END;it++)
+	// recursively create directories
+	for(QStringList::iterator it = BEGIN;it != END;++it)
 	{
 		if(!exists(*it, false))
 			if(!QDir::mkdir(*it))
@@ -80,21 +91,36 @@ void SQ_Dir::setRoot(const QString &name)
 	QDir::mkdir(m_root);
 }
 
+/*
+ *  Change current directory to m_root directory.
+ *
+ *  For example, if prefix == Thumbnails, it will
+ *  cd to "/home/krasu/.ksquirrel/thumbnails".
+ */
 void SQ_Dir::rewind()
 {
 	cd(m_root);
 }
 
+/*
+ *  Get current root directory.
+ *
+ *  For example, if prefix == Thumbnails, it will
+ *  return "/home/krasu/.ksquirrel/thumbnails".
+ */
 QString SQ_Dir::root() const
 {
 	return m_root;
 }
 
+/*
+ *  Save thumbnail to storage.
+ */
 void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
 {
 	if(thumb.thumbnail.isNull())
 	{
-		kdDebug() << "Thumbnail is NULL!" << endl;
+		kdDebug() << "SQ_Dir::saveThumbnail: thumbnail is NULL!" << endl;
 		return;
 	}
 
@@ -103,15 +129,15 @@ void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
 
 	if(fpath.lastModified() < ffullpath.lastModified())
 	{
-		kdDebug() << "equal => skipping writing..." << endl;
+		kdDebug() << "SQ_Dir::saveThumbnail: equal => skipping writing..." << endl;
 		return;
 	}
 
-	kdDebug() << "writing accepted..." << endl;
+	kdDebug() << "SQ_Dir::saveThumbnail: writing accepted..." << endl;
 
 	if(!mkdir(fpath.dirPath(true)))
 	{
-		kdDebug() << "Saving thumbnail: mkdir() falied" << endl;
+		kdDebug() << "SQ_Dir::saveThumbnail: mkdir() falied" << endl;
 		return;
 	}
 
@@ -127,37 +153,61 @@ void SQ_Dir::saveThumbnail(const QString &path, SQ_Thumbnail &thumb)
 	thumb.thumbnail.save(fullpath, thumbFormat, thumbQuality);
 }
 
+/*
+ *  Check if file exists. If exists, set 'fullpath'
+ *  to its full path.
+ */
 bool SQ_Dir::fileExists(const QString &file, QString &fullpath)
 {
 	QFileInfo f(m_root + file);
 
+	// file exists ?
 	bool b = f.exists();
 
+	// yes!
 	if(b)
 		fullpath = m_root + file;
 
 	return b;
 }
 
-QString SQ_Dir::getAbsPath(const QString relpath)
+/*
+ *  Get absolute path for relative path 'relpath'.
+ */
+QString SQ_Dir::absPath(const QString &relpath)
 {
 	return m_root + "/" + relpath;
 }
 
+/*
+ *  Check if file needs to be updated.
+ *
+ *  For example, yesterday you unpacked /opt/arc.zip with KSquirrel. SQ_Dir created
+ *  ~/.ksquirrel/extracts/opt/arc.zip and SQ_ArchiveHandler unpacked this
+ *  archive to it. Today you replaced /opt/arc.zip with newer version. Now
+ *  updateNeeded("/opt/arc.zip") will return true, and SQ_Archivehandler will clean
+ *  "~/.ksquirrel/extracts/opt/arc.zip" and unpack it ince more.
+ */
 bool SQ_Dir::updateNeeded(const QString &file)
 {
-	if(!QFile::exists(getAbsPath(file)))
+	// file even mot exist in storage, update needed!
+	if(!QFile::exists(absPath(file)))
 		return true;
 
-	QFileInfo fpath(file), ffullpath(getAbsPath(file));
+	QFileInfo fpath(file), ffullpath(absPath(file));
 
+	// compare "last modified" time
 	return fpath.lastModified() > ffullpath.lastModified();
 }
 
+/*
+ *  Remove file from storage
+ */
 void SQ_Dir::removeFile(const QString &file)
 {
-	QString full = getAbsPath(file);
+	// get absolute path
+	QString full = absPath(file);
 
+	// and remove file
 	QFile::remove(full);
 }
-

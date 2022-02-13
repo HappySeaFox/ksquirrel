@@ -610,7 +610,6 @@ uninstall-am: uninstall-info-am
 .NOEXPORT:
 
 
-
 #>+ 2
 KDE_DIST=libpixops.a Makefile.in Makefile.am 
 

@@ -42,11 +42,9 @@ void SQ_Converter::startEditPrivate()
 	convert->setCaption(i18n("Convert 1 file", "Convert %n files", files.count()));
 
 	connect(convert, SIGNAL(convert(SQ_ImageOptions*, SQ_ImageConvertOptions*)), this, SLOT(slotStartConvert(SQ_ImageOptions*, SQ_ImageConvertOptions*)));
-	connect(this, SIGNAL(convertText(const QString &, bool)), convert, SLOT(slotDebugText(const QString &, bool)));
-	connect(this, SIGNAL(oneFileProcessed()), convert, SLOT(slotOneProcessed()));
-	connect(this, SIGNAL(done(bool)), convert, SLOT(slotDone(bool)));
-
-	preview = false;
+        connect(this, SIGNAL(convertText(const QString &, bool)), convert, SLOT(slotDebugText(const QString &, bool)));
+        connect(this, SIGNAL(oneFileProcessed()), convert, SLOT(slotOneProcessed()));
+        connect(this, SIGNAL(done(bool)), convert, SLOT(slotDone(bool)));
 
 	convert->exec();
 }
@@ -74,7 +72,7 @@ void SQ_Converter::dialogReset()
 	convert->startConvertion(files.count());
 }
 
-void SQ_Converter::dialogAdditionalInit()
+void SQ_Converter::initWriteOptions()
 {
 	convert->fillWriteOptions(&opt, lw->opt);
 }

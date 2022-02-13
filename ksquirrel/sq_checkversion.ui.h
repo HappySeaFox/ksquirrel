@@ -167,12 +167,7 @@ void SQ_CheckVersion::slotFinishedKL(QNetworkOperation *netop)
     updateSize();
 }
 
-void SQ_CheckVersion::slotDownloadK(const QString &url)
-{
-    new KRun(KURL(QString::fromLatin1("http://prdownloads.sourceforge.net/ksquirrel/%1?download").arg(url)));
-}
-
-void SQ_CheckVersion::slotDownloadKL(const QString &url)
+void SQ_CheckVersion::slotDownload(const QString &url)
 {
     new KRun(KURL(QString::fromLatin1("http://prdownloads.sourceforge.net/ksquirrel/%1?download").arg(url)));
 }

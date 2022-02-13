@@ -21,10 +21,11 @@
 #include <qfont.h>
 #include <qcolor.h>
 
+#include "fmt_filters.h"
+
 struct SQ_ImageOptions
 {
 	QString putto;
-	QString prefix;
 	int where_to_put;
 	bool close;
 };
@@ -67,19 +68,15 @@ struct SQ_ImagePrintOptions
 	QColor transp_color;
 };
 
-struct SQ_IFO_swapRGB
-{
-	int type;
-};
-
 struct SQ_ImageFilterOptions
 {
-	int type, subtype;
+        int type;
 
-	union
-	{
-		SQ_IFO_swapRGB swaprgb;
-	}sb;
+        bool _bool;
+        fmt_filters::rgb rgb1, rgb2;
+        float _float;
+        unsigned int _uint;
+        double _double1, _double2;
 };
 
 #endif

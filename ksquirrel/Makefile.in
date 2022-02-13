@@ -53,9 +53,10 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_ksquirrel_OBJECTS = sq_iconloader.$(OBJEXT) \
-	sq_editsplashbutton.$(OBJEXT) fmt_filters.$(OBJEXT) \
-	sq_errorstring.$(OBJEXT) fileio.$(OBJEXT) fmt_utils.$(OBJEXT) \
+am_ksquirrel_OBJECTS = sq_imageloader.$(OBJEXT) \
+	sq_iconloader.$(OBJEXT) sq_editsplashbutton.$(OBJEXT) \
+	fmt_filters.$(OBJEXT) sq_errorstring.$(OBJEXT) \
+	fileio.$(OBJEXT) fmt_utils.$(OBJEXT) \
 	sq_navigatordropmenu.$(OBJEXT) sq_fileiconviewbase.$(OBJEXT) \
 	sq_glview.$(OBJEXT) sq_locationtoolbar.$(OBJEXT) \
 	sq_filethumbviewitem.$(OBJEXT) sq_diroperatorbase.$(OBJEXT) \
@@ -72,11 +73,12 @@ am_ksquirrel_OBJECTS = sq_iconloader.$(OBJEXT) \
 	sq_config.$(OBJEXT) sq_bookmarkowner.$(OBJEXT) \
 	sq_archivehandler.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT)
 #>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
-#>+ 22
+#>+ 23
 ksquirrel_final_OBJECTS = ksquirrel.all_cpp.o 
-ksquirrel_nofinal_OBJECTS = sq_iconloader.$(OBJEXT) \
-	sq_editsplashbutton.$(OBJEXT) fmt_filters.$(OBJEXT) \
-	sq_errorstring.$(OBJEXT) fileio.$(OBJEXT) fmt_utils.$(OBJEXT) \
+ksquirrel_nofinal_OBJECTS = sq_imageloader.$(OBJEXT) \
+	sq_iconloader.$(OBJEXT) sq_editsplashbutton.$(OBJEXT) \
+	fmt_filters.$(OBJEXT) sq_errorstring.$(OBJEXT) \
+	fileio.$(OBJEXT) fmt_utils.$(OBJEXT) \
 	sq_navigatordropmenu.$(OBJEXT) sq_fileiconviewbase.$(OBJEXT) \
 	sq_glview.$(OBJEXT) sq_locationtoolbar.$(OBJEXT) \
 	sq_filethumbviewitem.$(OBJEXT) sq_diroperatorbase.$(OBJEXT) \
@@ -92,7 +94,7 @@ ksquirrel_nofinal_OBJECTS = sq_iconloader.$(OBJEXT) \
 	sq_externaltool.$(OBJEXT) sq_diroperator.$(OBJEXT) \
 	sq_config.$(OBJEXT) sq_bookmarkowner.$(OBJEXT) \
 	sq_archivehandler.$(OBJEXT) ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_pluginsinfo.$(OBJEXT) sq_slideshow.$(OBJEXT) sq_selectdeselectgroup.$(OBJEXT) sq_checkversion.$(OBJEXT) sq_thumbnailcachemaster.$(OBJEXT) sq_helpwidget.$(OBJEXT) sq_viewcache.$(OBJEXT) sq_options.$(OBJEXT) sq_librarieschanged.$(OBJEXT) sq_imageproperties.$(OBJEXT) sq_filters.$(OBJEXT) sq_externaltools.$(OBJEXT)\
-sq_glwidget.moc.o sq_fileiconview.moc.o sq_editsplashbutton.moc.o sq_externaltool.moc.o sq_fileiconviewbase.moc.o ksquirrel.moc.o sq_filedetailview.moc.o sq_filethumbview.moc.o sq_thumbnailjob.moc.o sq_bookmarkowner.moc.o sq_diroperator.moc.o sq_quickbrowser.moc.o sq_diroperatorbase.moc.o sq_tray.moc.o sq_locationtoolbar.moc.o sq_treeview.moc.o sq_librarylistener.moc.o sq_widgetstack.moc.o sq_navigatordropmenu.moc.o 
+sq_glwidget.moc.o sq_fileiconview.moc.o sq_editsplashbutton.moc.o sq_externaltool.moc.o sq_fileiconviewbase.moc.o ksquirrel.moc.o sq_glview.moc.o sq_filedetailview.moc.o sq_filethumbview.moc.o sq_thumbnailjob.moc.o sq_bookmarkowner.moc.o sq_diroperator.moc.o sq_quickbrowser.moc.o sq_diroperatorbase.moc.o sq_tray.moc.o sq_locationtoolbar.moc.o sq_treeview.moc.o sq_librarylistener.moc.o sq_widgetstack.moc.o sq_navigatordropmenu.moc.o 
 @KDE_USE_FINAL_FALSE@ksquirrel_OBJECTS = $(ksquirrel_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@ksquirrel_OBJECTS = $(ksquirrel_final_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -365,13 +367,13 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-#>- ksquirrel_SOURCES = sq_pluginsinfo.ui sq_iconloader.cpp sq_slideshow.ui sq_selectdeselectgroup.ui sq_checkversion.ui sq_thumbnailcachemaster.ui sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
+#>- ksquirrel_SOURCES = sq_imageloader.cpp sq_pluginsinfo.ui sq_iconloader.cpp sq_slideshow.ui sq_selectdeselectgroup.ui sq_checkversion.ui sq_thumbnailcachemaster.ui sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_helpwidget.ui sq_glview.cpp sq_locationtoolbar.cpp sq_viewcache.ui sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_imageproperties.ui sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_filters.ui sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltools.ui sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp 
 #>+ 1
-ksquirrel_SOURCES= sq_iconloader.cpp     sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp  sq_glview.cpp sq_locationtoolbar.cpp  sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp  sq_librarylistener.cpp sq_libraryhandler.cpp   sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp  sq_fileiconview.cpp sq_filedetailview.cpp  sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp  sq_pluginsinfo.cpp sq_slideshow.cpp sq_selectdeselectgroup.cpp sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp
+ksquirrel_SOURCES=sq_imageloader.cpp  sq_iconloader.cpp     sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp  sq_glview.cpp sq_locationtoolbar.cpp  sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp  sq_librarylistener.cpp sq_libraryhandler.cpp   sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp  sq_fileiconview.cpp sq_filedetailview.cpp  sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp  sq_pluginsinfo.cpp sq_slideshow.cpp sq_selectdeselectgroup.cpp sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp
 ksquirrel_LDADD = ./imageedit_overlay/libimageedit_overlay.a ./imageedit_dlg/libimageedit_dlg.a ./libpixops/libpixops.a $(LIB_KIO) $(LIB_KDEPRINT) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET) 
 
 ####### kdevelop will overwrite this part!!! (end)############
-SUBDIRS = imageedit_dlg imageedit_overlay libpixops
+SUBDIRS = imageedit_dlg imageedit_overlay libpixops ksquirrel-small
 EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	hi32-app-ksquirrel.png hi16-app-ksquirrel.png error.h \
 	sq_about.h sq_archivehandler.cpp sq_archivehandler.h \
@@ -394,7 +396,7 @@ EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	sq_progress.h sq_diroperatorbase.cpp sq_diroperatorbase.h \
 	sq_thumbnailinfo.h sq_filethumbviewitem.cpp \
 	sq_filethumbviewitem.h sq_viewcache.ui sq_locationtoolbar.cpp \
-	sq_locationtoolbar.h ksquirrelrc sq_glview.cpp sq_glview.h \
+	sq_locationtoolbar.h sq_glview.cpp sq_glview.h \
 	sq_helpwidget.ui sq_fileiconviewbase.cpp sq_fileiconviewbase.h \
 	sq_navigatordropmenu.cpp sq_navigatordropmenu.h fmt_utils.cpp \
 	fileio.cpp sq_errorstring.cpp sq_errorstring.h fmt_filters.cpp \
@@ -402,7 +404,8 @@ EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop \
 	sq_thumbnailcachemaster.ui sq_glwidget_helpers.h \
 	sq_checkversion.ui sq_library.h sq_selectdeselectgroup.ui \
 	sq_slideshow.ui sq_iconloader.cpp sq_iconloader.h \
-	sq_pluginsinfo.ui
+	sq_pluginsinfo.ui sq_iconloader_pixmaps.h sq_imageloader.cpp \
+	sq_imageloader.h
 
 # These paths are KDE specific. Use them:
 # kde_appsdir         Where your application's menu entry (.desktop) should go to.
@@ -543,6 +546,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_iconlistbox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_iconlistitem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_iconloader.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_imageloader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_libraryhandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_librarylistener.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_locationtoolbar.Po@am__quote@
@@ -866,12 +870,12 @@ uninstall-info: uninstall-info-recursive
 
 
 install-data-local:
-#>- 	$(mkinstalldirs) $(kde_appsdir)/Applications/
+#>- 	$(mkinstalldirs) $(kde_appsdir)/Graphics/
 #>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Applications/
-#>- 	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(kde_appsdir)/Applications/ksquirrel.desktop
+	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Graphics/
+#>- 	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(kde_appsdir)/Graphics/ksquirrel.desktop
 #>+ 1
-	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(DESTDIR)$(kde_appsdir)/Applications/ksquirrel.desktop
+	$(INSTALL_DATA) $(srcdir)/ksquirrel.desktop $(DESTDIR)$(kde_appsdir)/Graphics/ksquirrel.desktop
 #>- 	$(mkinstalldirs) $(kde_icondir)/hicolor/32x32/apps/
 #>+ 1
 	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/hicolor/32x32/apps/
@@ -884,26 +888,17 @@ install-data-local:
 #>- 	$(INSTALL_DATA) $(srcdir)/hi16-app-ksquirrel.png $(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/hi16-app-ksquirrel.png $(DESTDIR)$(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/
-#>- 	$(INSTALL_DATA) $(srcdir)/ksquirrelrc $(kde_datadir)/ksquirrel/ksquirrelrc
-#>+ 1
-	$(INSTALL_DATA) $(srcdir)/ksquirrelrc $(DESTDIR)$(kde_datadir)/ksquirrel/ksquirrelrc
 
 uninstall-local:
-#>- 	-rm -f $(kde_appsdir)/Applications/ksquirrel.desktop
+#>- 	-rm -f $(kde_appsdir)/Graphics/ksquirrel.desktop
 #>+ 1
-	-rm -f $(DESTDIR)$(kde_appsdir)/Applications/ksquirrel.desktop
+	-rm -f $(DESTDIR)$(kde_appsdir)/Graphics/ksquirrel.desktop
 #>- 	-rm -f $(kde_icondir)/hicolor/32x32/apps/ksquirrel.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_icondir)/hicolor/32x32/apps/ksquirrel.png
 #>- 	-rm -f $(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_icondir)/hicolor/16x16/apps/ksquirrel.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/ksquirrelrc
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/ksquirrelrc
 
 # Uncomment the following two lines if you add a ui.rc file for your application to make use of
 # KDE?s XML GUI builing
@@ -926,7 +921,6 @@ messages:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-
 
 
 #>+ 3
@@ -970,6 +964,13 @@ ksquirrel.moc.cpp: $(srcdir)/ksquirrel.h
 
 #>+ 2
 mocs: ksquirrel.moc.cpp
+
+#>+ 3
+sq_glview.moc.cpp: $(srcdir)/sq_glview.h
+	$(MOC) $(srcdir)/sq_glview.h -o sq_glview.moc.cpp
+
+#>+ 2
+mocs: sq_glview.moc.cpp
 
 #>+ 3
 sq_filedetailview.moc.cpp: $(srcdir)/sq_filedetailview.h
@@ -1064,10 +1065,10 @@ mocs: sq_navigatordropmenu.moc.cpp
 
 #>+ 3
 clean-metasources:
-	-rm -f  sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_editsplashbutton.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_quickbrowser.moc.cpp sq_diroperatorbase.moc.cpp sq_tray.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp
+	-rm -f  sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_editsplashbutton.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_glview.moc.cpp sq_filedetailview.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_quickbrowser.moc.cpp sq_diroperatorbase.moc.cpp sq_tray.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp
 
 #>+ 2
-KDE_DIST=sq_version sq_librarieschanged.ui.h sq_externaltools.ui.h fileio.h sq_checkversion.ui.h fmt_utils.h fmt_types.h sq_pluginsinfo.h Makefile.in sq_thumbnailcachemaster.h sq_helpwidget.h sq_slideshow.ui.h sq_selectdeselectgroup.ui.h sq_imageproperties.ui.h sq_librarieschanged.h fmt_defs.h sq_pluginsinfo.ui.h fmt_codec_base.h sq_viewcache.h sq_imageproperties.h sq_externaltools.h sq_filters.h sq_slideshow.h sq_options.ui.h sq_checkversion.h sq_viewcache.ui.h sq_selectdeselectgroup.h sq_options.h sq_thumbnailcachemaster.ui.h Makefile.am 
+KDE_DIST=sq_version sq_librarieschanged.ui.h sq_externaltools.ui.h fileio.h sq_checkversion.ui.h fmt_utils.h fmt_types.h sq_pluginsinfo.h Makefile.in sq_thumbnailcachemaster.h sq_helpwidget.h sq_helpwidget.ui.h sq_slideshow.ui.h sq_selectdeselectgroup.ui.h sq_imageproperties.ui.h sq_librarieschanged.h fmt_defs.h sq_pluginsinfo.ui.h fmt_codec_base.h sq_viewcache.h sq_imageproperties.h sq_externaltools.h sq_filters.h sq_slideshow.h sq_options.ui.h sq_checkversion.h sq_viewcache.ui.h sq_selectdeselectgroup.h sq_options.h sq_thumbnailcachemaster.ui.h Makefile.am 
 
 #>+ 15
 clean-ui:
@@ -1127,11 +1128,11 @@ bcheck-am:
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_iconloader.cpp $(srcdir)/sq_editsplashbutton.cpp $(srcdir)/fmt_filters.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/fileio.cpp $(srcdir)/fmt_utils.cpp $(srcdir)/sq_navigatordropmenu.cpp $(srcdir)/sq_fileiconviewbase.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_locationtoolbar.cpp $(srcdir)/sq_filethumbviewitem.cpp $(srcdir)/sq_diroperatorbase.cpp $(srcdir)/sq_progress.cpp $(srcdir)/sq_thumbnailsize.cpp $(srcdir)/sq_thumbnailjob.cpp $(srcdir)/sq_pixmapcache.cpp $(srcdir)/sq_filethumbview.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_iconlistbox.cpp $(srcdir)/sq_iconlistitem.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_quickbrowser.cpp $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_glu.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_externaltool.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_bookmarkowner.cpp $(srcdir)/sq_archivehandler.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_pluginsinfo.cpp $(srcdir)/sq_slideshow.cpp $(srcdir)/sq_selectdeselectgroup.cpp $(srcdir)/sq_checkversion.cpp $(srcdir)/sq_thumbnailcachemaster.cpp $(srcdir)/sq_helpwidget.cpp $(srcdir)/sq_viewcache.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_librarieschanged.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_filters.cpp $(srcdir)/sq_externaltools.cpp sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_editsplashbutton.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_thumbnailjob.moc.cpp sq_filethumbview.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_tray.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp  sq_options.moc sq_viewcache.moc sq_checkversion.moc sq_librarieschanged.moc sq_selectdeselectgroup.moc sq_pluginsinfo.moc sq_filters.moc sq_helpwidget.moc sq_externaltools.moc sq_thumbnailcachemaster.moc sq_slideshow.moc sq_imageproperties.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_imageloader.cpp $(srcdir)/sq_iconloader.cpp $(srcdir)/sq_editsplashbutton.cpp $(srcdir)/fmt_filters.cpp $(srcdir)/sq_errorstring.cpp $(srcdir)/fileio.cpp $(srcdir)/fmt_utils.cpp $(srcdir)/sq_navigatordropmenu.cpp $(srcdir)/sq_fileiconviewbase.cpp $(srcdir)/sq_glview.cpp $(srcdir)/sq_locationtoolbar.cpp $(srcdir)/sq_filethumbviewitem.cpp $(srcdir)/sq_diroperatorbase.cpp $(srcdir)/sq_progress.cpp $(srcdir)/sq_thumbnailsize.cpp $(srcdir)/sq_thumbnailjob.cpp $(srcdir)/sq_pixmapcache.cpp $(srcdir)/sq_filethumbview.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_iconlistbox.cpp $(srcdir)/sq_iconlistitem.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_quickbrowser.cpp $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_hloptions.cpp $(srcdir)/sq_glwidget.cpp $(srcdir)/sq_glu.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_externaltool.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_config.cpp $(srcdir)/sq_bookmarkowner.cpp $(srcdir)/sq_archivehandler.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_pluginsinfo.cpp $(srcdir)/sq_slideshow.cpp $(srcdir)/sq_selectdeselectgroup.cpp $(srcdir)/sq_checkversion.cpp $(srcdir)/sq_thumbnailcachemaster.cpp $(srcdir)/sq_helpwidget.cpp $(srcdir)/sq_viewcache.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_librarieschanged.cpp $(srcdir)/sq_imageproperties.cpp $(srcdir)/sq_filters.cpp $(srcdir)/sq_externaltools.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_glview.moc.cpp sq_filedetailview.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp sq_glwidget.moc.cpp sq_editsplashbutton.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_tray.moc.cpp  sq_options.moc sq_viewcache.moc sq_checkversion.moc sq_pluginsinfo.moc sq_helpwidget.moc sq_slideshow.moc sq_imageproperties.moc sq_librarieschanged.moc sq_selectdeselectgroup.moc sq_filters.moc sq_externaltools.moc sq_thumbnailcachemaster.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
-	for file in sq_iconloader.cpp sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_glview.cpp sq_locationtoolbar.cpp sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_librarylistener.cpp sq_libraryhandler.cpp sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp sq_pluginsinfo.cpp sq_slideshow.cpp sq_selectdeselectgroup.cpp sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp sq_glwidget.moc.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_editsplashbutton.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_filedetailview.moc.cpp sq_thumbnailjob.moc.cpp sq_filethumbview.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_tray.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp ; do \
+	for file in sq_imageloader.cpp sq_iconloader.cpp sq_editsplashbutton.cpp fmt_filters.cpp sq_errorstring.cpp fileio.cpp fmt_utils.cpp sq_navigatordropmenu.cpp sq_fileiconviewbase.cpp sq_glview.cpp sq_locationtoolbar.cpp sq_filethumbviewitem.cpp sq_diroperatorbase.cpp sq_progress.cpp sq_thumbnailsize.cpp sq_thumbnailjob.cpp sq_pixmapcache.cpp sq_filethumbview.cpp sq_dir.cpp sq_iconlistbox.cpp sq_iconlistitem.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_quickbrowser.cpp sq_librarylistener.cpp sq_libraryhandler.cpp sq_hloptions.cpp sq_glwidget.cpp sq_glu.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_externaltool.cpp sq_diroperator.cpp sq_config.cpp sq_bookmarkowner.cpp sq_archivehandler.cpp ksquirrel.cpp main.cpp sq_pluginsinfo.cpp sq_slideshow.cpp sq_selectdeselectgroup.cpp sq_checkversion.cpp sq_thumbnailcachemaster.cpp sq_helpwidget.cpp sq_viewcache.cpp sq_options.cpp sq_librarieschanged.cpp sq_imageproperties.cpp sq_filters.cpp sq_externaltools.cpp sq_fileiconview.moc.cpp sq_externaltool.moc.cpp sq_fileiconviewbase.moc.cpp ksquirrel.moc.cpp sq_glview.moc.cpp sq_filedetailview.moc.cpp sq_diroperatorbase.moc.cpp sq_quickbrowser.moc.cpp sq_locationtoolbar.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp sq_navigatordropmenu.moc.cpp sq_glwidget.moc.cpp sq_editsplashbutton.moc.cpp sq_filethumbview.moc.cpp sq_thumbnailjob.moc.cpp sq_bookmarkowner.moc.cpp sq_diroperator.moc.cpp sq_tray.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
 	done; \
@@ -1166,12 +1167,13 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 41
+#>+ 42
 $(srcdir)/sq_dir.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_thumbnailsize.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/main.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_config.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_diroperator.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
+$(srcdir)/sq_imageloader.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_progress.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/fmt_utils.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 
 $(srcdir)/sq_glwidget.cpp: sq_pluginsinfo.h sq_slideshow.h sq_selectdeselectgroup.h sq_checkversion.h sq_thumbnailcachemaster.h sq_helpwidget.h sq_viewcache.h sq_options.h sq_librarieschanged.h sq_imageproperties.h sq_filters.h sq_externaltools.h 

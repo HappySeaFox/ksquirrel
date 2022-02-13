@@ -39,24 +39,13 @@
 #include "sq_thumbnailjob.h"
 #include "sq_libraryhandler.h"
 #include "sq_thumbnailsize.h"
+#include "sq_imageloader.h"
 
 #include <csetjmp>
 
-#include "fileio.h"
-#include "fmt_utils.h"
-#include "fmt_codec_base.h"
-#include "error.h"
+#include "fmt_defs.h"
 
 #include <string>
-
-using namespace fmt_utils;
-
-#define SQ_FAIL_CLOSE(a) \
-		if((a))                    \
-		{                            \
-			codeK->fmt_read_close();     \
-			return false;                           \
-		}
 
 static const QString thumbFormat = "PNG";
 
@@ -160,7 +149,7 @@ void SQ_ThumbnailLoadJob::slotResult(KIO::Job * job)
 			KIO::UDSEntry::ConstIterator it= entry.begin();
 			mOriginalTime = 0;
 
-			for(; it!=entry.end(); it++)
+			for(; it!=entry.end(); ++it)
 			{
 				if ((*it).m_uds == KIO::UDS_MODIFICATION_TIME)
 				{
@@ -224,7 +213,7 @@ bool SQ_ThumbnailLoadJob::statResultThumbnail(KIO::StatJob * job)
 	KIO::UDSEntry::ConstIterator it = entry.begin();
 	time_t thumbnailTime = 0;
 
-	for(; it != entry.end(); it++)
+	for(; it != entry.end(); ++it)
 	{
 		if((*it).m_uds == KIO::UDS_MODIFICATION_TIME)
 		{
@@ -302,125 +291,50 @@ void SQ_ThumbnailLoadJob::insertOrSync(const QString &path, SQ_Thumbnail &th)
 
 bool SQ_ThumbnailLoadJob::loadThumbnail(const QString &pixPath, SQ_Thumbnail &t, bool processImage)
 {
-	SQ_LIBRARY 	*lib;
-	static RGBA 		*all = NULL, *dumbscan = NULL;
-	int 				w = 0, h = 0, res, current = 0, i, j;
-	RGBA			*scan;
-	fmt_info			finfo;
-	fmt_codec_base	 *codeK;
-	bool			b;
+        fmt_info *finfo;
 
-	lib = SQ_LibraryHandler::instance()->libraryForFile(pixPath);
+        RGBA *all;
 
-	if(!lib || !lib->codec)
-		return false;
+        bool b = SQ_ImageLoader::instance()->loadImage(pixPath);
 
-	codeK = lib->codec;
+        if(!b)
+                return false;
+
+        all = SQ_ImageLoader::instance()->bits();
+        finfo = SQ_ImageLoader::instance()->info();
+
+        SQ_LIBRARY *lib = SQ_LibraryHandler::instance()->latestLibrary();
+
+        t.info.type = lib->quickinfo;
+        t.info.dimensions = QString::fromLatin1("%1x%2").arg(finfo->image[0].w).arg(finfo->image[0].h);
+        t.info.bpp = QString::fromLatin1("%1").arg(finfo->image[0].bpp);
 
 #ifndef QT_NO_STL
-	res = codeK->fmt_read_init(QString(pixPath.local8Bit()));
+
+        t.info.color = finfo->image[0].colorspace;
+        t.info.compression = finfo->image[0].compression;
+
 #else
-	res = codeK->fmt_read_init(QString(pixPath.local8Bit()).ascii());
+
+        t.info.color = finfo->image[0].colorspace.c_str();
+        t.info.compression = finfo->image[0].compression.c_str();
+
 #endif
 
-	if(res != SQE_OK)
-		return false;
+        t.info.frames = QString::fromLatin1("0");
+        t.info.mime = lib->mime;
+        t.info.uncompressed = KIO::convertSize(finfo->image[0].w * finfo->image[0].h * sizeof(RGBA));
+        t.info.frames = QString::fromLatin1("%1").arg(finfo->image.size());
 
-	while(true)
-	{
-		i = codeK->fmt_read_next();
+        QImage image((unsigned char *)all, finfo->image[0].w, finfo->image[0].h, 32, 0, 0, QImage::LittleEndian);
+        image.setAlphaBuffer(true);
 
-		finfo = codeK->information();
+        if(processImage)
+                t.thumbnail = SQ_ThumbnailLoadJob::makeBigThumb(&image);
+        else
+                t.thumbnail = image;
 
-		if(i != SQE_OK && i != SQE_NOTOK && !current)
-		{
-			codeK->fmt_read_close();
-			return false;
-		}
-		else if((i != SQE_OK && i != SQE_NOTOK && current) || (i == SQE_NOTOK && current))
-			break;
-
-//		fprintf(stderr, "%dx%d@%d ...\n", finfo.image[current].w, finfo.image[current].h, finfo.image[current].bpp);
-
-		if(!current)
-		{
-			w = finfo.image[current].w;
-			h = finfo.image[current].h;
-			const int S = w * h * sizeof(RGBA);
-
-			all = (RGBA *)realloc(all, S);
-
-			b = !all;
-			SQ_FAIL_CLOSE(b)
-
-			memset(all, 255, S);
-
-			t.info.type = lib->quickinfo;
-			t.info.dimensions = QString::fromLatin1("%1x%2").arg(w).arg(h);
-			t.info.bpp = QString::fromLatin1("%1").arg(finfo.image[current].bpp);
-#ifndef QT_NO_STL
-			t.info.color = finfo.image[current].colorspace;
-			t.info.compression = finfo.image[current].compression;
-#else
-			t.info.color = finfo.image[current].colorspace.c_str();
-			t.info.compression = finfo.image[current].compression.c_str();
-#endif
-			t.info.frames = QString::fromLatin1("0");
-			t.info.mime = lib->mime;
-			t.info.uncompressed = KIO::convertSize(S);
-		}
-		else
-		{
-			dumbscan = (RGBA *)realloc(dumbscan, finfo.image[current].w * finfo.image[current].h * sizeof(RGBA));
-
-			if(!dumbscan)
-				break;
-		}
-
-		for(int pass = 0;pass < finfo.image[current].passes;pass++)
-		{
-			codeK->fmt_read_next_pass();
-
-			if(!current)
-			{
-				for(j = 0;j < finfo.image[current].h;j++)
-				{
-					scan = all + j * finfo.image[current].w;
-					i = codeK->fmt_read_scanline(scan);
-					b = (i != SQE_OK);
-					SQ_FAIL_CLOSE(b);
-				}
-			}
-			else
-			{
-				for(j = 0;j < finfo.image[current].h;j++)
-				{
-					i = codeK->fmt_read_scanline(dumbscan);
-					if(i != SQE_OK) goto E;
-				}
-			}
-		}
-
-		if(finfo.image[current].needflip && !current)
-			fmt_utils::flipv((char *)all, finfo.image[current].w * sizeof(RGBA), finfo.image[current].h);
-
-		current++;
-	}
-
-	E:
-
-	t.info.frames = QString::fromLatin1("%1").arg(current);
-	codeK->fmt_read_close();
-
-	QImage image((unsigned char *)all, w, h, 32, 0, 0, QImage::LittleEndian);
-	image.setAlphaBuffer(true);
-
-	if(processImage)
-		t.thumbnail = SQ_ThumbnailLoadJob::makeBigThumb(&image);
-	else
-		t.thumbnail = image;
-
-	return true;
+        return true;
 }
 
 QImage SQ_ThumbnailLoadJob::makeBigThumb(QImage *image)

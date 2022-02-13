@@ -292,7 +292,7 @@ xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 SUBDIRS = squirrels 
-EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png flipH.png flipV.png rotateL.png rotateR.png filter_color.png filter.png 
+EXTRA_DIST = bcg.png convert.png edit_sample.png mask.png reset_value.png resize.png resize_toolbutton.png rotate.png splash_colorize.png splash_convert.png splash_filter.png splash_print.png splash_resize.png splash_rotate.png print.png resize_h.png resize_wh.png resize_w.png resize_toolbutton2.png flipH.png flipV.png rotateL.png rotateR.png filter.png 
 #>- all: all-recursive
 #>+ 1
 all: docs-am  all-recursive
@@ -764,12 +764,6 @@ install-data-local:
 #>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
 #>+ 1
 	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/
-#>- 	$(INSTALL_DATA) $(srcdir)/filter_color.png $(kde_datadir)/ksquirrel/images/imageedit/filter_color.png
-#>+ 1
-	$(INSTALL_DATA) $(srcdir)/filter_color.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/filter_color.png
-#>- 	$(mkinstalldirs) $(kde_datadir)/ksquirrel/images/imageedit/
-#>+ 1
-	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/
 #>- 	$(INSTALL_DATA) $(srcdir)/filter.png $(kde_datadir)/ksquirrel/images/imageedit/filter.png
 #>+ 1
 	$(INSTALL_DATA) $(srcdir)/filter.png $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/filter.png
@@ -844,9 +838,6 @@ uninstall-local:
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/rotateR.png
-#>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/filter_color.png
-#>+ 1
-	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/filter_color.png
 #>- 	-rm -f $(kde_datadir)/ksquirrel/images/imageedit/filter.png
 #>+ 1
 	-rm -f $(DESTDIR)$(kde_datadir)/ksquirrel/images/imageedit/filter.png
@@ -855,7 +846,6 @@ uninstall-local:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-
 
 
 #>+ 2

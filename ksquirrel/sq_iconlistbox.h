@@ -20,11 +20,20 @@
 
 #include <klistbox.h>
 
+/* 
+ *  SQ_IconListBox represents a listbox with fixed width.
+ *
+ *  With SQ_IconListItem it is used in SQ_Options.
+ */
+
 class SQ_IconListBox : public KListBox
 {
 	public:
 		SQ_IconListBox(QWidget * = 0, const char * = 0, WFlags = 0);
 
+		void updateAndInstall(QObject *);
+
+	private:
 		void updateWidth();
 		void invalidateHeight();
 		void invalidateWidth();

@@ -15,15 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
- /*
-	from kdelibs
- */
- 
 #include <qlistbox.h>
+#include <qpainter.h>
+#include <qbitmap.h>
+#include <qpixmap.h>
 
 #include "sq_iconlistitem.h"
 
-SQ_IconListItem::SQ_IconListItem(QListBox *listbox, const QPixmap &pixmap, const QString &text) : QListBoxItem(listbox)
+SQ_IconListItem::SQ_IconListItem(QListBox *listbox, const QPixmap &pixmap, const QString &text)
+		: QListBoxItem(listbox)
 {
 	mPixmap = pixmap;
 
@@ -41,7 +41,7 @@ int SQ_IconListItem::expandMinimumWidth( int width )
 	return mMinimumWidth;
 }
 
-const QPixmap &SQ_IconListItem::defaultPixmap()
+const QPixmap& SQ_IconListItem::defaultPixmap()
 {
 	static QPixmap *pix=0;
 
@@ -90,7 +90,6 @@ int SQ_IconListItem::height( const QListBox *lb ) const
 		return (mPixmap.height() + ht + 10);
 	}
 }
-
 
 int SQ_IconListItem::width( const QListBox *lb ) const
 {

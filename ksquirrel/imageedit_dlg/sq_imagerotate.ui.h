@@ -19,31 +19,19 @@ void SQ_ImageRotate::init()
     pushReset->setPixmap(locate("appdata", "images/imageedit/reset_value.png"));
 
     imageopt.putto = SQ_Config::instance()->readEntry("Image edit options", "rotate_putto", QString::null);
-    imageopt.prefix = SQ_Config::instance()->readEntry("Image edit options", "rotate_prefix", QString::null);
     imageopt.where_to_put = SQ_Config::instance()->readNumEntry("Image edit options", "rotate_where_to_put", 0);
     imageopt.close = SQ_Config::instance()->readBoolEntry("Image edit options", "rotate_close", true);
 
-    sample.load(locate("appdata", "images/imageedit/edit_sample.png"));
-
     checkDontShow->setChecked(SQ_Config::instance()->readBoolEntry("Image edit options", "rotate_dontshowhelp", false));
+
+    flipv = fliph = false;
+    angle = 0;
 
     if(checkDontShow->isChecked())
 	slotNext();
 
-    if(sample.isNull())
-	return;
+    initPreviewImage();
 
-    sample = sample.convertDepth(32);
-    sample_saved = sample.copy();
-
-    if(sample.width() != sample.height())
-    {
-	qWarning("SQ_ImageRotate::init: sample's w & h are not equal");
-	sample = sample_saved = QImage();
-    }
-
-    slotReset();
-    
     done = true;
 }
 
@@ -188,40 +176,12 @@ void SQ_ImageRotate::rotateImage(bool right)
 {
     if(sample.isNull()) return;
 
-    QImage res(sample.width(), sample.height(), 32);
-
-    if(res.isNull())
-    {
-	qWarning("SQ_ImageRotate::slotRotateSample: temporary image is not created");
-	return;
-    }
-
-    unsigned int *line, *line2;
-    int x2;
-
-    for(int y = 0;y < sample.height();++y)
-    {
-	line = (unsigned int *)sample.scanLine(y);
-	x2 = (right) ? (sample.height() - y - 1) : y;
-
-	if(right)
-	    for(int x = 0;x < sample.height();++x)
-	    {
-	        line2 = (unsigned int *)res.scanLine(x);
-	        *(line2 + x2) = *(line+x);
-	    }
-	else
-	    for(int x = sample.height()-1, x3 = 0;x > 0;--x,++x3)
-	    {
-	         line2 = (unsigned int *)res.scanLine(x);
-	         *(line2 + x2) = *(line+x3);
-	    }
-    }
-
-    sample = res.copy();
-    sample.setAlphaBuffer(true);
+    sample = right ? KImageEffect::rotate(sample, KImageEffect::Rotate90) : KImageEffect::rotate(sample, KImageEffect::Rotate270);
 
     setImage(sample);
+
+    pixmap->erase();
+    pixmap->update();
 }
 
 void SQ_ImageRotate::slotOptions()
@@ -285,4 +245,27 @@ void SQ_ImageRotate::slotBack()
     pushRotate->setDefault(false);
 
     widgetStackWizard->raiseWidget(0);
+}
+
+void SQ_ImageRotate::initPreviewImage()
+{
+    QImage tmp;
+
+    tmp.load(locate("appdata", "images/imageedit/edit_sample.png"));
+
+    setPreviewImage(tmp);
+}
+
+void SQ_ImageRotate::setPreviewImage(const QImage &im)
+{    
+    if(im.isNull()) return;
+
+    sample = im.convertDepth(32);
+    sample.setAlphaBuffer(false);
+    sample_saved = sample.copy();
+
+    QPixmap p;
+
+    p.convertFromImage(sample_saved);
+    pixmap->setPixmap(p);
 }

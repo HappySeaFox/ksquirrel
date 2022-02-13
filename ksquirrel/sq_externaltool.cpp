@@ -51,7 +51,7 @@ SQ_ExternalTool::SQ_ExternalTool() : QObject(), QPtrList<KDesktopFile>()
 		if(tmp.isEmpty())
 			break;
 
-		QString path = dir->getAbsPath(tmp + ".desktop");
+		QString path = dir->absPath(tmp + ".desktop");
 
 		if(!QFile::exists(path))
 			continue;
@@ -66,79 +66,110 @@ SQ_ExternalTool::~SQ_ExternalTool()
 
 void SQ_ExternalTool::addTool(const QString &pixmap, const QString &name, const QString &command)
 {
-	QString abs = dir->getAbsPath(name + ".desktop");
+	// construct a path to new .desktop file
+	QString abs = dir->absPath(name + ".desktop");
 
 	QFile::remove(abs);
 
+	// create and init new KDesktopFile
 	KDesktopFile *d = new KDesktopFile(abs);
 	d->writeEntry("ServiceTypes", "*");
 	d->writeEntry("Exec", command);
 	d->writeEntry("Icon", pixmap);
 	d->writeEntry("Name", name);
+
+	// save it to disk now!
 	d->sync();
 
+	// add new entry
 	append(d);
 }
 
-QString SQ_ExternalTool::getToolPixmap(const int i)
+QString SQ_ExternalTool::toolPixmap(const int i)
 {
 	return at(i)->readIcon();
 }
 
-QString SQ_ExternalTool::getToolName(const int i)
+QString SQ_ExternalTool::toolName(const int i)
 {
 	return at(i)->readName();
 }
 
-QString SQ_ExternalTool::getToolCommand(const int i)
+QString SQ_ExternalTool::toolCommand(const int i)
 {
 	return at(i)->readEntry("Exec");
 }
 
-KPopupMenu* SQ_ExternalTool::getNewPopupMenu()
+/*
+ *  Recreate current popop menu.
+ */
+KPopupMenu* SQ_ExternalTool::newPopupMenu()
 {
 	int id;
 
+	// clear menu
 	menu->clear();
 
 	title = menu->insertTitle(i18n("No file selected"));
 
+	// construct new menu
 	for(unsigned int i = 0;i < count();i++)
 	{
-		id = menu->insertItem(SQ_IconLoader::instance()->loadIcon(getToolPixmap(i), KIcon::Desktop, 16), getToolName(i));
+		id = menu->insertItem(SQ_IconLoader::instance()->loadIcon(toolPixmap(i), KIcon::Desktop, 16), toolName(i));
 		menu->setItemParameter(id, i);
 	}
 
 	return menu;
 }
 
-KPopupMenu* SQ_ExternalTool::getConstPopupMenu() const
+/*
+ *  Get current popup menu.
+ */
+KPopupMenu* SQ_ExternalTool::constPopupMenu() const
 {
 	return menu;
 }
 
+/*
+ *  Write current state to config file
+ */
 void SQ_ExternalTool::writeEntries()
 {
 	int ncount = count(), cur = 1, i;
 
+	// no tools ?
 	if(!ncount)
 		return;
 
 	QString num;
 
+	// delete old group with old items
 	SQ_Config::instance()->deleteGroup("External tools");
 	SQ_Config::instance()->setGroup("External tools");
 
+	// write items in config file
 	for(i = 0;i < ncount;i++,cur++)
 	{
 		num.sprintf("%d", cur);
-		SQ_Config::instance()->writeEntry(num, getToolName(i));
+		SQ_Config::instance()->writeEntry(num, toolName(i));
 	}
 }
 
+/*
+ *  Invoked, when user executed popup menu with external tools.
+ *  This slot will do some useful stuff.
+ */
 void SQ_ExternalTool::slotAboutToShowMenu()
 {
+	// get selected items in filemanager
 	KFileItemList *items = (KFileItemList *)SQ_WidgetStack::instance()->visibleWidget()->selectedItems();
+
+	if(!items || !items->count())
+	{
+		menu->changeTitle(title, i18n("No file selected"));
+		return;
+	}
+
 	KFileItem *item = items->first();
 
 	if(!item)
@@ -147,8 +178,10 @@ void SQ_ExternalTool::slotAboutToShowMenu()
 		return;
 	}
 
+	// make title shorter
 	QString file = KStringHandler::rsqueeze(item->name(), 30);
 
+	// finally, change title
 	if(items)
 	{
 		QString final = (items->count() == 1 || items->count() == 0) ? file : (file + QString::fromLatin1(" (+%1)").arg(items->count()-1));

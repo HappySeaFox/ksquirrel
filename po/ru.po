@@ -74,8 +74,8 @@ msgid "External Tools"
 msgstr "Внешние программы"
 
 #: sq_diroperatorbase.cpp:438 ksquirrel.cpp:458
-msgid "Fi&lter"
-msgstr "Фи&льтр"
+msgid "Filter"
+msgstr "Фильтр"
 
 #: sq_diroperatorbase.cpp:448
 msgid "Select files to edit"

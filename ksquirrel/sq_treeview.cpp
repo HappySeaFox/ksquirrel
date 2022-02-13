@@ -32,58 +32,70 @@ SQ_TreeView::SQ_TreeView(QWidget *parent, const char *name) : KFileTreeView(pare
 	tree = this;
 	vis = false;
 
-//	QPixmap homePix = SQ_IconLoader::instance()->loadIcon("gohome", KIcon::Desktop, KIcon::SizeSmall);
 	QPixmap rootPix = SQ_IconLoader::instance()->loadIcon("hdd_mount", KIcon::Desktop, KIcon::SizeSmall);   
 
+	// we should add at least one branch
 	root = addBranch(KURL(QDir::rootDirPath()), " /", rootPix);
-//	home = addBranch(KURL(QDir().home().absPath()), " Home", homePix);
 
 	addColumn("Name");
 	header()->hide();
 
+	// don't show files
 	setDirOnlyMode(root, true);
-//	setDirOnlyMode(home, true);
 
+	// show '+'
 	setRootIsDecorated(true);
-	setShowSortIndicator(true);
 
 	setCurrentItem(root->root());
 	root->setOpen(true);
 
+	// connect signals
+
+	// Space and Return will open item
 	connect(this, SIGNAL(spacePressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
 	connect(this, SIGNAL(returnPressed(QListViewItem*)), SIGNAL(executed(QListViewItem*)));
+
 	connect(this, SIGNAL(executed(QListViewItem*)), SLOT(slotItemExecuted(QListViewItem*)));
-	connect(this, SIGNAL(newURL(const KURL&)), SLOT(slotNewURL(const KURL&)));
+	connect(this, SIGNAL(newURL(const KURL&)), this, SLOT(slotNewURL(const KURL&)));
 	connect(root, SIGNAL(populateFinished(KFileTreeViewItem *)), SLOT(slotOpened(KFileTreeViewItem *)));
 
 	itemsToClose = new KFileTreeViewItemList;
 
 	int sync_type = SQ_Config::instance()->readNumEntry("Fileview", "sync type", 0);
 
+	// load url, if needed
 	if(sync_type == 2 || sync_type == 0)
-		emitNewURL(SQ_WidgetStack::instance()->getURL());
+		emitNewURL(SQ_WidgetStack::instance()->url());
 }
 
 SQ_TreeView::~SQ_TreeView()
 {}
 
+/*
+ *  Item executed. Let's pass its url to SQ_WidgetStack (if needed).
+ */
 void SQ_TreeView::slotItemExecuted(QListViewItem *item)
 {
 	if(!item) return;
 
 	int sync_type = SQ_Config::instance()->readNumEntry("Fileview", "sync type", 0);
 
+	// current sychronization type doesn't require
+	// passing url to SQ_WidgetStack - return
 	if(sync_type == 2)
 		return;
 
 	KFileTreeViewItem *cur = static_cast<KFileTreeViewItem*>(item);
 	KURL Curl = cur->url();
 
+	// pass url to SQ_WidgetStack
 	SQ_WidgetStack::instance()->setURLForCurrent(Curl);
 }
 
 void SQ_TreeView::emitNewURL(const KURL &url)
 {
+	// tree is invisible.
+	// save url for future use
 	if(!vis)
 	{
 		pendingURL = url;
@@ -96,6 +108,9 @@ void SQ_TreeView::emitNewURL(const KURL &url)
 	emit newURL(url);
 }
 
+/*
+ *  Set given item visible, current, and populate it.
+ */
 void SQ_TreeView::populateItem(KFileTreeViewItem *item)
 {
 	setCurrentItem(item);
@@ -103,12 +118,16 @@ void SQ_TreeView::populateItem(KFileTreeViewItem *item)
 	item->setOpen(true);
 }
 
+/*
+ *  Close all last opened items.
+ */
 void SQ_TreeView::collapseOpened()
 {
 	paths.clear();
 
 	KFileTreeViewItem *item;
 
+	// go through array of items and close them all
 	while((item = itemsToClose->getFirst()) != NULL)
 	{
 		item->setOpen(false);
@@ -116,6 +135,9 @@ void SQ_TreeView::collapseOpened()
 	}
 }
 
+/*
+ *  Load url.
+ */
 void SQ_TreeView::slotNewURL(const KURL &url)
 {
 	collapseOpened();
@@ -125,6 +147,15 @@ void SQ_TreeView::slotNewURL(const KURL &url)
 
 	KURL last = k;
 
+	// divide url to paths.
+	// for example, "/home/krasu/1/2" will be divided into
+	//
+	// "/home/krasu/1/2"
+	// "/home/krasu/1"
+	// "/home/krasu/"
+	// "/home/"
+	// "/"
+	//
 	while(true)
 	{
 		paths.prepend(k.path());
@@ -136,42 +167,61 @@ void SQ_TreeView::slotNewURL(const KURL &url)
 		last = k;
 	}
 
-	while(doSearch(root))
+	while(doSearch())
 	{}
 }
 
+/*
+ *  New item is opened. Try to continue loading url.
+ */
 void SQ_TreeView::slotOpened(KFileTreeViewItem *item)
 {
 	if(!item) return;
 
-	doSearch(root);
+	// continue searhing...
+	doSearch();
 }
 
-bool SQ_TreeView::doSearch(KFileTreeBranch *branch)
+/*
+ *  Search first available url in variable 'paths'. Open found item.
+ *  If item was found return true.
+ */
+bool SQ_TreeView::doSearch()
 {
+	// all items are opened
 	if(paths.empty())
 		return false;
 
 	QValueList<QString>::iterator it = paths.begin();
 
-	KFileTreeViewItem *found = findItem(branch, *it);
+	KFileTreeViewItem *found = findItem(root, *it);
 
+	// item not found. It means that
+	//
+	//   * we loaded all subpaths - nothing to do
+	//   * item we needed is not loaded yet. populateItem() _now_ is trying to open
+	//     new subpath, and we will continue searching in slotOpened().
+	//
 	if(!found)
 		return false;
 
+	// ok, item is found
+	//
+	// remove first entry from 'paths'
+	// and try to open item
 	paths.erase(it);
 	populateItem(found);
 
+	// save a pointer to this item for collapseOpened()
 	itemsToClose->prepend(found);
 
+	// done, but new subpaths are pending...
 	return true;
 }
 
-bool SQ_TreeView::configVisible() const
-{
-	return vis;
-}
-
+/*
+ *  Set tree shown/hidden.
+ */
 void SQ_TreeView::setShown(bool shown)
 {
 	vis = shown;
@@ -179,14 +229,21 @@ void SQ_TreeView::setShown(bool shown)
 	KFileTreeView::setShown(shown);
 }
 
+/*
+ *  On show event load saved url, if any. See emitNewURL().
+ */
 void SQ_TreeView::showEvent(QShowEvent *)
 {
+	// if pending url is valid
 	if(!pendingURL.isEmpty())
 	{
+		// set pending url to current url
 		KURL url = pendingURL;
 
+		// reset pending url
 		pendingURL = KURL();
 
+		// finally, load url
 		emit newURL(url);
 	}
 }

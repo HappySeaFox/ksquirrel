@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kdebug.h>
-
 #include "sq_pixmapcache.h"
 #include "sq_dir.h"
 
@@ -35,67 +33,100 @@ SQ_PixmapCache::SQ_PixmapCache(int limit) : QMap<QString, SQ_Thumbnail>()
 SQ_PixmapCache::~SQ_PixmapCache()
 {}
 
+/*
+ *  Write all entries to disk and clear cache.
+ */
 void SQ_PixmapCache::sync()
 {
+	// nothing to sync
 	if(empty())
 		return;
 
 	QMapIterator<QString, SQ_Thumbnail> BEGIN = begin();
 	QMapIterator<QString, SQ_Thumbnail>    END = end();
 
-	kdDebug() << "Syncing " << size() << " entries..." << endl;
-
-	for(QMapIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;it++)
-	{
+	// go through array and sync each entry
+	for(QMapIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;++it)
 		syncEntry(it.key(), it.data());
-	}
 
+	// remove all entries from cache
 	clear();
 }
 
+/*
+ *  Write one entry to disk and remove it from cache.
+ */
 void SQ_PixmapCache::syncEntry(const QString &key, SQ_Thumbnail &thumb)
 {
-	kdDebug() << "syncing single entry \"" << key << "\"..." << endl;
+	// let SQ_Dir save thumbnail
 	dir->saveThumbnail(key, thumb);
 }
 
+/*
+ *  Insert new entry to cache
+ */
 void SQ_PixmapCache::insert(const QString &key, const SQ_Thumbnail &thumb)
 {
+	// thumbnail is null ?
 	if(thumb.thumbnail.isNull())
 		return;
 
+	// calc new cache size
 	last_full += SQ_PixmapCache::entrySize(thumb);
 
+	// add new entry
 	(*this)[key] = thumb;
 }
 
+/*
+ *  Remove entry from cache.
+ */
 void SQ_PixmapCache::removeEntry(const QString &key)
 {
-	SQ_Thumbnail thumb = (*this)[key];
+	cache_iterator it = find(key);
 
-	last_full -= SQ_PixmapCache::entrySize(thumb);
+	// no item to remove ?
+	if(it == end())
+		return;
+
+	last_full -= SQ_PixmapCache::entrySize(it.data());
 
 	QMap<QString, SQ_Thumbnail>::remove(key);
 }
 
+/*
+ *  Remove entry from cache and from disk.
+ */
 void SQ_PixmapCache::removeEntryFull(const QString &key)
 {
+	// remove from memory
 	removeEntry(key);
 
+	// remove from disk
 	dir->removeFile(key);
 }
 
+/*
+ *  Check if pixmap, represented by 'key', is already in cache.
+ */
 bool SQ_PixmapCache::contains2(const QString &key, SQ_Thumbnail &th)
 {
-	if(this->contains(key))
+	QMap<QString, SQ_Thumbnail>::iterator it = find(key);
+
+	// item found
+	if(it != end())
 	{
-		th = (*this)[key];
+		th = it.data();
 		return true;
 	}
 
+	// not found
 	return false;
 }
 
+/*
+ *  Calculate total size used by cache (not exact!)
+ */
 int SQ_PixmapCache::totalSize()
 {
 	if(valid_full)
@@ -104,14 +135,12 @@ int SQ_PixmapCache::totalSize()
 	QMapConstIterator<QString, SQ_Thumbnail> BEGIN = constBegin();
 	QMapConstIterator<QString, SQ_Thumbnail>    END = constEnd();
 
-	SQ_Thumbnail t;
 	int total = 0;
 
-	for(QMapConstIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;it++)
+	// go through rray and calculate total size
+	for(QMapConstIterator<QString, SQ_Thumbnail> it = BEGIN;it != END;++it)
 	{
-		t = it.data();
-
-		total += SQ_PixmapCache::entrySize(t);
+		total += SQ_PixmapCache::entrySize(it.data());
 	}
 
 	last_full = total;
@@ -120,6 +149,9 @@ int SQ_PixmapCache::totalSize()
 	return total;
 }
 
+/*
+ *  Calculate cache-related size of given thumbnail.
+ */
 int SQ_PixmapCache::entrySize(const SQ_Thumbnail &t)
 {
 	int  total = (((t.thumbnail.width() * t.thumbnail.height() * t.thumbnail.depth()) >> 3)

@@ -49,21 +49,22 @@ class SQ_EditBase : public QObject
 		virtual void startEditPrivate() = 0;
 		virtual void dialogReset() = 0;
 
-		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im, const fmt_writeoptions &opt);
+		virtual int manipAndWriteDecodedImage(const QString &name, fmt_image *im);
 		virtual int determineNextScan(const fmt_image &im, RGBA *scan, int y);
 
-		virtual void dialogAdditionalInit();
+		virtual void initWriteOptions();
 		virtual void setWritingLibrary();
 		virtual void cycleDone();
-		virtual void setPreviewImage(const QImage &im);
 
 		void decodingCycle();
+
+		QImage generatePreview() const;
+
+        private:
+		QString adjustFileName(const QString &globalprefix, const QString &name, int replace,
+					QString putto, bool paged = false, int page = 0);
+		int copyFile(const QString &src, const QString &dst) const;
 		void errorjmp(jmp_buf jmp, const int code);
-
-		int copyFile(const QString &src, const QString &dst);
-
-		QString adjustFileName(const QString &globalprefix, const QString &name, bool replace,
-									QString putto, bool paged = false, int page = 0);
 
 	signals:
 		void convertText(const QString &, bool);
@@ -77,15 +78,16 @@ class SQ_EditBase : public QObject
 		QStringList			files;
 		QString				err_internal, err_failed;
 		QString				currentFile;
-		int					error_code, current_page;
-		SQ_ImageOptions	imageopt;
+		int				error_code, current_page;
+		SQ_ImageOptions	                imageopt;
 		fmt_writeoptions		opt;
-		SQ_LIBRARY		*lr, *lw;
+		SQ_LIBRARY		        *lr, *lw;
 		RGBA				*image;
-		QString				special_action;
-		bool				ondisk, preview, multi, last, lastFrame;
+		QString				special_action, prefix;
+		bool				ondisk, multi, last, lastFrame;
 		KTempFile			*tempfile;
-		QString 				altlibrary;
+		QString 			altlibrary;
+                fmt_image                       *im;
 };
 
 #endif

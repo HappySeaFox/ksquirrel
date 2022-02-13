@@ -19,8 +19,18 @@
 
 SQ_BCGLabel::SQ_BCGLabel(QWidget *parent, const char *name, WFlags f) : QLabel(parent, name, f | Qt::WNoAutoErase)
 {
-	setScaledContents(true);
+	setScaledContents(false);
+
+	setFixedWidth(SQ_BCGLabel::fixedWidth());
+	setFixedHeight(SQ_BCGLabel::fixedWidth());
+
+	setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 }
 
 SQ_BCGLabel::~SQ_BCGLabel()
 {}
+
+int SQ_BCGLabel::fixedWidth()
+{
+    return 128;
+}
