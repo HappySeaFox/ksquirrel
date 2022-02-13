@@ -95,6 +95,8 @@ class SQ_DirOperator : public KDirOperator
 
         void stopPreview();
 
+        void setPendingFile(const QString &p);
+
     protected:
         /*
          *  Reimplement createView() to create custom views.
@@ -210,6 +212,7 @@ class SQ_DirOperator : public KDirOperator
         QTimer    *timer_preview;
         KURL lasturl;
         bool usenew;
+        QString m_pending;
 };
 
 inline
@@ -234,6 +237,12 @@ inline
 KFileView* SQ_DirOperator::createView(QWidget *, KFile::FileView)
 {
     return fileview;
+}
+
+inline
+void SQ_DirOperator::setPendingFile(const QString &p)
+{
+    m_pending = p;
 }
 
 #endif

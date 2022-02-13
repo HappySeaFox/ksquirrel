@@ -1244,10 +1244,7 @@ void KSquirrel::continueLoading()
 
         if(fm.isFile() && fm.isReadable())
         {
-            KFileView *v = pWidgetStack->diroperator()->view();
-            v->clearSelection();
-            v->setCurrentItem(fm.fileName());
-            v->setSelected(v->currentFileItem(), true);
+            pWidgetStack->diroperator()->setPendingFile(SQ_HLOptions::instance()->path);
 
             // if it is known image type - let's load it
             SQ_GLWidget::window()->startDecoding(SQ_HLOptions::instance()->path);

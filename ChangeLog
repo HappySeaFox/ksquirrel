@@ -1,3 +1,7 @@
+ksquirrel-0.7.0try4
+*********************
+* fixed file selection when passing filename through command line
+
 ksquirrel-0.7.0try3
 *********************
 * animated widget in toolbar now can be disabled (Options->Main)

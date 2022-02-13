@@ -21,6 +21,7 @@
 
 #include <qtimer.h>
 #include <qlabel.h>
+#include <qfileinfo.h>
 #include <qapplication.h>
 
 #include <kstringhandler.h>
@@ -262,6 +263,7 @@ void SQ_DirOperator::slotFinishedLoading()
     {
         lasturl = KURL();
         usenew = false;
+        m_pending = QString::null;
         KSquirrel::app()->sbarWidget("fileIcon")->clear();
         KSquirrel::app()->sbarWidget("fileName")->clear();
         return;
@@ -274,6 +276,26 @@ void SQ_DirOperator::slotFinishedLoading()
 
 void SQ_DirOperator::slotDelayedFinishedLoading()
 {
+    // select pending file if any
+    if(!m_pending.isEmpty())
+    {
+        KFileView *v = view();
+
+        QFileInfo fm(m_pending);
+
+        if(v)
+        {
+            v->clearSelection();
+            v->setCurrentItem(fm.fileName());
+            setCurrentItem(v->currentFileItem());
+        }
+
+        m_pending = QString::null;
+        startOrNotThumbnailUpdate();
+
+        return;
+    }
+
     KURL up_url = url().upURL();
 
     KFileItem *first = fileview->firstFileItem();
