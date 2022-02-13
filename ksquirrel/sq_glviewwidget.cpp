@@ -261,9 +261,9 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 	w = (GLfloat)sqGLDecoder->width();
 	h = (GLfloat)sqGLDecoder->height();
 
-//	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)w, (int)h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, (int)w, (int)h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, (int)w, (int)h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+//	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//	glTexImage2D(GL_TEXTURE_2D, 0, 4, (int)w, (int)h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();

@@ -7,9 +7,17 @@
 #define ATTR_ __attribute__ ((packed))
 
 
-#define TRUE  (1==1)
-#define FALSE (1==0)
-#define BOOL  char
+#if !defined TRUE
+    #define TRUE  (1==1)
+#endif
+
+#if !defined FALSE
+    #define FALSE (1==0)
+#endif
+
+#if !defined BOOL
+    #define BOOL  char
+#endif
 
 
 typedef struct

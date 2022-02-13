@@ -28,6 +28,8 @@
 
 #include "defs.h"
 
+template <class T> class QValueVector;
+
 class SQ_LIBRARY
 {
 	public:
@@ -55,7 +57,7 @@ class SQ_LIBRARY
 class SQ_LibraryHandler : public QObject
 {
 	private:
-		QValueList<SQ_LIBRARY>	*libs;
+		QValueVector<SQ_LIBRARY>*libs;
 		SQ_LIBRARY				*currentlib;
 
 	public:
@@ -66,13 +68,14 @@ class SQ_LibraryHandler : public QObject
 		int callReadFormat(const QString &file, PICTURE **pic);
 
 		SQ_LIBRARY getLibByIndex(const int &i);
-		int count() const { return libs->count(); }
+		int count() const;
 
 		bool supports(const QString &format) const;
 		QString allSupportedForFilter() const;
 
 		void clear();
 		void reInit(QStringList *foundLibraries);
+		void add(QStringList *foundLibraries);
 };
 
 #endif

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_convertwidget.ui'
 **
-** Created: Fri Mar 26 21:50:34 2004
+** Created: Tue Mar 30 01:45:38 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!

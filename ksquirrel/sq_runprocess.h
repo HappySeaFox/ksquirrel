@@ -19,12 +19,13 @@
 #define MENU_RUN_PROCESSES
 
 #include <qprocess.h>
-#include <qvaluelist.h>
 #include <qstring.h>
 #include <qpixmap.h>
 #include <qobject.h>
 
 #include <stdio.h>
+
+template <class T> class QValueVector;
 
 typedef struct
 {
@@ -56,7 +57,7 @@ class SQ_RunProcess : public QObject
 
 
     private:
-		QValueList<PROCESSITEM> *plist;
+		QValueVector<PROCESSITEM> *plist;
 		int baseid, curid;
 };
 

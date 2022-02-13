@@ -16,88 +16,71 @@
  ***************************************************************************/
 
 #include "sq_librarylistener.h"
-
-#include <qsocketnotifier.h>
-#include <fam.h>
-#include <qstring.h>
-#include <fcntl.h>
-
 #include "ksquirrel.h"
+#include "sq_libraryhandler.h"
+#include "sq_librarieschanged.h"
 
-SQ_LibraryListener::SQ_LibraryListener(QObject * parent, const char *name) : QObject(parent, name)
-{}
+#include <qstring.h>
+
+SQ_LibraryListener::SQ_LibraryListener(bool delayed) : KDirLister(delayed)
+{
+       setAutoUpdate(true);
+       setDirOnlyMode(false);
+       setShowingDotFiles(false);
+
+       connect(this, SIGNAL(started(const KURL &)), SLOT(slotStarted(const KURL &)));
+       connect(this, SIGNAL(completed()), SLOT(slotCompleted()));
+       connect(this, SIGNAL(newItems(const KFileItemList &)), SLOT(slotNewItems(const KFileItemList &)));
+       connect(this, SIGNAL(deleteItem(KFileItem *)), SLOT(slotDeleteItem(KFileItem *)));
+	connect(this, SIGNAL(showInfo(const QStringList &)), SLOT(slotShowInfo(const QStringList &)));
+}
 
 SQ_LibraryListener::~SQ_LibraryListener()
 {}
 
-bool SQ_LibraryListener::openFAM()
+void SQ_LibraryListener::slotStarted(const KURL &_url)
 {
-	fam = new FAMConnection;
+	url = _url;
+}
 
-	if(!fam) return false;
+void SQ_LibraryListener::slotCompleted()
+{
 
-	if(FAMOpen2(fam, "ksquirrel") != 0)
+}
+
+void SQ_LibraryListener::slotNewItems(const KFileItemList &items)
+{
+	KFileItemListIterator	it(items);
+	KFileItem 			*item;
+	QStringList			list;
+	QString				stritems = "";
+	
+	while((item = it.current()) != 0)
 	{
-		delete fam;
-		fam = 0;
-		return false;
+		++it;
+		if(item->isFile() && item)
+			stritems = stritems + url.path() + "/" + item->name() + "\n";
 	}
 
-	int famfd = FAMCONNECTION_GETFD(fam);
-	int flags = fcntl(famfd, F_GETFL);
-	fcntl(famfd, F_SETFL, flags | O_NONBLOCK);
+	list = QStringList::split("\n", stritems);
+	sqLibHandler->add(&list);
 
-	sn = new QSocketNotifier(famfd, QSocketNotifier::Read, 0);
-	connect(sn, SIGNAL(activated(int)), SLOT(readFam(int)));
+ 	sqConfig->setGroup("Libraries");
 
-	return true;
+	if(sqConfig->readBoolEntry("show dialog", true))
+		emit showInfo(list);
+
+	setAutoUpdate(sqConfig->readBoolEntry("monitor", true));
 }
 
-void SQ_LibraryListener::readFAM(int id)
+void SQ_LibraryListener::slotDeleteItem(KFileItem *item)
 {
-static const char *famevent[10] =
-{
-		"",
-		"FAMChanged",
-		"FAMDeleted",
-		"FAMStartExecuting",
-		"FAMStopExecuting",
-		"FAMCreated",
-		"FAMMoved",
-		"FAMAcknowledge",
-		"FAMExists",
-		"FAMEndExist"
-};
 
-	printf("\nFAM: caught \"%s\" signal\n", famevent[id]);
-
-	while (fam && FAMPending(fam))
-	{
-		FAMEvent ev;
-
-		if (FAMNextEvent(fam, &ev) != 1)
- 		{
-			closeFAM();
-			return;
-		}
-
-//		emit(signal_checkMail());
-	}
 }
 
-void SQ_LibraryListener::closeFAM()
+void SQ_LibraryListener::slotShowInfo(const QStringList &linfo)
 {
-	if(!fam) return;
-
-	delete sn;
-	sn = 0;
-	FAMClose(fam);
-	delete fam;
-	fam = 0;
-}
-
-void SQ_LibraryListener::startMonitoring(const QString &path)
-{
-	if(openFAM())
-		FAMMonitorDirectory(fam, path.ascii(), 0, 0);
+	SQ_LibrariesChanged cd(sqApp);
+	cd.setLibsInfo(linfo, true);
+	cd.exec();
 }

@@ -25,17 +25,53 @@
   */
 
 class KConfig;
+template <class T> class QValueVector;
+
+typedef struct
+{
+	QString	group;
+	QString	strvalue;
+	int		intvalue;
+	bool		boolvalue;
+	int		name;
+}SquirrelOption;
 
 class SQ_SquirrelOptions : public QObject
 {
+	public:
+		enum BoolOptions
+		{
+			checkSome=0
+		};
+
+		enum StringOptions
+		{
+			strSome=0
+		};
+
+		enum IntOptions
+		{
+                	intSome=0
+		};
+
+		enum Groups { Main = 0, Interface, FileView, GLView, Libraries, Caching };
+
 	private:
 		KConfig *config;
+		short	num;
+
+		QValueVector<SquirrelOption>	**l;
 
 	public: 
 		SQ_SquirrelOptions(QObject * parent = 0, const char *name = 0);
 		~SQ_SquirrelOptions();
 
 		void init(KConfig *);
+		void reinit(KConfig *);
+
+		QString readStringEntry(const int group, const int value, QString &def);
+		bool readBoolEntry(const int group, const int value, bool def);
+		int readNumEntry(const int group, const int value, int &def);
 };
 
 #endif

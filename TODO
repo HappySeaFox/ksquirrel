@@ -22,7 +22,7 @@ Libraries
 	[   ]  gif
 	[   ]  ico, cur
 	[ W ]  PCX
-	[ W ]  FAM support (hot detection of new libraries)
+	[ X ]  FAM support (hot detection of new libraries) ... replaced with KDirLister
 
 Fileview
 	[ X ]  WidgetStack

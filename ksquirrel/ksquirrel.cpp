@@ -18,7 +18,6 @@
 #include <qapplication.h>
 #include <qpixmap.h>
 #include <qimage.h>
-#include <qvaluelist.h>
 #include <qprocess.h>
 #include <qcolor.h>
 #include <qlabel.h>
@@ -26,6 +25,8 @@
 #include <qregexp.h>
 #include <qvbox.h>
 #include <qlayout.h>
+#include <qvaluevector.h>
+#include <qvaluelist.h>
 
 #include <kapp.h>
 #include <khelpmenu.h>
@@ -42,10 +43,10 @@
 #include "sq_splash.h"
 #include "sq_glviewwidget.h"
 #include "sq_libraryhandler.h"
-#include "sq_dir.h"
 #include "sq_bookmarks.h"
 #include "sq_convertwidget.h"
 #include "sq_squirreloptions.h"
+#include "sq_librarylistener.h"
 
 
 Squirrel * Squirrel::App = 0;
@@ -67,7 +68,7 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	sqOptions = new SQ_SquirrelOptions;
 	sqOptions->init(sqConfig);
 
-	iconSizeList = new QValueList<int>;
+	iconSizeList = new QValueVector<int>;
 	iconSizeList->append(16);
 	iconSizeList->append(22);
 	iconSizeList->append(32);
@@ -90,12 +91,12 @@ Squirrel::Squirrel(QWidget *parent, const char *name) : KDockMainWindow (parent,
 	
 	// !! Find libraries
 	sqLibHandler = new SQ_LibraryHandler;
-	slotRescanLibraries();
+	sqLibUpdater = new SQ_LibraryListener;
+	sqLibUpdater->openURL(KURL(sqLibPrefix), false, true);
 
 	// create view
 	sqConfig->setGroup("Interface");
 	curViewType = (Squirrel::ViewType)sqConfig->readNumEntry("ViewType",  Squirrel::SQuirrel);
-	dirForViewer = new SQ_Dir("/", sqLibHandler->allSupportedForFilter());
 
 	// set background color for GLview
 	sqConfig->setGroup("GL view");
@@ -212,7 +213,7 @@ void Squirrel::InitRunMenu()
 
 	for(int i = 0;i < getcount;i++)
 		if(pMenuProc->GetName(i) != "SEPARATOR")
-			pmLaunch->insertItem(QPixmap(pMenuProc->GetPixmap(i)), pMenuProc->GetName(i), pMenuProc->GetElementId(i));
+			pmLaunch->insertItem(pMenuProc->GetPixmap(i), pMenuProc->GetName(i), pMenuProc->GetElementId(i));
 		else
 			pmLaunch->insertSeparator();
 
@@ -250,7 +251,7 @@ void Squirrel::InitFilterMenu()
 	
 	actionFilterMenu = new KPopupMenu;
 	sqConfig->setGroup("Filters");
-	filterList = new QValueList<FILTER>;
+	filterList = new QValueVector<FILTER>;
 
 	/*  filterList should contain "*" and "all supported" filters by default  */
 	tmp_filter.name = "All files";
@@ -266,8 +267,7 @@ void Squirrel::InitFilterMenu()
 		sqConfig->setGroup("Filters");
 		tmp = sqConfig->readEntry(ext, "");
 		
-		if(tmp == QString(""))
-			break;
+		if(tmp == "") break;
 
 		tmp_filter.name = tmp;
 		sqConfig->setGroup("Filters ext");
@@ -316,29 +316,20 @@ void Squirrel::createWidgetsLikeSQuirrel()
 	CreateStatusBar();
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
-	//@todo option "show content when resizing" [true|false]
-	mainDock->dockManager()->setSplitterOpaqueResize(true);
 
-	QWidget *cw = new QWidget(mainDock);
+	mainSplitter = new QSplitter(mainDock);
 
-	sqWStack = new SQ_WidgetStack;
+	sqWStack = new SQ_WidgetStack(mainSplitter);
 	sqWStack->raiseFirst(createFirst);
 
-	mainDock->setWidget(cw);
+	mainDock->setWidget(mainSplitter);
 	mainDock->setDockSite(KDockWidget::DockCorner);
 	mainDock->setEnableDocking(KDockWidget::DockNone);
 	setView(mainDock);
 	setMainDockWidget(mainDock);
 
-	SQ_TreeView *pTree = new SQ_TreeView;
-	pdockTree = createDockWidget("Tree view", 0L, 0L, "");
-	pdockTree->setWidget(pTree);
-	pdock1 = pdockTree->manualDock(mainDock, KDockWidget::DockLeft, 23);
-
-	pdockTabView = createDockWidget("File browser", 0L, 0L, "");
-	sqWStack->setFocusPolicy(QTabWidget::NoFocus);
-	pdockTabView->setWidget(sqWStack);
-	pdockTabView->manualDock(mainDock, KDockWidget::DockLeft, 100);
+	SQ_TreeView *pTree = new SQ_TreeView(mainSplitter);
+	mainSplitter->moveToFirst(pTree);
 
        connect(sqCurrentURL, SIGNAL(returnPressed(const QString&)), sqWStack, SLOT(setURL(const QString&)));
 	connect(sqCurrentURL, SIGNAL(activated(const QString&)), sqWStack, SLOT(setURL(const QString&)));
@@ -349,6 +340,11 @@ void Squirrel::createWidgetsLikeSQuirrel()
 	CreateMenu(menubar);
 
 	sqGLView = new SQ_GLViewWidget;
+
+	QValueList<int> l;
+	l.append(1);
+	l.append(4);
+	mainSplitter->setSizes(l);
 }
 
 void Squirrel::createWidgetsLikeGqview()
@@ -514,15 +510,6 @@ void Squirrel::createWidgetsLikeXnview()
 	V->setSizes(l);
 }
 
-void Squirrel::receivedStdoutFromLibFinder(KProcess *pr, char *buf, int len)
-{
-	if(!pr) return;
-
-	QString rec = QString::fromLatin1(buf, len);
-
-	strlibFound += QStringList::split("\n", rec);
-}
-
 void Squirrel::CreateStatusBar()
 {
 	sbar = statusBar();
@@ -532,8 +519,6 @@ void Squirrel::CreateStatusBar()
 	
 	sqSBdirInfo = new QLabel(sbar);
 	sqSBcurFileInfo = new QLabel(sbar);
-//	sqSBcurFileInfo->setText("         ");
-//	sqSBcurFileInfo->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 	QHBox *vb = new QHBox(sbar);
 
 	sqSBfileIcon = new QLabel(vb);
@@ -628,7 +613,7 @@ void Squirrel::CreateActions()
 	pANextFile = new KAction("Next file", QIconSet(sqLoader->loadIcon("next", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("next", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotNextFile()), actionCollection(), "SQ select next file");
 	pAPrevFile = new KAction("Previous file", QIconSet(sqLoader->loadIcon("previous", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("previous", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotPreviousFile()), actionCollection(), "SQ select previous file");
 
-	pARescan = new KAction("Rescan libraries", QIconSet(sqLoader->loadIcon("reload", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("reload", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, SLOT(slotRescanLibraries()), actionCollection(), "SQ rescan libraries");
+	pARescan = new KAction("Rescan libraries", QIconSet(sqLoader->loadIcon("reload", KIcon::Desktop, KIcon::SizeSmall), sqLoader->loadIcon("reload", KIcon::Desktop, toolbarIconSize)), KShortcut(), this, 0, actionCollection(), "SQ rescan libraries");
 
 	pARaiseListView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
 	pARaiseIconView->setExclusiveGroup(QString("raise_some_widget_from_stack"));
@@ -647,14 +632,3 @@ void Squirrel::slotPreviousFile()
 
 Squirrel::~Squirrel()
 {}
-
-void Squirrel::slotRescanLibraries()
-{
-	strlibFound.clear();	
-	KShellProcess procLibFinder;
-	procLibFinder << "find" << sqLibPrefix << "-name" << "libSQ*.so";
-	connect(&procLibFinder, SIGNAL(receivedStdout(KProcess*,char*,int)), SLOT(receivedStdoutFromLibFinder(KProcess*,char*,int)));
-	procLibFinder.start(KProcess::Block, KProcess::Stdout);
-	disconnect(&procLibFinder, SIGNAL(receivedStdout(KProcess*,char*,int)), this, SLOT(receivedStdoutFromLibFinder(KProcess*,char*,int)));
-	sqLibHandler->reInit(&strlibFound);
-}

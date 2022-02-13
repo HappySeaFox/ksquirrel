@@ -19,35 +19,33 @@
 #define SQ_LIBRARYLISTENER_H
 
 #include <qobject.h>
-
-class QSocketNotifier;
-class QString;
-class FAMConnection;
+#include <kdirlister.h>
 
 /**
   *@author ckult
   */
 
-class SQ_LibraryListener : public QObject
+class SQ_LibraryListener : public KDirLister
 {
 	Q_OBJECT
 
 	private:
-		FAMConnection	*fam;
-		QSocketNotifier	*sn;
-
-		bool openFAM();
+		KURL	url;
 
 	public: 
-		SQ_LibraryListener(QObject * parent = 0, const char *name = 0);
+		SQ_LibraryListener(bool = false);
 		~SQ_LibraryListener();
 
-		void readFAM();
-		void closeFAM();
-		void startMonitoring(const QString &);
+	signals:
+		void showInfo(const QStringList &linfo);
 
 	public slots:
-		void readFAM(int);
+		void slotStarted(const KURL &);
+		void slotCompleted();
+		void slotNewItems(const KFileItemList &);
+		void slotDeleteItem(KFileItem *);
+
+		void slotShowInfo(const QStringList &linfo);
 };
 
 #endif

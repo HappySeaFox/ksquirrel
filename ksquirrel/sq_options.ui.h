@@ -28,6 +28,10 @@ void SQ_Options::init()
     checkRestart->setChecked(sqConfig->readBoolEntry("restart", true));
     checkMinimize->setChecked(sqConfig->readBoolEntry("minimize to tray", true));
     
+    sqConfig->setGroup("Libraries");
+    if(sqConfig->readBoolEntry("monitor", true)) checkMonitor->toggle();
+    checkFAMMessage->setChecked(sqConfig->readBoolEntry("show dialog", true));
+    
     sqConfig->setGroup("Interface");
     comboToolbarIconSize->setCurrentItem(sqConfig->readNumEntry("toolbar icon size", 0));
     tp = sqConfig->readNumEntry("create first", 0);
@@ -53,7 +57,6 @@ void SQ_Options::init()
     ((QRadioButton*)(buttonGroupZoomModel->find(tp)))->setChecked(true);
     tp = sqConfig->readNumEntry("shade model", 0);
     ((QRadioButton*)(buttonGroupShadeModel->find(tp)))->setChecked(true);
-    checkAdjust->setChecked(sqConfig->readBoolEntry("adjust image", false));
     kColorGLbackground->setColor(sqGLViewBGColor);
     checkDrop->setChecked(sqConfig->readBoolEntry("enable drop", true));
 
@@ -154,7 +157,6 @@ void SQ_Options::start()
     {
 	//@todo write sqConfig and sync().
 	sqConfig->setGroup("Interface");
-//	sqConfig->writeEntry("set last visited", checkLastVisited->isChecked());
 	sqConfig->writeEntry("ViewType", buttonGroupViewType->id(buttonGroupViewType->selected()));
 	sqConfig->writeEntry("toolbar icon size", comboToolbarIconSize->currentItem());
 	sqConfig->writeEntry("create first", buttonGroupCreateFirst->id(buttonGroupCreateFirst->selected()));
@@ -168,8 +170,6 @@ void SQ_Options::start()
 	sqConfig->writeEntry("click policy custom", buttonGroupClickPolicy->id(buttonGroupClickPolicy->selected()));
 	sqConfig->writeEntry("click policy system", checkClickSystem->isChecked());
 
-
-	// write color later
 	sqConfig->setGroup("Main");
 	sqConfig->writeEntry("show splash", checkSplash->isChecked());
 	sqConfig->writeEntry("minimize to tray", checkMinimize->isChecked());
@@ -178,10 +178,13 @@ void SQ_Options::start()
 	sqConfig->setGroup("GL view");
 	sqGLViewBGColor = kColorGLbackground->color();
 	sqConfig->writeEntry("GL view background", sqGLViewBGColor.name());
-	sqConfig->writeEntry("adjust image", checkAdjust->isChecked());
 	sqConfig->writeEntry("zoom model", buttonGroupZoomModel->id(buttonGroupZoomModel->selected()));
 	sqConfig->writeEntry("shade model", buttonGroupShadeModel->id(buttonGroupShadeModel->selected()));
 	sqConfig->writeEntry("enable drop", checkDrop->isChecked());
+	
+	sqConfig->setGroup("Libraries");
+	sqConfig->writeEntry("monitor", checkMonitor->isChecked());
+	sqConfig->writeEntry("show dialog", checkFAMMessage->isChecked());
 	
 	sqConfig->sync();
     }

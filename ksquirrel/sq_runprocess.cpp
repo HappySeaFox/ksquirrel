@@ -21,10 +21,11 @@
 #include <qmessagebox.h>
 
 #include "ksquirrel.h"
+#include <qvaluevector.h>
 
 SQ_RunProcess::SQ_RunProcess(const int _baseid) : baseid(_baseid),curid(0)
 {
-    plist = new QValueList<PROCESSITEM>;
+    plist = new QValueVector<PROCESSITEM>;
 
     QObject::QObject();
 }
@@ -47,7 +48,7 @@ void SQ_RunProcess::AddItem(const QString &_name, const QString &_program)
 	item.name =  _name;
 	item.program = _program;
 	item.id = curid;
-	item.px = (im1 == im2)?0:px;
+	item.px = (im1 == im2)?QPixmap(0):px;
 
 	plist->append(item);
 

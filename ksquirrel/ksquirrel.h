@@ -1,7 +1,7 @@
 /***************************************************************************
                           ksquirrel.h  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
+    begin                : Dec 10 2003
     copyright            : (C) 2004 by ckult
     email                : squirrel-sf@yandex.ru
  ***************************************************************************/
@@ -22,7 +22,6 @@
 #include <qtoolbutton.h>
 #include <qtabwidget.h>
 #include <qdockwindow.h>
-#include <qvaluelist.h>
 #include <qwhatsthis.h>
 #include <qpushbutton.h>
 #include <qstringlist.h>
@@ -45,11 +44,12 @@ class SQ_WidgetStack;
 class SQ_RunProcess;
 class SQ_SystemTray;
 class SQ_GLViewWidget;
-class SQ_LibraryHandler;
-class SQ_Dir;
 class SQ_Bookmarks;
 class SQ_SquirrelOptions;
+class SQ_LibraryListener;
+class SQ_LibraryHandler;
 
+template <class T> class QValueVector;
 
 typedef struct
 {
@@ -67,8 +67,8 @@ class Squirrel : public KDockMainWindow
 		ViewType			curViewType;
 
     private:
-		QValueList<FILTER>	*filterList;
-		QValueList<int>		*iconSizeList;
+		QValueVector<FILTER>*filterList;
+		QValueVector<int>		*iconSizeList;
 		SQ_SystemTray		*tray;
 		QToolButton			*pTBAbstractButton, *pTBBookmarksButton;
 		KMenuBar			*menubar;
@@ -79,9 +79,6 @@ class Squirrel : public KDockMainWindow
 		SQ_Splash			*splash;
 
 		KDockWidget 			*mainDock;
-		KDockWidget			*pdockTree;
-		KDockWidget 			*pdockTabView;
-		SQ_Dir				*dirForViewer;
 
 		KAction				*pAGLView, *pAConfigure, *pAExit, *pAConvert, *pANextFile, *pAPrevFile, *pARescan;
 		KRadioAction			*pARaiseListView, *pARaiseIconView, *pARaiseDetailView;
@@ -125,11 +122,8 @@ class Squirrel : public KDockMainWindow
 		void slotSetFilter(int);
 		void slotGLView();
 
-		void receivedStdoutFromLibFinder(KProcess*, char*, int);
-
 		void slotNextFile();
 		void slotPreviousFile();
-		void slotRescanLibraries();
 
 		void slotDoNothing() {}
 
@@ -155,6 +149,7 @@ class Squirrel : public KDockMainWindow
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
 		QString				libPrefix;
 		SQ_SquirrelOptions	*options;
+		SQ_LibraryListener		*libl;
 
 		QColor				GLBkGroundColor;
 };
@@ -162,6 +157,7 @@ class Squirrel : public KDockMainWindow
 #define	sqApp			(Squirrel::App)
 #define	sqOptions		(Squirrel::App->options)
 #define	sqConfig			(Squirrel::App->kconf)
+#define	sqLibUpdater		(Squirrel::App->libl)
 #define   sqLoader			(Squirrel::App->iconL)
 #define   sqStatus			(Squirrel::App->sbar)
 #define   sqProgress		(Squirrel::App->progress)

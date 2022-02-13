@@ -18,10 +18,11 @@
 #include "sq_libraryhandler.h"
 
 #include <qmessagebox.h>
+#include <qvaluevector.h>
 
 SQ_LibraryHandler::SQ_LibraryHandler(QStringList *foundLibraries, QObject *parent, const char *name) : QObject(parent, name), currentlib(0)
 {
-	libs = new QValueList<SQ_LIBRARY>;
+	libs = new QValueVector<SQ_LIBRARY>;
 
 	if(foundLibraries)
 		reInit(foundLibraries);
@@ -35,10 +36,10 @@ SQ_LibraryHandler::~SQ_LibraryHandler()
 
 void SQ_LibraryHandler::setCurrentLibrary(const QString &name)
 {
-	QValueList<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
-	QValueList<SQ_LIBRARY>::iterator      END = libs->end();
+	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
+	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
 
-	for(QValueList<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
+	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
 		if(((*it).sinfo).find(name, 0, false) > 0)
 		{
 			currentlib = &(*it);
@@ -62,10 +63,10 @@ SQ_LIBRARY SQ_LibraryHandler::getLibByIndex(const int &i)
 
 bool SQ_LibraryHandler::supports(const QString &format) const
 {
-	QValueList<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
-	QValueList<SQ_LIBRARY>::iterator      END = libs->end();
+	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
+	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
 
-	for(QValueList<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
+	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
 		if(((*it).sinfo).find(format, 0, false) > 0)
 			return true;
 
@@ -76,11 +77,11 @@ QString SQ_LibraryHandler::allSupportedForFilter() const
 {
 	QString ret = "";
 
-	QValueList<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
-	QValueList<SQ_LIBRARY>::iterator      END = libs->end();
+	QValueVector<SQ_LIBRARY>::iterator   BEGIN = libs->begin();
+	QValueVector<SQ_LIBRARY>::iterator      END = libs->end();
 
-	for(QValueList<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
-		ret = ret + QString((*it).sinfo) + " ";
+	for(QValueVector<SQ_LIBRARY>::iterator it = BEGIN;it != END;it++)
+		ret = ret + (*it).sinfo + " ";
 
 	return ret;
 }
@@ -93,7 +94,11 @@ void SQ_LibraryHandler::clear()
 void SQ_LibraryHandler::reInit(QStringList *foundLibraries)
 {
 	libs->clear();
+	add(foundLibraries);
+}
 
+void SQ_LibraryHandler::add(QStringList *foundLibraries)
+{
 	QValueList<QString>::iterator   BEGIN = foundLibraries->begin();
 	QValueList<QString>::iterator      END = foundLibraries->end();
 
@@ -127,4 +132,9 @@ void SQ_LibraryHandler::reInit(QStringList *foundLibraries)
       		else
 			libs->append(libtmp);
 	}
+}
+
+int SQ_LibraryHandler::count() const
+{
+	return libs->count();
 }

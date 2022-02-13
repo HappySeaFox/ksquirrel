@@ -290,7 +290,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.3/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.5/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)
 
@@ -426,7 +426,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=configure.files ksquirrelrc Makefile.dist ksquirrel.kdevses configure.in.in ksquirrel.doxygen stamp-h.in subdirs start_ ksquirrel-0.1.3.tar.gz 
+KDE_DIST=stamp-h.in subdirs start_ configure.files ksquirrelrc Makefile.dist ksquirrel.kdevses configure.in.in ksquirrel.doxygen ksquirrel-0.1.5.tar.gz 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -653,7 +653,7 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.3/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.5/Makefile.in
 
 
 #>+ 2

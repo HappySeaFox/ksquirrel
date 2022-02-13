@@ -37,12 +37,13 @@ sync tree & fileview=true
 
 [GL view]
 GL view background=#b9b9b9
+adjust image=false
 enable drop=true
 shade model=0
 zoom model=1
 
 [Interface]
-ViewType=0
+ViewType=1
 create first=0
 toolbar icon size=1
 
@@ -55,10 +56,6 @@ ViewMode=SmallColumns
 
 [KFileDialog Speedbar]
 Speedbar IconSize=32
-
-[Libraries]
-monitor=true
-show dialog=false
 
 [Main]
 minimize to tray=false

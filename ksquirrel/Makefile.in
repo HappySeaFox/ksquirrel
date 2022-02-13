@@ -248,12 +248,12 @@ x_libraries = @x_libraries@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = ksquirrel
 
-#>- ksquirrel_SOURCES = sq_librarylistener.cpp sq_squirreloptions.cpp sq_bookmarks.cpp sq_options.ui sq_convertwidget.ui sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_dir.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp 
+#>- ksquirrel_SOURCES = sq_librarieschanged.ui sq_librarylistener.cpp sq_squirreloptions.cpp sq_bookmarks.cpp sq_options.ui sq_convertwidget.ui sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp 
 #>+ 1
-ksquirrel_SOURCES=sq_librarylistener.cpp sq_squirreloptions.cpp sq_bookmarks.cpp   sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_dir.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp  sq_options.cpp sq_convertwidget.cpp
-ksquirrel_LDADD = -lkio -lGLU -lfam $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
+ksquirrel_SOURCES= sq_librarylistener.cpp sq_squirreloptions.cpp sq_bookmarks.cpp   sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp  sq_librarieschanged.cpp sq_options.cpp sq_convertwidget.cpp
+ksquirrel_LDADD = -lkio -lGLU $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_application.cpp sq_decoder.cpp sq_dir.cpp sq_diroperator.cpp sq_filedetailview.cpp sq_fileiconview.cpp sq_glviewwidget.cpp sq_libraryhandler.cpp sq_runprocess.cpp sq_specialpage.cpp sq_splash.cpp sq_tray.cpp sq_treeview.cpp sq_widgetstack.cpp defs.h sq_about.h sq_application.h sq_convertwidget.ui.h sq_decoder.h sq_dir.h sq_diroperator.h sq_filedetailview.h sq_fileiconview.h sq_glviewwidget.h sq_libraryhandler.h sq_options.ui.h sq_runprocess.h sq_specialpage.h sq_splash.h sq_tray.h sq_treeview.h sq_version.h sq_widgetstack.h sq_convertwidget.ui sq_options.ui sq_version sq_bookmarks.cpp sq_bookmarks.h sq_squirreloptions.cpp sq_squirreloptions.h sq_librarylistener.cpp sq_librarylistener.h 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png sq_application.cpp sq_decoder.cpp sq_diroperator.cpp sq_filedetailview.cpp sq_fileiconview.cpp sq_glviewwidget.cpp sq_libraryhandler.cpp sq_runprocess.cpp sq_specialpage.cpp sq_splash.cpp sq_tray.cpp sq_treeview.cpp sq_widgetstack.cpp defs.h sq_about.h sq_application.h sq_convertwidget.ui.h sq_decoder.h sq_diroperator.h sq_filedetailview.h sq_fileiconview.h sq_glviewwidget.h sq_libraryhandler.h sq_options.ui.h sq_runprocess.h sq_specialpage.h sq_splash.h sq_tray.h sq_treeview.h sq_version.h sq_widgetstack.h sq_convertwidget.ui sq_options.ui sq_version sq_bookmarks.cpp sq_bookmarks.h sq_squirreloptions.cpp sq_squirreloptions.h sq_librarylistener.cpp sq_librarylistener.h sq_librarieschanged.ui ksquirrelrc 
 
 ####### kdevelop will overwrite this part!!! (end)############
 # These paths are KDE specific. Use them:
@@ -298,7 +298,7 @@ am_ksquirrel_OBJECTS = sq_librarylistener.$(OBJEXT) \
 	sq_runprocess.$(OBJEXT) sq_libraryhandler.$(OBJEXT) \
 	sq_glviewwidget.$(OBJEXT) sq_fileiconview.$(OBJEXT) \
 	sq_filedetailview.$(OBJEXT) sq_diroperator.$(OBJEXT) \
-	sq_dir.$(OBJEXT) sq_decoder.$(OBJEXT) sq_application.$(OBJEXT) \
+	sq_decoder.$(OBJEXT) sq_application.$(OBJEXT) \
 	ksquirrel.$(OBJEXT) main.$(OBJEXT)
 #>- ksquirrel_OBJECTS = $(am_ksquirrel_OBJECTS)
 #>+ 13
@@ -310,8 +310,8 @@ ksquirrel_nofinal_OBJECTS = sq_librarylistener.$(OBJEXT) \
 	sq_runprocess.$(OBJEXT) sq_libraryhandler.$(OBJEXT) \
 	sq_glviewwidget.$(OBJEXT) sq_fileiconview.$(OBJEXT) \
 	sq_filedetailview.$(OBJEXT) sq_diroperator.$(OBJEXT) \
-	sq_dir.$(OBJEXT) sq_decoder.$(OBJEXT) sq_application.$(OBJEXT) \
-	ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_options.$(OBJEXT) sq_convertwidget.$(OBJEXT)\
+	sq_decoder.$(OBJEXT) sq_application.$(OBJEXT) \
+	ksquirrel.$(OBJEXT) main.$(OBJEXT) sq_librarieschanged.$(OBJEXT) sq_options.$(OBJEXT) sq_convertwidget.$(OBJEXT)\
 sq_fileiconview.moc.o sq_runprocess.moc.o sq_diroperator.moc.o sq_glviewwidget.moc.o sq_treeview.moc.o sq_librarylistener.moc.o sq_widgetstack.moc.o ksquirrel.moc.o sq_splash.moc.o sq_filedetailview.moc.o sq_decoder.moc.o 
 @KDE_USE_FINAL_FALSE@ksquirrel_OBJECTS = $(ksquirrel_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@ksquirrel_OBJECTS = $(ksquirrel_final_OBJECTS)
@@ -327,7 +327,7 @@ am__depfiles_maybe = depfiles
 #>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ksquirrel.Po ./$(DEPDIR)/main.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_application.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_bookmarks.Po \
-#>- @AMDEP_TRUE@	./$(DEPDIR)/sq_decoder.Po ./$(DEPDIR)/sq_dir.Po \
+#>- @AMDEP_TRUE@	./$(DEPDIR)/sq_decoder.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_diroperator.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_filedetailview.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_fileiconview.Po \
@@ -341,10 +341,10 @@ am__depfiles_maybe = depfiles
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_tray.Po ./$(DEPDIR)/sq_treeview.Po \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/sq_widgetstack.Po
 #>+ 33
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/sq_options.P $(DEPDIR)/sq_convertwidget.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/sq_runprocess.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_glviewwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_librarylistener.moc.P $(DEPDIR)/sq_widgetstack.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_filedetailview.moc.P $(DEPDIR)/sq_decoder.moc.P  $(DEPDIR)/ksquirrel.all_cpp.P  ./$(DEPDIR)/ksquirrel.Po ./$(DEPDIR)/main.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/sq_librarieschanged.P $(DEPDIR)/sq_options.P $(DEPDIR)/sq_convertwidget.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/sq_runprocess.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_glviewwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_librarylistener.moc.P $(DEPDIR)/sq_widgetstack.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_filedetailview.moc.P $(DEPDIR)/sq_decoder.moc.P  $(DEPDIR)/ksquirrel.all_cpp.P  ./$(DEPDIR)/ksquirrel.Po ./$(DEPDIR)/main.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_application.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_bookmarks.Po \
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_decoder.Po ./$(DEPDIR)/sq_dir.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_decoder.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_diroperator.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_filedetailview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_fileiconview.Po \
@@ -357,10 +357,10 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_squirreloptions.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_tray.Po ./$(DEPDIR)/sq_treeview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_widgetstack.Po
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/sq_options.P $(DEPDIR)/sq_convertwidget.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/sq_runprocess.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_glviewwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_librarylistener.moc.P $(DEPDIR)/sq_widgetstack.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_filedetailview.moc.P $(DEPDIR)/sq_decoder.moc.P  ./$(DEPDIR)/ksquirrel.Po ./$(DEPDIR)/main.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/sq_librarieschanged.P $(DEPDIR)/sq_options.P $(DEPDIR)/sq_convertwidget.P $(DEPDIR)/sq_fileiconview.moc.P $(DEPDIR)/sq_runprocess.moc.P $(DEPDIR)/sq_diroperator.moc.P $(DEPDIR)/sq_glviewwidget.moc.P $(DEPDIR)/sq_treeview.moc.P $(DEPDIR)/sq_librarylistener.moc.P $(DEPDIR)/sq_widgetstack.moc.P $(DEPDIR)/ksquirrel.moc.P $(DEPDIR)/sq_splash.moc.P $(DEPDIR)/sq_filedetailview.moc.P $(DEPDIR)/sq_decoder.moc.P  ./$(DEPDIR)/ksquirrel.Po ./$(DEPDIR)/main.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_application.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_bookmarks.Po \
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_decoder.Po ./$(DEPDIR)/sq_dir.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_decoder.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_diroperator.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_filedetailview.Po \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/sq_fileiconview.Po \
@@ -409,7 +409,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.3/ksquirrel/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.5/ksquirrel/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
@@ -456,7 +456,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_application.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_bookmarks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_decoder.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_dir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_diroperator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_filedetailview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sq_fileiconview.Po@am__quote@
@@ -540,7 +539,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=sq_convertwidget.h ksquirrel sq_options.h 
+KDE_DIST=sq_convertwidget.h ksquirrel sq_librarieschanged.h sq_librarieschanged.ui.h sq_options.h 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -663,11 +662,14 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/lo32-app-ksquirrel.png $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
 	$(mkinstalldirs) $(kde_icondir)/locolor/16x16/apps/
 	$(INSTALL_DATA) $(srcdir)/lo16-app-ksquirrel.png $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
+	$(mkinstalldirs) ~/.kde/share/config/
+	$(INSTALL_DATA) $(srcdir)/ksquirrelrc ~/.kde/share/config/ksquirrelrc
 
 uninstall-local:
 	-rm -f $(kde_appsdir)/Applications/ksquirrel.desktop
 	-rm -f $(kde_icondir)/locolor/32x32/apps/ksquirrel.png
 	-rm -f $(kde_icondir)/locolor/16x16/apps/ksquirrel.png
+	-rm -f ~/.kde/share/config/ksquirrelrc
 
 # Uncomment the following two lines if you add a ui.rc file for your application to make use of
 # KDEs XML GUI builing
@@ -693,7 +695,20 @@ messages:
 
 
 
-#>+ 27
+#>+ 40
+sq_librarieschanged.cpp: $(srcdir)/sq_librarieschanged.ui sq_librarieschanged.h sq_librarieschanged.moc
+	rm -f sq_librarieschanged.cpp
+	echo '#include <klocale.h>' > sq_librarieschanged.cpp
+	$(UIC) -tr ${UIC_TR} -i sq_librarieschanged.h $(srcdir)/sq_librarieschanged.ui > sq_librarieschanged.cpp.temp ; ret=$$?; \
+	sed -e "s,${UIC_TR}( \"\" ),QString::null,g" sq_librarieschanged.cpp.temp | sed -e "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | sed -e "s,image\([0-9][0-9]*\)_data,img\1_sq_librarieschanged,g" >> sq_librarieschanged.cpp ;\
+	rm -f sq_librarieschanged.cpp.temp ;\
+	if test "$$ret" = 0; then echo '#include "sq_librarieschanged.moc"' >> sq_librarieschanged.cpp; else rm -f sq_librarieschanged.cpp ; exit $$ret ; fi
+
+sq_librarieschanged.h: $(srcdir)/sq_librarieschanged.ui
+	$(UIC) -o sq_librarieschanged.h $(srcdir)/sq_librarieschanged.ui
+
+sq_librarieschanged.moc: sq_librarieschanged.h
+	$(MOC) sq_librarieschanged.h -o sq_librarieschanged.moc
 sq_options.cpp: $(srcdir)/sq_options.ui sq_options.h sq_options.moc
 	rm -f sq_options.cpp
 	echo '#include <klocale.h>' > sq_options.cpp
@@ -769,9 +784,10 @@ sq_decoder.moc.cpp: $(srcdir)/sq_decoder.h
 clean-metasources:
 	-rm -f  sq_fileiconview.moc.cpp sq_runprocess.moc.cpp sq_diroperator.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp
 
-#>+ 5
+#>+ 6
 clean-ui:
 	-rm -f \
+	sq_librarieschanged.cpp sq_librarieschanged.h sq_librarieschanged.moc \
 	sq_options.cpp sq_options.h sq_options.moc \
 	sq_convertwidget.cpp sq_convertwidget.h sq_convertwidget.moc 
 
@@ -782,15 +798,15 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  ksquirrel/Makefile
-	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.3/ksquirrel/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit ksquirrel-0.1.5/ksquirrel/Makefile.in
 
 
 #>+ 11
-ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_squirreloptions.cpp $(srcdir)/sq_bookmarks.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_runprocess.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_glviewwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_dir.cpp $(srcdir)/sq_decoder.cpp $(srcdir)/sq_application.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_convertwidget.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_runprocess.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp  sq_convertwidget.moc sq_options.moc
+ksquirrel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/sq_librarylistener.cpp $(srcdir)/sq_squirreloptions.cpp $(srcdir)/sq_bookmarks.cpp $(srcdir)/sq_widgetstack.cpp $(srcdir)/sq_treeview.cpp $(srcdir)/sq_tray.cpp $(srcdir)/sq_splash.cpp $(srcdir)/sq_specialpage.cpp $(srcdir)/sq_runprocess.cpp $(srcdir)/sq_libraryhandler.cpp $(srcdir)/sq_glviewwidget.cpp $(srcdir)/sq_fileiconview.cpp $(srcdir)/sq_filedetailview.cpp $(srcdir)/sq_diroperator.cpp $(srcdir)/sq_decoder.cpp $(srcdir)/sq_application.cpp $(srcdir)/ksquirrel.cpp $(srcdir)/main.cpp $(srcdir)/sq_librarieschanged.cpp $(srcdir)/sq_options.cpp $(srcdir)/sq_convertwidget.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_runprocess.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp  sq_convertwidget.moc sq_options.moc sq_librarieschanged.moc
 	@echo 'creating ksquirrel.all_cpp.cpp ...'; \
 	rm -f ksquirrel.all_cpp.files ksquirrel.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> ksquirrel.all_cpp.final; \
-	for file in sq_librarylistener.cpp sq_squirreloptions.cpp sq_bookmarks.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_dir.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp sq_options.cpp sq_convertwidget.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_runprocess.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp ; do \
+	for file in sq_librarylistener.cpp sq_squirreloptions.cpp sq_bookmarks.cpp sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_splash.cpp sq_specialpage.cpp sq_runprocess.cpp sq_libraryhandler.cpp sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_decoder.cpp sq_application.cpp ksquirrel.cpp main.cpp sq_librarieschanged.cpp sq_options.cpp sq_convertwidget.cpp sq_fileiconview.moc.cpp sq_diroperator.moc.cpp sq_runprocess.moc.cpp sq_glviewwidget.moc.cpp sq_treeview.moc.cpp sq_librarylistener.moc.cpp sq_widgetstack.moc.cpp ksquirrel.moc.cpp sq_splash.moc.cpp sq_filedetailview.moc.cpp sq_decoder.moc.cpp ; do \
 	  echo "#include \"$$file\"" >> ksquirrel.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> ksquirrel.all_cpp.final; \
 	done; \
@@ -821,23 +837,22 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 20
-$(srcdir)/sq_splash.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_dir.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_treeview.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_widgetstack.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/main.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_diroperator.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_specialpage.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_application.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_decoder.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_bookmarks.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_librarylistener.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_squirreloptions.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_tray.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_runprocess.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_libraryhandler.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_glviewwidget.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/ksquirrel.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_fileiconview.cpp: sq_options.h sq_convertwidget.h 
-$(srcdir)/sq_filedetailview.cpp: sq_options.h sq_convertwidget.h 
+#>+ 19
+$(srcdir)/sq_splash.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_treeview.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_widgetstack.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/main.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_diroperator.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_specialpage.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_application.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_decoder.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_bookmarks.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_librarylistener.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_squirreloptions.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_tray.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_libraryhandler.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_runprocess.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_glviewwidget.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/ksquirrel.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_fileiconview.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 
+$(srcdir)/sq_filedetailview.cpp: sq_librarieschanged.h sq_options.h sq_convertwidget.h 

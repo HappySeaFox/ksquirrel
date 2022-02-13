@@ -29,13 +29,11 @@
 
 SQ_Splash::SQ_Splash(QWidget *parent, const char *name) : QVBox(parent, name, WType_Modal | WStyle_Customize | WStyle_NoBorder | WDestructiveClose | WStyle_StaysOnTop)
 {
-	KIconLoader *loader = new KIconLoader(*(KGlobal::iconLoader()));
-
 	picLabel = new QLabel(this);
-	QPixmap pixmap = loader->loadIcon("folder", KIcon::Desktop, 256);
+	QPixmap pixmap = QPixmap::fromMimeSource("images/squirrel.png");
 
 	picLabel->setPixmap(pixmap);
-	move(QApplication::desktop()->width() / 2 - pixmap.width() / 2, QApplication::desktop()->height() / 2 - height() / 2);
+	move(QApplication::desktop()->width() / 2 - pixmap.width() / 2, QApplication::desktop()->height() / 2 - pixmap.height() / 2);
 }
 
 

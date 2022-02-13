@@ -31,7 +31,12 @@
 
 SQ_DirOperator::SQ_DirOperator(const KURL &url, QWidget *parent, const char *name) : KDirOperator(url, parent, name)
 {
-	sing = KGlobalSettings::singleClick();
+	sqConfig->setGroup("Fileview");
+	if(sqConfig->readBoolEntry("click policy system", true))
+		sing = KGlobalSettings::singleClick();
+	else
+		sing = (bool)1 - (bool)sqConfig->readNumEntry("click policy custom", 0);
+	
 
 	pARunSeparately = new KAction("Run separately", QIconSet(sqLoader->loadIcon("launch", KIcon::Desktop, KIcon::SizeSmall),sqLoader->loadIcon("launch", KIcon::Desktop, 22)), KShortcut(CTRL+Key_J), this, SLOT(slotRunSeparately()), sqApp->actionCollection(), "Run separately");
 
@@ -85,7 +90,7 @@ KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 		else
 			connect((SQ_FileDetailView*)fileview, SIGNAL(doubleClicked(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
 
-		disconnect((SQ_FileDetailView*)fileview, SIGNAL(returnPressed(QListViewItem*)), (SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*)));
+//		disconnect((SQ_FileDetailView*)fileview, SIGNAL(returnPressed(QListViewItem*)), (SQ_FileDetailView*)fileview, SIGNAL(clicked(QListViewItem*)));
 		connect((SQ_FileDetailView*)fileview, SIGNAL(returnPressed(QListViewItem*)), SLOT(slotDoubleClicked(QListViewItem*)));
 		connect((SQ_FileDetailView*)fileview, SIGNAL(currentChanged(QListViewItem*)), SLOT(slotSelected(QListViewItem*)));
 	}
@@ -104,7 +109,7 @@ KFileView* SQ_DirOperator::createView(QWidget *parent, KFile::FileView view)
 		else
 			connect((SQ_FileIconView*)fileview, SIGNAL(doubleClicked(QIconViewItem*)), SLOT(slotDoubleClicked(QIconViewItem*)));
 
-		disconnect((SQ_FileIconView*)fileview, SIGNAL(returnPressed(QIconViewItem*)), (SQ_FileIconView*)fileview, SIGNAL(clicked(QIconViewItem*)));
+//		disconnect((SQ_FileIconView*)fileview, SIGNAL(returnPressed(QIconViewItem*)), (SQ_FileIconView*)fileview, SIGNAL(clicked(QIconViewItem*)));
 		connect((SQ_FileIconView*)fileview, SIGNAL(returnPressed(QIconViewItem*)), SLOT(slotDoubleClicked(QIconViewItem*)));
 		connect((SQ_FileIconView*)fileview, SIGNAL(currentChanged(QIconViewItem*)), SLOT(slotSelected(QIconViewItem*)));
 	}
@@ -121,9 +126,7 @@ void SQ_DirOperator::slotDoubleClicked(QIconViewItem *item)
 		QFileInfo fm(f->fileInfo()->url().path());
 
 		if(f->fileInfo()->isFile())
-			if(sqLibHandler->supports(fm.extension(false)))
-				sqGLView->showIfCan(f->fileInfo()->url().path());
-			else;
+			sqGLView->showIfCan(f->fileInfo()->url().path());
 		else
 			emit dirActivated((const KFileItem*)f->fileInfo());
 	}
@@ -138,9 +141,7 @@ void SQ_DirOperator::slotDoubleClicked(QListViewItem *item)
 		QFileInfo fm(f->fileInfo()->url().path());
 
 		if(f->fileInfo()->isFile())
-			if(!sqLibHandler->supports(fm.extension(false)))
-					sqGLView->showIfCan(f->fileInfo()->url().path());
-			else;
+			sqGLView->showIfCan(f->fileInfo()->url().path());
 		else
 			emit dirActivated((const KFileItem*)f->fileInfo());
 	}
@@ -161,13 +162,7 @@ void SQ_DirOperator::slotSelected(QIconViewItem *item)
 			sqSBfileIcon->setPixmap(px);
 			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
 		}
-/*
-		if(f->fileInfo()->isFile() && (sqViewType == Squirrel::Gqview || sqViewType == Squirrel::Xnview || sqViewType == Squirrel::WinViewer))
-		{
-			QFileInfo fm(f->fileInfo()->url().path());
-			sqGLView->showIfCan(f->fileInfo()->url().path());
-		}
-*/	}
+	}
 }
 
 void SQ_DirOperator::slotSelected(QListViewItem *item)
@@ -185,13 +180,7 @@ void SQ_DirOperator::slotSelected(QListViewItem *item)
 			sqSBfileIcon->setPixmap(px);
 			sqSBfileName->setText("  " + fi->text() + ((fi->isDir())?"":(" (" + KIO::convertSize(fi->size()) + ")")));
 		}
-
-/*		if(f->fileInfo()->isFile() && (sqViewType == Squirrel::Gqview || sqViewType == Squirrel::Xnview || sqViewType == Squirrel::WinViewer))
-		{
-			QFileInfo fm(f->fileInfo()->url().path());
-			sqGLView->showIfCan(f->fileInfo()->url().path());
-		}
-*/	}
+	}
 }
 
 void SQ_DirOperator::setShowHiddenFilesF(bool s)

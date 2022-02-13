@@ -20,17 +20,18 @@
 
 #include <qwidgetstack.h>
 #include <qstring.h>
-#include <qvaluelist.h>
 #include <kurl.h>
 
 #include "sq_diroperator.h"
+
+template <class T> class QValueVector;
 
 class SQ_WidgetStack : public QWidgetStack
 {
 	Q_OBJECT
 
 	private:
-		QValueList<int>		*pIconSizeList;
+		QValueVector<int>		*pIconSizeList;
 		int					iCurrentListIndex, iCurrentIconIndex;
 		SQ_DirOperator		*pDirOperatorList, *pDirOperatorIcon, *pDirOperatorDetail;
 
@@ -67,6 +68,7 @@ class SQ_WidgetStack : public QWidgetStack
 		void slotShowHidden(bool);
 
 		void setNameFilter(const QString&);
+		const QString getNameFilter() const;
 };
 
 #endif

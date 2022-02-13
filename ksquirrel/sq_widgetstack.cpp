@@ -28,9 +28,11 @@
 
 #include "ksquirrel.h"
 
+#include <qvaluevector.h>
+
 SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 {
-	pIconSizeList = new QValueList<int>;
+	pIconSizeList = new QValueVector<int>;
 	pIconSizeList->append(16);
 	pIconSizeList->append(22);
 	pIconSizeList->append(32);
@@ -48,8 +50,6 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent) : QWidgetStack(parent)
 	pDirOperatorList = 0L;
 	pDirOperatorIcon = 0L;
 	pDirOperatorDetail = 0L;
-
-	addWidget(pDirOperatorList, 0);
 }
 
 SQ_WidgetStack::~SQ_WidgetStack()
@@ -106,13 +106,13 @@ void SQ_WidgetStack::slotSetIconBigger()
 	if(vis == pDirOperatorList && iCurrentListIndex != (signed)pIconSizeList->count()-1)
 	{
 		iCurrentListIndex++;
-		int iconsize = *(pIconSizeList->at(iCurrentListIndex));
+		int iconsize = (*pIconSizeList)[iCurrentListIndex];
 		pDirOperatorList->setIconSize(iconsize);
 	}
 	else if(vis == pDirOperatorIcon && iCurrentIconIndex != (signed)pIconSizeList->count()-1)
 	{
 		iCurrentIconIndex++;
-		int iconsize = *(pIconSizeList->at(iCurrentIconIndex));
+		int iconsize = (*pIconSizeList)[iCurrentIconIndex];
 		pDirOperatorIcon->setIconSize(iconsize);
 	}
 }
@@ -123,13 +123,13 @@ void SQ_WidgetStack::slotSetIconSmaller()
 	if(vis == pDirOperatorList && (unsigned)iCurrentListIndex != 0)
 	{
 		iCurrentListIndex--;
-		int iconsize = *(pIconSizeList->at(iCurrentListIndex));
+		int iconsize = (*pIconSizeList)[iCurrentListIndex];
 		pDirOperatorList->setIconSize(iconsize);
 	}
 	else if(vis == pDirOperatorIcon && (unsigned)iCurrentIconIndex != 0)
 	{
 		iCurrentIconIndex--;
-		int iconsize = *(pIconSizeList->at(iCurrentIconIndex));
+		int iconsize = (*pIconSizeList)[iCurrentIconIndex];
 		pDirOperatorIcon->setIconSize(iconsize);
 	}
 }
@@ -167,9 +167,14 @@ void SQ_WidgetStack::setNameFilter(const QString &f)
 	if(pDirOperatorIcon) pDirOperatorIcon->setNameFilter(f);
 	if(pDirOperatorDetail) pDirOperatorDetail->setNameFilter(f);
 
-	if(pDirOperatorList) pDirOperatorList->updateDir();
+	if(pDirOperatorList) pDirOperatorList->actionCollection()->action("reload")->activate();
 	if(pDirOperatorIcon) pDirOperatorIcon->actionCollection()->action("reload")->activate();
 	if(pDirOperatorDetail) pDirOperatorDetail->actionCollection()->action("reload")->activate();
+}
+
+const QString SQ_WidgetStack::getNameFilter() const
+{
+	return ((SQ_DirOperator*)visibleWidget())->nameFilter();
 }
 
 void SQ_WidgetStack::raiseWidget(int id)
@@ -184,7 +189,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorList->setView(KFile::Simple);
 		pDirOperatorList->view()->actionCollection()->action(2)->activate();
 		pDirOperatorList->setURL(getURL(), true);
-		int iconsize = *(pIconSizeList->at(iCurrentListIndex));
+		int iconsize = (*pIconSizeList)[iCurrentListIndex];
 		pDirOperatorList->setIconSize(iconsize);
 
 		connect(pDirOperatorList, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
@@ -199,7 +204,7 @@ void SQ_WidgetStack::raiseWidget(int id)
 		pDirOperatorIcon->setView(KFile::Simple);
 		pDirOperatorIcon->view()->actionCollection()->action(1)->activate();
 		pDirOperatorIcon->setURL(getURL(), true);
-		int iconsize = *(pIconSizeList->at(iCurrentIconIndex));
+		int iconsize = (*pIconSizeList)[iCurrentIconIndex];
 		pDirOperatorIcon->setIconSize(iconsize);
 
 		connect(pDirOperatorIcon, SIGNAL(urlEntered(const KURL&)), SLOT(setURL(const KURL&)));
