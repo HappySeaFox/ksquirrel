@@ -877,7 +877,7 @@ fi
 
 PACKAGE=ksquirrel
 
-VERSION=0.2.1
+VERSION=0.2.2
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
@@ -8652,11 +8652,6 @@ fi
 
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" 
 
-#MIN_CONFIG(3)
-
-
-CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" 
-
 
 
 DO_NOT_COMPILE="$DO_NOT_COMPILE CVS debian bsd-port admin"
@@ -8678,7 +8673,7 @@ fi
 
 for i in $ac_topsubdirs; do
   echo $ac_n "checking if $i should be compiled""... $ac_c" 1>&6
-echo "configure:8682: checking if $i should be compiled" >&5
+echo "configure:8677: checking if $i should be compiled" >&5
   if test -d $srcdir/$i; then
     install_it="yes"
     for j in $DO_NOT_COMPILE; do

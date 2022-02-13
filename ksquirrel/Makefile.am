@@ -3,11 +3,11 @@ bin_PROGRAMS = ksquirrel
 
 ## INCLUDES were found outside kdevelop specific part
 
-ksquirrel_SOURCES = sq_externaltools.ui sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_squirreloptions.cpp sq_specialpage.cpp sq_runprocess.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_bookmarks.cpp sq_application.cpp ksquirrel.cpp main.cpp 
+ksquirrel_SOURCES = sq_fileviewfilter.cpp sq_externaltools.ui sq_widgetstack.cpp sq_treeview.cpp sq_tray.cpp sq_squirreloptions.cpp sq_specialpage.cpp sq_runprocess.cpp sq_options.ui sq_librarylistener.cpp sq_libraryhandler.cpp sq_librarieschanged.ui sq_glviewwidget.cpp sq_fileiconview.cpp sq_filedetailview.cpp sq_diroperator.cpp sq_bookmarks.cpp sq_application.cpp ksquirrel.cpp main.cpp 
 ksquirrel_LDADD   = -lGLU -lkio $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
 
-EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png defs.h sq_about.h sq_application.cpp sq_application.h sq_bookmarks.cpp sq_bookmarks.h sq_diroperator.cpp sq_diroperator.h sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_glviewwidget.cpp sq_glviewwidget.h sq_librarieschanged.ui sq_librarieschanged.ui.h sq_libraryhandler.cpp sq_libraryhandler.h sq_librarylistener.cpp sq_librarylistener.h sq_options.ui sq_options.ui.h sq_runprocess.cpp sq_runprocess.h sq_specialpage.cpp sq_specialpage.h sq_squirreloptions.cpp sq_squirreloptions.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h sq_version sq_version.h sq_widgetstack.cpp sq_widgetstack.h sq_externaltools.ui 
+EXTRA_DIST = main.cpp ksquirrel.cpp ksquirrel.h ksquirrel.desktop lo32-app-ksquirrel.png lo16-app-ksquirrel.png defs.h sq_about.h sq_application.cpp sq_application.h sq_bookmarks.cpp sq_bookmarks.h sq_diroperator.cpp sq_diroperator.h sq_filedetailview.cpp sq_filedetailview.h sq_fileiconview.cpp sq_fileiconview.h sq_glviewwidget.cpp sq_glviewwidget.h sq_librarieschanged.ui sq_librarieschanged.ui.h sq_libraryhandler.cpp sq_libraryhandler.h sq_librarylistener.cpp sq_librarylistener.h sq_options.ui sq_options.ui.h sq_runprocess.cpp sq_runprocess.h sq_specialpage.cpp sq_specialpage.h sq_squirreloptions.cpp sq_squirreloptions.h sq_tray.cpp sq_tray.h sq_treeview.cpp sq_treeview.h sq_version sq_version.h sq_widgetstack.cpp sq_widgetstack.h sq_externaltools.ui sq_fileviewfilter.cpp sq_fileviewfilter.h 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Applications/

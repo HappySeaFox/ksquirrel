@@ -1,9 +1,9 @@
 /***************************************************************************
-                          sq_version.h  -  description
+                          sq_fileviewfilter.cpp  -  description
                              -------------------
-    begin                : Mon Mar 15 2004
-    copyright            : (C) 2004 by ckult
-    email                : squirrel-sf@yandex.ru
+    begin                : ??? ??? 6 2004
+    copyright            : (C) 2004 by CKulT
+    email                : squirrel-sf@uandex.ru
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,11 +15,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __APP_VERSION__
-#define __APP_VERSION__
+#include "sq_fileviewfilter.h"
 
-const char APP[] = "Squirrel development build #";
-const int version=3786;
+SQ_FileviewFilter::SQ_FileviewFilter() : QValueVector<FILTER> ()
+{
+}
 
-#endif
+SQ_FileviewFilter::~SQ_FileviewFilter()
+{}
 
+void SQ_FileviewFilter::addFilter(const FILTER &filter)
+{
+	append(filter);
+}
+
+void SQ_FileviewFilter::addFilter(const QString &name, const QString &ext)
+{
+	FILTER filt = {name, ext};
+
+	append(filt);
+}
+
+QString SQ_FileviewFilter::getFilterName(const int i)
+{
+	return (*this)[i].name;
+}
+
+QString SQ_FileviewFilter::getFilterExt(const int i)
+{
+	return (*this)[i].filter;
+}

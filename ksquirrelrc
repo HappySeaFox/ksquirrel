@@ -8,11 +8,35 @@ last visited=/mnt/win_c/images/
 set path=2
 sync type=1
 
+[Filters]
+1=All files
+10=PNM
+2=JPEG
+3=PNG
+4=Compuserve GIF
+5=ZSoft PCX
+6=SGI
+7=HTML documents
+8=Audio files
+9=XBM
+
+[Filters ext]
+1=*
+10=*.pnm *.ppm *.pgm *.pbm
+2=*.jpeg *.jpg *.jpe
+3=*.png
+4=*.gif
+5=*.pcx
+6=*.sgi *.rgb *.rgba *.bw
+7=*.html *.htm *.shtml
+8=*.mp3 *.ogg *.wav *.wma *.it
+9=*.xbm
+
 [GL view]
 GL view background=#cccccc
 enable drop=true
 shade model=0
-zoom model=0
+zoom model=1
 
 [Interface]
 ViewType=1

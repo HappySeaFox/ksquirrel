@@ -45,6 +45,8 @@
 #include "sq_squirreloptions.h"
 #include "sq_librarylistener.h"
 #include "sq_externaltools.h"
+#include "sq_fileviewfilter.h"
+
 
 Squirrel * Squirrel::App = 0;
 KDockWidget *pdock1;
@@ -143,6 +145,21 @@ void Squirrel::closeEvent(QCloseEvent *ev)
 		sqConfig->setGroup("Fileview");
 		sqConfig->writeEntry("last visited", (sqWStack->getURL()).path());
 
+		sqConfig->deleteGroup("Filters");
+		sqConfig->deleteGroup("Filters ext");
+
+		int count = sqFilters->count(), cur = 1;
+		QString num;
+
+		for(int i = 0;i < count;i++,cur++)
+		{
+			sqConfig->setGroup("Filters");
+			num.sprintf("%d", cur);
+			sqConfig->writeEntry(num, sqFilters->getFilterName(i));
+			sqConfig->setGroup("Filters ext");
+			sqConfig->writeEntry(num, sqFilters->getFilterExt(i));
+		}
+
 		sqConfig->sync();
 		ev->accept();
 	}
@@ -220,22 +237,22 @@ void Squirrel::CreateLocationToolbar()
 
 void Squirrel::InitFilterMenu()
 {
+	filterList = new SQ_FileviewFilter;
+
 	FILTER tmp_filter;
 	QString ext, tmp;
 	unsigned int i;
 	
 	actionFilterMenu = new KPopupMenu;
 	sqConfig->setGroup("Filters");
-	filterList = new QValueVector<FILTER>;
-
-	/*  filterList should contain "*" and "all supported" filters by default  */
+/*
 	tmp_filter.name = "All files";
 	tmp_filter.filter = "*";
-	filterList->append(tmp_filter);
+	filterList->addFilter(tmp_filter);
 	tmp_filter.name = "All supported files";
 	tmp_filter.filter = sqLibHandler->allSupportedForFilter();
-	filterList->append(tmp_filter);
-
+	filterList->addFilter(tmp_filter);
+*/
 	for(i = 1;;i ++)
 	{
 		ext.sprintf("%d", i);
@@ -249,13 +266,13 @@ void Squirrel::InitFilterMenu()
 		tmp = sqConfig->readEntry(ext, "");
 		tmp_filter.filter = tmp;
 
-		filterList->append(tmp_filter);
+		filterList->addFilter(tmp_filter);
 	}
 
-	for(i=0;i<filterList->count();i++)
-		actionFilterMenu->insertItem((*filterList)[i].name, 7000+i);
+	for(i = 0;i < filterList->count();i++)
+		actionFilterMenu->insertItem(filterList->getFilterName(i), 7000+i);
 
-	slotSetFilter(7001);
+	slotSetFilter(7000);
 	connect(actionFilterMenu, SIGNAL(activated(int)), this, SLOT(slotSetFilter(int)));
 }
 

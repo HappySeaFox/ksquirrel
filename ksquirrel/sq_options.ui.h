@@ -60,23 +60,23 @@ void SQ_Options::init()
     ((QRadioButton*)(buttonGroupShadeModel->find(tp)))->setChecked(true);
     kColorGLbackground->setColor(sqGLViewBGColor);
     checkDrop->setChecked(sqConfig->readBoolEntry("enable drop", true));
-
+    
+    checkShowLinks->toggle();
+/*
     tableLib->addColumn("Library");
     tableLib->addColumn("Info");
     tableLib->addColumn("Version");
     tableLib->addColumn("Extensions");
     
-    slotShowLinks(true);
     
     tableLib->setColumnWidthMode(0, QListView::Maximum);
     tableLib->setColumnWidthMode(1, QListView::Maximum);
     tableLib->setColumnWidthMode(2, QListView::Maximum);
     tableLib->setColumnWidthMode(3, QListView::Maximum);
-    tableLib->setSelectionMode(QListView::Single);
     
     for(int i = 0;i < 4;i++)
         tableLib->setColumnWidth(i, tableLib->columnWidth(i)+20);
-    
+*/    
     textPrefix->setText(sqLibPrefix);
     listMain->setSorting(-1);
     itemMain = new QListViewItem(listMain, 0);
@@ -97,6 +97,36 @@ void SQ_Options::init()
     listMain->header()->hide();
     listMain->setCurrentItem(itemMain);
     listMain->setSelected(itemMain, true);
+    
+//    listFilters->header()->hide();
+
+    listFilters->setSorting(-1);
+
+    	int count = sqFilters->count();
+	QListViewItem *itemafter = 0L, *item;
+
+	for(int i = 0;i < count;i++)
+	{
+		if(itemafter)
+		    item = new QListViewItem(listFilters, itemafter, sqFilters->getFilterName(i), sqFilters->getFilterExt(i));
+		else
+		item = new QListViewItem(listFilters, sqFilters->getFilterName(i), sqFilters->getFilterExt(i));
+
+		itemafter = item;
+
+	    item->setRenameEnabled(0, true);
+	    item->setRenameEnabled(1, true);
+	    item->setMultiLinesEnabled(false);
+	    
+	    listFilters->insertItem(item);
+	}
+
+	pushFilterUp->setPixmap(sqLoader->loadIcon("up", KIcon::Desktop, KIcon::SizeSmall));
+	pushFilterDown->setPixmap(sqLoader->loadIcon("down", KIcon::Desktop, KIcon::SizeSmall));
+	
+	listFilters->setCurrentItem(listFilters->firstChild());
+	listFilters->clearSelection();
+	listFilters->setSelected(listFilters->currentItem(), true);
 }
 
 
@@ -182,6 +212,16 @@ void SQ_Options::start()
 	sqConfig->setGroup("Libraries");
 	sqConfig->writeEntry("monitor", checkMonitor->isChecked());
 	sqConfig->writeEntry("show dialog", checkFAMMessage->isChecked());
+
+	// @todo write filters
+	QListViewItem *cur = listFilters->firstChild();
+        sqFilters->clear();
+
+	for(;cur;cur = cur->itemBelow())
+	{
+		FILTER tf = {cur->text(0), cur->text(1)};
+		sqFilters->addFilter(tf);
+	}
 	
 	sqConfig->sync();
     }
@@ -208,4 +248,64 @@ void SQ_Options::slotShowLinks( bool show )
 	path.replace(sqLibPrefix, "");
 	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.fmt_quickinfo()), QString(tmplib.fmt_version()), QString(tmplib.sinfo)));
     }
+}
+
+
+void SQ_Options::slotClearFilter()
+{
+	QListViewItem *item = listFilters->currentItem();
+    
+	if(!item) return;
+    
+	listFilters->takeItem(item);
+}
+
+void SQ_Options::slotNewFilter()
+{
+	QListViewItem *itemafter = listFilters->lastItem(), *item;
+
+	if(itemafter)
+		item = new QListViewItem(listFilters, itemafter, "Name", "*.");
+	else
+		item = new QListViewItem(listFilters,  "Name", "*.");
+
+	item->setRenameEnabled(0, true);
+	item->setRenameEnabled(1, true);
+	item->setMultiLinesEnabled(false);
+	listFilters->insertItem(item);
+	item->startRename(0);
+}
+
+
+void SQ_Options::slotFilterUp()
+{
+    QListViewItem *item = listFilters->currentItem();
+    
+    if(!item) return;
+ 
+    QListViewItem *itemafter = item->itemAbove();
+    
+    if(!itemafter) return;
+ 
+    itemafter->moveItem(item);
+}
+
+void SQ_Options::slotFilterDown()
+{
+    QListViewItem *item = listFilters->currentItem();
+    
+    if(!item) return;
+ 
+    QListViewItem *itemafter = item->itemBelow();
+    
+    if(!itemafter) return;
+ 
+    item->moveItem(itemafter);
+}
+
+
+void SQ_Options::slotFilterRenameRequest( QListViewItem *item, const QPoint &point, int pos )
+{
+    if(item)
+	item->startRename(((pos>=0)?pos:0));
 }

@@ -30,6 +30,7 @@
 #include "sq_libraryhandler.h"
 #include <kconfig.h>
 
+#include "err.h"
 
 SQ_GLViewWidget::SQ_GLViewWidget(QWidget *parent, const char *name) : QGLWidget(parent, name)
 {
@@ -275,6 +276,7 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 	const char *name = file.ascii();
 	static SQ_LIBRARY *lib;
 	static QString status;
+	unsigned int i;
 
 	if(!sqLibHandler->supports(fm.extension(false).upper()))
 	{
@@ -286,7 +288,13 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 	lib = sqLibHandler->getCurrentLibrary();
 
 	lib->fmt_init(&finfo, name);
-	lib->fmt_read_info(finfo);
+	i = lib->fmt_read_info(finfo);
+
+	if(i == SQERR_BADFILE)
+	{
+		QMessageBox::warning(sqApp, "Decoding", "      File corrupted !      ", QMessageBox::Ok, QMessageBox::NoButton);
+		return false;
+	}
 
 	rgba = (RGBA*)realloc(rgba, finfo->w * finfo->h * sizeof(RGBA));
 	memset(rgba, 255, finfo->w * finfo->h * sizeof(RGBA));
@@ -298,12 +306,12 @@ bool SQ_GLViewWidget::showIfCan(const QString &file)
 	sqSBDecoded->setText(status);
 
 	// step-by-step decoding & displaying is <NI>, so we can only decode a file like ver.0.1.3
-	for(unsigned int i = 0;i < finfo->h;i++)
+	for(i = 0;i < finfo->h;i++)
 		lib->fmt_read_scanline(finfo, rgba + i*finfo->w);
 
 	lib->fmt_close(finfo);
 
-	if(fm.extension(false).lower() == "bmp" || fm.extension(false).lower() == "tga")
+	if(fm.extension(false).lower() == "bmp" || fm.extension(false).lower() == "tga" || fm.extension(false).lower() == "rgb")
 		flip_bmp(rgba, finfo->w, finfo->h);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

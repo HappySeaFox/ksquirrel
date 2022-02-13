@@ -47,17 +47,11 @@ class SQ_Bookmarks;
 class SQ_SquirrelOptions;
 class SQ_LibraryListener;
 class SQ_LibraryHandler;
+class SQ_FileviewFilter;
 
 class KConfig;
 
 template <class T> class QValueVector;
-
-typedef struct
-{
-	QString name;
-	QString filter;
-}FILTER;
-
 
 class Squirrel : public KDockMainWindow, public DCOPObject
 {
@@ -70,7 +64,6 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		ViewType			curViewType;
 
 	private:
-		QValueVector<FILTER>*filterList;
 		QValueVector<int>		*iconSizeList;
 		SQ_SystemTray		*tray;
 		QToolButton			*pTBAbstractButton, *pTBBookmarksButton;
@@ -136,15 +129,14 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		SQ_WidgetStack		*pWidgetStack;
 		KHistoryCombo		*pCurrentURL;
 		SQ_GLViewWidget		*glView;
-
+		SQ_FileviewFilter		*filterList;
 		SQ_LibraryHandler		*sqLibHandlerReal;
-
 		KStatusBar			*sbar;
-		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
-		QString				libPrefix;
 		SQ_SquirrelOptions		*options;
 		SQ_LibraryListener		*libl;
 
+		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus;
+		QString				libPrefix;
 		QColor				GLBkGroundColor;
 
 	public slots:
@@ -158,6 +150,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 
 #define	sqApp			(Squirrel::App)
 #define	sqOptions		(Squirrel::App->options)
+#define	sqFilters			(Squirrel::App->filterList)
 #define	sqConfig			(Squirrel::App->kconf)
 #define	sqLibUpdater		(Squirrel::App->libl)
 #define   sqLoader			(Squirrel::App->iconL)
