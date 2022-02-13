@@ -115,7 +115,7 @@ KPopupMenu* SQ_ExternalTool::constPopupMenu() const
 }
 
 /*
- *  Write current state to config file
+ *  Write tools to config file
  */
 void SQ_ExternalTool::writeEntries()
 {

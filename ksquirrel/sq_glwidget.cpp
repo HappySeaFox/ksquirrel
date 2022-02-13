@@ -80,9 +80,9 @@
 #include "sq_errorstring.h"
 #include "sq_iconloader.h"
 
-#include "fileio.h"
-#include "fmt_codec_base.h"
-#include "error.h"
+#include <fileio.h>
+#include <fmt_codec_base.h>
+#include <error.h>
 
 #include "file_broken.xpm"
 
@@ -148,7 +148,7 @@ SQ_GLWidget::SQ_GLWidget(QWidget *parent, const char *name) : QGLWidget(parent, 
 
     SQ_Config::instance()->setGroup(SQ_SECTION);
     zoom_type = SQ_Config::instance()->readNumEntry("zoom type", 2);
-    linear = SQ_Config::instance()->readBoolEntry("zoom_nice", false);
+    linear = SQ_Config::instance()->readBoolEntry("zoom_nice", true);
 
     // load background for transparent image
     BGquads = QImage(locate("appdata", "images/checker.png"));
@@ -323,18 +323,17 @@ void SQ_GLWidget::createToolbar()
     pAZoomW->plug(zoom);
     pAZoomH->plug(zoom);
     pAZoomWH->plug(zoom);
-    zoom->insertSeparator();
     pAIfLess->plug(zoom);
 
     switch(zoom_type)
     {
         case 0: pAZoomW->setChecked(true); break;
         case 1: pAZoomH->setChecked(true); break;
-        case 2: pAZoomWH->setChecked(true); break;
         case 3: pAZoom100->setChecked(true); break;
         case 4: pAZoomLast->setChecked(true); break;
 
-        default: pAZoom100->setChecked(true);
+        // "case 2" too
+        default: pAZoomWH->setChecked(true);
     }
 
 //
@@ -352,7 +351,7 @@ void SQ_GLWidget::createToolbar()
     // Ugly hack: I don't see the reason why image flickers in
     // fullscreen state with hidden toolbar. The only way to prevent it
     // is to create very small child widget (1x1).
-    QWidget *hack = new QWidget(this);
+    hack = new QWidget(this);
     hack->setPaletteBackgroundColor(QColor(128,128,128));
     hack->setGeometry(0,0,1,1);
     hack->show();
@@ -679,7 +678,7 @@ void SQ_GLWidget::matrixChanged()
     str = QString::fromLatin1("%1%2 %3 deg")
             .arg((isflippedV)?"V":"")
             .arg((isflippedH)?"H":"")
-            .arg(get_angle(), 0, 'f', 1);
+            .arg(curangle, 0, 'f', 1);
 
     SQ_GLView::window()->sbarWidget("SBGLAngle")->setText(str);
 }
@@ -1170,29 +1169,25 @@ void SQ_GLWidget::slotZoomIfLess()
 // Zoom+
 void SQ_GLWidget::slotZoomPlus()
 {
-    if(!use_broken)
-        matrix_zoom(1.0f+zoomfactor/100.0f);
+    matrix_zoom(1.0f+zoomfactor/100.0f);
 }
 
 // Zoom-
 void SQ_GLWidget::slotZoomMinus()
 {
-    if(!use_broken)
-        matrix_zoom(1.0f/(1.0f+zoomfactor/100.0f));
+    matrix_zoom(1.0f/(1.0f+zoomfactor/100.0f));
 }
 
 // Rotate left.
 void SQ_GLWidget::slotRotateLeft()
 {
-    if(!use_broken)
-        matrix_rotate(-rotatefactor);
+    matrix_rotate(-rotatefactor);
 }
 
 // Rotate right.
 void SQ_GLWidget::slotRotateRight()
 {
-    if(!use_broken)
-        matrix_rotate(rotatefactor);
+    matrix_rotate(rotatefactor);
 }
 
 // Show image properties.
@@ -1389,9 +1384,11 @@ void SQ_GLWidget::matrix_pure_reset()
 
 bool SQ_GLWidget::matrix_zoom(GLfloat ratio)
 {
+    if(use_broken) return false;
+
     SQ_Config::instance()->setGroup("GL view");
 
-    int zoom_lim = SQ_Config::instance()->readNumEntry("zoom limit", 0);
+    int zoom_lim = SQ_Config::instance()->readNumEntry("zoom limit", 1);
     float zoom_min, zoom_max, zoom_tobe;
 
     zoom_tobe = hypotf(MATRIX_C1 * ratio, MATRIX_S1 * ratio) * 100.0f;
@@ -1449,13 +1446,10 @@ GLfloat SQ_GLWidget::get_zoom_pc() const
     return get_zoom() * 100.0f;
 }
 
-GLfloat SQ_GLWidget::get_angle() const
-{
-    return curangle;
-}
-
 void SQ_GLWidget::matrix_rotate(GLfloat angle)
 {
+    if(use_broken) return;
+
     double cosine, sine, rad;
     const double rad_const = 0.017453;
     GLfloat c1 = MATRIX_C1, c2 = MATRIX_C2, s1 = MATRIX_S1, s2 = MATRIX_S2;

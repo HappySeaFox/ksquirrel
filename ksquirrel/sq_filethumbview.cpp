@@ -70,11 +70,6 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     progressBox->setStretchFactor(progressBoxBar, 0);
     progressBox->setGeometry(5, 5, 235, 24);
 
-/*
-    thumbJob = new SQ_ThumbnailLoadJob(new KFileItemList());
-    delete (SQ_ThumbnailLoadJob*)thumbJob;
-*/
-
     // create timer 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(slotTooltipDelay()));
@@ -86,10 +81,10 @@ SQ_FileThumbView::SQ_FileThumbView(QWidget *parent, const char *name) : SQ_FileI
     setResizeMode(QIconView::Adjust);
 
     // load "pending" pixmaps
-    pending["48"] = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending48.png"));
-    pending["64"] = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending64.png"));
-    pending["96"] = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending96.png"));
-    pending["128"] = QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending128.png"));
+    pending.insert("48",  QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending48.png")));
+    pending.insert("64",  QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending64.png")));
+    pending.insert("96",  QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending96.png")));
+    pending.insert("128", QPixmap::fromMimeSource(locate("appdata", "images/thumbs/thumbs_pending128.png")));
 
     // some hacks for tooltip support
     disconnect(this, SIGNAL(onViewport()), this, 0);

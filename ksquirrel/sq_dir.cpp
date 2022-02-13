@@ -61,9 +61,7 @@ SQ_Dir::~SQ_Dir()
  */
 bool SQ_Dir::mkdir(const QString &relpath)
 {
-    QString _relpath = QDir::cleanDirPath(relpath);
-
-    QStringList paths = QStringList::split('/', _relpath);
+    QStringList paths = QStringList::split('/', QDir::cleanDirPath(relpath));
 
     cd(m_root);
 
@@ -98,17 +96,6 @@ void SQ_Dir::setRoot(const QString &name)
 void SQ_Dir::rewind()
 {
     cd(m_root);
-}
-
-/*
- *  Get current root directory.
- *
- *  For example, if prefix == Thumbnails, it will
- *  return "/home/krasu/.ksquirrel/thumbnails".
- */
-QString SQ_Dir::root() const
-{
-    return m_root;
 }
 
 /*

@@ -109,6 +109,9 @@ void SQ_ImageRotate::slotReset()
 
     sample = sample_saved.copy();
 
+    pixmap->erase();
+    pixmap->update();
+
     setImage(sample);
 }
 

@@ -24,11 +24,11 @@ Now I have two main subprojects for KSquirrel:
     - some functions from KIO
 
 * qpixbuf - MIT-SHM widget, which will be alternative to current OpenGL image
-  window. Currently it works only with 24-bit X11 mode. Uses libpixops to scale
+  window. Currently it works only in 24-bit X11 mode. Uses libpixops to scale
   up/down images. When this subproject will be released, KSquirrel won't depend
-  on OpenGL any more (will have --disable-opengl option for "configure"; now
-  this option exists, but do nothing).
+  on OpenGL any more (will have --disable-opengl option for "configure").
 
---------------------------------------------------
+---------------------------------------------------------------------
 
-All these tasks need maintainer. They don't depended on KSquirrel.
+All these tasks need maintainer. They don't depend on KSquirrel.
+If you want to try to develop these subprojects, please contact me.

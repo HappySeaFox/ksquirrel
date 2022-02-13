@@ -1,7 +1,7 @@
 Name: ksquirrel 
 Summary: KSquirrel - image viewer for KDE 
 Group: User Interface/Desktops 
-Version: 0.6.0
+Version: 0.6.1
 Release: 1
 Copyright: GPL 
 Source: %{name}-%{version}-%{release}.tar.bz2 

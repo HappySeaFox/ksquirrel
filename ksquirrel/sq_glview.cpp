@@ -125,22 +125,22 @@ void SQ_GLView::createContent()
     QHBox *sqSBDecodedBox = new QHBox;
     sqSBDecodedBox->setSpacing(2);
     QLabel *sqSBDecodedI = new QLabel(QString::null, sqSBDecodedBox, "SBDecodedI");
-    names["SBDecodedI"] = sqSBDecodedI;
+    names.insert("SBDecodedI", sqSBDecodedI);
     QLabel *sqSBDecoded = new QLabel(QString::null, sqSBDecodedBox, "SBDecoded");
-    names["SBDecoded"] = sqSBDecoded;
+    names.insert("SBDecoded", sqSBDecoded);
 
     QLabel *sqSBGLZoom = new QLabel(QString::null, 0, "SBGLZoom");
-    names["SBGLZoom"] = sqSBGLZoom;
+    names.insert("SBGLZoom", sqSBGLZoom);
     QLabel *sqSBGLAngle = new QLabel(QString::null, 0, "SBGLAngle");
-    names["SBGLAngle"] = sqSBGLAngle;
+    names.insert("SBGLAngle", sqSBGLAngle);
     QLabel *sqSBGLCoord = new QLabel(QString::null, 0, "SBGLCoord");
-    names["SBGLCoord"] = sqSBGLCoord;
+    names.insert("SBGLCoord", sqSBGLCoord);
     QLabel *sqSBLoaded = new QLabel(QString::null, 0, "SBLoaded");
-    names["SBLoaded"] = sqSBLoaded;
+    names.insert("SBLoaded", sqSBLoaded);
     QLabel *sqSBFrame = new QLabel(QString::null, 0, "SBFrame");
-    names["SBFrame"] = sqSBFrame;
-    KSqueezedTextLabel *sqSBFile = new KSqueezedTextLabel(QString::null, NULL, "SBFile");
-    names["SBFile"] = sqSBFile;
+    names.insert("SBFrame", sqSBFrame);
+    QLabel *sqSBFile = new KSqueezedTextLabel(QString::null, NULL, "SBFile");
+    names.insert("SBFile", sqSBFile);
 
     sqSBFrame->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs);
     sqSBFile->setAlignment(Qt::AlignRight | Qt::AlignTop);
@@ -351,7 +351,7 @@ SQ_ToolBar::SQ_ToolBar(QWidget *parent) : KToolBar(parent)
 {
     kdDebug() << "+SQ_ToolBar" << endl;
 
-    setFixedHeight(SQ_ToolButton::fixedWidth() + 4);
+    setFixedHeight(SQ_ToolButton::fixedWidth() + 5);
     boxLayout()->setSpacing(0);
 }
 

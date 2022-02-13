@@ -126,4 +126,10 @@ QString SQ_Dir::absPath(const QString &relpath)
     return m_root + "/" + relpath;
 }
 
+inline
+QString SQ_Dir::root() const
+{
+    return m_root;
+}
+
 #endif

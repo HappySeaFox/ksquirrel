@@ -26,17 +26,29 @@ visiting page http://ksquirrel.sourceforge.net/
 
 ***********************************************************************************
 
-- Icons in 'Edit selected images' tool are based on original crystal theme
-by (C) Everaldo.
+Copyrights
+----------
 
 - Some functions in SQ_GLWidget (see source code for more) are based on
-original code by (C) Guillaume Chazarain <guichaz@yahoo.fr>.
+original code by (C) Guillaume Chazarain <guichaz@yahoo.fr> in his great GLiv
+project.
 
 - KSquirrel uses fmt_filters package. See fmt_filters_README for more.
 
-- "broken" pixmap was taken from "Nuvola" icon theme.
+- "broken" pixmap was taken from the "Nuvola" icon theme for KDE.
 
 ***********************************************************************************
+
+Keyboard shortcuts
+------------------
+
+Image windows understands many hotkeys. You can invoke help window with either pressing
+"/" in image window, or selecting "Hotkeys" item from context menu.
+
+***********************************************************************************
+
+DCOP interface
+--------------
 
 Since 0.6.0-pre5 you can use DCOP interface to manipulate KSquirrel. Just run
 

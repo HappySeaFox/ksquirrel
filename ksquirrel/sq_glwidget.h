@@ -150,7 +150,6 @@ class SQ_GLWidget : public QGLWidget
 
         GLfloat get_zoom() const;
         GLfloat get_zoom_pc() const;
-        GLfloat get_angle() const;
 
         KActionCollection* actionCollection() const;
 
@@ -597,6 +596,7 @@ class SQ_GLWidget : public QGLWidget
         bool                  reset_mode, decoded, blocked, blocked_force, isflippedV, isflippedH,
                               changed, crossDrawn, changed2, marks, linear, use_broken;
         float                 zoomFactor;
+        QWidget               *hack;
 
         static SQ_GLWidget    *m_instance;
 };

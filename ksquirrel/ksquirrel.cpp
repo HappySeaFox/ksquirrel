@@ -56,6 +56,7 @@
 #include <kanimwidget.h>
 #include <kglobalsettings.h>
 #include <kactioncollection.h>
+#include <konq_operations.h>
 
 #include "ksquirrel.h"
 #include "sq_iconloader.h"
@@ -93,6 +94,7 @@
 #include "sq_multibar.h"
 #include "sq_mountview.h"
 #include "sq_sidebaractions.h"
+#include "sq_glinfo.h"
 
 #include "sq_converter.h"
 #include "sq_resizer.h"
@@ -139,7 +141,7 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name) : KMainWindow (parent, n
     kconf->setGroup("Thumbnails");
 
     thumbSize = new SQ_ThumbnailSize(this, static_cast<SQ_ThumbnailSize::Size>(kconf->readNumEntry("size",
-                            SQ_ThumbnailSize::Huge)));
+                            SQ_ThumbnailSize::Large)));
     thumbSize->setExtended(kconf->readBoolEntry("extended", false));
 
     // Additional setup
@@ -586,6 +588,7 @@ void KSquirrel::createMenu(KMenuBar *menubar)
     pop_file->insertSeparator();
     pWidgetStack->action("properties")->plug(pop_file);
     pWidgetStack->action("delete")->plug(pop_file);
+    pAEditMime->plug(pop_file);
     pop_file->insertSeparator();
     pAExit->plug(pop_file);
 
@@ -623,6 +626,7 @@ void KSquirrel::createMenu(KMenuBar *menubar)
     pAFilters->plug(pop_action);
     pACheck->plug(pop_action);
     pAPluginsInfo->plug(pop_action);
+    pAGLInfo->plug(pop_action);
     pop_action->insertSeparator();
     pAConfigure->plug(pop_action);
 }
@@ -706,6 +710,8 @@ void KSquirrel::createActions()
     connect(pASlideShow, SIGNAL(toggled(bool)), this, SLOT(slotSlideShowToggle(bool)));
 
     pAPluginsInfo = new KAction(i18n("Plugins information"), "info", 0, this, SLOT(slotPluginsInfo()), actionCollection(), "SQ Plugins Info");
+    pAGLInfo = new KAction(i18n("OpenGL information"), "info", 0, this, SLOT(slotGLInfo()), actionCollection(), "SQ OpenGL Info");
+    pAEditMime = new KAction(i18n("Edit file type"), "image", 0, this, SLOT(slotEditMime()), actionCollection(), "SQ Edit Mime");
 
     pAThumb0 = new KRadioAction(i18n("Small thumbnails"), locate("appdata", "images/thumbs/thumbs_small.png"), 0, this, SLOT(slotThumbsSmall()), actionCollection(), "SQ thumbs0");
     pAThumb1 = new KRadioAction(i18n("Medium thumbnails"), locate("appdata", "images/thumbs/thumbs_medium.png"), 0, this, SLOT(slotThumbsMedium()), actionCollection(), "SQ thumbs1");
@@ -1530,38 +1536,38 @@ void KSquirrel::control(const QString &command)
 
 void KSquirrel::fillMessages()
 {
-    messages["image_next"]                 = Qt::Key_PageDown;
-    messages["image_previous"]             = Qt::Key_PageUp;
-    messages["image_first"]                = Qt::Key_Home;
-    messages["image_last"]                 = Qt::Key_End;
-    messages["image_reset"]                = Qt::Key_R;
-    messages["image_information"]          = Qt::Key_I;
-    messages["image_delete"]               = Qt::Key_Delete;
+    messages.insert("image_next", Qt::Key_PageDown);
+    messages.insert("image_previous", Qt::Key_PageUp);
+    messages.insert("image_first", Qt::Key_Home);
+    messages.insert("image_last", Qt::Key_End);
+    messages.insert("image_reset", Qt::Key_R);
+    messages.insert("image_information", Qt::Key_I);
+    messages.insert("image_delete", Qt::Key_Delete);
 
-    messages["image_animation_toggle"]     = Qt::Key_A;
+    messages.insert("image_animation_toggle", Qt::Key_A);
 
-    messages["image_page_first"]           = Qt::Key_F1;
-    messages["image_page_last"]            = Qt::Key_F4;
-    messages["image_page_next"]            = Qt::Key_F3;
-    messages["image_page_previous"]        = Qt::Key_F2;
+    messages.insert("image_page_first", Qt::Key_F1);
+    messages.insert("image_page_last", Qt::Key_F4);
+    messages.insert("image_page_next", Qt::Key_F3);
+    messages.insert("image_page_previous", Qt::Key_F2);
 
-    messages["image_window_fullscreen"]    = Qt::Key_F;
-    messages["image_window_quickbrowser"]  = Qt::Key_Q;
-    messages["image_window_close"]         = Qt::Key_X;
-    messages["image_window_help"]          = Qt::Key_Slash;
+    messages.insert("image_window_fullscreen", Qt::Key_F);
+    messages.insert("image_window_quickbrowser", Qt::Key_Q);
+    messages.insert("image_window_close", Qt::Key_X);
+    messages.insert("image_window_help", Qt::Key_Slash);
 
-    messages["zoom_plus"]                  = Qt::Key_Plus;
-    messages["zoom_minus"]                 = Qt::Key_Minus;
-    messages["zoom_1"]                     = Qt::Key_1;
-    messages["zoom_2"]                     = Qt::Key_2;
-    messages["zoom_3"]                     = Qt::Key_3;
-    messages["zoom_4"]                     = Qt::Key_4;
-    messages["zoom_5"]                     = Qt::Key_5;
-    messages["zoom_6"]                     = Qt::Key_6;
-    messages["zoom_7"]                     = Qt::Key_7;
-    messages["zoom_8"]                     = Qt::Key_8;
-    messages["zoom_9"]                     = Qt::Key_9;
-    messages["zoom_10"]                    = Qt::Key_0;
+    messages.insert("zoom_plus", Qt::Key_Plus);
+    messages.insert("zoom_minus", Qt::Key_Minus);
+    messages.insert("zoom_1", Qt::Key_1);
+    messages.insert("zoom_2", Qt::Key_2);
+    messages.insert("zoom_3", Qt::Key_3);
+    messages.insert("zoom_4", Qt::Key_4);
+    messages.insert("zoom_5", Qt::Key_5);
+    messages.insert("zoom_6", Qt::Key_6);
+    messages.insert("zoom_7", Qt::Key_7);
+    messages.insert("zoom_8", Qt::Key_8);
+    messages.insert("zoom_9", Qt::Key_9);
+    messages.insert("zoom_10", Qt::Key_0);
 }
 
 // Check for a newer version
@@ -1737,4 +1743,21 @@ bool KSquirrel::checkConfigFileVersion()
     QString version = tmpconf.readEntry("version");
 
     return (version != SQ_VERSION);
+}
+
+// show imformation on OpenGL
+void KSquirrel::slotGLInfo()
+{
+    SQ_GLInfo gi(this);
+
+    gi.exec();
+}
+
+// edit mime type (Konqueror-related action)
+void KSquirrel::slotEditMime()
+{
+    KFileItem *f = pWidgetStack->diroperator()->view()->currentFileItem();
+
+    if(f)
+        KonqOperations::editMimeType(f->mimetype());
 }

@@ -64,13 +64,14 @@ class SQ_ExternalTool : public QObject, public QValueVector<Tool>
         KPopupMenu* constPopupMenu() const;
 
         /*
-         *  Write current state to config file
+         *  Write tools to config file as QStringLists
          */
         void writeEntries();
 
         static SQ_ExternalTool* instance() { return m_instance; }
 
     private slots:
+
         /*
          *  Invoked, when user executed popup menu with external tools.
          *  This slot will do some useful stuff.

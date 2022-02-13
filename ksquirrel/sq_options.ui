@@ -420,12 +420,6 @@
                     <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
-            <property name="frameShape">
-                <enum>NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Plain</enum>
-            </property>
             <property name="margin">
                 <number>0</number>
             </property>
@@ -440,38 +434,57 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <spacer row="2" column="0">
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <widget class="QFrame" row="0" column="0">
                         <property name="name">
-                            <cstring>spacer10</cstring>
+                            <cstring>frame5</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
+                        <property name="frameShape">
+                            <enum>GroupBoxPanel</enum>
                         </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
                         </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>175</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="0" column="0">
-                        <property name="name">
-                            <cstring>checkMinimize</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Minimize to tray after closing</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="1" column="0">
-                        <property name="name">
-                            <cstring>checkSync</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Write configuration file to disk, when I press "OK"</string>
-                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer row="2" column="0">
+                                <property name="name">
+                                    <cstring>spacer10</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QCheckBox" row="1" column="0">
+                                <property name="name">
+                                    <cstring>checkSync</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Write configuration file to disk, when I press "OK"</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="0" column="0">
+                                <property name="name">
+                                    <cstring>checkMinimize</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Minimize to tray after closing</string>
+                                </property>
+                            </widget>
+                        </grid>
                     </widget>
                 </grid>
             </widget>
@@ -804,76 +817,95 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="0" column="0">
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <widget class="QFrame" row="0" column="0">
                         <property name="name">
-                            <cstring>checkMime</cstring>
+                            <cstring>frame6</cstring>
                         </property>
-                        <property name="text">
-                            <string>Disable mimetype icons</string>
+                        <property name="frameShape">
+                            <enum>GroupBoxPanel</enum>
                         </property>
-                    </widget>
-                    <widget class="QCheckBox" row="1" column="0">
-                        <property name="name">
-                            <cstring>checkNoWriteThumbs</cstring>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
                         </property>
-                        <property name="text">
-                            <string>Do not write thumbnails on disk</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="2" column="0">
-                        <property name="name">
-                            <cstring>checkExtended</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Extended thumbnails</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="3" column="0">
-                        <property name="name">
-                            <cstring>checkTooltips</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Show tooltips with thumbnail info</string>
-                        </property>
-                    </widget>
-                    <widget class="KIntNumInput" row="4" column="0">
-                        <property name="name">
-                            <cstring>spinMargin</cstring>
-                        </property>
-                        <property name="label">
-                            <string>Margin between thumbnails</string>
-                        </property>
-                        <property name="suffix">
-                            <string> pixels</string>
-                        </property>
-                    </widget>
-                    <spacer row="6" column="0">
-                        <property name="name">
-                            <cstring>spacer17_3</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>70</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="KIntNumInput" row="5" column="0">
-                        <property name="name">
-                            <cstring>spinCacheSize</cstring>
-                        </property>
-                        <property name="label">
-                            <string>Maximum cache size (in memory)</string>
-                        </property>
-                        <property name="suffix">
-                            <string> Kb</string>
-                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox" row="0" column="0">
+                                <property name="name">
+                                    <cstring>checkMime</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Disable mimetype icons</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="1" column="0">
+                                <property name="name">
+                                    <cstring>checkNoWriteThumbs</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Do not write thumbnails on disk</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="2" column="0">
+                                <property name="name">
+                                    <cstring>checkExtended</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Extended thumbnails</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="3" column="0">
+                                <property name="name">
+                                    <cstring>checkTooltips</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show tooltips with thumbnail info</string>
+                                </property>
+                            </widget>
+                            <widget class="KIntNumInput" row="4" column="0">
+                                <property name="name">
+                                    <cstring>spinMargin</cstring>
+                                </property>
+                                <property name="label">
+                                    <string>Margin between thumbnails</string>
+                                </property>
+                                <property name="suffix">
+                                    <string> pixels</string>
+                                </property>
+                            </widget>
+                            <widget class="KIntNumInput" row="5" column="0">
+                                <property name="name">
+                                    <cstring>spinCacheSize</cstring>
+                                </property>
+                                <property name="label">
+                                    <string>Maximum cache size (in memory)</string>
+                                </property>
+                                <property name="suffix">
+                                    <string> Kb</string>
+                                </property>
+                            </widget>
+                            <spacer row="6" column="0">
+                                <property name="name">
+                                    <cstring>spacer17_3</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>16</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </grid>
                     </widget>
                 </grid>
             </widget>
@@ -1525,94 +1557,6 @@
                                 </spacer>
                             </grid>
                         </widget>
-                        <widget class="QWidget">
-                            <property name="name">
-                                <cstring>TabPage</cstring>
-                            </property>
-                            <attribute name="title">
-                                <string>OpenGL information</string>
-                            </attribute>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <widget class="QListView" row="0" column="0">
-                                    <column>
-                                        <property name="text">
-                                            <string>Column 1</string>
-                                        </property>
-                                        <property name="clickable">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="resizable">
-                                            <bool>true</bool>
-                                        </property>
-                                    </column>
-                                    <column>
-                                        <property name="text">
-                                            <string>New Column</string>
-                                        </property>
-                                        <property name="clickable">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="resizable">
-                                            <bool>true</bool>
-                                        </property>
-                                    </column>
-                                <item>
-                                    <property name="text">
-                                        <string>GL_VENDOR</string>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap></pixmap>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap></pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>GL_RENDERER</string>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap></pixmap>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap></pixmap>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>GL_VERSION</string>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap></pixmap>
-                                    </property>
-                                    <property name="pixmap">
-                                        <pixmap></pixmap>
-                                    </property>
-                                </item>
-                                    <property name="name">
-                                        <cstring>listGL</cstring>
-                                    </property>
-                                    <property name="itemMargin">
-                                        <number>2</number>
-                                    </property>
-                                    <property name="resizeMode">
-                                        <enum>LastColumn</enum>
-                                    </property>
-                                </widget>
-                            </grid>
-                        </widget>
                     </widget>
                 </grid>
             </widget>
@@ -1627,48 +1571,67 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="0" column="0">
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <widget class="QFrame" row="0" column="0">
                         <property name="name">
-                            <cstring>checkMonitor</cstring>
+                            <cstring>frame7</cstring>
                         </property>
-                        <property name="text">
-                            <string>Monitor directory with libraries</string>
+                        <property name="frameShape">
+                            <enum>GroupBoxPanel</enum>
                         </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Monitor directory with libraries, so new .so files can be dynamically added</string>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
                         </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer row="2" column="0">
+                                <property name="name">
+                                    <cstring>spacer12</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>25</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QCheckBox" row="1" column="0">
+                                <property name="name">
+                                    <cstring>checkFAMMessage</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Show a message, if the directory has changed</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Show dialog with information about new or deleted libraries</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="0" column="0">
+                                <property name="name">
+                                    <cstring>checkMonitor</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Monitor directory with libraries</string>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>Monitor directory with libraries, so new .so files can be dynamically added</string>
+                                </property>
+                            </widget>
+                        </grid>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="0">
-                        <property name="name">
-                            <cstring>checkFAMMessage</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string>Show a message, if the directory has changed</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Show dialog with information about new or deleted libraries</string>
-                        </property>
-                    </widget>
-                    <spacer row="2" column="0">
-                        <property name="name">
-                            <cstring>spacer12</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>210</height>
-                            </size>
-                        </property>
-                    </spacer>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -2084,7 +2047,6 @@
     <tabstop>radioButton28</tabstop>
     <tabstop>spinZoomMin</tabstop>
     <tabstop>spinZoomMax</tabstop>
-    <tabstop>listGL</tabstop>
     <tabstop>checkMonitor</tabstop>
     <tabstop>checkFAMMessage</tabstop>
     <tabstop>buttonOk</tabstop>
@@ -2105,14 +2067,12 @@
     <include location="local" impldecl="in implementation">sq_iconlistitem.h</include>
     <include location="local" impldecl="in implementation">sq_viewcache.h</include>
     <include location="local" impldecl="in implementation">sq_pixmapcache.h</include>
-    <include location="global" impldecl="in implementation">GL/gl.h</include>
     <include location="local" impldecl="in implementation">sq_iconloader.h</include>
     <include location="local" impldecl="in implementation">sq_options.ui.h</include>
 </includes>
 <variables>
     <variable>QString favpixmap;</variable>
     <variable>bool showlinks;</variable>
-    <variable>typedef struct { QListViewItem *item; int id;} ListViewItemID;</variable>
     <variable>QString custpixmap;</variable>
 </variables>
 <slots>

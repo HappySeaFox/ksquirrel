@@ -1,3 +1,19 @@
+ksquirrel-0.6.1: bugfix release, minor changes
+*****************************************************
+
+ksquirrel:
+* updated .desktop files. MIME types inserted.
+* "Nice" zoom now default zoom type
+* "OpenGL information" moved to separate dialog
+* "./configure.gnu --disable-ksmall" to disable ksquirrel-small in compile time
+* small fix in rotate dialog, pixmap now erased correctly
+
+ksquirrel-libs:
+* some codecs are disabled as buggy (use --enable-devel to enable them)
+* ksquirrel-libs now installs development library and header files. Now ksquirel-libs
+  must be installed BEFORE KSquirrel.
+* updated documentation
+
 ksquirrel-0.6.0-final and ksquirrel-libs-0.6.0-final
 ************************************************************
 

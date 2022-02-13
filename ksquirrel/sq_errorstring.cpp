@@ -30,17 +30,17 @@ SQ_ErrorString::SQ_ErrorString(QObject *parent) : QObject(parent)
     kdDebug() << "+SQ_ErrorString" << endl;
 
     // fill map with translated messages
-    messages[SQE_OK] = QString::fromLatin1("OK");
-    messages[SQE_R_NOFILE] = i18n("can't open file for reading");
-    messages[SQE_R_BADFILE] = i18n("file corrupted");
-    messages[SQE_R_NOMEMORY] = i18n("no memory");
-    messages[SQE_R_NOTSUPPORTED] = i18n("file type not supported");
-    messages[SQE_R_WRONGDIM] = i18n("wrong image dimensions");
-    messages[SQE_W_NOFILE] = i18n("can't open file for writing");
-    messages[SQE_W_NOTSUPPORTED] = i18n("write feature is not supported");
-    messages[SQE_W_ERROR] = i18n("write error (check free space)");
-    messages[SQE_W_WRONGPARAMS] = i18n("wrong parameters");
-    messages[SQE_NOTFINISHED] = i18n("Editing process is not finished yet");
+    messages.insert(SQE_OK,             QString::fromLatin1("OK"));
+    messages.insert(SQE_R_NOFILE,       i18n("can't open file for reading"));
+    messages.insert(SQE_R_BADFILE,      i18n("file corrupted"));
+    messages.insert(SQE_R_NOMEMORY,     i18n("no memory"));
+    messages.insert(SQE_R_NOTSUPPORTED, i18n("file type not supported"));
+    messages.insert(SQE_R_WRONGDIM,     i18n("wrong image dimensions"));
+    messages.insert(SQE_W_NOFILE,       i18n("can't open file for writing"));
+    messages.insert(SQE_W_NOTSUPPORTED, i18n("write feature is not supported"));
+    messages.insert(SQE_W_ERROR,        i18n("write error (check free space)"));
+    messages.insert(SQE_W_WRONGPARAMS,  i18n("wrong parameters"));
+    messages.insert(SQE_NOTFINISHED,    i18n("Editing process is not finished yet"));
 }
 
 SQ_ErrorString::~SQ_ErrorString()

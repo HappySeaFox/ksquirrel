@@ -13,7 +13,6 @@ void SQ_ExternalTools::init()
 {
     listTools->setSorting(-1);
 
-    int count = SQ_ExternalTool::instance()->count();
     QListViewItem *itemafter = 0L, *item;
 
     for(QValueVector<Tool>::iterator it = SQ_ExternalTool::instance()->begin();it != SQ_ExternalTool::instance()->end();++it)

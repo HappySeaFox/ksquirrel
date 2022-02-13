@@ -76,7 +76,7 @@ SQ_WidgetStack::SQ_WidgetStack(QWidget *parent, const int id) : QVBox(parent)
 
     if(SQ_HLOptions::instance()->path.isEmpty())
     {
-        switch(SQ_Config::instance()->readNumEntry("set path", 1))
+        switch(SQ_Config::instance()->readNumEntry("set path", 0))
         {
             case 2: path = SQ_Config::instance()->readEntry("custom directory", "/"); break;
             case 1: path = ""; break;

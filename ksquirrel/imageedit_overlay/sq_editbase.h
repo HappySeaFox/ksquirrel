@@ -24,11 +24,11 @@
 #include <sstream>
 #include <csetjmp>
 
-#include "fmt_types.h"
-#include "fmt_utils.h"
-#include "fileio.h"
-#include "fmt_codec_base.h"
-#include "error.h"
+#include <fmt_types.h>
+#include <fmt_utils.h>
+#include <fileio.h>
+#include <fmt_codec_base.h>
+#include <error.h>
 
 #include "sq_imageedit.h"
 

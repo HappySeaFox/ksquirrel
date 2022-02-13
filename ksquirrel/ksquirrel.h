@@ -359,6 +359,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotOptions();
 
         /*
+         *  Edit current item's mimetype (Konqueror-related action).
+         */
+        void slotEditMime();
+
+        /*
          *  Invoke 'Filters' dialog.
          */
         void slotFilters();
@@ -491,6 +496,11 @@ class KSquirrel : public KMainWindow, public DCOPObject
         void slotPluginsInfo();
 
         /*
+         *  Invoked, when user clicked "OpenGL information" button.
+         */
+        void slotGLInfo();
+
+        /*
          *  Convinience slot.
          *  Reload libraries from disk.
          */
@@ -537,6 +547,8 @@ class KSquirrel : public KMainWindow, public DCOPObject
         // Open "SQ_ThumbnailCacheMaster"
         *pATCMaster,
 
+        *pAEditMime,
+
         // Show image window
         *pAGLView,
 
@@ -554,6 +566,9 @@ class KSquirrel : public KMainWindow, public DCOPObject
 
         // Dialog for advanced slideshow
         *pASlideShowDialog,
+
+        // OpenGL information
+        *pAGLInfo,
 
         // Plugins information
         *pAPluginsInfo;

@@ -1,11 +1,11 @@
-AC_INIT([ksquirrel], [0.6.0], [ksquirrel@tut.by])
+AC_INIT([ksquirrel], [0.6.1], [ksquirrel@tut.by])
 AC_CONFIG_SRCDIR([ksquirrel/main.cpp])
 AC_GNU_SOURCE
 #AM_INIT_AUTOMAKE([foreign])
 #AC_CONFIG_HEADER([config.h])
 AC_CONFIG_AUX_DIR([admin])
 
-AM_INIT_AUTOMAKE(ksquirrel, 0.6.0)
+AM_INIT_AUTOMAKE(ksquirrel, 0.6.1)
 AM_CONFIG_HEADER([config.h])
 
 unset CDPATH
@@ -14,6 +14,8 @@ unset CDPATH
 #AC_ARG_PROGRAM
 
 KDE_SET_PREFIX
+
+sq_ksmall="yes"
 
 AC_ENABLE_SHARED(yes)
 AC_ENABLE_STATIC(no)
@@ -36,10 +38,7 @@ AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 AM_PROG_AS
 AC_PATH_PROG([PERL], [perl])
-
 AC_CHECK_HEADER([math.h], [], AC_MSG_ERROR("ksquirrel needs math.h"))
-
-#AC_CHECK_LIB([kio], [KFileIconView], [], AC_MSG_ERROR("KIO library is corrupted!"))
 
 # Checks for header files.
 AC_PATH_X
@@ -47,6 +46,59 @@ AC_PATH_XTRA
 AC_HEADER_STDC
 AC_CHECK_HEADERS([limits.h stdlib.h unistd.h stdio.h], [], AC_MSG_ERROR("Some headers are missing"))
 AC_CHECK_HEADER([setjmp.h], [], AC_MSG_ERROR("ksquirrel needs setjmp.h"))
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+PKG_CHECK_MODULES([ksquirrellibs], ksquirrellibs, [
+
+        __cppflags=$CPPFLAGS
+
+        CXXFLAGS="$ksquirrellibs_CFLAGS $CXXFLAGS"
+        CPPFLAGS="$ksquirrellibs_CFLAGS $CPPFLAGS"
+
+        # hell, conftests will fail with error "gcc: unknown option -rpath"
+        # we will use $ksquirrellibs_LIBS later in Makefile.am...
+        AC_SUBST(ksquirrellibs_LIBS)
+
+        AC_LANG_SAVE
+        AC_LANG_CPLUSPLUS
+
+        AC_CHECK_HEADERS([ksquirrel-libs/fileio.h], [
+
+#                                AC_TRY_RUN([
+#include <fileio.h>
+
+#int main()
+#{
+#    ifstreamK i;
+#
+#    i.open("1", ios::in);
+#
+#    i.close();
+#
+#    return 0;
+#}
+#
+#], [], [AC_MSG_ERROR([Ksquirrel-libs is not installed. Please install ksquirrel-libs first.])], $ksquirrellibs_LIBS)
+                            ],
+                            [AC_MSG_ERROR([Ksquirrel-libs development files are not installed. Please install them first.])])
+
+
+        # restore language & CPPFLAGS
+        CPPFLAGS=${__cppflags}
+        AC_LANG_RESTORE
+                            ],
+                [AC_MSG_ERROR([Ksquirrel-libs development file (.pc) is not installed. Please install ksquirrel-libs first.])]
+)
+
+KDE_CHECK_HEADER(konq_operations.h, [], AC_MSG_ERROR("Header file konq_operations.h is missing. Please install kdebase-devel package."))
+
+#AC_CHECK_LIB([kio], [KFileIconView], [], AC_MSG_ERROR("KIO library is corrupted!"))
+
+__cflags=$CFLAGS
 
 CFLAGS="$X_INCLUDES $CFLAGS"
 LDFLAGS="$X_PRE_LIBS -lX11 $X_LDFLAGS $X_EXTRA_LIBS $LDFLAGS"
@@ -81,10 +133,8 @@ AC_CHECK_FUNC([glMultMatrixd], [], AC_MSG_ERROR($SQ_GL_ERROR))
 AC_CHECK_FUNC([glTranslated], [], AC_MSG_ERROR($SQ_GL_ERROR))
 AC_CHECK_FUNC([glGetIntegerv], [], AC_MSG_ERROR($SQ_GL_ERROR))
 
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_CONST
-AC_TYPE_SIZE_T
+CFLAGS=${__cflags}
+CXXFLAGS="$X_INCLUDES $CXXFLAGS"
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
@@ -93,6 +143,17 @@ AC_FUNC_STAT
 #AC_CHECK_FUNCS([mkdir socket sqrt])
 
 AC_CHECK_FUNCS([memcpy memset], [], AC_MSG_ERROR("ksquirrel needs memcpy() and memset() functions!"))
+
+AC_ARG_ENABLE(ksmall,
+              [AS_HELP_STRING([--disable-ksmall], [don't compile ksquirrel-small [default=no]])],
+              [     case "${enableval}" in
+                       no)  sq_ksmall="yes" ;;
+                       yes) sq_ksmall="no"  ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for ksmall param]) ;;
+                    esac]
+             )
+
+AM_CONDITIONAL([SQ_ENABLE_KSMALL], [test $sq_ksmall = yes])
 
 ##################### from gdk-pixbuf-0.22 #########################
 #
@@ -103,7 +164,14 @@ AC_CHECK_FUNCS([memcpy memset], [], AC_MSG_ERROR("ksquirrel needs memcpy() and m
 # This code is partially taken from Mesa
 #
 dnl Let people disable the MMX optimization
-AC_ARG_ENABLE(mmx, [  --disable-mmx     Don't use MMX optimization [default=auto]], enable_mmx="$enableval", enable_mmx=auto)
+AC_ARG_ENABLE(mmx,
+              [AS_HELP_STRING([--disable-mmx], [don't use MMX [default=auto]])],
+              [     case "${enableval}" in
+                       no)  enable_mmx="auto" ;;
+                       yes) enable_mmx="no"  ;;
+                       *)   AC_MSG_ERROR([bad value ${enableval} for mmx param]) ;;
+                    esac]
+             )
 
 AC_MSG_CHECKING(for x86 platform)
   case $host_cpu in
@@ -171,26 +239,21 @@ AC_CONFIG_FILES([doc/en/Makefile])
 
 AC_OUTPUT
 
-if [ test -e /usr/lib/ksquirrel-libs/version ]; then
-sq_kl="yes" && sq_kl_help="";
-else sq_kl="no" && sq_kl_help=" (ksquirrel-libs package is not installed, please don't forget to install it)";
-fi
-
 echo "
 KSquirrel configuration:
 -------------------------
-  Source code location: ${srcdir}
-  KSquirrel version:    ${VERSION}
-  C Compiler:           ${CC}
-  C Compiler flags:     ${CFLAGS}
-  C++ Compiler:         ${CXX}
-  C++ Compiler flags:   ${CXXFLAGS}
-  
+  Source code location:     ${srcdir}
+  KSquirrel version:        ${VERSION}
+  C Compiler:               ${CC}
+  C Compiler flags:         ${CFLAGS}
+  C++ Compiler:             ${CXX}
+  C++ Compiler flags:       ${CXXFLAGS}
+  Compile ksquirrel-small:  $sq_ksmall
+
 Installation options:
 ----------------------
   prefix:                   ${prefix}
   KSquirrel binary:         ${prefix}/bin/${PACKAGE}
-  ksquirrel-libs installed: $sq_kl $sq_kl_help
 
   ----------------------------------------------------
 

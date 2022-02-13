@@ -69,7 +69,7 @@ void SQ_Options::init()
 
     kColorSystem->setColor(colorGroup().color(QColorGroup::Base));
 
-    tp = kconf->readNumEntry("zoom limit", 0);
+    tp = kconf->readNumEntry("zoom limit", 1);
     buttonGroupZoomLimit->setButton(tp);
     spinZoomMin->setValue(kconf->readNumEntry("zoom_min", 1));
     spinZoomMax->setValue(kconf->readNumEntry("zoom_max", 10000));
@@ -129,29 +129,6 @@ void SQ_Options::init()
     connect(listMain, SIGNAL(selectionChanged()), SLOT(slotShowPage()));
 
     kURLReqOpenCustom->setMode(mode);
-
-    listGL->header()->hide();
-    listGL->setSorting(-1);
-    QListViewItem *item;
-    QMap<QString, GLenum> v;
-
-    v["GL_VENDOR"] = GL_VENDOR;
-    v["GL_RENDERER"] = GL_RENDERER;
-    v["GL_VERSION"] = GL_VERSION;
-
-    for(QMap<QString, GLenum>::ConstIterator it = v.constBegin(); it != v.constEnd(); ++it)
-    {
-        item = listGL->findItem(it.key().latin1(), 0);
-        if(item)
-        {
-            const GLubyte *b = glGetString(it.data());
-            if(b)
-            {
-                QString s = (const char*)b;
-                item->setText(1, s);
-            }   
-        }
-    }
 
     fillAltCombo();
 

@@ -38,7 +38,7 @@ void SQ_Filters::init()
     pushNew->setPixmap(SQ_IconLoader::instance()->loadIcon("filenew", KIcon::Desktop, KIcon::SizeSmall));
     pushDelete->setPixmap(SQ_IconLoader::instance()->loadIcon("editdelete", KIcon::Desktop, KIcon::SizeSmall));
     pushClearAll->setPixmap(SQ_IconLoader::instance()->loadIcon("edittrash", KIcon::Desktop, KIcon::SizeSmall));
-    
+
     listFilters->setCurrentItem(listFilters->firstChild());
     listFilters->clearSelection();
     listFilters->setSelected(listFilters->currentItem(), true);

@@ -49,13 +49,13 @@ SQ_ArchiveHandler::SQ_ArchiveHandler(QObject * parent, const char *name) : QObje
     dir = new SQ_Dir(SQ_Dir::Extracts);
 
     // fill the map with protocols
-    protocols["application/x-bzip"] = 0;
-    protocols["application/x-bzip2"] = 1;
-    protocols["application/x-gzip"] = 2;
-    protocols["application/x-tar"] = 3;
-    protocols["application/x-tbz"] = 4;
-    protocols["application/x-tgz"] = 5;
-    protocols["application/x-zip"] = 6;
+    protocols.insert("application/x-bzip", 0);
+    protocols.insert("application/x-bzip2", 1);
+    protocols.insert("application/x-gzip", 2);
+    protocols.insert("application/x-tar", 3);
+    protocols.insert("application/x-tbz", 4);
+    protocols.insert("application/x-tgz", 5);
+    protocols.insert("application/x-zip", 6);
 }
 
 SQ_ArchiveHandler::~SQ_ArchiveHandler()

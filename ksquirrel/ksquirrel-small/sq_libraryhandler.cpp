@@ -29,10 +29,8 @@
 
 #include <csetjmp>
 
-#include "fileio.h"
-#include "fmt_codec_base.h"
-
-#include "sq_thumbnailinfo.h"
+#include <fileio.h>
+#include <fmt_codec_base.h>
 
 static const int buffer_size = 10;
 
