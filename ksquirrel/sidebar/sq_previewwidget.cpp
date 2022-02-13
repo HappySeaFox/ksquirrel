@@ -106,7 +106,7 @@ void SQ_PreviewWidget::load(const KURL &url)
     resizeEvent(0);
 }
 
-void SQ_PreviewWidget::resizeEvent(QResizeEvent *e)
+void SQ_PreviewWidget::resizeEvent(QResizeEvent *)
 {
 //    printf("resize %d %d\n", e, m_ignore);
     if(!m_ignore && fit())

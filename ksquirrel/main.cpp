@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
         a.dcopClient()->registerAs(App, false);
 
     // create an instance
-    SQ = new KSquirrel(0, App, &splash);
+    SQ = new KSquirrel(0, App);
 
     a.setMainWidget(SQ);
 

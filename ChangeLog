@@ -1,3 +1,8 @@
+ksquirrel-0.7.0try3
+*********************
+* animated widget in toolbar now can be disabled (Options->Main)
+* splash screen security improvements
+
 ksquirrel-0.7.0try2
 *********************
 * file path via command line parameter now works, e.g.

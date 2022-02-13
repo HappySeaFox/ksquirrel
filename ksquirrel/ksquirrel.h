@@ -79,7 +79,7 @@ class KSquirrel : public KMainWindow, public DCOPObject
         /*
          *  Constructor & destructor
          */
-        KSquirrel(QWidget *parent, const char *name, SQ_SplashScreen **splash_to_delete);
+        KSquirrel(QWidget *parent, const char *name);
         ~KSquirrel();
 
         /*
@@ -169,6 +169,9 @@ class KSquirrel : public KMainWindow, public DCOPObject
      *  Internal methods
      */
     private:
+
+        // create or delete animated logo
+        void configAnime(bool init = true);
 
         void continueLoading();
 

@@ -46,10 +46,14 @@
 #include "sq_splashscreen.h"
 #include "sq_progress.h"
 
+SQ_SplashScreen * SQ_SplashScreen::m_inst = 0;
+
 SQ_SplashScreen::SQ_SplashScreen(QWidget * parent, const char *name) 
-    : QWidget(parent, name, WStyle_NoBorder | WStyle_Customize | WDestructiveClose)
+    : QWidget(parent, name, Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WStyle_StaysOnTop | Qt::WDestructiveClose)
 {
     kdDebug() << "+SQ_SplashScreen" << endl;
+
+    m_inst = this;
 
     QPixmap pix = QPixmap(locate("appdata", "images/splash.png"));
 
@@ -69,19 +73,28 @@ SQ_SplashScreen::SQ_SplashScreen(QWidget * parent, const char *name)
 SQ_SplashScreen::~SQ_SplashScreen()
 {
     kdDebug() << "-SQ_SplashScreen" << endl;
+
+    m_inst = 0;
 }
 
 void SQ_SplashScreen::finish()
 {
-    pr->flush();
+    if(SQ_SplashScreen::instance())
+    {
+        SQ_SplashScreen::instance()->progress()->flush();
+        SQ_SplashScreen::instance()->close();
+    }
 }
 
-void SQ_SplashScreen::mousePressEvent(QMouseEvent *)
+void SQ_SplashScreen::mousePressEvent(QMouseEvent *e)
 {
+    e->accept();
+
     hide();
 }
 
 void SQ_SplashScreen::advance()
 {
-    pr->advance();
+    if(SQ_SplashScreen::instance())
+        SQ_SplashScreen::instance()->progress()->advance();
 }

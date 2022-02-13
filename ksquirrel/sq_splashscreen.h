@@ -47,14 +47,26 @@ class SQ_SplashScreen : public QWidget
         SQ_SplashScreen(QWidget *parent = 0, const char *name = 0);
         ~SQ_SplashScreen();
 
-        void advance();
-        void finish();
+        static void advance();
+        static void finish();
+
+        SQ_Progress *progress();
+
+        static SQ_SplashScreen* instance() { return m_inst; }
 
     protected:
         virtual void mousePressEvent(QMouseEvent *);
 
     private:
         SQ_Progress *pr;
+
+        static SQ_SplashScreen *m_inst;
 };
+
+inline
+SQ_Progress* SQ_SplashScreen::progress()
+{
+    return pr;
+}
 
 #endif

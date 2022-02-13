@@ -108,8 +108,8 @@ static const int menuParam = 100000;
 
 KSquirrel * KSquirrel::m_instance = 0;
 
-KSquirrel::KSquirrel(QWidget *parent, const char *name, SQ_SplashScreen **splash) 
-    : KMainWindow (parent, name), DCOPObject(name), splash_to_delete(*splash)
+KSquirrel::KSquirrel(QWidget *parent, const char *name) 
+    : KMainWindow (parent, name), DCOPObject(name)
 {
     // singleton setup
     m_instance = this;
@@ -143,7 +143,7 @@ KSquirrel::KSquirrel(QWidget *parent, const char *name, SQ_SplashScreen **splash
     sqFiltersName = 0;
     pCurrentURL = 0;
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     fillMessages();
 
@@ -205,6 +205,9 @@ void KSquirrel::slotOptions()
         SQ_TreeView::instance()->setupRecursion();
         SQ_PreviewWidget::instance()->rereadColor();
         SQ_PreviewWidget::instance()->update();
+
+        // create or delete animated logo
+        configAnime(false);
     }
 }
 
@@ -440,7 +443,7 @@ void KSquirrel::createWidgets(int createFirst)
     viewBrowser = new QWidgetStack(this, QString::fromLatin1("SQ_BROWSER_WIDGET_STACK"));
     viewBrowser->resize(size());
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     QVBox *b1 = new QVBox(viewBrowser);
 
@@ -466,7 +469,7 @@ void KSquirrel::createWidgets(int createFirst)
 
     SQ_CategoriesBox *cb = new SQ_CategoriesBox;
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     // create widgetstack containing views
     pWidgetStack = new SQ_WidgetStack(mainView, createFirst);
@@ -483,13 +486,13 @@ void KSquirrel::createWidgets(int createFirst)
 
     mainView->setSizes(sz);
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     SQ_MountView *mv = new SQ_MountView;
 
     ptree = new SQ_TreeView;
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     QString prep = QString::fromLatin1("  ");
 
@@ -521,7 +524,7 @@ void KSquirrel::createWidgets(int createFirst)
     else
         gl_view = new SQ_GLView;
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
 // KIPI support
 #ifdef SQ_HAVE_KIPI
@@ -552,7 +555,7 @@ void KSquirrel::createWidgets(int createFirst)
     connect(pASelectAll, SIGNAL(activated()), pWidgetStack, SLOT(slotSelectAll()));
     connect(pADeselectAll, SIGNAL(activated()), pWidgetStack, SLOT(slotDeselectAll()));
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 }
 
 // Create statusbar and all needed QLabels
@@ -687,9 +690,7 @@ void KSquirrel::createToolbar(KToolBar *tools)
     pAExit->plug(tools);
 
     // insert animated widget
-    tools->insertAnimatedWidget(1000, this, SLOT(slotAnimatedClicked()), locate("appdata", "images/anime.png"));
-    tools->alignItemRight(1000);
-    tools->animatedWidget(1000)->start();
+    configAnime();
 }
 
 // Create all KActions
@@ -1118,7 +1119,7 @@ void KSquirrel::preCreate()
     connect(sls, SIGNAL(next()), this, SLOT(slotNextSlideShow()));
     connect(sls, SIGNAL(previous()), this, SLOT(slotPreviousSlideShow()));
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     // timer for slideshow
     slideShowTimer = new QTimer(this);
@@ -1128,7 +1129,7 @@ void KSquirrel::preCreate()
     // create main actions
     createActions();
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     actionFilterMenu = new KPopupMenu;
 
@@ -1139,7 +1140,7 @@ void KSquirrel::preCreate()
     pARaiseDetailView->plug(actionViews);
     pARaiseThumbView->plug(actionViews);
 
-    if(splash_to_delete) splash_to_delete->advance();
+    SQ_SplashScreen::advance();
 
     // if -l option specified, exit
     if(SQ_HLOptions::instance()->showLibsAndExit)
@@ -1232,11 +1233,8 @@ void KSquirrel::continueLoading()
 
     tray = new SQ_Tray(this);
 
-    if(splash_to_delete) splash_to_delete->advance();
-
-
-    splash_to_delete->finish();
-    delete splash_to_delete;
+    SQ_SplashScreen::advance();
+    SQ_SplashScreen::finish();
 
     // Check if we need to load a file at startup
     // (if one was specified in command line)
@@ -1254,11 +1252,6 @@ void KSquirrel::continueLoading()
             // if it is known image type - let's load it
             SQ_GLWidget::window()->startDecoding(SQ_HLOptions::instance()->path);
         }
-    }
-    else if(gl_view->isSeparate())
-    {
-        gl_view->show();
-        gl_view->hide();
     }
 }
 
@@ -1748,5 +1741,23 @@ void KSquirrel::saveLayout()
     kconf->setGroup("Interface");
     kconf->writeEntry("splitter", mainView->sizes());
 }
+
+void KSquirrel::configAnime(bool init)
+{
+    KAnimWidget *anim = tools->animatedWidget(1000); // get animated widget, if exist
+
+    kconf->setGroup("Main");
+
+    // show animated logo in toolbar if needed
+    if(!kconf->readBoolEntry("anime_dont", false) && (init || (!init && !anim)))
+    {
+        tools->insertAnimatedWidget(1000, this, SLOT(slotAnimatedClicked()), locate("appdata", "images/anime.png"));
+        tools->alignItemRight(1000);
+        tools->animatedWidget(1000)->start();
+    }
+    else if(!init && kconf->readBoolEntry("anime_dont", false) && anim)
+        delete anim;
+}
+
 
 #include "ksquirrel.moc"

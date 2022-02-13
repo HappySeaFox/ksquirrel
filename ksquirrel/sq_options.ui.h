@@ -37,6 +37,7 @@ void SQ_Options::init()
     checkMinimize->setChecked(kconf->readBoolEntry("minimize to tray", false));
     checkSync->setChecked(kconf->readBoolEntry("sync", false));
     checkSplash->setChecked(kconf->readBoolEntry("splash", true));
+    checkAnime->setChecked(kconf->readBoolEntry("anime_dont", false));
 
     KFile::Mode mode = static_cast<KFile::Mode>(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
@@ -179,6 +180,7 @@ int SQ_Options::start()
         kconf->writeEntry("minimize to tray", checkMinimize->isChecked());
         kconf->writeEntry("sync", checkSync->isChecked());
         kconf->writeEntry("splash", checkSplash->isChecked());
+        kconf->writeEntry("anime_dont", checkAnime->isChecked());
 
         kconf->setGroup("Thumbnails");
         kconf->writeEntry("margin", spinMargin->value());

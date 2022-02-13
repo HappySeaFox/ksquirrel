@@ -16,11 +16,11 @@
   <Doc3 CursorPosLine="918" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget.cpp" >
    <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
   </Doc3>
-  <Doc4 CursorPosLine="48" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="53" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget_helpers.cpp" >
-   <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
-  </Doc4>
-  <Doc5 CursorPosLine="52" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="83" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/sq_glwidget_helpers.h" >
+  <Doc4 CursorPosLine="172" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="41" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/ksquirrel.h" >
    <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc4>
+  <Doc5 CursorPosLine="1757" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="13" FileName="/home/ckult/MyProjects/ksquirrel/ksquirrel/ksquirrel.cpp" >
+   <View0 Top="0" Width="800" Attach="1" Height="466" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
   </Doc5>
  </DocsAndViews>
 </KDevPrjSession>

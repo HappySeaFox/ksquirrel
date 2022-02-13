@@ -390,7 +390,24 @@
                                     <string>Show splash screen at startup</string>
                                 </property>
                             </widget>
-                            <widget class="QButtonGroup" row="3" column="0">
+                            <spacer row="5" column="0">
+                                <property name="name">
+                                    <cstring>spacer10</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QButtonGroup" row="4" column="0">
                                 <property name="name">
                                     <cstring>buttonGroupCS</cstring>
                                 </property>
@@ -441,23 +458,14 @@
                                     </widget>
                                 </grid>
                             </widget>
-                            <spacer row="4" column="0">
+                            <widget class="QCheckBox" row="3" column="0">
                                 <property name="name">
-                                    <cstring>spacer10</cstring>
+                                    <cstring>checkAnime</cstring>
                                 </property>
-                                <property name="orientation">
-                                    <enum>Vertical</enum>
+                                <property name="text">
+                                    <string>Don't show animated logo in toolbar</string>
                                 </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>10</height>
-                                    </size>
-                                </property>
-                            </spacer>
+                            </widget>
                         </grid>
                     </widget>
                     <widget class="QWidget">
