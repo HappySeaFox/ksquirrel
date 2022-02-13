@@ -247,7 +247,7 @@ DIST_COMMON =  README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
 
 #>- DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=ksquirrel-wrapper strip_ subdirs start_ configure.files messages.log Makefile.dist ksquirrel.kdevses configure.in.in 
+KDE_DIST=ksquirrel-wrapper strip_ subdirs start_ configure.files ksquirrelrc messages.log Makefile.dist ksquirrel.kdevses configure.in.in 
 
 DISTFILES= $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 

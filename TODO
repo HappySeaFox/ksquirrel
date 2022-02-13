@@ -1,18 +1,20 @@
 X - done
 W - now working on
 
+Compiling
+	[   ]  ./configure --disable-opengl
 
 GL view (need help)
 	[   ]  scrollbars
 	[ X ]  editable zoomfactor
 	[ X ]  "currentzoom = N%" (done: "[V][H] 100.0% (90.0 deg)")
-	[   ]  step-by-step drawing
+	[ X ]  step-by-step drawing
 	[   ]  border around a picture
 	[ X ]  all operations (rotate, flip ...) - with matrices!
 	[   ]  background for transparent images (and for all other ;))
 	[ X ]  scroll support (next/prev image)
 	[ X ]  moving image
-	[   ]  class SQ_GLViewWidgetBase, and SQ_GLViewWidgetCommon:public SQ_GLViewWidgetBase, SQ_GLViewWidgetToolbar:public SQ_GLViewWidgetBase
+	[ X ]  class SQ_GLViewWidgetBase(?), and SQ_GLViewWidgetCommon:public SQ_GLViewWidgetBase, SQ_GLViewWidgetToolbar:public SQ_GLViewWidgetBase
 		(GL viewer with toolbar and statusbar, if GLViewWidget is a separate window, and common widget otherwise)
 
 Libraries
@@ -49,6 +51,7 @@ Interface
 	[ X ]  CreateWidgetsLikeXnview
 	[ X ]  CreateWidgetsLikeKuickshow
 	[ X ]  CreateWidgetsLikeWinviewer
+	[ X ]  CreateWidgetsLikeShowImg
 	[   ]  CreateWidgetsLikeBrowser
 	[ X ]  Save Position
 	[ X ]  Save Size

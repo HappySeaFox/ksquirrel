@@ -1,7 +1,7 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
 
-EXTRA_DIST = drag.png usual.png view_gqview.png view_kuickshow.png view_squirrel.png view_winviewer.png view_xnview.png view_showimg.png close.png flip_h.png flip_v.png help.png next.png previous.png reset.png rotate_left.png rotate_right.png zoom-.png zoom+.png 
+EXTRA_DIST = drag.png usual.png view_gqview.png view_kuickshow.png view_squirrel.png view_winviewer.png view_xnview.png view_showimg.png close.png flip_h.png flip_v.png help.png next.png previous.png reset.png rotate_left.png rotate_right.png zoom-.png zoom+.png libs_notfound.png view_konqueror.png 
 
 install-data-local:
 	$(mkinstalldirs) /usr/share/apps/ksquirrel/cursors/
@@ -40,6 +40,10 @@ install-data-local:
 	$(INSTALL_DATA) $(srcdir)/zoom-.png /usr/share/apps/ksquirrel/actions/zoom-.png
 	$(mkinstalldirs) /usr/share/apps/ksquirrel/actions/
 	$(INSTALL_DATA) $(srcdir)/zoom+.png /usr/share/apps/ksquirrel/actions/zoom+.png
+	$(mkinstalldirs) /usr/share/apps/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/libs_notfound.png /usr/share/apps/ksquirrel/images/libs_notfound.png
+	$(mkinstalldirs) /usr/share/apps/ksquirrel/images/
+	$(INSTALL_DATA) $(srcdir)/view_konqueror.png /usr/share/apps/ksquirrel/images/view_konqueror.png
 
 uninstall-local:
 	-rm -f /usr/share/apps/ksquirrel/cursors/drag.png
@@ -60,5 +64,7 @@ uninstall-local:
 	-rm -f /usr/share/apps/ksquirrel/actions/rotate_right.png
 	-rm -f /usr/share/apps/ksquirrel/actions/zoom-.png
 	-rm -f /usr/share/apps/ksquirrel/actions/zoom+.png
+	-rm -f /usr/share/apps/ksquirrel/images/libs_notfound.png
+	-rm -f /usr/share/apps/ksquirrel/images/view_konqueror.png
 
 ####### kdevelop will overwrite this part!!! (end)############

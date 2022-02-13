@@ -52,11 +52,11 @@ class SQ_GLViewWidget : public QGLWidget
 		GLfloat 			matrix[8];
 		GLuint			texture[1];
 		GLfloat			zoomfactor, movefactor;
-		GLfloat			w, h, curangle;
+		GLfloat			curangle;
 		GLint 			ZoomModel, ShadeModel;
 		GLint			ZoomModelArray[2], ShadeModelArray[2];
 
-		RGBA			*rgba, *scan, *rgba_next;
+		RGBA			*rgba, *rgba_next;
 		fmt_info			*finfo;
 
 		int				xmoveold, ymoveold, xmove, ymove;
@@ -85,7 +85,7 @@ class SQ_GLViewWidget : public QGLWidget
 		void matrix_move(GLfloat x, GLfloat y);
 		void matrix_zoom(GLfloat ratio);
 		void matrix_reset();
-		void write_gl_matrix();
+		void write_gl_matrix(bool update = true);
 		void matrix_rotate(GLfloat angle);
 		void flip(int);
 		void flip_h();
@@ -107,7 +107,6 @@ class SQ_GLViewWidget : public QGLWidget
 		void dropEvent(QDropEvent *);
 
 		void contextMenuEvent(QContextMenuEvent *);
-
 		void mousePressEvent(QMouseEvent *);
 		void mouseReleaseEvent(QMouseEvent *);
 		void mouseMoveEvent(QMouseEvent *);
@@ -129,10 +128,10 @@ class SQ_GLViewWidget : public QGLWidget
 		void slotShowImage(const QString &file);
 		void slotSomeHelp();
 		void slotRenderPixmapIntoFile();
-		void slotCloseGLView();
+		void slotProperties();
 
 	public:
-		KAction			*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp, *pARender, *pAClose;
+		KAction	*pARotateLeft, *pARotateRight, *pAZoomPlus, *pAZoomMinus, *pAFlipV, *pAFlipH, *pAReset, *pAHelp, *pARender, *pAClose, *pAProperties;
 };
 
 #endif

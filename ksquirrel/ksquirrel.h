@@ -37,6 +37,7 @@ class KActionMenu;
 
 class QSplitter;
 class QLabel;
+class QWidgetStack;
 
 class SQ_WidgetStack;
 class SQ_RunProcess;
@@ -83,10 +84,10 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		QStringList			strlibFound;
 
 		SQ_RunProcess		*pMenuProc;
-		SQ_SystemTray		*tray;
+		QWidgetStack			*viewBrowser;
 
 		void CreateLocationToolbar();
-		void CreateStatusBar();
+		void CreateStatusBar(KStatusBar*);
 		void CreateToolbar(KToolBar*);
 		void CreateMenu(KMenuBar*);
 		void CreateActions();
@@ -126,6 +127,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		void slotRunCommand(int);
 		void slotGotoTray();
 		void slotSetFile();
+		void slotCloseGLWidget();
 
 	public:
 		Squirrel(SQ_HLOptions *, QWidget *parent = 0, const char *name = 0);
@@ -141,6 +143,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 		SQ_LibraryHandler		*sqLibHandlerReal;
 		KStatusBar			*sbar;
 		SQ_LibraryListener		*libl;
+		SQ_SystemTray		*tray;
 
 		QLabel				*dirInfo, *curFileInfo, *fileIcon, *fileName, *decodedStatus, *GLreporter;
 		SQ_ExternalTool		*extool;
@@ -167,6 +170,7 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 #define   sqCache			(Squirrel::App->hcache)
 #define	sqBookmarks		(Squirrel::App->bookmarkOwner)
 #define	sqHighLevel		(Squirrel::App->highlevel)
+#define	sqTray			(Squirrel::App->tray)
 
 #define   sqStatus			(Squirrel::App->sbar)
 #define	sqFilters			(Squirrel::App->filterList)
@@ -182,9 +186,8 @@ class Squirrel : public KDockMainWindow, public DCOPObject
 #define   sqSBfileName		(Squirrel::App->fileName)
 #define   sqSBDecoded		(Squirrel::App->decodedStatus)
 #define	sqSBGLreport		(Squirrel::App->GLreporter)
-
 #define	sqGLView			(Squirrel::App->glBase)
 #define	sqLibHandler		(Squirrel::App->sqLibHandlerReal)
-
 #define	sqViewType		(Squirrel::App->curViewType)
+
 #endif

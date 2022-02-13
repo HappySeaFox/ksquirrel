@@ -183,6 +183,11 @@ void Squirrel::slotOptions()
 	sqGLView->getGL()->setZoomFactor(sqConfig->readNumEntry("GL view", "zoom", 25));
 	sqGLView->getGL()->setMoveFactor(sqConfig->readNumEntry("GL view", "move", 5));
 	sqLibUpdater->setAutoUpdate(sqConfig->readBoolEntry("Libraries", "monitor", true));
+	sqLibHandler->clear();
+	sqLibUpdater->openURL(KURL(sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/")), false, true);
+
+	if(sqConfig->readBoolEntry("Main", "sync", true))
+		sqConfig->sync();
 }
 
 void Squirrel::closeEvent(QCloseEvent *ev)
@@ -411,7 +416,7 @@ void Squirrel::createWidgetsLikeSQuirrel()
 	pTLocation = new KToolBar(this, QMainWindow::Top, true, "Location toolbar");
 	CreateLocationToolbar();
 
-	CreateStatusBar();
+	CreateStatusBar(statusBar());
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
 	
@@ -444,7 +449,7 @@ void Squirrel::createWidgetsLikeSQuirrel()
 
 void Squirrel::createWidgetsLikeGqview()
 {
-	CreateStatusBar();
+	CreateStatusBar(statusBar());
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
 	mainDock->dockManager()->setSplitterOpaqueResize(true);
@@ -493,7 +498,7 @@ void Squirrel::createWidgetsLikeKuickshow()
 	fileTools = toolBar("tools");
 	fileTools->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-	CreateStatusBar();
+	CreateStatusBar(statusBar());
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
 
@@ -519,7 +524,7 @@ void Squirrel::createWidgetsLikeKuickshow()
 
 void Squirrel::createWidgetsLikeWinViewer()
 {
-	CreateStatusBar();
+	CreateStatusBar(statusBar());
 
 	// WinViewer specific
 	sqStatus->removeWidget(sqSBdirInfo);
@@ -575,7 +580,7 @@ void Squirrel::createWidgetsLikeWinViewer()
 
 void Squirrel::createWidgetsLikeXnview()
 {
-	CreateStatusBar();
+	CreateStatusBar(statusBar());
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
 	mainSplitter = new QSplitter(Qt::Vertical, mainDock);
@@ -605,7 +610,7 @@ void Squirrel::createWidgetsLikeXnview()
 
 void Squirrel::createWidgetsLikeShowImg()
 {
-	CreateStatusBar();
+	CreateStatusBar(statusBar());
 
 	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
 	mainDock->dockManager()->setSplitterOpaqueResize(true);
@@ -663,6 +668,40 @@ void Squirrel::createWidgetsLikeShowImg()
 
 void Squirrel::createWidgetsLikeBrowser()
 {
+	mainDock = createDockWidget("MainDockWidget", 0L, 0L, "main_dock_widget");
+	mainDock->dockManager()->setSplitterOpaqueResize(true);
+	viewBrowser = new QWidgetStack(mainDock, "SQ_BROWSER_WIDGET_STACK");
+	mainDock->setWidget(viewBrowser);
+	mainDock->setDockSite(KDockWidget::DockCorner);
+	mainDock->setEnableDocking(KDockWidget::DockNone);
+	setView(mainDock);
+	setMainDockWidget(mainDock);
+
+	QVBox *b1 = new QVBox(viewBrowser);
+	KMenuBar *pMenuBar = new KMenuBar(b1);
+	KToolBar *t1 = new KToolBar(b1);
+	pTLocation = new KToolBar(sqApp, b1, true, "Location toolbar");
+	pTLocation->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+	CreateLocationToolbar();
+	sqWStack = new SQ_WidgetStack(b1);
+	KStatusBar *stat = new KStatusBar(b1);
+	CreateStatusBar(stat);
+
+	sqWStack->raiseFirst(createFirst);
+
+	b1->setStretchFactor(sqWStack, 1);
+
+	CreateToolbar(t1);
+	CreateMenu(pMenuBar);
+
+	connect(sqCurrentURL, SIGNAL(returnPressed(const QString&)), sqWStack, SLOT(setURL(const QString&)));
+	connect(sqCurrentURL, SIGNAL(activated(const QString&)), sqWStack, SLOT(setURL(const QString&)));
+
+	QVBox *b2 = new QVBox(viewBrowser);
+	sqGLView = new SQ_GLViewGeneral(b2);
+
+	viewBrowser->addWidget(b1, 0);
+	viewBrowser->addWidget(b2, 1);
 }
 
 void Squirrel::setSplitterSizes(int s1, int s2)
@@ -673,9 +712,9 @@ void Squirrel::setSplitterSizes(int s1, int s2)
 	mainSplitter->setSizes(l);
 }
 
-void Squirrel::CreateStatusBar()
+void Squirrel::CreateStatusBar(KStatusBar *bar)
 {
-	sbar = statusBar();
+	sbar = bar;
 	sbar->setSizeGripEnabled(true);
 	sbar->show();
 
@@ -943,7 +982,30 @@ void Squirrel::raiseGLWidget()
 		return;
 
 		case Squirrel::Browser:
+			viewBrowser->raiseWidget(1);
+		break;
 
+		default: return;
+	}
+}
+
+void Squirrel::slotCloseGLWidget()
+{
+	switch(curViewType)
+	{
+        	case Squirrel::SQuirrel:
+        	case Squirrel::Kuickshow:
+			sqGLView->close();
+		break;
+
+		case Squirrel::Gqview:
+        	case Squirrel::WinViewer:
+        	case Squirrel::Xnview:
+         	case Squirrel::ShowImg:
+		return;
+
+		case Squirrel::Browser:
+			viewBrowser->raiseWidget(0);
 		break;
 
 		default: return;

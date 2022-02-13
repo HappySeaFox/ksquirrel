@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file './sq_options.ui'
 **
-** Created: Сбт Май 15 16:56:11 2004
+** Created: Срд Май 19 22:34:49 2004
 **      by: The User Interface Compiler ($Id: qt/main.cpp   3.1.1   edited Nov 21 17:40 $)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -18,6 +18,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 class KColorButton;
+class KHistoryCombo;
 class QButtonGroup;
 class QCheckBox;
 class QComboBox;
@@ -47,9 +48,10 @@ public:
     QPushButton* buttonCancel;
     QWidgetStack* widgetStack1;
     QWidget* pageMain;
-    QCheckBox* checkOneInstance;
     QCheckBox* checkRestart;
     QCheckBox* checkMinimize;
+    QCheckBox* checkOneInstance;
+    QCheckBox* checkSync;
     QWidget* pageInterface;
     QButtonGroup* buttonGroupCreateFirst;
     QRadioButton* radioButton16;
@@ -61,14 +63,28 @@ public:
     QCheckBox* checkSavePos;
     QCheckBox* checkSaveSize;
     QButtonGroup* buttonGroupViewType;
-    QRadioButton* radioKuickShow;
     QRadioButton* radioSQuirrel;
     QRadioButton* radioGQview;
-    QRadioButton* radioButton13;
+    QRadioButton* radioKuickShow;
+    QRadioButton* radioButton29;
     QRadioButton* radioWinViewer;
     QRadioButton* radioXnview;
-    QRadioButton* radioButton29;
-    QLabel* pixmapShowView;
+    QRadioButton* radioButton13;
+    QWidgetStack* widgetStackView;
+    QWidget* page;
+    QLabel* pixmapView1;
+    QWidget* page_2;
+    QLabel* pixmapView2;
+    QWidget* page_3;
+    QLabel* pixmapView3;
+    QWidget* page_4;
+    QLabel* pixmapView4;
+    QWidget* page_5;
+    QLabel* pixmapView5;
+    QWidget* page_6;
+    QLabel* pixmapView6;
+    QWidget* page_7;
+    QLabel* pixmapView7;
     QWidget* pageFileview;
     QButtonGroup* buttonGroupSetPath;
     QRadioButton* radioSetThis;
@@ -98,15 +114,10 @@ public:
     QLabel* textLabel2;
     QCheckBox* checkDrop;
     QWidget* tab_2;
-    QButtonGroup* buttonGroupShadeModel;
-    QRadioButton* radioSmooth;
-    QRadioButton* radioFlat;
     QButtonGroup* buttonGroup9;
     QLabel* textLabel1_5_2;
     KColorButton* kColorGLbackground;
     QCheckBox* checkSystemColor;
-    QCheckBox* checkBackgroundTransparent;
-    QCheckBox* checkBorder;
     QLabel* textMove;
     QLabel* textLabel2_3_2;
     QLabel* textLabel1_6_2;
@@ -115,6 +126,14 @@ public:
     QLabel* textLabel1_7_2;
     QLabel* textAngle;
     QLabel* textLabel1_9_2;
+    QCheckBox* checkBorder;
+    QCheckBox* checkBackgroundTransparent;
+    QButtonGroup* buttonGroupShadeModel;
+    QRadioButton* radioSmooth;
+    QRadioButton* radioFlat;
+    QButtonGroup* buttonGroupCenter;
+    QRadioButton* radioCenterImage;
+    QRadioButton* radioCenterAxes;
     QWidget* tab_3;
     QButtonGroup* buttonGroupZoomModel;
     QRadioButton* radioLinear;
@@ -127,16 +146,24 @@ public:
     QRadioButton* radioButton21;
     QRadioButton* radioButton20;
     QRadioButton* radioButton28;
+    QWidget* tab_4;
+    QButtonGroup* buttonGroupScrolling;
+    QRadioButton* radioSCRZoom;
+    QRadioButton* radioSRCNext;
     QWidget* pageLibraries;
     QLabel* textLabel1;
     QButtonGroup* buttonGroup12;
     QCheckBox* checkMonitor;
     QCheckBox* checkFAMMessage;
-    QLineEdit* linePrefix;
     QPushButton* pushNewPrefix;
-    QListView* tableLib;
     QCheckBox* checkShowLinks;
     QCheckBox* checkContinue;
+    QWidgetStack* WST;
+    QWidget* page_8;
+    QListView* tableLib;
+    QWidget* page_9;
+    QLabel* pixmapNotFound;
+    KHistoryCombo* comboPrefix;
     QWidget* pageCaching;
     QCheckBox* checkCacheEnable;
     QButtonGroup* buttonGroup13;
@@ -160,17 +187,15 @@ public:
     virtual int start();
 
 public slots:
-    virtual void slotSelectPage( int page );
-    virtual void slotSetViewPixmap( int id );
     virtual void slotOpenDir();
     virtual void slotDirCache();
     virtual void slotShowLinks( bool showl );
     virtual void slotNewPrefix();
 
 protected:
-    bool showlinks;
-    typedef struct { QListViewItem *item; int id;} ListViewItemID;
     QString libPrefix;
+    typedef struct { QListViewItem *item; int id;} ListViewItemID;
+    bool showlinks;
 
     QGridLayout* SQ_OptionsLayout;
     QGridLayout* pageMainLayout;
@@ -178,6 +203,13 @@ protected:
     QGridLayout* buttonGroupCreateFirstLayout;
     QGridLayout* buttonGroup14Layout;
     QGridLayout* buttonGroupViewTypeLayout;
+    QGridLayout* pageLayout;
+    QGridLayout* pageLayout_2;
+    QGridLayout* pageLayout_3;
+    QGridLayout* pageLayout_4;
+    QGridLayout* pageLayout_5;
+    QGridLayout* pageLayout_6;
+    QGridLayout* pageLayout_7;
     QGridLayout* pageFileviewLayout;
     QGridLayout* buttonGroupSetPathLayout;
     QHBoxLayout* layout4;
@@ -189,14 +221,19 @@ protected:
     QGridLayout* buttonGroup15Layout;
     QHBoxLayout* layout5;
     QGridLayout* tabLayout_2;
-    QGridLayout* buttonGroupShadeModelLayout;
     QGridLayout* buttonGroup9Layout;
     QGridLayout* layout4_2;
+    QGridLayout* buttonGroupShadeModelLayout;
+    QGridLayout* buttonGroupCenterLayout;
     QGridLayout* tabLayout_3;
     QGridLayout* buttonGroupZoomModelLayout;
     QGridLayout* buttonGroupZoomTypeLayout;
+    QGridLayout* tabLayout_4;
+    QGridLayout* buttonGroupScrollingLayout;
     QGridLayout* pageLibrariesLayout;
     QGridLayout* buttonGroup12Layout;
+    QGridLayout* pageLayout_8;
+    QGridLayout* pageLayout_9;
     QGridLayout* pageCachingLayout;
     QGridLayout* buttonGroup13Layout;
     QGridLayout* buttonGroupCachePolicyLayout;
@@ -206,8 +243,6 @@ protected:
 protected slots:
     virtual void languageChange();
 private:
-    QPixmap a[6];
-
     void init();
 
 };

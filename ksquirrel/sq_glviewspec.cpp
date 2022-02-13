@@ -23,9 +23,9 @@
 #include <kstatusbar.h>
 #include <kstandarddirs.h>
 
+#include "ksquirrel.h"
 #include "sq_glviewspec.h"
 #include "sq_glviewwidget.h"
-#include "ksquirrel.h"
 #include "sq_config.h"
 #include "sq_widgetstack.h"
 
@@ -92,9 +92,9 @@ void SQ_GLViewSpec::create()
 	pBAbstract = new QToolButton(QIconSet(QPixmap::fromMimeSource(locate("appdata", "actions/reset.png"))), gl->pAReset->text(), "", gl, SLOT(slotMatrixReset()), toolbar);
 	pBAbstract->setUsesBigPixmap(true);
 	pBAbstract->setAutoRepeat(true);
-	pBAbstract = new QToolButton(QIconSet(QPixmap::fromMimeSource(locate("appdata", "actions/help.png"))), gl->pAHelp->text(), "", gl, SLOT(slotSomeHelp()), toolbar);
+	pBAbstract = new QToolButton(QIconSet(QPixmap::fromMimeSource(locate("appdata", "actions/help.png"))), gl->pAProperties->text(), "", gl, SLOT(slotProperties()), toolbar);
 	pBAbstract->setUsesBigPixmap(true);
-	pBAbstract = new QToolButton(QIconSet(QPixmap::fromMimeSource(locate("appdata", "actions/close.png"))), gl->pAClose->text(), "", gl, SLOT(slotCloseGLView()), toolbar);
+	pBAbstract = new QToolButton(QIconSet(QPixmap::fromMimeSource(locate("appdata", "actions/close.png"))), gl->pAClose->text(), "", sqApp, SLOT(slotCloseGLWidget()), toolbar);
 	pBAbstract->setUsesBigPixmap(true);
 
 	l->addWidget(toolbar, 0, 0);

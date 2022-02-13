@@ -31,7 +31,7 @@ author=CKulT
 configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux\s
 email=squirrel-sf@uandex.ru
 kdevprj_version=1.3
-lfv_open_groups=Others,User Interface
+lfv_open_groups=User Interface
 make_options=\s-s -j2
 makefiles=Makefile.am,ksquirrel/Makefile.am,doc/Makefile.am,doc/en/Makefile.am,po/Makefile.am,pics/Makefile.am
 modifyMakefiles=true
@@ -96,7 +96,7 @@ install_location=
 type=DATA
 
 [ksquirrel/Makefile.am]
-files=ksquirrel/main.cpp,ksquirrel/ksquirrel.cpp,ksquirrel/ksquirrel.h,ksquirrel/ksquirrel.desktop,ksquirrel/defs.h,ksquirrel/sq_about.h,ksquirrel/sq_application.cpp,ksquirrel/sq_application.h,ksquirrel/sq_diroperator.cpp,ksquirrel/sq_diroperator.h,ksquirrel/sq_filedetailview.cpp,ksquirrel/sq_filedetailview.h,ksquirrel/sq_fileiconview.cpp,ksquirrel/sq_fileiconview.h,ksquirrel/sq_glviewwidget.cpp,ksquirrel/sq_glviewwidget.h,ksquirrel/sq_librarieschanged.ui,ksquirrel/sq_librarieschanged.ui.h,ksquirrel/sq_libraryhandler.cpp,ksquirrel/sq_libraryhandler.h,ksquirrel/sq_librarylistener.cpp,ksquirrel/sq_librarylistener.h,ksquirrel/sq_options.ui,ksquirrel/sq_options.ui.h,ksquirrel/sq_runprocess.cpp,ksquirrel/sq_runprocess.h,ksquirrel/sq_specialpage.cpp,ksquirrel/sq_specialpage.h,ksquirrel/sq_tray.cpp,ksquirrel/sq_tray.h,ksquirrel/sq_treeview.cpp,ksquirrel/sq_treeview.h,ksquirrel/sq_version,ksquirrel/sq_version.h,ksquirrel/sq_widgetstack.cpp,ksquirrel/sq_widgetstack.h,ksquirrel/sq_externaltools.ui,ksquirrel/sq_fileviewfilter.cpp,ksquirrel/sq_fileviewfilter.h,ksquirrel/sq_externaltool.cpp,ksquirrel/sq_externaltool.h,ksquirrel/sq_config.cpp,ksquirrel/sq_config.h,ksquirrel/sq_filters.ui,ksquirrel/sq_cachehandler.cpp,ksquirrel/sq_cachehandler.h,ksquirrel/sq_zfstream.cpp,ksquirrel/sq_zfstream.h,ksquirrel/sq_dirlister.cpp,ksquirrel/sq_dirlister.h,ksquirrel/sq_bookmarkowner.cpp,ksquirrel/sq_bookmarkowner.h,ksquirrel/sq_hloptions.cpp,ksquirrel/sq_hloptions.h,ksquirrel/sq_glbase.cpp,ksquirrel/sq_glbase.h,ksquirrel/sq_glviewgeneral.cpp,ksquirrel/sq_glviewgeneral.h,ksquirrel/sq_glviewspec.cpp,ksquirrel/sq_glviewspec.h
+files=ksquirrel/main.cpp,ksquirrel/ksquirrel.cpp,ksquirrel/ksquirrel.h,ksquirrel/ksquirrel.desktop,ksquirrel/defs.h,ksquirrel/sq_about.h,ksquirrel/sq_application.cpp,ksquirrel/sq_application.h,ksquirrel/sq_diroperator.cpp,ksquirrel/sq_diroperator.h,ksquirrel/sq_filedetailview.cpp,ksquirrel/sq_filedetailview.h,ksquirrel/sq_fileiconview.cpp,ksquirrel/sq_fileiconview.h,ksquirrel/sq_glviewwidget.cpp,ksquirrel/sq_glviewwidget.h,ksquirrel/sq_librarieschanged.ui,ksquirrel/sq_librarieschanged.ui.h,ksquirrel/sq_libraryhandler.cpp,ksquirrel/sq_libraryhandler.h,ksquirrel/sq_librarylistener.cpp,ksquirrel/sq_librarylistener.h,ksquirrel/sq_options.ui,ksquirrel/sq_options.ui.h,ksquirrel/sq_runprocess.cpp,ksquirrel/sq_runprocess.h,ksquirrel/sq_specialpage.cpp,ksquirrel/sq_specialpage.h,ksquirrel/sq_tray.cpp,ksquirrel/sq_tray.h,ksquirrel/sq_treeview.cpp,ksquirrel/sq_treeview.h,ksquirrel/sq_version,ksquirrel/sq_widgetstack.cpp,ksquirrel/sq_widgetstack.h,ksquirrel/sq_externaltools.ui,ksquirrel/sq_fileviewfilter.cpp,ksquirrel/sq_fileviewfilter.h,ksquirrel/sq_externaltool.cpp,ksquirrel/sq_externaltool.h,ksquirrel/sq_config.cpp,ksquirrel/sq_config.h,ksquirrel/sq_filters.ui,ksquirrel/sq_cachehandler.cpp,ksquirrel/sq_cachehandler.h,ksquirrel/sq_zfstream.cpp,ksquirrel/sq_zfstream.h,ksquirrel/sq_dirlister.cpp,ksquirrel/sq_dirlister.h,ksquirrel/sq_bookmarkowner.cpp,ksquirrel/sq_bookmarkowner.h,ksquirrel/sq_hloptions.cpp,ksquirrel/sq_hloptions.h,ksquirrel/sq_glbase.cpp,ksquirrel/sq_glbase.h,ksquirrel/sq_glviewgeneral.cpp,ksquirrel/sq_glviewgeneral.h,ksquirrel/sq_glviewspec.cpp,ksquirrel/sq_glviewspec.h
 sub_dirs=
 type=prog_main
 
@@ -430,12 +430,6 @@ install=false
 install_location=
 type=DATA
 
-[ksquirrel/sq_version.h]
-dist=true
-install=false
-install_location=
-type=HEADER
-
 [ksquirrel/sq_widgetstack.cpp]
 dist=true
 install=false
@@ -461,7 +455,7 @@ install_location=
 type=HEADER
 
 [pics/Makefile.am]
-files=pics/drag.png,pics/usual.png,pics/view_gqview.png,pics/view_kuickshow.png,pics/view_squirrel.png,pics/view_winviewer.png,pics/view_xnview.png,pics/view_showimg.png,pics/close.png,pics/flip_h.png,pics/flip_v.png,pics/help.png,pics/next.png,pics/previous.png,pics/reset.png,pics/rotate_left.png,pics/rotate_right.png,pics/zoom-.png,pics/zoom+.png
+files=pics/drag.png,pics/usual.png,pics/view_gqview.png,pics/view_kuickshow.png,pics/view_squirrel.png,pics/view_winviewer.png,pics/view_xnview.png,pics/view_showimg.png,pics/close.png,pics/flip_h.png,pics/flip_v.png,pics/help.png,pics/next.png,pics/previous.png,pics/reset.png,pics/rotate_left.png,pics/rotate_right.png,pics/zoom-.png,pics/zoom+.png,pics/libs_notfound.png,pics/view_konqueror.png
 sub_dirs=
 type=normal
 
@@ -493,6 +487,12 @@ type=DATA
 dist=true
 install=true
 install_location=/usr/share/apps/ksquirrel/actions/help.png
+type=DATA
+
+[pics/libs_notfound.png]
+dist=true
+install=true
+install_location=/usr/share/apps/ksquirrel/images/libs_notfound.png
 type=DATA
 
 [pics/next.png]
@@ -535,6 +535,12 @@ type=DATA
 dist=true
 install=true
 install_location=/usr/share/apps/ksquirrel/images/view_gqview.png
+type=DATA
+
+[pics/view_konqueror.png]
+dist=true
+install=true
+install_location=/usr/share/apps/ksquirrel/images/view_konqueror.png
 type=DATA
 
 [pics/view_kuickshow.png]

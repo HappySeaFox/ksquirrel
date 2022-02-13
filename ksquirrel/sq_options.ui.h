@@ -7,31 +7,37 @@
 ** place of a destructor.
 *****************************************************************************/
 
-void SQ_Options::slotSelectPage(int page)
-{
-    widgetStack1->raiseWidget(page);
-}
-
-
 void SQ_Options::init()
 {
     int tp;
-    a[0] = QPixmap::fromMimeSource(locate("appdata", "images/view_squirrel.png"));
-    a[1] = QPixmap::fromMimeSource(locate("appdata", "images/view_gqview.png"));
-    a[2] = QPixmap::fromMimeSource(locate("appdata", "images/view_kuickshow.png"));
-    a[3] = QPixmap::fromMimeSource(locate("appdata", "images/view_winviewer.png"));
-    a[4] = QPixmap::fromMimeSource(locate("appdata", "images/view_xnview.png"));
-    a[5] = QPixmap::fromMimeSource(locate("appdata", "images/view_showimg.png"));
+    pixmapView1->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_squirrel.png")));
+    pixmapView2->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_gqview.png")));
+    pixmapView3->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_kuickshow.png")));
+    pixmapView4->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_winviewer.png")));
+    pixmapView5->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_xnview.png")));
+    pixmapView6->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_showimg.png")));
+    pixmapView7->setPixmap(QPixmap::fromMimeSource(locate("appdata", "images/view_konqueror.png")));
+    QPixmap pixNF = QPixmap::fromMimeSource(locate("appdata", "images/libs_notfound.png"));
+    pixmapNotFound->setPixmap(pixNF);
     
     checkRestart->setChecked(sqConfig->readBoolEntry("Main", "restart", true));
     checkMinimize->setChecked(sqConfig->readBoolEntry("Main", "minimize to tray", true));
     checkOneInstance->setChecked(sqConfig->readBoolEntry("Main", "activate another", true));
+    checkSync->setChecked(sqConfig->readBoolEntry("Main", "sync", true));
     
     if(sqConfig->readBoolEntry("Libraries", "monitor", true)) checkMonitor->toggle();
     checkFAMMessage->setChecked(sqConfig->readBoolEntry("Libraries", "show dialog", true));
-   linePrefix->setText(sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/"));
-   if(sqConfig->readBoolEntry("Libraries", "continue", true)) checkContinue->toggle();
-
+   
+  QString lp = sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
+   comboPrefix->setEditText(lp);
+   comboPrefix->addToHistory(lp);
+   comboPrefix->setDuplicatesEnabled(false);
+   KURLCompletion *pURLCompletion = new KURLCompletion(KURLCompletion::DirCompletion);
+   pURLCompletion->setDir("/");
+   comboPrefix->setCompletionObject(pURLCompletion);
+   comboPrefix->setAutoDeleteCompletionObject(true);
+   if(sqConfig->readBoolEntry("Libraries", "continue", true))
+       checkContinue->toggle();
     
     comboToolbarIconSize->setCurrentItem(sqConfig->readNumEntry("Interface", "toolbar icon size", 0));
     tp = sqConfig->readNumEntry("Interface", "create first", 0);
@@ -52,12 +58,16 @@ void SQ_Options::init()
 
 // Init GLView page
     tp = sqViewType;
-    pixmapShowView->setPixmap(a[tp]);
+    widgetStackView->raiseWidget(tp);
     ((QRadioButton*)(buttonGroupViewType->find(tp)))->setChecked(true);
     tp = sqConfig->readNumEntry("GL view", "zoom model", 0);
     ((QRadioButton*)(buttonGroupZoomModel->find(tp)))->setChecked(true);
     tp = sqConfig->readNumEntry("GL view", "shade model", 0);
     ((QRadioButton*)(buttonGroupShadeModel->find(tp)))->setChecked(true);
+    tp = sqConfig->readNumEntry("GL view", "manipulation center", 0);
+    ((QRadioButton*)(buttonGroupCenter->find(tp)))->setChecked(true);
+    tp = sqConfig->readNumEntry("GL view", "scroll", 1);
+    ((QRadioButton*)(buttonGroupScrolling->find(tp)))->setChecked(true);
     QColor color;
     color.setNamedColor(sqConfig->readEntry("GL view", "GL view background", "#cccccc"));
     kColorGLbackground->setColor(color);
@@ -100,15 +110,6 @@ void SQ_Options::init()
     listMain->setSelected(0, true);
 }
 
-
-
-void SQ_Options::slotSetViewPixmap(int id)
-{
-    pixmapShowView->setPixmap(a[id]);
-}
-
-
-
 void SQ_Options::slotOpenDir()
 {
 	QString s = KFileDialog::getExistingDirectory("/", this, "Choose a directory");
@@ -129,8 +130,12 @@ void SQ_Options::slotShowLinks( bool showl )
 {
     QString path;
     int totalRows = sqLibHandler->count();
+    
+    WST->raiseWidget((sqLibHandler->count())?0:1);
 
     tableLib->clear();
+    libPrefix = sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
+    if(!libPrefix.endsWith("/"))	libPrefix += "/";
 
     for(int i = 0;i < totalRows;i++)
     {
@@ -147,7 +152,6 @@ void SQ_Options::slotShowLinks( bool showl )
 
 	tableLib->insertItem(new QListViewItem(tableLib, path, QString(tmplib.fmt_quickinfo()), QString(tmplib.fmt_version()), QString(tmplib.sinfo)));
     }
-
 }
 
 
@@ -157,13 +161,11 @@ void SQ_Options::slotNewPrefix()
 
     if(!s.isEmpty())
     {
-	linePrefix->setText(s);
+	comboPrefix->setEditText(s);
+	comboPrefix->addToHistory(s);
 	libPrefix = s;
-	if(!libPrefix.endsWith("/")) libPrefix += "/";
-
-	sqConfig->readEntry("Libraries", "prefix", "/usr/lib/squirrel/");
-	sqLibHandler->clear();
-	sqLibUpdater->openURL(KURL(libPrefix), false, true);
+	if(!libPrefix.endsWith("/"))
+	    libPrefix += "/";
     }
 }
 
@@ -193,12 +195,15 @@ int SQ_Options::start()
 		sqConfig->writeEntry("minimize to tray", checkMinimize->isChecked());
 		sqConfig->writeEntry("restart", checkRestart->isChecked());
 		sqConfig->writeEntry("activate another", checkOneInstance->isChecked());
+		sqConfig->writeEntry("sync", checkSync->isChecked());
 
 		sqConfig->setGroup("GL view");
 		sqConfig->writeEntry("system color", checkSystemColor->isChecked());
 		sqConfig->writeEntry("GL view background", (kColorGLbackground->color()).name());
 		sqConfig->writeEntry("zoom model", buttonGroupZoomModel->id(buttonGroupZoomModel->selected()));
+		sqConfig->writeEntry("manipulation center", buttonGroupCenter->id(buttonGroupCenter->selected()));
 		sqConfig->writeEntry("shade model", buttonGroupShadeModel->id(buttonGroupShadeModel->selected()));
+		sqConfig->writeEntry("scroll", buttonGroupScrolling->id(buttonGroupScrolling->selected()));
 		sqConfig->writeEntry("enable drop", checkDrop->isChecked());
 		sqConfig->writeEntry("angle", sliderAngle->value());
 		sqConfig->writeEntry("zoom", spinZoomFactor->value());
@@ -212,7 +217,7 @@ int SQ_Options::start()
 		sqConfig->setGroup("Libraries");
 		sqConfig->writeEntry("monitor", checkMonitor->isChecked());
 		sqConfig->writeEntry("show dialog", checkFAMMessage->isChecked());
-		sqConfig->writeEntry("prefix", linePrefix->text());
+		sqConfig->writeEntry("prefix", comboPrefix->currentText());
 		sqConfig->writeEntry("continue", checkContinue->isChecked());
 		
 		sqConfig->setGroup("Cache");

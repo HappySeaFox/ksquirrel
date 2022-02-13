@@ -25,7 +25,6 @@
 
 #include "ksquirrel.h"
 #include "sq_about.h"
-#include "sq_version.h"
 #include "sq_application.h"
 #include "sq_hloptions.h"
 
@@ -44,12 +43,11 @@ int main(int argc, char *argv[])
 	const QCString App = "ksquirrel";
 
 	XInitThreads();
-	
-	QString			name_app;
+
 	Squirrel 			*SQ;
 	SQ_HLOptions		*high;
 
-	aboutData.addAuthor("Dmitry CKulT Baryshev", "Author, first programming, code cleanups, fisrt GL viewer.", "squirrel-sf@yandex.ru", "http://ckult.narod.ru");
+	aboutData.addAuthor("Dmitry Baryshev aka CKulT", "Author, first programming, code cleanups, fisrt GL viewer.", "squirrel-sf@yandex.ru", "http://ckult.narod.ru");
 	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org");
 	aboutData.addCredit("OpenGL forum at", 0, 0, "http://opengl.org.ru");
 	aboutData.addCredit("A great description of various file formats at", 0, 0, "http://www.wotsit.org");
@@ -94,8 +92,6 @@ int main(int argc, char *argv[])
 
 	// create instance
 	SQ = new Squirrel(high, 0, "KMainWindow");
-	name_app.sprintf("%s%d", APP, version);
-	SQ->setCaption(name_app);
 
 	a.setMainWidget(SQ);
 
